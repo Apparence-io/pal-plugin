@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BubbleOverlayButton extends StatefulWidget {
   final double width, height;
   final Size screenSize;
+  final Function onTapCallback;
 
   const BubbleOverlayButton({
     Key key,
     @required this.screenSize,
     this.height = 50.0,
     this.width = 50.0,
+    this.onTapCallback,
   }) : super(key: key);
 
   @override
@@ -64,7 +67,10 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
               ),
             ),
             onTap: () {
-              print('Button tapped');
+              HapticFeedback.selectionClick();
+              if (widget.onTapCallback != null) {
+                widget.onTapCallback();
+              }
             },
           ),
         ),

@@ -1,7 +1,3 @@
 library palplugin;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'package:palplugin/src/pal.dart' show Pal;

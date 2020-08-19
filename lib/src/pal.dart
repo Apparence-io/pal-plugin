@@ -1,6 +1,7 @@
 library palplugin;
 
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/bubble_overlay.dart';
 
 class Pal extends StatefulWidget {
   /// application child to display Pal over it.
@@ -28,17 +29,20 @@ class _PalState extends State<Pal> {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Stack(
-        children: [
-          widget.child,
-          Center(
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.red,
-            ),
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            children: [
+              widget.child,
+              BubbleOverlayButton(
+                screenSize: Size(
+                  constraints.maxWidth,
+                  constraints.maxHeight,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

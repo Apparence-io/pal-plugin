@@ -1,5 +1,6 @@
-import 'package:palplugin/database/adapter/generic_adapter.dart';
-import 'package:palplugin/database/entity/helper_on_screen_visit.dart';
+
+import 'package:palplugin/src/database/adapter/generic_adapter.dart';
+import 'package:palplugin/src/database/entity/helper_on_screen_visit.dart';
 
 class HelperEntityAdapter extends GenericEntityAdapter {
   @override

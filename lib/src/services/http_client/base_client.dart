@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:palplugin/service/http_client/adapters/error_adapter.dart';
+import 'package:palplugin/src/services/http_client/adapters/error_adapter.dart';
 
 abstract class BaseHttpClient {}
 

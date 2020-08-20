@@ -1,4 +1,5 @@
-import 'package:palplugin/database/entity/helper_entity.dart';
+
+import 'package:palplugin/src/database/entity/helper_entity.dart';
 
 class HelperOnScreenVisitEntity extends HelperEntity {
   String title;

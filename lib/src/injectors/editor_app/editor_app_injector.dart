@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/editor_app_context.dart';
-import 'package:palplugin/service/editor/helper/helper_service.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
+import 'package:palplugin/src/services/editor/helper/helper_service.dart';
 
 class EditorInjector extends InheritedWidget {
   final HelperService _helperService;

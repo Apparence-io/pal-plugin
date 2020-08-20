@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/user_app_context.dart';
+import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 
 class UserInjector extends InheritedWidget {
   UserInjector({

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-
-import 'route1_model.dart';
-import 'route1_presenter.dart';
+import 'package:pal_example/ui/pages/route1/route1_model.dart';
+import 'package:pal_example/ui/pages/route1/route1_presenter.dart';
 
 abstract class Route1View {
   void pushToRoute2(final BuildContext context);

@@ -1,4 +1,5 @@
-import 'package:palplugin/database/adapter/generic_adapter.dart';
+
+import 'package:palplugin/src/database/adapter/generic_adapter.dart';
 
 class ErrorAdapter extends GenericEntityAdapter {
   @override

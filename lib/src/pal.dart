@@ -1,6 +1,9 @@
 library palplugin;
 
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
+import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
+import 'package:palplugin/src/services/http_client/base_client.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
 import 'package:palplugin/src/ui/widgets/bubble_overlay.dart';
 import 'package:palplugin/src/router.dart';
@@ -15,11 +18,15 @@ class Pal extends StatefulWidget {
   /// disable or enable the editor mode.
   final bool editorModeEnabled;
 
+  /// text direction of your application.
+  final TextDirection textDirection;
+
   Pal({
     Key key,
     @required this.child,
     @required this.navigatorKey,
     this.editorModeEnabled = true,
+    this.textDirection = TextDirection.ltr,
   }) : super(key: key);
 
   @override
@@ -28,43 +35,57 @@ class Pal extends StatefulWidget {
 
 // TODO: Create editor state mode
 class _PalState extends State<Pal> {
-  final GlobalKey repaintBoundaryKey = GlobalKey();
+  final GlobalKey _repaintBoundaryKey = GlobalKey();
+
+  // TODO: Flavor integration
+  final HttpClient _httpClient = HttpClient.create('MY_TOKEN');
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      // TODO: To be set on parameter ?
-      textDirection: TextDirection.ltr,
-      child: MaterialApp(
-        onGenerateRoute: (RouteSettings settings) => route(settings),
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: LayoutBuilder(
-          builder: (context, constraints) {
-            return Stack(
-              key: ValueKey('palMainStack'),
-              children: [
-                // The app
-                RepaintBoundary(
-                  key: repaintBoundaryKey,
-                  child: widget.child,
-                ),
+      textDirection: widget.textDirection,
+      child: (widget.editorModeEnabled)
+          ? EditorAppContext(
+              httpClient: _httpClient,
+              child: _buildWrapper(),
+            )
+          : UserAppContext(
+              httpClient: _httpClient,
+              child: _buildWrapper(),
+            ),
+    );
+  }
 
-                // Build the floating widget above the app
-                BubbleOverlayButton(
-                  key: ValueKey('palBubbleOverlay'),
-                  screenSize: Size(
-                    constraints.maxWidth,
-                    constraints.maxHeight,
-                  ),
-                  onTapCallback: () => _showHelpersListModal(context),
+  Widget _buildWrapper() {
+    return MaterialApp(
+      onGenerateRoute: (RouteSettings settings) => route(settings),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            key: ValueKey('palMainStack'),
+            children: [
+              // The app
+              RepaintBoundary(
+                key: _repaintBoundaryKey,
+                child: widget.child,
+              ),
+
+              // Build the floating widget above the app
+              BubbleOverlayButton(
+                key: ValueKey('palBubbleOverlay'),
+                screenSize: Size(
+                  constraints.maxWidth,
+                  constraints.maxHeight,
                 ),
-              ],
-            );
-          },
-        ),
+                onTapCallback: () => _showHelpersListModal(context),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -86,7 +107,7 @@ class _PalState extends State<Pal> {
           borderRadius: BorderRadius.circular(radius),
           child: HelpersListModal(
             hostedAppNavigatorKey: widget.navigatorKey,
-            repaintBoundaryKey: repaintBoundaryKey,
+            repaintBoundaryKey: _repaintBoundaryKey,
           ),
         );
       },

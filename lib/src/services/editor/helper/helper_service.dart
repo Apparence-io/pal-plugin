@@ -1,6 +1,6 @@
-import 'package:palplugin/database/entity/helper_entity.dart';
-import 'package:palplugin/database/entity/pageable.dart';
-import 'package:palplugin/database/repository/editor/helper_repository.dart';
+import 'package:palplugin/src/database/entity/helper_entity.dart';
+import 'package:palplugin/src/database/entity/pageable.dart';
+import 'package:palplugin/src/database/repository/editor/helper_repository.dart';
 
 abstract class HelperService {
   factory HelperService.build(HelperRepository helperRepository) =>

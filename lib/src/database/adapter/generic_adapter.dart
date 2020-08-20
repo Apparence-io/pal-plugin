@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:palplugin/database/entity/pageable.dart';
+import 'package:palplugin/src/database/entity/pageable.dart';
 
 /// GenericEntityAdapter interface
 ///

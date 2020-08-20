@@ -11,7 +11,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   @override
   Widget build(BuildContext context) {
     return MVVMPage<HelpersListModalPresenter, HelpersListModalModel>(
-      key: ValueKey('HelpersListModal'),
+      key: ValueKey('palHelpersListModal'),
       presenter: HelpersListModalPresenter(this),
       builder: (context, presenter, model) {
         return Scaffold(
@@ -23,6 +23,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               Padding(
                 padding: const EdgeInsets.only(right: 20.0),
                 child: IconButton(
+                  key: ValueKey('palHelpersListModalClose'),
                   icon: Icon(Icons.close),
                   onPressed: () => Navigator.pop(context.buildContext),
                 ),

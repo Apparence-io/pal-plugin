@@ -42,12 +42,14 @@ class _PalState extends State<Pal> {
         home: LayoutBuilder(
           builder: (context, constraints) {
             return Stack(
+              key: ValueKey('palMainStack'),
               children: [
                 // The app
                 widget.child,
 
                 // Build the floating widget above the app
                 BubbleOverlayButton(
+                  key: ValueKey('palBubbleOverlay'),
                   screenSize: Size(
                     constraints.maxWidth,
                     constraints.maxHeight,

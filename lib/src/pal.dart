@@ -28,6 +28,8 @@ class Pal extends StatefulWidget {
 
 // TODO: Create editor state mode
 class _PalState extends State<Pal> {
+  final GlobalKey repaintBoundaryKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -45,7 +47,10 @@ class _PalState extends State<Pal> {
               key: ValueKey('palMainStack'),
               children: [
                 // The app
-                widget.child,
+                RepaintBoundary(
+                  key: repaintBoundaryKey,
+                  child: widget.child,
+                ),
 
                 // Build the floating widget above the app
                 BubbleOverlayButton(
@@ -79,7 +84,10 @@ class _PalState extends State<Pal> {
       builder: (context) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(radius),
-          child: HelpersListModal(),
+          child: HelpersListModal(
+            hostedAppNavigatorKey: widget.navigatorKey,
+            repaintBoundaryKey: repaintBoundaryKey,
+          ),
         );
       },
     );

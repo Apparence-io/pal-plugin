@@ -14,6 +14,6 @@ Route<dynamic> route(RouteSettings settings) {
     case '/editor/:id/edit':
       return MaterialPageRoute(builder: (context) => Text('A route with id with edit'));
     default:
-      throw 'Unexpected Route';
+      throw 'unexpected Route';
   }
 }

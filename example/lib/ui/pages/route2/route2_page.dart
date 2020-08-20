@@ -19,7 +19,7 @@ class Route2Page extends StatelessWidget implements Route2View {
       builder: (context, presenter, model) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Route2'),
+            title: Text('Route 2'),
           ),
           body: this._buildPage(context.buildContext, presenter, model),
         );
@@ -34,6 +34,7 @@ class Route2Page extends StatelessWidget implements Route2View {
   ) {
     return Center(
       child: RaisedButton(
+        key: ValueKey('childRoutePop'),
         onPressed: () => Navigator.pop(context),
         child: Text('Go back!'),
       ),

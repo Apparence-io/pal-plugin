@@ -14,9 +14,10 @@ class MyApp extends StatelessWidget {
     return Pal(
       navigatorKey: _navigatorKey,
       child: MaterialApp(
+        key: ValueKey('hostedApp'),
         initialRoute: '/',
         navigatorKey: _navigatorKey,
-        title: 'Flutter Demo',
+        title: 'Pal Demo',
         onGenerateRoute: (RouteSettings settings) => route(settings),
         theme: ThemeData(
           primarySwatch: Colors.blue,

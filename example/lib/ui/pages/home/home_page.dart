@@ -52,10 +52,12 @@ class HomePage extends StatelessWidget implements HomeView {
             height: 20.0,
           ),
           RaisedButton(
+            key: ValueKey('childRoute1Push'),
             child: Text('Push to child route 1'),
             onPressed: () => pushToRoute1(context),
           ),
           RaisedButton(
+            key: ValueKey('childRoute2Push'),
             child: Text('Push to child route 2'),
             onPressed: () => pushToRoute2(context),
           )

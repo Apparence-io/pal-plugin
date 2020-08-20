@@ -18,10 +18,11 @@ class Route1Page extends StatelessWidget implements Route1View {
       presenter: Route1Presenter(this),
       builder: (context, presenter, model) {
         return Scaffold(
-            appBar: AppBar(
-              title: Text('Route 1'),
-            ),
-            body: this._buildPage(context.buildContext, presenter, model));
+          appBar: AppBar(
+            title: Text('Route 1'),
+          ),
+          body: this._buildPage(context.buildContext, presenter, model),
+        );
       },
     );
   }
@@ -33,6 +34,7 @@ class Route1Page extends StatelessWidget implements Route1View {
   ) {
     return Center(
       child: RaisedButton(
+        key: ValueKey('childRoute2Push'),
         child: Text('Push to child route 2'),
         onPressed: () => pushToRoute2(context),
       ),

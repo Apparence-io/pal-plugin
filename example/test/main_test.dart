@@ -9,8 +9,8 @@ main() {
     await tester.pumpWidget(myApp);
   }
 
-  group('pal integration', () {
-    testWidgets('hosted app should be visible', (tester) async {
+  group('Hosted app integration', () {
+    testWidgets('should be visible', (tester) async {
       await before(tester);
       await tester.pumpAndSettle();
 
@@ -22,8 +22,10 @@ main() {
 
       expect(find.byKey(ValueKey('Home')), findsOneWidget);
     });
+  });
 
-    testWidgets('pal integration should be visible', (tester) async {
+  group('Pal integration', () {
+    testWidgets('should be visible', (tester) async {
       await before(tester);
       await tester.pumpAndSettle();
 

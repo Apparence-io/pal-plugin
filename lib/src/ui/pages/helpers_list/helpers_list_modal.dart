@@ -24,7 +24,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
                 padding: const EdgeInsets.only(right: 20.0),
                 child: IconButton(
                   key: ValueKey('palHelpersListModalClose'),
-                  icon: Icon(Icons.close),
+                  icon: Icon(
+                    Icons.close,
+                    size: 30.0,
+                  ),
                   onPressed: () => Navigator.pop(context.buildContext),
                 ),
               ),
@@ -46,9 +49,22 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       final HelpersListModalModel model) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: RaisedButton(
-        child: Text('TEST'),
-        onPressed: () => Navigator.pushNamed(context, '/editor/new'),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Helpers list here'),
+            SizedBox(
+              height: 30.0,
+            ),
+            RaisedButton.icon(
+              key: ValueKey('palHelpersListModalNew'),
+              onPressed: () => Navigator.pushNamed(context, '/editor/new'),
+              icon: Icon(Icons.add_circle_outline),
+              label: Text('New'),
+            )
+          ],
+        ),
       ),
     );
   }

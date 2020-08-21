@@ -1,18 +1,19 @@
 
 import 'package:palplugin/src/database/adapter/generic_adapter.dart';
 import 'package:palplugin/src/database/entity/helper_on_screen_visit.dart';
-import 'package:palplugin/src/database/entity/trigger_type.dart';
+import 'package:palplugin/src/database/entity/helper_type.dart';
 
 class HelperEntityAdapter extends GenericEntityAdapter {
   @override
   parseMap(Map<String, dynamic> map) {
-    final TriggerHelper triggerType = getTriggerHelperType(map["triggerType"]);
-    switch (triggerType) {
-      case TriggerHelper.HELPER_ON_SCREEN_VISIT:
-        HelperOnScreenVisitEntity(
+    final HelperType helperType = getTriggerHelperType(map["type"]);
+    switch (helperType) {
+      case HelperType.HELPER_ON_SCREEN_VISIT:
+        return HelperOnScreenVisitEntity(
           id: map["id"],
           name: map["name"],
-          type: map["type"],
+          type: helperType,
+          triggerType: map["triggerType"],
           creationDate: DateTime.parse(map["creationDate"]).toLocal(),
           lastUpdateDate: DateTime.parse(map["lastUpdateDate"]).toLocal(),
           priority: map["priority"],

@@ -1,7 +1,10 @@
+import 'package:palplugin/src/database/entity/helper_type.dart';
+
 class HelperEntity {
   String id;
   String name;
-  String type;
+  HelperType type;
+  String triggerType;
   DateTime creationDate;
   DateTime lastUpdateDate;
   int priority;
@@ -14,6 +17,7 @@ class HelperEntity {
       {this.id,
       this.name,
       this.type,
+      this.triggerType,
       this.creationDate,
       this.lastUpdateDate,
       this.priority,

@@ -1,5 +1,6 @@
 
 import 'package:palplugin/src/database/entity/helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper_type.dart';
 
 class HelperOnScreenVisitEntity extends HelperEntity {
   String title;
@@ -9,7 +10,8 @@ class HelperOnScreenVisitEntity extends HelperEntity {
   HelperOnScreenVisitEntity(
       {String id,
       String name,
-      String type,
+      HelperType type,
+      String triggerType,
       DateTime creationDate,
       DateTime lastUpdateDate,
       int priority,
@@ -24,6 +26,7 @@ class HelperOnScreenVisitEntity extends HelperEntity {
             id: id,
             name: name,
             type: type,
+            triggerType: triggerType,
             creationDate: creationDate,
             lastUpdateDate: lastUpdateDate,
             priority: priority,

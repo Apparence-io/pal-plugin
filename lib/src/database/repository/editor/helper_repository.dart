@@ -15,9 +15,11 @@ class HelperRepository extends BaseHttpRepository {
   HelperRepository({@required HttpClient httpClient})
       : super(httpClient: httpClient);
 
-  Future<HelperEntity> createHelper(final int versionId, final String pageId, final CreateHelperEntity createHelper) async {
+  Future<HelperEntity> createHelper(final String pageId,
+      final CreateHelperEntity createHelper) async {
     final Response response =
-    await this.httpClient.post("/versions/$versionId/pages/$pageId/helpers", body: jsonEncode(createHelper));
+    await this.httpClient.post(
+        "/pages/$pageId/helpers", body: jsonEncode(createHelper));
     return this._adapter.parse(response.body);
   }
 

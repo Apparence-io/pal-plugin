@@ -15,9 +15,10 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   final String _baseUrl;
   final String _token;
 
-  factory HttpClient.create(final String token) => HttpClient.private(token);
+  factory HttpClient.create(final String token, {final baseUrl}) =>
+      HttpClient._private(token, baseUrl: baseUrl);
 
-  HttpClient.private(final String token, {final baseUrl})
+  HttpClient._private(final String token, {final baseUrl})
       : assert(token != null && token != ""),
         this._baseUrl = baseUrl ?? BASE_URL,
         this._token = token;

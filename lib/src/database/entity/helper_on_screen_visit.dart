@@ -9,31 +9,33 @@ class HelperOnScreenVisitEntity extends HelperEntity {
 
   HelperOnScreenVisitEntity(
       {String id,
-      String name,
-      HelperType type,
-      String triggerType,
-      DateTime creationDate,
-      DateTime lastUpdateDate,
-      int priority,
-      String pageId,
-      int versionId,
-      String versionMin,
-      String versionMax,
-      String title,
-      String theme,
-      int languageId})
+        String name,
+        HelperType type,
+        String triggerType,
+        DateTime creationDate,
+        DateTime lastUpdateDate,
+        int priority,
+        String pageId,
+        int versionMinId,
+        String versionMin,
+        int versionMaxId,
+        String versionMax,
+        String title,
+        String theme,
+        int languageId})
       : super(
-            id: id,
-            name: name,
-            type: type,
-            triggerType: triggerType,
-            creationDate: creationDate,
-            lastUpdateDate: lastUpdateDate,
-            priority: priority,
-            pageId: pageId,
-            versionId: versionId,
-            versionMin: versionMin,
-            versionMax: versionMax) {
+      id: id,
+      name: name,
+      type: type,
+      triggerType: triggerType,
+      creationDate: creationDate,
+      lastUpdateDate: lastUpdateDate,
+      priority: priority,
+      pageId: pageId,
+      versionMinId: versionMinId,
+      versionMin: versionMin,
+      versionMaxId: versionMaxId,
+      versionMax: versionMax) {
     this.title = title;
     this.theme = theme;
     this.languageId = languageId;

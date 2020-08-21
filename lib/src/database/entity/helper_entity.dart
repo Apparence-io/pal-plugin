@@ -9,8 +9,9 @@ class HelperEntity {
   DateTime lastUpdateDate;
   int priority;
   String pageId;
-  int versionId;
+  int versionMinId;
   String versionMin;
+  int versionMaxId;
   String versionMax;
 
   HelperEntity(
@@ -22,7 +23,8 @@ class HelperEntity {
       this.lastUpdateDate,
       this.priority,
       this.pageId,
-      this.versionId,
+        this.versionMinId,
       this.versionMin,
+        this.versionMaxId,
       this.versionMax});
 }

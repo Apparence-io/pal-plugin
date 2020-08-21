@@ -5,6 +5,9 @@ abstract class CreateHelperEntity {
   HelperType type;
   String triggerType;
   int priority;
+  int versionMinId;
+  int versionMaxId;
 
-  CreateHelperEntity({this.name, this.type, this.triggerType, this.priority});
+  CreateHelperEntity(
+      {this.name, this.type, this.triggerType, this.priority, this.versionMinId, this.versionMaxId});
 }

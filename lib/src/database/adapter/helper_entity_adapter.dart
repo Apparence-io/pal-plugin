@@ -1,11 +1,12 @@
 
 import 'package:palplugin/src/database/adapter/generic_adapter.dart';
+import 'package:palplugin/src/database/entity/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper_on_screen_visit.dart';
 import 'package:palplugin/src/database/entity/helper_type.dart';
 
-class HelperEntityAdapter extends GenericEntityAdapter {
+class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
   @override
-  parseMap(Map<String, dynamic> map) {
+  HelperEntity parseMap(Map<String, dynamic> map) {
     final HelperType helperType = getTriggerHelperType(map["type"]);
     switch (helperType) {
       case HelperType.HELPER_ON_SCREEN_VISIT:
@@ -18,13 +19,16 @@ class HelperEntityAdapter extends GenericEntityAdapter {
           lastUpdateDate: DateTime.parse(map["lastUpdateDate"]).toLocal(),
           priority: map["priority"],
           pageId: map["pageId"],
-          versionId: map["versionId"],
+          versionMinId: map["versionMinId"],
           versionMin: map["versionMin"],
+          versionMaxId: map["versionMaxId"],
           versionMax: map["versionMax"],
           title: map["title"],
           theme: map["theme"],
           languageId: map["languageId"],
         );
     }
+
+    return null;
   }
 }

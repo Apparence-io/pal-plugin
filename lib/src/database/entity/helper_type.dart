@@ -1,5 +1,5 @@
 enum HelperType {
-  HELPER_ON_SCREEN_VISIT
+  HELPER_FULL_SCREEN
 }
 
 HelperType getTriggerHelperType(final String value) {

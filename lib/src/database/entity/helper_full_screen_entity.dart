@@ -2,12 +2,14 @@
 import 'package:palplugin/src/database/entity/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper_type.dart';
 
-class HelperOnScreenVisitEntity extends HelperEntity {
+class HelperFullScreenEntity extends HelperEntity {
   String title;
-  String theme;
+  String fontColor;
+  String backgroundColor;
+  String borderColor;
   int languageId;
 
-  HelperOnScreenVisitEntity(
+  HelperFullScreenEntity(
       {String id,
         String name,
         HelperType type,
@@ -21,7 +23,9 @@ class HelperOnScreenVisitEntity extends HelperEntity {
         int versionMaxId,
         String versionMax,
         String title,
-        String theme,
+        String fontColor,
+        String backgroundColor,
+        String borderColor,
         int languageId})
       : super(
       id: id,
@@ -37,7 +41,9 @@ class HelperOnScreenVisitEntity extends HelperEntity {
       versionMaxId: versionMaxId,
       versionMax: versionMax) {
     this.title = title;
-    this.theme = theme;
+    this.fontColor = fontColor;
+    this.backgroundColor = backgroundColor;
+    this.borderColor = borderColor;
     this.languageId = languageId;
   }
 }

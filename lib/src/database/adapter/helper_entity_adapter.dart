@@ -1,7 +1,7 @@
 
 import 'package:palplugin/src/database/adapter/generic_adapter.dart';
 import 'package:palplugin/src/database/entity/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper_on_screen_visit.dart';
+import 'package:palplugin/src/database/entity/helper_full_screen_entity.dart';
 import 'package:palplugin/src/database/entity/helper_type.dart';
 
 class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
@@ -9,8 +9,8 @@ class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
   HelperEntity parseMap(Map<String, dynamic> map) {
     final HelperType helperType = getTriggerHelperType(map["type"]);
     switch (helperType) {
-      case HelperType.HELPER_ON_SCREEN_VISIT:
-        return HelperOnScreenVisitEntity(
+      case HelperType.HELPER_FULL_SCREEN:
+        return HelperFullScreenEntity(
           id: map["id"],
           name: map["name"],
           type: helperType,
@@ -24,7 +24,9 @@ class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
           versionMaxId: map["versionMaxId"],
           versionMax: map["versionMax"],
           title: map["title"],
-          theme: map["theme"],
+          fontColor: map["fontColor"],
+          backgroundColor: map["backgroundColor"],
+          borderColor: map["borderColor"],
           languageId: map["languageId"],
         );
     }

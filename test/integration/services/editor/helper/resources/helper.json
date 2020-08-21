@@ -1,7 +1,7 @@
 {
   "id": "db6b01e1-b649-4a17-949a-9ab320601001",
   "name": "Helper test 1",
-  "type": "HELPER_ON_SCREEN_VISIT",
+  "type": "HELPER_FULL_SCREEN",
   "triggerType": "on_start",
   "creationDate": "2019-10-30 17:30:00.000-06:30",
   "lastUpdateDate": "2019-10-30 17:30:00.000-06:30",
@@ -12,6 +12,8 @@
   "versionMaxId": 2,
   "versionMax": "1.0.2",
   "title": "title",
-  "theme": "theme",
+  "fontColor": "#FFFFFFFF",
+  "backgroundColor": "#FFFFFFFF",
+  "borderColor": "#FFFFFFFF",
   "languageId": 1
 }

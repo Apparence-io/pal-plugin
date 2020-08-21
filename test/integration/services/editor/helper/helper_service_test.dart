@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/create_helper_on_screen_visit_entity.dart';
+import 'package:palplugin/src/database/entity/create_helper_full_screen_entity.dart';
 import 'package:palplugin/src/database/entity/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper_on_screen_visit.dart';
+import 'package:palplugin/src/database/entity/helper_full_screen_entity.dart';
 import 'package:palplugin/src/database/entity/helper_type.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/database/repository/editor/helper_repository.dart';
@@ -42,7 +42,7 @@ void main() {
       assert(helpers.totalPages == 1);
       assert(helpers.totalElements == 1);
       assert(helpers.entities.length == 1);
-      HelperOnScreenVisitEntity entity = helpers.entities[0];
+      HelperFullScreenEntity entity = helpers.entities[0];
       checkReturnedHelper(entity);
     });
 
@@ -62,12 +62,14 @@ void main() {
 
       HelperEntity helper = await helperService.createPageHelper(
           "db6b01e1-b649-4a17-949a-9ab320600001",
-          CreateHelperOnScreenVisitEntity(
+          CreateHelperFullScreenEntity(
             title: "title",
             name: "title",
             languageId: 1,
             priority: 1,
-            theme: "theme",
+            fontColor: "#FFFFFFFF",
+            backgroundColor: "#FFFFFFFF",
+            borderColor: "#FFFFFFFF",
             triggerType: "triggerType",
             versionMaxId: 1,
             versionMinId: 2,
@@ -78,10 +80,10 @@ void main() {
   });
 }
 
-void checkReturnedHelper(HelperOnScreenVisitEntity helper) {
+void checkReturnedHelper(HelperFullScreenEntity helper) {
   assert(helper.id == "db6b01e1-b649-4a17-949a-9ab320601001");
   assert(helper.name == "Helper test 1");
-  assert(helper.type == HelperType.HELPER_ON_SCREEN_VISIT);
+  assert(helper.type == HelperType.HELPER_FULL_SCREEN);
   assert(helper.triggerType == "on_start");
   assert(helper.creationDate ==
       DateTime.parse("2019-10-30 17:30:00.000-06:30").toLocal());
@@ -94,6 +96,8 @@ void checkReturnedHelper(HelperOnScreenVisitEntity helper) {
   assert(helper.versionMaxId == 2);
   assert(helper.versionMax == "1.0.2");
   assert(helper.title == "title");
-  assert(helper.theme == "theme");
+  assert(helper.fontColor == "#FFFFFFFF");
+  assert(helper.borderColor == "#FFFFFFFF");
+  assert(helper.borderColor == "#FFFFFFFF");
   assert(helper.languageId == 1);
 }

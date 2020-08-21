@@ -1,16 +1,18 @@
 import 'package:palplugin/src/database/entity/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper_type.dart';
 
-class CreateHelperOnScreenVisitEntity extends CreateHelperEntity {
+class CreateHelperFullScreenEntity extends CreateHelperEntity {
   String title;
-  String theme;
+  String fontColor;
+  String backgroundColor;
+  String borderColor;
   int languageId;
 
-  CreateHelperOnScreenVisitEntity(
-      {String name, String triggerType, int priority, int versionMinId, int versionMaxId, this.title, this.theme, this.languageId})
+  CreateHelperFullScreenEntity(
+      {String name, String triggerType, int priority, int versionMinId, int versionMaxId, this.title, this.fontColor, this.backgroundColor, this.borderColor, this.languageId})
     : super(
     name: name,
-    type: HelperType.HELPER_ON_SCREEN_VISIT,
+    type: HelperType.HELPER_FULL_SCREEN,
     triggerType: triggerType,
     priority: priority,
     versionMinId: versionMinId,
@@ -26,7 +28,9 @@ class CreateHelperOnScreenVisitEntity extends CreateHelperEntity {
       "versionMinId": this.versionMinId,
       "versionMaxId": this.versionMaxId,
       "title": this.title,
-      "theme": this.theme,
+      "fontColor": this.fontColor,
+      "backgrounColor": this.backgroundColor,
+      "borderColor": this.borderColor,
       "languageId": this.languageId,
     };
   }

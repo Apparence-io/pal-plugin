@@ -1,6 +1,7 @@
 library palplugin;
 
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
 import 'package:palplugin/src/ui/widgets/bubble_overlay.dart';
 import 'package:palplugin/src/router.dart';
@@ -37,10 +38,7 @@ class _PalState extends State<Pal> {
       textDirection: TextDirection.ltr,
       child: MaterialApp(
         onGenerateRoute: (RouteSettings settings) => route(settings),
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        theme: PalTheme.light,
         home: LayoutBuilder(
           builder: (context, constraints) {
             return Stack(
@@ -74,6 +72,7 @@ class _PalState extends State<Pal> {
 
     showModalBottomSheet(
       context: context,
+      barrierColor: Colors.black26,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(radius),

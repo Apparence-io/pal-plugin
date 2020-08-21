@@ -1,4 +1,4 @@
-import 'file:///Users/jeremyhammerer/Workspace/samples/flutter_app/lib/create_helper_entity.dart';
+import 'package:palplugin/src/database/entity/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/trigger_type.dart';
 
 class CreateHelperOnScreenVisitEntity extends CreateHelperEntity {

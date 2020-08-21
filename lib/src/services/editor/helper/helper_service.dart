@@ -19,7 +19,7 @@ class _HelperHttpService implements HelperService {
 
   @override
   Future<HelperEntity> createPageHelper(final int versionId, final String pageId, final CreateHelperEntity createHelper) {
-    this._helperRepository.createHelper(versionId, pageId, createHelper);
+    return this._helperRepository.createHelper(versionId, pageId, createHelper);
   }
 
   @override

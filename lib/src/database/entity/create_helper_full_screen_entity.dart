@@ -21,17 +21,17 @@ class CreateHelperFullScreenEntity extends CreateHelperEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      "name": this.name,
-      "type": helperTypeToString(this.type),
-      "triggerType": this.triggerType,
-      "priority": this.priority,
-      "versionMinId": this.versionMinId,
-      "versionMaxId": this.versionMaxId,
-      "title": this.title,
-      "fontColor": this.fontColor,
-      "backgrounColor": this.backgroundColor,
-      "borderColor": this.borderColor,
-      "languageId": this.languageId,
+      'name': this.name,
+      'type': helperTypeToString(this.type),
+      'triggerType': this.triggerType,
+      'priority': this.priority,
+      'versionMinId': this.versionMinId,
+      'versionMaxId': this.versionMaxId,
+      'title': this.title,
+      'fontColor': this.fontColor,
+      'backgrounColor': this.backgroundColor,
+      'borderColor': this.borderColor,
+      'languageId': this.languageId,
     };
   }
 }

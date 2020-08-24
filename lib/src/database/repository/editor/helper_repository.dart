@@ -19,13 +19,13 @@ class HelperRepository extends BaseHttpRepository {
       final CreateHelperEntity createHelper) async {
     final Response response =
     await this.httpClient.post(
-        "/pages/$pageId/helpers", body: jsonEncode(createHelper));
+        '/pages/$pageId/helpers', body: jsonEncode(createHelper));
     return this._adapter.parse(response.body);
   }
 
   Future<Pageable<HelperEntity>> getHelpers(final String route) async {
     final Response response =
-        await this.httpClient.get("/pages/helpers?route=$route");
+        await this.httpClient.get('/pages/helpers?route=$route');
     return this._adapter.parsePage(response.body);
   }
 }

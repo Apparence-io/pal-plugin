@@ -22,10 +22,17 @@ class Pal extends StatefulWidget {
   /// text direction of your application.
   final TextDirection textDirection;
 
+  /// set the application token to interact with the server.
+  final String appToken;
+
+  final RouteObserver<PageRoute> routeObserver;
+
   Pal({
     Key key,
     @required this.child,
     @required this.navigatorKey,
+    @required this.appToken,
+    @required this.routeObserver,
     this.editorModeEnabled = true,
     this.textDirection = TextDirection.ltr,
   }) : super(key: key);
@@ -39,7 +46,15 @@ class _PalState extends State<Pal> {
   final GlobalKey _repaintBoundaryKey = GlobalKey();
 
   // TODO: Flavor integration
-  final HttpClient _httpClient = HttpClient.create('MY_TOKEN');
+  HttpClient _httpClient;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // TODO: Wait for app to be initialized
+    _httpClient = HttpClient.create(widget.appToken);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,14 +88,15 @@ class _PalState extends State<Pal> {
               ),
 
               // Build the floating widget above the app
-              BubbleOverlayButton(
-                key: ValueKey('palBubbleOverlay'),
-                screenSize: Size(
-                  constraints.maxWidth,
-                  constraints.maxHeight,
+              if (widget.editorModeEnabled)
+                BubbleOverlayButton(
+                  key: ValueKey('palBubbleOverlay'),
+                  screenSize: Size(
+                    constraints.maxWidth,
+                    constraints.maxHeight,
+                  ),
+                  onTapCallback: () => _showHelpersListModal(context),
                 ),
-                onTapCallback: () => _showHelpersListModal(context),
-              ),
             ],
           );
         },
@@ -100,7 +116,6 @@ class _PalState extends State<Pal> {
           topRight: Radius.circular(radius),
         ),
       ),
-      backgroundColor: Colors.white,
       builder: (context) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(radius),

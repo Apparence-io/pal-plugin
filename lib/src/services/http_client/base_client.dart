@@ -10,7 +10,7 @@ abstract class BaseHttpClient {}
 /// intercept request and add user token if present
 /// if token is expired calls refresh token endpoint and save new token
 class HttpClient extends http.BaseClient implements BaseHttpClient {
-  static const String BASE_URL = ""; //TODO add prod url
+  static const String BASE_URL = "http://217.182.88.6:8053/"; //TODO add prod url
   final http.Client _client = new http.Client();
   final String _baseUrl;
   final String _token;

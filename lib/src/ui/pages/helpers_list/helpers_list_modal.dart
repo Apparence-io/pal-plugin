@@ -34,24 +34,6 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       presenter: HelpersListModalPresenter(this),
       builder: (context, presenter, model) {
         return Scaffold(
-          appBar: AppBar(
-            titleSpacing: 40.0,
-            automaticallyImplyLeading: false,
-            title: Text('Pal editor'),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: IconButton(
-                  key: ValueKey('palHelpersListModalClose'),
-                  icon: Icon(
-                    Icons.close,
-                    size: 30.0,
-                  ),
-                  onPressed: () => Navigator.pop(context.buildContext),
-                ),
-              ),
-            ],
-          ),
           body: this._buildPage(
             context.buildContext,
             presenter,
@@ -68,48 +50,127 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     final HelpersListModalModel model,
   ) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Helpers list here'),
-                SizedBox(
-                  height: 30.0,
-                ),
-                RaisedButton.icon(
-                  key: ValueKey('palHelpersListModalNew'),
-                  onPressed: () => Navigator.pushNamed(context, '/editor/new'),
-                  icon: Icon(Icons.add_circle_outline),
-                  label: Text('New'),
-                ),
-                RaisedButton.icon(
-                  key: ValueKey('palLookupAllChildrens'),
-                  onPressed: () => lookupHostedAppStruct(hostedAppNavigatorKey),
-                  icon: Icon(Icons.search),
-                  label: Text('Host struct'),
-                ),
-                RaisedButton.icon(
-                  key: ValueKey('palScreenshot'),
-                  onPressed: () => capturePng(presenter, model),
-                  icon: Icon(Icons.mobile_screen_share),
-                  label: Text('Capture host screen'),
-                )
-              ],
-            ),
-            if (model.imageBs != null)
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                ),
-                child: Image.memory(model.imageBs, height: 210),
-              ),
-          ],
+      padding: const EdgeInsets.symmetric(
+        vertical: 15.0,
+        horizontal: 24.0,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _buildHeader(context),
+          Expanded(
+            child: _buildList(context, presenter, model),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: _buildFooter(context),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter(
+    final BuildContext context,
+  ) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlineButton(
+        key: ValueKey('palHelpersListModalClose'),
+        child: Text(
+          'Close',
+          style: TextStyle(
+            fontWeight: FontWeight.w300,
+            color: Theme.of(context).accentColor,
+          ),
+        ),
+        onPressed: () => Navigator.pop(context),
+        borderSide: BorderSide(
+          color: Theme.of(context).accentColor,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
         ),
       ),
+    );
+  }
+
+  Widget _buildList(
+    final BuildContext context,
+    final HelpersListModalPresenter presenter,
+    final HelpersListModalModel model,
+  ) {
+    return Row(
+      key: ValueKey('palHelpersListModalContent'),
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RaisedButton.icon(
+              key: ValueKey('palLookupAllChildrens'),
+              onPressed: () => lookupHostedAppStruct(hostedAppNavigatorKey),
+              icon: Icon(Icons.search),
+              label: Text('Host struct'),
+            ),
+            RaisedButton.icon(
+              key: ValueKey('palScreenshot'),
+              onPressed: () => capturePng(presenter, model),
+              icon: Icon(Icons.mobile_screen_share),
+              label: Text('Capture host screen'),
+            )
+          ],
+        ),
+        if (model.imageBs != null)
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+            ),
+            child: Image.memory(model.imageBs, height: 210),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildHeader(
+    final BuildContext context,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'PAL editor',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(
+              height: 3.0,
+            ),
+            Text(
+              'List of available helpers on this page',
+              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w300),
+            )
+          ],
+        ),
+        SizedBox(
+          height: 30.0,
+          width: 30.0,
+          child: FloatingActionButton(
+            key: ValueKey('palHelpersListModalNew'),
+            onPressed: () => Navigator.pushNamed(context, '/editor/new'),
+            child: Icon(
+              Icons.add,
+              size: 18.0,
+            ),
+            shape: CircleBorder(),
+          ),
+        )
+      ],
     );
   }
 

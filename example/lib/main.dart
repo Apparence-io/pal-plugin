@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pal_example/router.dart';
 import 'package:palplugin/palplugin.dart';
+
+import 'router.dart';
 
 void main() {
   runApp(MyApp());

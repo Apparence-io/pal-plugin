@@ -58,32 +58,37 @@ class _PalState extends State<Pal> {
   }
 
   Widget _buildWrapper() {
-    return MaterialApp(
-      onGenerateRoute: (RouteSettings settings) => route(settings),
-      theme: PalTheme.light,
-      home: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            key: ValueKey('palMainStack'),
-            children: [
-              // The app
-              RepaintBoundary(
-                key: _repaintBoundaryKey,
-                child: widget.child,
-              ),
+    return PalTheme(
+      theme: PalThemeData.light(),
+      child: Builder(
+        builder: (context) => MaterialApp(
+          onGenerateRoute: (RouteSettings settings) => route(settings),
+          theme: PalTheme.of(context).buildTheme(),
+          home: LayoutBuilder(
+            builder: (context, constraints) {
+              return Stack(
+                key: ValueKey('palMainStack'),
+                children: [
+                  // The app
+                  RepaintBoundary(
+                    key: _repaintBoundaryKey,
+                    child: widget.child,
+                  ),
 
-              // Build the floating widget above the app
-              BubbleOverlayButton(
-                key: ValueKey('palBubbleOverlay'),
-                screenSize: Size(
-                  constraints.maxWidth,
-                  constraints.maxHeight,
-                ),
-                onTapCallback: () => _showHelpersListModal(context),
-              ),
-            ],
-          );
-        },
+                  // Build the floating widget above the app
+                  BubbleOverlayButton(
+                    key: ValueKey('palBubbleOverlay'),
+                    screenSize: Size(
+                      constraints.maxWidth,
+                      constraints.maxHeight,
+                    ),
+                    onTapCallback: () => _showHelpersListModal(context),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

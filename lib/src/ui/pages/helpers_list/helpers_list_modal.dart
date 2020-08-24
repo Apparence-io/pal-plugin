@@ -118,6 +118,12 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               onPressed: () => capturePng(presenter, model),
               icon: Icon(Icons.mobile_screen_share),
               label: Text('Capture host screen'),
+            ),
+            RaisedButton.icon(
+              key: ValueKey('test'),
+              onPressed: () => Navigator.of(context).pushNamed('/editor'),
+              icon: Icon(Icons.texture),
+              label: Text('Test start editor'),
             )
           ],
         ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-
-import 'route2_model.dart';
-import 'route2_presenter.dart';
+import 'package:pal_example/ui/pages/route2/route2_model.dart';
+import 'package:pal_example/ui/pages/route2/route2_presenter.dart';
 
 abstract class Route2View {
   void popBack(final BuildContext context);

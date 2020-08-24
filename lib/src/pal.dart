@@ -95,6 +95,7 @@ class _PalState extends State<Pal> {
 
     showModalBottomSheet(
       context: context,
+      barrierColor: Colors.black26,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(radius),

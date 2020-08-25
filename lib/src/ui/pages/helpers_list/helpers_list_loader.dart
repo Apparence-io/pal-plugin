@@ -1,7 +1,5 @@
 import 'package:palplugin/palplugin.dart';
-import 'package:palplugin/src/database/adapter/page_entity_adapter%20copy.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/entity/page_entity.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/page_server.dart';
@@ -16,28 +14,33 @@ class HelpersListModalLoader {
     this._helperService,
   );
 
-  Future<void> load() {
+  Future<HelpersListModalModel> load() async {
+    var resViewModel = HelpersListModalModel();
+
+    String pageId = await getPageId();
+    if (pageId != null && pageId.length > 0) {
+      Pageable<HelperEntity> helpersPage = await this._helperService.getPageHelpers(pageId);
+      resViewModel.helpers = helpersPage?.entities;
+    }
+
+    return resViewModel;
+  }
+
+  Future<String> getPageId() {
     // Getting child current route
     String routeName = PalController.instance?.routeName?.value;
     if (routeName == null || routeName.length <= 0) {
       return Future.value();
     }
 
-    return this
-        ._pageService
-        .getPage(routeName)
-        .then((Pageable<PageEntity> resPages) {
-      if (resPages != null && resPages.totalElements > 0) {
-        return this._helperService.getPageHelpers(resPages.entities[0].id);
-      } else {
-        return Future.value(null);
-      }
-    }).then((Pageable<HelperEntity> resHelpers) {
-      var resViewModel = HelpersListModalModel();
-      if (resHelpers != null) {
-        resViewModel.helpers = resHelpers.entities;
-      }
-      return resViewModel;
-    });
+    return this._pageService.getPage(routeName).then(
+      (resPages) {
+        String routeId;
+        if (resPages != null && resPages.totalElements > 0) {
+          routeId = resPages.entities[0].id;
+        }
+        return routeId;
+      },
+    );
   }
 }

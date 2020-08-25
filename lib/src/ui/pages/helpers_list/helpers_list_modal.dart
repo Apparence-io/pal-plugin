@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+import 'package:palplugin/src/ui/pages/helpers_list/widgets/helper_tile_widget.dart';
 
 abstract class HelpersListModalView {
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
@@ -71,7 +72,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
         children: [
           _buildHeader(context),
           Expanded(
-            child: _buildList(context, presenter, model),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: _buildList(context, presenter, model),
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -112,36 +116,32 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   ) {
-    return Row(
-      key: ValueKey('palHelpersListModalContent'),
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RaisedButton.icon(
-              key: ValueKey('palLookupAllChildrens'),
-              onPressed: () => lookupHostedAppStruct(hostedAppNavigatorKey),
-              icon: Icon(Icons.search),
-              label: Text('Host struct'),
+    return (model.helpers != null)
+        ? ListView.separated(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            key: ValueKey('palHelpersListModalContent'),
+            separatorBuilder: (context, index) => SizedBox(
+              height: 12,
             ),
-            RaisedButton.icon(
-              key: ValueKey('palScreenshot'),
-              onPressed: () => capturePng(presenter, model),
-              icon: Icon(Icons.mobile_screen_share),
-              label: Text('Capture host screen'),
-            )
-          ],
-        ),
-        if (model.imageBs != null)
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-            ),
-            child: Image.memory(model.imageBs, height: 210),
-          ),
-      ],
-    );
+            itemCount: model.helpers.length,
+            itemBuilder: (context, index) {
+              HelperEntity helperEntity = model.helpers[index];
+
+              return HelperTileWidget(
+                name: helperEntity?.name,
+                trigger: helperEntity?.triggerType,
+                versionMin: helperEntity?.versionMin,
+                versionMax: helperEntity?.versionMax,
+                isDisabled: false,
+              );
+            },
+          )
+        : Center(
+            key: ValueKey('palHelpersListModalNoHelpers'),
+            child: (model.isLoading)
+                ? CircularProgressIndicator()
+                : Text('No helpers on this page.'),
+          );
   }
 
   Widget _buildHeader(

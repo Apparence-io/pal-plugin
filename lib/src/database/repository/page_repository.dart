@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
-import 'package:palplugin/src/database/adapter/page_entity_adapter%20copy.dart';
+import 'package:palplugin/src/database/adapter/page_entity_adapter.dart';
 import 'package:palplugin/src/database/entity/page_entity.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/database/repository/base_repository.dart';

@@ -29,10 +29,10 @@ class PalTheme {
         backgroundColor: aqua,
         foregroundColor: dark,
       ),
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: Color(0xFFFAFEFF),
       cardColor: Colors.white,
       textSelectionColor: Colors.white,
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFFAFEFF),
       textTheme: GoogleFonts.montserratTextTheme().apply(
         bodyColor: dark,
         displayColor: dark,

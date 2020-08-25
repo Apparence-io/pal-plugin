@@ -17,7 +17,14 @@ class HelpersListModalPresenter
 
   @override
   Future onInit() async {
-    this.loader.load();
+    this.viewModel.isLoading = true;
+    this.refreshView();
+
+    this.loader.load().then((HelpersListModalModel res) {
+      viewModel = res;
+      this.viewModel.isLoading = false;
+      this.refreshView();
+    });
   }
 
   setImage(ByteData byteData) {

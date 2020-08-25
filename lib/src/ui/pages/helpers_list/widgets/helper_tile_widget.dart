@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class HelperTileWidget extends StatelessWidget {
   final String name;
@@ -42,7 +43,13 @@ class HelperTileWidget extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              HapticFeedback.selectionClick();
+              
+              if (onTapCallback != null) {
+                onTapCallback();
+              }
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

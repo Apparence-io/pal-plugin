@@ -132,11 +132,16 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               HelperEntity helperEntity = model.helpers[index];
 
               return HelperTileWidget(
+                key: ValueKey('palHelpersListModalTile$index'),
                 name: helperEntity?.name,
                 trigger: helperEntity?.triggerType,
                 versionMin: helperEntity?.versionMin,
                 versionMax: helperEntity?.versionMax,
                 isDisabled: false,
+                onTapCallback: () {
+                  // TODO: Send params
+                  Navigator.pushNamed(context, '/editor/${helperEntity.id}');
+                },
               );
             },
           )

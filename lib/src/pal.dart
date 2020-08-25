@@ -28,14 +28,11 @@ class Pal extends StatefulWidget {
   /// set the application token to interact with the server.
   final String appToken;
 
-  final RouteObserver<PageRoute> routeObserver;
-
   Pal({
     Key key,
     @required this.child,
     @required this.navigatorKey,
     @required this.appToken,
-    @required this.routeObserver,
     this.editorModeEnabled = true,
     this.textDirection = TextDirection.ltr,
   }) : super(key: key);
@@ -62,20 +59,15 @@ class _PalState extends State<Pal> {
       baseUrl: 'http://217.182.88.6:8053',
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Child app is now fully initializated
-      print(widget.navigatorKey.currentContext);
-    });
-
     // Register listener on route name change
-    PalController.instance.routeName.addListener(() {
-      print(PalController.instance.routeName.value);
-    });
+    // PalController.instance.routeName.addListener(() {
+    //   print(PalController.instance.routeName.value);
+    // });
   }
 
   @override
   void dispose() {
-    PalController.instance.routeName.dispose();
+    // PalController.instance.routeName.dispose();
     super.dispose();
   }
 
@@ -121,15 +113,15 @@ class _PalState extends State<Pal> {
               ),
 
               // Build the floating widget above the app
-              if (widget.editorModeEnabled)
-                BubbleOverlayButton(
-                  key: ValueKey('palBubbleOverlay'),
-                  screenSize: Size(
-                    constraints.maxWidth,
-                    constraints.maxHeight,
-                  ),
-                  onTapCallback: () => _showHelpersListModal(context),
+              // if (widget.editorModeEnabled)
+              BubbleOverlayButton(
+                key: ValueKey('palBubbleOverlay'),
+                screenSize: Size(
+                  constraints.maxWidth,
+                  constraints.maxHeight,
                 ),
+                onTapCallback: () => _showHelpersListModal(context),
+              ),
             ],
           );
         },
@@ -151,12 +143,11 @@ class _PalState extends State<Pal> {
       ),
       builder: (context) {
         return ClipRRect(
-          borderRadius: BorderRadius.circular(radius),
-          child: HelpersListModal(
-            hostedAppNavigatorKey: widget.navigatorKey,
-            repaintBoundaryKey: _repaintBoundaryKey,
-          ),
-        );
+            borderRadius: BorderRadius.circular(radius),
+            child: HelpersListModal(
+              hostedAppNavigatorKey: widget.navigatorKey,
+              repaintBoundaryKey: _repaintBoundaryKey,
+            ));
       },
     );
   }

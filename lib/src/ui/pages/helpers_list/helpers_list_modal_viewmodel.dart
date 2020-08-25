@@ -8,5 +8,8 @@ class HelpersListModalModel extends MVVMModel {
   List<HelperEntity> helpers;
   bool isLoading = true;
 
-  HelpersListModalModel();
+  HelpersListModalModel({
+    this.helpers,
+    this.isLoading,
+  });
 }

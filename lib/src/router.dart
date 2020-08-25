@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 GlobalKey<NavigatorState> key = new GlobalKey<NavigatorState>();
 
 Route<dynamic> route(RouteSettings settings) {
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    print("...NEW ROUTE");
-  });
-
   switch (settings.name) {
     case '/editor/new':
       return MaterialPageRoute(builder: (context) => Scaffold(body: Text('New')));

@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Pal(
       navigatorKey: _navigatorKey,
-      routeObserver: _routeObserver,
       appToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkYzExNzFlNS0xYTc2LTRmYjUtOWM3Yi0yZWM4ZjcxMWQ1ZDUiLCJ0eXBlIjoiUFJPSkVDVCIsImlhdCI6MTU5NzkyODcxMH0.cJ8qEQj_3aL9scDX3Q96xZ-P6LdZE2IJZddovmp7dJU',
       child: MaterialApp(
         key: ValueKey('hostedApp'),

@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/create_helper_full_screen_entity.dart';
-import 'package:palplugin/src/database/entity/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper_full_screen_entity.dart';
-import 'package:palplugin/src/database/entity/helper_type.dart';
+import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_full_screen_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
-import 'package:palplugin/src/database/repository/editor/helper_repository.dart';
-import 'package:palplugin/src/services/editor/helper/helper_service.dart';
+import 'package:palplugin/src/database/repository/helper_repository.dart';
+import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
 class _HttpClientMock extends Mock implements HttpClient {}

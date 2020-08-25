@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/palplugin.dart';
 
 GlobalKey<NavigatorState> key = new GlobalKey<NavigatorState>();
 
 Route<dynamic> route(RouteSettings settings) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    print("...NEW ROUTE");
+  });
+
   switch (settings.name) {
-    case '/':
-      return MaterialPageRoute(builder: (context) => Pal(navigatorKey: key, child: null,), maintainState: true);
     case '/editor/new':
       return MaterialPageRoute(builder: (context) => Scaffold(body: Text('New')));
     case '/editor/:id':

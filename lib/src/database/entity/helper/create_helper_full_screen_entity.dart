@@ -1,5 +1,6 @@
-import 'package:palplugin/src/database/entity/create_helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper_type.dart';
+
+import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 
 class CreateHelperFullScreenEntity extends CreateHelperEntity {
   String title;
@@ -8,16 +9,25 @@ class CreateHelperFullScreenEntity extends CreateHelperEntity {
   String borderColor;
   int languageId;
 
-  CreateHelperFullScreenEntity(
-      {String name, String triggerType, int priority, int versionMinId, int versionMaxId, this.title, this.fontColor, this.backgroundColor, this.borderColor, this.languageId})
-    : super(
-    name: name,
-    type: HelperType.HELPER_FULL_SCREEN,
-    triggerType: triggerType,
-    priority: priority,
-    versionMinId: versionMinId,
-    versionMaxId: versionMaxId,
-  );
+  CreateHelperFullScreenEntity({
+    String name,
+    String triggerType,
+    int priority,
+    int versionMinId,
+    int versionMaxId,
+    this.title,
+    this.fontColor,
+    this.backgroundColor,
+    this.borderColor,
+    this.languageId,
+  }) : super(
+          name: name,
+          type: HelperType.HELPER_FULL_SCREEN,
+          triggerType: triggerType,
+          priority: priority,
+          versionMinId: versionMinId,
+          versionMaxId: versionMaxId,
+        );
 
   Map<String, dynamic> toJson() {
     return {

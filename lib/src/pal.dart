@@ -3,6 +3,7 @@ library palplugin;
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
+import 'package:palplugin/src/pal_controller.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
@@ -53,7 +54,27 @@ class _PalState extends State<Pal> {
     super.initState();
 
     // TODO: Wait for app to be initialized
-    _httpClient = HttpClient.create(widget.appToken);
+    // TODO: Check if token is valid
+    _httpClient = HttpClient.create(
+      widget.appToken,
+      baseUrl: 'http://217.182.88.6:8053/',
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Child app is now fully initializated
+      print(widget.navigatorKey.currentContext);
+    });
+
+    // Register listener on route name change
+    PalController.instance.routeName.addListener(() {
+      print(PalController.instance.routeName.value);
+    });
+  }
+
+  @override
+  void dispose() {
+    PalController.instance.routeName.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,6 +127,9 @@ class _PalState extends State<Pal> {
 
   _showHelpersListModal(BuildContext context) {
     double radius = 25.0;
+
+    var test = ModalRoute.of(widget.navigatorKey.currentState.context);
+    print(test.settings.name);
 
     showModalBottomSheet(
       context: context,

@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
+import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 
@@ -20,9 +23,11 @@ abstract class HelpersListModalView {
 class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final GlobalKey repaintBoundaryKey;
+  final HelpersListModalLoader loader;
 
   HelpersListModal({
     Key key,
+    this.loader,
     this.hostedAppNavigatorKey,
     this.repaintBoundaryKey,
   });
@@ -31,7 +36,11 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   Widget build(BuildContext context) {
     return MVVMPage<HelpersListModalPresenter, HelpersListModalModel>(
       key: ValueKey('palHelpersListModal'),
-      presenter: HelpersListModalPresenter(this),
+      presenter: HelpersListModalPresenter(this,
+          loader: this.loader ??
+              HelpersListModalLoader(
+                UserInjector.of(context).pageService,
+              )),
       builder: (context, presenter, model) {
         return Scaffold(
           body: this._buildPage(
@@ -179,8 +188,6 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     if (hostedAppNavigatorKey == null) {
       return;
     }
-
-    hostedAppNavigatorKey.currentContext.visitChildElements(processElement);
   }
 
   // TODO: Move this to an utils file

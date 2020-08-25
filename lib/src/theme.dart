@@ -10,13 +10,14 @@ class _PalThemeLightColors {
   static const Color cyan = Color(0xFF90E0EF);
   static const Color aqua = Color(0xFFCAF0F8);
   static const Color red = Color(0xFFeB5160);
+  static const Color white = Color(0xFFFAFEFF);
 
   static const Gradient gradient1 = const LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: <Color>[
-      Color(0xFFFAFEFF),
-      Color(0xFFECF6F8),
+      white,
+      aqua,
     ]
   );
 }
@@ -30,12 +31,15 @@ class _PalThemeColors {
 
   final Color accent;
 
+  final Color light;
+
   final Gradient bottomNavEditorGradient;
 
   const _PalThemeColors._({
     this.dark,
     this.color1, this.color2, this.color3, this.color4,
     this.accent,
+    this.light,
     this.bottomNavEditorGradient
   });
 
@@ -45,6 +49,7 @@ class _PalThemeColors {
     color2: _PalThemeLightColors.lightBlue,
     color3: _PalThemeLightColors.cyan,
     color4: _PalThemeLightColors.aqua,
+    light:  _PalThemeLightColors.white,
     accent: _PalThemeLightColors.red,
     bottomNavEditorGradient: _PalThemeLightColors.gradient1,
   );
@@ -65,7 +70,7 @@ class PalTheme extends InheritedWidget {
     : assert(child != null),
       super(key: key, child: child);
 
-  static PalThemeData of(BuildContext context) =>context.dependOnInheritedWidgetOfExactType<PalTheme>().theme;
+  static PalThemeData of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<PalTheme>().theme;
 
   @override
   bool updateShouldNotify(PalTheme old) {
@@ -84,7 +89,6 @@ class PalThemeData {
   }
 
   factory PalThemeData.light() => PalThemeData._(_PalThemeColors.light());
-
 
   ThemeData buildTheme() {
     final ThemeData base = ThemeData.dark();

@@ -12,8 +12,6 @@ Route<dynamic> route(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => Pal(navigatorKey: key, child: null,), maintainState: true);
     case '/editor/new':
       return MaterialPageRoute(builder: (context) => Scaffold(body: Text('New')));
-    case '/editor':
-      return MaterialPageRoute(builder: editorPageBuilder.build);
     case '/editor/:id/edit':
       return MaterialPageRoute(builder: (context) => Scaffold(body: Text('New')));
     default:

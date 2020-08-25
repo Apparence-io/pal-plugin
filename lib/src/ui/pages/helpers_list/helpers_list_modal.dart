@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/ui/pages/editor/editor.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 
@@ -121,7 +122,15 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             ),
             RaisedButton.icon(
               key: ValueKey('test'),
-              onPressed: () => Navigator.of(context).pushNamed('/editor'),
+              onPressed: () {
+                //FIXME remove and clean
+                Navigator.of(context).pop();
+                OverlayEntry helperOverlay = OverlayEntry(
+                  opaque: false,
+                  builder: new EditorPageBuilder().build
+                );
+                hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
+              },
               icon: Icon(Icons.texture),
               label: Text('Test start editor'),
             )

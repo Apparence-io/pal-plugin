@@ -22,7 +22,12 @@ class PageRepository extends BaseHttpRepository {
     return this._adapter.parse(response.body);
   }
 
-  Future<Pageable<PageEntity>> getPages(final String route) async {
+  Future<Pageable<PageEntity>> getPages() async {
+    final Response response = await this.httpClient.get('pages');
+    return this._adapter.parsePage(response.body);
+  }
+
+  Future<Pageable<PageEntity>> getPage(final String route) async {
     final Response response = await this.httpClient.get('pages?route=$route');
     return this._adapter.parsePage(response.body);
   }

@@ -41,6 +41,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
         loader: this.loader ??
             HelpersListModalLoader(
               EditorInjector.of(context).pageService,
+              EditorInjector.of(context).helperService,
             ),
       ),
       builder: (context, presenter, model) {

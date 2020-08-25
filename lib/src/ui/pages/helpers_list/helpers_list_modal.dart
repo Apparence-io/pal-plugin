@@ -36,11 +36,13 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   Widget build(BuildContext context) {
     return MVVMPage<HelpersListModalPresenter, HelpersListModalModel>(
       key: ValueKey('palHelpersListModal'),
-      presenter: HelpersListModalPresenter(this,
-          loader: this.loader ??
-              HelpersListModalLoader(
-                UserInjector.of(context).pageService,
-              )),
+      presenter: HelpersListModalPresenter(
+        this,
+        loader: this.loader ??
+            HelpersListModalLoader(
+              EditorInjector.of(context).pageService,
+            ),
+      ),
       builder: (context, presenter, model) {
         return Scaffold(
           body: this._buildPage(

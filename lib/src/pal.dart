@@ -2,7 +2,9 @@ library palplugin;
 
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
+import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
 import 'package:palplugin/src/pal_controller.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 import 'package:palplugin/src/theme.dart';
@@ -57,7 +59,7 @@ class _PalState extends State<Pal> {
     // TODO: Check if token is valid
     _httpClient = HttpClient.create(
       widget.appToken,
-      baseUrl: 'http://217.182.88.6:8053/',
+      baseUrl: 'http://217.182.88.6:8053',
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -84,11 +86,21 @@ class _PalState extends State<Pal> {
       child: (widget.editorModeEnabled)
           ? EditorAppContext(
               httpClient: _httpClient,
-              child: _buildWrapper(),
+              child: Builder(builder: (context) {
+                return EditorInjector(
+                  child: _buildWrapper(),
+                  appContext: EditorAppContext.of(context),
+                );
+              }),
             )
           : UserAppContext(
               httpClient: _httpClient,
-              child: _buildWrapper(),
+              child: Builder(builder: (context) {
+                return UserInjector(
+                  child: _buildWrapper(),
+                  appContext: UserAppContext.of(context),
+                );
+              }),
             ),
     );
   }
@@ -127,9 +139,6 @@ class _PalState extends State<Pal> {
 
   _showHelpersListModal(BuildContext context) {
     double radius = 25.0;
-
-    var test = ModalRoute.of(widget.navigatorKey.currentState.context);
-    print(test.settings.name);
 
     showModalBottomSheet(
       context: context,

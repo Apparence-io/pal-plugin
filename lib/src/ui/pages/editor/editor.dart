@@ -4,10 +4,10 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/helpers_list.dart';
 
+import 'editor_presenter.dart';
+import 'editor_viewmodel.dart';
 
-class EditorViewModel extends MVVMModel {
-  bool enableSave;
-}
+
 
 abstract class EditorView {
 
@@ -93,21 +93,13 @@ class EditorPageBuilder implements EditorView {
         ),
       ),
       backgroundColor: PalTheme.of(context).buildTheme().backgroundColor,
-      builder: (context) => HelpersListMenu()
+      builder: (context) => HelpersListMenu(
+        options: [
+          HelperListOption(text: "Simple helper box", icon: Icons.border_outer),
+          HelperListOption(text: "Fullscreen helper", icon: Icons.border_outer),
+        ],
+      )
     );
   }
-
-}
-
-
-class EditorPresenter extends Presenter<EditorViewModel, EditorView> {
-
-  EditorPresenter(EditorView viewInterface) : super(EditorViewModel(), viewInterface);
-
-  @override
-  void onInit() {
-    viewModel.enableSave = false;
-  }
-
 
 }

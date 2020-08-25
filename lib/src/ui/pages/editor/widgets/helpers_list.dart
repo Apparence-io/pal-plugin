@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/theme.dart';
 
+
+class HelperListOption {
+  String text;
+  IconData icon;
+
+  HelperListOption({this.text, this.icon});
+}
+
 class HelpersListMenu extends StatelessWidget {
+
+  List<HelperListOption> options;
+
+
+  HelpersListMenu({@required this.options});
+
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +47,13 @@ class HelpersListMenu extends StatelessWidget {
         ),
         Positioned(
           bottom: 32, left: 16, right: 16, top: 16,
-          child: ListView(
-            children: [
-              ListTile(
-                key: ValueKey("option"),
-                leading: Icon(Icons.border_outer, color: color),
-                title: Text("Simple helper box"),
-              ),
-              ListTile(
-                key: ValueKey("option"),
-                leading: Icon(Icons.border_outer, color: color),
-                title: Text("Fullscreen helper"),
-              ),
-            ],
+          child: ListView.builder(
+            itemBuilder: (context, index) => ListTile(
+              key: ValueKey("option"),
+              leading: Icon(options[index].icon, color: color),
+              title: Text(options[index].text),
+            ),
+            itemCount: options.length,
           ),
         )
       ],

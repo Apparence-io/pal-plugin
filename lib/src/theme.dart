@@ -117,13 +117,14 @@ class PalThemeData {
       ),
       bottomAppBarTheme: BottomAppBarTheme(
         color: colors.dark,
-      )
+      ),
+      highlightColor: colors.color4,
     );
   }
 
   Gradient get bottomNavEditorGradient => colors.bottomNavEditorGradient;
 
-  Color get editorMenuIconColor => colors.color2;
+  Color get highlightColor => colors.color4;
 }
 
 

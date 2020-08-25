@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';
-import 'package:palplugin/src/ui/pages/editor/widgets/helpers_list.dart';
+import 'package:palplugin/src/ui/widgets/modal_bottomsheet_options.dart';
 
 import 'editor_presenter.dart';
 import 'editor_viewmodel.dart';
@@ -82,21 +82,12 @@ class EditorPageBuilder implements EditorView {
   }
 
   _showHelperModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      useRootNavigator: true,
-      isDismissible: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
-        ),
-      ),
-      backgroundColor: PalTheme.of(context).buildTheme().backgroundColor,
-      builder: (context) => HelpersListMenu(
+    showModalBottomSheetOptions(
+      context,
+      (context) => ModalBottomSheetOptions(
         options: [
-          HelperListOption(text: "Simple helper box", icon: Icons.border_outer),
-          HelperListOption(text: "Fullscreen helper", icon: Icons.border_outer),
+          SheetOption(text: "Simple helper box", icon: Icons.border_outer),
+          SheetOption(text: "Fullscreen helper", icon: Icons.border_outer),
         ],
       )
     );

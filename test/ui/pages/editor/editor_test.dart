@@ -4,7 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/editor/editor.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';
-import 'package:palplugin/src/ui/pages/editor/widgets/helpers_list.dart';
+import 'package:palplugin/src/ui/widgets/modal_bottomsheet_options.dart';
 
 
 Future _initPage(EditorPageBuilder editorPageBuilder, WidgetTester tester) async {
@@ -47,7 +47,7 @@ void main() {
       await tester.pump();
       await tester.pumpAndSettle(Duration(milliseconds: 500));
       // shows options
-      var helpersOptionsFinder = find.byType(HelpersListMenu);
+      var helpersOptionsFinder = find.byType(ModalBottomSheetOptions);
       expect(helpersOptionsFinder, findsOneWidget);
       // check options
       expect(find.byKey(ValueKey("option")), findsNWidgets(2));

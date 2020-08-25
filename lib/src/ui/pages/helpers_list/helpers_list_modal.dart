@@ -25,6 +25,8 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final GlobalKey repaintBoundaryKey;
   final HelpersListModalLoader loader;
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
 
   HelpersListModal({
     Key key,
@@ -35,9 +37,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
 
   @override
   Widget build(BuildContext context) {
-    return MVVMPage<HelpersListModalPresenter, HelpersListModalModel>(
-      key: ValueKey('palHelpersListModal'),
-      presenter: HelpersListModalPresenter(
+    return _mvvmPageBuilder.build(
+      key: UniqueKey(),
+      context: context,
+      presenterBuilder: (context) => HelpersListModalPresenter(
         this,
         loader: this.loader ??
             HelpersListModalLoader(
@@ -47,6 +50,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       ),
       builder: (context, presenter, model) {
         return Scaffold(
+          key: ValueKey('palHelpersListModal'),
           body: this._buildPage(
             context.buildContext,
             presenter,

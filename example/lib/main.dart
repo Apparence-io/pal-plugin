@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         navigatorKey: _navigatorKey,
         title: 'Pal Demo',
+        debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) => route(settings),
         theme: ThemeData(
           primarySwatch: Colors.blue,

@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/editor/editor.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+import 'package:palplugin/src/ui/widgets/overlayed.dart';
 
 abstract class HelpersListModalView {
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
@@ -128,6 +130,12 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
                 OverlayEntry helperOverlay = OverlayEntry(
                   opaque: false,
                   builder: new EditorPageBuilder().build
+                );
+                assert(PalTheme.of(context) != null);
+                assert(Overlayed.of(context) != null);
+                Overlayed.of(context).entries.putIfAbsent(
+                  OverlayKeys.EDITOR_OVERLAY_KEY,
+                  () => helperOverlay
                 );
                 hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
               },

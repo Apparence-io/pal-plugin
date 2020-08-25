@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/pages/editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/widgets/modal_bottomsheet_options.dart';
+import 'package:palplugin/src/ui/widgets/overlayed.dart';
 
 import 'editor_presenter.dart';
 import 'editor_viewmodel.dart';
@@ -12,7 +16,6 @@ import 'editor_viewmodel.dart';
 abstract class EditorView {
 
 }
-
 
 class EditorPageBuilder implements EditorView {
 
@@ -36,9 +39,20 @@ class EditorPageBuilder implements EditorView {
         child: Stack(
           children: [
             _buildAddButton(context),
-            _buildValidationActions(context)
+            _buildValidationActions(context),
+            _buildEditorMode(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildEditorMode(BuildContext context) {
+    return Positioned(
+      top: 24, right: -24,
+      child: Transform.rotate(
+        angle: pi/4,
+        child: EditorModeBanner()
       ),
     );
   }
@@ -65,7 +79,7 @@ class EditorPageBuilder implements EditorView {
         children: [
           EditorButton.cancel(
             PalTheme.of(context),
-            () => _showHelperModal(context),
+            () => Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY),
             key: ValueKey("editModeCancel"),
           ),
           Padding(

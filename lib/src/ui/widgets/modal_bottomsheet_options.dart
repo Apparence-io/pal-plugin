@@ -32,6 +32,8 @@ showModalBottomSheetOptions(BuildContext context, ModalBottomSheetOptionsBuilder
 
 typedef OnValidate = void Function(SheetOption validatedOption);
 
+typedef OnSelectOption = void Function(SheetOption option);
+
 /// A designed content usable as bottom sheet
 /// list of selectable options
 /// cancel / validate will fire an event
@@ -41,7 +43,9 @@ class ModalBottomSheetOptions extends StatefulWidget {
 
   final OnValidate onValidate;
 
-  ModalBottomSheetOptions({@required this.options, @required this.onValidate});
+  final OnSelectOption onSelectOption;
+
+  ModalBottomSheetOptions({@required this.options, @required this.onValidate, this.onSelectOption});
 
   @override
   _ModalBottomSheetOptionsState createState() => _ModalBottomSheetOptionsState();
@@ -67,6 +71,9 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
                   onTap: () {
                     setState(() {
                       _selected = widget.options[index];
+                      if(widget.onSelectOption != null) {
+                        widget.onSelectOption(_selected);
+                      }
                     });
                   },
                   key: ValueKey("option"),

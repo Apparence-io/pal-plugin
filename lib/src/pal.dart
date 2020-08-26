@@ -67,6 +67,7 @@ class _PalState extends State<Pal> {
 
   @override
   void dispose() {
+    // FIXME: Is it the right place ?
     // PalController.instance.routeName.dispose();
     super.dispose();
   }
@@ -143,11 +144,12 @@ class _PalState extends State<Pal> {
       ),
       builder: (context) {
         return ClipRRect(
-            borderRadius: BorderRadius.circular(radius),
-            child: HelpersListModal(
-              hostedAppNavigatorKey: widget.navigatorKey,
-              repaintBoundaryKey: _repaintBoundaryKey,
-            ));
+          borderRadius: BorderRadius.circular(radius),
+          child: HelpersListModal(
+            hostedAppNavigatorKey: widget.navigatorKey,
+            repaintBoundaryKey: _repaintBoundaryKey,
+          ),
+        );
       },
     );
   }

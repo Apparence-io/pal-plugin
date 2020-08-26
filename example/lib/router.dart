@@ -6,6 +6,7 @@ import 'package:palplugin/palplugin.dart';
 
 Route<dynamic> route(RouteSettings settings) {
   // Notify Pal plugin when a new page is pushed
+  // FIXME: Need to handle Pop
   PalController.instance.routeName.value = settings.name;
 
   switch (settings.name) {

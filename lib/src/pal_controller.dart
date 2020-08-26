@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class PalController {
   static final PalController _singleton = new PalController._internal();

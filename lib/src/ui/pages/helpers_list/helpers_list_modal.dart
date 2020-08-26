@@ -104,7 +104,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             color: Theme.of(context).accentColor,
           ),
         ),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          HapticFeedback.selectionClick();
+          Navigator.pop(context);
+        },
         borderSide: BorderSide(
           color: Theme.of(context).accentColor,
         ),
@@ -183,7 +186,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
           width: 30.0,
           child: FloatingActionButton(
             key: ValueKey('palHelpersListModalNew'),
-            onPressed: () => Navigator.pushNamed(context, '/editor/new'),
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              Navigator.pushNamed(context, '/editor/new');
+            },
             child: Icon(
               Icons.add,
               size: 18.0,

@@ -29,6 +29,7 @@ class HelpersListModalLoader {
   Future<String> getPageId() {
     // Getting child current route
     String routeName = PalController.instance?.routeName?.value;
+
     if (routeName == null || routeName.length <= 0) {
       return Future.value();
     }

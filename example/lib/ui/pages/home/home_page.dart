@@ -68,11 +68,11 @@ class HomePage extends StatelessWidget implements HomeView {
 
   @override
   void pushToRoute1(BuildContext context) {
-    Navigator.of(context).pushNamed('/route1');
+    Navigator.pushNamed(context, '/route1');
   }
 
   @override
   void pushToRoute2(BuildContext context) {
-    Navigator.of(context).pushNamed('/route2');
+    Navigator.pushNamed(context, '/route2');
   }
 }

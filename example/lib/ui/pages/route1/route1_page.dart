@@ -42,6 +42,6 @@ class Route1Page extends StatelessWidget implements Route1View {
 
   @override
   void pushToRoute2(BuildContext context) {
-    Navigator.of(context).pushNamed('/route2');
+    Navigator.pushNamed(context, '/route2');
   }
 }

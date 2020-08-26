@@ -75,15 +75,6 @@ class _PalState extends State<Pal> {
   }
 
   @override
-  void dispose() {
-    // FIXME: Is it the right place ?
-    // PalController.instance.routeName.dispose();
-    super.dispose();
-  }
-
-
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 //    palEditModeStateService = EditorInjector.of(context).palEditModeStateService; FIXME uncomment this when injector is working
@@ -93,6 +84,8 @@ class _PalState extends State<Pal> {
 
   @override
   void dispose() {
+    // FIXME: Is it the right place ?
+    // PalController.instance.routeName.dispose();
     palEditModeStateService.showEditorBubble.removeListener(_onShowBubbleStateChanged);
     super.dispose();
   }

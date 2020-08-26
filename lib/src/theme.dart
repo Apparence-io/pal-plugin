@@ -83,8 +83,13 @@ class PalThemeData {
 
   _PalThemeColors colors;
 
+  PalThemeData._(_PalThemeColors colors) {
+    this.colors = colors;
+  }
 
-  static ThemeData _buildLightTheme() {
+  factory PalThemeData.light() => PalThemeData._(_PalThemeColors.light());
+
+  ThemeData buildTheme() {
     final ThemeData base = ThemeData.dark();
 
     const Color dark = Color(0xFF000767);

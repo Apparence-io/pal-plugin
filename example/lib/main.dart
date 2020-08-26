@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pal_example/router.dart';
 import 'package:palplugin/palplugin.dart';
+
+import 'router.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         navigatorKey: _navigatorKey,
         title: 'Pal Demo',
+        debugShowCheckedModeBanner: false,
         onGenerateRoute: (RouteSettings settings) => route(settings),
         theme: ThemeData(
           primarySwatch: Colors.blue,

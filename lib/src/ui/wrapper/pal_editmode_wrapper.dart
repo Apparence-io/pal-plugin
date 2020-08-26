@@ -101,7 +101,6 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
         return ClipRRect(
           borderRadius: BorderRadius.circular(radius),
           child: HelpersListModal(
-            hostedAppNavigatorKey: null,
             repaintBoundaryKey: _repaintBoundaryKey,
           ),
         );

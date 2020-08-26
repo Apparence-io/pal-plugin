@@ -6,6 +6,7 @@ import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
+import 'package:palplugin/src/ui/widgets/bubble_overlay.dart';
 
 void main() {
   group('test main plugin start', () {
@@ -30,9 +31,12 @@ void main() {
       var palFinder = find.byType(Pal).first;
       var editorAppContextFinder = find.byType(EditorAppContext);
       var userAppContextFinder = find.byType(UserAppContext);
+
       expect(palFinder, findsOneWidget);
       expect(editorAppContextFinder, findsOneWidget);
       expect(userAppContextFinder, findsNothing);
+      // the bubble button should be available to turn on editor
+      expect(find.byType(BubbleOverlayButton), findsOneWidget);
     });
 
     testWidgets('Create app with Pal in user mode should inject UserInjector', (WidgetTester tester) async {
@@ -44,6 +48,8 @@ void main() {
       expect(palFinder, findsOneWidget);
       expect(editorAppContextFinder, findsNothing);
       expect(userAppContextFinder, findsOneWidget);
+      // the bubble button should not be avaialble on this mode
+      expect(find.byType(BubbleOverlayButton), findsNothing);
     });
 
   });

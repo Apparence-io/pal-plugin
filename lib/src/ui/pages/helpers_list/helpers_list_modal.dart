@@ -125,14 +125,11 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             RaisedButton.icon(
               key: ValueKey('test'),
               onPressed: () {
-                //FIXME remove and clean
                 Navigator.of(context).pop();
                 OverlayEntry helperOverlay = OverlayEntry(
                   opaque: false,
                   builder: new EditorPageBuilder().build
                 );
-                assert(PalTheme.of(context) != null);
-                assert(Overlayed.of(context) != null);
                 Overlayed.of(context).entries.putIfAbsent(
                   OverlayKeys.EDITOR_OVERLAY_KEY,
                   () => helperOverlay

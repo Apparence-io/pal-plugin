@@ -25,7 +25,7 @@ abstract class HelpersListModalView {
 }
 
 class HelpersListModal extends StatelessWidget implements HelpersListModalView {
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
   final GlobalKey repaintBoundaryKey;
   final HelpersListModalLoader loader;
   final _mvvmPageBuilder =

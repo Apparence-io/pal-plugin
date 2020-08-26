@@ -15,10 +15,15 @@ import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
 import 'package:palplugin/src/ui/widgets/bubble_overlay.dart';
 import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/ui/widgets/overlayed.dart';
+import 'package:palplugin/src/ui/wrapper/pal_editmode_wrapper.dart';
 
 import 'injectors/editor_app/editor_app_injector.dart';
 
-class Pal extends StatefulWidget {
+// our production server adress
+const PAL_SERVER_URL = 'http://217.182.88.6:8053';
+
+// Pal top widget
+class Pal extends StatelessWidget {
   /// application child to display Pal over it.
   final MaterialApp child;
 
@@ -34,6 +39,8 @@ class Pal extends StatefulWidget {
   /// set the application token to interact with the server.
   final String appToken;
 
+  final HttpClient _httpClient;
+
   Pal({
     Key key,
     @required this.child,
@@ -41,150 +48,36 @@ class Pal extends StatefulWidget {
     @required this.appToken,
     this.editorModeEnabled = true,
     this.textDirection = TextDirection.ltr,
-  }) : super(key: key);
-
-  @override
-  _PalState createState() => _PalState();
-}
-
-// TODO: Create editor state mode
-class _PalState extends State<Pal> {
-
-  final GlobalKey _repaintBoundaryKey = GlobalKey();
-
-  PalEditModeStateService palEditModeStateService;
-
-  // TODO: Flavor integration / inject it instead of creation here
-  HttpClient _httpClient;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // TODO: Wait for app to be initialized
-    // TODO: Check if token is valid
-    _httpClient = HttpClient.create(
-      widget.appToken,
-      baseUrl: 'http://217.182.88.6:8053',
-    );
-
-    // Register listener on route name change
-    // PalController.instance.routeName.addListener(() {
-    //   print(PalController.instance.routeName.value);
-    // });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-//    palEditModeStateService = EditorInjector.of(context).palEditModeStateService; FIXME uncomment this when injector is working
-//    palEditModeStateService.showEditorBubble.addListener(_onShowBubbleStateChanged); FIXME uncomment this when injector is working
-  }
-
-
-  @override
-  void dispose() {
-    // FIXME: Is it the right place ?
-    // PalController.instance.routeName.dispose();
-    palEditModeStateService.showEditorBubble.removeListener(_onShowBubbleStateChanged);
-    super.dispose();
-  }
+  }) : _httpClient =  HttpClient.create(appToken, baseUrl: PAL_SERVER_URL),
+     assert(child != null, 'Pal must embbed a client application'),
+     super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-      textDirection: widget.textDirection,
-      child: (widget.editorModeEnabled)
-          ? EditorAppContext(
-              httpClient: _httpClient,
-              child: Builder(builder: (context) {
-                return EditorInjector(
-                  child: _buildWrapper(),
-                  appContext: EditorAppContext.of(context),
-                );
-              }),
-            )
-          : UserAppContext(
-              httpClient: _httpClient,
-              child: Builder(builder: (context) {
-                return UserInjector(
-                  child: _buildClientWrapper(),
-                  appContext: UserAppContext.of(context),
-                );
-              }),
-            ),
-    );
-  }
-
-  Widget _buildClientWrapper() {
-    return HelperOrchestrator(child: widget.child);
-  }
-
-  Widget _buildWrapper() {
-    return PalTheme(
-      theme: PalThemeData.light(),
-      child: Overlayed(
-        child: Builder(
-          builder: (context) => MaterialApp(
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: (RouteSettings settings) => route(settings),
-            theme: PalTheme.of(context).buildTheme(),
-            home: LayoutBuilder( //TODO put this in another file
-              builder: (context, constraints) {
-                return Stack(
-                  key: ValueKey('palMainStack'),
-                  children: [
-                    // The app
-                    RepaintBoundary(
-                      key: _repaintBoundaryKey,
-                      child: widget.child,
-                    ),
-                    // Build the floating widget above the app
-//                    if(palEditModeStateService.showEditorBubble.value) //FIXME uncomment this when injector is working
-                      BubbleOverlayButton(
-                        key: ValueKey('palBubbleOverlay'),
-                        screenSize: Size(
-                          constraints.maxWidth,
-                          constraints.maxHeight,
-                        ),
-                        onTapCallback: () => _showHelpersListModal(context),
-                      ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ),
+      textDirection: textDirection,
+      child: (editorModeEnabled)
+        ? EditorAppContext(
+        httpClient: _httpClient,
+        child: Builder(builder: (context) {
+          return EditorInjector(
+            child: PalEditModeWrapper(userApp: child),
+            appContext: EditorAppContext.of(context),
+          );
+        }),
+      )
+        : UserAppContext(
+        httpClient: _httpClient,
+        child: Builder(builder: (context) {
+          return UserInjector(
+            child: HelperOrchestrator(child: child),
+            appContext: UserAppContext.of(context),
+          );
+        }),
       ),
     );
   }
 
-  _onShowBubbleStateChanged() {
-    if(mounted)
-      setState(() {});
-  }
 
-  _showHelpersListModal(BuildContext context) {
-    double radius = 25.0;
-
-    showModalBottomSheet(
-      context: context,
-      barrierColor: Colors.black26,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          topRight: Radius.circular(radius),
-        ),
-      ),
-      builder: (context) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(radius),
-          child: HelpersListModal(
-            hostedAppNavigatorKey: widget.navigatorKey,
-            repaintBoundaryKey: _repaintBoundaryKey,
-          ),
-        );
-      },
-    );
-  }
 }
+

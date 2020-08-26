@@ -19,6 +19,7 @@ class BubbleOverlayButton extends StatefulWidget {
 }
 
 class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
+
   Offset _position;
 
   @override

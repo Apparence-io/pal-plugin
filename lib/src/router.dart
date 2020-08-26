@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 GlobalKey<NavigatorState> key = new GlobalKey<NavigatorState>();
 
+
 Route<dynamic> route(RouteSettings settings) {
   switch (settings.name) {
     case '/editor/new':

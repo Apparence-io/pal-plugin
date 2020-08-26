@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:palplugin/palplugin.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 
 void main() {
   group('test main plugin start', () {
+    final _navigatorKey = GlobalKey<NavigatorState>();
 
-    testWidgets('Create app with Pal in editor mode should inject EditorAppContext', (WidgetTester tester) async {
+    testWidgets(
+        'Create app with Pal in editor mode should inject EditorAppContext',
+        (WidgetTester tester) async {
       Scaffold _myHomeTest = Scaffold(
         body: Container(),
       );
       Pal app = Pal(
-        child: new MaterialApp(
+        appToken: 'A_TOKEN',
+        navigatorKey: _navigatorKey,
+        child: MaterialApp(
+          navigatorKey: _navigatorKey,
           home: _myHomeTest,
         ),
         editorModeEnabled: true,
@@ -27,12 +32,16 @@ void main() {
       expect(userAppContextFinder, findsNothing);
     });
 
-    testWidgets('Create app with Pal in user mode should inject UserAppContext', (WidgetTester tester) async {
+    testWidgets('Create app with Pal in user mode should inject UserAppContext',
+        (WidgetTester tester) async {
       Scaffold _myHomeTest = Scaffold(
         body: Container(),
       );
       Pal app = Pal(
-        child: new MaterialApp(
+        appToken: 'A_TOKEN',
+        navigatorKey: _navigatorKey,
+        child: MaterialApp(
+          navigatorKey: _navigatorKey,
           home: _myHomeTest,
         ),
         editorModeEnabled: false,
@@ -45,6 +54,5 @@ void main() {
       expect(editorAppContextFinder, findsNothing);
       expect(userAppContextFinder, findsOneWidget);
     });
-
   });
 }

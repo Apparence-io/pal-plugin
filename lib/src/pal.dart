@@ -86,7 +86,7 @@ class _PalState extends State<Pal> {
   void dispose() {
     // FIXME: Is it the right place ?
     // PalController.instance.routeName.dispose();
-    palEditModeStateService.showEditorBubble.removeListener(_onShowBubbleStateChanged);
+    palEditModeStateService?.showEditorBubble?.removeListener(_onShowBubbleStateChanged);
     super.dispose();
   }
 

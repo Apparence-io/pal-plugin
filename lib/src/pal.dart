@@ -5,6 +5,8 @@ import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/client/helper_orchestrator.dart';
+import 'package:palplugin/src/ui/helpers/fullscreen/fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
 import 'package:palplugin/src/ui/widgets/bubble_overlay.dart';
 import 'package:palplugin/src/router.dart';
@@ -52,9 +54,13 @@ class _PalState extends State<Pal> {
             )
           : UserAppContext(
               httpClient: _httpClient,
-              child: _buildWrapper(),
+              child: _buildClientWrapper(),
             ),
     );
+  }
+
+  Widget _buildClientWrapper() {
+    return HelperOrchestrator(child: widget.child);
   }
 
   Widget _buildWrapper() {

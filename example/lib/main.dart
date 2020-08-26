@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Pal(
       navigatorKey: _navigatorKey,
+      editorModeEnabled: true,
       child: MaterialApp(
         key: ValueKey('hostedApp'),
         initialRoute: '/',

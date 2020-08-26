@@ -52,13 +52,10 @@ class _PalState extends State<Pal> {
 
   final GlobalKey _repaintBoundaryKey = GlobalKey();
 
-  // TODO: Flavor integration
-  HttpClient _httpClient;
-
   PalEditModeStateService palEditModeStateService;
 
   // TODO: Flavor integration / inject it instead of creation here
-  final HttpClient _httpClient = HttpClient.create('MY_TOKEN');
+  HttpClient _httpClient;
 
   @override
   void initState() {

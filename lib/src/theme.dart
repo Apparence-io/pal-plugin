@@ -117,4 +117,8 @@ class PalThemeData {
       ),
     );
   }
+
+  Gradient get bottomNavEditorGradient => colors.bottomNavEditorGradient;
+
+  Color get highlightColor => colors.color4;
 }

@@ -34,7 +34,7 @@ class Route2Page extends StatelessWidget implements Route2View {
     return Center(
       child: RaisedButton(
         key: ValueKey('childRoutePop'),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => popBack(context),
         child: Text('Go back!'),
       ),
     );

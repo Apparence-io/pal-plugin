@@ -1,10 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
+import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+
+class HelpersListModalLoaderMock extends Mock
+    implements HelpersListModalLoader {}
 
 main() {
   group('Helpers list modal', () {
-    HelpersListModal helpersListModal = HelpersListModal();
+    HelpersListModalLoader loader = HelpersListModalLoaderMock();
+    HelpersListModal helpersListModal = HelpersListModal(
+      loader: loader,
+    );
+
+    when(loader.load()).thenAnswer(
+        (realInvocation) => Future.value(HelpersListModalModel(helpers: [
+              HelperEntity(
+                id: '1',
+                name: 'aName',
+                triggerType: 'aType',
+                versionMin: '1.0.1',
+                versionMax: '2.0.0',
+              ),
+              HelperEntity(
+                id: '2',
+                name: 'aName 2',
+                triggerType: 'aType2',
+                versionMin: '1.0.2',
+              ),
+              HelperEntity(
+                id: '3',
+                name: 'aName 3',
+                triggerType: 'aType3',
+                versionMin: '1.8.2',
+                versionMax: '2.3.0',
+              ),
+            ])));
 
     before(WidgetTester tester) async {
       await tester.pumpWidget(
@@ -13,6 +47,7 @@ main() {
           routes: {
             '/editor/new': (context) =>
                 Scaffold(body: Text('Welcome editor new')),
+            '/editor/3': (context) => Scaffold(body: Text('Helper 3')),
           },
         ),
       );
@@ -34,6 +69,35 @@ main() {
 
       expect(find.byKey(ValueKey('palHelpersListModalNew')), findsOneWidget);
       expect(find.byIcon(Icons.add), findsOneWidget);
+    });
+
+    testWidgets('should display helpers', (tester) async {
+      await before(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.text('aName'), findsOneWidget);
+      expect(find.text('aType'), findsOneWidget);
+      expect(find.text('1.0.1 - 2.0.0'), findsOneWidget);
+
+      expect(find.text('aName 2'), findsOneWidget);
+      expect(find.text('aType2'), findsOneWidget);
+      expect(find.text('1.0.2 - last'), findsOneWidget);
+
+      expect(find.text('aName 3'), findsOneWidget);
+      expect(find.text('aType3'), findsOneWidget);
+      expect(find.text('1.8.2 - 2.3.0'), findsOneWidget);
+    });
+
+    testWidgets('should tap on helper', (tester) async {
+      await before(tester);
+      await tester.pumpAndSettle();
+
+      Finder helper3Button = find.byKey(ValueKey('palHelpersListModalTile2'));
+      await tester.ensureVisible(helper3Button);
+      await tester.tap(helper3Button);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Helper 3'), findsOneWidget);
     });
 
     testWidgets('should open new editor page', (tester) async {

@@ -5,7 +5,7 @@ class PalTheme {
   static final ThemeData light = _buildLightTheme();
 
   static ThemeData _buildLightTheme() {
-    final ThemeData base = ThemeData.dark();
+    final ThemeData base = ThemeData.light();
 
     const Color dark = Color(0xFF000767);
     const Color blue = Color(0xFF3681bd);
@@ -16,21 +16,23 @@ class PalTheme {
 
     return base.copyWith(
       accentColor: dark,
-      accentColorBrightness: Brightness.dark,
+      accentColorBrightness: Brightness.light,
       primaryColor: aqua,
       primaryColorDark: dark,
       primaryColorLight: aqua,
-      primaryColorBrightness: Brightness.dark,
+      primaryColorBrightness: Brightness.light,
       buttonTheme: base.buttonTheme.copyWith(
         buttonColor: aqua,
         textTheme: ButtonTextTheme.primary,
       ),
       floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: aqua, foregroundColor: dark),
-      scaffoldBackgroundColor: Colors.white,
+        backgroundColor: aqua,
+        foregroundColor: dark,
+      ),
+      scaffoldBackgroundColor: Color(0xFFFAFEFF),
       cardColor: Colors.white,
       textSelectionColor: Colors.white,
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFFAFEFF),
       textTheme: GoogleFonts.montserratTextTheme().apply(
         bodyColor: dark,
         displayColor: dark,

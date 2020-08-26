@@ -2,7 +2,10 @@ library palplugin;
 
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
+import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
+import 'package:palplugin/src/pal_controller.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
@@ -22,10 +25,14 @@ class Pal extends StatefulWidget {
   /// text direction of your application.
   final TextDirection textDirection;
 
+  /// set the application token to interact with the server.
+  final String appToken;
+
   Pal({
     Key key,
     @required this.child,
     @required this.navigatorKey,
+    @required this.appToken,
     this.editorModeEnabled = true,
     this.textDirection = TextDirection.ltr,
   }) : super(key: key);
@@ -39,7 +46,31 @@ class _PalState extends State<Pal> {
   final GlobalKey _repaintBoundaryKey = GlobalKey();
 
   // TODO: Flavor integration
-  final HttpClient _httpClient = HttpClient.create('MY_TOKEN');
+  HttpClient _httpClient;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // TODO: Wait for app to be initialized
+    // TODO: Check if token is valid
+    _httpClient = HttpClient.create(
+      widget.appToken,
+      baseUrl: 'http://217.182.88.6:8053',
+    );
+
+    // Register listener on route name change
+    // PalController.instance.routeName.addListener(() {
+    //   print(PalController.instance.routeName.value);
+    // });
+  }
+
+  @override
+  void dispose() {
+    // FIXME: Is it the right place ?
+    // PalController.instance.routeName.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +79,21 @@ class _PalState extends State<Pal> {
       child: (widget.editorModeEnabled)
           ? EditorAppContext(
               httpClient: _httpClient,
-              child: _buildWrapper(),
+              child: Builder(builder: (context) {
+                return EditorInjector(
+                  child: _buildWrapper(),
+                  appContext: EditorAppContext.of(context),
+                );
+              }),
             )
           : UserAppContext(
               httpClient: _httpClient,
-              child: _buildWrapper(),
+              child: Builder(builder: (context) {
+                return UserInjector(
+                  child: _buildWrapper(),
+                  appContext: UserAppContext.of(context),
+                );
+              }),
             ),
     );
   }
@@ -73,6 +114,7 @@ class _PalState extends State<Pal> {
               ),
 
               // Build the floating widget above the app
+              // if (widget.editorModeEnabled)
               BubbleOverlayButton(
                 key: ValueKey('palBubbleOverlay'),
                 screenSize: Size(
@@ -100,7 +142,6 @@ class _PalState extends State<Pal> {
           topRight: Radius.circular(radius),
         ),
       ),
-      backgroundColor: Colors.white,
       builder: (context) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(radius),

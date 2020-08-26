@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/create_helper_full_screen_entity.dart';
-import 'package:palplugin/src/database/entity/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper_full_screen_entity.dart';
-import 'package:palplugin/src/database/entity/helper_type.dart';
+import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_full_screen_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
-import 'package:palplugin/src/database/repository/editor/helper_repository.dart';
-import 'package:palplugin/src/services/editor/helper/helper_service.dart';
+import 'package:palplugin/src/database/repository/helper_repository.dart';
+import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
 class _HttpClientMock extends Mock implements HttpClient {}
@@ -19,10 +19,9 @@ void main() {
     test("test get helpers", () async {
       final _HttpClientMock mockedHttpClient = _HttpClientMock();
 
-      final String content = new File(
-              "test/integration/services/editor/helper/resources/helpers.json")
-          .readAsStringSync();
-      when(mockedHttpClient.get("/pages/helpers?route=test/route"))
+      final String content =
+          new File("test/services/resources/helpers.json").readAsStringSync();
+      when(mockedHttpClient.get("pages/db6b01e1-b649-4a17-949a-9ab320600001/helpers"))
           .thenAnswer((_) => Future.value(
                 Response(content, 200),
               ));
@@ -31,7 +30,7 @@ void main() {
       final HelperService helperService = HelperService.build(helperRepository);
 
       Pageable<HelperEntity> helpers =
-          await helperService.getPageHelpers("test/route");
+          await helperService.getPageHelpers("db6b01e1-b649-4a17-949a-9ab320600001");
 
       assert(helpers.offset == 1);
       assert(helpers.pageNumber == 0);
@@ -49,9 +48,8 @@ void main() {
     test("test create helper", () async {
       final _HttpClientMock mockedHttpClient = _HttpClientMock();
 
-      final String content = new File(
-              "test/integration/services/editor/helper/resources/helper.json")
-          .readAsStringSync();
+      final String content =
+          new File("test/services/resources/helper.json").readAsStringSync();
       when(mockedHttpClient.post(any, body: anyNamed("body")))
           .thenAnswer((_) => Future.value(
                 Response(content, 200),

@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/theme.dart';
 
 class SheetOption {
+  HelperType type;
   String text;
   IconData icon;
 
-  SheetOption({this.text, this.icon});
+  SheetOption({
+    @required this.type,
+    @required this.text,
+    this.icon,
+  });
 }
 
-typedef ModalBottomSheetOptionsBuilder = ModalBottomSheetOptions Function(BuildContext context);
-
+typedef ModalBottomSheetOptionsBuilder = ModalBottomSheetOptions Function(
+    BuildContext context);
 
 /// use this method as showModalBottomSheet to a designed version of bottomSheet constructing a
 /// [ModalBottomSheetOptions]
-showModalBottomSheetOptions(BuildContext context, ModalBottomSheetOptionsBuilder builder) {
+showModalBottomSheetOptions(
+    BuildContext context, ModalBottomSheetOptionsBuilder builder) {
   showModalBottomSheet(
     context: context,
     useRootNavigator: true,
@@ -25,10 +32,9 @@ showModalBottomSheetOptions(BuildContext context, ModalBottomSheetOptionsBuilder
       ),
     ),
     backgroundColor: PalTheme.of(context).colors.light,
-    builder: builder
+    builder: builder,
   );
 }
-
 
 typedef OnValidate = void Function(SheetOption validatedOption);
 
@@ -38,21 +44,21 @@ typedef OnSelectOption = void Function(SheetOption option);
 /// list of selectable options
 /// cancel / validate will fire an event
 class ModalBottomSheetOptions extends StatefulWidget {
-
   final List<SheetOption> options;
 
   final OnValidate onValidate;
 
   final OnSelectOption onSelectOption;
 
-  ModalBottomSheetOptions({@required this.options, @required this.onValidate, this.onSelectOption});
+  ModalBottomSheetOptions(
+      {@required this.options, @required this.onValidate, this.onSelectOption});
 
   @override
-  _ModalBottomSheetOptionsState createState() => _ModalBottomSheetOptionsState();
+  _ModalBottomSheetOptionsState createState() =>
+      _ModalBottomSheetOptionsState();
 }
 
 class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
-
   SheetOption _selected;
 
   @override
@@ -62,32 +68,37 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
     return Stack(
       children: [
         Positioned(
-          bottom: 32, left: 0, right: 0, top: 24,
+          bottom: 32,
+          left: 0,
+          right: 0,
+          top: 24,
           child: ListView.builder(
-            itemBuilder: (context, index) =>
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                color: _selected == widget.options[index] ? PalTheme.of(context).highlightColor : Colors.transparent,
-                child: ListTile(
-                  onTap: () {
-                    setState(() {
-                      _selected = widget.options[index];
-                      if(widget.onSelectOption != null) {
-                        widget.onSelectOption(_selected);
-                      }
-                    });
-                  },
-                  key: ValueKey("option"),
-                  leading: Icon(widget.options[index].icon, color: color),
-                  title: Text(widget.options[index].text
-                  ),
-                ),
+            itemBuilder: (context, index) => Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              color: _selected == widget.options[index]
+                  ? PalTheme.of(context).highlightColor
+                  : Colors.transparent,
+              child: ListTile(
+                onTap: () {
+                  setState(() {
+                    _selected = widget.options[index];
+                    if (widget.onSelectOption != null) {
+                      widget.onSelectOption(_selected);
+                    }
+                  });
+                },
+                key: ValueKey("option"),
+                leading: Icon(widget.options[index].icon, color: color),
+                title: Text(widget.options[index].text),
               ),
+            ),
             itemCount: widget.options.length,
           ),
         ),
         Positioned(
-          bottom: 16, left: 16, right: 16,
+          bottom: 16,
+          left: 16,
+          right: 16,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -106,7 +117,7 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
                     opacity: _selected == null ? .5 : 1,
                     child: InkWell(
                       onTap: () {
-                        if(widget.onValidate != null) {
+                        if (widget.onValidate != null) {
                           widget.onValidate(_selected);
                         }
                       },

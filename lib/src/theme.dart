@@ -11,6 +11,7 @@ class _PalThemeLightColors {
   static const Color aqua = Color(0xFFCAF0F8);
   static const Color red = Color(0xFFeB5160);
   static const Color white = Color(0xFFFAFEFF);
+  static const Color gray = Color(0xFF4F4E57);
 
   static const Gradient gradient1 = const LinearGradient(
     begin: Alignment.topCenter,
@@ -27,7 +28,7 @@ class _PalThemeColors {
 
   final Color dark;
 
-  final Color color1, color2, color3, color4;
+  final Color color1, color2, color3, color4, color5;
 
   final Color accent;
 
@@ -37,7 +38,7 @@ class _PalThemeColors {
 
   const _PalThemeColors._({
     this.dark,
-    this.color1, this.color2, this.color3, this.color4,
+    this.color1, this.color2, this.color3, this.color4, this.color5,
     this.accent,
     this.light,
     this.bottomNavEditorGradient
@@ -49,6 +50,7 @@ class _PalThemeColors {
     color2: _PalThemeLightColors.lightBlue,
     color3: _PalThemeLightColors.cyan,
     color4: _PalThemeLightColors.aqua,
+    color5: _PalThemeLightColors.gray,
     light:  _PalThemeLightColors.white,
     accent: _PalThemeLightColors.red,
     bottomNavEditorGradient: _PalThemeLightColors.gradient1,
@@ -126,4 +128,6 @@ class PalThemeData {
   Gradient get bottomNavEditorGradient => colors.bottomNavEditorGradient;
 
   Color get highlightColor => colors.color4;
+
+  Color get toolbarBackgroundColor => colors.color5;
 }

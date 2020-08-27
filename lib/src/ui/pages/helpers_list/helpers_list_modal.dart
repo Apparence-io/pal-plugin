@@ -199,6 +199,28 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             ),
             shape: CircleBorder(),
           ),
+        ),
+        // FIXME: This icon button is temporaly available
+        SizedBox(
+          height: 30.0,
+          width: 30.0,
+          child: FloatingActionButton(
+            key: ValueKey('palHelpersListModalEditor'),
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              Navigator.of(context).pop();
+              OverlayEntry helperOverlay = OverlayEntry(
+                  opaque: false, builder: new EditorPageBuilder(hostedAppNavigatorKey).build);
+              Overlayed.of(context).entries.putIfAbsent(
+                  OverlayKeys.EDITOR_OVERLAY_KEY, () => helperOverlay);
+              hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
+            },
+            child: Icon(
+              Icons.format_paint,
+              size: 18.0,
+            ),
+            shape: CircleBorder(),
+          ),
         )
       ],
     );

@@ -28,7 +28,7 @@ Future _initPage(EditorPageBuilder editorPageBuilder, WidgetTester tester) async
 void main() {
   group('Editor', () {
 
-    var editorPageBuilder = EditorPageBuilder();
+    var editorPageBuilder = EditorPageBuilder(null);
 
     testWidgets('should create page correctly', (WidgetTester tester) async {
       await _initPage(editorPageBuilder, tester);

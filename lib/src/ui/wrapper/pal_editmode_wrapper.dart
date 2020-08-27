@@ -13,7 +13,9 @@ class PalEditModeWrapper extends StatefulWidget {
   // this is the client embedded application that wanna use our Pal
   final MaterialApp userApp;
 
-  PalEditModeWrapper({@required this.userApp});
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+
+  PalEditModeWrapper({@required this.userApp, this.hostedAppNavigatorKey});
 
   @override
   _PalEditModeWrapperState createState() => _PalEditModeWrapperState();
@@ -102,6 +104,7 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
           borderRadius: BorderRadius.circular(radius),
           child: HelpersListModal(
             repaintBoundaryKey: _repaintBoundaryKey,
+            hostedAppNavigatorKey: widget.hostedAppNavigatorKey,
           ),
         );
       },

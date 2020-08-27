@@ -25,6 +25,7 @@ abstract class EditorView {
     final EditorPresenter presenter,
   );
   unFocusCurrentTextField(final BuildContext context);
+  removeOverlay(final BuildContext context);
 }
 
 class EditorPageBuilder implements EditorView {
@@ -53,46 +54,53 @@ class EditorPageBuilder implements EditorView {
     final EditorPresenter presenter,
     final EditorViewModel model,
   ) {
-    return Material(
-      color: Colors.transparent,
-      shadowColor: Colors.transparent,
-      child: Container(
-        color: Colors.black.withOpacity(.2),
-        child: Stack(
-          children: [
-            // TODO: Put here helpers widget
-            // just create a stack if there is more than one widgets
-            if (_helperToEdit != null) _helperToEdit,
-            Stack(
-              key: ValueKey('palEditorModeInteractUI'),
-              children: [
-                _buildAddButton(context, presenter),
-                _buildValidationActions(context, presenter),
-                _buildBannerEditorMode(context),
-                if (model.toobarIsVisible && model.toolbarPosition != null)
-                  Positioned(
-                    top: model.toolbarPosition.dy - 8.0,
-                    left: model.toolbarPosition.dx,
-                    right: model.toolbarPosition.dx,
-                    child: EditHelperToolbar(
-                      onChangeBorderTap: () {
-                        // TODO: To implement
-                      },
-                      onCloseTap: () {
-                        presenter.closeToolbar();
-                        unFocusCurrentTextField(context);
-                      },
-                      onChangeFontTap: () {
-                        // TODO: To implement
-                      },
-                      onEditTextTap: () {
-                        // TODO: To implement
-                      },
-                    ),
-                  )
-              ],
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: () {
+        removeOverlay(context);
+        return Future.value(false);
+      },
+      child: Material(
+        color: Colors.transparent,
+        shadowColor: Colors.transparent,
+        child: Container(
+          color: Colors.black.withOpacity(.2),
+          child: Stack(
+            children: [
+              // TODO: Put here helpers widget
+              // just create a stack if there is more than one widgets
+              if (_helperToEdit != null) _helperToEdit,
+              Stack(
+                key: ValueKey('palEditorModeInteractUI'),
+                children: [
+                  if (_helperToEdit == null)
+                    _buildAddButton(context, presenter),
+                  _buildValidationActions(context, presenter),
+                  _buildBannerEditorMode(context),
+                  if (model.toobarIsVisible && model.toolbarPosition != null)
+                    Positioned(
+                      top: model.toolbarPosition.dy - 8.0,
+                      left: model.toolbarPosition.dx,
+                      right: model.toolbarPosition.dx,
+                      child: EditHelperToolbar(
+                        onChangeBorderTap: () {
+                          // TODO: To implement
+                        },
+                        onCloseTap: () {
+                          presenter.hideToolbar();
+                          unFocusCurrentTextField(context);
+                        },
+                        onChangeFontTap: () {
+                          // TODO: To implement
+                        },
+                        onEditTextTap: () {
+                          // TODO: To implement
+                        },
+                      ),
+                    )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -134,21 +142,14 @@ class EditorPageBuilder implements EditorView {
         children: [
           EditorButton.cancel(
             PalTheme.of(context),
-            () {
-              // FIXME: What to do here, return back to creation ?
-              // remove last widget to edit ?
-              Overlayed.removeOverlay(
-                hostedAppNavigatorKey.currentContext,
-                OverlayKeys.EDITOR_OVERLAY_KEY,
-              );
-            },
+            () => removeOverlay(context),
             key: ValueKey("editModeCancel"),
           ),
           Padding(
             padding: EdgeInsets.only(left: 16),
             child: EditorButton.validate(
               PalTheme.of(context),
-              () => showHelperModal(context, presenter),
+              () => presenter.saveHelper(),
               key: ValueKey("editModeValidate"),
             ),
           ),
@@ -217,5 +218,13 @@ class EditorPageBuilder implements EditorView {
   @override
   unFocusCurrentTextField(final BuildContext context) {
     FocusScope.of(context).unfocus();
+  }
+
+  @override
+  removeOverlay(BuildContext context) {
+    Overlayed.removeOverlay(
+      hostedAppNavigatorKey.currentContext,
+      OverlayKeys.EDITOR_OVERLAY_KEY,
+    );
   }
 }

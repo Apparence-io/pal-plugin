@@ -135,7 +135,7 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
                       children: [
                         Container(
                           color: Colors.white12,
-                          key: ValueKey('palFullScreenHelperTitle'),
+                          key: _titleKey,
                           child: (widget.isEditMode)
                               ? _buildEditMode()
                               : _buildUserMode(),
@@ -181,7 +181,7 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
 
   Widget _buildEditMode() {
     return TextField(
-      key: _titleKey,
+      key: ValueKey('palFullscreenHelperTitleField'),
       focusNode: _titleFocus,
       controller: _titleController,
       decoration: InputDecoration(
@@ -207,6 +207,7 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
   Widget _buildUserMode() {
     return Text(
       widget.helperText,
+      key: ValueKey('palFullscreenHelperTitleText'),
       style: TextStyle(
         color: widget.textColor,
         fontSize:

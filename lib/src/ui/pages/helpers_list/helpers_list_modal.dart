@@ -25,7 +25,8 @@ abstract class HelpersListModalView {
 }
 
 class HelpersListModal extends StatelessWidget implements HelpersListModalView {
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
+  final GlobalKey<NavigatorState>
+      hostedAppNavigatorKey; //FIXME remove this from here
   final GlobalKey repaintBoundaryKey;
   final HelpersListModalLoader loader;
   final _mvvmPageBuilder =
@@ -212,9 +213,13 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               HapticFeedback.selectionClick();
               Navigator.of(context).pop();
               OverlayEntry helperOverlay = OverlayEntry(
-                  opaque: false, builder: new EditorPageBuilder(hostedAppNavigatorKey).build);
+                opaque: false,
+                builder: new EditorPageBuilder(hostedAppNavigatorKey).build,
+              );
               Overlayed.of(context).entries.putIfAbsent(
-                  OverlayKeys.EDITOR_OVERLAY_KEY, () => helperOverlay);
+                    OverlayKeys.EDITOR_OVERLAY_KEY,
+                    () => helperOverlay,
+                  );
               hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
             },
             child: Icon(

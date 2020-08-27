@@ -48,8 +48,9 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
   }
 
   _onTitleTextChanged() {
-    print('TEST');
-    print(_titleController.value);
+    if (widget.onTitleTextChanged != null) {
+      widget.onTitleTextChanged(_titleController?.value?.text);
+    }
   }
 
   _onTitleFocusChanged() {
@@ -60,7 +61,10 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
       final titleWidgetOffset = titleRenderBox.localToGlobal(Offset.zero);
 
       widget.onTitleFocusChanged(
-          _titleFocus.hasFocus, titleWidgetSize, titleWidgetOffset);
+        _titleFocus.hasFocus,
+        titleWidgetSize,
+        titleWidgetOffset,
+      );
     }
   }
 

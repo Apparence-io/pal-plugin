@@ -21,8 +21,8 @@ class Overlayed extends InheritedWidget {
 
   static void removeOverlay(BuildContext context, OverlayKeys key) {
     var instance = context.dependOnInheritedWidgetOfExactType<Overlayed>();
-    instance.entries[key].remove();
-    instance.entries.remove(key);
+    instance?.entries[key]?.remove();
+    instance?.entries?.remove(key);
   }
 
   @override

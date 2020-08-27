@@ -23,6 +23,7 @@ class EditHelperToolbar extends StatelessWidget {
     const iconsRadius = 18.0;
 
     return Container(
+      key: ValueKey('palToolbar'),
       height: toolbarHeight,
       color: PalTheme.of(context).toolbarBackgroundColor,
       child: Padding(
@@ -33,6 +34,7 @@ class EditHelperToolbar extends StatelessWidget {
             Row(
               children: [
                 CircleIconButton(
+                  key: ValueKey('palToolbarEditText'),
                   radius: toolbarHeight / 2,
                   backgroundColor: Colors.transparent,
                   onTapCallback: () {
@@ -49,6 +51,7 @@ class EditHelperToolbar extends StatelessWidget {
                   ),
                 ),
                 CircleIconButton(
+                  key: ValueKey('palToolbarChangeBorder'),
                   radius: toolbarHeight / 2,
                   backgroundColor: Colors.transparent,
                   onTapCallback: () {
@@ -65,6 +68,7 @@ class EditHelperToolbar extends StatelessWidget {
                   ),
                 ),
                 CircleIconButton(
+                  key: ValueKey('palToolbarChangeFont'),
                   radius: toolbarHeight / 2,
                   backgroundColor: Colors.transparent,
                   onTapCallback: () {
@@ -83,6 +87,7 @@ class EditHelperToolbar extends StatelessWidget {
               ],
             ),
             CircleIconButton(
+              key: ValueKey('palToolbarClose'),
               radius: toolbarHeight / 2,
               backgroundColor: Colors.transparent,
               onTapCallback: () {

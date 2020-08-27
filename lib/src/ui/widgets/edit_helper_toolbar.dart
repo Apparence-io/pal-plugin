@@ -59,7 +59,7 @@ class EditHelperToolbar extends StatelessWidget {
                     }
                   },
                   icon: Icon(
-                    Icons.fullscreen_exit,
+                    Icons.border_outer,
                     color: Colors.white,
                     size: iconsRadius,
                   ),
@@ -75,7 +75,7 @@ class EditHelperToolbar extends StatelessWidget {
                     }
                   },
                   icon: Icon(
-                    Icons.format_italic,
+                    Icons.text_format,
                     color: Colors.white,
                     size: iconsRadius,
                   ),

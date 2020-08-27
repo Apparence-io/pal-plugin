@@ -188,6 +188,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
           height: 30.0,
           width: 30.0,
           child: FloatingActionButton(
+            heroTag: 'palHelpersListModalNew',
             key: ValueKey('palHelpersListModalNew'),
             onPressed: () {
               HapticFeedback.selectionClick();
@@ -205,6 +206,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
           height: 30.0,
           width: 30.0,
           child: FloatingActionButton(
+            heroTag: 'palHelpersListModalEditor',
             key: ValueKey('palHelpersListModalEditor'),
             onPressed: () {
               HapticFeedback.selectionClick();

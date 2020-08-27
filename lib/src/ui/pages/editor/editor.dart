@@ -196,8 +196,7 @@ class EditorPageBuilder implements EditorView {
   ) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
-        _helperToEdit = FullscreenHelperWidget(
-          isEditMode: true,
+        _helperToEdit = FullscreenHelperWidget.editor(
           onTitleFocusChanged: (bool hasFocus, Size size, Offset position) {
             if (!hasFocus) {
               presenter.hideToolbar();

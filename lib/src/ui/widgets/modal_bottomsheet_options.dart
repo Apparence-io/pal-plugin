@@ -87,7 +87,7 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
                     }
                   });
                 },
-                key: ValueKey("option"),
+                key: ValueKey("option$index"),
                 leading: Icon(widget.options[index].icon, color: color),
                 title: Text(widget.options[index].text),
               ),

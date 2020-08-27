@@ -14,10 +14,10 @@ class FullscreenHelperWidget extends StatefulWidget {
   final Function(bool, Size, Offset) onTitleFocusChanged;
 
   FullscreenHelperWidget(
-      {this.bgColor = Colors.blueAccent,
-      this.textColor = Colors.white,
-      this.helperText = 'Edit me!',
-      this.textSize = 80.0,
+      {this.bgColor,
+      this.textColor,
+      this.helperText,
+      this.textSize,
       this.isEditMode = false,
       this.onTitleFocusChanged,
       this.onTitleTextChanged,
@@ -26,6 +26,37 @@ class FullscreenHelperWidget extends StatefulWidget {
         assert(textColor != null),
         assert(helperText != null),
         super(key: key);
+
+  factory FullscreenHelperWidget.user({
+    Key key,
+    @required Color bgColor,
+    @required Color textColor,
+    @required String helperText,
+    @required double textSize,
+  }) {
+    return FullscreenHelperWidget(
+      bgColor: bgColor,
+      textColor: textColor,
+      helperText: helperText,
+      textSize: textSize,
+    );
+  }
+
+  factory FullscreenHelperWidget.editor({
+    Key key,
+    Function(String) onTitleTextChanged,
+    Function(bool, Size, Offset) onTitleFocusChanged,
+  }) {
+    return FullscreenHelperWidget(
+      bgColor: Colors.blueAccent,
+      textColor: Colors.white,
+      helperText: 'Edit me!',
+      textSize: 80.0,
+      onTitleFocusChanged: onTitleFocusChanged,
+      onTitleTextChanged: onTitleTextChanged,
+      isEditMode: true,
+    );
+  }
 
   @override
   _FullscreenHelperWidgetState createState() => _FullscreenHelperWidgetState();

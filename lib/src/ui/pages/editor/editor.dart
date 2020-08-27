@@ -24,6 +24,7 @@ abstract class EditorView {
     final HelperType helperType,
     final EditorPresenter presenter,
   );
+  unFocusCurrentTextField(final BuildContext context);
 }
 
 class EditorPageBuilder implements EditorView {
@@ -73,7 +74,21 @@ class EditorPageBuilder implements EditorView {
                     top: model.toolbarPosition.dy - 8.0,
                     left: model.toolbarPosition.dx,
                     right: model.toolbarPosition.dx,
-                    child: EditHelperToolbar(),
+                    child: EditHelperToolbar(
+                      onChangeBorderTap: () {
+                        // TODO: To implement
+                      },
+                      onCloseTap: () {
+                        presenter.closeToolbar();
+                        unFocusCurrentTextField(context);
+                      },
+                      onChangeFontTap: () {
+                        // TODO: To implement
+                      },
+                      onEditTextTap: () {
+                        // TODO: To implement
+                      },
+                    ),
                   )
               ],
             ),
@@ -198,5 +213,10 @@ class EditorPageBuilder implements EditorView {
       default:
     }
     presenter.refreshView();
+  }
+
+  @override
+  unFocusCurrentTextField(final BuildContext context) {
+    FocusScope.of(context).unfocus();
   }
 }

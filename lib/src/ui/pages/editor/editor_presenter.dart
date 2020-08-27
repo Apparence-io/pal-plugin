@@ -16,6 +16,11 @@ class EditorPresenter extends Presenter<EditorViewModel, EditorView> {
     viewModel.toobarIsVisible = false;
     viewModel.toolbarPosition = Offset.zero;
   }
+
+  closeToolbar() {
+    viewModel.toobarIsVisible = true;
+    this.refreshView();
+  }
   
   showToolbar(Size helperSize, Offset helperPosition) {
     viewModel.toobarIsVisible = true;

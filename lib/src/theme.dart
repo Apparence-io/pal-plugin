@@ -130,4 +130,6 @@ class PalThemeData {
   Color get highlightColor => colors.color4;
 
   Color get toolbarBackgroundColor => colors.color5;
+
+  Color get floatingBubbleBackgroundColor => colors.dark;
 }

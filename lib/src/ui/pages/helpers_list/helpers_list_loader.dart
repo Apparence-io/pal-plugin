@@ -19,6 +19,7 @@ class HelpersListModalLoader {
 
     String pageId = await getPageId();
     if (pageId != null && pageId.length > 0) {
+      resViewModel.pageId = pageId;
       Pageable<HelperEntity> helpersPage = await this._helperService.getPageHelpers(pageId);
       resViewModel.helpers = helpersPage?.entities;
     }

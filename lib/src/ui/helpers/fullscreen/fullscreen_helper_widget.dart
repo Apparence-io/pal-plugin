@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+
+class FullscreenHelperNotifier {
+  ValueNotifier<String> title = ValueNotifier(null);
+  ValueNotifier<String> fontColor = ValueNotifier(null);
+  ValueNotifier<String> backgroundColor = ValueNotifier(null);
+  ValueNotifier<String> borderColor = ValueNotifier(null);
+  ValueNotifier<int> languageId = ValueNotifier(null);
+}
 
 class FullscreenHelperWidget extends StatefulWidget {
   final Color bgColor, textColor;
@@ -8,6 +18,8 @@ class FullscreenHelperWidget extends StatefulWidget {
   final double textSize;
 
   final bool isEditMode;
+
+  final FullscreenHelperNotifier fullscreenHelperNotifier;
 
   final Function(String) onTitleTextChanged;
 
@@ -21,6 +33,7 @@ class FullscreenHelperWidget extends StatefulWidget {
       this.isEditMode = false,
       this.onTitleFocusChanged,
       this.onTitleTextChanged,
+      this.fullscreenHelperNotifier,
       Key key})
       : assert(bgColor != null),
         assert(textColor != null),
@@ -46,6 +59,7 @@ class FullscreenHelperWidget extends StatefulWidget {
     Key key,
     Function(String) onTitleTextChanged,
     Function(bool, Size, Offset) onTitleFocusChanged,
+    FullscreenHelperNotifier fullscreenHelperNotifier,
   }) {
     return FullscreenHelperWidget(
       bgColor: Colors.blueAccent,
@@ -55,6 +69,7 @@ class FullscreenHelperWidget extends StatefulWidget {
       onTitleFocusChanged: onTitleFocusChanged,
       onTitleTextChanged: onTitleTextChanged,
       isEditMode: true,
+      fullscreenHelperNotifier: fullscreenHelperNotifier,
     );
   }
 
@@ -76,12 +91,18 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
     Future.delayed(Duration(seconds: 1), () {
       setState(() => helperOpacity = 1);
     });
+
+    // TODO: Refactor this init because this is so ugly :/
+    // TODO: Create util file to handle color conversion
+    widget.fullscreenHelperNotifier.backgroundColor.value = '${widget.bgColor.value.toRadixString(16)}';
+    widget.fullscreenHelperNotifier.borderColor.value = '${widget.bgColor.value.toRadixString(16)}';
+    widget.fullscreenHelperNotifier.fontColor.value = '${widget.textColor.value.toRadixString(16)}';
+    widget.fullscreenHelperNotifier.languageId.value = 0;
+    widget.fullscreenHelperNotifier.title.value = widget.helperText;
   }
 
   _onTitleTextChanged() {
-    if (widget.onTitleTextChanged != null) {
-      widget.onTitleTextChanged(_titleController?.value?.text);
-    }
+    widget.fullscreenHelperNotifier.title.value = _titleController?.value?.text;
   }
 
   _onTitleFocusChanged() {

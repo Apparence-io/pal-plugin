@@ -7,9 +7,11 @@ class HelpersListModalModel extends MVVMModel {
   Uint8List imageBs;
   List<HelperEntity> helpers;
   bool isLoading = true;
+  String pageId;
 
   HelpersListModalModel({
     this.helpers,
     this.isLoading,
+    this.pageId,
   });
 }

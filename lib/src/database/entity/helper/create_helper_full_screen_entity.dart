@@ -39,7 +39,7 @@ class CreateHelperFullScreenEntity extends CreateHelperEntity {
       'versionMaxId': this.versionMaxId,
       'title': this.title,
       'fontColor': this.fontColor,
-      'backgrounColor': this.backgroundColor,
+      'backgroundColor': this.backgroundColor,
       'borderColor': this.borderColor,
       'languageId': this.languageId,
     };

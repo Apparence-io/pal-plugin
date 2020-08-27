@@ -23,6 +23,7 @@ class HelpersListModalPresenter
     // TODO: This is not executed when setState
     this.loader.load().then((HelpersListModalModel res) {
       this.viewModel.helpers = res.helpers;
+      this.viewModel.pageId = res.pageId;
       this.viewModel.isLoading = false;
       this.refreshView();
     });

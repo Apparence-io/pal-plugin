@@ -19,6 +19,7 @@ class HelperRepository extends BaseHttpRepository {
     final String pageId,
     final CreateHelperEntity createHelper,
   ) async {
+    print(jsonEncode(createHelper));
     final Response response = await this
         .httpClient
         .post('pages/$pageId/helpers', body: jsonEncode(createHelper));

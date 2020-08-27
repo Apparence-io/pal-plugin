@@ -19,7 +19,7 @@ Future _initPage(
           builder: (context) => MaterialApp(
             theme: PalTheme.of(context).buildTheme(),
             onGenerateRoute: (_) =>
-                MaterialPageRoute(builder: EditorPageBuilder(null).build),
+                MaterialPageRoute(builder: EditorPageBuilder(null, null).build),
           ),
         ),
       ));

@@ -78,7 +78,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          _buildHeader(context),
+          _buildHeader(context, model),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 20.0),
@@ -162,6 +162,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
 
   Widget _buildHeader(
     final BuildContext context,
+    final HelpersListModalModel model,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,7 +215,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               Navigator.of(context).pop();
               OverlayEntry helperOverlay = OverlayEntry(
                 opaque: false,
-                builder: new EditorPageBuilder(hostedAppNavigatorKey).build,
+                builder: new EditorPageBuilder(model.pageId, hostedAppNavigatorKey).build,
               );
               Overlayed.of(context).entries.putIfAbsent(
                     OverlayKeys.EDITOR_OVERLAY_KEY,

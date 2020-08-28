@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/theme.dart';
 
@@ -80,6 +81,8 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
                   : Colors.transparent,
               child: ListTile(
                 onTap: () {
+                  HapticFeedback.selectionClick();
+
                   setState(() {
                     _selected = widget.options[index];
                     if (widget.onSelectOption != null) {
@@ -108,7 +111,10 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
                   key: ValueKey('cancel'),
                   color: Colors.transparent,
                   splashColor: Colors.black26,
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    HapticFeedback.selectionClick();
+                    Navigator.of(context).pop();
+                  },
                   child: Text(
                     'Cancel',
                     style: TextStyle(
@@ -126,6 +132,8 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
                       splashColor: Colors.black26,
                       onPressed: () {
                         if (widget.onValidate != null) {
+                          HapticFeedback.selectionClick();
+
                           widget.onValidate(_selected);
                         }
                       },

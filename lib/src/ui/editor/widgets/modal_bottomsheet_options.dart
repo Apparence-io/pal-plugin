@@ -104,27 +104,37 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).pop(),
+                FlatButton(
+                  key: ValueKey('cancel'),
+                  color: Colors.transparent,
+                  splashColor: Colors.black26,
+                  onPressed: () => Navigator.of(context).pop(),
                   child: Text(
-                    "Cancel",
-                    key: ValueKey("cancel"),
+                    'Cancel',
+                    style: TextStyle(
+                      color: PalTheme.of(context).colors.dark,
+                    ),
                   ),
                 ),
                 IgnorePointer(
                   ignoring: _selected == null,
                   child: Opacity(
                     opacity: _selected == null ? .5 : 1,
-                    child: InkWell(
-                      onTap: () {
+                    child: FlatButton(
+                      key: ValueKey('validate'),
+                      color: Colors.transparent,
+                      splashColor: Colors.black26,
+                      onPressed: () {
                         if (widget.onValidate != null) {
                           widget.onValidate(_selected);
                         }
                       },
                       child: Text(
-                        "Validate",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                        key: ValueKey("validate"),
+                        'Validate',
+                        style: TextStyle(
+                          color: PalTheme.of(context).colors.dark,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

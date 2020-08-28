@@ -7,9 +7,7 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.da
 import 'package:palplugin/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
-
 class PalEditModeWrapper extends StatefulWidget {
-
   // this is the client embedded application that wanna use our Pal
   final MaterialApp userApp;
 
@@ -22,7 +20,6 @@ class PalEditModeWrapper extends StatefulWidget {
 }
 
 class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
-
   final GlobalKey _repaintBoundaryKey = GlobalKey();
 
   PalEditModeStateService palEditModeStateService;
@@ -30,15 +27,18 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    palEditModeStateService = EditorInjector.of(context).palEditModeStateService;
-    palEditModeStateService.showEditorBubble.addListener(_onShowBubbleStateChanged);
+    palEditModeStateService =
+        EditorInjector.of(context).palEditModeStateService;
+    palEditModeStateService.showEditorBubble
+        .addListener(_onShowBubbleStateChanged);
   }
 
   @override
   void dispose() {
     super.dispose();
-    if(palEditModeStateService != null) {
-      palEditModeStateService.showEditorBubble.removeListener(_onShowBubbleStateChanged);
+    if (palEditModeStateService != null) {
+      palEditModeStateService.showEditorBubble
+          .removeListener(_onShowBubbleStateChanged);
     }
   }
 
@@ -48,60 +48,59 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
       theme: PalThemeData.light(),
       child: Overlayed(
         child: Builder(
-          builder: (context) =>
-            MaterialApp(
-              debugShowCheckedModeBanner: false,
-              onGenerateRoute: (RouteSettings settings) => route(settings),
-              theme: PalTheme.of(context).buildTheme(),
-              home: LayoutBuilder(
-                builder: (context, constraints) {
-                  return Stack(
-                    key: ValueKey('palMainStack'),
-                    children: [
-                      // The app
-                      RepaintBoundary(
-                        key: _repaintBoundaryKey,
-                        child: widget.userApp,
-                      ),
-                      // Build the floating widget above the app
-                      if(palEditModeStateService.showEditorBubble.value)
-                        BubbleOverlayButton(
-                          key: ValueKey('palBubbleOverlay'),
-                          screenSize: Size(
-                            constraints.maxWidth,
-                            constraints.maxHeight,
-                          ),
-                          onTapCallback: () => _showHelpersListModal(context),
+          builder: (context) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: (RouteSettings settings) => route(settings),
+            theme: PalTheme.of(context).buildTheme(),
+            home: LayoutBuilder(
+              builder: (context, constraints) {
+                return Stack(
+                  key: ValueKey('palMainStack'),
+                  children: [
+                    // The app
+                    RepaintBoundary(
+                      key: _repaintBoundaryKey,
+                      child: widget.userApp,
+                    ),
+                    // Build the floating widget above the app
+                    if (palEditModeStateService.showEditorBubble.value)
+                      BubbleOverlayButton(
+                        key: ValueKey('palBubbleOverlay'),
+                        screenSize: Size(
+                          constraints.maxWidth,
+                          constraints.maxHeight,
                         ),
-                    ],
-                  );
-                },
-              ),
+                        onTapCallback: () => _showHelpersListModal(context),
+                      ),
+                  ],
+                );
+              },
             ),
           ),
+        ),
       ),
     );
   }
 
   _onShowBubbleStateChanged() {
-    if(mounted)
-      setState(() {});
+    if (mounted) setState(() {});
   }
 
   _showHelpersListModal(BuildContext context) {
-    double radius = 25.0;
+    BorderRadius borderRadius = BorderRadius.only(
+      topLeft: Radius.circular(25.0),
+      topRight: Radius.circular(25.0),
+    );
+
     showModalBottomSheet(
       context: context,
       barrierColor: Colors.black26,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(radius),
-          topRight: Radius.circular(radius),
-        ),
+        borderRadius: borderRadius,
       ),
       builder: (context) {
         return ClipRRect(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: borderRadius,
           child: HelpersListModal(
             repaintBoundaryKey: _repaintBoundaryKey,
             hostedAppNavigatorKey: widget.hostedAppNavigatorKey,

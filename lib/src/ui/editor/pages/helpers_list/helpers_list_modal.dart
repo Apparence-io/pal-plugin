@@ -186,50 +186,58 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             )
           ],
         ),
-        SizedBox(
-          height: 30.0,
-          width: 30.0,
-          child: FloatingActionButton(
-            heroTag: 'palHelpersListModalNew',
-            key: ValueKey('palHelpersListModalNew'),
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              Navigator.pushNamed(context, '/editor/new');
-            },
-            child: Icon(
-              Icons.add,
-              size: 18.0,
+        Row(
+          children: [
+            SizedBox(
+              height: 30.0,
+              width: 30.0,
+              child: FloatingActionButton(
+                heroTag: 'palHelpersListModalNew',
+                key: ValueKey('palHelpersListModalNew'),
+                onPressed: () {
+                  HapticFeedback.selectionClick();
+                  Navigator.pushNamed(context, '/editor/new');
+                },
+                child: Icon(
+                  Icons.add,
+                  size: 18.0,
+                ),
+                shape: CircleBorder(),
+              ),
             ),
-            shape: CircleBorder(),
-          ),
-        ),
-        // FIXME: This icon button is temporaly available
-        SizedBox(
-          height: 30.0,
-          width: 30.0,
-          child: FloatingActionButton(
-            heroTag: 'palHelpersListModalEditor',
-            key: ValueKey('palHelpersListModalEditor'),
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
-              OverlayEntry helperOverlay = OverlayEntry(
-                opaque: false,
-                builder: new EditorPageBuilder(model.pageId, hostedAppNavigatorKey).build,
-              );
-              Overlayed.of(context).entries.putIfAbsent(
-                    OverlayKeys.EDITOR_OVERLAY_KEY,
-                    () => helperOverlay,
+            // FIXME: This icon button is temporaly available
+            SizedBox(width: 20.0,),
+            SizedBox(
+              height: 30.0,
+              width: 30.0,
+              child: FloatingActionButton(
+                heroTag: 'palHelpersListModalEditor',
+                key: ValueKey('palHelpersListModalEditor'),
+                onPressed: () {
+                  HapticFeedback.selectionClick();
+                  Navigator.of(context).pop();
+                  OverlayEntry helperOverlay = OverlayEntry(
+                    opaque: false,
+                    builder: new EditorPageBuilder(
+                            model.pageId, hostedAppNavigatorKey)
+                        .build,
                   );
-              hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
-            },
-            child: Icon(
-              Icons.format_paint,
-              size: 18.0,
-            ),
-            shape: CircleBorder(),
-          ),
-        )
+                  Overlayed.of(context).entries.putIfAbsent(
+                        OverlayKeys.EDITOR_OVERLAY_KEY,
+                        () => helperOverlay,
+                      );
+                  hostedAppNavigatorKey.currentState.overlay
+                      .insert(helperOverlay);
+                },
+                child: Icon(
+                  Icons.format_paint,
+                  size: 18.0,
+                ),
+                shape: CircleBorder(),
+              ),
+            )
+          ],
+        ),
       ],
     );
   }

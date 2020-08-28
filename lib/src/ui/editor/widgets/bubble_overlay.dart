@@ -42,7 +42,10 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
           onPanUpdate: (details) {
             setState(() {
               _position = details.globalPosition -
-                  Offset(widget.width / 2, widget.height / 2);
+                  Offset(
+                    widget.width / 2,
+                    widget.height / 2,
+                  );
             });
           },
           child: _buildBubble(),
@@ -60,6 +63,12 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
       child: CircleIconButton(
         backgroundColor: PalTheme.of(context).floatingBubbleBackgroundColor,
         radius: widget.width / 2,
+        shadow: BoxShadow(
+          color: Colors.black.withOpacity(0.25),
+          spreadRadius: 10,
+          blurRadius: 35,
+          offset: Offset(0, 3), // changes position of shadow
+        ),
         icon: Icon(
           Icons.menu,
           color: Colors.white,

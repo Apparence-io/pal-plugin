@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
 class EditorButton extends StatelessWidget {
 
@@ -34,26 +35,16 @@ class EditorButton extends StatelessWidget {
     icon: Icon(Icons.mode_edit, size: 32, color: theme.colors.light),
     bgColor: theme.colors.color3,
     bordered: true,
-    key: key
+    key: key,
   );
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size ?? 52,
-      height: size ?? 52,
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(color: PalTheme.of(context).colors.dark.withOpacity(0.15), blurRadius: 6, spreadRadius: 2, offset: Offset(0, 6))
-        ],
-        border: bordered ? Border.all(color: PalTheme.of(context).colors.color2, width: 2) : null,
-        shape: BoxShape.circle,
-        color: bgColor,
-      ),
-      child: IconButton(
-        icon: icon,
-        onPressed: onPressed,
-      ),
+    return CircleIconButton(
+      icon: icon,
+      radius: size / 2,
+      backgroundColor: bgColor,
+      onTapCallback: onPressed,
     );
   }
 }

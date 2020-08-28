@@ -28,7 +28,8 @@ abstract class GenericEntityAdapter<T> {
 
   Pageable<T> parsePage(String value) {
     Map page = json.decode(value);
-    Pageable<T> result = Pageable(
+    try {
+      Pageable<T> result = Pageable(
         offset: page['pageable']['offset'],
         pageNumber: page['pageable']['pageNumber'],
         first: page['first'],
@@ -37,8 +38,11 @@ abstract class GenericEntityAdapter<T> {
         totalPages: page['totalPages'],
         totalElements: page['totalElements'],
         pageSize: page['pageable']['pageSize']);
-    result.entities = this.parseArray(json.encode(page['content']));
-    return result;
+      result.entities = this.parseArray(json.encode(page['content']));
+      return result;
+    } catch (err) {
+      throw "Error while parsing data " + err;
+    }
   }
 
   Map<String, dynamic> decode(String value) {

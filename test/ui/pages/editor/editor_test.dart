@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/user_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/pages/editor/editor.dart';
 import 'package:palplugin/src/ui/pages/editor/editor_loader.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
-import 'package:palplugin/src/ui/widgets/modal_bottomsheet_options.dart';
+import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
 
 class EditorLoaderMock extends Mock implements EditorLoader {}
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/user_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
 /// On each page visited we check if we have to show a new helper to user

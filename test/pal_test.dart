@@ -6,7 +6,7 @@ import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
-import 'package:palplugin/src/ui/widgets/bubble_overlay.dart';
+import 'package:palplugin/src/ui/editor/widgets/bubble_overlay.dart';
 
 void main() {
   group('test main plugin start', () {

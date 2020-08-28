@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/widgets/circle_button.dart';
+import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
 class EditHelperToolbar extends StatelessWidget {
   final Function onEditTextTap;

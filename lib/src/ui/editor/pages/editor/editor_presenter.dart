@@ -4,8 +4,8 @@ import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_e
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/services/editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/editor_fullscreen_helper_widget.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/user_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 
 import 'editor.dart';
 import 'editor_viewmodel.dart';

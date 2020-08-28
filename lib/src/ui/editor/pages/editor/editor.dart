@@ -253,6 +253,7 @@ class EditorPageBuilder implements EditorView {
 
   @override
   removeOverlay(BuildContext context) {
+    // FIXME: Don't work when a set state was triggered
     Overlayed.removeOverlay(
       hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,

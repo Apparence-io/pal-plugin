@@ -8,6 +8,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/editor/editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
@@ -29,14 +30,16 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       hostedAppNavigatorKey; //FIXME remove this from here
   final GlobalKey repaintBoundaryKey;
   final HelpersListModalLoader loader;
+  final PalEditModeStateService palEditModeStateService;
+
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
-
   HelpersListModal({
     Key key,
     this.loader,
     this.hostedAppNavigatorKey,
     this.repaintBoundaryKey,
+    this.palEditModeStateService,
   });
 
   @override
@@ -51,6 +54,8 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               EditorInjector.of(context).pageService,
               EditorInjector.of(context).helperService,
             ),
+        palEditModeStateService: this.palEditModeStateService ??
+            EditorInjector.of(context).palEditModeStateService,
       ),
       builder: (context, presenter, model) {
         return Scaffold(
@@ -78,7 +83,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          _buildHeader(context, model),
+          _buildHeader(context, model, presenter),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 20.0),
@@ -163,6 +168,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   Widget _buildHeader(
     final BuildContext context,
     final HelpersListModalModel model,
+    final HelpersListModalPresenter presenter,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +212,9 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               ),
             ),
             // FIXME: This icon button is temporaly available
-            SizedBox(width: 20.0,),
+            SizedBox(
+              width: 20.0,
+            ),
             SizedBox(
               height: 30.0,
               width: 30.0,
@@ -216,11 +224,13 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
                 onPressed: () {
                   HapticFeedback.selectionClick();
                   Navigator.of(context).pop();
+                  // FIXME: This will be moved to new page
                   OverlayEntry helperOverlay = OverlayEntry(
                     opaque: false,
-                    builder: new EditorPageBuilder(
-                            model.pageId, hostedAppNavigatorKey)
-                        .build,
+                    builder: EditorPageBuilder(
+                      model.pageId,
+                      hostedAppNavigatorKey,
+                    ).build,
                   );
                   Overlayed.of(context).entries.putIfAbsent(
                         OverlayKeys.EDITOR_OVERLAY_KEY,
@@ -228,6 +238,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
                       );
                   hostedAppNavigatorKey.currentState.overlay
                       .insert(helperOverlay);
+                  presenter.hidePalBubble();
                 },
                 child: Icon(
                   Icons.format_paint,

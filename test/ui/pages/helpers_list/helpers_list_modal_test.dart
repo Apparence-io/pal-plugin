@@ -3,18 +3,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 
 class HelpersListModalLoaderMock extends Mock
     implements HelpersListModalLoader {}
+class PalEditModeStateServiceMock extends Mock
+    implements PalEditModeStateService {}
 
 main() {
   group('Helpers list modal', () {
     HelpersListModalLoader loader = HelpersListModalLoaderMock();
+    PalEditModeStateService palEditModeStateService = PalEditModeStateServiceMock();
     HelpersListModal helpersListModal = HelpersListModal(
       loader: loader,
+      palEditModeStateService: palEditModeStateService,
     );
 
     when(loader.load()).thenAnswer(

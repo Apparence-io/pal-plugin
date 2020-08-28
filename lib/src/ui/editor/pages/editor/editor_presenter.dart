@@ -28,6 +28,14 @@ class EditorPresenter extends Presenter<EditorViewModel, EditorView> {
     viewModel.toolbarPosition = Offset.zero;
 
     viewModel.fullscreenHelperNotifier = FullscreenHelperNotifier();
+    // FIXME: Mocked version, need to be modified on UI
+    viewModel.basicHelper = BasicHelper(
+      name: 'Test from app',
+      priority: 0,
+      triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+      versionMinId: 1,
+      versionMaxId: 2,
+    );
   }
 
   showToolbar(Size helperSize, Offset helperPosition) {
@@ -48,16 +56,15 @@ class EditorPresenter extends Presenter<EditorViewModel, EditorView> {
     this.refreshView();
 
     // Create fullscren infos only
-    CreateHelperFullScreenEntity createHelperFullScreenEntity = this.editorService.saveFullscreenHelper(
-          pageId,
-          fullscreenHelperNotifier: viewModel.fullscreenHelperNotifier,
-          name: 'Test',
-          priority: 0,
-          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-          versionMinId: 1,
-          versionMaxId: 2,
-        );
-    await this.helperService.createPageHelper(pageId, createHelperFullScreenEntity);
+    CreateHelperFullScreenEntity createHelperFullScreenEntity =
+        this.editorService.saveFullscreenHelper(
+              pageId,
+              fullscreenHelperNotifier: viewModel.fullscreenHelperNotifier,
+              basicHelper: viewModel.basicHelper,
+            );
+    await this
+        .helperService
+        .createPageHelper(pageId, createHelperFullScreenEntity);
 
     viewModel.isLoading = false;
     this.refreshView();

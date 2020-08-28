@@ -65,7 +65,6 @@ class _ModalBottomSheetOptionsState extends State<ModalBottomSheetOptions> {
   @override
   Widget build(BuildContext context) {
     var color = PalTheme.of(context).colors.dark;
-    var bgColor = PalTheme.of(context).colors.color4;
     return Stack(
       children: [
         Positioned(

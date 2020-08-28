@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:palplugin/palplugin.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
@@ -16,6 +15,7 @@ void main() {
         body: Container(),
       );
       Pal app = Pal(
+        navigatorKey: null,
         appToken: "testtoken",
         editorModeEnabled: editorModeEnabled,
         child: new MaterialApp(

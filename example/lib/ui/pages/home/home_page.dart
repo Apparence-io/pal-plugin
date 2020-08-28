@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal_example/ui/pages/home/home_model.dart';
 import 'package:pal_example/ui/pages/home/home_presenter.dart';
-import 'package:palplugin/palplugin.dart';
 
 abstract class HomeView {
   void pushToRoute1(final BuildContext context);

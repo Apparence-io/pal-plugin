@@ -62,7 +62,9 @@ void main() {
 
     group('editor mode', () {
       testWidgets('textfield is present', (WidgetTester tester) async {
-        FullscreenHelperWidget helperWidget = FullscreenHelperWidget.editor();
+        FullscreenHelperWidget helperWidget = FullscreenHelperWidget.editor(
+          fullscreenHelperNotifier: FullscreenHelperNotifier(),
+        );
         var app = new MediaQuery(
             data: MediaQueryData(), child: MaterialApp(home: helperWidget));
         await tester.pumpWidget(app);

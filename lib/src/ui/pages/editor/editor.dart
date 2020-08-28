@@ -85,36 +85,41 @@ class EditorPageBuilder implements EditorView {
               // TODO: Put here helpers widget
               // just create a stack if there is more than one widgets
               if (_helperToEdit != null) _helperToEdit,
-              Stack(
-                key: ValueKey('palEditorModeInteractUI'),
-                children: [
-                  if (_helperToEdit == null)
-                    _buildAddButton(context, presenter, model),
-                  _buildValidationActions(context, presenter),
-                  _buildBannerEditorMode(context),
-                  if (model.toobarIsVisible && model.toolbarPosition != null)
-                    Positioned(
-                      top: model.toolbarPosition.dy - 8.0,
-                      left: model.toolbarPosition.dx,
-                      right: model.toolbarPosition.dx,
-                      child: EditHelperToolbar(
-                        onChangeBorderTap: () {
-                          // TODO: To implement
-                        },
-                        onCloseTap: () {
-                          presenter.hideToolbar();
-                          unFocusCurrentTextField(context);
-                        },
-                        onChangeFontTap: () {
-                          // TODO: To implement
-                        },
-                        onEditTextTap: () {
-                          // TODO: To implement
-                        },
-                      ),
+              (!model.isLoading)
+                  ? Stack(
+                      key: ValueKey('palEditorModeInteractUI'),
+                      children: [
+                        if (_helperToEdit == null)
+                          _buildAddButton(context, presenter, model),
+                        _buildValidationActions(context, presenter),
+                        _buildBannerEditorMode(context),
+                        if (model.toobarIsVisible &&
+                            model.toolbarPosition != null)
+                          Positioned(
+                            top: model.toolbarPosition.dy - 8.0,
+                            left: model.toolbarPosition.dx,
+                            right: model.toolbarPosition.dx,
+                            child: EditHelperToolbar(
+                              onChangeBorderTap: () {
+                                // TODO: To implement
+                              },
+                              onCloseTap: () {
+                                presenter.hideToolbar();
+                                unFocusCurrentTextField(context);
+                              },
+                              onChangeFontTap: () {
+                                // TODO: To implement
+                              },
+                              onEditTextTap: () {
+                                // TODO: To implement
+                              },
+                            ),
+                          )
+                      ],
                     )
-                ],
-              ),
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    ),
             ],
           ),
         ),
@@ -166,7 +171,12 @@ class EditorPageBuilder implements EditorView {
             padding: EdgeInsets.only(left: 16),
             child: EditorButton.validate(
               PalTheme.of(context),
-              () => presenter.saveFullscreenHelper(pageId),
+              () async {
+                await presenter.saveFullscreenHelper(pageId);
+                await Future.delayed(Duration(milliseconds: 500));
+
+                removeOverlay(context);
+              },
               key: ValueKey("editModeValidate"),
             ),
           ),

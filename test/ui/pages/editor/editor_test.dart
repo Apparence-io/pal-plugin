@@ -4,13 +4,17 @@ import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/helpers/fullscreen/fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/pages/editor/editor.dart';
+import 'package:palplugin/src/ui/pages/editor/editor_loader.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
 import 'package:palplugin/src/ui/widgets/modal_bottomsheet_options.dart';
 
+class EditorLoaderMock extends Mock implements EditorLoader {}
+
 Future _initPage(
   WidgetTester tester,
 ) async {
+  EditorLoader loader = EditorLoaderMock();
   var app = new MediaQuery(
       data: MediaQueryData(),
       child: PalTheme(
@@ -18,8 +22,12 @@ Future _initPage(
         child: Builder(
           builder: (context) => MaterialApp(
             theme: PalTheme.of(context).buildTheme(),
-            onGenerateRoute: (_) =>
-                MaterialPageRoute(builder: EditorPageBuilder(null, null).build),
+            onGenerateRoute: (_) => MaterialPageRoute(
+                builder: EditorPageBuilder(
+              '',
+              null,
+              loader: loader,
+            ).build),
           ),
         ),
       ));

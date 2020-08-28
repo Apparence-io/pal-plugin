@@ -8,6 +8,7 @@ class EditorViewModel extends MVVMModel {
   bool toobarIsVisible;
   Offset toolbarPosition;
   Size toolbarSize;
+  bool isLoading;
 
   // Fullscreen values
   CreateHelperFullScreenEntity createHelperFullScreenEntity;

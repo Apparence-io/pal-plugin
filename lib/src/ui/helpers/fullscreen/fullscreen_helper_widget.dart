@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 
 class FullscreenHelperNotifier {
-  ValueNotifier<String> title = ValueNotifier(null);
-  ValueNotifier<String> fontColor = ValueNotifier(null);
-  ValueNotifier<String> backgroundColor = ValueNotifier(null);
-  ValueNotifier<String> borderColor = ValueNotifier(null);
-  ValueNotifier<int> languageId = ValueNotifier(null);
+  ValueNotifier<String> titleNotifier = ValueNotifier(null);
+  ValueNotifier<String> fontColorNotifier = ValueNotifier(null);
+  ValueNotifier<String> backgroundColorNotifier = ValueNotifier(null);
+  ValueNotifier<String> borderColorNotifier = ValueNotifier(null);
+  ValueNotifier<int> languageIdNotifier = ValueNotifier(null);
+
+  FullscreenHelperNotifier({
+    String title,
+    String fontColor,
+    String backgroundColor,
+    String borderColor,
+    int languageId,
+  }) {
+    this.titleNotifier = ValueNotifier(title);
+    this.fontColorNotifier = ValueNotifier(fontColor);
+    this.backgroundColorNotifier = ValueNotifier(backgroundColor);
+    this.borderColorNotifier = ValueNotifier(borderColor);
+    this.languageIdNotifier = ValueNotifier(languageId);
+  }
 }
 
 class FullscreenHelperWidget extends StatefulWidget {
@@ -25,6 +37,7 @@ class FullscreenHelperWidget extends StatefulWidget {
 
   final Function(bool, Size, Offset) onTitleFocusChanged;
 
+  // TODO: Need to merge all params with ValueNotifiers
   FullscreenHelperWidget(
       {this.bgColor,
       this.textColor,
@@ -94,15 +107,21 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
 
     // TODO: Refactor this init because this is so ugly :/
     // TODO: Create util file to handle color conversion
-    widget.fullscreenHelperNotifier.backgroundColor.value = '${widget.bgColor.value.toRadixString(16)}';
-    widget.fullscreenHelperNotifier.borderColor.value = '${widget.bgColor.value.toRadixString(16)}';
-    widget.fullscreenHelperNotifier.fontColor.value = '${widget.textColor.value.toRadixString(16)}';
-    widget.fullscreenHelperNotifier.languageId.value = 0;
-    widget.fullscreenHelperNotifier.title.value = widget.helperText;
+    // FIXME: Use FullscreenHelperWidget params or only notifier ??
+    if (widget.fullscreenHelperNotifier != null) {
+      widget.fullscreenHelperNotifier.backgroundColorNotifier.value =
+          '${widget.bgColor.value.toRadixString(16)}';
+      widget.fullscreenHelperNotifier.borderColorNotifier.value =
+          '${widget.bgColor.value.toRadixString(16)}';
+      widget.fullscreenHelperNotifier.fontColorNotifier.value =
+          '${widget.textColor.value.toRadixString(16)}';
+      widget.fullscreenHelperNotifier.languageIdNotifier.value = 1;
+      widget.fullscreenHelperNotifier.titleNotifier.value = widget.helperText;
+    }
   }
 
   _onTitleTextChanged() {
-    widget.fullscreenHelperNotifier.title.value = _titleController?.value?.text;
+    widget.fullscreenHelperNotifier.titleNotifier.value = _titleController?.value?.text;
   }
 
   _onTitleFocusChanged() {

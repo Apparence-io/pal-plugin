@@ -19,6 +19,7 @@ class EditorPresenter extends Presenter<EditorViewModel, EditorView> {
   void onInit() {
     viewModel.enableSave = false;
     viewModel.toobarIsVisible = false;
+    viewModel.isLoading = false;
     viewModel.toolbarPosition = Offset.zero;
 
     viewModel.fullscreenHelperNotifier = FullscreenHelperNotifier();
@@ -38,14 +39,29 @@ class EditorPresenter extends Presenter<EditorViewModel, EditorView> {
   }
 
   saveFullscreenHelper(String pageId) async {
+    viewModel.isLoading = true;
+    this.refreshView();
     // Create fullscren infos only
-    CreateHelperFullScreenEntity fullScreenEntity = CreateHelperFullScreenEntity(
-      title: viewModel.fullscreenHelperNotifier.title.value,
-      fontColor: viewModel.fullscreenHelperNotifier.fontColor.value,
-      backgroundColor: viewModel.fullscreenHelperNotifier.backgroundColor.value,
-      borderColor: viewModel.fullscreenHelperNotifier.borderColor.value,
-      languageId: viewModel.fullscreenHelperNotifier.languageId.value,
+    CreateHelperFullScreenEntity fullScreenEntity =
+        CreateHelperFullScreenEntity(
+      title: viewModel.fullscreenHelperNotifier.titleNotifier.value,
+      fontColor: viewModel.fullscreenHelperNotifier.fontColorNotifier.value,
+      backgroundColor:
+          viewModel.fullscreenHelperNotifier.backgroundColorNotifier.value,
+      borderColor: viewModel.fullscreenHelperNotifier.borderColorNotifier.value,
+      languageId: viewModel.fullscreenHelperNotifier.languageIdNotifier.value,
     );
-    await this.loader.saveHelper(pageId, fullScreenEntity);
+    await this.loader.saveHelper(
+          name: 'Un nom',
+          priority: 0,
+          triggerType: 'ON_SCREEN_VISIT',
+          versionMaxId: 2,
+          versionMinId: 1,
+          pageId: pageId,
+          helperEntity: fullScreenEntity,
+        );
+
+    viewModel.isLoading = false;
+    this.refreshView();
   }
 }

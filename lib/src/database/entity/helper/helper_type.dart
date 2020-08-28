@@ -3,7 +3,7 @@ enum HelperType {
   SIMPLE_HELPER,
 }
 
-HelperType getTriggerHelperType(final String value) {
+HelperType getHelperType(final String value) {
   return HelperType.values.firstWhere((element) => element.toString().split('.')[1] == value);
 }
 

@@ -1,4 +1,5 @@
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 
 class HelperFullScreenEntity extends HelperEntity {
@@ -12,7 +13,7 @@ class HelperFullScreenEntity extends HelperEntity {
     String id,
     String name,
     HelperType type,
-    String triggerType,
+    HelperTriggerType triggerType,
     DateTime creationDate,
     DateTime lastUpdateDate,
     int priority,

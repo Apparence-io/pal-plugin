@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/theme.dart';
@@ -141,7 +142,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               return HelperTileWidget(
                 key: ValueKey('palHelpersListModalTile$index'),
                 name: helperEntity?.name,
-                trigger: helperEntity?.triggerType,
+                trigger: helperTriggerTypeToString(helperEntity?.triggerType),
                 versionMin: helperEntity?.versionMin,
                 versionMax: helperEntity?.versionMax,
                 isDisabled: false,

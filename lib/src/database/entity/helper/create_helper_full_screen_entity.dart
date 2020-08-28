@@ -1,5 +1,6 @@
 
 import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 
 class CreateHelperFullScreenEntity extends CreateHelperEntity {
@@ -11,7 +12,7 @@ class CreateHelperFullScreenEntity extends CreateHelperEntity {
 
   CreateHelperFullScreenEntity({
     String name,
-    String triggerType,
+    HelperTriggerType triggerType,
     int priority,
     int versionMinId,
     int versionMaxId,
@@ -33,7 +34,7 @@ class CreateHelperFullScreenEntity extends CreateHelperEntity {
     return {
       'name': this.name,
       'type': helperTypeToString(this.type),
-      'triggerType': this.triggerType,
+      'triggerType': helperTriggerTypeToString(this.triggerType),
       'priority': this.priority,
       'versionMinId': this.versionMinId,
       'versionMaxId': this.versionMaxId,

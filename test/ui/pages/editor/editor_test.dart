@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/helpers/fullscreen/user_fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/pages/editor/editor.dart';
 import 'package:palplugin/src/ui/pages/editor/editor_loader.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';

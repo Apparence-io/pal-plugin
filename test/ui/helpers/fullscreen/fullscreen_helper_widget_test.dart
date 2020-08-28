@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/helpers/fullscreen/user_fullscreen_helper_widget.dart';
 
 void main() {
   group('full screen helper widget', () {

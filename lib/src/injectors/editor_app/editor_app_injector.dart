@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
+import 'package:palplugin/src/services/editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/page_server.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
@@ -7,6 +8,7 @@ import 'package:palplugin/src/services/pal/pal_state_service.dart';
 class EditorInjector extends InheritedWidget {
   final PageService _pageService;
   final HelperService _helperService;
+  final EditorService _editorService;
   final PalEditModeStateService _palEditModeStateService;
 
   EditorInjector({
@@ -16,6 +18,7 @@ class EditorInjector extends InheritedWidget {
   })  : assert(child != null && appContext != null),
         this._pageService = PageService.build(appContext.pageRepository),
         this._helperService = HelperService.build(appContext.helperRepository),
+        this._editorService = EditorService.build(),
         this._palEditModeStateService = PalEditModeStateService.build(),
         super(key: key, child: child);
 
@@ -32,4 +35,6 @@ class EditorInjector extends InheritedWidget {
   PageService get pageService => this._pageService;
 
   PalEditModeStateService get palEditModeStateService => this._palEditModeStateService;
+
+  EditorService get editorService => this._editorService;
 }

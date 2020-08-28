@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/services/editor_service.dart';
+import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/fullscreen_helper_widget.dart';
-import 'package:palplugin/src/ui/pages/editor/editor_loader.dart';
+import 'package:palplugin/src/ui/helpers/fullscreen/editor_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/helpers/fullscreen/user_fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/pages/editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/widgets/edit_helper_toolbar.dart';
@@ -35,15 +37,17 @@ abstract class EditorView {
 class EditorPageBuilder implements EditorView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
+  final EditorService editorService;
+  final HelperService helperService;
 
   final _mvvmPageBuilder = MVVMPageBuilder<EditorPresenter, EditorViewModel>();
-  final EditorLoader loader;
   Widget _helperToEdit;
 
   EditorPageBuilder(
     this.pageId,
     this.hostedAppNavigatorKey, {
-    this.loader,
+    this.editorService,
+    this.helperService,
   });
 
   Widget build(BuildContext context) {
@@ -52,10 +56,8 @@ class EditorPageBuilder implements EditorView {
       context: context,
       presenterBuilder: (context) => EditorPresenter(
         this,
-        loader: this.loader ??
-            EditorLoader(
-              EditorInjector.of(context).helperService,
-            ),
+        editorService ?? EditorInjector.of(context).editorService,
+        helperService ?? EditorInjector.of(context).helperService
       ),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
@@ -226,7 +228,7 @@ class EditorPageBuilder implements EditorView {
   ) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
-        _helperToEdit = FullscreenHelperWidget.editor(
+        _helperToEdit = EditorFullscreenHelperWidget(
           fullscreenHelperNotifier: model.fullscreenHelperNotifier,
           onTitleFocusChanged: (bool hasFocus, Size size, Offset position) {
             if (!hasFocus) {

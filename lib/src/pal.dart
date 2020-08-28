@@ -1,15 +1,13 @@
 library palplugin;
 
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/pal_editmode_wrapper.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 import 'package:palplugin/src/ui/client/helper_orchestrator.dart';
-import 'package:palplugin/src/pal_editmode_wrapper.dart';
-
-import 'injectors/editor_app/editor_app_injector.dart';
 
 // our production server adress
 const PAL_SERVER_URL = 'http://217.182.88.6:8053';

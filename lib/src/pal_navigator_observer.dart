@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/palplugin.dart';
+import 'package:palplugin/src/pal_controller.dart';
 
 // TODO: Pal controller need to be an instanciated class & not a Singleton page ?
 class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> {

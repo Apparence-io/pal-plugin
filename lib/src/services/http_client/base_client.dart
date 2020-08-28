@@ -10,17 +10,17 @@ abstract class BaseHttpClient {}
 /// intercept request and add user token if present
 /// if token is expired calls refresh token endpoint and save new token
 class HttpClient extends http.BaseClient implements BaseHttpClient {
-  static const String BASE_URL = ""; //TODO add prod url
   final http.Client _client = new http.Client();
   final String _baseUrl;
   final String _token;
 
-  factory HttpClient.create(final String token, {final baseUrl}) =>
-      HttpClient._private(token, baseUrl: baseUrl);
+  factory HttpClient.create(final String url, final String token) =>
+      HttpClient._private(url, token);
 
-  HttpClient._private(final String token, {final baseUrl})
-      : assert(token != null && token != ""),
-        this._baseUrl = baseUrl ?? BASE_URL,
+  HttpClient._private(final String url, final String token)
+      : assert(url != null && url != ""),
+        assert(token != null && token != ""),
+        this._baseUrl = url,
         this._token = token;
 
   @override

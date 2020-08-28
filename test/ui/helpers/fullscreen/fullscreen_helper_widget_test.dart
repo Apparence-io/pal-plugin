@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
 
 void main() {
   group('full screen helper widget', () {
@@ -7,7 +9,7 @@ void main() {
       testWidgets('bgColor is required', (WidgetTester tester) async {
         bool hasThrow = false;
         try {
-          FullscreenHelperWidget helperWidget = FullscreenHelperWidget.user();
+          UserFullscreenHelperWidget helperWidget = UserFullscreenHelperWidget();
           var app = new MediaQuery(
               data: MediaQueryData(), child: MaterialApp(home: helperWidget));
           await tester.pumpWidget(app);
@@ -22,7 +24,7 @@ void main() {
       testWidgets('textColor is required', (WidgetTester tester) async {
         bool hasThrow = false;
         try {
-          FullscreenHelperWidget helperWidget = FullscreenHelperWidget.user(
+          UserFullscreenHelperWidget helperWidget = UserFullscreenHelperWidget(
             bgColor: Colors.black,
           );
           var app = new MediaQuery(
@@ -40,7 +42,7 @@ void main() {
       testWidgets(
           'helper has two actions to dissmiss it. One is positive feedback, other is negative',
           (WidgetTester tester) async {
-        FullscreenHelperWidget helperWidget = FullscreenHelperWidget.user(
+        UserFullscreenHelperWidget helperWidget = UserFullscreenHelperWidget(
           bgColor: Colors.black,
           textColor: Colors.white,
           helperText: "Lorem ipsum",
@@ -61,7 +63,7 @@ void main() {
 
     group('editor mode', () {
       testWidgets('textfield is present', (WidgetTester tester) async {
-        FullscreenHelperWidget helperWidget = FullscreenHelperWidget.editor(
+        EditorFullscreenHelperWidget helperWidget = EditorFullscreenHelperWidget(
           fullscreenHelperNotifier: FullscreenHelperNotifier(),
         );
         var app = new MediaQuery(

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_loader.dart';
-import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal.dart';
-import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 
 class HelpersListModalLoaderMock extends Mock
     implements HelpersListModalLoader {}
@@ -21,20 +22,20 @@ main() {
               HelperEntity(
                 id: '1',
                 name: 'aName',
-                triggerType: 'aType',
+                triggerType: HelperTriggerType.ON_SCREEN_VISIT,
                 versionMin: '1.0.1',
                 versionMax: '2.0.0',
               ),
               HelperEntity(
                 id: '2',
                 name: 'aName 2',
-                triggerType: 'aType2',
+                triggerType: HelperTriggerType.ON_SCREEN_VISIT,
                 versionMin: '1.0.2',
               ),
               HelperEntity(
                 id: '3',
                 name: 'aName 3',
-                triggerType: 'aType3',
+                triggerType: HelperTriggerType.ON_SCREEN_VISIT,
                 versionMin: '1.8.2',
                 versionMax: '2.3.0',
               ),
@@ -76,16 +77,15 @@ main() {
       await tester.pumpAndSettle();
 
       expect(find.text('aName'), findsOneWidget);
-      expect(find.text('aType'), findsOneWidget);
       expect(find.text('1.0.1 - 2.0.0'), findsOneWidget);
 
       expect(find.text('aName 2'), findsOneWidget);
-      expect(find.text('aType2'), findsOneWidget);
       expect(find.text('1.0.2 - last'), findsOneWidget);
 
       expect(find.text('aName 3'), findsOneWidget);
-      expect(find.text('aType3'), findsOneWidget);
       expect(find.text('1.8.2 - 2.3.0'), findsOneWidget);
+
+      expect(find.text('ON_SCREEN_VISIT'), findsNWidgets(3));
     });
 
     testWidgets('should tap on helper', (tester) async {

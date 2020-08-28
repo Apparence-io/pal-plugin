@@ -6,6 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_full_screen_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/database/repository/helper_repository.dart';
@@ -68,7 +69,7 @@ void main() {
             fontColor: "#FFFFFFFF",
             backgroundColor: "#FFFFFFFF",
             borderColor: "#FFFFFFFF",
-            triggerType: "triggerType",
+            triggerType: HelperTriggerType.ON_SCREEN_VISIT,
             versionMaxId: 1,
             versionMinId: 2,
           ));
@@ -82,7 +83,7 @@ void checkReturnedHelper(HelperFullScreenEntity helper) {
   assert(helper.id == "db6b01e1-b649-4a17-949a-9ab320601001");
   assert(helper.name == "Helper test 1");
   assert(helper.type == HelperType.HELPER_FULL_SCREEN);
-  assert(helper.triggerType == "on_start");
+  assert(helper.triggerType == HelperTriggerType.ON_SCREEN_VISIT);
   assert(helper.creationDate ==
       DateTime.parse("2019-10-30 17:30:00.000-06:30").toLocal());
   assert(helper.lastUpdateDate ==

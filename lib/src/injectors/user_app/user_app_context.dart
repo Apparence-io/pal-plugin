@@ -6,14 +6,26 @@ import 'package:palplugin/src/services/http_client/base_client.dart';
 /// [UserAppContext] inherited class to provide some context to all childs
 ///  - this class will retain [HttpClient] to pass to all childs
 class UserAppContext extends InheritedWidget {
+
   final PageRepository _pageRepository;
   final HelperRepository _helperRepository;
 
-  UserAppContext({
-    Key key,
+  factory UserAppContext.create(
+      {@required Key key, @required Widget child, @required url, @required String token,}) =>
+      UserAppContext._private(
+        key: key,
+        child: child,
+        httpClient: url == null || token == null ? null : HttpClient.create(
+            url, token),
+      );
+
+
+  UserAppContext._private({
+    @required Key key,
     @required Widget child,
-    @required BaseHttpClient httpClient,
+    @required HttpClient httpClient,
   })  : assert(child != null),
+        assert(httpClient != null),
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._helperRepository = HelperRepository(httpClient: httpClient),
         super(key: key, child: child);

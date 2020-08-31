@@ -28,6 +28,7 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
   @override
   void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
     super.didPush(route, previousRoute);
+//    print("push new route ${route.settings?.name}/${previousRoute?.settings?.name}");
     if (route is PageRoute) {
       _notify(route.settings);
     }

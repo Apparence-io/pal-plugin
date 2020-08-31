@@ -35,13 +35,13 @@ class HelperOrchestrator extends InheritedWidget {
   }
 
   _init() {
-    this.routeObserver.stream.listen((RouteSettings newRoute) {
-
+    this.routeObserver.stream.listen((RouteSettings newRoute) async {
+      var helpersToShow = await this.helperClientService.getPageHelpers(newRoute.name);
     });
   }
 
-  // TODO make one for each strategy
   // this method should be private
+  // TODO make one for each strategy
   _showHelper(BuildContext context) {
     OverlayEntry entry = OverlayEntry(
       opaque: false,

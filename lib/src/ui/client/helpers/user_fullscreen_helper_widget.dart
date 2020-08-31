@@ -1,30 +1,26 @@
 import 'package:flutter/material.dart';
 
-class FullscreenHelperWidget extends StatefulWidget {
-
+class UserFullscreenHelperWidget extends StatefulWidget {
   final Color bgColor, textColor;
 
   final String helperText;
 
   final double textSize;
 
-  FullscreenHelperWidget({
-    @required this.bgColor,
-    @required this.textColor,
-    @required this.helperText,
-    this.textSize,
-    Key key
-  }): assert(bgColor != null),
-      assert(textColor != null),
-      assert(helperText != null),
-      super(key: key);
+  UserFullscreenHelperWidget(
+      {this.bgColor, this.textColor, this.helperText, this.textSize, Key key})
+      : assert(bgColor != null),
+        assert(textColor != null),
+        assert(helperText != null),
+        super(key: key);
 
   @override
-  _FullscreenHelperWidgetState createState() => _FullscreenHelperWidgetState();
+  _UserFullscreenHelperWidgetState createState() =>
+      _UserFullscreenHelperWidgetState();
 }
 
-class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
-
+class _UserFullscreenHelperWidgetState
+    extends State<UserFullscreenHelperWidget> {
   double helperOpacity = 0;
 
   @override
@@ -37,7 +33,6 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var deviceSize = MediaQuery.of(context).size;
     return Material(
       color: Colors.transparent,
       shadowColor: Colors.transparent,
@@ -50,19 +45,19 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
           color: widget.bgColor,
           child: Stack(
             children: [
-              Positioned(
-                top: deviceSize.height / 2,
-                left: 0,
-                right: 0,
+              Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         widget.helperText,
+                        key: ValueKey('palFullscreenHelperTitleText'),
                         style: TextStyle(
                           color: widget.textColor,
-                          fontSize: widget.textSize ?? Theme.of(context).textTheme.bodyText1.fontSize
+                          fontSize: widget.textSize ??
+                              Theme.of(context).textTheme.bodyText1.fontSize,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -88,9 +83,7 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
                           child: Text(
                             "This is not helping",
                             style: TextStyle(
-                              color: widget.textColor,
-                              fontSize: 10
-                            ),
+                                color: widget.textColor, fontSize: 10),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -105,6 +98,4 @@ class _FullscreenHelperWidgetState extends State<FullscreenHelperWidget> {
       ),
     );
   }
-
-
 }

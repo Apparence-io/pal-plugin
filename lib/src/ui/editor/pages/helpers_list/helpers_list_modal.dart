@@ -6,14 +6,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_loader.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/pages/editor/editor.dart';
-import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_presenter.dart';
-import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_modal_viewmodel.dart';
-import 'package:palplugin/src/ui/pages/helpers_list/widgets/helper_tile_widget.dart';
-import 'package:palplugin/src/ui/widgets/overlayed.dart';
+import 'package:palplugin/src/services/pal/pal_state_service.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/widgets/helper_tile_widget.dart';
+import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 abstract class HelpersListModalView {
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
@@ -25,17 +26,20 @@ abstract class HelpersListModalView {
 }
 
 class HelpersListModal extends StatelessWidget implements HelpersListModalView {
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
+  final GlobalKey<NavigatorState>
+      hostedAppNavigatorKey; //FIXME remove this from here
   final GlobalKey repaintBoundaryKey;
   final HelpersListModalLoader loader;
+  final PalEditModeStateService palEditModeStateService;
+
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
-
   HelpersListModal({
     Key key,
     this.loader,
     this.hostedAppNavigatorKey,
     this.repaintBoundaryKey,
+    this.palEditModeStateService,
   });
 
   @override
@@ -50,6 +54,8 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               EditorInjector.of(context).pageService,
               EditorInjector.of(context).helperService,
             ),
+        palEditModeStateService: this.palEditModeStateService ??
+            EditorInjector.of(context).palEditModeStateService,
       ),
       builder: (context, presenter, model) {
         return Scaffold(
@@ -77,7 +83,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          _buildHeader(context),
+          _buildHeader(context, model, presenter),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 20.0),
@@ -140,7 +146,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               return HelperTileWidget(
                 key: ValueKey('palHelpersListModalTile$index'),
                 name: helperEntity?.name,
-                trigger: helperEntity?.triggerType,
+                trigger: helperTriggerTypeToString(helperEntity?.triggerType),
                 versionMin: helperEntity?.versionMin,
                 versionMax: helperEntity?.versionMax,
                 isDisabled: false,
@@ -161,6 +167,8 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
 
   Widget _buildHeader(
     final BuildContext context,
+    final HelpersListModalModel model,
+    final HelpersListModalPresenter presenter,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -184,22 +192,63 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             )
           ],
         ),
-        SizedBox(
-          height: 30.0,
-          width: 30.0,
-          child: FloatingActionButton(
-            key: ValueKey('palHelpersListModalNew'),
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              Navigator.pushNamed(context, '/editor/new');
-            },
-            child: Icon(
-              Icons.add,
-              size: 18.0,
+        Row(
+          children: [
+            SizedBox(
+              height: 30.0,
+              width: 30.0,
+              child: FloatingActionButton(
+                heroTag: 'palHelpersListModalNew',
+                key: ValueKey('palHelpersListModalNew'),
+                onPressed: () {
+                  HapticFeedback.selectionClick();
+                  Navigator.pushNamed(context, '/editor/new');
+                },
+                child: Icon(
+                  Icons.add,
+                  size: 18.0,
+                ),
+                shape: CircleBorder(),
+              ),
             ),
-            shape: CircleBorder(),
-          ),
-        )
+            // FIXME: This icon button is temporaly available
+            SizedBox(
+              width: 20.0,
+            ),
+            SizedBox(
+              height: 30.0,
+              width: 30.0,
+              child: FloatingActionButton(
+                heroTag: 'palHelpersListModalEditor',
+                key: ValueKey('palHelpersListModalEditor'),
+                onPressed: () {
+                  HapticFeedback.selectionClick();
+                  Navigator.of(context).pop();
+                  // FIXME: This will be moved to new page
+                  OverlayEntry helperOverlay = OverlayEntry(
+                    opaque: false,
+                    builder: HelperEditorPageBuilder(
+                      model.pageId,
+                      hostedAppNavigatorKey,
+                    ).build,
+                  );
+                  Overlayed.of(context).entries.putIfAbsent(
+                        OverlayKeys.EDITOR_OVERLAY_KEY,
+                        () => helperOverlay,
+                      );
+                  hostedAppNavigatorKey.currentState.overlay
+                      .insert(helperOverlay);
+                  presenter.hidePalBubble();
+                },
+                child: Icon(
+                  Icons.format_paint,
+                  size: 18.0,
+                ),
+                shape: CircleBorder(),
+              ),
+            )
+          ],
+        ),
       ],
     );
   }

@@ -9,7 +9,7 @@ abstract class HelperService {
 
   Future<HelperEntity> createPageHelper(
     final String pageId,
-    final CreateHelperEntity createHelper,
+    final CreateHelperEntity createHelperEntity,
   );
 
   Future<Pageable<HelperEntity>> getPageHelpers(String route);
@@ -21,15 +21,15 @@ class _HelperHttpService implements HelperService {
   _HelperHttpService(this._helperRepository);
 
   @override
-  Future<HelperEntity> createPageHelper(
-    final String pageId,
-    final CreateHelperEntity createHelper,
-  ) {
-    return this._helperRepository.createHelper(pageId, createHelper);
+  Future<Pageable<HelperEntity>> getPageHelpers(final String route) {
+    return this._helperRepository.getHelpers(route);
   }
 
   @override
-  Future<Pageable<HelperEntity>> getPageHelpers(final String route) {
-    return this._helperRepository.getHelpers(route);
+  Future<HelperEntity> createPageHelper(
+    String pageId,
+    CreateHelperEntity createHelperEntity,
+  ) {
+    return this._helperRepository.createHelper(pageId, createHelperEntity);
   }
 }

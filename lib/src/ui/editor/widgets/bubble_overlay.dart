@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
 class BubbleOverlayButton extends StatefulWidget {
   final double width, height;
@@ -19,7 +21,6 @@ class BubbleOverlayButton extends StatefulWidget {
 }
 
 class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
-
   Offset _position;
 
   @override
@@ -40,7 +41,11 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
         child: GestureDetector(
           onPanUpdate: (details) {
             setState(() {
-              _position = details.globalPosition - Offset(widget.width / 2, widget.height / 2);
+              _position = details.globalPosition -
+                  Offset(
+                    widget.width / 2,
+                    widget.height / 2,
+                  );
             });
           },
           child: _buildBubble(),
@@ -55,26 +60,25 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
     return SizedBox(
       height: widget.height,
       width: widget.width,
-      child: ClipOval(
-        child: Material(
-          color: Colors.purple,
-          child: InkWell(
-            child: SizedBox(
-              width: widget.width,
-              height: widget.height,
-              child: Icon(
-                Icons.menu,
-                color: Colors.white,
-              ),
-            ),
-            onTap: () {
-              HapticFeedback.selectionClick();
-              if (widget.onTapCallback != null) {
-                widget.onTapCallback();
-              }
-            },
-          ),
+      child: CircleIconButton(
+        backgroundColor: PalTheme.of(context).floatingBubbleBackgroundColor,
+        radius: widget.width / 2,
+        shadow: BoxShadow(
+          color: Colors.black.withOpacity(0.25),
+          spreadRadius: 10,
+          blurRadius: 35,
+          offset: Offset(0, 3), // changes position of shadow
         ),
+        icon: Icon(
+          Icons.menu,
+          color: Colors.white,
+        ),
+        onTapCallback: () {
+          HapticFeedback.selectionClick();
+          if (widget.onTapCallback != null) {
+            widget.onTapCallback();
+          }
+        },
       ),
     );
   }

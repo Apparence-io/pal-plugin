@@ -5,8 +5,8 @@ import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
+import 'package:palplugin/src/pal_editmode_wrapper.dart';
 import 'package:palplugin/src/ui/client/helper_orchestrator.dart';
-import 'package:palplugin/src/ui/wrapper/pal_editmode_wrapper.dart';
 
 import 'injectors/editor_app/editor_app_injector.dart';
 
@@ -51,7 +51,7 @@ class Pal extends StatelessWidget {
         token: this.appToken,
         child: Builder(builder: (context) {
           return EditorInjector(
-            child: PalEditModeWrapper(userApp: child),
+            child: PalEditModeWrapper(userApp: child, hostedAppNavigatorKey: navigatorKey,),
             appContext: EditorAppContext.of(context),
           );
         }),
@@ -71,4 +71,3 @@ class Pal extends StatelessWidget {
 
 
 }
-

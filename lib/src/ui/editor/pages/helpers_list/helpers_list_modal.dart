@@ -78,21 +78,23 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 15.0,
-        horizontal: 24.0,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          _buildHeader(context, model, presenter),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: _buildList(context, presenter, model),
-            ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: _buildHeader(context, model, presenter),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _buildFooter(context),
+          Expanded(
+            child: _buildList(context, presenter, model),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: _buildFooter(context),
+            ),
           )
         ],
       ),
@@ -134,7 +136,8 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   ) {
     return (model.helpers != null)
         ? ListView.separated(
-            padding: const EdgeInsets.only(bottom: 20.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 24.0),
             key: ValueKey('palHelpersListModalContent'),
             separatorBuilder: (context, index) => SizedBox(
               height: 12,

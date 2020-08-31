@@ -11,7 +11,7 @@ class UserAppContext extends InheritedWidget {
   final HelperRepository _helperRepository;
 
   factory UserAppContext.create(
-      {@required Key key, @required Widget child, @required url, @required String token,}) =>
+      {Key key, @required Widget child, @required url, @required String token,}) =>
       UserAppContext._private(
         key: key,
         child: child,

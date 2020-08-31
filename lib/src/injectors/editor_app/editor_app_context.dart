@@ -15,7 +15,7 @@ class EditorAppContext extends InheritedWidget {
   final VersionRepository _versionRepository;
 
   factory EditorAppContext.create(
-      {@required Key key, @required Widget child, @required url, @required String token,}) =>
+      {Key key, @required Widget child, @required url, @required String token,}) =>
       EditorAppContext._private(
         key: key,
         child: child,

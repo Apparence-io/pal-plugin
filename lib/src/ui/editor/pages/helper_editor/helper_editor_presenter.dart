@@ -28,7 +28,7 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     viewModel.toolbarPosition = Offset.zero;
 
     // FIXME: Mocked version, need to be modified on UI
-    viewModel.fullscreenHelperViewModel = FullscreenHelperViewModel(
+    viewModel.helperViewModel = FullscreenHelperViewModel(
       name: 'Test from app',
       priority: 0,
       triggerType: HelperTriggerType.ON_SCREEN_VISIT,

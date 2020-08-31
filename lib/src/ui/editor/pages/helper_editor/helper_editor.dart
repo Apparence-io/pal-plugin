@@ -175,7 +175,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
             child: EditorButton.validate(
               PalTheme.of(context),
               () async {
-                await presenter.save(pageId, model.fullscreenHelperViewModel);
+                await presenter.save(pageId, model.helperViewModel);
                 await Future.delayed(Duration(milliseconds: 500));
 
                 removeOverlay(context);
@@ -230,7 +230,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         _helperToEdit = EditorFullscreenHelperWidget(
-          fullscreenHelperViewModel: model.fullscreenHelperViewModel,
+          fullscreenHelperViewModel: model.helperViewModel,
           onTitleFocusChanged: (bool hasFocus, Size size, Offset position) {
             if (!hasFocus) {
               presenter.hideToolbar();

@@ -7,6 +7,7 @@ import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
@@ -36,13 +37,16 @@ class HelperEditorPageBuilder implements HelperEditorView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
   final HelperService helperService;
+  final HelperEditorLoader loader;
 
-  final _mvvmPageBuilder = MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
   Widget _helperToEdit;
 
   HelperEditorPageBuilder(
     this.pageId,
     this.hostedAppNavigatorKey, {
+    this.loader,
     this.helperService,
   });
 
@@ -51,7 +55,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
       key: ValueKey("EditorPage"),
       context: context,
       presenterBuilder: (context) => HelperEditorPresenter(
-          this, helperService ?? EditorInjector.of(context).helperService),
+        this,
+        loader ?? HelperEditorLoader(),
+        helperService ?? EditorInjector.of(context).helperService,
+      ),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
         presenter,

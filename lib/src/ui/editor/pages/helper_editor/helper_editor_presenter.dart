@@ -5,15 +5,18 @@ import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:palplugin/src/services/helper_service.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
 class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
   final HelperService helperService;
+  final HelperEditorLoader loader;
 
   HelperEditorPresenter(
     HelperEditorView viewInterface,
+    this.loader,
     this.helperService,
   ) : super(HelperEditorViewModel(), viewInterface);
 

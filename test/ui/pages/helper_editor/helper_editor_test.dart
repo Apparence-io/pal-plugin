@@ -5,15 +5,19 @@ import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
 
 class HelperServiceMock extends Mock implements HelperService {}
 
+class HelperEditorLoaderMock extends Mock implements HelperEditorLoader {}
+
 Future _initPage(
   WidgetTester tester,
 ) async {
   HelperService helperService = HelperServiceMock();
+  HelperEditorLoader loader = HelperEditorLoaderMock();
 
   var app = new MediaQuery(
       data: MediaQueryData(),
@@ -26,6 +30,7 @@ Future _initPage(
                 builder: HelperEditorPageBuilder(
               '',
               null,
+              loader: loader,
               helperService: helperService,
             ).build),
           ),

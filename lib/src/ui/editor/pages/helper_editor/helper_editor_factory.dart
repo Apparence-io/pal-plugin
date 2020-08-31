@@ -8,19 +8,12 @@ class EditorFactory {
   static CreateHelperEntity build(HelperViewModel model) {
     CreateHelperEntity createHelperEntity;
 
-    switch (model.helper.runtimeType) {
+    switch (model.runtimeType) {
       case FullscreenHelperViewModel:
-        createHelperEntity = _buildFullscreenHelper(model.helper);
+        createHelperEntity = _buildFullscreenHelper(model);
         break;
       default:
     }
-
-    // Shared helpers data
-    createHelperEntity.name = model.name;
-    createHelperEntity.priority = model.priority;
-    createHelperEntity.triggerType = model.triggerType;
-    createHelperEntity.versionMaxId = model.versionMaxId;
-    createHelperEntity.versionMinId = model.versionMinId;
 
     return createHelperEntity;
   }

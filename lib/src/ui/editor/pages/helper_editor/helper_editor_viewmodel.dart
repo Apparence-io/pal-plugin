@@ -11,17 +11,15 @@ class HelperEditorViewModel extends MVVMModel {
   Offset toolbarPosition;
   Size toolbarSize;
 
-  // FullscreenHelperNotifier fullscreenHelperNotifier;
-  HelperViewModel basicHelperModel;
+  FullscreenHelperViewModel fullscreenHelperViewModel;
 }
 
-class HelperViewModel<T> {
+class HelperViewModel {
   final String name;
   final HelperTriggerType triggerType;
   final int priority;
   final int versionMinId;
   final int versionMaxId;
-  final T helper;
 
   HelperViewModel({
     @required this.name,
@@ -29,16 +27,28 @@ class HelperViewModel<T> {
     @required this.priority,
     @required this.versionMinId,
     this.versionMaxId,
-    @required this.helper,
   });
 }
 
-class FullscreenHelperViewModel
-    extends HelperViewModel<FullscreenHelperViewModel> {
+class FullscreenHelperViewModel extends HelperViewModel {
   final ValueNotifier<String> title = ValueNotifier('Edit me!');
   final ValueNotifier<Color> fontColor = ValueNotifier(Colors.white);
   final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
   final ValueNotifier<Color> borderColor = ValueNotifier(Colors.greenAccent);
   final ValueNotifier<int> languageId = ValueNotifier(1);
   final ValueNotifier<num> fontSize = ValueNotifier(80.0);
+
+  FullscreenHelperViewModel({
+    @required String name,
+    @required HelperTriggerType triggerType,
+    @required int priority,
+    @required int versionMinId,
+    int versionMaxId,
+  }) : super(
+          name: name,
+          triggerType: triggerType,
+          priority: priority,
+          versionMinId: versionMinId,
+          versionMaxId: versionMaxId,
+        );
 }

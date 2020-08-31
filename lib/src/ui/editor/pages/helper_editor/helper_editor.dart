@@ -7,40 +7,40 @@ import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/widgets/editor_banner.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/widgets/editor_button.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
-import 'editor_presenter.dart';
-import 'editor_viewmodel.dart';
+import 'helper_editor_presenter.dart';
+import 'helper_editor_viewmodel.dart';
 
-abstract class EditorView {
+abstract class HelperEditorView {
   showHelperModal(
     final BuildContext context,
-    final EditorPresenter presenter,
-    final EditorViewModel model,
+    final HelperEditorPresenter presenter,
+    final HelperEditorViewModel model,
   );
   addNewHelper(
     final BuildContext context,
     final HelperType helperType,
-    final EditorPresenter presenter,
-    final EditorViewModel model,
+    final HelperEditorPresenter presenter,
+    final HelperEditorViewModel model,
   );
   unFocusCurrentTextField(final BuildContext context);
   removeOverlay(final BuildContext context);
 }
 
-class EditorPageBuilder implements EditorView {
+class HelperEditorPageBuilder implements HelperEditorView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
   final HelperService helperService;
 
-  final _mvvmPageBuilder = MVVMPageBuilder<EditorPresenter, EditorViewModel>();
+  final _mvvmPageBuilder = MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
   Widget _helperToEdit;
 
-  EditorPageBuilder(
+  HelperEditorPageBuilder(
     this.pageId,
     this.hostedAppNavigatorKey, {
     this.helperService,
@@ -50,7 +50,7 @@ class EditorPageBuilder implements EditorView {
     return _mvvmPageBuilder.build(
       key: ValueKey("EditorPage"),
       context: context,
-      presenterBuilder: (context) => EditorPresenter(
+      presenterBuilder: (context) => HelperEditorPresenter(
           this, helperService ?? EditorInjector.of(context).helperService),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
@@ -62,8 +62,8 @@ class EditorPageBuilder implements EditorView {
 
   _buildEditorPage(
     final BuildContext context,
-    final EditorPresenter presenter,
-    final EditorViewModel model,
+    final HelperEditorPresenter presenter,
+    final HelperEditorViewModel model,
   ) {
     return WillPopScope(
       onWillPop: () {
@@ -132,8 +132,8 @@ class EditorPageBuilder implements EditorView {
 
   Widget _buildAddButton(
     final BuildContext context,
-    final EditorPresenter presenter,
-    final EditorViewModel model,
+    final HelperEditorPresenter presenter,
+    final HelperEditorViewModel model,
   ) {
     return Positioned(
       bottom: 16,
@@ -148,8 +148,8 @@ class EditorPageBuilder implements EditorView {
 
   Widget _buildValidationActions(
     final BuildContext context,
-    final EditorPresenter presenter,
-    final EditorViewModel model,
+    final HelperEditorPresenter presenter,
+    final HelperEditorViewModel model,
   ) {
     return Positioned(
       bottom: 32,
@@ -184,8 +184,8 @@ class EditorPageBuilder implements EditorView {
   @override
   showHelperModal(
     final BuildContext context,
-    final EditorPresenter presenter,
-    final EditorViewModel model,
+    final HelperEditorPresenter presenter,
+    final HelperEditorViewModel model,
   ) {
     showModalBottomSheetOptions(
       context,
@@ -217,8 +217,8 @@ class EditorPageBuilder implements EditorView {
   addNewHelper(
     final BuildContext context,
     final HelperType helperType,
-    final EditorPresenter presenter,
-    final EditorViewModel model,
+    final HelperEditorPresenter presenter,
+    final HelperEditorViewModel model,
   ) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:

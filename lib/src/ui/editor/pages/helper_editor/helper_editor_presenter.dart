@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/editor_factory.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:palplugin/src/services/helper_service.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
 
-import 'editor.dart';
-import 'editor_viewmodel.dart';
+import 'helper_editor.dart';
+import 'helper_editor_viewmodel.dart';
 
-class EditorPresenter extends Presenter<EditorViewModel, EditorView> {
+class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
   final HelperService helperService;
 
-  EditorPresenter(
-    EditorView viewInterface,
+  HelperEditorPresenter(
+    HelperEditorView viewInterface,
     this.helperService,
-  ) : super(EditorViewModel(), viewInterface);
+  ) : super(HelperEditorViewModel(), viewInterface);
 
   @override
   void onInit() {

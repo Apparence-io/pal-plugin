@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/editor_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 class EditorFactory {
   static CreateHelperEntity build(HelperViewModel model) {

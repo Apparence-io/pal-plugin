@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/editor_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 class EditorFullscreenHelperWidget extends StatefulWidget {
   final FullscreenHelperViewModel fullscreenHelperViewModel;

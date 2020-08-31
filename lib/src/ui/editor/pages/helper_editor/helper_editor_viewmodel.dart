@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 
-class EditorViewModel extends MVVMModel {
+class HelperEditorViewModel extends MVVMModel {
   bool enableSave;
   bool isLoading;
 

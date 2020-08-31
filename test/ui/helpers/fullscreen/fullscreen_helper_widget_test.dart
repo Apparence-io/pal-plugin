@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 void main() {
   group('full screen helper widget', () {
@@ -64,7 +65,7 @@ void main() {
     group('editor mode', () {
       testWidgets('textfield is present', (WidgetTester tester) async {
         EditorFullscreenHelperWidget helperWidget = EditorFullscreenHelperWidget(
-          fullscreenHelperNotifier: FullscreenHelperNotifier(),
+          fullscreenHelperViewModel: FullscreenHelperViewModel(),
         );
         var app = new MediaQuery(
             data: MediaQueryData(), child: MaterialApp(home: helperWidget));

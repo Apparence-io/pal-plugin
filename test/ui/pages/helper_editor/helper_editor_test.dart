@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/services/editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/editor.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/widgets/editor_button.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
-
-class EditorServiceMock extends Mock implements EditorService {}
 
 class HelperServiceMock extends Mock implements HelperService {}
 
 Future _initPage(
   WidgetTester tester,
 ) async {
-  EditorService editorService = EditorServiceMock();
   HelperService helperService = HelperServiceMock();
 
   var app = new MediaQuery(
@@ -27,10 +23,9 @@ Future _initPage(
           builder: (context) => MaterialApp(
             theme: PalTheme.of(context).buildTheme(),
             onGenerateRoute: (_) => MaterialPageRoute(
-                builder: EditorPageBuilder(
+                builder: HelperEditorPageBuilder(
               '',
               null,
-              editorService: editorService,
               helperService: helperService,
             ).build),
           ),

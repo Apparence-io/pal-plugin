@@ -10,7 +10,7 @@ import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
-import 'package:palplugin/src/ui/editor/pages/editor/editor.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/widgets/helper_tile_widget.dart';
@@ -227,7 +227,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
                   // FIXME: This will be moved to new page
                   OverlayEntry helperOverlay = OverlayEntry(
                     opaque: false,
-                    builder: EditorPageBuilder(
+                    builder: HelperEditorPageBuilder(
                       model.pageId,
                       hostedAppNavigatorKey,
                     ).build,

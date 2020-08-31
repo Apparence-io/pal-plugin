@@ -1,33 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
 
 class EditorViewModel extends MVVMModel {
   bool enableSave;
   bool isLoading;
 
   // Toolbar stuff
-  bool toobarIsVisible;
+  bool toolbarIsVisible;
   Offset toolbarPosition;
   Size toolbarSize;
 
-  FullscreenHelperNotifier fullscreenHelperNotifier;
-  BasicHelper basicHelper;
+  // FullscreenHelperNotifier fullscreenHelperNotifier;
+  HelperViewModel basicHelperModel;
 }
 
-class BasicHelper {
+class HelperViewModel<T> {
   final String name;
   final HelperTriggerType triggerType;
   final int priority;
   final int versionMinId;
   final int versionMaxId;
+  final T helper;
 
-  BasicHelper({
+  HelperViewModel({
     @required this.name,
     @required this.triggerType,
     @required this.priority,
     @required this.versionMinId,
     this.versionMaxId,
+    @required this.helper,
   });
+}
+
+class FullscreenHelperViewModel
+    extends HelperViewModel<FullscreenHelperViewModel> {
+  final ValueNotifier<String> title = ValueNotifier('Edit me!');
+  final ValueNotifier<Color> fontColor = ValueNotifier(Colors.white);
+  final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
+  final ValueNotifier<Color> borderColor = ValueNotifier(Colors.greenAccent);
+  final ValueNotifier<int> languageId = ValueNotifier(1);
+  final ValueNotifier<num> fontSize = ValueNotifier(80.0);
 }

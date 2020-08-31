@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/services/editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
@@ -36,7 +35,6 @@ abstract class EditorView {
 class EditorPageBuilder implements EditorView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
-  final EditorService editorService;
   final HelperService helperService;
 
   final _mvvmPageBuilder = MVVMPageBuilder<EditorPresenter, EditorViewModel>();
@@ -45,7 +43,6 @@ class EditorPageBuilder implements EditorView {
   EditorPageBuilder(
     this.pageId,
     this.hostedAppNavigatorKey, {
-    this.editorService,
     this.helperService,
   });
 
@@ -54,10 +51,7 @@ class EditorPageBuilder implements EditorView {
       key: ValueKey("EditorPage"),
       context: context,
       presenterBuilder: (context) => EditorPresenter(
-        this,
-        editorService ?? EditorInjector.of(context).editorService,
-        helperService ?? EditorInjector.of(context).helperService
-      ),
+          this, helperService ?? EditorInjector.of(context).helperService),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
         presenter,
@@ -92,9 +86,9 @@ class EditorPageBuilder implements EditorView {
                       children: [
                         if (_helperToEdit == null)
                           _buildAddButton(context, presenter, model),
-                        _buildValidationActions(context, presenter),
+                        _buildValidationActions(context, presenter, model),
                         _buildBannerEditorMode(context),
-                        if (model.toobarIsVisible &&
+                        if (model.toolbarIsVisible &&
                             model.toolbarPosition != null)
                           Positioned(
                             top: model.toolbarPosition.dy - 8.0,
@@ -155,6 +149,7 @@ class EditorPageBuilder implements EditorView {
   Widget _buildValidationActions(
     final BuildContext context,
     final EditorPresenter presenter,
+    final EditorViewModel model,
   ) {
     return Positioned(
       bottom: 32,
@@ -173,7 +168,7 @@ class EditorPageBuilder implements EditorView {
             child: EditorButton.validate(
               PalTheme.of(context),
               () async {
-                await presenter.saveFullscreenHelper(pageId);
+                await presenter.save(pageId, model.basicHelperModel);
                 await Future.delayed(Duration(milliseconds: 500));
 
                 removeOverlay(context);
@@ -228,7 +223,7 @@ class EditorPageBuilder implements EditorView {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         _helperToEdit = EditorFullscreenHelperWidget(
-          fullscreenHelperNotifier: model.fullscreenHelperNotifier,
+          fullscreenHelperViewModel: model.basicHelperModel.helper,
           onTitleFocusChanged: (bool hasFocus, Size size, Offset position) {
             if (!hasFocus) {
               presenter.hideToolbar();

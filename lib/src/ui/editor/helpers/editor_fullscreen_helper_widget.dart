@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-
-class FullscreenHelperNotifier {
-  final ValueNotifier<String> title = ValueNotifier('Edit me!');
-  final ValueNotifier<Color> fontColor = ValueNotifier(Colors.white);
-  final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
-  final ValueNotifier<Color> borderColor = ValueNotifier(Colors.greenAccent);
-  final ValueNotifier<int> languageId = ValueNotifier(1);
-  final ValueNotifier<num> fontSize = ValueNotifier(80.0);
-}
+import 'package:palplugin/src/ui/editor/pages/editor/editor_viewmodel.dart';
 
 class EditorFullscreenHelperWidget extends StatefulWidget {
-  final FullscreenHelperNotifier fullscreenHelperNotifier;
+  final FullscreenHelperViewModel fullscreenHelperViewModel;
   final Function(String) onTitleTextChanged;
   final Function(bool, Size, Offset) onTitleFocusChanged;
 
   EditorFullscreenHelperWidget({
-    @required this.fullscreenHelperNotifier,
+    @required this.fullscreenHelperViewModel,
     this.onTitleFocusChanged,
     this.onTitleTextChanged,
     Key key,
@@ -44,7 +36,7 @@ class _EditorFullscreenHelperWidgetState
   }
 
   _onTitleTextChanged() {
-    widget.fullscreenHelperNotifier.title?.value =
+    widget.fullscreenHelperViewModel.title?.value =
         _titleController?.value?.text;
   }
 
@@ -83,7 +75,7 @@ class _EditorFullscreenHelperWidgetState
           curve: Curves.fastOutSlowIn,
           opacity: helperOpacity,
           child: Container(
-            color: widget.fullscreenHelperNotifier.backgroundColor?.value,
+            color: widget.fullscreenHelperViewModel.backgroundColor?.value,
             child: Stack(
               children: [
                 Center(
@@ -105,7 +97,7 @@ class _EditorFullscreenHelperWidgetState
                               "Ok, thanks !",
                               style: TextStyle(
                                 color: widget
-                                    .fullscreenHelperNotifier.fontColor?.value,
+                                    .fullscreenHelperViewModel.fontColor?.value,
                                 fontSize: 18,
                                 decoration: TextDecoration.underline,
                               ),
@@ -121,7 +113,7 @@ class _EditorFullscreenHelperWidgetState
                               "This is not helping",
                               style: TextStyle(
                                 color: widget
-                                    .fullscreenHelperNotifier.fontColor?.value,
+                                    .fullscreenHelperViewModel.fontColor?.value,
                                 fontSize: 10,
                               ),
                               textAlign: TextAlign.center,
@@ -150,17 +142,17 @@ class _EditorFullscreenHelperWidgetState
         hintText: 'Edit me!',
         hintStyle: TextStyle(
           color:
-              widget.fullscreenHelperNotifier.fontColor?.value?.withAlpha(80),
+              widget.fullscreenHelperViewModel.fontColor?.value?.withAlpha(80),
           decoration: TextDecoration.none,
-          fontSize: widget.fullscreenHelperNotifier.fontSize?.value ??
+          fontSize: widget.fullscreenHelperViewModel.fontSize?.value ??
               Theme.of(context).textTheme.headline2.fontSize,
         ),
       ),
       textAlign: TextAlign.center,
       style: TextStyle(
-        color: widget.fullscreenHelperNotifier.fontColor?.value,
+        color: widget.fullscreenHelperViewModel.fontColor?.value,
         decoration: TextDecoration.none,
-        fontSize: widget.fullscreenHelperNotifier.fontSize?.value ??
+        fontSize: widget.fullscreenHelperViewModel.fontSize?.value ??
             Theme.of(context).textTheme.headline2.fontSize,
       ),
     );

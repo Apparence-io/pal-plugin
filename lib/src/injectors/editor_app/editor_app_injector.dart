@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
-import 'package:palplugin/src/services/client/versions/package_version.dart';
+import 'package:palplugin/src/pal_navigator_observer.dart';
+import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/page_server.dart';
@@ -16,9 +18,12 @@ class EditorInjector extends InheritedWidget {
 
   final PalEditModeStateService _palEditModeStateService;
 
+  final PalRouteObserver routeObserver;
+
   EditorInjector({
     Key key,
     @required EditorAppContext appContext,
+    @required this.routeObserver,
     @required Widget child,
   })  : assert(child != null && appContext != null),
         this._pageService = PageService.build(appContext.pageRepository),

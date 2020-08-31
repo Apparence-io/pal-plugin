@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:palplugin/src/database/adapter/helper_entity_adapter.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
@@ -10,6 +10,7 @@ import 'package:palplugin/src/database/repository/base_repository.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
 class HelperRepository extends BaseHttpRepository {
+
   final HelperEntityAdapter _adapter = HelperEntityAdapter();
 
   HelperRepository({@required HttpClient httpClient})
@@ -29,5 +30,10 @@ class HelperRepository extends BaseHttpRepository {
     final Response response =
         await this.httpClient.get('pages/$pageId/helpers');
     return this._adapter.parsePage(response.body);
+  }
+
+  Future<List<HelperEntity>> getClientHelpers(final String pageId, String version, int inAppUserId) async {
+    final Response response = await this.httpClient.get('pages/$pageId/helpers?inAppUserId=$inAppUserId&version=$version');
+    return this._adapter.parseArray(response.body);
   }
 }

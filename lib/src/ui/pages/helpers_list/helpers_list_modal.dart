@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/ui/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/pages/editor/editor.dart';
@@ -25,9 +26,13 @@ abstract class HelpersListModalView {
 }
 
 class HelpersListModal extends StatelessWidget implements HelpersListModalView {
+
   final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
+
   final GlobalKey repaintBoundaryKey;
+
   final HelpersListModalLoader loader;
+
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
 
@@ -49,6 +54,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             HelpersListModalLoader(
               EditorInjector.of(context).pageService,
               EditorInjector.of(context).helperService,
+              EditorInjector.of(context).routeObserver
             ),
       ),
       builder: (context, presenter, model) {

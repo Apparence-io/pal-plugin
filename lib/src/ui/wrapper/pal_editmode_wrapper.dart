@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/palplugin.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/theme.dart';
@@ -23,11 +25,14 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
 
   final GlobalKey _repaintBoundaryKey = GlobalKey();
 
+  PalRouteObserver routeObserver;
+
   PalEditModeStateService palEditModeStateService;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    routeObserver = EditorInjector.of(context).routeObserver;
     palEditModeStateService = EditorInjector.of(context).palEditModeStateService;
     palEditModeStateService.showEditorBubble.addListener(_onShowBubbleStateChanged);
   }

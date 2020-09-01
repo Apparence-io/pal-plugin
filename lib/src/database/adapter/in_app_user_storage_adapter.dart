@@ -1,0 +1,14 @@
+import 'package:palplugin/src/database/adapter/generic_adapter.dart';
+import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
+
+class InAppUserEntityAdapter extends GenericEntityAdapter<InAppUserEntity> {
+  @override
+  InAppUserEntity parseMap(Map<String, dynamic> map) {
+    return InAppUserEntity(
+      id: map["id"],
+      userAppId: map["userAppId"],
+      anonymous: map["anonymous"],
+      disabledHelpers: map["disabledHelpers"],
+    );
+  }
+}

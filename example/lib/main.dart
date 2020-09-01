@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         navigatorObservers: [_palNavigator],
         title: 'Pal Demo',
         debugShowCheckedModeBanner: false,
-        onGenerateRoute: (RouteSettings settings) => route(settings),
+        onGenerateRoute: route,
         theme: ThemeData(
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,

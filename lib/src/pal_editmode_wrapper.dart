@@ -49,6 +49,7 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
       child: Overlayed(
         child: Builder(
           builder: (context) => MaterialApp(
+            key: palNavigatorGlobalKey,
             debugShowCheckedModeBanner: false,
             onGenerateRoute: (RouteSettings settings) => route(settings),
             theme: PalTheme.of(context).buildTheme(),

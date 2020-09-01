@@ -21,13 +21,13 @@ class HelperRepository extends BaseHttpRepository {
   ) async {
     final Response response = await this
         .httpClient
-        .post('pages/$pageId/helpers', body: jsonEncode(createHelper));
+        .post('editor/pages/$pageId/helpers', body: jsonEncode(createHelper));
     return this._adapter.parse(response.body);
   }
 
   Future<Pageable<HelperEntity>> getHelpers(final String pageId) async {
     final Response response =
-        await this.httpClient.get('pages/$pageId/helpers');
+        await this.httpClient.get('editor/pages/$pageId/helpers');
     return this._adapter.parsePage(response.body);
   }
 }

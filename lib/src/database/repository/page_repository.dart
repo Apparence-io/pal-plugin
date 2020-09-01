@@ -23,12 +23,12 @@ class PageRepository extends BaseHttpRepository {
   }
 
   Future<Pageable<PageEntity>> getPages() async {
-    final Response response = await this.httpClient.get('pages');
+    final Response response = await this.httpClient.get('editor/pages');
     return this._adapter.parsePage(response.body);
   }
 
   Future<Pageable<PageEntity>> getPage(final String route) async {
-    final Response response = await this.httpClient.get('pages?route=$route');
+    final Response response = await this.httpClient.get('editor/pages?route=$route');
     return this._adapter.parsePage(response.body);
   }
 }

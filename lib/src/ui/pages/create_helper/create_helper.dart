@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 import 'package:palplugin/src/ui/widgets/bordered_text_field.dart';
+
+class CreateHelperPageArguments {
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+  final String pageId;
+
+  CreateHelperPageArguments(
+    this.hostedAppNavigatorKey,
+    this.pageId,
+  );
+}
 
 abstract class CreateHelperView {
   void onFormChanged(
@@ -14,7 +28,14 @@ abstract class CreateHelperView {
 }
 
 class CreateHelperPage extends StatefulWidget {
-  CreateHelperPage({Key key});
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+  final String pageId;
+
+  CreateHelperPage({
+    Key key,
+    this.hostedAppNavigatorKey,
+    this.pageId,
+  });
 
   @override
   _CreateHelperPageState createState() => _CreateHelperPageState();
@@ -36,22 +57,22 @@ class _CreateHelperPageState extends State<CreateHelperPage>
       ),
       builder: (context, presenter, model) {
         return Scaffold(
-          key: ValueKey('CreateHelper'),
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            iconTheme: IconThemeData(
-              color: PalTheme.of(context.buildContext).colors.dark,
-            ),
-            title: Text(
-              'Create new helper',
-              style: TextStyle(
+            key: ValueKey('CreateHelper'),
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              iconTheme: IconThemeData(
                 color: PalTheme.of(context.buildContext).colors.dark,
               ),
+              title: Text(
+                'Create new helper',
+                style: TextStyle(
+        color: PalTheme.of(context.buildContext).colors.dark,
+                ),
+              ),
             ),
-          ),
-          body: this._buildPage(context.buildContext, presenter, model),
-        );
+            body: this._buildPage(context.buildContext, presenter, model),
+          );
       },
     );
   }
@@ -144,6 +165,20 @@ class _CreateHelperPageState extends State<CreateHelperPage>
 
   @override
   void launchHelperEditor() {
-    // TODO: implement launchHelperEditor
+    HapticFeedback.selectionClick();
+
+    OverlayEntry helperOverlay = OverlayEntry(
+      opaque: false,
+      builder: HelperEditorPageBuilder(
+        widget.pageId,
+        widget.hostedAppNavigatorKey,
+      ).build,
+    );
+    Overlayed.of(context).entries.putIfAbsent(
+          OverlayKeys.EDITOR_OVERLAY_KEY,
+          () => helperOverlay,
+        );
+    widget.hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
+    Navigator.of(context).pop();
   }
 }

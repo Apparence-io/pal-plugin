@@ -8,12 +8,14 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/widgets/helper_tile_widget.dart';
+import 'package:palplugin/src/ui/pages/create_helper/create_helper.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 abstract class HelpersListModalView {
@@ -21,6 +23,10 @@ abstract class HelpersListModalView {
   void processElement(Element element, {int n = 0});
   Future<void> capturePng(
     final HelpersListModalPresenter presenter,
+    final HelpersListModalModel model,
+  );
+  void openHelperCreationPage(
+    final BuildContext context,
     final HelpersListModalModel model,
   );
 }
@@ -203,9 +209,21 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               child: FloatingActionButton(
                 heroTag: 'palHelpersListModalNew',
                 key: ValueKey('palHelpersListModalNew'),
-                onPressed: () {
+                onPressed: () async {
                   HapticFeedback.selectionClick();
-                  Navigator.pushNamed(context, '/editor/new');
+
+                  // Display the helper creation view
+                  await Navigator.pushNamed(
+                    context,
+                    '/editor/new',
+                    arguments: CreateHelperPageArguments(
+                      hostedAppNavigatorKey,
+                      model.pageId,
+                    ),
+                  );
+
+                  // Dismiss the bottom modal when next was tapped
+                  Navigator.pop(context);
                 },
                 child: Icon(
                   Icons.add,
@@ -224,25 +242,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               child: FloatingActionButton(
                 heroTag: 'palHelpersListModalEditor',
                 key: ValueKey('palHelpersListModalEditor'),
-                onPressed: () {
-                  HapticFeedback.selectionClick();
-                  Navigator.of(context).pop();
-                  // FIXME: This will be moved to new page
-                  OverlayEntry helperOverlay = OverlayEntry(
-                    opaque: false,
-                    builder: HelperEditorPageBuilder(
-                      model.pageId,
-                      hostedAppNavigatorKey,
-                    ).build,
-                  );
-                  Overlayed.of(context).entries.putIfAbsent(
-                        OverlayKeys.EDITOR_OVERLAY_KEY,
-                        () => helperOverlay,
-                      );
-                  hostedAppNavigatorKey.currentState.overlay
-                      .insert(helperOverlay);
-                  presenter.hidePalBubble();
-                },
+                onPressed: () => openHelperCreationPage(context, model),
                 child: Icon(
                   Icons.format_paint,
                   size: 18.0,
@@ -303,5 +303,26 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       print('error while catching screenshot');
       print(e);
     }
+  }
+
+  @override
+  void openHelperCreationPage(
+    final BuildContext context,
+    final HelpersListModalModel model,
+  ) async {
+    HapticFeedback.selectionClick();
+
+    // Display the helper creation view
+    await Navigator.pushNamed(
+      context,
+      '/editor/new',
+      arguments: CreateHelperPageArguments(
+        hostedAppNavigatorKey,
+        model.pageId,
+      ),
+    );
+
+    // Dismiss the bottom modal when next was tapped
+    // Navigator.pop(context);
   }
 }

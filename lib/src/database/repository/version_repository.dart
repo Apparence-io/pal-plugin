@@ -19,7 +19,7 @@ class VersionHttpRepository extends BaseHttpRepository implements VersionReposit
 
   @override
   Future<Pageable<VersionEntity>> getVersions({String name = '', int pageSize = 10, }) {
-    return this.httpClient.get('/versions?versionName=$name&pageSize=$pageSize')
+    return this.httpClient.get('editor/versions?versionName=$name&pageSize=$pageSize')
       .then((res) => _versionEntityAdapter.parsePage(res.body));
   }
 

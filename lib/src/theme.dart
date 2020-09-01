@@ -48,6 +48,7 @@ class _PalThemeColors {
         color2: _PalThemeLightColors.lightBlue,
         color3: _PalThemeLightColors.cyan,
         color4: _PalThemeLightColors.aqua,
+        color5: _PalThemeLightColors.gray,
         light: _PalThemeLightColors.white,
         accent: _PalThemeLightColors.red,
         bottomNavEditorGradient: _PalThemeLightColors.gradient1,

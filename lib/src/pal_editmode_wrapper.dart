@@ -99,12 +99,13 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius,
       ),
-      builder: (context) {
+      builder: (BuildContext bottomSheetContext) {
         return ClipRRect(
           borderRadius: borderRadius,
           child: HelpersListModal(
             repaintBoundaryKey: _repaintBoundaryKey,
             hostedAppNavigatorKey: widget.hostedAppNavigatorKey,
+            bottomModalContext: bottomSheetContext,
           ),
         );
       },

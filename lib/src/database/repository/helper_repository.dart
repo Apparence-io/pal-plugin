@@ -25,9 +25,9 @@ class HelperRepository extends BaseHttpRepository {
     return this._adapter.parse(response.body);
   }
 
-  Future<Pageable<HelperEntity>> getHelpers(final String pageId) async {
+  Future<Pageable<HelperEntity>> getHelpers(final String pageId, final int page, final int pageSize) async {
     final Response response =
-        await this.httpClient.get('editor/pages/$pageId/helpers');
+        await this.httpClient.get('editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
     return this._adapter.parsePage(response.body);
   }
 }

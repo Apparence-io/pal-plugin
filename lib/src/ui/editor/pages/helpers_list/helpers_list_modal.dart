@@ -8,15 +8,12 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/widgets/helper_tile_widget.dart';
-import 'package:palplugin/src/ui/pages/create_helper/create_helper.dart';
-import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 
 abstract class HelpersListModalView {
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
@@ -35,8 +32,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   final GlobalKey<NavigatorState>
       hostedAppNavigatorKey; //FIXME remove this from here
   final GlobalKey repaintBoundaryKey;
+  final BuildContext bottomModalContext;
   final HelpersListModalLoader loader;
   final PalEditModeStateService palEditModeStateService;
+  final ScrollController listController = ScrollController();
 
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
@@ -45,6 +44,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     this.loader,
     this.hostedAppNavigatorKey,
     this.repaintBoundaryKey,
+    this.bottomModalContext,
     this.palEditModeStateService,
   });
 
@@ -93,7 +93,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             child: _buildHeader(context, model, presenter),
           ),
           Expanded(
-            child: _buildList(context, presenter, model),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: _buildList(context, presenter, model),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -148,6 +151,12 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             separatorBuilder: (context, index) => SizedBox(
               height: 12,
             ),
+            controller: listController
+              ..addListener(() {
+                if (this.listController.position.extentAfter <= 100) {
+                  presenter.loadMore();
+                }
+              }),
             itemCount: model.helpers.length,
             itemBuilder: (context, index) {
               HelperEntity helperEntity = model.helpers[index];
@@ -168,7 +177,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
           )
         : Center(
             key: ValueKey('palHelpersListModalNoHelpers'),
-            child: (model.isLoading)
+            child: (model.isLoading || model.loadingMore)
                 ? CircularProgressIndicator()
                 : Text('No helpers on this page.'),
           );
@@ -209,22 +218,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               child: FloatingActionButton(
                 heroTag: 'palHelpersListModalNew',
                 key: ValueKey('palHelpersListModalNew'),
-                onPressed: () async {
-                  HapticFeedback.selectionClick();
-
-                  // Display the helper creation view
-                  await Navigator.pushNamed(
-                    context,
-                    '/editor/new',
-                    arguments: CreateHelperPageArguments(
-                      hostedAppNavigatorKey,
-                      model.pageId,
-                    ),
-                  );
-
-                  // Dismiss the bottom modal when next was tapped
-                  Navigator.pop(context);
-                },
+                onPressed: () => openHelperCreationPage(context, model),
                 child: Icon(
                   Icons.add,
                   size: 18.0,
@@ -232,24 +226,6 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
                 shape: CircleBorder(),
               ),
             ),
-            // FIXME: This icon button is temporaly available
-            SizedBox(
-              width: 20.0,
-            ),
-            SizedBox(
-              height: 30.0,
-              width: 30.0,
-              child: FloatingActionButton(
-                heroTag: 'palHelpersListModalEditor',
-                key: ValueKey('palHelpersListModalEditor'),
-                onPressed: () => openHelperCreationPage(context, model),
-                child: Icon(
-                  Icons.format_paint,
-                  size: 18.0,
-                ),
-                shape: CircleBorder(),
-              ),
-            )
           ],
         ),
       ],
@@ -313,7 +289,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     HapticFeedback.selectionClick();
 
     // Display the helper creation view
-    await Navigator.pushNamed(
+    final shouldOpenEditor = await Navigator.pushNamed(
       context,
       '/editor/new',
       arguments: CreateHelperPageArguments(
@@ -322,7 +298,9 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
       ),
     );
 
-    // Dismiss the bottom modal when next was tapped
-    // Navigator.pop(context);
+    if (shouldOpenEditor != null && shouldOpenEditor) {
+      // Dismiss the bottom modal when next was tapped
+      Navigator.pop(bottomModalContext);
+    }
   }
 }

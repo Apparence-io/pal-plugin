@@ -4,11 +4,14 @@ class BorderedTextField extends StatelessWidget {
   final String label;
   final String hintText;
   final String Function(String) validator;
+  final TextEditingController controller;
+
   const BorderedTextField({
     Key key,
     @required this.label,
     @required this.hintText,
     @required this.validator,
+    @required this.controller,
   }) : super(key: key);
 
   @override
@@ -27,7 +30,7 @@ class BorderedTextField extends StatelessWidget {
           ),
         ),
         TextFormField(
-          // autovalidate: true,
+          controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(7.0))),

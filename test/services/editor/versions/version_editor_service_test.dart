@@ -65,7 +65,7 @@ void main() {
       };
 
       when(packageVersionReaderMock.version).thenReturn(versionNumber);
-      when(httpClientMock.get('/versions?versionName=$versionNumber&pageSize=10'))
+      when(httpClientMock.get('editor/versions?versionName=$versionNumber&pageSize=10'))
         .thenAnswer((_) async => http.Response(jsonEncode(expectedModel), 200));
       var currentVersionEntity = await versionEditorService.getCurrentVersion();
       expect(currentVersionEntity, isNotNull);
@@ -105,7 +105,7 @@ void main() {
         "totalElements": 3,
         "totalPages": 1
       };
-      when(httpClientMock.get('/versions?versionName=&pageSize=1000'))
+      when(httpClientMock.get('editor/versions?versionName=&pageSize=1000'))
         .thenAnswer((_) async => http.Response(jsonEncode(expectedModel), 200));
 
       List<VersionEntity> allVersions = await versionEditorService.getAll();

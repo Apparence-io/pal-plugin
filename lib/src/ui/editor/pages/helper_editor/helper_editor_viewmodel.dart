@@ -11,6 +11,7 @@ class HelperEditorViewModel extends MVVMModel {
   Offset toolbarPosition;
   Size toolbarSize;
 
+  bool isEditingWidget;
   HelperViewModel helperViewModel;
 }
 

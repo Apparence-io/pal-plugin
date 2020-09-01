@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/ui/pages/create_helper/create_helper.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
 

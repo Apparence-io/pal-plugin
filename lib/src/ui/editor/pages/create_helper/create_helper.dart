@@ -151,6 +151,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
             children: [
               DropdownButtonFormField(
                 key: ValueKey('palCreateHelperTypeDropdown'),
+                validator: (String value) => (value.isEmpty) ? 'Please select a type' : null,
                 value: model.triggerTypes.first.key,
                 onChanged: presenter.selectTriggerHelperType,
                 items: _buildDropdownArray(model),

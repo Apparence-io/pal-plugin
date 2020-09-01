@@ -55,20 +55,6 @@ class HelperEditorPresenter
     this.refreshView();
   }
 
-  // saveFullscreenHelper(String pageId) async {
-  //   viewModel.isLoading = true;
-  //   this.refreshView();
-
-  //   // Create fullscren infos only
-  //   await this.helperService.createPageHelper(
-  //         pageId,
-  //         HelperEditorFactory.build(viewModel.basicHelperModel),
-  //       );
-
-  //   viewModel.isLoading = false;
-  //   this.refreshView();
-  // }
-
   Future<HelperEntity> save(
     String pageId,
     HelperViewModel helperViewModel,

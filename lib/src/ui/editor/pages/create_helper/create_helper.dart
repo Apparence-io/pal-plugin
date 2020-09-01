@@ -6,7 +6,7 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
-import 'package:palplugin/src/ui/widgets/bordered_text_field.dart';
+import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
 
 class CreateHelperPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
@@ -131,10 +131,10 @@ class _CreateHelperPageState extends State<CreateHelperPage>
                     bottom: 16.0,
                   ),
                   child: RaisedButton(
+                    key: ValueKey('palCreateHelperNextButton'),
                     disabledColor: PalTheme.of(context).colors.color4,
                     child: Text(
                       'Next',
-                      key: ValueKey('palCreateHelperNextButton'),
                       style: TextStyle(
                         color: Colors.white,
                       ),

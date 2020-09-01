@@ -9,3 +9,14 @@ HelperTriggerType getHelperTriggerType(final String value) {
 String helperTriggerTypeToString(final HelperTriggerType helperTriggerType) {
   return helperTriggerType.toString().split('.')[1];
 }
+
+String getHelperTriggerTypeDescription(final HelperTriggerType helperTriggerType) {
+  String description;
+  switch (helperTriggerType) {
+    case HelperTriggerType.ON_SCREEN_VISIT:
+      description = 'On screen visit';
+      break;
+    default:
+  }
+  return description;
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
@@ -23,7 +24,7 @@ abstract class CreateHelperView {
     CreateHelperModel model,
     CreateHelperPresenter presenter,
   );
-  void launchHelperEditor();
+  void launchHelperEditor(final CreateHelperModel model);
 }
 
 class CreateHelperPage extends StatefulWidget {
@@ -52,9 +53,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     return _mvvmPageBuilder.build(
       key: UniqueKey(),
       context: context,
-      presenterBuilder: (context) => CreateHelperPresenter(
-        this,
-      ),
+      presenterBuilder: (context) => CreateHelperPresenter(this),
       builder: (context, presenter, model) {
         return Scaffold(
           key: ValueKey('CreateHelper'),
@@ -103,18 +102,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
                         height: 205.0,
                       ),
                       SizedBox(height: 32.0),
-                      Form(
-                        key: _formKey,
-                        onChanged: () => onFormChanged(model, presenter),
-                        child: BorderedTextField(
-                          key: ValueKey('palCreateHelperTextFieldName'),
-                          label: 'Name',
-                          hintText: 'My new helper',
-                          controller: _helperNameController,
-                          validator: (String value) =>
-                              (value.isEmpty) ? 'Please enter a name' : null,
-                        ),
-                      ),
+                      _buildForm(model, presenter),
                     ],
                   ),
                 ),
@@ -130,22 +118,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
                     right: 16.0,
                     bottom: 16.0,
                   ),
-                  child: RaisedButton(
-                    key: ValueKey('palCreateHelperNextButton'),
-                    disabledColor: PalTheme.of(context).colors.color4,
-                    child: Text(
-                      'Next',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    color: PalTheme.of(context).colors.color1,
-                    onPressed:
-                        model.isFormValid ? () => launchHelperEditor() : null,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
+                  child: _buildNextButton(model),
                 ),
               ),
             ),
@@ -153,6 +126,79 @@ class _CreateHelperPageState extends State<CreateHelperPage>
         ),
       ),
     );
+  }
+
+  Widget _buildForm(
+    final CreateHelperModel model,
+    final CreateHelperPresenter presenter,
+  ) {
+    return Form(
+      key: _formKey,
+      onChanged: () => onFormChanged(model, presenter),
+      child: Wrap(
+        runSpacing: 17.0,
+        children: [
+          BorderedTextField(
+            key: ValueKey('palCreateHelperTextFieldName'),
+            label: 'Name',
+            hintText: 'My new helper',
+            controller: _helperNameController,
+            validator: (String value) =>
+                (value.isEmpty) ? 'Please enter a name' : null,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownButtonFormField(
+                key: ValueKey('palCreateHelperTypeDropdown'),
+                value: model.triggerTypes.first.key,
+                onChanged: presenter.selectTriggerHelperType,
+                items: _buildDropdownArray(model),
+              ),
+              SizedBox(height: 4.0),
+              Text(
+                'Select the trigger type',
+                style: TextStyle(
+                  fontSize: 9.0,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNextButton(final CreateHelperModel model) {
+    return RaisedButton(
+      key: ValueKey('palCreateHelperNextButton'),
+      disabledColor: PalTheme.of(context).colors.color4,
+      child: Text(
+        'Next',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      color: PalTheme.of(context).colors.color1,
+      onPressed: model.isFormValid ? () => launchHelperEditor(model) : null,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+    );
+  }
+
+  List<DropdownMenuItem<String>> _buildDropdownArray(
+      final CreateHelperModel model) {
+    List<DropdownMenuItem<String>> dropdownArray = [];
+
+    model.triggerTypes.forEach((element) {
+      dropdownArray.add(DropdownMenuItem<String>(
+        value: element.key,
+        child: Text(element.description),
+      ));
+    });
+
+    return dropdownArray;
   }
 
   @override
@@ -165,7 +211,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   }
 
   @override
-  void launchHelperEditor() {
+  void launchHelperEditor(final CreateHelperModel model) {
     HapticFeedback.selectionClick();
 
     // Open editor overlay
@@ -173,6 +219,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
       widget.hostedAppNavigatorKey,
       widget.pageId,
       helperName: _helperNameController?.value?.text,
+      triggerType: getHelperTriggerType(model.selectedTriggerType),
     );
     OverlayEntry helperOverlay = OverlayEntry(
       opaque: false,

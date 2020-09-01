@@ -35,6 +35,7 @@ void main() {
       expect(
           find.byKey(ValueKey('palCreateHelperTextFieldName')), findsOneWidget);
       expect(find.byKey(ValueKey('palCreateHelperNextButton')), findsOneWidget);
+      expect(find.byKey(ValueKey('palCreateHelperTypeDropdown')), findsOneWidget);
       expect(find.text('Next'), findsOneWidget);
     });
 
@@ -73,6 +74,16 @@ void main() {
                   find.byKey(ValueKey('palCreateHelperNextButton')))
               .enabled,
           isFalse);
+    });
+
+    testWidgets('should select on screen visit type', (WidgetTester tester) async {
+      await _before(tester);
+
+      var dropdownHelperType = find.byKey(ValueKey('palCreateHelperTypeDropdown'));
+      await tester.tap(dropdownHelperType);
+      await tester.pumpAndSettle();
+
+      // TODO: Can only be done when more type are added
     });
   });
 }

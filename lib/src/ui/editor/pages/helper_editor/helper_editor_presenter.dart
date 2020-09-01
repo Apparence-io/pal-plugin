@@ -35,7 +35,7 @@ class HelperEditorPresenter
       viewModel.helperViewModel = FullscreenHelperViewModel(
         name: basicArguments.helperName,
         priority: basicArguments.priority ?? 0,
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+        triggerType: basicArguments.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
         versionMinId: basicArguments.versionMinId ?? 1,
         versionMaxId: basicArguments.versionMaxId ?? 2,
       );

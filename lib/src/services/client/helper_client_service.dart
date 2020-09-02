@@ -15,7 +15,7 @@ class HelperClientService {
       PackageVersionReader()
     );
 
-  Future<List<HelperEntity>> getPageHelpers(final String route) => throw "not implemented";
+  Future<List<HelperEntity>> getPageHelpers(final String route, final String inAppUserId) => throw "not implemented";
 }
 
 class _HelperClientHttpService implements HelperClientService {
@@ -29,7 +29,7 @@ class _HelperClientHttpService implements HelperClientService {
   _HelperClientHttpService(this._helperRepository, this._pageRepository, this._packageVersionReader);
 
   @override
-  Future<List<HelperEntity>> getPageHelpers(final String route) async {
+  Future<List<HelperEntity>> getPageHelpers(final String route, final String inAppUserId) async {
     var page = await _pageRepository.getPage(route);
     if(page == null || page.entities.length == 0) {
       return Future.value([]);
@@ -37,7 +37,7 @@ class _HelperClientHttpService implements HelperClientService {
     return _helperRepository.getClientHelpers(
       page.entities.first.id,
       _packageVersionReader.version,
-      1
+      inAppUserId
     );
   }
 }

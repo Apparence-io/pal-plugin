@@ -1,16 +1,16 @@
 class InAppUserEntity {
   String id;
-  String userAppId;
+  String inAppId;
   bool disabledHelpers;
   bool anonymous;
 
   InAppUserEntity(
-      {this.id, this.userAppId, this.disabledHelpers, this.anonymous});
+      {this.id, this.inAppId, this.disabledHelpers, this.anonymous});
 
   Map<String, dynamic> toJson() {
     return {
       "id": this.id,
-      "userAppId": this.userAppId,
+      "inAppId": this.inAppId,
       "disabledHelpers": this.disabledHelpers,
       "anonymous": this.anonymous,
     };

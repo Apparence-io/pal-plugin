@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:palplugin/src/services/client/page_client_service.dart';
 import 'package:palplugin/src/ui/client/helper_orchestrator.dart';
 
@@ -11,6 +13,8 @@ import 'package:palplugin/src/ui/client/helper_orchestrator.dart';
 class HelperClientServiceMock extends Mock implements HelperClientService {}
 
 class PageClientServiceMock extends Mock implements PageClientService {}
+
+class InAppUserClientServiceMock extends Mock implements InAppUserClientService {}
 
 
 class SamplePage extends StatelessWidget {
@@ -30,6 +34,8 @@ void main() {
   group('HelperOrchestrator', () {
 
     var helperClientServiceMock = HelperClientServiceMock();
+
+    InAppUserClientService inAppUserClientService = InAppUserClientServiceMock();
 
     final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -60,6 +66,7 @@ void main() {
         data: MediaQueryData(),
         child: HelperOrchestrator(
           helperClientService:  helperClientServiceMock,
+          inAppUserClientService: inAppUserClientService,
           routeObserver: PalNavigatorObserver.instance(),
           child: MaterialApp(
             home: page1
@@ -73,12 +80,14 @@ void main() {
 
     testWidgets('call helperService to get what needs to be shown on each route', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
-      when(helperClientServiceMock.getPageHelpers(any)).thenAnswer((_) => Future.value([]));
+      when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
+      when(helperClientServiceMock.getPageHelpers(any, any)).thenAnswer((_) => Future.value([]));
       var app = new MediaQuery(
         data: MediaQueryData(),
         child: HelperOrchestrator(
           helperClientService:  helperClientServiceMock,
-          routeObserver: routeObserver,
+            inAppUserClientService: inAppUserClientService,
+            routeObserver: routeObserver,
           child: MaterialApp(
             navigatorKey: navigatorKey,
             navigatorObservers: [routeObserver],
@@ -101,13 +110,15 @@ void main() {
 
     testWidgets('changing page will dissmiss current helper', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
-      when(helperClientServiceMock.getPageHelpers("test")).thenAnswer((_) => Future.value([
+      when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
+      when(helperClientServiceMock.getPageHelpers("test", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([
         HelperEntity(id: "1", name: "test1")
       ]));
-      when(helperClientServiceMock.getPageHelpers("route2")).thenAnswer((_) => Future.value([]));
+      when(helperClientServiceMock.getPageHelpers("route2", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([]));
       var orchestrator = HelperOrchestrator(
         helperClientService: helperClientServiceMock,
-        routeObserver: routeObserver,
+          inAppUserClientService: inAppUserClientService,
+          routeObserver: routeObserver,
         child: MaterialApp(
           navigatorKey: navigatorKey,
           navigatorObservers: [routeObserver],
@@ -130,12 +141,14 @@ void main() {
 
     testWidgets('only one overlay at a time', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
-      when(helperClientServiceMock.getPageHelpers("test")).thenAnswer((_) => Future.value([
+      when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
+      when(helperClientServiceMock.getPageHelpers("test", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([
         HelperEntity(id: "1", name: "test1")
       ]));
       var orchestrator = HelperOrchestrator(
         helperClientService: helperClientServiceMock,
-        routeObserver: routeObserver,
+          inAppUserClientService: inAppUserClientService,
+          routeObserver: routeObserver,
         child: MaterialApp(
           navigatorKey: navigatorKey,
           navigatorObservers: [routeObserver],

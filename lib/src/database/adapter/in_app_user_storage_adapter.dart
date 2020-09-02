@@ -6,7 +6,7 @@ class InAppUserEntityAdapter extends GenericEntityAdapter<InAppUserEntity> {
   InAppUserEntity parseMap(Map<String, dynamic> map) {
     return InAppUserEntity(
       id: map["id"],
-      userAppId: map["userAppId"],
+      inAppId: map["inAppId"],
       anonymous: map["anonymous"],
       disabledHelpers: map["disabledHelpers"],
     );

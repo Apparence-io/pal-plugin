@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
@@ -16,6 +18,8 @@ class HelperOrchestrator extends InheritedWidget {
 
   final HelperClientService helperClientService;
 
+  final InAppUserClientService inAppUserClientService;
+
   final GlobalKey<NavigatorState> navigatorKey;
 
   HelperOrchestrator({
@@ -23,6 +27,7 @@ class HelperOrchestrator extends InheritedWidget {
     @required MaterialApp child,
     @required this.routeObserver,
     @required this.helperClientService,
+    @required this.inAppUserClientService,
   }): assert(child != null),
     this.navigatorKey = child.navigatorKey,
     super(key: key, child: child) {
@@ -36,7 +41,7 @@ class HelperOrchestrator extends InheritedWidget {
     return false;
   }
 
-  _init() {
+  _init() async {
     this.routeObserver.stream.listen((RouteSettings newRoute) async {
       if(newRoute == null || newRoute.name == null) {
         return;
@@ -51,8 +56,8 @@ class HelperOrchestrator extends InheritedWidget {
       popHelper();
     }
     try {
-      List<HelperEntity> helpersToShow = await this.helperClientService
-          .getPageHelpers(route);
+      final List<HelperEntity> helpersToShow = await this.inAppUserClientService.getOrCreate()
+          .then((inAppUser) => this.helperClientService.getPageHelpers(route, inAppUser.id));
       if (helpersToShow != null && helpersToShow.length > 0) {
         _showHelper();
       }

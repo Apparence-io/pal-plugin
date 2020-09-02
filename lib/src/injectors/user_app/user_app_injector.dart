@@ -40,6 +40,6 @@ class UserInjector extends InheritedWidget {
 
   HelperClientService get helperService => this._helperService;
 
-  InAppUserClientService get clientInAppUserService =>
+  InAppUserClientService get inAppUserClientService =>
       this._clientInAppUserService;
 }

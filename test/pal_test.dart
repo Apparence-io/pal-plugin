@@ -17,7 +17,6 @@ void main() {
         body: Container(),
       );
       Pal app = Pal(
-        navigatorKey: null,
         appToken: "testtoken",
         editorModeEnabled: editorModeEnabled,
         child: new MaterialApp(

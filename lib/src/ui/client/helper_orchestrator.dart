@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/palplugin.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
-import 'package:palplugin/src/services/client/page_client_service.dart';
-import 'package:palplugin/src/ui/helpers/fullscreen/fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
 /// On each page visited we check if we have to show a new helper to user
@@ -52,9 +50,14 @@ class HelperOrchestrator extends InheritedWidget {
     if(helper.overlay != null) {
       popHelper();
     }
-    List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route);
-    if(helpersToShow != null && helpersToShow.length > 0) {
-      _showHelper();
+    try {
+      List<HelperEntity> helpersToShow = await this.helperClientService
+          .getPageHelpers(route);
+      if (helpersToShow != null && helpersToShow.length > 0) {
+        _showHelper();
+      }
+    } catch (e) {
+      // Nothing to do
     }
   }
 

@@ -1,8 +1,8 @@
 import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
 import 'package:palplugin/src/database/repository/in_app_user_repository.dart';
-import 'package:palplugin/src/services/client/in_app_user/client_in_app_user_storage.dart';
+import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_storage.dart';
 
-abstract class ClientInAppUserService {
+abstract class InAppUserClientService {
   Future<InAppUserEntity> create();
 
   Future<InAppUserEntity> onConnect(String inAppUserId);
@@ -11,18 +11,18 @@ abstract class ClientInAppUserService {
 
   Future<InAppUserEntity> onDisconnect();
 
-  factory ClientInAppUserService.build(
+  factory InAppUserClientService.build(
       InAppUserRepository inAppUserRepository) =>
       _ClientInAppUserHttpService(inAppUserRepository);
 }
 
-class _ClientInAppUserHttpService implements ClientInAppUserService {
+class _ClientInAppUserHttpService implements InAppUserClientService {
   final InAppUserRepository _inAppUserRepository;
-  final ClientInAppUserStorageManager _clientInAppUserStorageManager;
+  final InAppUserStorageClientManager _clientInAppUserStorageManager;
 
   _ClientInAppUserHttpService(this._inAppUserRepository)
       : this._clientInAppUserStorageManager =
-            ClientInAppUserStorageManager.build();
+            InAppUserStorageClientManager.build();
 
   @override
   Future<InAppUserEntity> create() async {

@@ -2,16 +2,16 @@ import 'package:palplugin/src/database/adapter/in_app_user_storage_adapter.dart'
 import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
 import 'package:palplugin/src/services/local_storage/local_storage_manager.dart';
 
-class ClientInAppUserStorageManager {
+class InAppUserStorageClientManager {
   final StorageManager _localStorageManager;
   final InAppUserEntityAdapter _adapter;
   InAppUserEntity _inAppUser;
 
-  factory ClientInAppUserStorageManager.build() =>
-      ClientInAppUserStorageManager._private(
+  factory InAppUserStorageClientManager.build() =>
+      InAppUserStorageClientManager._private(
           LocalStorageManager("in_app_user"), InAppUserEntityAdapter());
 
-  ClientInAppUserStorageManager._private(
+  InAppUserStorageClientManager._private(
       this._localStorageManager, this._adapter);
 
   Future storeInAppUser(final InAppUserEntity inAppUser) async {

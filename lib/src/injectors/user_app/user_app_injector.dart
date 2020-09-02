@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
-import 'package:palplugin/src/services/client/in_app_user/client_in_app_user_service.dart';
+import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
 import 'package:palplugin/src/services/client/page_client_service.dart';
 
@@ -12,7 +12,7 @@ class UserInjector extends InheritedWidget {
 
   final HelperClientService _helperService;
 
-  final ClientInAppUserService _clientInAppUserService;
+  final InAppUserClientService _clientInAppUserService;
 
   final PalRouteObserver routeObserver;
 
@@ -24,7 +24,7 @@ class UserInjector extends InheritedWidget {
   })  : assert(child != null && appContext != null),
         this._pageService = PageClientService.build(appContext.pageRepository),
         this._helperService = HelperClientService.build(appContext),
-        this._clientInAppUserService = ClientInAppUserService.build(
+        this._clientInAppUserService = InAppUserClientService.build(
             appContext.inAppUserRepository),
         super(key: key, child: child);
 
@@ -40,6 +40,6 @@ class UserInjector extends InheritedWidget {
 
   HelperClientService get helperService => this._helperService;
 
-  ClientInAppUserService get clientInAppUserService =>
+  InAppUserClientService get clientInAppUserService =>
       this._clientInAppUserService;
 }

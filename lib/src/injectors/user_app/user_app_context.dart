@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/repository/helper_repository.dart';
 import 'package:palplugin/src/database/repository/page_repository.dart';
+import 'package:palplugin/src/database/repository/version_repository.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
 /// [UserAppContext] inherited class to provide some context to all childs
@@ -8,7 +9,10 @@ import 'package:palplugin/src/services/http_client/base_client.dart';
 class UserAppContext extends InheritedWidget {
 
   final PageRepository _pageRepository;
+
   final HelperRepository _helperRepository;
+
+  final VersionRepository _versionRepository;
 
   factory UserAppContext.create(
       {Key key, @required Widget child, @required url, @required String token,}) =>
@@ -28,6 +32,7 @@ class UserAppContext extends InheritedWidget {
         assert(httpClient != null),
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._helperRepository = HelperRepository(httpClient: httpClient),
+        this._versionRepository = VersionHttpRepository(httpClient: httpClient),
         super(key: key, child: child);
 
   static UserAppContext of(BuildContext context) {
@@ -42,4 +47,6 @@ class UserAppContext extends InheritedWidget {
   PageRepository get pageRepository => this._pageRepository;
 
   HelperRepository get helperRepository => this._helperRepository;
+
+  VersionRepository get versionRepository => this._versionRepository;
 }

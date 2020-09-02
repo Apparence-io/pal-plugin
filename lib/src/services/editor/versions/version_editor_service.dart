@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:palplugin/src/database/adapter/version_entity_adapter.dart';
 import 'package:palplugin/src/database/entity/version_entity.dart';
 import 'package:palplugin/src/database/repository/version_repository.dart';
-import 'package:palplugin/src/services/client/versions/package_version.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
 abstract class VersionEditorService {

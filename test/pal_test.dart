@@ -10,6 +10,8 @@ import 'package:palplugin/src/ui/editor/widgets/bubble_overlay.dart';
 void main() {
   group('test main plugin start', () {
 
+    final _navigatorKey = GlobalKey<NavigatorState>();
+
     Pal _createApp(bool editorModeEnabled) {
       Scaffold _myHomeTest = Scaffold(
         body: Container(),
@@ -20,6 +22,8 @@ void main() {
         editorModeEnabled: editorModeEnabled,
         child: new MaterialApp(
           home: _myHomeTest,
+          navigatorKey: _navigatorKey,
+          navigatorObservers: [PalNavigatorObserver.instance()],
         ),
       );
       return app;

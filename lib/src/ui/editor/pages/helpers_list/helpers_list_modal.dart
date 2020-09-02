@@ -8,6 +8,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
@@ -26,10 +27,13 @@ abstract class HelpersListModalView {
 }
 
 class HelpersListModal extends StatelessWidget implements HelpersListModalView {
-  final GlobalKey<NavigatorState>
-      hostedAppNavigatorKey; //FIXME remove this from here
+
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
+
   final GlobalKey repaintBoundaryKey;
+
   final HelpersListModalLoader loader;
+
   final PalEditModeStateService palEditModeStateService;
 
   final _mvvmPageBuilder =
@@ -53,6 +57,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
             HelpersListModalLoader(
               EditorInjector.of(context).pageService,
               EditorInjector.of(context).helperService,
+              EditorInjector.of(context).routeObserver
             ),
         palEditModeStateService: this.palEditModeStateService ??
             EditorInjector.of(context).palEditModeStateService,

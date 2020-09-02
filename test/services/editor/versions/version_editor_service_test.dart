@@ -6,7 +6,7 @@ import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/database/entity/version_entity.dart';
 import 'package:palplugin/src/database/repository/version_repository.dart';
-import 'package:palplugin/src/services/client/versions/package_version.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 

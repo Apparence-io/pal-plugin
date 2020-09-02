@@ -31,9 +31,7 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
       return inAppUser;
     }
 
-    return this
-        ._inAppUserRepository
-        .create(InAppUserEntity(disabledHelpers: false));
+    return await this._inAppUserRepository.create(InAppUserEntity(disabledHelpers: false));
   }
 
   @override
@@ -74,7 +72,7 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
     }
 
     this._clientInAppUserStorageManager.clearInAppUser();
-    return this
+    return await this
         ._inAppUserRepository
         .create(InAppUserEntity(disabledHelpers: false));
   }

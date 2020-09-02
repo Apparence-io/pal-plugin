@@ -33,7 +33,10 @@ class HelperRepository extends BaseHttpRepository {
   }
 
   Future<List<HelperEntity>> getClientHelpers(final String pageId, String version, String inAppUserId) async {
-    final Response response = await this.httpClient.get('pages/$pageId/helpers?inAppUserId=$inAppUserId&version=$version');
+    final Response response = await this.httpClient.get('client/pages/$pageId/helpers', headers: {
+      "version": version,
+      "inAppUserId": inAppUserId
+    });
     return this._adapter.parseArray(response.body);
   }
 }

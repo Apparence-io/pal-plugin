@@ -16,7 +16,7 @@ class InAppUserRepository extends BaseHttpRepository {
   }
 
   Future<InAppUserEntity> update(final InAppUserEntity inAppUser) async {
-    final Response response = await this.httpClient.put("client/in-app-users", body: InAppUserEntityAdapter().toJson(inAppUser));
+    final Response response = await this.httpClient.put("client/in-app-users/${inAppUser.id}", body: InAppUserEntityAdapter().toJson(inAppUser));
     return InAppUserEntityAdapter().parse(response.body);
   }
 }

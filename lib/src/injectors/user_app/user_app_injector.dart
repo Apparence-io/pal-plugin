@@ -3,6 +3,7 @@ import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
 import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
 import 'package:palplugin/src/services/client/page_client_service.dart';
+import 'package:palplugin/src/in_app_user_manager.dart';
 
 import '../../pal_navigator_observer.dart';
 
@@ -26,7 +27,9 @@ class UserInjector extends InheritedWidget {
         this._helperService = HelperClientService.build(appContext),
         this._clientInAppUserService = InAppUserClientService.build(
             appContext.inAppUserRepository),
-        super(key: key, child: child);
+        super(key: key, child: child){
+    setInAppUserManagerService(this.inAppUserClientService);
+  }
 
   static UserInjector of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<UserInjector>();

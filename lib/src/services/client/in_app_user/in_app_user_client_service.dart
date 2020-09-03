@@ -32,7 +32,7 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
     }
 
     inAppUser = await this._inAppUserRepository.create(InAppUserEntity(disabledHelpers: false));
-    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+    await this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
     return inAppUser;
   }
 
@@ -49,8 +49,8 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
       inAppId: inAppUserId
     ));
 
-    this._clientInAppUserStorageManager.clearInAppUser();
-    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+    await this._clientInAppUserStorageManager.clearInAppUser();
+    await this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
     return inAppUser;
   }
 
@@ -68,8 +68,8 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
         disabledHelpers: disabledHelpers
     ));
 
-    this._clientInAppUserStorageManager.clearInAppUser();
-    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+    await this._clientInAppUserStorageManager.clearInAppUser();
+    await this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
     return inAppUser;
   }
 
@@ -81,13 +81,13 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
       return inAppUser;
     }
 
-    this._clientInAppUserStorageManager.clearInAppUser();
+    await this._clientInAppUserStorageManager.clearInAppUser();
 
     inAppUser = await this
         ._inAppUserRepository
         .create(InAppUserEntity(disabledHelpers: false));
 
-    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+    await this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
 
     return inAppUser;
   }

@@ -7,11 +7,11 @@ import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
-import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
@@ -51,7 +51,6 @@ abstract class HelperEditorView {
     final HelperEditorPresenter presenter,
     final HelperEditorViewModel model,
   );
-  unFocusCurrentTextField(final BuildContext context);
   removeOverlay(final BuildContext context);
 }
 
@@ -116,28 +115,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
                           _buildAddButton(context, presenter, model),
                         _buildValidationActions(context, presenter, model),
                         _buildBannerEditorMode(context),
-                        if (model.toolbarIsVisible &&
-                            model.toolbarPosition != null)
-                          Positioned(
-                            top: model.toolbarPosition.dy - 8.0,
-                            left: model.toolbarPosition.dx,
-                            right: model.toolbarPosition.dx,
-                            child: EditHelperToolbar(
-                              onChangeBorderTap: () {
-                                // TODO: To implement
-                              },
-                              onCloseTap: () {
-                                presenter.hideToolbar();
-                                unFocusCurrentTextField(context);
-                              },
-                              onChangeFontTap: () {
-                                // TODO: To implement
-                              },
-                              onEditTextTap: () {
-                                // TODO: To implement
-                              },
-                            ),
-                          )
                       ],
                     )
                   : Center(
@@ -196,16 +173,18 @@ class HelperEditorPageBuilder implements HelperEditorView {
               padding: EdgeInsets.only(left: 16),
               child: EditorButton.validate(
                 PalTheme.of(context),
-                () async {
-                  await presenter.save(
-                      helperEditorPageArguments.pageId, model.helperViewModel);
-                  await Future.delayed(Duration(milliseconds: 500));
+                model.isEditableWidgetValid
+                    ? () async {
+                        await presenter.save(helperEditorPageArguments.pageId,
+                            model.helperViewModel);
+                        await Future.delayed(Duration(milliseconds: 500));
 
-                  removeOverlay(context);
-                },
+                        removeOverlay(context);
+                      }
+                    : null,
                 key: ValueKey("editModeValidate"),
               ),
-          ),
+            ),
         ],
       ),
     );
@@ -252,29 +231,23 @@ class HelperEditorPageBuilder implements HelperEditorView {
   ) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
-        _helperToEdit = EditorFullscreenHelperWidget(
-          fullscreenHelperViewModel: model.helperViewModel,
-          onTitleFocusChanged: (bool hasFocus, Size size, Offset position) {
-            if (!hasFocus) {
-              presenter.hideToolbar();
-            } else {
-              presenter.showToolbar(size, position);
-            }
-          },
+        presenter.initEditedWidgetData(HelperType.HELPER_FULL_SCREEN);
+        _helperToEdit = EditorFullScreenHelperPage(
+          viewModel: model.helperViewModel,
+          onFormChanged: presenter.checkIfEditableWidgetFormValid,
         );
         break;
       case HelperType.SIMPLE_HELPER:
-        // TODO: Add simple helper widget
+        presenter.initEditedWidgetData(HelperType.SIMPLE_HELPER);
+        _helperToEdit = EditorSimpleHelperPage(
+          viewModel: model.helperViewModel,
+          onFormChanged: presenter.checkIfEditableWidgetFormValid,
+        );
         break;
       default:
     }
     model.isEditingWidget = (_helperToEdit != null);
     presenter.refreshView();
-  }
-
-  @override
-  unFocusCurrentTextField(final BuildContext context) {
-    FocusScope.of(context).unfocus();
   }
 
   @override

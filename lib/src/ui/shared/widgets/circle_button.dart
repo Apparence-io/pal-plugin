@@ -24,29 +24,29 @@ class CircleIconButton extends StatelessWidget {
         shape: BoxShape.circle,
         color: Colors.transparent,
         boxShadow: [
-          shadow ?? BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 5,
-            blurRadius: 9,
-            offset: Offset(0, 3), // changes position of shadow
-          ),
+          shadow ??
+              BoxShadow(
+                color: Colors.black.withOpacity(onTapCallback != null ? 0.1 : 0.03),
+                spreadRadius: 5,
+                blurRadius: 9,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
         ],
       ),
       child: ClipOval(
-        child: Material(
-          color: backgroundColor,
-          child: InkWell(
-            splashColor: splashColor,
-            child: SizedBox(
-              width: radius * 2,
-              height: radius * 2,
-              child: icon,
+        child: Opacity(
+          opacity: onTapCallback != null ? 1 : 0.35,
+          child: Material(
+            color: backgroundColor,
+            child: InkWell(
+              splashColor: splashColor,
+              child: SizedBox(
+                width: radius * 2,
+                height: radius * 2,
+                child: icon,
+              ),
+              onTap: onTapCallback,
             ),
-            onTap: () {
-              if (onTapCallback != null) {
-                onTapCallback();
-              }
-            },
           ),
         ),
       ),

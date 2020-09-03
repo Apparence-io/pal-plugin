@@ -8,6 +8,7 @@ class EditHelperToolbar extends StatelessWidget {
   final Function onChangeBorderTap;
   final Function onChangeFontTap;
   final Function onCloseTap;
+  final num bottomPadding;
 
   const EditHelperToolbar({
     Key key,
@@ -15,6 +16,7 @@ class EditHelperToolbar extends StatelessWidget {
     this.onChangeBorderTap,
     this.onChangeFontTap,
     this.onCloseTap,
+    this.bottomPadding = 8.0,
   }) : super(key: key);
 
   @override
@@ -22,88 +24,91 @@ class EditHelperToolbar extends StatelessWidget {
     const toolbarHeight = 25.0;
     const iconsRadius = 18.0;
 
-    return Container(
-      key: ValueKey('palToolbar'),
-      height: toolbarHeight,
-      color: PalTheme.of(context).toolbarBackgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                CircleIconButton(
-                  key: ValueKey('palToolbarEditText'),
-                  radius: toolbarHeight / 2,
-                  backgroundColor: Colors.transparent,
-                  onTapCallback: () {
-                    HapticFeedback.selectionClick();
+    return Padding(
+      padding: EdgeInsets.only(bottom: bottomPadding),
+      child: Container(
+        key: ValueKey('palToolbar'),
+        height: toolbarHeight,
+        color: PalTheme.of(context).toolbarBackgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleIconButton(
+                    key: ValueKey('palToolbarEditText'),
+                    radius: toolbarHeight / 2,
+                    backgroundColor: Colors.transparent,
+                    onTapCallback: () {
+                      HapticFeedback.selectionClick();
 
-                    if (onEditTextTap != null) {
-                      onEditTextTap();
-                    }
-                  },
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                    size: iconsRadius,
+                      if (onEditTextTap != null) {
+                        onEditTextTap();
+                      }
+                    },
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: iconsRadius,
+                    ),
                   ),
-                ),
-                CircleIconButton(
-                  key: ValueKey('palToolbarChangeBorder'),
-                  radius: toolbarHeight / 2,
-                  backgroundColor: Colors.transparent,
-                  onTapCallback: () {
-                    HapticFeedback.selectionClick();
+                  CircleIconButton(
+                    key: ValueKey('palToolbarChangeBorder'),
+                    radius: toolbarHeight / 2,
+                    backgroundColor: Colors.transparent,
+                    onTapCallback: () {
+                      HapticFeedback.selectionClick();
 
-                    if (onChangeBorderTap != null) {
-                      onChangeBorderTap();
-                    }
-                  },
-                  icon: Icon(
-                    Icons.border_outer,
-                    color: Colors.white,
-                    size: iconsRadius,
+                      if (onChangeBorderTap != null) {
+                        onChangeBorderTap();
+                      }
+                    },
+                    icon: Icon(
+                      Icons.border_outer,
+                      color: Colors.white,
+                      size: iconsRadius,
+                    ),
                   ),
-                ),
-                CircleIconButton(
-                  key: ValueKey('palToolbarChangeFont'),
-                  radius: toolbarHeight / 2,
-                  backgroundColor: Colors.transparent,
-                  onTapCallback: () {
-                    HapticFeedback.selectionClick();
+                  CircleIconButton(
+                    key: ValueKey('palToolbarChangeFont'),
+                    radius: toolbarHeight / 2,
+                    backgroundColor: Colors.transparent,
+                    onTapCallback: () {
+                      HapticFeedback.selectionClick();
 
-                    if (onChangeFontTap != null) {
-                      onChangeFontTap();
-                    }
-                  },
-                  icon: Icon(
-                    Icons.text_format,
-                    color: Colors.white,
-                    size: iconsRadius,
+                      if (onChangeFontTap != null) {
+                        onChangeFontTap();
+                      }
+                    },
+                    icon: Icon(
+                      Icons.text_format,
+                      color: Colors.white,
+                      size: iconsRadius,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            CircleIconButton(
-              key: ValueKey('palToolbarClose'),
-              radius: toolbarHeight / 2,
-              backgroundColor: Colors.transparent,
-              onTapCallback: () {
-                HapticFeedback.selectionClick();
-
-                if (onCloseTap != null) {
-                  onCloseTap();
-                }
-              },
-              icon: Icon(
-                Icons.close,
-                color: Colors.white,
-                size: iconsRadius,
+                ],
               ),
-            ),
-          ],
+              CircleIconButton(
+                key: ValueKey('palToolbarClose'),
+                radius: toolbarHeight / 2,
+                backgroundColor: Colors.transparent,
+                onTapCallback: () {
+                  HapticFeedback.selectionClick();
+
+                  if (onCloseTap != null) {
+                    onCloseTap();
+                  }
+                },
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: iconsRadius,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

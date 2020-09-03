@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:palplugin/src/extensions/color_extension.dart';
 
 class EditorFactory {
   static CreateHelperEntity build(HelperViewModel model) {
@@ -27,15 +28,10 @@ class EditorFactory {
       versionMaxId: model.versionMaxId,
       versionMinId: model.versionMinId,
       title: model.title?.value,
-      fontColor: colorToHex(model.fontColor?.value),
-      backgroundColor: colorToHex(model.backgroundColor?.value),
-      borderColor: colorToHex(model.borderColor?.value),
+      fontColor: model.fontColor?.value?.toHex(),
+      backgroundColor: model.backgroundColor?.value?.toHex(),
+      borderColor: model.borderColor?.value?.toHex(),
       languageId: model.languageId?.value,
     );
-  }
-
-  // TODO: Move to global utils file
-  static String colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2, 8)}';
   }
 }

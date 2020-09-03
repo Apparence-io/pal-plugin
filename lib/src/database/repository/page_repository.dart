@@ -33,7 +33,7 @@ class PageRepository extends BaseHttpRepository {
   }
 
   Future<Pageable<PageEntity>> getClientPage(final String route) async {
-    final Response response = await this.httpClient.get('pages?route=$route');
+    final Response response = await this.httpClient.get('client/pages?route=$route');
     return this._adapter.parsePage(response.body);
   }
 

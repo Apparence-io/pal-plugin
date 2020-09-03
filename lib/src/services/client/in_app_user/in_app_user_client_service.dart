@@ -25,42 +25,52 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
 
   @override
   Future<InAppUserEntity> getOrCreate() async {
-    final InAppUserEntity inAppUser =
+    InAppUserEntity inAppUser =
         await this._clientInAppUserStorageManager.readInAppUser();
     if (inAppUser != null) {
       return inAppUser;
     }
 
-    return await this._inAppUserRepository.create(InAppUserEntity(disabledHelpers: false));
+    inAppUser = await this._inAppUserRepository.create(InAppUserEntity(disabledHelpers: false));
+    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+    return inAppUser;
   }
 
   @override
   Future<InAppUserEntity> onConnect(final String inAppUserId) async {
-    final InAppUserEntity savedInAppUser =
+    InAppUserEntity inAppUser =
         await this._clientInAppUserStorageManager.readInAppUser();
-    if (savedInAppUser == null  || !savedInAppUser.anonymous) {
-      return savedInAppUser;
+    if (inAppUser == null  || !inAppUser.anonymous) {
+      return inAppUser;
     }
 
-    return this._inAppUserRepository.update(InAppUserEntity(
-      id: savedInAppUser.id,
+    inAppUser = await this._inAppUserRepository.update(InAppUserEntity(
+      id: inAppUser.id,
       inAppId: inAppUserId
     ));
+
+    this._clientInAppUserStorageManager.clearInAppUser();
+    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+    return inAppUser;
   }
 
   @override
   Future<InAppUserEntity> update(final bool disabledHelpers) async {
-    final InAppUserEntity savedInAppUser =
+    InAppUserEntity inAppUser =
         await this._clientInAppUserStorageManager.readInAppUser();
 
-    if (savedInAppUser == null) {
-      return savedInAppUser;
+    if (inAppUser == null) {
+      return inAppUser;
     }
 
-    return this._inAppUserRepository.update(InAppUserEntity(
-        id: savedInAppUser.id,
+    inAppUser = await this._inAppUserRepository.update(InAppUserEntity(
+        id: inAppUser.id,
         disabledHelpers: disabledHelpers
     ));
+
+    this._clientInAppUserStorageManager.clearInAppUser();
+    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+    return inAppUser;
   }
 
   @override
@@ -72,8 +82,13 @@ class _ClientInAppUserHttpService implements InAppUserClientService {
     }
 
     this._clientInAppUserStorageManager.clearInAppUser();
-    return await this
+
+    inAppUser = await this
         ._inAppUserRepository
         .create(InAppUserEntity(disabledHelpers: false));
+
+    this._clientInAppUserStorageManager.storeInAppUser(inAppUser);
+
+    return inAppUser;
   }
 }

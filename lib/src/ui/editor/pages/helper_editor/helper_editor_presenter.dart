@@ -33,24 +33,21 @@ class HelperEditorPresenter
     viewModel.isEditableWidgetValid = false;
     viewModel.toolbarPosition = Offset.zero;
 
-    if (basicArguments != null) {
-      // Create a template helper model
-      // this template will be copied to edited widget
-      viewModel.helperViewModel = FullscreenHelperViewModel(
-        name: basicArguments.helperName,
-        priority: basicArguments.priority ?? 0,
-        triggerType:
-            basicArguments.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
-        versionMinId: basicArguments.versionMinId ?? 1,
-        versionMaxId: basicArguments.versionMaxId ?? 2,
-      );
-    }
+    // Create a template helper model
+    // this template will be copied to edited widget
+    viewModel.templateViewModel = FullscreenHelperViewModel(
+      name: basicArguments?.helperName,
+      priority: basicArguments?.priority ?? 0,
+      triggerType:
+          basicArguments?.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
+      versionMinId: basicArguments?.versionMinId ?? 1,
+      versionMaxId: basicArguments?.versionMaxId ?? 2,
+    );
   }
 
   checkIfEditableWidgetFormValid(bool isFormValid) {
     viewModel.isEditableWidgetValid = isFormValid;
-    print(isFormValid);
-    // this.refreshView();
+    this.refreshView();
   }
 
   // Simply copy all template data from [viewModel.defaultViewModel] to the

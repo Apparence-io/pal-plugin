@@ -24,6 +24,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
+      key: ValueKey('palEditorFullscreenHelperWidgetBuilder'),
       context: context,
       presenterBuilder: (context) =>
           EditorFullScreenHelperPresenter(this, viewModel),
@@ -121,7 +122,12 @@ class EditorFullScreenHelperPage extends StatelessWidget
           key: model.titleKey,
           child: Form(
             key: model.formKey,
-            onChanged: (onFormChanged != null) ? onFormChanged(model.formKey?.currentState?.validate()): null,
+            autovalidate: true,
+            onChanged: () {
+              if (onFormChanged != null) {
+                onFormChanged(model.formKey?.currentState?.validate());
+              }
+            },
             child: _buildTitle(context, presenter, model),
           ),
         ),

@@ -20,7 +20,7 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
 
     // Init keys
     this.viewModel.containerKey = GlobalKey();
-    this.viewModel.formKey = GlobalKey();
+    this.viewModel.formKey = GlobalKey<FormState>();
 
     // Init details textfield
     this.viewModel.detailsFocusNode = FocusNode();
@@ -45,6 +45,9 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     this.refreshView();
   }
   String validateDetailsTextField(String currentValue) {
+    if (currentValue.length <= 0) {
+      return 'Please enter some text';
+    }
     if (currentValue.length > 45) {
       return 'Maximum 45 characters';
     }

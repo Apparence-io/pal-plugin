@@ -25,6 +25,7 @@ class EditorSimpleHelperPage extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
+      key: ValueKey('palEditorSimpleHelperWidgetBuilder'),
       context: context,
       presenterBuilder: (context) => EditorSimpleHelperPresenter(
         this,
@@ -103,6 +104,12 @@ class EditorSimpleHelperPage extends StatelessWidget
                 ),
                 child: Form(
                   key: model.formKey,
+                  autovalidate: true,
+                  onChanged: () {
+                    if (onFormChanged != null) {
+                      onFormChanged(model.formKey?.currentState?.validate());
+                    }
+                  },
                   child: _buildDetailsField(context, presenter, model),
                 ),
               ),

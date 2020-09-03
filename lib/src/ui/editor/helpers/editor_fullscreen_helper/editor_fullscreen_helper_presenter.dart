@@ -16,6 +16,7 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     super.onInit();
 
     this.viewModel.titleKey = GlobalKey();
+    this.viewModel.formKey = GlobalKey<FormState>();
 
     this.viewModel.titleFocus = FocusNode();
     this.viewModel.titleController = TextEditingController();
@@ -46,6 +47,9 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     this.refreshView();
   }
   String validateTitleTextField(String currentValue) {
+    if (currentValue.length <= 0) {
+      return 'Please enter some text';
+    }
     if (currentValue.length > 45) {
       return 'Maximum 45 characters';
     }

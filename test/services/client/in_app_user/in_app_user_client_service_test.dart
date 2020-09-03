@@ -44,7 +44,7 @@ void main() {
       final HttpClient httpClient = _HttpClientMock();
       final String content = new File("test/services/client/in_app_user/resources/in_app_user_anonymous.json").readAsStringSync();
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_create_body.json").readAsStringSync();
-      when(httpClient.post("/client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
+      when(httpClient.post("client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
       when(mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(null));
@@ -85,7 +85,7 @@ void main() {
       final HttpClient httpClient = _HttpClientMock();
       final String content = new File("test/services/client/in_app_user/resources/in_app_user.json").readAsStringSync();
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_on_connect_body.json").readAsStringSync();
-      when(httpClient.put("/client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
+      when(httpClient.put("client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
@@ -126,7 +126,7 @@ void main() {
       final HttpClient httpClient = _HttpClientMock();
       final String content = new File("test/services/client/in_app_user/resources/in_app_user.json").readAsStringSync();
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_update_body.json").readAsStringSync();
-      when(httpClient.put("/client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
+      when(httpClient.put("client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
@@ -153,7 +153,7 @@ void main() {
       final HttpClient httpClient = _HttpClientMock();
       final String content = new File("test/services/client/in_app_user/resources/in_app_user_anonymous.json").readAsStringSync();
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_create_body.json").readAsStringSync();
-      when(httpClient.post("/client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
+      when(httpClient.post("client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();

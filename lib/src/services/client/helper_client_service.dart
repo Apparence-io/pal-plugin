@@ -30,7 +30,7 @@ class _HelperClientHttpService implements HelperClientService {
 
   @override
   Future<List<HelperEntity>> getPageHelpers(final String route, final String inAppUserId) async {
-    var page = await _pageRepository.getPage(route);
+    var page = await _pageRepository.getClientPage(route);
     if(page == null || page.entities.length == 0) {
       return Future.value([]);
     }

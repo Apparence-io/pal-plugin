@@ -8,6 +8,7 @@ abstract class PageService {
 
   Future<PageEntity> createPage(final PageEntity createPage);
   Future<Pageable<PageEntity>> getPage(final String route);
+  Future<Pageable<PageEntity>> getClientPage(final String route);
   Future<Pageable<PageEntity>> getPages();
 }
 
@@ -30,4 +31,10 @@ class _PageHttpService implements PageService {
   Future<Pageable<PageEntity>> getPage(String route) {
     return this._pageRepository.getPage(route);
   }
+
+  @override
+  Future<Pageable<PageEntity>> getClientPage(String route) {
+    return this._pageRepository.getPage(route);
+  }
+
 }

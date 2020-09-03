@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
@@ -134,6 +135,9 @@ class EditorSimpleHelperPage extends StatelessWidget
       autovalidate: true,
       onTap: presenter.onDetailTextFieldTapped,
       validator: presenter.validateDetailsTextField,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(new RegExp('^(.*(\n.*){0,2})')),
+      ],
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: 'Edit me!',

@@ -44,6 +44,7 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     this.viewModel.isToolbarVisible = true;
     this.refreshView();
   }
+
   String validateDetailsTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';

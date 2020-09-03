@@ -49,6 +49,7 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
       child: Overlayed(
         child: Builder(
           builder: (context) => MaterialApp(
+            key: palNavigatorGlobalKey,
             debugShowCheckedModeBanner: false,
             onGenerateRoute: (RouteSettings settings) => route(settings),
             theme: PalTheme.of(context).buildTheme(),
@@ -98,12 +99,13 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius,
       ),
-      builder: (context) {
+      builder: (BuildContext bottomSheetContext) {
         return ClipRRect(
           borderRadius: borderRadius,
           child: HelpersListModal(
             repaintBoundaryKey: _repaintBoundaryKey,
             hostedAppNavigatorKey: widget.hostedAppNavigatorKey,
+            bottomModalContext: bottomSheetContext,
           ),
         );
       },

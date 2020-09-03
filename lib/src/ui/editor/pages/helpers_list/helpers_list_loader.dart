@@ -10,10 +10,10 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_vi
 class HelpersListModalLoader {
 
   final PageService _pageService;
-
   final HelperService _helperService;
-
   final PalRouteObserver _routeObserver;
+  final _helpersOffset = 20;
+  Pageable<HelperEntity> _pageable;
 
   HelpersListModalLoader(
     this._pageService,
@@ -27,10 +27,29 @@ class HelpersListModalLoader {
     String pageId = await getPageId();
     if (pageId != null && pageId.length > 0) {
       resViewModel.pageId = pageId;
-      Pageable<HelperEntity> helpersPage = await this._helperService.getPageHelpers(pageId);
-      resViewModel.helpers = helpersPage?.entities;
+      resViewModel.helpers = await this.loadMore(pageId);
     }
     return resViewModel;
+  }
+
+  Future<List<HelperEntity>> loadMore(String pageId) {
+    return _pageable != null && _pageable.last
+        ? Future.value([])
+        : this
+            ._helperService
+            .getPageHelpers(
+              pageId,
+              _pageable == null ? 0 : ++_pageable.pageNumber,
+              _helpersOffset,
+            )
+            .then(
+            (res) {
+              _pageable = res;
+              List<HelperEntity> helpers = this._pageable.entities.toList();
+
+              return helpers;
+            },
+          );
   }
 
   Future<String> getPageId() async {

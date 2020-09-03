@@ -12,7 +12,7 @@ abstract class HelperService {
     final CreateHelperEntity createHelperEntity,
   );
 
-  Future<Pageable<HelperEntity>> getPageHelpers(String route);
+  Future<Pageable<HelperEntity>> getPageHelpers(final String route, final int page, final int pageSize);
 }
 
 class _HelperHttpService implements HelperService {
@@ -21,8 +21,8 @@ class _HelperHttpService implements HelperService {
   _HelperHttpService(this._helperRepository);
 
   @override
-  Future<Pageable<HelperEntity>> getPageHelpers(final String route) {
-    return this._helperRepository.getHelpers(route);
+  Future<Pageable<HelperEntity>> getPageHelpers(final String route, final int page, final int pageSize) {
+    return this._helperRepository.getHelpers(route, page, pageSize);
   }
 
   @override

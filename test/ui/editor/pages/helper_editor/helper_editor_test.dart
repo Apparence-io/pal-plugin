@@ -28,8 +28,7 @@ Future _initPage(
             theme: PalTheme.of(context).buildTheme(),
             onGenerateRoute: (_) => MaterialPageRoute(
                 builder: HelperEditorPageBuilder(
-              '',
-              null,
+              HelperEditorPageArguments(null, ''),
               loader: loader,
               helperService: helperService,
             ).build),
@@ -47,7 +46,7 @@ void main() {
       expect(find.byKey(ValueKey("EditorPage")), findsOneWidget);
       // has a add button to add helper box, validate and cancel
       var editButtonFinder = find.byType(EditorButton);
-      expect(editButtonFinder, findsNWidgets(3));
+      expect(editButtonFinder, findsNWidgets(2));
     });
 
     testWidgets('click on add helper button should show helpers list options',

@@ -22,7 +22,7 @@ void main() {
 
       final String content =
           new File("test/services/resources/helpers.json").readAsStringSync();
-      when(mockedHttpClient.get("pages/db6b01e1-b649-4a17-949a-9ab320600001/helpers"))
+      when(mockedHttpClient.get("editor/pages/db6b01e1-b649-4a17-949a-9ab320600001/helpers?page=1&pageSize=10"))
           .thenAnswer((_) => Future.value(
                 Response(content, 200),
               ));
@@ -31,7 +31,7 @@ void main() {
       final HelperService helperService = HelperService.build(helperRepository);
 
       Pageable<HelperEntity> helpers =
-          await helperService.getPageHelpers("db6b01e1-b649-4a17-949a-9ab320600001");
+          await helperService.getPageHelpers("db6b01e1-b649-4a17-949a-9ab320600001", 1, 10);
 
       assert(helpers.offset == 1);
       assert(helpers.pageNumber == 0);

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/helper_service.dart';
@@ -16,6 +17,27 @@ import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 import 'helper_editor_presenter.dart';
 import 'helper_editor_viewmodel.dart';
+
+class HelperEditorPageArguments {
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+  final String pageId;
+
+  final String helperName;
+  final int priority;
+  final HelperTriggerType triggerType;
+  final int versionMinId;
+  final int versionMaxId;
+
+  HelperEditorPageArguments(
+    this.hostedAppNavigatorKey,
+    this.pageId, {
+    this.helperName,
+    this.priority,
+    this.triggerType,
+    this.versionMinId,
+    this.versionMaxId,
+  });
+}
 
 abstract class HelperEditorView {
   showHelperModal(
@@ -34,8 +56,7 @@ abstract class HelperEditorView {
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
-  final String pageId;
+  final HelperEditorPageArguments helperEditorPageArguments;
   final HelperService helperService;
   final HelperEditorLoader loader;
 
@@ -44,8 +65,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   Widget _helperToEdit;
 
   HelperEditorPageBuilder(
-    this.pageId,
-    this.hostedAppNavigatorKey, {
+    this.helperEditorPageArguments, {
     this.loader,
     this.helperService,
   });
@@ -56,6 +76,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
       context: context,
       presenterBuilder: (context) => HelperEditorPresenter(
         this,
+        helperEditorPageArguments,
         loader ?? HelperEditorLoader(),
         helperService ?? EditorInjector.of(context).helperService,
       ),
@@ -86,12 +107,12 @@ class HelperEditorPageBuilder implements HelperEditorView {
             children: [
               // TODO: Put here helpers widget
               // just create a stack if there is more than one widgets
-              if (_helperToEdit != null) _helperToEdit,
+              if (model.isEditingWidget) _helperToEdit,
               (!model.isLoading)
                   ? Stack(
                       key: ValueKey('palEditorModeInteractUI'),
                       children: [
-                        if (_helperToEdit == null)
+                        if (!model.isEditingWidget)
                           _buildAddButton(context, presenter, model),
                         _buildValidationActions(context, presenter, model),
                         _buildBannerEditorMode(context),
@@ -170,18 +191,20 @@ class HelperEditorPageBuilder implements HelperEditorView {
             () => removeOverlay(context),
             key: ValueKey("editModeCancel"),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 16),
-            child: EditorButton.validate(
-              PalTheme.of(context),
-              () async {
-                await presenter.save(pageId, model.helperViewModel);
-                await Future.delayed(Duration(milliseconds: 500));
+          if (model.isEditingWidget)
+            Padding(
+              padding: EdgeInsets.only(left: 16),
+              child: EditorButton.validate(
+                PalTheme.of(context),
+                () async {
+                  await presenter.save(
+                      helperEditorPageArguments.pageId, model.helperViewModel);
+                  await Future.delayed(Duration(milliseconds: 500));
 
-                removeOverlay(context);
-              },
-              key: ValueKey("editModeValidate"),
-            ),
+                  removeOverlay(context);
+                },
+                key: ValueKey("editModeValidate"),
+              ),
           ),
         ],
       ),
@@ -245,6 +268,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         break;
       default:
     }
+    model.isEditingWidget = (_helperToEdit != null);
     presenter.refreshView();
   }
 
@@ -257,7 +281,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   removeOverlay(BuildContext context) {
     // FIXME: Don't work when a set state was triggered
     Overlayed.removeOverlay(
-      hostedAppNavigatorKey.currentContext,
+      helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,
     );
   }

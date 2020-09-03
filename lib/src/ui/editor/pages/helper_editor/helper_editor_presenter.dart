@@ -10,12 +10,15 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
-class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
+class HelperEditorPresenter
+    extends Presenter<HelperEditorViewModel, HelperEditorView> {
   final HelperService helperService;
   final HelperEditorLoader loader;
+  final HelperEditorPageArguments basicArguments;
 
   HelperEditorPresenter(
     HelperEditorView viewInterface,
+    this.basicArguments,
     this.loader,
     this.helperService,
   ) : super(HelperEditorViewModel(), viewInterface);
@@ -25,16 +28,18 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     viewModel.enableSave = false;
     viewModel.toolbarIsVisible = false;
     viewModel.isLoading = false;
+    viewModel.isEditingWidget = false;
     viewModel.toolbarPosition = Offset.zero;
 
-    // FIXME: Mocked version, need to be modified on UI
-    viewModel.helperViewModel = FullscreenHelperViewModel(
-      name: 'Test from app',
-      priority: 0,
-      triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-      versionMinId: 1,
-      versionMaxId: 2,
-    );
+    if (basicArguments != null) {
+      viewModel.helperViewModel = FullscreenHelperViewModel(
+        name: basicArguments.helperName,
+        priority: basicArguments.priority ?? 0,
+        triggerType: basicArguments.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
+        versionMinId: basicArguments.versionMinId ?? 1,
+        versionMaxId: basicArguments.versionMaxId ?? 2,
+      );
+    }
   }
 
   showToolbar(Size helperSize, Offset helperPosition) {
@@ -49,20 +54,6 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     viewModel.toolbarIsVisible = false;
     this.refreshView();
   }
-
-  // saveFullscreenHelper(String pageId) async {
-  //   viewModel.isLoading = true;
-  //   this.refreshView();
-
-  //   // Create fullscren infos only
-  //   await this.helperService.createPageHelper(
-  //         pageId,
-  //         HelperEditorFactory.build(viewModel.basicHelperModel),
-  //       );
-
-  //   viewModel.isLoading = false;
-  //   this.refreshView();
-  // }
 
   Future<HelperEntity> save(
     String pageId,

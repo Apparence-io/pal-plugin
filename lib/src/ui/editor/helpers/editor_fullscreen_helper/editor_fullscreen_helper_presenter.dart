@@ -22,7 +22,7 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     this.viewModel.titleController = TextEditingController();
 
     this.viewModel.helperOpacity = 0;
-    this.viewModel.isToolbarVisible = false;
+    this.viewModel.isToolbarVisible = true;
 
     this.viewModel.titleController.addListener(() {
       fullscreenHelperViewModel.title?.value = this.viewModel.titleController?.value?.text;
@@ -34,12 +34,12 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     });
   }
 
-  @override
-  void onDestroy() {
-    this.viewModel.titleFocus.dispose();
-    this.viewModel.titleController.dispose();
-    super.onDestroy();
-  }
+  // @override
+  // void onDestroy() {
+  //   this.viewModel.titleFocus.dispose();
+  //   this.viewModel.titleController.dispose();
+  //   super.onDestroy();
+  // }
 
   // Title text field stuff
   onTitleTextFieldTapped() {
@@ -64,5 +64,7 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     this.refreshView();
   }
   onChangeFontTap() { }
-  onEditTextTap() { }
+  onEditTextTap() {
+    this.viewModel.titleFocus.requestFocus();
+  }
 }

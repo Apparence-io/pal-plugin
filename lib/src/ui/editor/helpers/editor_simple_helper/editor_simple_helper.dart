@@ -127,7 +127,7 @@ class EditorSimpleHelperPage extends StatelessWidget
   ) {
     return TextFormField(
       key: ValueKey('palSimpleHelperDetailField'),
-      focusNode: model.detailsFocusNode,
+      focusNode: model.detailsFocus,
       controller: model.detailsController,
       keyboardType: TextInputType.multiline,
       maxLines: null,

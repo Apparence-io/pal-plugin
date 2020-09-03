@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
@@ -101,7 +101,7 @@ void main() {
         await _initPage(tester);
         await _addFullScreenWidget(tester);
         expect(find.byType(ModalBottomSheetOptions), findsNothing);
-        expect(find.byType(EditorFullscreenHelperWidget), findsOneWidget);
+        expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
       });
 
       testWidgets('can edit fullscreen title', (WidgetTester tester) async {

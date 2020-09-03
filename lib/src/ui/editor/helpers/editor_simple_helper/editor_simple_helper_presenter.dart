@@ -23,7 +23,7 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     this.viewModel.formKey = GlobalKey<FormState>();
 
     // Init details textfield
-    this.viewModel.detailsFocusNode = FocusNode();
+    this.viewModel.detailsFocus = FocusNode();
     this.viewModel.detailsController = TextEditingController();
 
     // Add listeners for details textfield
@@ -32,12 +32,12 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     });
   }
 
-  @override
-  Future onDestroy() async {
-    this.viewModel.detailsFocusNode.dispose();
-    this.viewModel.detailsController.dispose();
-    super.onDestroy();
-  }
+  // @override
+  // Future onDestroy() async {
+  //   this.viewModel.detailsFocus.dispose();
+  //   this.viewModel.detailsController.dispose();
+  //   super.onDestroy();
+  // }
 
   // Details text field stuff
   onDetailTextFieldTapped() {
@@ -58,9 +58,11 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
   onChangeBorderTap() { }
   onCloseTap() {
     this.viewModel.isToolbarVisible = false;
-    this.viewModel.detailsFocusNode.unfocus();
+    this.viewModel.detailsFocus.unfocus();
     this.refreshView();
   }
   onChangeFontTap() { }
-  onEditTextTap() { }
+  onEditTextTap() {
+    this.viewModel.detailsFocus.requestFocus();
+  }
 }

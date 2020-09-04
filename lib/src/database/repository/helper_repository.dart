@@ -39,4 +39,11 @@ class HelperRepository extends BaseHttpRepository {
     });
     return this._adapter.parseArray(response.body);
   }
+
+  Future clientTriggerHelper(final String pageId, final String helperId, final String inAppUserId) async {
+    this.httpClient.post('client/pages/$pageId/helpers/$helperId/triggered-helpers', headers: {
+      "inAppUserId": inAppUserId
+    }).then((value) {return;});
+
+  }
 }

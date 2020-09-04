@@ -53,15 +53,15 @@ class HelperOrchestrator extends InheritedWidget {
   }
 
   @visibleForTesting
-  onChangePage(String route) async {
+  onChangePage(final String route) async {
     if(helper.overlay != null) {
       popHelper();
     }
     try {
-      final List<HelperEntity> helpersToShow = await this.inAppUserClientService.getOrCreate()
-          .then((inAppUser) => this.helperClientService.getPageHelpers(route, inAppUser.id));
+      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
       if (helpersToShow != null && helpersToShow.length > 0) {
-        _showHelper(helpersToShow[0]);
+        _showHelper(helpersToShow[0], inAppUser.id);
       }
     } catch (e) {
       // Nothing to do
@@ -70,10 +70,13 @@ class HelperOrchestrator extends InheritedWidget {
 
   // this method should be private
   // TODO make one for each strategy
-  _showHelper(HelperEntity helper) {
+  _showHelper(final HelperEntity helper, final String inAppUserId) {
     OverlayEntry entry = OverlayEntry(
       opaque: false,
-      builder: (context) => HelperFactory.build(helper),
+      builder: (context) => HelperFactory.build(helper, onTrigger: () async {
+        await helperClientService.triggerHelper(helper.pageId, helper.id, inAppUserId);
+        this.popHelper();
+      }),
     );
     var overlay = navigatorKey.currentState.overlay;
     overlay.insert(entry);

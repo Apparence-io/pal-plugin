@@ -16,7 +16,7 @@ class PalEditModeStateServiceMock extends Mock
 main() {
   group('Helpers list modal', () {
     HelpersListModalLoader loader = HelpersListModalLoaderMock();
-    PalEditModeStateService palEditModeStateService = PalEditModeStateServiceMock();
+    PalEditModeStateService palEditModeStateService = PalEditModeStateService.build();
     HelpersListModal helpersListModal = HelpersListModal(
       loader: loader,
       palEditModeStateService: palEditModeStateService,

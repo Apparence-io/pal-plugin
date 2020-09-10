@@ -59,9 +59,16 @@ class HelperEditorPresenter
     );
   }
 
+  hideToolbar() {
+    viewModel.toolbarIsVisible = false;
+    this.refreshView();
+  }
+
   onClickClose() {
     //TODO
   }
+
+
 
   Future<HelperEntity> save(
     String pageId,

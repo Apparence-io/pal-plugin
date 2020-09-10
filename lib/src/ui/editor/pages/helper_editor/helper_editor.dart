@@ -189,7 +189,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         children: [
           EditorButton.cancel(
             PalTheme.of(context),
-            () => removeOverlay(context),
+            () => removeOverlay(),
             key: ValueKey("editModeCancel"),
           ),
           if (model.isEditingWidget)

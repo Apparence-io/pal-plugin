@@ -76,12 +76,11 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   }
 
   Map<String, String> _initHeader(Map<String, String> headers) {
-    if (headers == null || headers['Content-Type'] == null) {
-      headers = new Map()
-        ..putIfAbsent('Content-Type', () => 'application/json');
-    } else if (headers['Content-Type'] == null) {
-      headers = headers..putIfAbsent('Content-Type', () => 'application/json');
+    if (headers == null) {
+      headers = new Map();
     }
+    headers..putIfAbsent('Content-Type', () => 'application/json');
+
     return headers;
   }
 

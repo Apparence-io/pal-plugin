@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
+import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
 import 'package:palplugin/src/services/client/page_client_service.dart';
-import 'package:palplugin/src/services/helper_service.dart';
-import 'package:palplugin/src/services/page_server.dart';
+import 'package:palplugin/src/in_app_user_manager.dart';
 
 import '../../pal_navigator_observer.dart';
 
@@ -12,6 +12,8 @@ class UserInjector extends InheritedWidget {
   final PageClientService _pageService;
 
   final HelperClientService _helperService;
+
+  final InAppUserClientService _clientInAppUserService;
 
   final PalRouteObserver routeObserver;
 
@@ -23,7 +25,11 @@ class UserInjector extends InheritedWidget {
   })  : assert(child != null && appContext != null),
         this._pageService = PageClientService.build(appContext.pageRepository),
         this._helperService = HelperClientService.build(appContext),
-        super(key: key, child: child);
+        this._clientInAppUserService = InAppUserClientService.build(
+            appContext.inAppUserRepository),
+        super(key: key, child: child){
+    setInAppUserManagerService(this.inAppUserClientService);
+  }
 
   static UserInjector of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<UserInjector>();
@@ -36,4 +42,7 @@ class UserInjector extends InheritedWidget {
   PageClientService get pageService => this._pageService;
 
   HelperClientService get helperService => this._helperService;
+
+  InAppUserClientService get inAppUserClientService =>
+      this._clientInAppUserService;
 }

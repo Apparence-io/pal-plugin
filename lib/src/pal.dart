@@ -83,6 +83,7 @@ class Pal extends StatelessWidget {
           child: Builder(
             builder: (context) => HelperOrchestrator(
               helperClientService: UserInjector.of(context).helperService,
+              inAppUserClientService: UserInjector.of(context).inAppUserClientService,
               routeObserver: navigatorObserver,
               child: child
             ),

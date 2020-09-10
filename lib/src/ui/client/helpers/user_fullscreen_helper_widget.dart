@@ -7,8 +7,10 @@ class UserFullscreenHelperWidget extends StatefulWidget {
 
   final double textSize;
 
+  final Function onTrigger;
+
   UserFullscreenHelperWidget(
-      {this.bgColor, this.textColor, this.helperText, this.textSize, Key key})
+      {this.bgColor, this.textColor, this.helperText, this.textSize, this.onTrigger, Key key})
       : assert(bgColor != null),
         assert(textColor != null),
         assert(helperText != null),
@@ -74,6 +76,7 @@ class _UserFullscreenHelperWidgetState
                             ),
                             textAlign: TextAlign.center,
                           ),
+                          onTap: this.widget.onTrigger,
                         ),
                       ),
                       Padding(
@@ -86,6 +89,7 @@ class _UserFullscreenHelperWidgetState
                                 color: widget.textColor, fontSize: 10),
                             textAlign: TextAlign.center,
                           ),
+                          onTap: this.widget.onTrigger,
                         ),
                       ),
                     ],

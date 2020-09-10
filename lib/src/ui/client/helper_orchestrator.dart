@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/helper/helper_full_screen_entity.dart';
+import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
+import 'package:palplugin/src/ui/client/helper_factory.dart';
 import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
@@ -16,6 +20,8 @@ class HelperOrchestrator extends InheritedWidget {
 
   final HelperClientService helperClientService;
 
+  final InAppUserClientService inAppUserClientService;
+
   final GlobalKey<NavigatorState> navigatorKey;
 
   HelperOrchestrator({
@@ -23,6 +29,7 @@ class HelperOrchestrator extends InheritedWidget {
     @required MaterialApp child,
     @required this.routeObserver,
     @required this.helperClientService,
+    @required this.inAppUserClientService,
   }): assert(child != null),
     this.navigatorKey = child.navigatorKey,
     super(key: key, child: child) {
@@ -36,7 +43,7 @@ class HelperOrchestrator extends InheritedWidget {
     return false;
   }
 
-  _init() {
+  _init() async {
     this.routeObserver.stream.listen((RouteSettings newRoute) async {
       if(newRoute == null || newRoute.name == null) {
         return;
@@ -46,15 +53,15 @@ class HelperOrchestrator extends InheritedWidget {
   }
 
   @visibleForTesting
-  onChangePage(String route) async {
+  onChangePage(final String route) async {
     if(helper.overlay != null) {
       popHelper();
     }
     try {
-      List<HelperEntity> helpersToShow = await this.helperClientService
-          .getPageHelpers(route);
+      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
       if (helpersToShow != null && helpersToShow.length > 0) {
-        _showHelper();
+        _showHelper(helpersToShow[0], inAppUser.id);
       }
     } catch (e) {
       // Nothing to do
@@ -63,19 +70,17 @@ class HelperOrchestrator extends InheritedWidget {
 
   // this method should be private
   // TODO make one for each strategy
-  _showHelper() {
+  _showHelper(final HelperEntity helper, final String inAppUserId) {
     OverlayEntry entry = OverlayEntry(
       opaque: false,
-      builder: (context) => UserFullscreenHelperWidget(
-        helperText: "Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum",
-        bgColor: Color(0xFF2C77B6),
-        textColor: Color(0xFFFAFEFF),
-        textSize: 18,
-      )
+      builder: (context) => HelperFactory.build(helper, onTrigger: () async {
+        await helperClientService.triggerHelper(helper.pageId, helper.id, inAppUserId);
+        this.popHelper();
+      }),
     );
     var overlay = navigatorKey.currentState.overlay;
     overlay.insert(entry);
-    helper.overlay = entry;
+    this.helper.overlay = entry;
   }
 
   bool popHelper() => helper.pop();

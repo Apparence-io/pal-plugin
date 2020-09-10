@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/repository/helper_repository.dart';
+import 'package:palplugin/src/database/repository/in_app_user_repository.dart';
 import 'package:palplugin/src/database/repository/page_repository.dart';
 import 'package:palplugin/src/database/repository/version_repository.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
@@ -11,7 +12,7 @@ class UserAppContext extends InheritedWidget {
   final PageRepository _pageRepository;
 
   final HelperRepository _helperRepository;
-
+  final InAppUserRepository _inAppUserRepository;
   final VersionRepository _versionRepository;
 
   factory UserAppContext.create(
@@ -33,6 +34,7 @@ class UserAppContext extends InheritedWidget {
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._helperRepository = HelperRepository(httpClient: httpClient),
         this._versionRepository = VersionHttpRepository(httpClient: httpClient),
+        this._inAppUserRepository = InAppUserRepository(httpClient: httpClient),
         super(key: key, child: child);
 
   static UserAppContext of(BuildContext context) {
@@ -49,4 +51,6 @@ class UserAppContext extends InheritedWidget {
   HelperRepository get helperRepository => this._helperRepository;
 
   VersionRepository get versionRepository => this._versionRepository;
+
+  InAppUserRepository get inAppUserRepository => this._inAppUserRepository;
 }

@@ -5,6 +5,7 @@ import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_e
 import 'package:palplugin/src/database/entity/helper/create_helper_simple_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:palplugin/src/extensions/color_extension.dart';
 
 class EditorFactory {
   static HelperViewModel init(HelperViewModel model, HelperType helperType) {
@@ -61,9 +62,9 @@ class EditorFactory {
       versionMaxId: model.versionMaxId,
       versionMinId: model.versionMinId,
       title: model.title?.value,
-      fontColor: colorToHex(model.fontColor?.value),
-      backgroundColor: colorToHex(model.backgroundColor?.value),
-      borderColor: colorToHex(model.borderColor?.value),
+      fontColor: model.fontColor?.value?.toHex(),
+      backgroundColor: model.backgroundColor?.value?.toHex(),
+      borderColor: model.borderColor?.value?.toHex(),
       languageId: model.languageId?.value,
     );
   }

@@ -5,13 +5,19 @@ import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 class HelperEditorViewModel extends MVVMModel {
   bool enableSave;
   bool isLoading;
+  bool isEditableWidgetValid;
 
   // Toolbar stuff
   bool toolbarIsVisible;
   Offset toolbarPosition;
   Size toolbarSize;
-
+  Size editedWidgetSize;
   bool isEditingWidget;
+  
+  // This the template view model with all default values
+  HelperViewModel templateViewModel;
+
+  // This is the actual edited widget view model
   HelperViewModel helperViewModel;
 }
 
@@ -53,3 +59,27 @@ class FullscreenHelperViewModel extends HelperViewModel {
           versionMaxId: versionMaxId,
         );
 }
+
+class SimpleHelperViewModel extends HelperViewModel {
+  final ValueNotifier<String> details = ValueNotifier('Edit me!');
+  final ValueNotifier<Color> fontColor = ValueNotifier(Colors.white);
+  final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.black87);
+  final ValueNotifier<Color> borderColor = ValueNotifier(Colors.greenAccent);
+  final ValueNotifier<int> languageId = ValueNotifier(1);
+  final ValueNotifier<num> fontSize = ValueNotifier(14.0);
+
+  SimpleHelperViewModel({
+    @required String name,
+    @required HelperTriggerType triggerType,
+    @required int priority,
+    @required int versionMinId,
+    int versionMaxId,
+  }) : super(
+          name: name,
+          triggerType: triggerType,
+          priority: priority,
+          versionMinId: versionMinId,
+          versionMaxId: versionMaxId,
+        );
+}
+

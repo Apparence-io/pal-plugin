@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper_widget.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 void main() {
@@ -10,7 +11,8 @@ void main() {
       testWidgets('bgColor is required', (WidgetTester tester) async {
         bool hasThrow = false;
         try {
-          UserFullscreenHelperWidget helperWidget = UserFullscreenHelperWidget();
+          UserFullscreenHelperWidget helperWidget =
+              UserFullscreenHelperWidget();
           var app = new MediaQuery(
               data: MediaQueryData(), child: MaterialApp(home: helperWidget));
           await tester.pumpWidget(app);
@@ -63,14 +65,27 @@ void main() {
     });
 
     group('editor mode', () {
-      testWidgets('textfield is present', (WidgetTester tester) async {
-        EditorFullscreenHelperWidget helperWidget = EditorFullscreenHelperWidget(
-          fullscreenHelperViewModel: FullscreenHelperViewModel(),
-        );
+      _before(WidgetTester tester) async {
         var app = new MediaQuery(
-            data: MediaQueryData(), child: MaterialApp(home: helperWidget));
+          data: MediaQueryData(),
+          child: PalTheme(
+            theme: PalThemeData.light(),
+            child: Builder(
+              builder: (context) => MaterialApp(
+                theme: PalTheme.of(context).buildTheme(),
+                home: EditorFullScreenHelperPage(
+                  viewModel: FullscreenHelperViewModel(),
+                ),
+              ),
+            ),
+          ),
+        );
         await tester.pumpWidget(app);
         await tester.pumpAndSettle(Duration(seconds: 1));
+      }
+
+      testWidgets('textfield is present', (WidgetTester tester) async {
+        await _before(tester);
 
         expect(find.byType(TextField), findsOneWidget);
         expect(find.text('Edit me!'), findsOneWidget);

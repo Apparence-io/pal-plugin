@@ -40,19 +40,23 @@ class HelperEditorPageArguments {
 }
 
 abstract class HelperEditorView {
+
   showHelperModal(
     final BuildContext context,
     final HelperEditorPresenter presenter,
     final HelperEditorViewModel model,
   );
+
   addNewHelper(
     final BuildContext context,
     final HelperType helperType,
     final HelperEditorPresenter presenter,
     final HelperEditorViewModel model,
   );
+
   unFocusCurrentTextField(final BuildContext context);
-  removeOverlay(final BuildContext context);
+
+  removeOverlay();
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
@@ -95,7 +99,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   ) {
     return WillPopScope(
       onWillPop: () {
-        removeOverlay(context);
+        removeOverlay();
         return Future.value(false);
       },
       child: Material(
@@ -188,7 +192,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         children: [
           EditorButton.cancel(
             PalTheme.of(context),
-            () => removeOverlay(context),
+            () => removeOverlay(),
             key: ValueKey("editModeCancel"),
           ),
           if (model.isEditingWidget)
@@ -200,8 +204,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
                   await presenter.save(
                       helperEditorPageArguments.pageId, model.helperViewModel);
                   await Future.delayed(Duration(milliseconds: 500));
-
-                  removeOverlay(context);
+                  removeOverlay();
                 },
                 key: ValueKey("editModeValidate"),
               ),
@@ -278,8 +281,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   @override
-  removeOverlay(BuildContext context) {
-    // FIXME: Don't work when a set state was triggered
+  removeOverlay() {
     Overlayed.removeOverlay(
       helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,

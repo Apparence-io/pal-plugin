@@ -55,6 +55,10 @@ class HelperEditorPresenter
     this.refreshView();
   }
 
+  onClickClose() {
+    //TODO
+  }
+
   Future<HelperEntity> save(
     String pageId,
     HelperViewModel helperViewModel,

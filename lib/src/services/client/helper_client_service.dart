@@ -16,6 +16,7 @@ class HelperClientService {
     );
 
   Future<List<HelperEntity>> getPageHelpers(final String route, final String inAppUserId) => throw "not implemented";
+
   Future triggerHelper(final String pageId, final String helperId, final String inAppUserId) => throw "not implemented";
 }
 

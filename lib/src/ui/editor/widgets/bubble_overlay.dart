@@ -4,13 +4,19 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
 class BubbleOverlayButton extends StatefulWidget {
+
+  final ValueNotifier<bool> visibility;
+
   final double width, height;
+
   final Size screenSize;
+
   final Function onTapCallback;
 
   const BubbleOverlayButton({
     Key key,
     @required this.screenSize,
+    @required this.visibility,
     this.height = 50.0,
     this.width = 50.0,
     this.onTapCallback,
@@ -30,25 +36,39 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
       widget.screenSize.width / 2 - (widget.width / 2),
       widget.screenSize.height - (widget.height * 2),
     );
+    widget.visibility.addListener(_onVisibilityChange);
+  }
+
+  _onVisibilityChange() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    widget.visibility.removeListener(_onVisibilityChange);
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (_position != null) {
-      return Positioned(
-        left: _position.dx,
-        top: _position.dy,
-        child: GestureDetector(
-          onPanUpdate: (details) {
-            setState(() {
-              _position = details.globalPosition -
-                  Offset(
-                    widget.width / 2,
-                    widget.height / 2,
-                  );
-            });
-          },
-          child: _buildBubble(),
+      return Visibility(
+        visible: widget.visibility.value,
+        child: Positioned(
+          left: _position.dx,
+          top: _position.dy,
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                _position = details.globalPosition -
+                    Offset(
+                      widget.width / 2,
+                      widget.height / 2,
+                    );
+              });
+            },
+            child: _buildBubble(),
+          ),
         ),
       );
     } else {

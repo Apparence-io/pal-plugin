@@ -17,19 +17,20 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/widgets/helper_tile_w
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 
 abstract class HelpersListModalView {
+
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
+
   void processElement(Element element, {int n = 0});
+
   Future<void> capturePng(
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   );
-  void openHelperCreationPage(
-    final BuildContext context,
-    final HelpersListModalModel model,
-  );
+
+  void openHelperCreationPage(final HelpersListModalModel model);
 }
 
-class HelpersListModal extends StatelessWidget implements HelpersListModalView {
+class HelpersListModal extends StatefulWidget  {
 
   final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
 
@@ -37,10 +38,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   final BuildContext bottomModalContext;
   final HelpersListModalLoader loader;
   final PalEditModeStateService palEditModeStateService;
-  final ScrollController listController = ScrollController();
 
-  final _mvvmPageBuilder =
-      MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
   HelpersListModal({
     Key key,
     this.loader,
@@ -51,19 +49,29 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   });
 
   @override
+  _HelpersListModalState createState() => _HelpersListModalState();
+}
+
+class _HelpersListModalState extends State<HelpersListModal> implements HelpersListModalView {
+  final ScrollController listController = ScrollController();
+
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
+
+  @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
       key: UniqueKey(),
       context: context,
       presenterBuilder: (context) => HelpersListModalPresenter(
         this,
-        loader: this.loader ??
+        loader: this.widget.loader ??
             HelpersListModalLoader(
               EditorInjector.of(context).pageService,
               EditorInjector.of(context).helperService,
               EditorInjector.of(context).routeObserver
             ),
-        palEditModeStateService: this.palEditModeStateService ??
+        palEditModeStateService: this.widget.palEditModeStateService ??
             EditorInjector.of(context).palEditModeStateService,
       ),
       builder: (context, presenter, model) {
@@ -221,7 +229,8 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
               child: FloatingActionButton(
                 heroTag: 'palHelpersListModalNew',
                 key: ValueKey('palHelpersListModalNew'),
-                onPressed: () => openHelperCreationPage(context, model),
+                // onPressed: () => openHelperCreationPage(context, model),
+                onPressed: presenter.onClickAdd,
                 child: Icon(
                   Icons.add,
                   size: 18.0,
@@ -242,11 +251,10 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     }
   }
 
-  // TODO: Move this to an utils file
   @override
   processElement(Element element, {int n = 0}) {
     if (element.widget.key != null) {
-      var parentObject = repaintBoundaryKey.currentContext.findRenderObject();
+      var parentObject = widget.repaintBoundaryKey.currentContext.findRenderObject();
       if (element.widget is Scaffold) {
         print("SCAFFOLD");
       }
@@ -264,7 +272,6 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
     element.visitChildElements((visitor) => processElement(visitor, n: n + 1));
   }
 
-  // TODO: Move this to an utils file
   @override
   Future<void> capturePng(
     final HelpersListModalPresenter presenter,
@@ -272,7 +279,7 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   ) async {
     try {
       RenderRepaintBoundary boundary =
-          repaintBoundaryKey.currentContext.findRenderObject();
+          widget.repaintBoundaryKey.currentContext.findRenderObject();
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
@@ -285,25 +292,21 @@ class HelpersListModal extends StatelessWidget implements HelpersListModalView {
   }
 
   @override
-  void openHelperCreationPage(
-    final BuildContext context,
-    final HelpersListModalModel model,
-  ) async {
+  void openHelperCreationPage(final HelpersListModalModel model) async {
     HapticFeedback.selectionClick();
-
     // Display the helper creation view
     final shouldOpenEditor = await Navigator.pushNamed(
       context,
       '/editor/new',
       arguments: CreateHelperPageArguments(
-        hostedAppNavigatorKey,
+        widget.hostedAppNavigatorKey,
         model.pageId,
       ),
     );
 
     if (shouldOpenEditor != null && shouldOpenEditor) {
       // Dismiss the bottom modal when next was tapped
-      Navigator.pop(bottomModalContext);
+      Navigator.pop(widget.bottomModalContext);
     }
   }
 }

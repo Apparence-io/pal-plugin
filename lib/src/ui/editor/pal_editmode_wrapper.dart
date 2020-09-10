@@ -64,15 +64,15 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
                       child: widget.userApp,
                     ),
                     // Build the floating widget above the app
-                    if (palEditModeStateService.showEditorBubble.value)
-                      BubbleOverlayButton(
-                        key: ValueKey('palBubbleOverlay'),
-                        screenSize: Size(
-                          constraints.maxWidth,
-                          constraints.maxHeight,
-                        ),
-                        onTapCallback: () => _showHelpersListModal(context),
+                    BubbleOverlayButton(
+                      key: ValueKey('palBubbleOverlay'),
+                      visibility: palEditModeStateService.showEditorBubble,
+                      screenSize: Size(
+                        constraints.maxWidth,
+                        constraints.maxHeight,
                       ),
+                      onTapCallback: () => _showHelpersListModal(context),
+                    ),
                   ],
                 );
               },

@@ -54,8 +54,8 @@ class HelpersListModalPresenter
     this.refreshView();
   }
 
-  hidePalBubble() {
-    // FIXME: set state broke overlay removal
-    // this.palEditModeStateService.showEditorBubble.value = false;
+  onClickAdd() {
+    this.viewInterface.openHelperCreationPage(this.viewModel);
+    this.palEditModeStateService.showEditorBubble.value = false;
   }
 }

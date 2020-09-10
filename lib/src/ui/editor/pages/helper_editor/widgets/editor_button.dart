@@ -56,13 +56,11 @@ class EditorButton extends StatelessWidget {
       icon: icon,
       radius: size / 2,
       backgroundColor: bgColor,
-      onTapCallback: () {
+      onTapCallback: (onPressed != null) ? () {
         HapticFeedback.selectionClick();
 
-        if (onPressed != null) {
-          onPressed();
-        }
-      },
+        onPressed();
+      } : null,
     );
   }
 }

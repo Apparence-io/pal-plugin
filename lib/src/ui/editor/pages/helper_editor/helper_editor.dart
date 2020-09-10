@@ -40,22 +40,18 @@ class HelperEditorPageArguments {
 }
 
 abstract class HelperEditorView {
-
   showHelperModal(
     final BuildContext context,
     final HelperEditorPresenter presenter,
     final HelperEditorViewModel model,
   );
-
   addNewHelper(
     final BuildContext context,
     final HelperType helperType,
     final HelperEditorPresenter presenter,
     final HelperEditorViewModel model,
   );
-
   unFocusCurrentTextField(final BuildContext context);
-
   removeOverlay();
 }
 
@@ -192,7 +188,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         children: [
           EditorButton.cancel(
             PalTheme.of(context),
-            () => removeOverlay(),
+            () => removeOverlay(context),
             key: ValueKey("editModeCancel"),
           ),
           if (model.isEditingWidget)
@@ -255,19 +251,18 @@ class HelperEditorPageBuilder implements HelperEditorView {
   ) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
-        _helperToEdit = EditorFullscreenHelperWidget(
-          fullscreenHelperViewModel: model.helperViewModel,
-          onTitleFocusChanged: (bool hasFocus, Size size, Offset position) {
-            if (!hasFocus) {
-              presenter.hideToolbar();
-            } else {
-              presenter.showToolbar(size, position);
-            }
-          },
+        presenter.initEditedWidgetData(HelperType.HELPER_FULL_SCREEN);
+        _helperToEdit = EditorFullScreenHelperPage(
+          viewModel: model.helperViewModel,
+          onFormChanged: presenter.checkIfEditableWidgetFormValid,
         );
         break;
       case HelperType.SIMPLE_HELPER:
-        // TODO: Add simple helper widget
+        presenter.initEditedWidgetData(HelperType.SIMPLE_HELPER);
+        _helperToEdit = EditorSimpleHelperPage(
+          viewModel: model.helperViewModel,
+          onFormChanged: presenter.checkIfEditableWidgetFormValid,
+        );
         break;
       default:
     }

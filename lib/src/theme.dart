@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class _PalThemeLightColors {
   static const Color dark = Color(0xFF03045E);
+  static const Color black = Color(0xFF292931);
   static const Color blue = Color(0xFF0077B6);
   static const Color lightBlue = Color(0xFF00B4D8);
   static const Color cyan = Color(0xFF90E0EF);
@@ -23,6 +24,8 @@ class _PalThemeLightColors {
 class _PalThemeColors {
   final Color dark;
 
+  final Color black;
+
   final Color color1, color2, color3, color4, color5;
 
   final Color accent;
@@ -33,6 +36,7 @@ class _PalThemeColors {
 
   const _PalThemeColors._(
       {this.dark,
+      this.black,
       this.color1,
       this.color2,
       this.color3,
@@ -45,6 +49,7 @@ class _PalThemeColors {
   factory _PalThemeColors.light() => const _PalThemeColors._(
         dark: _PalThemeLightColors.dark,
         color1: _PalThemeLightColors.blue,
+        black: _PalThemeLightColors.black,
         color2: _PalThemeLightColors.lightBlue,
         color3: _PalThemeLightColors.cyan,
         color4: _PalThemeLightColors.aqua,
@@ -94,6 +99,7 @@ class PalThemeData {
     const Color cyan = Color(0xFFa1e3f1);
     const Color aqua = Color(0xFF90E0EF);
     const Color red = Color(0xFFe7636a);
+    const Color black = Color(0xFF292931);
 
     return base.copyWith(
       accentColor: dark,
@@ -136,4 +142,8 @@ class PalThemeData {
   Color get toolbarBackgroundColor => colors.color5;
 
   Color get floatingBubbleBackgroundColor => colors.dark;
+
+  Color get simpleHelperBackgroundColor => colors.black;
+
+  Color get simpleHelperFontColor => Color(0xFFFAFEFF);
 }

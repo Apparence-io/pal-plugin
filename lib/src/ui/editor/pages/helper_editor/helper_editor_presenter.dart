@@ -35,7 +35,7 @@ class HelperEditorPresenter
 
     // Create a template helper model
     // this template will be copied to edited widget
-    viewModel.templateViewModel = FullscreenHelperViewModel(
+    viewModel.templateViewModel = HelperViewModel(
       name: basicArguments?.helperName,
       priority: basicArguments?.priority ?? 0,
       triggerType:

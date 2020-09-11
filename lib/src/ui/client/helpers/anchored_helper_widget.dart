@@ -32,7 +32,6 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
         anchorSize = elementFinder.result.size;
         currentPos = elementFinder.getResultCenter();
         writeArea = elementFinder.getLargestAvailableSpace();
-        print("writeArea: $writeArea");
       });
     });
   }
@@ -50,7 +49,8 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
                 child: CustomPaint(
                   painter: AnchoredFullscreenPainter(
                     currentPos: this.currentPos,
-                    anchorSize: this.anchorSize
+                    anchorSize: this.anchorSize,
+                    padding: 16
                   )
                 )
               ),
@@ -58,10 +58,63 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
           ),
           Positioned.fromRect(
             rect: writeArea ?? Rect.largest,
-            child: Center(child: Text("This is a text i wanna show")),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "This is a text i wanna show. My user needs to understand this part of the screen",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 21
+                    ),
+                  ),
+                ),
+                _buildPositivFeedback(),
+                _buildNegativFeedback(),
+              ],
+            ),
           )
         ],
       ),
+    );
+  }
+
+  Padding _buildNegativFeedback() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: InkWell(
+          key: ValueKey("negativeFeedback"),
+          child: Text(
+            "This is not helping",
+            style: TextStyle(
+              // color: widget.textColor, fontSize: 10
+            ),
+            textAlign: TextAlign.center,
+          ),
+          // onTap: this.widget.onTrigger,
+        ),
+    );
+  }
+
+  Padding _buildPositivFeedback() {
+    return Padding(
+        padding: const EdgeInsets.only(top: 24.0),
+        child: InkWell(
+          key: ValueKey("positiveFeedback"),
+          child: Text(
+            "Ok, thanks !",
+            style: TextStyle(
+              // color: widget.textColor,
+              fontSize: 18,
+              decoration: TextDecoration.underline,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          // onTap: this.widget.onTrigger,
+        ),
     );
   }
 }
@@ -69,15 +122,15 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
 
 class AnchoredFullscreenPainter extends CustomPainter {
 
-  Offset currentPos;
+  final Offset currentPos;
 
-  final double radius = 32;
+  final double padding;
 
   final Size anchorSize;
 
   final double area = 24.0 * 24.0;
 
-  AnchoredFullscreenPainter({this.currentPos, this.anchorSize});
+  AnchoredFullscreenPainter({this.currentPos, this.anchorSize, this.padding = 0});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -85,7 +138,7 @@ class AnchoredFullscreenPainter extends CustomPainter {
       ..blendMode = BlendMode.clear
       ..isAntiAlias = true;
     Paint bgPainter = Paint()
-      ..color = Colors.lightGreenAccent
+      ..color = Colors.lightGreenAccent.withOpacity(.6)
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
     Paint redPainter = Paint()
@@ -99,9 +152,8 @@ class AnchoredFullscreenPainter extends CustomPainter {
     // canvas.drawRect(currentPos & anchorSize, clearPainter);
     canvas.drawRect(Rect.fromCenter(
       center: currentPos,
-      width: anchorSize.width,
-      height: anchorSize.height), clearPainter);
-    canvas.drawCircle(Offset(0,0), 60, redPainter);
+      width: anchorSize.width + padding,
+      height: anchorSize.height + padding), clearPainter);
     canvas.restore();
   }
 

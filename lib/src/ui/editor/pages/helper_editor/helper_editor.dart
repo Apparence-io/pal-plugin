@@ -221,24 +221,19 @@ class HelperEditorPageBuilder implements HelperEditorView {
       context,
       (context) => ModalBottomSheetOptions(
         onValidate: (SheetOption anOption) {
+          //FIXME this should call a presenter actions that do this
           // First dismiss the bottom modal sheet
           Navigator.pop(context);
-
           // Then assign in stack the selected helper
           addNewHelper(context, anOption.type, presenter, model);
         },
-        options: [
-          SheetOption(
-            text: "Simple helper box",
+        options: model.availableHelperType.map(
+          (el) => SheetOption(
+            text: el.text,
             icon: Icons.border_outer,
-            type: HelperType.SIMPLE_HELPER,
-          ),
-          SheetOption(
-            text: "Fullscreen helper",
-            icon: Icons.border_outer,
-            type: HelperType.HELPER_FULL_SCREEN,
-          ),
-        ],
+            type: el.type,
+          )
+        ).toList(),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 
 class HelperEditorViewModel extends MVVMModel {
   bool enableSave;
@@ -13,12 +14,23 @@ class HelperEditorViewModel extends MVVMModel {
   Size toolbarSize;
   Size editedWidgetSize;
   bool isEditingWidget;
+
+  // this is used to let user choose between all available type options
+  List<HelperTypeOption> availableHelperType;
   
   // This the template view model with all default values
   HelperViewModel templateViewModel;
 
   // This is the actual edited widget view model
   HelperViewModel helperViewModel;
+}
+
+// this is used to let user choose between all available type options
+class HelperTypeOption {
+  String text;
+  HelperType type;
+
+  HelperTypeOption(this.text, this.type);
 }
 
 class HelperViewModel {

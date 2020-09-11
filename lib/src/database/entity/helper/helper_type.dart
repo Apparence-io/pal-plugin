@@ -1,6 +1,7 @@
 enum HelperType {
   HELPER_FULL_SCREEN,
   SIMPLE_HELPER,
+  ANCHORED_OVERLAYED_HELPER,
 }
 
 HelperType getHelperType(final String value) {

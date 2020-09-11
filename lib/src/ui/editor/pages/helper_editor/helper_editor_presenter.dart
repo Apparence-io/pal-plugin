@@ -33,6 +33,13 @@ class HelperEditorPresenter
     viewModel.isEditableWidgetValid = false;
     viewModel.toolbarPosition = Offset.zero;
 
+    // init the available helpers type we can create
+    viewModel.availableHelperType = [
+      HelperTypeOption("Simple helper box", HelperType.SIMPLE_HELPER),
+      HelperTypeOption("Fullscreen helper", HelperType.HELPER_FULL_SCREEN),
+      HelperTypeOption("Anchored fullscreen helper", HelperType.ANCHORED_OVERLAYED_HELPER),
+    ];
+
     // Create a template helper model
     // this template will be copied to edited widget
     viewModel.templateViewModel = HelperViewModel(
@@ -67,8 +74,6 @@ class HelperEditorPresenter
   onClickClose() {
     //TODO
   }
-
-
 
   Future<HelperEntity> save(
     String pageId,

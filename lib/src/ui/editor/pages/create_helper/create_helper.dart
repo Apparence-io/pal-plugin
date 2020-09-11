@@ -6,6 +6,7 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
 
@@ -221,10 +222,12 @@ class _CreateHelperPageState extends State<CreateHelperPage>
       widget.pageId,
       helperName: _helperNameController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
+
     );
+    var elementFinder = ElementFinder(widget.hostedAppNavigatorKey.currentContext);
     OverlayEntry helperOverlay = OverlayEntry(
       opaque: false,
-      builder: HelperEditorPageBuilder(args).build,
+      builder: HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
     );
     Overlayed.of(context).entries.putIfAbsent(
           OverlayKeys.EDITOR_OVERLAY_KEY,

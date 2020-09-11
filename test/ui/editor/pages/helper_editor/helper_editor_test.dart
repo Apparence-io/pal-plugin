@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
@@ -61,7 +62,7 @@ void main() {
       var helpersOptionsFinder = find.byType(ModalBottomSheetOptions);
       expect(helpersOptionsFinder, findsOneWidget);
       // check options
-      expect(find.byType(ListTile), findsNWidgets(2));
+      expect(find.byType(ListTile), findsNWidgets(3));
       expect(find.byKey(ValueKey("cancel")), findsOneWidget);
       expect(find.byKey(ValueKey("validate")), findsOneWidget);
     });
@@ -128,5 +129,32 @@ void main() {
         // TODO: Add validate button tap
       });
     });
+  });
+
+  group('anchored helper', () {
+    _addAnchoredScreenWidget(WidgetTester tester) async {
+      var editButtonFinder = find.byKey(ValueKey("editModeButton"));
+      // click on button
+      await tester.tap(editButtonFinder);
+      await tester.pump();
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
+      var option3 = find.byKey(ValueKey("option2"));
+      await tester.tap(option3.first);
+      await tester.pump();
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
+      var validateButton = find.byKey(ValueKey("validate"));
+      await tester.tap(validateButton.first);
+      await tester.pumpAndSettle(Duration(milliseconds: 1000));
+    }
+
+    testWidgets('can add an anchored fullscreen helper', (WidgetTester tester) async {
+      await _initPage(tester);
+      await _addAnchoredScreenWidget(tester);
+      expect(find.byType(ModalBottomSheetOptions), findsNothing);
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
+    });
+
+
+
   });
 }

@@ -33,5 +33,26 @@ void main() {
       expect(finder.result.size, equals(Size(150, 50)));
     });
 
+    testWidgets('scan widgets finds all with their rect', (WidgetTester tester) async {
+      BuildContext _context;
+      var app = new MediaQuery(data: MediaQueryData(),
+        child: MaterialApp(home: Builder(
+          builder: (context) {
+            _context = context;
+            return page;
+          },
+        ))
+      );
+      await tester.pumpWidget(app);
+      ElementFinder finder =  ElementFinder(_context);
+      var elements = finder.scan();
+      expect(elements, isNotNull);
+      expect(elements.length, equals(6));
+      var keys = elements.keys.toList();
+      expect(keys[2], contains("text1"));
+      expect(keys[3], contains("text2"));
+      // expect(elements[keys.last].bounds.size, equals(Size(150, 50)));
+    });
+
   });
 }

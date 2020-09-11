@@ -7,6 +7,7 @@ import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
@@ -14,6 +15,7 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banne
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
+import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 import 'helper_editor_presenter.dart';
@@ -41,34 +43,43 @@ class HelperEditorPageArguments {
 }
 
 abstract class HelperEditorView {
+
   showHelperModal(
     final BuildContext context,
     final HelperEditorPresenter presenter,
     final HelperEditorViewModel model,
   );
-  addNewHelper(
-    final BuildContext context,
-    final HelperType helperType,
-    final HelperEditorPresenter presenter,
-    final HelperEditorViewModel model,
-  );
+
+  addFullscreenHelperEditor(FullscreenHelperViewModel model, Function isValid);
+
+  addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid);
+
+  addAnchoredFullscreenEditor(AnchoredFullscreenHelperViewModel model, Function isValid);
+
   unFocusCurrentTextField(final BuildContext context);
+
   removeOverlay();
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
+
+  final ElementFinder elementFinder;
+
   final HelperEditorPageArguments helperEditorPageArguments;
+
   final HelperService helperService;
+
   final HelperEditorLoader loader;
 
-  final _mvvmPageBuilder =
-      MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
+  final _mvvmPageBuilder = MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
+
   Widget _helperToEdit;
 
   HelperEditorPageBuilder(
     this.helperEditorPageArguments, {
     this.loader,
     this.helperService,
+    this.elementFinder,
   });
 
   Widget build(BuildContext context) {
@@ -80,6 +91,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         helperEditorPageArguments,
         loader ?? HelperEditorLoader(),
         helperService ?? EditorInjector.of(context).helperService,
+        elementFinder
       ),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
@@ -108,7 +120,8 @@ class HelperEditorPageBuilder implements HelperEditorView {
             children: [
               // TODO: Put here helpers widget
               // just create a stack if there is more than one widgets
-              if (model.isEditingWidget) _helperToEdit,
+              if (model.isEditingWidget)
+                Positioned.fill(child: _helperToEdit),
               (!model.isLoading)
                   ? Stack(
                       key: ValueKey('palEditorModeInteractUI'),
@@ -221,11 +234,9 @@ class HelperEditorPageBuilder implements HelperEditorView {
       context,
       (context) => ModalBottomSheetOptions(
         onValidate: (SheetOption anOption) {
-          //FIXME this should call a presenter actions that do this
           // First dismiss the bottom modal sheet
           Navigator.pop(context);
-          // Then assign in stack the selected helper
-          addNewHelper(context, anOption.type, presenter, model);
+          presenter.chooseHelperType(anOption.type);
         },
         options: model.availableHelperType.map(
           (el) => SheetOption(
@@ -238,32 +249,29 @@ class HelperEditorPageBuilder implements HelperEditorView {
     );
   }
 
-  @override
-  addNewHelper(
-    final BuildContext context,
-    final HelperType helperType,
-    final HelperEditorPresenter presenter,
-    final HelperEditorViewModel model,
-  ) {
-    switch (helperType) {
-      case HelperType.HELPER_FULL_SCREEN:
-        presenter.initEditedWidgetData(HelperType.HELPER_FULL_SCREEN);
-        _helperToEdit = EditorFullScreenHelperPage(
-          viewModel: model.helperViewModel,
-          onFormChanged: presenter.checkIfEditableWidgetFormValid,
-        );
-        break;
-      case HelperType.SIMPLE_HELPER:
-        presenter.initEditedWidgetData(HelperType.SIMPLE_HELPER);
-        _helperToEdit = EditorSimpleHelperPage(
-          viewModel: model.helperViewModel,
-          onFormChanged: presenter.checkIfEditableWidgetFormValid,
-        );
-        break;
-      default:
-    }
-    model.isEditingWidget = (_helperToEdit != null);
-    presenter.refreshView();
+  // /////////////////////////////////////////:
+  // HelperEditorView
+  // /////////////////////////////////////////:
+
+  addFullscreenHelperEditor(FullscreenHelperViewModel model, Function isValid) {
+    _helperToEdit = EditorFullScreenHelperPage(
+      viewModel: model,
+      onFormChanged: isValid,
+    );
+  }
+
+  addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid) {
+    _helperToEdit = EditorSimpleHelperPage(
+      viewModel: model,
+      onFormChanged: isValid,
+    );
+  }
+
+  addAnchoredFullscreenEditor(AnchoredFullscreenHelperViewModel model, Function isValid) {
+    _helperToEdit = EditorAnchoredFullscreenHelper(
+      // viewModel: model,
+      // onFormChanged: isValid,
+    );
   }
 
   @override

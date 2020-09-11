@@ -7,14 +7,20 @@ import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
+import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
 class HelperEditorPresenter
     extends Presenter<HelperEditorViewModel, HelperEditorView> {
+
   final HelperService helperService;
+
+  final ElementFinder elementFinder;
+
   final HelperEditorLoader loader;
+
   final HelperEditorPageArguments basicArguments;
 
   HelperEditorPresenter(
@@ -22,6 +28,7 @@ class HelperEditorPresenter
     this.basicArguments,
     this.loader,
     this.helperService,
+    this.elementFinder
   ) : super(HelperEditorViewModel(), viewInterface);
 
   @override
@@ -57,13 +64,30 @@ class HelperEditorPresenter
     this.refreshView();
   }
 
-  // Simply copy all template data from [viewModel.defaultViewModel] to the
-  // actual edited widget view model
-  initEditedWidgetData(HelperType type) {
-    viewModel.helperViewModel = EditorFactory.init(
-      viewModel.templateViewModel,
-      type,
-    );
+  chooseHelperType(HelperType helperType) {
+    initEditedWidgetData(helperType);
+    switch (helperType) {
+      case HelperType.HELPER_FULL_SCREEN:
+        viewInterface.addFullscreenHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        break;
+      case HelperType.SIMPLE_HELPER:
+        viewInterface.addSimpleHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        break;
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        viewInterface.addAnchoredFullscreenEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        // refactoring required
+        var bounds = elementFinder.scan();
+        bounds.forEach((key,element) {
+          print("#element : ${element.key} => ${element.bounds}");
+        });
+        //--
+        break;
+      default:
+        throw "Not implemented type";
+        break;
+    }
+    viewModel.isEditingWidget = true;
+    refreshView();
   }
 
   hideToolbar() {
@@ -90,5 +114,18 @@ class HelperEditorPresenter
     this.refreshView();
 
     return helperEntity;
+  }
+
+  //----------------------------------------------------------------------
+  // PRIVATES
+  //----------------------------------------------------------------------
+
+  // Simply copy all template data from [viewModel.defaultViewModel] to the
+  // actual edited widget view model
+  initEditedWidgetData(HelperType type) {
+    viewModel.helperViewModel = EditorFactory.init(
+      viewModel.templateViewModel,
+      type,
+    );
   }
 }

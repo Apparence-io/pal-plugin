@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -13,18 +14,28 @@ class ElementFinder {
 
   Element _result;
 
+  // this method scan all child recursively to get all widget bounds we could select for an helper
+  Map<String, ElementModel> scan() {
+    Map<String, ElementModel> results = Map<String, ElementModel>();
+    context.visitChildElements((element) => _scanChildElement(context.findRenderObject(), element, results));
+    return results;
+  }
+
+  // this method scan all child recursively to find a widget having a key == searchedKey
   searchChildElement(String key) => context.visitChildElements((element) => _searchChildElement(element, key));
 
   Element get result => _result;
 
   Rect get resultRect => _result.findRenderObject().paintBounds;
 
+  // returns the Offset as the top left of our widget
   Offset getResultPosition() {
     var parentObject = context.findRenderObject();
     var translation = _result.renderObject.getTransformTo(parentObject).getTranslation();
     return Offset(translation.x, translation.y);
   }
 
+  // returns the Offset as the center of our result
   Offset getResultCenter() {
     var parentObject = context.findRenderObject();
     var translation = _result.renderObject.getTransformTo(parentObject).getTranslation();
@@ -60,11 +71,15 @@ class ElementFinder {
     var availableHSpaceArea =  availableHSpace.size.width * availableHSpace.size.height;
     var availableWSpaceArea =  availableWSpace.size.width * availableWSpace.size.height;
     const MIN_WRITABLE_SPACE = 100;
-    if(availableWSpaceArea > availableWSpace.size.width * availableWSpace.size.height && availableWSpace.width > MIN_WRITABLE_SPACE) {
+    if(availableWSpaceArea > availableHSpaceArea && availableWSpace.width > MIN_WRITABLE_SPACE) {
       return availableWSpace;
     }
     return availableHSpace;
   }
+
+  // -----------------------------------------------------------
+  // private
+  // -----------------------------------------------------------
 
   _searchChildElement(Element element, String key, {int n = 0}) {
     if(element.widget.key != null) {
@@ -75,4 +90,27 @@ class ElementFinder {
     }
     element.visitChildElements((visitor) => _searchChildElement(visitor, key, n: n + 1));
   }
+
+  _scanChildElement(RenderObject parentObject, Element element, Map<String, ElementModel> results, {int n = 0}) {
+    if(element.widget.key != null && !results.containsKey(element.widget.key.toString())) {
+      var bounds = element.findRenderObject().paintBounds;
+      if(results.values.firstWhere((element) => element.bounds == bounds, orElse: () => null) == null) {
+        results.putIfAbsent(
+          element.widget.key.toString(),
+          () => ElementModel(
+            element.widget.key.toString(),
+            bounds
+          )
+        );
+      }
+    }
+    element.visitChildElements((visitor) =>  _scanChildElement(parentObject, visitor, results, n: n + 1));
+  }
+}
+
+class ElementModel {
+  String key;
+  Rect bounds;
+
+  ElementModel(this.key, this.bounds);
 }

@@ -70,6 +70,15 @@ class FullscreenHelperViewModel extends HelperViewModel {
           versionMinId: versionMinId,
           versionMaxId: versionMaxId,
         );
+
+  factory FullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model)
+    => FullscreenHelperViewModel(
+      name: model.name,
+      triggerType: model.triggerType,
+      priority: model.priority,
+      versionMinId: model.versionMinId,
+      versionMaxId: model.versionMaxId,
+    );
 }
 
 class SimpleHelperViewModel extends HelperViewModel {
@@ -93,5 +102,39 @@ class SimpleHelperViewModel extends HelperViewModel {
           versionMinId: versionMinId,
           versionMaxId: versionMaxId,
         );
+
+  factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model)
+    => SimpleHelperViewModel(
+      name: model.name,
+      triggerType: model.triggerType,
+      priority: model.priority,
+      versionMinId: model.versionMinId,
+      versionMaxId: model.versionMaxId,
+    );
 }
 
+class AnchoredFullscreenHelperViewModel extends HelperViewModel {
+
+  AnchoredFullscreenHelperViewModel({
+      @required String name,
+      @required HelperTriggerType triggerType,
+      @required int priority,
+      @required int versionMinId,
+      int versionMaxId,
+    }) : super(
+      name: name,
+      triggerType: triggerType,
+      priority: priority,
+      versionMinId: versionMinId,
+      versionMaxId: versionMaxId,
+    );
+
+  factory AnchoredFullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model)
+    => AnchoredFullscreenHelperViewModel(
+      name: model.name,
+      triggerType: model.triggerType,
+      priority: model.priority,
+      versionMinId: model.versionMinId,
+      versionMaxId: model.versionMaxId,
+    );
+}

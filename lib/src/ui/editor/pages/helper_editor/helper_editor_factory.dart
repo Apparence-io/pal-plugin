@@ -8,37 +8,22 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmo
 import 'package:palplugin/src/extensions/color_extension.dart';
 
 class EditorFactory {
-  static HelperViewModel init(HelperViewModel model, HelperType helperType) {
-    HelperViewModel viewModel;
 
+  static HelperViewModel init(HelperViewModel model, HelperType helperType) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
-        viewModel = FullscreenHelperViewModel(
-          name: model.name,
-          triggerType: model.triggerType,
-          priority: model.priority,
-          versionMinId: model.versionMinId,
-          versionMaxId: model.versionMaxId,
-        );
-        break;
+        return FullscreenHelperViewModel.fromHelperViewModel(model);
       case HelperType.SIMPLE_HELPER:
-        viewModel = SimpleHelperViewModel(
-          name: model.name,
-          triggerType: model.triggerType,
-          priority: model.priority,
-          versionMinId: model.versionMinId,
-          versionMaxId: model.versionMaxId,
-        );
-        break;
+        return SimpleHelperViewModel.fromHelperViewModel(model);
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        return AnchoredFullscreenHelperViewModel.fromHelperViewModel(model);
       default:
+        return null;
     }
-
-    return viewModel;
   }
 
   static CreateHelperEntity build(HelperViewModel model) {
     CreateHelperEntity createHelperEntity;
-
     switch (model.runtimeType) {
       case FullscreenHelperViewModel:
         createHelperEntity = _buildFullscreenHelper(model);
@@ -48,13 +33,10 @@ class EditorFactory {
         break;
       default:
     }
-
     return createHelperEntity;
   }
 
-  static CreateHelperFullScreenEntity _buildFullscreenHelper(
-    FullscreenHelperViewModel model,
-  ) {
+  static CreateHelperFullScreenEntity _buildFullscreenHelper(FullscreenHelperViewModel model) {
     return CreateHelperFullScreenEntity(
       name: model.name,
       triggerType: model.triggerType,
@@ -69,9 +51,7 @@ class EditorFactory {
     );
   }
 
-  static CreateHelperSimpleEntity _buildSimpleHelper(
-    SimpleHelperViewModel model,
-  ) {
+  static CreateHelperSimpleEntity _buildSimpleHelper(SimpleHelperViewModel model) {
     return CreateHelperSimpleEntity(
       name: model.name,
       triggerType: model.triggerType,

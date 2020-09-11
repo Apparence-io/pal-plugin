@@ -6,6 +6,7 @@ import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
 import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:palplugin/src/ui/client/helper_factory.dart';
+import 'package:palplugin/src/ui/client/helpers/anchored_helper_widget.dart';
 import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
@@ -48,7 +49,8 @@ class HelperOrchestrator extends InheritedWidget {
       if(newRoute == null || newRoute.name == null) {
         return;
       }
-      onChangePage(newRoute.name);
+      _showTestHelper(); //FIXME delte this
+      // onChangePage(newRoute.name);
     });
   }
 
@@ -82,6 +84,19 @@ class HelperOrchestrator extends InheritedWidget {
     overlay.insert(entry);
     this.helper.overlay = entry;
   }
+
+  // REMOVE THIS
+  _showTestHelper() {
+    OverlayEntry entry = OverlayEntry(
+      opaque: false,
+      builder: (context) => AnchoredHelper(navigatorKey.currentContext, "childRoute1Text"),
+    );
+    // - show helper
+    var overlay = navigatorKey.currentState.overlay;
+    overlay.insert(entry);
+    this.helper.overlay = entry;
+  }
+  // REMOVE THIS END
 
   bool popHelper() => helper.pop();
 }

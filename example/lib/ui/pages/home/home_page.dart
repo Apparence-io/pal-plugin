@@ -51,6 +51,7 @@ class HomePage extends StatelessWidget implements HomeView {
         children: <Widget>[
           Text(
             'You have pushed the button this many times:',
+            key: ValueKey('childRoute1Text'),
           ),
           Text(
             '${model.counter}',

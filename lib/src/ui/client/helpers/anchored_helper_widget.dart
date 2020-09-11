@@ -6,7 +6,9 @@ class AnchoredHelper extends StatefulWidget {
 
   final BuildContext subPageContext;
 
-  AnchoredHelper(this.subPageContext);
+  final String keySearch;
+
+  AnchoredHelper(this.subPageContext, this.keySearch);
 
   @override
   _AnchoredHelperState createState() => _AnchoredHelperState();
@@ -18,15 +20,19 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
 
   Size anchorSize;
 
+  Rect writeArea;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ElementFinder elementFinder = ElementFinder(widget.subPageContext);
-      elementFinder.searchChildElement("childRoute2Push");
+      elementFinder.searchChildElement(widget.keySearch);
       setState(() {
         anchorSize = elementFinder.result.size;
         currentPos = elementFinder.getResultCenter();
+        writeArea = elementFinder.getLargestAvailableSpace();
+        print("writeArea: $writeArea");
       });
     });
   }
@@ -35,17 +41,26 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Container(
-        child: Visibility(
-          visible: this.currentPos != null,
-          child: SizedBox(
-            child: CustomPaint(painter: AnchoredFullscreenPainter(
-                currentPos: this.currentPos,
-                anchorSize: this.anchorSize
-              )
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Visibility(
+              visible: this.currentPos != null,
+              child: SizedBox(
+                child: CustomPaint(
+                  painter: AnchoredFullscreenPainter(
+                    currentPos: this.currentPos,
+                    anchorSize: this.anchorSize
+                  )
+                )
+              ),
             )
           ),
-        ),
+          Positioned.fromRect(
+            rect: writeArea ?? Rect.largest,
+            child: Center(child: Text("This is a text i wanna show")),
+          )
+        ],
       ),
     );
   }
@@ -73,6 +88,11 @@ class AnchoredFullscreenPainter extends CustomPainter {
       ..color = Colors.lightGreenAccent
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
+    Paint redPainter = Paint()
+      ..color = Colors.redAccent
+      ..style = PaintingStyle.fill
+      ..isAntiAlias = true;
+
     canvas.saveLayer(Offset.zero & size, Paint());
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPainter);
     // canvas.drawCircle(currentPos, radius, clearPainter);
@@ -81,6 +101,7 @@ class AnchoredFullscreenPainter extends CustomPainter {
       center: currentPos,
       width: anchorSize.width,
       height: anchorSize.height), clearPainter);
+    canvas.drawCircle(Offset(0,0), 60, redPainter);
     canvas.restore();
   }
 

@@ -49,8 +49,8 @@ void main() {
       expect(elements, isNotNull);
       expect(elements.length, equals(6));
       var keys = elements.keys.toList();
-      expect(keys[2], contains("text1"));
-      expect(keys[3], contains("text2"));
+      expect(keys[1], contains("text1"));
+      expect(keys[2], contains("text2"));
       // expect(elements[keys.last].bounds.size, equals(Size(150, 50)));
     });
 

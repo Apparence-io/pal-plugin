@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
@@ -213,6 +214,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   }
 
   @override
+  //FIXME put this in another class to deport logic
   void launchHelperEditor(final CreateHelperModel model) {
     HapticFeedback.selectionClick();
 
@@ -222,19 +224,12 @@ class _CreateHelperPageState extends State<CreateHelperPage>
       widget.pageId,
       helperName: _helperNameController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
-
     );
     var elementFinder = ElementFinder(widget.hostedAppNavigatorKey.currentContext);
-    OverlayEntry helperOverlay = OverlayEntry(
-      opaque: false,
-      builder: HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
+    showOverlayed(
+      widget.hostedAppNavigatorKey,
+      HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
     );
-    Overlayed.of(context).entries.putIfAbsent(
-          OverlayKeys.EDITOR_OVERLAY_KEY,
-          () => helperOverlay,
-        );
-    widget.hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
-
     // Go back
     Navigator.of(context).pop(true);
   }

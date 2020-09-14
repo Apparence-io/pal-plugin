@@ -89,7 +89,7 @@ class HelperOrchestrator extends InheritedWidget {
   _showTestHelper() {
     OverlayEntry entry = OverlayEntry(
       opaque: false,
-      builder: (context) => AnchoredHelper(navigatorKey.currentContext, "childRoute1Text"),
+      builder: (context) => AnchoredHelper(navigatorKey.currentContext, "childRoute2Push"),
     );
     // - show helper
     var overlay = navigatorKey.currentState.overlay;

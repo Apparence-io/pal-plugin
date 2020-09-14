@@ -30,6 +30,7 @@ class HomePage extends StatelessWidget implements HomeView {
             title: Text('Pal example'),
           ),
           floatingActionButton: FloatingActionButton(
+            key: ValueKey("floatingActionAdd"),
             onPressed: presenter.incrementCounter,
             tooltip: 'Increment',
             child: Icon(Icons.add),

@@ -44,17 +44,11 @@ class HelperEditorPageArguments {
 
 abstract class HelperEditorView {
 
-  showHelperModal(
-    final BuildContext context,
-    final HelperEditorPresenter presenter,
-    final HelperEditorViewModel model,
-  );
-
   addFullscreenHelperEditor(FullscreenHelperViewModel model, Function isValid);
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid);
 
-  addAnchoredFullscreenEditor(AnchoredFullscreenHelperViewModel model, Function isValid);
+  addAnchoredFullscreenEditor(HelperEditorPresenter presenter);
 
   unFocusCurrentTextField(final BuildContext context);
 
@@ -112,6 +106,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         return Future.value(false);
       },
       child: Material(
+        key: ValueKey("EditorMaterial"),
         color: Colors.transparent,
         shadowColor: Colors.transparent,
         child: Container(
@@ -224,7 +219,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
     );
   }
 
-  @override
   showHelperModal(
     final BuildContext context,
     final HelperEditorPresenter presenter,
@@ -267,8 +261,9 @@ class HelperEditorPageBuilder implements HelperEditorView {
     );
   }
 
-  addAnchoredFullscreenEditor(AnchoredFullscreenHelperViewModel model, Function isValid) {
+  addAnchoredFullscreenEditor(HelperEditorPresenter presenter) {
     _helperToEdit = EditorAnchoredFullscreenHelper(
+      presenter: presenter,
       // viewModel: model,
       // onFormChanged: isValid,
     );

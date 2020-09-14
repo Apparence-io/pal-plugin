@@ -15,9 +15,14 @@ class ElementFinder {
   Element _result;
 
   // this method scan all child recursively to get all widget bounds we could select for an helper
-  Map<String, ElementModel> scan() {
+  Map<String, ElementModel> scan({Key omitChildsOf}) {
     Map<String, ElementModel> results = Map<String, ElementModel>();
-    context.visitChildElements((element) => _scanChildElement(context.findRenderObject(), element, results));
+    context.visitChildElements((element) => _scanChildElement(
+        context.findRenderObject(),
+        element,
+        results,
+        omitChildsOf: omitChildsOf
+      ));
     return results;
   }
 
@@ -80,7 +85,6 @@ class ElementFinder {
   // -----------------------------------------------------------
   // private
   // -----------------------------------------------------------
-
   _searchChildElement(Element element, String key, {int n = 0}) {
     if(element.widget.key != null) {
       if(element.widget.key.toString().contains(key)) {
@@ -91,26 +95,40 @@ class ElementFinder {
     element.visitChildElements((visitor) => _searchChildElement(visitor, key, n: n + 1));
   }
 
-  _scanChildElement(RenderObject parentObject, Element element, Map<String, ElementModel> results, {int n = 0}) {
-    if(element.widget.key != null && !results.containsKey(element.widget.key.toString())) {
+  // omits elements with key starting with anything other than [<
+  // flutter makes key with "[<_myKey_>]" for our keys
+  _scanChildElement(RenderObject parentObject, Element element, Map<String, ElementModel> results, {int n = 0, Key omitChildsOf}) {
+    if(element.widget.key != null && omitChildsOf !=null && element.widget.key.toString() == omitChildsOf.toString()) {
+      print("ignore elements");
+      return;
+    }
+    if(element.widget.key != null && element.widget.key.toString().startsWith("[<") && !results.containsKey(element.widget.key.toString())) {
+      print("add element ${element.widget.key.toString()}");
+      var renderObject = element.findRenderObject();
       var bounds = element.findRenderObject().paintBounds;
-      if(results.values.firstWhere((element) => element.bounds == bounds, orElse: () => null) == null) {
+      var translation = renderObject.getTransformTo(parentObject).getTranslation();
+      var offset = Offset(translation.x, translation.y);
+      if(results.values.firstWhere((element) => element.bounds == bounds && element.offset == offset, orElse: () => null) == null) {
         results.putIfAbsent(
           element.widget.key.toString(),
           () => ElementModel(
             element.widget.key.toString(),
-            bounds
+            bounds,
+            offset
           )
         );
       }
     }
-    element.visitChildElements((visitor) =>  _scanChildElement(parentObject, visitor, results, n: n + 1));
+    element.visitChildElements((visitor) =>  _scanChildElement(parentObject, visitor, results, n: n + 1, omitChildsOf: omitChildsOf));
   }
 }
 
 class ElementModel {
   String key;
+
   Rect bounds;
 
-  ElementModel(this.key, this.bounds);
+  Offset offset;
+
+  ElementModel(this.key, this.bounds, this.offset);
 }

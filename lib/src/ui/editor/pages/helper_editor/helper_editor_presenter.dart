@@ -12,8 +12,7 @@ import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
-class HelperEditorPresenter
-    extends Presenter<HelperEditorViewModel, HelperEditorView> {
+class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
 
   final HelperService helperService;
 
@@ -39,6 +38,7 @@ class HelperEditorPresenter
     viewModel.isEditingWidget = false;
     viewModel.isEditableWidgetValid = false;
     viewModel.toolbarPosition = Offset.zero;
+    viewModel.userPageElements =  new Map();
 
     // init the available helpers type we can create
     viewModel.availableHelperType = [
@@ -74,13 +74,7 @@ class HelperEditorPresenter
         viewInterface.addSimpleHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;
       case HelperType.ANCHORED_OVERLAYED_HELPER:
-        viewInterface.addAnchoredFullscreenEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
-        // refactoring required
-        var bounds = elementFinder.scan();
-        bounds.forEach((key,element) {
-          print("#element : ${element.key} => ${element.bounds}");
-        });
-        //--
+        viewInterface.addAnchoredFullscreenEditor(this);
         break;
       default:
         throw "Not implemented type";
@@ -88,6 +82,13 @@ class HelperEditorPresenter
     }
     viewModel.isEditingWidget = true;
     refreshView();
+  }
+
+  // this methods scan elements on the user page we want to add an helper
+  // this load all elements with their bounds + key
+  scanElements() {
+    var bounds = elementFinder.scan(omitChildsOf: ValueKey("EditorPage"));
+    viewModel.userPageElements = bounds.map((key, value) => new MapEntry(key, new WidgetElementModel(value.bounds, value.offset)));
   }
 
   hideToolbar() {

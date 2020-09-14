@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
 
@@ -27,4 +28,17 @@ Route<dynamic> route(RouteSettings settings) {
     default:
       throw 'unexpected Route';
   }
+}
+
+//shows a page as overlay for our editor
+showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
+  OverlayEntry helperOverlay = OverlayEntry(
+    opaque: false,
+    builder: builder,
+  );
+  Overlayed.of(hostedAppNavigatorKey.currentContext).entries.putIfAbsent(
+    OverlayKeys.EDITOR_OVERLAY_KEY,
+    () => helperOverlay,
+  );
+  hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
 }

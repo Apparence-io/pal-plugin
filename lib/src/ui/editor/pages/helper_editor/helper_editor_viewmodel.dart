@@ -15,6 +15,9 @@ class HelperEditorViewModel extends MVVMModel {
   Size editedWidgetSize;
   bool isEditingWidget;
 
+  // Elements on user page
+  Map<String, WidgetElementModel> userPageElements;
+
   // this is used to let user choose between all available type options
   List<HelperTypeOption> availableHelperType;
   
@@ -23,6 +26,14 @@ class HelperEditorViewModel extends MVVMModel {
 
   // This is the actual edited widget view model
   HelperViewModel helperViewModel;
+}
+
+class WidgetElementModel {
+  Rect rect;
+
+  Offset offset;
+
+  WidgetElementModel(this.rect, this.offset);
 }
 
 // this is used to let user choose between all available type options

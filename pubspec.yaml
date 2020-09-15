@@ -16,6 +16,7 @@ dependencies:
   google_fonts: ^1.1.0
   package_info: ^0.4.3
   rxdart: ^0.24.1
+  flutter_colorpicker: ^0.3.4
 
 dev_dependencies:
   flutter_test:
@@ -27,9 +28,10 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
-# To add assets to your package, add an assets section, like this:
+  # To add assets to your package, add an assets section, like this:
   assets:
     - packages/palplugin/assets/images/create_helper.png
+
 #
 # For details regarding assets in packages, see
 # https://flutter.dev/assets-and-images/#from-packages

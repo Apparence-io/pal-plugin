@@ -4,6 +4,7 @@ import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
@@ -38,7 +39,6 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     viewModel.isEditingWidget = false;
     viewModel.isEditableWidgetValid = false;
     viewModel.toolbarPosition = Offset.zero;
-    viewModel.userPageElements =  new Map();
 
     // init the available helpers type we can create
     viewModel.availableHelperType = [
@@ -82,13 +82,6 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     }
     viewModel.isEditingWidget = true;
     refreshView();
-  }
-
-  // this methods scan elements on the user page we want to add an helper
-  // this load all elements with their bounds + key
-  scanElements() {
-    var bounds = elementFinder.scan(omitChildsOf: ValueKey("EditorPage"));
-    viewModel.userPageElements = bounds.map((key, value) => new MapEntry(key, new WidgetElementModel(value.bounds, value.offset)));
   }
 
   hideToolbar() {

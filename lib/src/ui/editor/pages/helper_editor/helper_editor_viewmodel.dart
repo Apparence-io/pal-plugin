@@ -15,9 +15,6 @@ class HelperEditorViewModel extends MVVMModel {
   Size editedWidgetSize;
   bool isEditingWidget;
 
-  // Elements on user page
-  Map<String, WidgetElementModel> userPageElements;
-
   // this is used to let user choose between all available type options
   List<HelperTypeOption> availableHelperType;
   
@@ -28,13 +25,7 @@ class HelperEditorViewModel extends MVVMModel {
   HelperViewModel helperViewModel;
 }
 
-class WidgetElementModel {
-  Rect rect;
 
-  Offset offset;
-
-  WidgetElementModel(this.rect, this.offset);
-}
 
 // this is used to let user choose between all available type options
 class HelperTypeOption {
@@ -44,7 +35,7 @@ class HelperTypeOption {
   HelperTypeOption(this.text, this.type);
 }
 
-class HelperViewModel {
+class HelperViewModel extends MVVMModel {
   final String name;
   final HelperTriggerType triggerType;
   final int priority;
@@ -116,32 +107,6 @@ class SimpleHelperViewModel extends HelperViewModel {
 
   factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model)
     => SimpleHelperViewModel(
-      name: model.name,
-      triggerType: model.triggerType,
-      priority: model.priority,
-      versionMinId: model.versionMinId,
-      versionMaxId: model.versionMaxId,
-    );
-}
-
-class AnchoredFullscreenHelperViewModel extends HelperViewModel {
-
-  AnchoredFullscreenHelperViewModel({
-      @required String name,
-      @required HelperTriggerType triggerType,
-      @required int priority,
-      @required int versionMinId,
-      int versionMaxId,
-    }) : super(
-      name: name,
-      triggerType: triggerType,
-      priority: priority,
-      versionMinId: versionMinId,
-      versionMaxId: versionMaxId,
-    );
-
-  factory AnchoredFullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model)
-    => AnchoredFullscreenHelperViewModel(
       name: model.name,
       triggerType: model.triggerType,
       priority: model.priority,

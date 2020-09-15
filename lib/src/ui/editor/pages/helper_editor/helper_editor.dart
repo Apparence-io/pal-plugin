@@ -113,8 +113,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
           color: Colors.black.withOpacity(.2),
           child: Stack(
             children: [
-              // TODO: Put here helpers widget
-              // just create a stack if there is more than one widgets
               if (model.isEditingWidget)
                 Positioned.fill(child: _helperToEdit),
               (!model.isLoading)
@@ -263,9 +261,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
 
   addAnchoredFullscreenEditor(HelperEditorPresenter presenter) {
     _helperToEdit = EditorAnchoredFullscreenHelper(
-      presenter: presenter,
-      // viewModel: model,
-      // onFormChanged: isValid,
+      elementFinder: elementFinder
     );
   }
 

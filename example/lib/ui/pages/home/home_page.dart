@@ -56,6 +56,7 @@ class HomePage extends StatelessWidget implements HomeView {
           ),
           Text(
             '${model.counter}',
+            key: ValueKey('textCounter'),
             style: Theme.of(context).textTheme.headline4,
           ),
           SizedBox(

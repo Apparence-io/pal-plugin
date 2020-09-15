@@ -9,14 +9,13 @@ import 'package:palplugin/src/extensions/color_extension.dart';
 
 class EditorFactory {
 
+  //FIXME DELETE
   static HelperViewModel init(HelperViewModel model, HelperType helperType) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         return FullscreenHelperViewModel.fromHelperViewModel(model);
       case HelperType.SIMPLE_HELPER:
         return SimpleHelperViewModel.fromHelperViewModel(model);
-      case HelperType.ANCHORED_OVERLAYED_HELPER:
-        return AnchoredFullscreenHelperViewModel.fromHelperViewModel(model);
       default:
         return null;
     }

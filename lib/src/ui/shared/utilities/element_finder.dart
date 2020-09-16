@@ -99,11 +99,9 @@ class ElementFinder {
   // flutter makes key with "[<_myKey_>]" for our keys
   _scanChildElement(RenderObject parentObject, Element element, Map<String, ElementModel> results, {int n = 0, Key omitChildsOf}) {
     if(element.widget.key != null && omitChildsOf !=null && element.widget.key.toString() == omitChildsOf.toString()) {
-      print("ignore elements");
       return;
     }
     if(element.widget.key != null && element.widget.key.toString().startsWith("[<") && !results.containsKey(element.widget.key.toString())) {
-      print("add element ${element.widget.key.toString()}");
       var renderObject = element.findRenderObject();
       var bounds = element.findRenderObject().paintBounds;
       var translation = renderObject.getTransformTo(parentObject).getTranslation();

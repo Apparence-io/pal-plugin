@@ -12,6 +12,10 @@ class AnchoredFullscreenHelperViewModel extends MVVMModel {
   final int versionMaxId;
   // Elements on user page
   Map<String, WidgetElementModel> userPageElements;
+  // Rect where we will write our helper text
+  Rect writeArea;
+  String title, description;
+
 
   AnchoredFullscreenHelperViewModel({
     @required this.name,

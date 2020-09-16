@@ -18,11 +18,7 @@ void main() {
 
     final _navigatorKey = GlobalKey<NavigatorState>();
 
-    ElementFinder _elementFinder;
-
     EditorAnchoredFullscreenPresenter presenter;
-
-    EditorAnchoredFullscreenHelper component = EditorAnchoredFullscreenHelper();
 
     Scaffold _myHomeTest = Scaffold(
       body: Column(
@@ -82,6 +78,21 @@ void main() {
       element2.onTap();
       await tester.pumpAndSettle(Duration(milliseconds: 100));
       expect(presenter.viewModel.selectedAnchorKey, contains("text2"));
+    });
+
+    testWidgets("if anchored selected => shows editable title + text content", (WidgetTester tester) async {
+      // init pal + go to editor
+      await tester.setIphone11Max();
+      await beforeEach(tester);
+      // tap on first element
+      var elementsFinder = find.byKey(ValueKey("elementContainer"));
+      var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
+      element1.onTap();
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
+      expect(find.text("My helper title"), findsOneWidget);
+      expect(find.text("Lorem ipsum lorem ipsum lorem ipsum"), findsOneWidget);
+      expect(find.text("Ok, thanks !"), findsOneWidget, reason: "A positiv feedback button is available");
+      expect(find.text("This is not helping"), findsOneWidget, reason: "A negativ feedback button is available");
     });
 
   });

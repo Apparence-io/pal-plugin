@@ -15,6 +15,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   EditorAnchoredFullscreenPresenter(EditorAnchoredFullscreenHelperView viewInterface, this.elementFinder)
     : super(AnchoredFullscreenHelperViewModel(), viewInterface) {
     viewModel.userPageElements = Map();
+    viewModel.title = "My helper title";
+    viewModel.description = "Lorem ipsum lorem ipsum lorem ipsum";
   }
 
   @override
@@ -36,6 +38,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
       previouslySelected.value.selected = false;
     }
     viewModel.userPageElements[key].selected = true;
+    elementFinder.searchChildElement(key);
+    viewModel.writeArea = elementFinder.getLargestAvailableSpace();
     refreshView();
   }
 }

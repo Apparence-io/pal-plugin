@@ -30,7 +30,7 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
       elementFinder.searchChildElement(widget.keySearch);
       setState(() {
         anchorSize = elementFinder.result.size;
-        currentPos = elementFinder.getResultCenter();
+        currentPos = elementFinder.getResultPosition();
         writeArea = elementFinder.getLargestAvailableSpace();
       });
     });
@@ -82,7 +82,7 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
     );
   }
 
-  Padding _buildNegativFeedback() {
+  Widget _buildNegativFeedback() {
     return Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: InkWell(
@@ -99,7 +99,7 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
     );
   }
 
-  Padding _buildPositivFeedback() {
+  Widget _buildPositivFeedback() {
     return Padding(
         padding: const EdgeInsets.only(top: 24.0),
         child: InkWell(
@@ -150,10 +150,20 @@ class AnchoredFullscreenPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPainter);
     // canvas.drawCircle(currentPos, radius, clearPainter);
     // canvas.drawRect(currentPos & anchorSize, clearPainter);
-    canvas.drawRect(Rect.fromCenter(
-      center: currentPos,
-      width: anchorSize.width + padding,
-      height: anchorSize.height + padding), clearPainter);
+    if(padding > 0) {
+      canvas.drawRect(Rect.fromLTWH(
+        currentPos.dx - padding /2,
+        currentPos.dy - padding /2,
+        anchorSize.width + padding,
+        anchorSize.height + padding), clearPainter);
+    } else {
+      canvas.drawRect(Rect.fromLTWH(
+        currentPos.dx,
+        currentPos.dy,
+        anchorSize.width,
+        anchorSize.height), clearPainter);
+    }
+
     canvas.restore();
   }
 

@@ -49,8 +49,7 @@ class HelperOrchestrator extends InheritedWidget {
       if(newRoute == null || newRoute.name == null) {
         return;
       }
-      _showTestHelper(); //FIXME delte this
-      // onChangePage(newRoute.name);
+      onChangePage(newRoute.name);
     });
   }
 

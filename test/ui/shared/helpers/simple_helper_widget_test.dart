@@ -43,6 +43,11 @@ void main() {
       testWidgets('toolbar can be closed', (WidgetTester tester) async {
         await _before(tester);
 
+
+        var simpleHelperDetailTextField = find.byKey(ValueKey('palSimpleHelperDetailField'));
+        await tester.tap(simpleHelperDetailTextField);
+        await tester.pumpAndSettle();
+        
         expect(find.byType(EditHelperToolbar), findsOneWidget);
 
         var closeButtonToolbar = find.byKey(ValueKey('palToolbarClose'));

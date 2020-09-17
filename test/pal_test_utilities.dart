@@ -10,13 +10,13 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_presen
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 
-Future initAppWithPal(WidgetTester tester, Widget userApp, GlobalKey<NavigatorState> navigatorKey) async {
+Future initAppWithPal(WidgetTester tester, Widget userApp, GlobalKey<NavigatorState> navigatorKey, { RouteFactory routeFactory }) async {
   BuildContext context;
   Pal app = Pal(
     appToken: "testtoken",
     editorModeEnabled: true,
     child: new MaterialApp(
-      onGenerateRoute: (_) => MaterialPageRoute(builder: (ctx) {
+      onGenerateRoute: routeFactory ?? (_) => MaterialPageRoute(builder: (ctx) {
         context = ctx;
         return userApp;
       }),
@@ -26,6 +26,7 @@ Future initAppWithPal(WidgetTester tester, Widget userApp, GlobalKey<NavigatorSt
   );
   await tester.pumpWidget(app);
 }
+
 
 Future showEditor(WidgetTester tester, GlobalKey<NavigatorState> navigatorKey, HelperTriggerType type) async {
   // push helper editor page

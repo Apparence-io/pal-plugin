@@ -27,11 +27,11 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ElementFinder elementFinder = ElementFinder(widget.subPageContext);
-      elementFinder.searchChildElement(widget.keySearch);
+      var element = elementFinder.searchChildElement(widget.keySearch);
       setState(() {
-        anchorSize = elementFinder.result.size;
-        currentPos = elementFinder.getResultPosition();
-        writeArea = elementFinder.getLargestAvailableSpace();
+        anchorSize = element.bounds.size;
+        currentPos = element.offset;
+        writeArea = elementFinder.getLargestAvailableSpace(element);
       });
     });
   }

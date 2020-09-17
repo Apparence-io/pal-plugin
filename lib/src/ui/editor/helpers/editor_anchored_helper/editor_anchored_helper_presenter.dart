@@ -38,8 +38,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
       previouslySelected.value.selected = false;
     }
     viewModel.userPageElements[key].selected = true;
-    elementFinder.searchChildElement(key);
-    viewModel.writeArea = elementFinder.getLargestAvailableSpace();
+    var element = elementFinder.searchChildElement(key);
+    viewModel.writeArea = elementFinder.getLargestAvailableSpace(element);
     refreshView();
   }
 }

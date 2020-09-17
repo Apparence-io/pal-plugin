@@ -8,56 +8,51 @@ import 'package:flutter/material.dart';
 /// result is available in [result] and returns an [Element]
 class ElementFinder {
 
+  // Prefer use the navigatorContext to get full context tree
   final BuildContext context;
 
   ElementFinder(this.context);
 
-  Element _result;
-
   // this method scan all child recursively to get all widget bounds we could select for an helper
-  Map<String, ElementModel> scan({Key omitChildsOf}) {
+  Map<String, ElementModel> scan({Key omitChildsOf, bool debugMode = false}) {
     Map<String, ElementModel> results = Map<String, ElementModel>();
     context.visitChildElements((element) => _scanChildElement(
         context.findRenderObject(),
         element,
         results,
-        omitChildsOf: omitChildsOf
+        omitChildsOf: omitChildsOf,
+        debugMode: debugMode
       ));
     return results;
   }
 
-  // this method scan all child recursively to find a widget having a key == searchedKey
-  searchChildElement(String key) => context.visitChildElements((element) => _searchChildElement(element, key));
-
-  Element get result => _result;
-
-  Rect get resultRect => _result.findRenderObject().paintBounds;
-
-  // returns the Offset as the top left of our widget
-  Offset getResultPosition() {
-    var parentObject = context.findRenderObject();
-    var translation = _result.renderObject.getTransformTo(parentObject).getTranslation();
-    return Offset(translation.x, translation.y);
+  // List all pages from this context
+  List<PageElement> scanPages() {
+    var pages = List<PageElement>();
+    context.visitChildElements((element) => _scanPageChildElement(element, pages));
+    return pages;
   }
 
-  // returns the Offset as the center of our result
-  Offset getResultCenter() {
-    var parentObject = context.findRenderObject();
-    var translation = _result.renderObject.getTransformTo(parentObject).getTranslation();
-    var translationX = translation.x + (_result.size.width / 2);
-    var translationY = translation.y + (_result.size.height / 2);
-    return Offset(translationX, translationY);
+  // this method scan all child recursively to find a widget having a key == searchedKey
+  ElementModel searchChildElement(String key) {
+    ElementModel result = ElementModel.empty();
+    context.visitChildElements((element) => _searchChildElement(element, key, result));
+    if(result.element != null) {
+      return _createElementModel(context.findRenderObject(), result.element);
+    }
+    return result;
   }
 
   /// This functions search for the maximum rect available space
   /// We use it for example to find the most available space to write a text in our anchored helper
-  Rect getLargestAvailableSpace() {
+  Rect getLargestAvailableSpace(ElementModel elementModel) {
     var parentObject = context.findRenderObject();
-    var translation = _result.renderObject.getTransformTo(parentObject).getTranslation();
+    var element = elementModel.element;
+    var translation = element.renderObject.getTransformTo(parentObject).getTranslation();
     var objectX = translation.x;
-    var objectEndX = objectX + _result.size.width;
+    var objectEndX = objectX + element.size.width;
     var objectY = translation.y;
-    var objectEndY = objectY + _result.size.height;
+    var objectEndY = objectY + element.size.height;
     var layerRect = parentObject.paintBounds;
 
     Rect availableHSpace;
@@ -85,48 +80,88 @@ class ElementFinder {
   // -----------------------------------------------------------
   // private
   // -----------------------------------------------------------
-  _searchChildElement(Element element, String key, {int n = 0}) {
-    if(element.widget.key != null) {
-      if(element.widget.key.toString().contains(key)) {
-        this._result = element;
-        return;
-      }
+  _searchChildElement(Element element, String key, ElementModel result, {int n = 0}) {
+    if(result.element == null && element.widget.key != null && element.widget.key.toString().contains(key)) {
+      result.element = element;
     }
-    element.visitChildElements((visitor) => _searchChildElement(visitor, key, n: n + 1));
+    if(result.element != null) {
+      return;
+    }
+    element.visitChildElements((visitor) => _searchChildElement(visitor, key, result, n: n + 1));
   }
 
   // omits elements with key starting with anything other than [<
   // flutter makes key with "[<_myKey_>]" for our keys
-  _scanChildElement(RenderObject parentObject, Element element, Map<String, ElementModel> results, {int n = 0, Key omitChildsOf}) {
+  // scan all elements in the current page tree and add their bounds to the results map
+  _scanChildElement(RenderObject parentObject, Element element, Map<String, ElementModel> results, {int n = 0, Key omitChildsOf, bool debugMode = true}) {
+    if(debugMode) {
+      var nbChilds = element.debugDescribeChildren().length;
+      var pre = StringBuffer();
+      for(int i = 0; i<n ; i++) {
+        pre.write(" ");
+      }
+      print("$pre ${element?.widget.runtimeType}  $n => $nbChilds ");
+    }
     if(element.widget.key != null && omitChildsOf !=null && element.widget.key.toString() == omitChildsOf.toString()) {
       return;
     }
     if(element.widget.key != null && element.widget.key.toString().startsWith("[<") && !results.containsKey(element.widget.key.toString())) {
-      var renderObject = element.findRenderObject();
-      var bounds = element.findRenderObject().paintBounds;
-      var translation = renderObject.getTransformTo(parentObject).getTranslation();
-      var offset = Offset(translation.x, translation.y);
-      if(results.values.firstWhere((element) => element.bounds == bounds && element.offset == offset, orElse: () => null) == null) {
-        results.putIfAbsent(
-          element.widget.key.toString(),
-          () => ElementModel(
-            element.widget.key.toString(),
-            bounds,
-            offset
-          )
-        );
+      if(debugMode) {
+        print("  added ${element?.widget?.key.toString()} : $n");
+      }
+      var model = _createElementModel(parentObject, element);
+      if(results.values.firstWhere((element) => element.bounds == model.bounds && element.offset == model.offset, orElse: () => null) == null) {
+        results.putIfAbsent(element.widget.key.toString(), () => model);
       }
     }
-    element.visitChildElements((visitor) =>  _scanChildElement(parentObject, visitor, results, n: n + 1, omitChildsOf: omitChildsOf));
+    element.visitChildElements((visitor) =>  _scanChildElement(parentObject, visitor, results, n: n + 1, omitChildsOf: omitChildsOf, debugMode: debugMode));
+  }
+
+  // search first entries that contains our pages
+  _scanPageChildElement(Element element, List<PageElement> pages) {
+    if(element.runtimeType.toString() == "_Theatre") {
+      element.visitChildElements((visitor) => pages.add(PageElement(element)));
+    } else {
+      element.visitChildElements((visitor) => _scanPageChildElement(element, pages));
+    }
+  }
+
+  ElementModel _createElementModel(RenderObject parentObject, Element element) {
+    var renderObject = element.findRenderObject();
+    var bounds = element.findRenderObject().paintBounds;
+    var translation = renderObject.getTransformTo(parentObject).getTranslation();
+    var offset = Offset(translation.x, translation.y);
+    return ElementModel(
+      element.widget.key.toString(),
+      bounds,
+      offset,
+      element.widget.runtimeType,
+      element: element
+    );
   }
 }
 
+class PageElement {
+
+  Element element;
+
+  PageElement(this.element);
+}
+
 class ElementModel {
+
   String key;
 
   Rect bounds;
 
   Offset offset;
 
-  ElementModel(this.key, this.bounds, this.offset);
+  Element element;
+
+  Type runtimeType;
+
+  ElementModel(this.key, this.bounds, this.offset, this.runtimeType, {this.element});
+
+  factory ElementModel.empty() => ElementModel(null, null, null, null);
 }
+

@@ -59,7 +59,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                 Expanded(child: Container()),
                 Container(
                   width: constraints.maxWidth * 0.8,
-                  child: EditableTextField(
+                  child: EditableTextField.floating(
                     helperToolbarKey:
                         ValueKey('palEditorSimpleHelperWidgetToolbar'),
                     textFormFieldKey: ValueKey('palSimpleHelperDetailField'),

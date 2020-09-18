@@ -40,6 +40,69 @@ class EditableTextField extends StatefulWidget {
     @required this.textStyle,
   }) : super(key: globalKey);
 
+  factory EditableTextField.fixed({
+    final Key textFormFieldKey,
+    final Key backgroundContainerKey,
+    final Key helperToolbarKey,
+    final bool autovalidate = true,
+    final BoxDecoration backgroundBoxDecoration,
+    final EdgeInsetsGeometry backgroundPadding,
+    final EdgeInsetsGeometry textFormFieldPadding,
+    final String Function(String) validator,
+    @required final TextEditingController textEditingController,
+    final TextInputType keyboardType,
+    @required final TextStyle textStyle,
+    final int maxLines = 1,
+    final List<TextInputFormatter> inputFormatters,
+  }) =>
+      EditableTextField(
+        textFormFieldKey: textFormFieldKey,
+        backgroundContainerKey: backgroundContainerKey,
+        helperToolbarKey: helperToolbarKey,
+        autovalidate: autovalidate,
+        backgroundPadding: backgroundPadding,
+        textFormFieldPadding: textFormFieldPadding,
+        validator: validator,
+        backgroundBoxDecoration: backgroundBoxDecoration,
+        maxLines: maxLines,
+        inputFormatters: inputFormatters,
+        textEditingController: textEditingController,
+        keyboardType: keyboardType,
+        textStyle: textStyle,
+      );
+
+  /// used to show textfield even if a keyboard is shown
+  factory EditableTextField.floating({
+    final Key textFormFieldKey,
+    final Key backgroundContainerKey,
+    final Key helperToolbarKey,
+    final bool autovalidate = true,
+    final BoxDecoration backgroundBoxDecoration,
+    final EdgeInsetsGeometry backgroundPadding,
+    final EdgeInsetsGeometry textFormFieldPadding,
+    final String Function(String) validator,
+    @required final TextEditingController textEditingController,
+    final TextInputType keyboardType,
+    @required final TextStyle textStyle,
+    final int maxLines = 1,
+    final List<TextInputFormatter> inputFormatters,
+  }) =>
+      EditableTextField(
+        textFormFieldKey: textFormFieldKey,
+        backgroundContainerKey: backgroundContainerKey,
+        helperToolbarKey: helperToolbarKey,
+        autovalidate: autovalidate,
+        backgroundPadding: backgroundPadding,
+        textFormFieldPadding: textFormFieldPadding,
+        validator: validator,
+        backgroundBoxDecoration: backgroundBoxDecoration,
+        maxLines: maxLines,
+        inputFormatters: inputFormatters,
+        textEditingController: textEditingController,
+        keyboardType: keyboardType,
+        textStyle: textStyle,
+      );
+
   @override
   _EditableTextFieldState createState() => _EditableTextFieldState();
 }

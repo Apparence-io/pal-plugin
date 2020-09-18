@@ -71,7 +71,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          EditableTextField(
+                          EditableTextField.fixed(
                             helperToolbarKey: ValueKey(
                                 'palEditorFullscreenHelperWidgetToolbar'),
                             textFormFieldKey:

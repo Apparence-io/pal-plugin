@@ -53,7 +53,7 @@ class HelpersListModalLoader {
   }
 
   Future<String> getPageId() async {
-    RouteSettings route = await _routeObserver.stream.first;
+    RouteSettings route = await _routeObserver.routeSettings.first;
     if (route == null || route.name.length <= 0) {
       return Future.value();
     }

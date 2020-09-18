@@ -45,7 +45,7 @@ class HelperOrchestrator extends InheritedWidget {
   }
 
   _init() async {
-    this.routeObserver.stream.listen((RouteSettings newRoute) async {
+    this.routeObserver.routeSettings.listen((RouteSettings newRoute) async {
       if(newRoute == null || newRoute.name == null) {
         return;
       }

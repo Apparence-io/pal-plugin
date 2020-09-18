@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/services/editor/finder/finder_service.dart';
 import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
@@ -18,6 +19,8 @@ class EditorInjector extends InheritedWidget {
 
   final PalEditModeStateService _palEditModeStateService;
 
+  final FinderService _finderService;
+
   final PalRouteObserver routeObserver;
 
   EditorInjector({
@@ -28,6 +31,7 @@ class EditorInjector extends InheritedWidget {
   })  : assert(child != null && appContext != null),
         this._pageService = PageService.build(appContext.pageRepository),
         this._helperService = HelperService.build(appContext.helperRepository),
+        this._finderService = FinderService(observer: routeObserver),
         this._versionEditorService = VersionEditorService.build(
           versionRepository: appContext.versionRepository,
           packageVersionReader: PackageVersionReader()
@@ -48,4 +52,6 @@ class EditorInjector extends InheritedWidget {
   PageService get pageService => this._pageService;
 
   PalEditModeStateService get palEditModeStateService => this._palEditModeStateService;
+
+  FinderService get finderService => this._finderService;
 }

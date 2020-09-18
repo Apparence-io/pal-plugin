@@ -33,7 +33,7 @@ class Route1Page extends StatelessWidget implements Route1View {
   ) {
     return Center(
       child: RaisedButton(
-        key: ValueKey('childRoute2Push'),
+        key: ValueKey('childRoute2Push2'),
         child: Text('Push to child route 2'),
         onPressed: () => pushToRoute2(context),
       ),

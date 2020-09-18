@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/palplugin.dart';
+import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PalRouteObserver {
 
-  Stream<RouteSettings> get stream => throw "not implemented yet";
+  Stream<RouteSettings> get routeSettings => throw "not implemented yet";
 }
 
 
@@ -12,7 +13,9 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
 
   static PalNavigatorObserver _instance;
 
-  Subject<RouteSettings> _route = BehaviorSubject() ;
+  Subject<RouteSettings> _routeSettingsSubject = BehaviorSubject();
+  
+  Subject<PageRoute> _routeSubject = BehaviorSubject();
 
   PalNavigatorObserver._();
 
@@ -23,14 +26,16 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
     return _instance;
   }
 
-  _notify(RouteSettings route) => _route.add(route);
+  _notify(RouteSettings route) => _routeSettingsSubject.add(route);
+
+  _notifyRoute(PageRoute route) => _routeSubject.add(route);
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
     super.didPush(route, previousRoute);
-//    print("push new route ${route.settings?.name}/${previousRoute?.settings?.name}");
     if (route is PageRoute) {
       _notify(route.settings);
+      _notifyRoute(route);
     }
   }
 
@@ -39,6 +44,7 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (newRoute is PageRoute) {
       _notify(newRoute.settings);
+      _notifyRoute(newRoute);
     }
   }
 
@@ -47,8 +53,11 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
     super.didPop(route, previousRoute);
     if (previousRoute is PageRoute && route is PageRoute) {
       _notify(previousRoute.settings);
+      _notifyRoute(previousRoute);
     }
   }
 
-  Stream<RouteSettings> get stream => _route.asBroadcastStream();
+  Stream<RouteSettings> get routeSettings => _routeSettingsSubject.asBroadcastStream();
+  
+  Stream<PageRoute> get route => _routeSubject.asBroadcastStream();
 }

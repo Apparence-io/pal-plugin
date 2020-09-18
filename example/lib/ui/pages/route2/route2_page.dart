@@ -31,12 +31,21 @@ class Route2Page extends StatelessWidget implements Route2View {
     final Route2Presenter presenter,
     final Route2Model model,
   ) {
-    return Center(
-      child: RaisedButton(
-        key: ValueKey('childRoutePop'),
-        onPressed: () => popBack(context),
-        child: Text('Go back!'),
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        RaisedButton(
+          key: ValueKey('childRoutePop'),
+          onPressed: () => popBack(context),
+          child: Text('Go back!'),
+        ),
+        RaisedButton(
+          key: ValueKey('childRouteToOne'),
+          onPressed: () => Navigator.pushNamed(context, "/route1"),
+          child: Text('Push page 1 !'),
+        ),
+      ],
     );
   }
 

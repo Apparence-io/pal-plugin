@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:palplugin/palplugin.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 
 import '../../../pal_test_utilities.dart';
@@ -58,50 +59,5 @@ void main() {
 
   });
 
-  group('Element finder with multiple pages app', () {
 
-    final _navigatorKey = GlobalKey<NavigatorState>();
-
-
-    _createPage(int n) {
-      return Scaffold(
-        key: ValueKey("page$n"),
-        body: Column(
-          children: [
-            Text("Test Text", key: ValueKey("p${n}Text1")),
-            Text("Test Text 2", key: ValueKey("p${n}Text2")),
-            Text("Test Text 3", key: ValueKey("p${n}Text3")),
-            Container(key: ValueKey("container"), height: 50, width: 150)
-          ],
-        ),
-      );
-    }
-
-    _before(WidgetTester tester) async {
-      var routeFactory = (settings) {
-        switch(settings.name) {
-          case '/':
-            return MaterialPageRoute(
-              settings: settings,
-              builder: (context) => _createPage(1),
-            );
-          case '/page1':
-            return MaterialPageRoute(
-              settings: settings,
-              builder: (context) => _createPage(1),
-            );
-        }
-      };
-      await initAppWithPal(tester, null, _navigatorKey, routeFactory: routeFactory);
-    }
-
-    // TODO TEST SCAN PAGE ELEMENTS
-
-    // TODO TEST SCAN LARGEST AREA
-
-    testWidgets('list availables pages on context tree', (WidgetTester tester) async {
-        await _before(tester);
-    });
-
-  });
 }

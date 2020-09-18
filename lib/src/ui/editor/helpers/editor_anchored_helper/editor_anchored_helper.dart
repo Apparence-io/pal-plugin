@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/services/editor/finder/finder_service.dart';
 import 'package:palplugin/src/ui/client/helpers/anchored_helper_widget.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -15,9 +17,7 @@ abstract class EditorAnchoredFullscreenHelperView {
 
 class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAnchoredFullscreenHelperView {
 
-  final ElementFinder elementFinder;
-
-  EditorAnchoredFullscreenHelper({@required this.elementFinder});
+  EditorAnchoredFullscreenHelper();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
       key: ValueKey("EditorAnchoredFullscreenHelperPage"),
       presenter:  EditorAnchoredFullscreenPresenter(
         this,
-        elementFinder //FIXME use hosted nav context
+        EditorInjector.of(context).finderService
       ),
       builder: (context, presenter, model) =>
         Material(

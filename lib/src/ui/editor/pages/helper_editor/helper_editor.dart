@@ -260,9 +260,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   addAnchoredFullscreenEditor(HelperEditorPresenter presenter) {
-    _helperToEdit = EditorAnchoredFullscreenHelper(
-      elementFinder: elementFinder
-    );
+    _helperToEdit = EditorAnchoredFullscreenHelper( );
   }
 
   @override

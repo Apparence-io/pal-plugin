@@ -12,7 +12,9 @@ class UserAppContext extends InheritedWidget {
   final PageRepository _pageRepository;
 
   final HelperRepository _helperRepository;
+
   final InAppUserRepository _inAppUserRepository;
+
   final VersionRepository _versionRepository;
 
   factory UserAppContext.create(

@@ -43,7 +43,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
       key: ValueKey('palEditorFullscreenHelperWidget'),
       onTap: () {
         // Close the toolbar & unfocus textfield
-        EditableTextField.globalKey.currentState.onCloseTap();
+        // EditableTextField.globalKey.currentState.onCloseTap();
       },
       child: Material(
         color: Colors.transparent,

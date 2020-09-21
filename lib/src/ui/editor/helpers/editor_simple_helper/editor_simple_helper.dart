@@ -47,7 +47,7 @@ class EditorSimpleHelperPage extends StatelessWidget
       key: ValueKey('palEditorSimpleHelperWidget'),
       onTap: () {
         // Close the toolbar & unfocus textfield
-        EditableTextField.globalKey.currentState.onCloseTap();
+        // EditableTextField.globalKey.currentState.onCloseTap();
       },
       child: LayoutBuilder(builder: (context, constraints) {
         return SingleChildScrollView(

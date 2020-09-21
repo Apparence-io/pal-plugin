@@ -4,11 +4,15 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 class EditorUpdateHelperModel extends MVVMModel {
   GlobalKey<FormState> formKey;
   GlobalKey containerKey;
-  TextEditingController detailsController;
+  TextEditingController titleController;
+  List<TextEditingController> changelogControllers;
+  List<Widget> changelogs;
   
   EditorUpdateHelperModel({
     this.formKey,
     this.containerKey,
-    this.detailsController,
+    this.titleController,
+    this.changelogControllers,
+    this.changelogs,
   });
 }

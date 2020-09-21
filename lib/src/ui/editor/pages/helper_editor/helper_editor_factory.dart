@@ -16,6 +16,8 @@ class EditorFactory {
         return FullscreenHelperViewModel.fromHelperViewModel(model);
       case HelperType.SIMPLE_HELPER:
         return SimpleHelperViewModel.fromHelperViewModel(model);
+      case HelperType.UPDATE_HELPER:
+        return UpdateHelperViewModel.fromHelperViewModel(model);
       default:
         return null;
     }

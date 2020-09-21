@@ -3,8 +3,11 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
 
-class EditorUpdateHelperPresenter extends Presenter<EditorUpdateHelperModel, EditorUpdateHelperView>{
+class EditorUpdateHelperPresenter
+    extends Presenter<EditorUpdateHelperModel, EditorUpdateHelperView> {
   final UpdateHelperViewModel updateHelperViewModel;
 
   EditorUpdateHelperPresenter(
@@ -21,12 +24,19 @@ class EditorUpdateHelperPresenter extends Presenter<EditorUpdateHelperModel, Edi
     this.viewModel.formKey = GlobalKey<FormState>();
 
     // Init details textfield
-    this.viewModel.detailsController = TextEditingController();
+    this.viewModel.titleController = TextEditingController();
+    this.viewModel.changelogControllers = [];
+
+    this.viewModel.changelogs = [];
 
     // Add listeners for details textfield
-    this.viewModel.detailsController.addListener(() {
-      updateHelperViewModel.titleText?.value = this.viewModel.detailsController?.value?.text;
+    this.viewModel.titleController.addListener(() {
+      updateHelperViewModel.titleText?.value =
+          this.viewModel.titleController?.value?.text;
     });
+    // this.viewModel.changelogController.addListener(() {
+    //   // updateHelperViewModel.changelogText?.value = this.viewModel.changelogController?.value?.text;
+    // });
   }
 
   // @override
@@ -36,10 +46,33 @@ class EditorUpdateHelperPresenter extends Presenter<EditorUpdateHelperModel, Edi
   //   super.onDestroy();
   // }
 
+  addChangelogNote() {
+    this.viewModel.changelogControllers.add(TextEditingController());
+    this.viewModel.changelogs.add(
+          EditableTextField.floating(
+            textStyle: TextStyle(
+              color: Colors.red,
+              fontSize: 14.0,
+            ),
+            textEditingController: this.viewModel.changelogControllers.last,
+          ),
+        );
+    this.refreshView();
+  }
+
   // Details text field stuff
   onDetailTextFieldTapped() {
     this.refreshView();
   }
+
+  changeBackgroundColor(BuildContext context, EditorUpdateHelperPresenter presenter) {
+    this.viewInterface.showColorPickerDialog(context, presenter);
+  }
+
+  // updateBackgroundColor() {
+  //   this.viewInterface.getModel().backgroundColor.value = Colors.red;
+  //   this.refreshView();
+  // }
 
   String validateDetailsTextField(String currentValue) {
     if (currentValue.length <= 0) {

@@ -126,24 +126,26 @@ class UpdateHelperViewModel extends HelperViewModel {
   // Title text stuff
   final ValueNotifier<String> titleText =
       ValueNotifier('Enter your title here...');
-  final ValueNotifier<Color> titleFontColor = ValueNotifier(Colors.white);
+  final ValueNotifier<Color> titleFontColor = ValueNotifier(Colors.grey);
   final ValueNotifier<Color> titleBackgroundColor =
       ValueNotifier(Colors.black87);
-  final ValueNotifier<num> titleFontSize = ValueNotifier(14.0);
-  // FIXME: Remove this test
-  final ValueNotifier<TextStyle> titleTextStyle =
-      ValueNotifier(TextStyle(color: Colors.blue, fontSize: 30.0));
-  // END
+  final ValueNotifier<num> titleFontSize = ValueNotifier(24.0);
 
   // Changelog text stuff
   final ValueNotifier<List<String>> changelogText = ValueNotifier(
     ['Enter your first update line here...'],
   );
-  final ValueNotifier<Color> changelogFontColor = ValueNotifier(Colors.white);
-  final ValueNotifier<Color> changelogBackgroundColor =
-      ValueNotifier(Colors.black87);
-  final ValueNotifier<num> changelogFontSize = ValueNotifier(14.0);
+  final ValueNotifier<List<Color>> changelogFontColor = ValueNotifier(
+    [Colors.grey],
+  );
+  final ValueNotifier<List<Color>> changelogBackgroundColor = ValueNotifier(
+    [Colors.black87],
+  );
+  final ValueNotifier<List<num>> changelogFontSize = ValueNotifier(
+    [14.0],
+  );
   final ValueNotifier<int> languageId = ValueNotifier(1);
+  final ValueNotifier<Color> backgroundColor = ValueNotifier(Color(0xFFBFEEF5));
 
   UpdateHelperViewModel({
     @required String name,

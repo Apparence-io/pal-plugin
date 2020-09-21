@@ -189,7 +189,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
     final HelperEditorViewModel model,
   ) {
     return Positioned(
-      bottom: 32,
+      bottom: 25,
       left: 16,
       right: 16,
       child: Row(

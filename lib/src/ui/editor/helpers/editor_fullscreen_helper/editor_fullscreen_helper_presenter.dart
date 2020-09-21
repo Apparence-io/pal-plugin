@@ -18,7 +18,6 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     this.viewModel.titleKey = GlobalKey();
     this.viewModel.formKey = GlobalKey<FormState>();
 
-    this.viewModel.titleFocus = FocusNode();
     this.viewModel.titleController = TextEditingController();
 
     this.viewModel.helperOpacity = 0;
@@ -54,17 +53,5 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
       return 'Maximum 45 characters';
     }
     return null;
-  }
-
-  // Toolbar stuff
-  onChangeBorderTap() { }
-  onCloseTap() {
-    this.viewModel.isToolbarVisible = false;
-    this.viewModel.titleFocus.unfocus();
-    this.refreshView();
-  }
-  onChangeFontTap() { }
-  onEditTextTap() {
-    this.viewModel.titleFocus.requestFocus();
   }
 }

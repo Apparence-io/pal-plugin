@@ -23,7 +23,6 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     this.viewModel.formKey = GlobalKey<FormState>();
 
     // Init details textfield
-    this.viewModel.detailsFocus = FocusNode();
     this.viewModel.detailsController = TextEditingController();
 
     // Add listeners for details textfield
@@ -53,17 +52,5 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
       return 'Maximum 45 characters';
     }
     return null;
-  }
-
-  // Toolbar stuff
-  onChangeBorderTap() { }
-  onCloseTap() {
-    this.viewModel.isToolbarVisible = false;
-    this.viewModel.detailsFocus.unfocus();
-    this.refreshView();
-  }
-  onChangeFontTap() { }
-  onEditTextTap() {
-    this.viewModel.detailsFocus.requestFocus();
   }
 }

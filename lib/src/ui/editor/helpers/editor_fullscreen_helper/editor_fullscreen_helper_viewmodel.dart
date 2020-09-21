@@ -7,7 +7,6 @@ class EditorFullScreenHelperModel extends MVVMModel {
   GlobalKey titleKey;
 
   // Title text field
-  FocusNode titleFocus;
   TextEditingController titleController;
   
   double helperOpacity;
@@ -17,7 +16,6 @@ class EditorFullScreenHelperModel extends MVVMModel {
     this.helperOpacity,
     this.formKey,
     this.titleKey,
-    this.titleFocus,
     this.titleController,
     this.isToolbarVisible,
   });

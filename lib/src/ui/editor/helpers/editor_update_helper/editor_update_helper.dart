@@ -197,6 +197,7 @@ class EditorUpdateHelperPage extends StatelessWidget
     showDialog(
       context: context,
       child: ColorPickerDialog(
+        placeholderColor: this.viewModel?.backgroundColor?.value,
         onColorSelected: (Color aColor) {
           this.viewModel.backgroundColor.value = aColor;
           presenter.refreshView();

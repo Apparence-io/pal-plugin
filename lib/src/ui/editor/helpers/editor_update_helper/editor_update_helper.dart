@@ -69,13 +69,14 @@ class EditorUpdateHelperPage extends StatelessWidget
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: SingleChildScrollView(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -95,13 +96,16 @@ class EditorUpdateHelperPage extends StatelessWidget
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 15.0),
-                            child:
-                                _buildThanksButton(context, presenter, model),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 15.0,
+                            left: 10.0,
+                            right: 10.0,
                           ),
-                        ],
-                      ),
+                          child: _buildThanksButton(context, presenter, model),
+                        ),
+                      ],
                     ),
                     Positioned(
                       top: 20.0,

@@ -1,4 +1,6 @@
 PODS:
+  - application_icon (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - keyboard_visibility (0.5.0):
     - Flutter
@@ -10,6 +12,7 @@ PODS:
   - Reachability (3.2)
 
 DEPENDENCIES:
+  - application_icon (from `.symlinks/plugins/application_icon/ios`)
   - Flutter (from `Flutter`)
   - keyboard_visibility (from `.symlinks/plugins/keyboard_visibility/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
@@ -20,6 +23,8 @@ SPEC REPOS:
     - Reachability
 
 EXTERNAL SOURCES:
+  application_icon:
+    :path: ".symlinks/plugins/application_icon/ios"
   Flutter:
     :path: Flutter
   keyboard_visibility:
@@ -30,6 +35,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
 
 SPEC CHECKSUMS:
+  application_icon: 6c882fd954934784443dad48a169cadb5f326cb1
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   keyboard_visibility: 96a24de806fe6823c3ad956c01ba2ec6d056616f
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62

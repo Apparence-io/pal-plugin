@@ -31,7 +31,7 @@ main() {
           findsOneWidget);
 
       expect(find.byKey(ValueKey('childRoute1Push')), findsOneWidget);
-      expect(find.byKey(ValueKey('childRoute2Push')), findsOneWidget);
+      expect(find.byKey(ValueKey('childRoute2Push2')), findsOneWidget);
     });
 
     group('child navigation should work', () {
@@ -51,7 +51,7 @@ main() {
         await before(tester);
         await tester.pumpAndSettle();
 
-        Finder child1RouteButton = find.byKey(ValueKey('childRoute2Push'));
+        Finder child1RouteButton = find.byKey(ValueKey('childRoute2Push2'));
         await tester.ensureVisible(child1RouteButton);
         await tester.tap(child1RouteButton);
         await tester.pumpAndSettle();

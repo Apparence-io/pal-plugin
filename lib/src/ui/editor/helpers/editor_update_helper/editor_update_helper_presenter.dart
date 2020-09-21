@@ -25,54 +25,57 @@ class EditorUpdateHelperPresenter
 
     // Init details textfield
     this.viewModel.titleController = TextEditingController();
-    this.viewModel.changelogControllers = [];
+    this.viewModel.thanksController = TextEditingController();
+    this.viewModel.changelogsControllers = [];
 
-    this.viewModel.changelogs = [];
+    this.viewModel.changelogsTextfieldWidgets = [];
 
     // Add listeners for details textfield
     this.viewModel.titleController.addListener(() {
       updateHelperViewModel.titleText?.value =
           this.viewModel.titleController?.value?.text;
     });
-    // this.viewModel.changelogController.addListener(() {
-    //   // updateHelperViewModel.changelogText?.value = this.viewModel.changelogController?.value?.text;
-    // });
+
+    this.addChangelogNote();
   }
 
-  // @override
-  // Future onDestroy() async {
-  //   this.viewModel.detailsFocus.dispose();
-  //   this.viewModel.detailsController.dispose();
-  //   super.onDestroy();
-  // }
+  @override
+  Future onDestroy() async {
+    this.viewModel.titleController?.dispose();
+    this.viewModel.thanksController?.dispose();
+    // Dismiss all changelogs controllers
+    for (TextEditingController controller in this.viewModel.changelogsControllers) {
+      controller?.dispose();
+    }
+    super.onDestroy();
+  }
 
   addChangelogNote() {
-    this.viewModel.changelogControllers.add(TextEditingController());
-    this.viewModel.changelogs.add(
+    var changelogController = TextEditingController();
+
+    UpdateHelperViewModel viewModel = this.viewInterface.getModel();
+    viewModel.changelogFontColor?.value?.add(Colors.red);
+    viewModel.changelogFontSize?.value?.add(50.0);
+
+    this.viewModel.changelogsControllers.add(changelogController);
+    this.viewModel.changelogsTextfieldWidgets.add(
           EditableTextField.floating(
             textStyle: TextStyle(
-              color: Colors.red,
-              fontSize: 14.0,
+              color: viewModel.changelogFontColor?.value?.last,
+              fontSize: viewModel.changelogFontSize?.value?.last,
             ),
-            textEditingController: this.viewModel.changelogControllers.last,
+            textEditingController: changelogController,
           ),
         );
-    this.refreshView();
-  }
-
-  // Details text field stuff
-  onDetailTextFieldTapped() {
+    changelogController.addListener(() {
+      updateHelperViewModel.changelogText?.value?.last = changelogController?.value?.text;
+    });
     this.refreshView();
   }
 
   changeBackgroundColor(BuildContext context, EditorUpdateHelperPresenter presenter) {
     this.viewInterface.showColorPickerDialog(context, presenter);
   }
-
-  // updateBackgroundColor() {
-  //   this.viewInterface.getModel().backgroundColor.value = Colors.red;
-  //   this.refreshView();
-  // }
 
   String validateDetailsTextField(String currentValue) {
     if (currentValue.length <= 0) {

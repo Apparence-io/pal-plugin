@@ -5,14 +5,16 @@ class EditorUpdateHelperModel extends MVVMModel {
   GlobalKey<FormState> formKey;
   GlobalKey containerKey;
   TextEditingController titleController;
-  List<TextEditingController> changelogControllers;
-  List<Widget> changelogs;
+  List<TextEditingController> changelogsControllers;
+  TextEditingController thanksController;
+  List<Widget> changelogsTextfieldWidgets;
   
   EditorUpdateHelperModel({
     this.formKey,
     this.containerKey,
     this.titleController,
-    this.changelogControllers,
-    this.changelogs,
+    this.changelogsControllers,
+    this.changelogsTextfieldWidgets,
+    this.thanksController,
   });
 }

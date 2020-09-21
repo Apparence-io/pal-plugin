@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
@@ -10,7 +11,8 @@ import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
 abstract class EditorUpdateHelperView {
-  void showColorPickerDialog(BuildContext context, EditorUpdateHelperPresenter presenter);
+  void showColorPickerDialog(
+      BuildContext context, EditorUpdateHelperPresenter presenter);
   UpdateHelperViewModel getModel();
 }
 
@@ -54,61 +56,65 @@ class EditorUpdateHelperPage extends StatelessWidget
         padding: const EdgeInsets.only(bottom: 90.0),
         child: Padding(
           padding: const EdgeInsets.all(2.0),
-          child: DottedBorder(
-            strokeWidth: 2.0,
-            strokeCap: StrokeCap.round,
-            dashPattern: [10, 7],
-            color: Colors.black54,
-            child: Container(
-              width: double.infinity,
-              color: viewModel.backgroundColor?.value,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 40.0),
-                                  child: Image.asset(
-                                    'packages/palplugin/assets/images/create_helper.png',
-                                    height: 200.0,
+          child: Form(
+            key: model.formKey,
+            child: DottedBorder(
+              strokeWidth: 2.0,
+              strokeCap: StrokeCap.round,
+              dashPattern: [10, 7],
+              color: Colors.black54,
+              child: Container(
+                width: double.infinity,
+                color: viewModel.backgroundColor?.value,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 40.0),
+                                    child: Image.asset(
+                                      'packages/palplugin/assets/images/create_helper.png',
+                                      height: 200.0,
+                                    ),
                                   ),
-                                ),
-                                _buildTitleField(context, presenter, model),
-                                SizedBox(height: 5.0),
-                                _buildChangelogFields(
-                                    context, presenter, model),
-                              ],
+                                  _buildTitleField(context, presenter, model),
+                                  SizedBox(height: 5.0),
+                                  _buildChangelogFields(
+                                      context, presenter, model),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 15.0),
-                          child: _buildThanksButton(context, presenter, model),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 15.0),
+                            child:
+                                _buildThanksButton(context, presenter, model),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: 20.0,
-                    left: 20.0,
-                    child: CircleIconButton(
-                      icon: Icon(Icons.invert_colors),
-                      backgroundColor: PalTheme.of(context).colors.light,
-                      onTapCallback: () =>
-                          presenter.changeBackgroundColor(context, presenter),
+                    Positioned(
+                      top: 20.0,
+                      left: 20.0,
+                      child: CircleIconButton(
+                        icon: Icon(Icons.invert_colors),
+                        backgroundColor: PalTheme.of(context).colors.light,
+                        onTapCallback: () =>
+                            presenter.changeBackgroundColor(context, presenter),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -147,20 +153,25 @@ class EditorUpdateHelperPage extends StatelessWidget
     return Column(
       children: [
         Wrap(
-          children: model.changelogs,
+          children: model.changelogsTextfieldWidgets,
           spacing: 5.0,
           runSpacing: 5.0,
         ),
-        SizedBox(height: 5.0),
-        CircleIconButton(
-          backgroundColor: Colors.transparent,
-          icon: Icon(
-            Icons.add,
-            color: Colors.grey.withAlpha(170),
-            size: 35.0,
+        Padding(
+          padding: const EdgeInsets.only(top: 5.0, bottom: 16.0),
+          child: CircleIconButton(
+            backgroundColor: Colors.transparent,
+            icon: Icon(
+              Icons.add,
+              color: Colors.grey.withAlpha(170),
+              size: 35.0,
+            ),
+            displayShadow: false,
+            onTapCallback: () {
+              HapticFeedback.selectionClick();
+              presenter.addChangelogNote();
+            },
           ),
-          displayShadow: false,
-          onTapCallback: presenter.addChangelogNote,
         ),
       ],
     );
@@ -176,8 +187,7 @@ class EditorUpdateHelperPage extends StatelessWidget
       height: 50.0,
       child: RaisedButton(
         color: PalTheme.of(context).colors.color1,
-        child: Text(
-          'Thank you !',
+        child: TextField(
           style: TextStyle(
             color: Colors.white,
             fontSize: 22.0,
@@ -193,7 +203,9 @@ class EditorUpdateHelperPage extends StatelessWidget
   }
 
   @override
-  void showColorPickerDialog(BuildContext context, EditorUpdateHelperPresenter presenter) {
+  void showColorPickerDialog(
+      BuildContext context, EditorUpdateHelperPresenter presenter) {
+    HapticFeedback.selectionClick();
     showDialog(
       context: context,
       child: ColorPickerDialog(

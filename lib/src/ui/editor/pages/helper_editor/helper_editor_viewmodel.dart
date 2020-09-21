@@ -17,7 +17,7 @@ class HelperEditorViewModel extends MVVMModel {
 
   // this is used to let user choose between all available type options
   List<HelperTypeOption> availableHelperType;
-  
+
   // This the template view model with all default values
   HelperViewModel templateViewModel;
 
@@ -25,14 +25,17 @@ class HelperEditorViewModel extends MVVMModel {
   HelperViewModel helperViewModel;
 }
 
-
-
 // this is used to let user choose between all available type options
 class HelperTypeOption {
   String text;
   HelperType type;
+  IconData icon;
 
-  HelperTypeOption(this.text, this.type);
+  HelperTypeOption(
+    this.text,
+    this.type, {
+    this.icon = Icons.border_outer,
+  });
 }
 
 class HelperViewModel extends MVVMModel {
@@ -73,14 +76,15 @@ class FullscreenHelperViewModel extends HelperViewModel {
           versionMaxId: versionMaxId,
         );
 
-  factory FullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model)
-    => FullscreenHelperViewModel(
-      name: model.name,
-      triggerType: model.triggerType,
-      priority: model.priority,
-      versionMinId: model.versionMinId,
-      versionMaxId: model.versionMaxId,
-    );
+  factory FullscreenHelperViewModel.fromHelperViewModel(
+          HelperViewModel model) =>
+      FullscreenHelperViewModel(
+        name: model.name,
+        triggerType: model.triggerType,
+        priority: model.priority,
+        versionMinId: model.versionMinId,
+        versionMaxId: model.versionMaxId,
+      );
 }
 
 class SimpleHelperViewModel extends HelperViewModel {
@@ -105,12 +109,62 @@ class SimpleHelperViewModel extends HelperViewModel {
           versionMaxId: versionMaxId,
         );
 
-  factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model)
-    => SimpleHelperViewModel(
-      name: model.name,
-      triggerType: model.triggerType,
-      priority: model.priority,
-      versionMinId: model.versionMinId,
-      versionMaxId: model.versionMaxId,
-    );
+  factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model) =>
+      SimpleHelperViewModel(
+        name: model.name,
+        triggerType: model.triggerType,
+        priority: model.priority,
+        versionMinId: model.versionMinId,
+        versionMaxId: model.versionMaxId,
+      );
+}
+
+class UpdateHelperViewModel extends HelperViewModel {
+  // TODO: It can be better to use a multi prop listener to only send
+  // - Text value
+  // - Text style value (including font color, background color, font size...)
+  // Title text stuff
+  final ValueNotifier<String> titleText =
+      ValueNotifier('Enter your title here...');
+  final ValueNotifier<Color> titleFontColor = ValueNotifier(Colors.white);
+  final ValueNotifier<Color> titleBackgroundColor =
+      ValueNotifier(Colors.black87);
+  final ValueNotifier<num> titleFontSize = ValueNotifier(14.0);
+  // FIXME: Remove this test
+  final ValueNotifier<TextStyle> titleTextStyle =
+      ValueNotifier(TextStyle(color: Colors.blue, fontSize: 30.0));
+  // END
+
+  // Changelog text stuff
+  final ValueNotifier<List<String>> changelogText = ValueNotifier(
+    ['Enter your first update line here...'],
+  );
+  final ValueNotifier<Color> changelogFontColor = ValueNotifier(Colors.white);
+  final ValueNotifier<Color> changelogBackgroundColor =
+      ValueNotifier(Colors.black87);
+  final ValueNotifier<num> changelogFontSize = ValueNotifier(14.0);
+  final ValueNotifier<int> languageId = ValueNotifier(1);
+
+  UpdateHelperViewModel({
+    @required String name,
+    @required HelperTriggerType triggerType,
+    @required int priority,
+    @required int versionMinId,
+    int versionMaxId,
+  }) : super(
+          name: name,
+          triggerType: triggerType,
+          priority: priority,
+          versionMinId: versionMinId,
+          versionMaxId: versionMaxId,
+        );
+
+  factory UpdateHelperViewModel.fromHelperViewModel(HelperViewModel model) =>
+      UpdateHelperViewModel(
+        name: model.name,
+        triggerType: model.triggerType,
+        priority: model.priority,
+        versionMinId: model.versionMinId,
+        versionMaxId: model.versionMaxId,
+      );
 }

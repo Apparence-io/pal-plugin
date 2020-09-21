@@ -4,7 +4,6 @@ import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
@@ -13,8 +12,8 @@ import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
-class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
-
+class HelperEditorPresenter
+    extends Presenter<HelperEditorViewModel, HelperEditorView> {
   final HelperService helperService;
 
   final ElementFinder elementFinder;
@@ -23,13 +22,9 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
 
   final HelperEditorPageArguments basicArguments;
 
-  HelperEditorPresenter(
-    HelperEditorView viewInterface,
-    this.basicArguments,
-    this.loader,
-    this.helperService,
-    this.elementFinder
-  ) : super(HelperEditorViewModel(), viewInterface);
+  HelperEditorPresenter(HelperEditorView viewInterface, this.basicArguments,
+      this.loader, this.helperService, this.elementFinder)
+      : super(HelperEditorViewModel(), viewInterface);
 
   @override
   void onInit() {
@@ -42,9 +37,25 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
 
     // init the available helpers type we can create
     viewModel.availableHelperType = [
-      HelperTypeOption("Simple helper box", HelperType.SIMPLE_HELPER),
-      HelperTypeOption("Fullscreen helper", HelperType.HELPER_FULL_SCREEN),
-      HelperTypeOption("Anchored fullscreen helper", HelperType.ANCHORED_OVERLAYED_HELPER),
+      HelperTypeOption(
+        'Simple helper box',
+        HelperType.SIMPLE_HELPER,
+        icon: Icons.chat_bubble_outline,
+      ),
+      HelperTypeOption(
+        'Fullscreen helper',
+        HelperType.HELPER_FULL_SCREEN,
+        icon: Icons.fullscreen,
+      ),
+      HelperTypeOption(
+        'Anchored fullscreen helper',
+        HelperType.ANCHORED_OVERLAYED_HELPER,
+      ),
+      HelperTypeOption(
+        'Update review helper',
+        HelperType.UPDATE_HELPER,
+        icon: Icons.list,
+      ),
     ];
 
     // Create a template helper model
@@ -68,13 +79,19 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     initEditedWidgetData(helperType);
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
-        viewInterface.addFullscreenHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        viewInterface.addFullscreenHelperEditor(
+            viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;
       case HelperType.SIMPLE_HELPER:
-        viewInterface.addSimpleHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        viewInterface.addSimpleHelperEditor(
+            viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         viewInterface.addAnchoredFullscreenEditor(this);
+        break;
+      case HelperType.UPDATE_HELPER:
+        viewInterface.addUpdateHelperEditor(
+            viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;
       default:
         throw "Not implemented type";

@@ -28,6 +28,13 @@ class _PulsingCircleState extends State<PulsingCircle> with SingleTickerProvider
   }
 
   @override
+  void dispose() {
+    this.controller.stop();
+    this.controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
         animation: this.controller,

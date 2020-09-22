@@ -51,8 +51,16 @@ class _ProgressWidgetState extends State<ProgressWidget>
   }
 
   @override
+  void dispose() {
+    this.controller.stop();
+    this.controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
+      key: ValueKey("ProgressBar"),
       height: 25,
 
         // PLACING PULSING CIRCLES ON-TOP THE PROGRESS BAR
@@ -101,7 +109,7 @@ class _ProgressWidgetState extends State<ProgressWidget>
                 Container(
                   width: 25,
 
-                  child: PulsingCircle(active: i==widget.step,done: i<widget.step),
+                  child: PulsingCircle(active: i==widget.step,done: i<widget.step,key: ValueKey("PulsingCircle"),),
                 )
               ],
             ),

@@ -23,10 +23,13 @@ class EditorUpdateHelperPresenter
 
     this.viewModel.editableTextFieldController =
         StreamController<bool>.broadcast();
+    this.viewModel.scrollController = ScrollController();
 
     // Init keys
     this.viewModel.containerKey = GlobalKey();
     this.viewModel.formKey = GlobalKey<FormState>();
+
+    this.viewModel.releaseNotes = 0;
 
     // Init details textfield
     this.viewModel.titleController = TextEditingController();
@@ -40,6 +43,11 @@ class EditorUpdateHelperPresenter
     this.viewModel.titleController.addListener(() {
       updateHelperViewModel.titleText?.value =
           this.viewModel.titleController?.value?.text;
+    });
+
+    this.viewModel.thanksController.addListener(() {
+      updateHelperViewModel.thanksButtonText?.value =
+          this.viewModel.thanksController?.value?.text;
     });
 
     KeyboardVisibilityNotification().addNewListener(
@@ -66,8 +74,6 @@ class EditorUpdateHelperPresenter
   }
 
   addChangelogNote() {
-    var changelogController = TextEditingController();
-
     String hintText;
     if (this.viewModel.changelogsTextfieldWidgets.length <= 0) {
       hintText = 'Enter your first update line here...';
@@ -75,32 +81,68 @@ class EditorUpdateHelperPresenter
       hintText = 'Enter update line here...';
     }
 
-    UpdateHelperViewModel helperModel = this.viewInterface.getModel();
-    helperModel.changelogFontColor?.value?.add(Colors.black87);
-    helperModel.changelogFontSize?.value?.add(14.0);
-    helperModel.changelogText?.value?.add(hintText);
+    // Create static keys
+    ValueKey textFormFieldKey = ValueKey(
+      'pal_EditorUpdateHelperWidget_ReleaseNoteField_${this.viewModel.releaseNotes}',
+    );
+    ValueKey textFormToolbarKey = ValueKey(
+      'pal_EditorUpdateHelperWidget_ReleaseNoteToolbar_${this.viewModel.releaseNotes}',
+    );
+    String textFormMapKey = textFormFieldKey.toString();
 
-    this.viewModel.changelogsControllers.add(changelogController);
+    // Assign data
+    UpdateHelperViewModel helperModel = this.viewInterface.getModel();
+    helperModel.changelogFontColor?.value
+        ?.putIfAbsent(textFormMapKey, () => Colors.black87);
+    helperModel.changelogFontSize?.value
+        ?.putIfAbsent(textFormMapKey, () => 14.0);
+    helperModel.changelogText?.value
+        ?.putIfAbsent(textFormMapKey, () => '');
+
     this.viewModel.changelogsTextfieldWidgets.add(
-          EditableTextField.floating(
+          EditableTextField(
+            textFormFieldKey: textFormFieldKey,
+            helperToolbarKey: textFormToolbarKey,
             outsideTapStream: this.viewModel.editableTextFieldController.stream,
-            hintText: helperModel.changelogText?.value?.last,
+            hintText: hintText,
+            maximumCharacterLength: 120,
             textStyle: TextStyle(
-              color: helperModel.changelogFontColor?.value?.last,
-              fontSize: helperModel.changelogFontSize?.value?.last,
+              color: helperModel.changelogFontColor?.value[textFormMapKey],
+              fontSize: helperModel.changelogFontSize?.value[textFormMapKey],
             ),
-            textEditingController: changelogController,
+            onChanged: (Key key, String newValue) {
+              updateHelperViewModel.changelogText?.value[textFormMapKey] =
+                  newValue;
+            },
           ),
         );
-    changelogController.addListener(() {
-      updateHelperViewModel.changelogText?.value?.last =
-          changelogController?.value?.text;
-    });
+    this.viewModel.releaseNotes++;
+
     this.refreshView();
   }
 
+  onTitleChanged(Key key, String newValue) {
+    updateHelperViewModel.titleText?.value = newValue;
+  }
+
+  onThanksChanged(Key key, String newValue) {
+    updateHelperViewModel.thanksButtonText?.value = newValue;
+  }
+
+  scrollToBottom() {
+    if (this.viewModel.scrollController.hasClients) {
+      this.viewModel.scrollController.animateTo(
+            0.0,
+            curve: Curves.easeOut,
+            duration: const Duration(milliseconds: 500),
+          );
+    }
+  }
+
   changeBackgroundColor(
-      BuildContext context, EditorUpdateHelperPresenter presenter) {
+    BuildContext context,
+    EditorUpdateHelperPresenter presenter,
+  ) {
     this.viewInterface.showColorPickerDialog(context, presenter);
   }
 

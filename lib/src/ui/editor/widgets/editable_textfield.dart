@@ -20,10 +20,12 @@ class EditableTextField extends StatefulWidget {
   final EdgeInsetsGeometry backgroundPadding;
   final EdgeInsetsGeometry textFormFieldPadding;
   final String Function(String) validator;
-  final TextEditingController textEditingController;
+  final Function(Key, String) onChanged;
   final TextInputType keyboardType;
   final TextStyle textStyle;
   final int maxLines;
+  final int maximumCharacterLength;
+  final int minimumCharacterLength;
   final String hintText;
   final List<TextInputFormatter> inputFormatters;
   final Stream<bool> outsideTapStream;
@@ -34,6 +36,9 @@ class EditableTextField extends StatefulWidget {
     this.backgroundContainerKey,
     this.helperToolbarKey,
     this.outsideTapStream,
+    this.maximumCharacterLength,
+    this.minimumCharacterLength,
+    this.onChanged,
     this.autovalidate = true,
     this.backgroundPadding,
     this.textFormFieldPadding,
@@ -42,85 +47,9 @@ class EditableTextField extends StatefulWidget {
     this.maxLines = 1,
     this.inputFormatters,
     this.hintText = 'Edit me!',
-    @required this.textEditingController,
     this.keyboardType,
     @required this.textStyle,
   }) : super();
-
-  factory EditableTextField.fixed({
-    Key key,
-    final Key textFormFieldKey,
-    final Key backgroundContainerKey,
-    final Key helperToolbarKey,
-    final Stream outsideTapStream,
-    final bool autovalidate = true,
-    final BoxDecoration backgroundBoxDecoration,
-    final EdgeInsetsGeometry backgroundPadding,
-    final EdgeInsetsGeometry textFormFieldPadding,
-    final String Function(String) validator,
-    @required final TextEditingController textEditingController,
-    final TextInputType keyboardType,
-    final String hintText = 'Edit me!',
-    @required final TextStyle textStyle,
-    final int maxLines = 1,
-    final List<TextInputFormatter> inputFormatters,
-  }) =>
-      EditableTextField(
-        key: key,
-        outsideTapStream: outsideTapStream,
-        textFormFieldKey: textFormFieldKey,
-        backgroundContainerKey: backgroundContainerKey,
-        helperToolbarKey: helperToolbarKey,
-        autovalidate: autovalidate,
-        backgroundPadding: backgroundPadding,
-        textFormFieldPadding: textFormFieldPadding,
-        validator: validator,
-        hintText: hintText,
-        backgroundBoxDecoration: backgroundBoxDecoration,
-        maxLines: maxLines,
-        inputFormatters: inputFormatters,
-        textEditingController: textEditingController,
-        keyboardType: keyboardType,
-        textStyle: textStyle,
-      );
-
-  /// used to show textfield even if a keyboard is shown
-  factory EditableTextField.floating({
-    Key key,
-    final Key textFormFieldKey,
-    final Key backgroundContainerKey,
-    final Key helperToolbarKey,
-    final bool autovalidate = true,
-    final Stream outsideTapStream,
-    final BoxDecoration backgroundBoxDecoration,
-    final EdgeInsetsGeometry backgroundPadding,
-    final EdgeInsetsGeometry textFormFieldPadding,
-    final String Function(String) validator,
-    @required final TextEditingController textEditingController,
-    final TextInputType keyboardType,
-    @required final TextStyle textStyle,
-    final String hintText = 'Edit me!',
-    final int maxLines = 1,
-    final List<TextInputFormatter> inputFormatters,
-  }) =>
-      EditableTextField(
-        key: key,
-        textFormFieldKey: textFormFieldKey,
-        backgroundContainerKey: backgroundContainerKey,
-        helperToolbarKey: helperToolbarKey,
-        outsideTapStream: outsideTapStream,
-        autovalidate: autovalidate,
-        backgroundPadding: backgroundPadding,
-        textFormFieldPadding: textFormFieldPadding,
-        validator: validator,
-        backgroundBoxDecoration: backgroundBoxDecoration,
-        maxLines: maxLines,
-        hintText: hintText,
-        inputFormatters: inputFormatters,
-        textEditingController: textEditingController,
-        keyboardType: keyboardType,
-        textStyle: textStyle,
-      );
 
   @override
   _EditableTextFieldState createState() => _EditableTextFieldState();
@@ -134,6 +63,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
   @override
   void initState() {
     super.initState();
+    print(widget.key);
 
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);
@@ -183,9 +113,26 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     key: widget.textFormFieldKey,
                     autovalidate: widget.autovalidate,
                     focusNode: _focusNode,
-                    controller: widget.textEditingController,
                     onTap: _onTextFieldTapped,
-                    validator: widget.validator,
+                    onChanged: (String newValue) {
+                      if (widget.onChanged != null) {
+                        widget.onChanged(widget.textFormFieldKey, newValue);
+                      }
+                    },
+                    validator: (String value) {
+                      String error;
+                      if (widget.minimumCharacterLength != null) {
+                        if (value.length <= widget.minimumCharacterLength) {
+                          error = 'Minimum ${widget.minimumCharacterLength} ${widget.minimumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
+                        }
+                      }
+                      if (widget.maximumCharacterLength != null) {
+                        if (value.length >= widget.maximumCharacterLength) {
+                          error = 'Maximum ${widget.maximumCharacterLength} ${widget.maximumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
+                        }
+                      }
+                      return error;
+                    },
                     keyboardType: widget.keyboardType,
                     maxLines: widget.maxLines,
                     onFieldSubmitted: _onFieldSubmitted,

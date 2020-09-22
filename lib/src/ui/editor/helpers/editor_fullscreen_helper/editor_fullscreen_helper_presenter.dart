@@ -22,18 +22,16 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     this.viewModel.titleKey = GlobalKey();
     this.viewModel.formKey = GlobalKey<FormState>();
 
-    this.viewModel.titleController = TextEditingController();
-
     this.viewModel.helperOpacity = 0;
-
-    this.viewModel.titleController.addListener(() {
-      fullscreenHelperViewModel.title?.value = this.viewModel.titleController?.value?.text;
-    });
 
     Future.delayed(Duration(seconds: 1), () {
       this.viewModel.helperOpacity = 1;
       this.refreshView();
     });
+  }
+
+  onTitleChanged(Key key, String newValue) {
+    fullscreenHelperViewModel.title?.value = newValue;
   }
 
   // @override

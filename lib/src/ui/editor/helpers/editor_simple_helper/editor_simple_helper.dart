@@ -56,12 +56,12 @@ class EditorSimpleHelperPage extends StatelessWidget
                 Expanded(child: Container()),
                 Container(
                   width: constraints.maxWidth * 0.8,
-                  child: EditableTextField.floating(
+                  child: EditableTextField(
                     outsideTapStream: model.editableTextFieldController.stream,
                     helperToolbarKey:
                         ValueKey('palEditorSimpleHelperWidgetToolbar'),
                     textFormFieldKey: ValueKey('palSimpleHelperDetailField'),
-                    textEditingController: model.detailsController,
+                    onChanged: presenter.onDetailsChanged,
                     maxLines: null,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(

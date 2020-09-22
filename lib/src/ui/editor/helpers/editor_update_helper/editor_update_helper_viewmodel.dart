@@ -12,6 +12,8 @@ class EditorUpdateHelperModel extends MVVMModel {
   List<Widget> changelogsTextfieldWidgets;
   StreamController<bool> editableTextFieldController;
   bool isKeyboardVisible;
+  ScrollController scrollController;
+  num releaseNotes;
   
   EditorUpdateHelperModel({
     this.formKey,
@@ -22,5 +24,7 @@ class EditorUpdateHelperModel extends MVVMModel {
     this.thanksController,
     this.editableTextFieldController,
     this.isKeyboardVisible,
+    this.scrollController,
+    this.releaseNotes,
   });
 }

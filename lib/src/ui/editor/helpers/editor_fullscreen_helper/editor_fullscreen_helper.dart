@@ -68,13 +68,14 @@ class EditorFullScreenHelperPage extends StatelessWidget
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          EditableTextField.fixed(
-                            outsideTapStream: model.editableTextFieldController.stream,
+                          EditableTextField(
+                            outsideTapStream:
+                                model.editableTextFieldController.stream,
                             helperToolbarKey: ValueKey(
                                 'palEditorFullscreenHelperWidgetToolbar'),
                             textFormFieldKey:
                                 ValueKey('palFullscreenHelperTitleField'),
-                            textEditingController: model.titleController,
+                            onChanged: presenter.onTitleChanged,
                             textStyle: TextStyle(
                               color: viewModel.fontColor?.value,
                               decoration: TextDecoration.none,

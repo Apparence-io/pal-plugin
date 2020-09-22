@@ -57,7 +57,8 @@ class EditorUpdateHelperPage extends StatelessWidget
         onTap: presenter.onOutsideTap,
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.only(bottom: (model.isKeyboardVisible ? 0.0 : 90.0)),
+            padding:
+                EdgeInsets.only(bottom: (model.isKeyboardVisible ? 0.0 : 90.0)),
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Form(
@@ -78,6 +79,8 @@ class EditorUpdateHelperPage extends StatelessWidget
                           children: [
                             Expanded(
                               child: SingleChildScrollView(
+                                reverse: true,
+                                controller: model.scrollController,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0),
@@ -141,15 +144,17 @@ class EditorUpdateHelperPage extends StatelessWidget
     final EditorUpdateHelperPresenter presenter,
     final EditorUpdateHelperModel model,
   ) {
-    return EditableTextField.floating(
+    return EditableTextField(
       helperToolbarKey: ValueKey(
         'pal_EditorUpdateHelperWidget_TitleToolbar',
       ),
       textFormFieldKey: ValueKey(
         'pal_EditorUpdateHelperWidget_TitleField',
       ),
-      textEditingController: model.titleController,
-      hintText: viewModel?.titleText?.value,
+      hintText: 'Enter your title here...',
+      onChanged: presenter.onTitleChanged,
+      maximumCharacterLength: 60,
+      minimumCharacterLength: 1,
       outsideTapStream: model.editableTextFieldController.stream,
       textStyle: TextStyle(
         color: viewModel.titleFontColor?.value ??
@@ -184,6 +189,7 @@ class EditorUpdateHelperPage extends StatelessWidget
             onTapCallback: () {
               HapticFeedback.selectionClick();
               presenter.addChangelogNote();
+              presenter.scrollToBottom();
             },
           ),
         ),
@@ -198,19 +204,19 @@ class EditorUpdateHelperPage extends StatelessWidget
   ) {
     return SizedBox(
       width: double.infinity,
-      height: 50.0,
-      child: RaisedButton(
-        color: PalTheme.of(context).colors.color1,
-        child: TextField(
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22.0,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        onPressed: () {},
-        shape: RoundedRectangleBorder(
+      child: EditableTextField(
+        outsideTapStream: model.editableTextFieldController.stream,
+        onChanged: presenter.onThanksChanged,
+        hintText: 'Thank you!',
+        maximumCharacterLength: 25,
+        backgroundBoxDecoration: BoxDecoration(
+          color: PalTheme.of(context).colors.color1,
           borderRadius: BorderRadius.circular(10.0),
+        ),
+        textStyle: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0,
+          fontWeight: FontWeight.w400,
         ),
       ),
     );

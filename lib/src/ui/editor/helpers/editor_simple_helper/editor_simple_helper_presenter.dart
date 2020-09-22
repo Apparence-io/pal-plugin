@@ -23,14 +23,6 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     // Init keys
     this.viewModel.containerKey = GlobalKey();
     this.viewModel.formKey = GlobalKey<FormState>();
-
-    // Init details textfield
-    this.viewModel.detailsController = TextEditingController();
-
-    // Add listeners for details textfield
-    this.viewModel.detailsController.addListener(() {
-      simpleHelperViewModel.details?.value = this.viewModel.detailsController?.value?.text;
-    });
   }
 
   @override
@@ -38,6 +30,10 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     this.viewModel.editableTextFieldController.close();
     this.viewModel.detailsController.dispose();
     super.onDestroy();
+  }
+
+  onDetailsChanged(Key key, String newValue) {
+    simpleHelperViewModel.details?.value = newValue;
   }
 
   onOutsideTap() {

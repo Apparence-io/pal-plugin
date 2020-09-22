@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 
@@ -6,17 +8,15 @@ class EditorFullScreenHelperModel extends MVVMModel {
   GlobalKey<FormState> formKey;
   GlobalKey titleKey;
 
-  // Title text field
   TextEditingController titleController;
-  
   double helperOpacity;
-  bool isToolbarVisible;
+  StreamController<bool> editableTextFieldController;
   
   EditorFullScreenHelperModel({
     this.helperOpacity,
     this.formKey,
     this.titleKey,
     this.titleController,
-    this.isToolbarVisible,
+    this.editableTextFieldController,
   });
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 
@@ -8,6 +10,8 @@ class EditorUpdateHelperModel extends MVVMModel {
   List<TextEditingController> changelogsControllers;
   TextEditingController thanksController;
   List<Widget> changelogsTextfieldWidgets;
+  StreamController<bool> editableTextFieldController;
+  bool isKeyboardVisible;
   
   EditorUpdateHelperModel({
     this.formKey,
@@ -16,5 +20,7 @@ class EditorUpdateHelperModel extends MVVMModel {
     this.changelogsControllers,
     this.changelogsTextfieldWidgets,
     this.thanksController,
+    this.editableTextFieldController,
+    this.isKeyboardVisible,
   });
 }

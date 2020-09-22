@@ -41,10 +41,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
   ) {
     return GestureDetector(
       key: ValueKey('palEditorFullscreenHelperWidget'),
-      onTap: () {
-        // Close the toolbar & unfocus textfield
-        // EditableTextField.globalKey.currentState.onCloseTap();
-      },
+      onTap: presenter.onOutsideTap,
       child: Material(
         color: Colors.transparent,
         shadowColor: Colors.transparent,
@@ -72,6 +69,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           EditableTextField.fixed(
+                            outsideTapStream: model.editableTextFieldController.stream,
                             helperToolbarKey: ValueKey(
                                 'palEditorFullscreenHelperWidgetToolbar'),
                             textFormFieldKey:

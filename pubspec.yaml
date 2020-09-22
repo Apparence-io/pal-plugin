@@ -18,6 +18,7 @@ dependencies:
   rxdart: ^0.24.1
   flutter_colorpicker: ^0.3.4
   dotted_border: ^1.0.6
+  keyboard_visibility: ^0.5.6
 
 dev_dependencies:
   flutter_test:

@@ -45,10 +45,7 @@ class EditorSimpleHelperPage extends StatelessWidget
   ) {
     return GestureDetector(
       key: ValueKey('palEditorSimpleHelperWidget'),
-      onTap: () {
-        // Close the toolbar & unfocus textfield
-        // EditableTextField.globalKey.currentState.onCloseTap();
-      },
+      onTap: presenter.onOutsideTap,
       child: LayoutBuilder(builder: (context, constraints) {
         return SingleChildScrollView(
           child: Container(
@@ -60,6 +57,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                 Container(
                   width: constraints.maxWidth * 0.8,
                   child: EditableTextField.floating(
+                    outsideTapStream: model.editableTextFieldController.stream,
                     helperToolbarKey:
                         ValueKey('palEditorSimpleHelperWidgetToolbar'),
                     textFormFieldKey: ValueKey('palSimpleHelperDetailField'),

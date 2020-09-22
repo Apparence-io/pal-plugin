@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
@@ -16,7 +18,7 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
   void onInit() {
     super.onInit();
 
-    this.viewModel.isToolbarVisible = true;
+    this.viewModel.editableTextFieldController = StreamController<bool>.broadcast();
 
     // Init keys
     this.viewModel.containerKey = GlobalKey();
@@ -31,17 +33,15 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     });
   }
 
-  // @override
-  // Future onDestroy() async {
-  //   this.viewModel.detailsFocus.dispose();
-  //   this.viewModel.detailsController.dispose();
-  //   super.onDestroy();
-  // }
+  @override
+  Future onDestroy() async {
+    this.viewModel.editableTextFieldController.close();
+    this.viewModel.detailsController.dispose();
+    super.onDestroy();
+  }
 
-  // Details text field stuff
-  onDetailTextFieldTapped() {
-    this.viewModel.isToolbarVisible = true;
-    this.refreshView();
+  onOutsideTap() {
+    this.viewModel.editableTextFieldController.add(true);
   }
 
   String validateDetailsTextField(String currentValue) {

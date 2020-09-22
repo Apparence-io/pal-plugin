@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,12 +26,14 @@ class EditableTextField extends StatefulWidget {
   final int maxLines;
   final String hintText;
   final List<TextInputFormatter> inputFormatters;
+  final Stream<bool> outsideTapStream;
 
   EditableTextField({
     Key key,
     this.textFormFieldKey,
     this.backgroundContainerKey,
     this.helperToolbarKey,
+    this.outsideTapStream,
     this.autovalidate = true,
     this.backgroundPadding,
     this.textFormFieldPadding,
@@ -48,6 +52,7 @@ class EditableTextField extends StatefulWidget {
     final Key textFormFieldKey,
     final Key backgroundContainerKey,
     final Key helperToolbarKey,
+    final Stream outsideTapStream,
     final bool autovalidate = true,
     final BoxDecoration backgroundBoxDecoration,
     final EdgeInsetsGeometry backgroundPadding,
@@ -55,13 +60,14 @@ class EditableTextField extends StatefulWidget {
     final String Function(String) validator,
     @required final TextEditingController textEditingController,
     final TextInputType keyboardType,
-    final String hintText,
+    final String hintText = 'Edit me!',
     @required final TextStyle textStyle,
     final int maxLines = 1,
     final List<TextInputFormatter> inputFormatters,
   }) =>
       EditableTextField(
         key: key,
+        outsideTapStream: outsideTapStream,
         textFormFieldKey: textFormFieldKey,
         backgroundContainerKey: backgroundContainerKey,
         helperToolbarKey: helperToolbarKey,
@@ -85,6 +91,7 @@ class EditableTextField extends StatefulWidget {
     final Key backgroundContainerKey,
     final Key helperToolbarKey,
     final bool autovalidate = true,
+    final Stream outsideTapStream,
     final BoxDecoration backgroundBoxDecoration,
     final EdgeInsetsGeometry backgroundPadding,
     final EdgeInsetsGeometry textFormFieldPadding,
@@ -92,7 +99,7 @@ class EditableTextField extends StatefulWidget {
     @required final TextEditingController textEditingController,
     final TextInputType keyboardType,
     @required final TextStyle textStyle,
-    final String hintText,
+    final String hintText = 'Edit me!',
     final int maxLines = 1,
     final List<TextInputFormatter> inputFormatters,
   }) =>
@@ -101,6 +108,7 @@ class EditableTextField extends StatefulWidget {
         textFormFieldKey: textFormFieldKey,
         backgroundContainerKey: backgroundContainerKey,
         helperToolbarKey: helperToolbarKey,
+        outsideTapStream: outsideTapStream,
         autovalidate: autovalidate,
         backgroundPadding: backgroundPadding,
         textFormFieldPadding: textFormFieldPadding,
@@ -121,6 +129,29 @@ class EditableTextField extends StatefulWidget {
 class _EditableTextFieldState extends State<EditableTextField> {
   bool _isToolbarVisible = false;
   FocusNode _focusNode = FocusNode();
+  StreamSubscription _outsideSub;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Install listener when focus change
+    _focusNode.addListener(_onFocusChange);
+
+    // Listen on stream when outside tap is detected
+    _outsideSub = widget.outsideTapStream?.listen((event) {
+      if (event) {
+        this._onCloseTap();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _outsideSub?.cancel();
+    _focusNode.removeListener(_onFocusChange);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,18 +162,18 @@ class _EditableTextFieldState extends State<EditableTextField> {
           if (_isToolbarVisible)
             EditHelperToolbar(
               key: widget.helperToolbarKey,
-              onChangeBorderTap: onChangeBorderTap,
-              onCloseTap: onCloseTap,
-              onChangeFontTap: onChangeFontTap,
-              onEditTextTap: onTextFieldTapped,
+              onChangeBorderTap: _onChangeBorderTap,
+              onCloseTap: _onCloseTap,
+              onChangeFontTap: _onChangeFontTap,
+              onEditTextTap: _onTextFieldTapped,
             ),
-          DottedBorder(
-            dashPattern: [6, 3],
-            color: Colors.black45,
-            child: Padding(
-              // FIXME: This is used to show element even if keyboard is shown
-              // should be better to find a way to not use it :/
-              padding: widget.backgroundPadding ?? EdgeInsets.zero,
+          Padding(
+            // FIXME: This is used to show element even if keyboard is shown
+            // should be better to find a way to not use it :/
+            padding: widget.backgroundPadding ?? EdgeInsets.zero,
+            child: DottedBorder(
+              dashPattern: [6, 3],
+              color: Colors.black45,
               child: Container(
                 decoration: widget.backgroundBoxDecoration,
                 key: widget.backgroundContainerKey,
@@ -153,11 +184,11 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     autovalidate: widget.autovalidate,
                     focusNode: _focusNode,
                     controller: widget.textEditingController,
-                    onTap: onTextFieldTapped,
+                    onTap: _onTextFieldTapped,
                     validator: widget.validator,
                     keyboardType: widget.keyboardType,
                     maxLines: widget.maxLines,
-                    onFieldSubmitted: onFieldSubmitted,
+                    onFieldSubmitted: _onFieldSubmitted,
                     cursorColor: widget.textStyle.color,
                     inputFormatters: widget.inputFormatters,
                     decoration: InputDecoration(
@@ -185,15 +216,29 @@ class _EditableTextFieldState extends State<EditableTextField> {
     );
   }
 
-  onTextFieldTapped() {
+  // Textfield stuff
+  _onTextFieldTapped() {
     _focusNode.requestFocus();
     setState(() {
       _isToolbarVisible = true;
     });
   }
 
-  onChangeBorderTap() {}
-  onCloseTap() {
+  _onFocusChange() {
+    if (!_focusNode.hasFocus) {
+      setState(() {
+        _isToolbarVisible = false;
+      });
+    }
+  }
+
+  _onFieldSubmitted(String newValue) {
+    this._onCloseTap();
+  }
+
+  // Toolbar stuff
+  _onChangeBorderTap() {}
+  _onCloseTap() {
     _focusNode.unfocus();
 
     setState(() {
@@ -201,8 +246,5 @@ class _EditableTextFieldState extends State<EditableTextField> {
     });
   }
 
-  onChangeFontTap() {}
-  onFieldSubmitted(String newValue) {
-    this.onCloseTap();
-  }
+  _onChangeFontTap() {}
 }

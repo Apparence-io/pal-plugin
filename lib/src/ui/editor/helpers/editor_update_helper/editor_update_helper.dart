@@ -50,74 +50,83 @@ class EditorUpdateHelperPage extends StatelessWidget
     final EditorUpdateHelperPresenter presenter,
     final EditorUpdateHelperModel model,
   ) {
-    return SafeArea(
-      child: Padding(
-        // Ignore bottom actions button
-        padding: const EdgeInsets.only(bottom: 90.0),
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Form(
-            key: model.formKey,
-            child: DottedBorder(
-              strokeWidth: 2.0,
-              strokeCap: StrokeCap.round,
-              dashPattern: [10, 7],
-              color: Colors.black54,
-              child: Container(
-                width: double.infinity,
-                color: viewModel.backgroundColor?.value,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      resizeToAvoidBottomPadding: true,
+      body: GestureDetector(
+        onTap: presenter.onOutsideTap,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: (model.isKeyboardVisible ? 0.0 : 90.0)),
+            child: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Form(
+                key: model.formKey,
+                child: DottedBorder(
+                  strokeWidth: 2.0,
+                  strokeCap: StrokeCap.round,
+                  dashPattern: [10, 7],
+                  color: Colors.black54,
+                  child: Container(
+                    width: double.infinity,
+                    color: viewModel.backgroundColor?.value,
+                    child: Stack(
+                      fit: StackFit.expand,
                       children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 40.0),
-                                    child: Image.asset(
-                                      'packages/palplugin/assets/images/create_helper.png',
-                                      height: 200.0,
-                                    ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 40.0),
+                                        child: Image.asset(
+                                          'packages/palplugin/assets/images/create_helper.png',
+                                          height: 200.0,
+                                        ),
+                                      ),
+                                      _buildTitleField(
+                                          context, presenter, model),
+                                      SizedBox(height: 25.0),
+                                      _buildChangelogFields(
+                                          context, presenter, model),
+                                    ],
                                   ),
-                                  _buildTitleField(context, presenter, model),
-                                  SizedBox(height: 25.0),
-                                  _buildChangelogFields(
-                                      context, presenter, model),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                bottom: 15.0,
+                                left: 10.0,
+                                right: 10.0,
+                              ),
+                              child:
+                                  _buildThanksButton(context, presenter, model),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 15.0,
-                            left: 10.0,
-                            right: 10.0,
+                        Positioned(
+                          top: 20.0,
+                          left: 20.0,
+                          child: CircleIconButton(
+                            icon: Icon(Icons.invert_colors),
+                            backgroundColor: PalTheme.of(context).colors.light,
+                            onTapCallback: () => presenter
+                                .changeBackgroundColor(context, presenter),
                           ),
-                          child: _buildThanksButton(context, presenter, model),
                         ),
                       ],
                     ),
-                    Positioned(
-                      top: 20.0,
-                      left: 20.0,
-                      child: CircleIconButton(
-                        icon: Icon(Icons.invert_colors),
-                        backgroundColor: PalTheme.of(context).colors.light,
-                        onTapCallback: () =>
-                            presenter.changeBackgroundColor(context, presenter),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -141,6 +150,7 @@ class EditorUpdateHelperPage extends StatelessWidget
       ),
       textEditingController: model.titleController,
       hintText: viewModel?.titleText?.value,
+      outsideTapStream: model.editableTextFieldController.stream,
       textStyle: TextStyle(
         color: viewModel.titleFontColor?.value ??
             PalTheme.of(context).simpleHelperFontColor,

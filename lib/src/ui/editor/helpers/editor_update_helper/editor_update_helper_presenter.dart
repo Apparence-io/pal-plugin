@@ -53,13 +53,22 @@ class EditorUpdateHelperPresenter
   addChangelogNote() {
     var changelogController = TextEditingController();
 
+    String hintText;
+    if (this.viewModel.changelogsTextfieldWidgets.length <= 0) {
+      hintText = 'Enter your first update line here...';
+    } else {
+      hintText = 'Enter update line here...';
+    }
+
     UpdateHelperViewModel viewModel = this.viewInterface.getModel();
-    viewModel.changelogFontColor?.value?.add(Colors.red);
-    viewModel.changelogFontSize?.value?.add(50.0);
+    viewModel.changelogFontColor?.value?.add(Colors.black87);
+    viewModel.changelogFontSize?.value?.add(14.0);
+    viewModel.changelogText?.value?.add(hintText);
 
     this.viewModel.changelogsControllers.add(changelogController);
     this.viewModel.changelogsTextfieldWidgets.add(
           EditableTextField.floating(
+            hintText: viewModel.changelogText?.value?.last,
             textStyle: TextStyle(
               color: viewModel.changelogFontColor?.value?.last,
               fontSize: viewModel.changelogFontSize?.value?.last,

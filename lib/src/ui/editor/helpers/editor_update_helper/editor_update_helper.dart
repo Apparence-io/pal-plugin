@@ -89,7 +89,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                                     ),
                                   ),
                                   _buildTitleField(context, presenter, model),
-                                  SizedBox(height: 5.0),
+                                  SizedBox(height: 25.0),
                                   _buildChangelogFields(
                                       context, presenter, model),
                                 ],

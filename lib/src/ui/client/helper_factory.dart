@@ -8,7 +8,6 @@ class HelperFactory {
   static Widget build(final HelperEntity helper, {final Function onTrigger}){
     switch(helper.runtimeType){
       case HelperFullScreenEntity :
-
         return _createHelperFullScreen(helper as HelperFullScreenEntity, onTrigger);
     }
     return null;

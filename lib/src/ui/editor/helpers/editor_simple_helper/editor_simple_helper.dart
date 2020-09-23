@@ -79,8 +79,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                             new RegExp('^(.*(\n.*){0,2})')),
                       ],
                       backgroundBoxDecoration: BoxDecoration(
-                        color: viewModel.backgroundColor?.value ??
-                            PalTheme.of(context).simpleHelperBackgroundColor,
+                        color: viewModel.detailsField?.backgroundColor?.value,
                         borderRadius: BorderRadius.circular(6.0),
                       ),
                       backgroundPadding: EdgeInsets.only(
@@ -92,9 +91,8 @@ class EditorSimpleHelperPage extends StatelessWidget
                         horizontal: 33.0,
                       ),
                       textStyle: TextStyle(
-                        color: viewModel.fontColor?.value ??
-                            PalTheme.of(context).simpleHelperFontColor,
-                        fontSize: viewModel.fontSize?.value ?? 14.0,
+                        color: viewModel.detailsField?.fontColor?.value,
+                        fontSize: viewModel.detailsField?.fontSize?.value,
                       ),
                     ),
                   ),

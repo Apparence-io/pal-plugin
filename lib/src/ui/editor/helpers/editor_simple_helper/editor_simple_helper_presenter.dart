@@ -32,7 +32,7 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
   }
 
   onDetailsFieldChanged(Key key, String newValue) {
-    simpleHelperViewModel.details?.value = newValue;
+    simpleHelperViewModel.detailsField?.text?.value = newValue;
   }
 
   onOutsideTap() {

@@ -79,13 +79,9 @@ class EditorFullScreenHelperPage extends StatelessWidget
                             maximumCharacterLength: 20,
                             minimumCharacterLength: 1,
                             textStyle: TextStyle(
-                              color: viewModel.fontColor?.value,
+                              color: viewModel.titleField?.fontColor?.value,
                               decoration: TextDecoration.none,
-                              fontSize: viewModel.fontSize?.value ??
-                                  Theme.of(context)
-                                      .textTheme
-                                      .headline2
-                                      .fontSize,
+                              fontSize: viewModel.titleField?.fontSize?.value,
                             ),
                           ),
                           Padding(
@@ -95,7 +91,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
                               child: Text(
                                 "Ok, thanks !",
                                 style: TextStyle(
-                                  color: viewModel.fontColor?.value,
+                                  color: Colors.white,
                                   fontSize: 18,
                                   decoration: TextDecoration.underline,
                                 ),
@@ -110,7 +106,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
                               child: Text(
                                 "This is not helping",
                                 style: TextStyle(
-                                  color: viewModel.fontColor?.value,
+                                  color: Colors.white,
                                   fontSize: 10,
                                 ),
                                 textAlign: TextAlign.center,

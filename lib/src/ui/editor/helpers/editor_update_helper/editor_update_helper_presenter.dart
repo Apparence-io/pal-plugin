@@ -74,11 +74,11 @@ class EditorUpdateHelperPresenter
   }
 
   onTitleFieldChanged(Key key, String newValue) {
-    updateHelperViewModel.titleText?.value = newValue;
+    updateHelperViewModel.titleField?.text?.value = newValue;
   }
 
   onThanksFieldChanged(Key key, String newValue) {
-    updateHelperViewModel.thanksButtonText?.value = newValue;
+    updateHelperViewModel.thanksButton?.text?.value = newValue;
   }
 
   changeBackgroundColor(

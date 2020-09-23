@@ -32,7 +32,7 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
   }
 
   onTitleChanged(Key key, String newValue) {
-    fullscreenHelperViewModel.title?.value = newValue;
+    fullscreenHelperViewModel.titleField?.text?.value = newValue;
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
@@ -169,15 +170,14 @@ class EditorUpdateHelperPage extends StatelessWidget
       textFormFieldKey: ValueKey(
         'pal_EditorUpdateHelperWidget_TitleField',
       ),
-      hintText: 'Enter your title here...',
+      hintText: viewModel.titleField?.hintText,
       onChanged: presenter.onTitleFieldChanged,
       maximumCharacterLength: 60,
       minimumCharacterLength: 1,
       outsideTapStream: model.editableTextFieldController.stream,
       textStyle: TextStyle(
-        color: viewModel.titleFontColor?.value ??
-            PalTheme.of(context).simpleHelperFontColor,
-        fontSize: viewModel.titleFontSize?.value ?? 24.0,
+        color: viewModel.titleField?.fontColor?.value,
+        fontSize: viewModel.titleField?.fontSize?.value,
       ),
     );
   }
@@ -232,7 +232,7 @@ class EditorUpdateHelperPage extends StatelessWidget
         ),
         outsideTapStream: model.editableTextFieldController.stream,
         onChanged: presenter.onThanksFieldChanged,
-        hintText: 'Thank you!',
+        hintText: viewModel.thanksButton?.hintText,
         maximumCharacterLength: 25,
         backgroundBoxDecoration: BoxDecoration(
           color: PalTheme.of(context).colors.color1,
@@ -272,19 +272,13 @@ class EditorUpdateHelperPage extends StatelessWidget
     String textFormMapKey,
   ) {
     // Assign defaults values
-    this
-        .viewModel
-        .changelogFontColor
-        ?.value
-        ?.putIfAbsent(textFormMapKey, () => Colors.black87);
-    this
-        .viewModel
-        .changelogFontSize
-        ?.value
-        ?.putIfAbsent(textFormMapKey, () => 14.0);
-    this.viewModel.changelogText?.value?.putIfAbsent(
+    this.viewModel.changelogsFields?.putIfAbsent(
           textFormMapKey,
-          () => '',
+          () => TextFormFieldNotifier(
+            text: '',
+            fontSize: 14.0,
+            fontColor: Colors.black87,
+          ),
         );
 
     model.changelogsTextfieldWidgets.add(
@@ -295,11 +289,14 @@ class EditorUpdateHelperPage extends StatelessWidget
         hintText: hintText,
         maximumCharacterLength: 120,
         textStyle: TextStyle(
-          color: this.viewModel.changelogFontColor?.value[textFormMapKey],
-          fontSize: this.viewModel.changelogFontSize?.value[textFormMapKey],
+          color:
+              this.viewModel.changelogsFields[textFormMapKey]?.fontColor?.value,
+          fontSize:
+              this.viewModel.changelogsFields[textFormMapKey]?.fontSize?.value,
         ),
         onChanged: (Key key, String newValue) {
-          this.viewModel.changelogText?.value[textFormMapKey] = newValue;
+          this.viewModel.changelogsFields[textFormMapKey]?.text?.value =
+              newValue;
         },
       ),
     );

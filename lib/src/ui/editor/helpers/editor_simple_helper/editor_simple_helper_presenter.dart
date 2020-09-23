@@ -28,11 +28,10 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
   @override
   Future onDestroy() async {
     this.viewModel.editableTextFieldController.close();
-    this.viewModel.detailsController.dispose();
     super.onDestroy();
   }
 
-  onDetailsChanged(Key key, String newValue) {
+  onDetailsFieldChanged(Key key, String newValue) {
     simpleHelperViewModel.details?.value = newValue;
   }
 

@@ -120,7 +120,6 @@ class HelperEditorPresenter
     CreateHelperEntity createHelperEntity =
         EditorFactory.build(helperViewModel);
 
-    print(createHelperEntity);
     HelperEntity helperEntity =
         await this.helperService.createPageHelper(pageId, createHelperEntity);
     viewModel.isLoading = false;

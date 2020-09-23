@@ -22,24 +22,24 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     this.viewModel.titleKey = GlobalKey();
     this.viewModel.formKey = GlobalKey<FormState>();
 
-    this.viewModel.helperOpacity = 0;
+    this.viewModel.helperOpacity = 1;
 
-    Future.delayed(Duration(seconds: 1), () {
-      this.viewModel.helperOpacity = 1;
-      this.refreshView();
-    });
+    // Disable animation on editor mode ?
+    // Future.delayed(Duration(seconds: 1), () {
+    //   this.viewModel.helperOpacity = 1;
+    //   this.refreshView();
+    // });
   }
 
   onTitleChanged(Key key, String newValue) {
     fullscreenHelperViewModel.title?.value = newValue;
   }
 
-  // @override
-  // Future onDestroy() async {
-  //   this.viewModel.editableTextFieldController.close();
-  //   this.viewModel.titleController.dispose();
-  //   super.onDestroy();
-  // }
+  @override
+  Future onDestroy() async {
+    this.viewModel.editableTextFieldController.close();
+    super.onDestroy();
+  }
 
   onOutsideTap() {
     this.viewModel.editableTextFieldController.add(true);

@@ -63,7 +63,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
   @override
   void initState() {
     super.initState();
-    print(widget.key);
 
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);

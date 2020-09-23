@@ -12,8 +12,19 @@ import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
 abstract class EditorUpdateHelperView {
   void showColorPickerDialog(
-      BuildContext context, EditorUpdateHelperPresenter presenter);
-  UpdateHelperViewModel getModel();
+    BuildContext context,
+    EditorUpdateHelperPresenter presenter,
+  );
+  void addChangelogNoteTextField(
+    EditorUpdateHelperModel model,
+    Key textFormFieldKey,
+    Key textFormToolbarKey,
+    String hintText,
+    String textFormMapKey,
+  );
+  void scrollToBottomChangelogList(
+    EditorUpdateHelperModel model,
+  );
 }
 
 class EditorUpdateHelperPage extends StatelessWidget
@@ -63,6 +74,12 @@ class EditorUpdateHelperPage extends StatelessWidget
               padding: const EdgeInsets.all(2.0),
               child: Form(
                 key: model.formKey,
+                autovalidate: true,
+                onChanged: () {
+                  if (onFormChanged != null) {
+                    onFormChanged(model.formKey?.currentState?.validate());
+                  }
+                },
                 child: DottedBorder(
                   strokeWidth: 2.0,
                   strokeCap: StrokeCap.round,
@@ -152,7 +169,7 @@ class EditorUpdateHelperPage extends StatelessWidget
         'pal_EditorUpdateHelperWidget_TitleField',
       ),
       hintText: 'Enter your title here...',
-      onChanged: presenter.onTitleChanged,
+      onChanged: presenter.onTitleFieldChanged,
       maximumCharacterLength: 60,
       minimumCharacterLength: 1,
       outsideTapStream: model.editableTextFieldController.stream,
@@ -188,8 +205,8 @@ class EditorUpdateHelperPage extends StatelessWidget
             displayShadow: false,
             onTapCallback: () {
               HapticFeedback.selectionClick();
-              presenter.addChangelogNote();
-              presenter.scrollToBottom();
+              presenter.addChangelogNote(model);
+              this.scrollToBottomChangelogList(model);
             },
           ),
         ),
@@ -206,7 +223,7 @@ class EditorUpdateHelperPage extends StatelessWidget
       width: double.infinity,
       child: EditableTextField(
         outsideTapStream: model.editableTextFieldController.stream,
-        onChanged: presenter.onThanksChanged,
+        onChanged: presenter.onThanksFieldChanged,
         hintText: 'Thank you!',
         maximumCharacterLength: 25,
         backgroundBoxDecoration: BoxDecoration(
@@ -239,7 +256,56 @@ class EditorUpdateHelperPage extends StatelessWidget
   }
 
   @override
-  UpdateHelperViewModel getModel() {
-    return this.viewModel;
+  void addChangelogNoteTextField(
+    EditorUpdateHelperModel model,
+    Key textFormFieldKey,
+    Key textFormToolbarKey,
+    String hintText,
+    String textFormMapKey,
+  ) {
+    // Assign defaults values
+    this
+        .viewModel
+        .changelogFontColor
+        ?.value
+        ?.putIfAbsent(textFormMapKey, () => Colors.black87);
+    this
+        .viewModel
+        .changelogFontSize
+        ?.value
+        ?.putIfAbsent(textFormMapKey, () => 14.0);
+    this.viewModel.changelogText?.value?.putIfAbsent(
+          textFormMapKey,
+          () => '',
+        );
+
+    model.changelogsTextfieldWidgets.add(
+      EditableTextField(
+        textFormFieldKey: textFormFieldKey,
+        helperToolbarKey: textFormToolbarKey,
+        outsideTapStream: model.editableTextFieldController.stream,
+        hintText: hintText,
+        maximumCharacterLength: 120,
+        textStyle: TextStyle(
+          color: this.viewModel.changelogFontColor?.value[textFormMapKey],
+          fontSize: this.viewModel.changelogFontSize?.value[textFormMapKey],
+        ),
+        onChanged: (Key key, String newValue) {
+          this.viewModel.changelogText?.value[textFormMapKey] = newValue;
+        },
+      ),
+    );
+  }
+
+  scrollToBottomChangelogList(
+    EditorUpdateHelperModel model,
+  ) {
+    if (model.scrollController.hasClients) {
+      model.scrollController.animateTo(
+        0.0,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 500),
+      );
+    }
   }
 }

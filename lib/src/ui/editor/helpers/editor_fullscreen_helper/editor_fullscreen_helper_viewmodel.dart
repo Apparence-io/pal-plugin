@@ -8,7 +8,6 @@ class EditorFullScreenHelperModel extends MVVMModel {
   GlobalKey<FormState> formKey;
   GlobalKey titleKey;
 
-  TextEditingController titleController;
   double helperOpacity;
   StreamController<bool> editableTextFieldController;
   
@@ -16,7 +15,6 @@ class EditorFullScreenHelperModel extends MVVMModel {
     this.helperOpacity,
     this.formKey,
     this.titleKey,
-    this.titleController,
     this.editableTextFieldController,
   });
 }

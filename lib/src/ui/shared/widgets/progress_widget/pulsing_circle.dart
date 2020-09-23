@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/theme.dart';
 
-class PulsingCircle extends StatefulWidget {
+/* Controller class */
+class PulsingCircleWidget extends StatefulWidget {
   final bool active;
   final bool done;
 
-  const PulsingCircle({Key key, this.active, this.done}) : super(key: key);
+  const PulsingCircleWidget({Key key, this.active, this.done}) : super(key: key);
 
   @override
-  _PulsingCircleState createState() => _PulsingCircleState();
+  _PulsingCircleWidgetState createState() => _PulsingCircleWidgetState();
 }
 
-class _PulsingCircleState extends State<PulsingCircle> with SingleTickerProviderStateMixin{
+class _PulsingCircleWidgetState extends State<PulsingCircleWidget> with SingleTickerProviderStateMixin {
   // CORE ATTRIBUTES
   AnimationController controller;
   Animation animation;
@@ -37,16 +38,30 @@ class _PulsingCircleState extends State<PulsingCircle> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: this.controller,
-
-        builder: (context, child) =>
-         CircleAvatar(
-          //  COLOR BASED ON IF THE CIRCLE IS DONE / ACTIVE / NONE
+      animation: this.controller,
+      builder: (context, child) => CircleRender(
+        //  COLOR BASED ON IF THE CIRCLE IS DONE / ACTIVE / NONE
           // IN THE ORDER BELOW : DARK / CYAN / GREY
-          backgroundColor: widget.done ? PalTheme.of(context).colors.dark  : widget.active ? PalTheme.of(context).colors.color3 : Color(0xFFC1BFD6) ,
-          // IF THE CIRCLE IS ACTIVE : ANIMATED / IF NOT : STATIC
-          radius: widget.active ? this.animation.value : 8,
-        ),
-      );
+        color:widget.done ? PalTheme.of(context).colors.dark  : widget.active ? PalTheme.of(context).colors.color3 : Color(0xFFC1BFD6) ,
+        // IF THE CIRCLE IS ACTIVE : ANIMATED / IF NOT : STATIC
+        radius: widget.active ? this.animation.value : 8,
+      ),
+    );
+  }
+}
+
+/* Render class */
+class CircleRender extends StatelessWidget {
+  final Color color;
+  final double radius;
+
+  const CircleRender({Key key, this.color, this.radius}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+          backgroundColor: this.color,
+          radius: this.radius
+        );
   }
 }

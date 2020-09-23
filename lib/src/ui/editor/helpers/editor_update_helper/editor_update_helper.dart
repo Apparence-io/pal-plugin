@@ -62,7 +62,6 @@ class EditorUpdateHelperPage extends StatelessWidget
     final EditorUpdateHelperModel model,
   ) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
       resizeToAvoidBottomPadding: true,
       body: GestureDetector(
         onTap: presenter.onOutsideTap,
@@ -138,6 +137,8 @@ class EditorUpdateHelperPage extends StatelessWidget
                           top: 20.0,
                           left: 20.0,
                           child: CircleIconButton(
+                            key: ValueKey(
+                                'pal_EditorUpdateHelperWidget_BackgroundColorPicker'),
                             icon: Icon(Icons.invert_colors),
                             backgroundColor: PalTheme.of(context).colors.light,
                             onTapCallback: () => presenter
@@ -196,6 +197,7 @@ class EditorUpdateHelperPage extends StatelessWidget
         Padding(
           padding: const EdgeInsets.only(top: 5.0, bottom: 16.0),
           child: CircleIconButton(
+            key: ValueKey('pal_EditorUpdateHelperWidget_AddNote'),
             backgroundColor: Colors.transparent,
             icon: Icon(
               Icons.add,
@@ -222,6 +224,12 @@ class EditorUpdateHelperPage extends StatelessWidget
     return SizedBox(
       width: double.infinity,
       child: EditableTextField(
+        helperToolbarKey: ValueKey(
+          'pal_EditorUpdateHelperWidget_ThanksButtonToolbar',
+        ),
+        textFormFieldKey: ValueKey(
+          'pal_EditorUpdateHelperWidget_ThanksButtonField',
+        ),
         outsideTapStream: model.editableTextFieldController.stream,
         onChanged: presenter.onThanksFieldChanged,
         hintText: 'Thank you!',

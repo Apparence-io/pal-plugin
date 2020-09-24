@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper_widget.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_widget.dart';
 
 void main() {
   group('[Client] Update helper widget', () {

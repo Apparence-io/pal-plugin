@@ -1,56 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
+import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/release_note_tile.dart';
 
-class UserUpdateHelperWidget extends StatefulWidget {
+abstract class UserUpdateHelperView {}
+
+class UserUpdateHelperPage extends StatelessWidget
+    implements UserUpdateHelperView {
   final Color backgroundColor;
   final CustomLabel titleLabel;
   final List<CustomLabel> changelogLabels;
   final CustomLabel thanksButtonLabel;
+  final PackageVersionReader packageVersionReader;
 
-  UserUpdateHelperWidget({
+  UserUpdateHelperPage({
     Key key,
     @required this.backgroundColor,
     @required this.titleLabel,
     @required this.changelogLabels,
     this.thanksButtonLabel,
+    this.packageVersionReader,
   })  : assert(backgroundColor != null),
         assert(titleLabel != null),
-        assert(changelogLabels != null),
-        super(key: key);
+        assert(changelogLabels != null);
 
-  @override
-  _UserUpdateHelperWidgetState createState() => _UserUpdateHelperWidgetState();
-}
-
-class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
-  double helperOpacity = 0;
-  String appVersion = '--';
-
-  @override
-  void initState() {
-    super.initState();
-    _readAppInfo();
-    Future.delayed(Duration(seconds: 1), () {
-      setState(() => helperOpacity = 1);
-    });
-  }
-
-  _readAppInfo() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    this.appVersion = packageInfo?.version;
-  }
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<UserUpdateHelperPresenter, UserUpdateHelperModel>();
 
   @override
   Widget build(BuildContext context) {
+    return _mvvmPageBuilder.build(
+      key: UniqueKey(),
+      context: context,
+      singleAnimControllerBuilder: (tickerProvider) => AnimationController(
+        vsync: tickerProvider,
+        duration: Duration(
+          milliseconds: 1100,
+        ),
+      ),
+      animListener: (context, presenter, model) {
+        if (model.changelogCascadeAnimation) {
+          context.animationController.forward().then(
+                (value) => presenter.onCascadeAnimationEnd(),
+              );
+        }
+      },
+      presenterBuilder: (context) => UserUpdateHelperPresenter(
+        this,
+        packageVersionReader ?? UserInjector.of(context).packageVersionReader,
+      ),
+      builder: (context, presenter, model) {
+        return this._buildPage(context, presenter, model);
+      },
+    );
+  }
+
+  Widget _buildPage(
+    final MvvmContext context,
+    final UserUpdateHelperPresenter presenter,
+    final UserUpdateHelperModel model,
+  ) {
     return AnimatedOpacity(
       duration: Duration(milliseconds: 500),
       curve: Curves.fastOutSlowIn,
-      opacity: helperOpacity,
+      opacity: model.helperOpacity,
       child: Scaffold(
         key: ValueKey('pal_UserUpdateHelperWidget_Scaffold'),
-        backgroundColor: widget.backgroundColor,
+        backgroundColor: backgroundColor,
         body: SafeArea(
           child: Container(
             width: double.infinity,
@@ -65,14 +86,14 @@ class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
                   Flexible(
                     key: ValueKey('pal_UserUpdateHelperWidget_AppSummary'),
                     flex: 2,
-                    child: buildAppSummary(),
+                    child: buildAppSummary(context.buildContext, model),
                   ),
                   Expanded(
                     key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes'),
                     flex: 5,
-                    child: _buildReleaseNotes(),
+                    child: _buildReleaseNotes(context, model),
                   ),
-                  buildThanksButton(),
+                  buildThanksButton(context.buildContext, model),
                 ],
               ),
             ),
@@ -96,27 +117,29 @@ class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
     );
   }
 
-  Container buildAppSummary() {
+  Container buildAppSummary(
+    final BuildContext context,
+    final UserUpdateHelperModel model,
+  ) {
     return Container(
       width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            widget.titleLabel?.text ?? 'New application update',
+            titleLabel?.text ?? 'New application update',
             key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
             style: TextStyle(
-              fontSize: widget.titleLabel?.fontSize ?? 27.0,
+              fontSize: titleLabel?.fontSize ?? 27.0,
               fontWeight: FontWeight.bold,
-              color: widget.titleLabel?.fontColor ??
-                  PalTheme.of(context).colors.light,
+              color: titleLabel?.fontColor ?? PalTheme.of(context).colors.light,
             ),
           ),
           SizedBox(
             height: 10.0,
           ),
           Text(
-            'Version $appVersion',
+            'Version ${model.appVersion}',
             key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Version'),
             style: TextStyle(
               fontSize: 13.0,
@@ -129,7 +152,10 @@ class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
     );
   }
 
-  SizedBox buildThanksButton() {
+  SizedBox buildThanksButton(
+    final BuildContext context,
+    final UserUpdateHelperModel model,
+  ) {
     return SizedBox(
       key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton'),
       width: double.infinity,
@@ -149,10 +175,10 @@ class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Text(
-              widget.thanksButtonLabel?.text ?? 'Thank you !',
+              thanksButtonLabel?.text ?? 'Thank you !',
               style: TextStyle(
-                fontSize: widget.thanksButtonLabel?.fontSize ?? 18.0,
-                color: widget.thanksButtonLabel?.fontColor ?? Colors.white,
+                fontSize: thanksButtonLabel?.fontSize ?? 18.0,
+                color: thanksButtonLabel?.fontColor ?? Colors.white,
               ),
             ),
           ),
@@ -161,7 +187,10 @@ class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
     );
   }
 
-  SingleChildScrollView _buildReleaseNotes() {
+  SingleChildScrollView _buildReleaseNotes(
+    final MvvmContext context,
+    final UserUpdateHelperModel model,
+  ) {
     return SingleChildScrollView(
       child: Container(
         width: double.infinity,
@@ -169,54 +198,38 @@ class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 27.0),
           child: Column(
             key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List'),
-            children: _buildReleaseNotesLabels(),
+            children: _buildReleaseNotesLabels(context, model),
           ),
         ),
       ),
     );
   }
 
-  List<Widget> _buildReleaseNotesLabels() {
+  List<Widget> _buildReleaseNotesLabels(
+    final MvvmContext context,
+    final UserUpdateHelperModel model,
+  ) {
     List<Widget> labels = [];
     int index = 0;
-    for (CustomLabel label in widget.changelogLabels) {
+    for (CustomLabel label in changelogLabels) {
+      var stepTime = 1.0 / changelogLabels.length;
+      var animationStart = stepTime * index;
+      var animationEnd = stepTime + animationStart;
+      // var label = widget.changelogLabels[index];
       Widget textLabel = Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
-        child: _buildReleaseNoteLabel(label, index++),
+        child: ReleaseNoteTile(
+          index: index++,
+          text: label?.text,
+          fontColor: label?.fontColor,
+          fontSize: label?.fontSize,
+          animationController: context.animationController,
+          animationStart: animationStart,
+          animationEnd: animationEnd,
+        ),
       );
       labels.add(textLabel);
     }
     return labels;
-  }
-
-  Widget _buildReleaseNoteLabel(
-    CustomLabel label,
-    int index,
-  ) {
-    Color fontColor = label?.fontColor ?? Colors.white;
-    double fontSize = label?.fontSize ?? 15.0;
-
-    return RichText(
-      key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_$index'),
-      textAlign: TextAlign.center,
-      text: TextSpan(
-        text: '•  ',
-        style: TextStyle(
-          color: fontColor,
-          fontSize: fontSize,
-          fontWeight: FontWeight.w900,
-        ),
-        children: <TextSpan>[
-          TextSpan(
-            text: label?.text,
-            style: TextStyle(
-              color: fontColor,
-              fontSize: fontSize,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 
 class UserUpdateHelperWidget extends StatefulWidget {
@@ -24,13 +26,20 @@ class UserUpdateHelperWidget extends StatefulWidget {
 
 class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
   double helperOpacity = 0;
+  String appVersion = '--';
 
   @override
   void initState() {
     super.initState();
+    _readAppInfo();
     Future.delayed(Duration(seconds: 1), () {
       setState(() => helperOpacity = 1);
     });
+  }
+
+  _readAppInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    this.appVersion = packageInfo?.version;
   }
 
   @override
@@ -40,106 +49,173 @@ class _UserUpdateHelperWidgetState extends State<UserUpdateHelperWidget> {
       curve: Curves.fastOutSlowIn,
       opacity: helperOpacity,
       child: Scaffold(
+        key: ValueKey('pal_UserUpdateHelperWidget_Scaffold'),
         backgroundColor: widget.backgroundColor,
         body: SafeArea(
           child: Container(
             width: double.infinity,
             child: Container(
-              color: Colors.green,
               child: Column(
                 children: [
                   Flexible(
-                    flex: 3,
-                    child: Container(
-                      width: double.infinity,
-                      color: Colors.blue,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Image.asset(
-                          'packages/palplugin/assets/images/create_helper.png',
-                          key: ValueKey('palCreateHelperImage'),
-                          // height: 282.0,
-                        ),
-                      ),
-                    ),
+                    key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
+                    flex: 4,
+                    child: buildIcon(),
                   ),
                   Flexible(
-                    flex: 1,
-                    child: Container(
-                      width: double.infinity,
-                      color: Colors.red,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'New title',
-                            style: TextStyle(
-                              fontSize: 31,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Text(
-                            'Version / 20',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    key: ValueKey('pal_UserUpdateHelperWidget_AppSummary'),
+                    flex: 2,
+                    child: buildAppSummary(),
                   ),
                   Expanded(
-                    flex: 4,
-                    child: SingleChildScrollView(
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.yellow,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                '- My first awesome feature',
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                '- My second app awesome feature',
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                '- My last app awesome feature I wanna be sure you are aware of',
-                                textAlign: TextAlign.center,
-                              ), 
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes'),
+                    flex: 5,
+                    child: _buildReleaseNotes(),
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 20.0,
-                        right: 20.0,
-                        bottom: 10.0,
-                      ),
-                      child: RaisedButton(
-                        onPressed: () {},
-                        child: Text('Thank you!', style: TextStyle(
-                          fontSize: 14,
-                        ),),
-                      ),
-                    ),
-                  ),
+                  buildThanksButton(),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Container buildIcon() {
+    return Container(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Image.asset(
+          'packages/palplugin/assets/images/create_helper.png',
+          key: ValueKey('pal_UserUpdateHelperWidget_Icon_Image'),
+          // height: 282.0,
+        ),
+      ),
+    );
+  }
+
+  Container buildAppSummary() {
+    return Container(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            widget.titleLabel?.text ?? 'New application update',
+            key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
+            style: TextStyle(
+              fontSize: widget.titleLabel?.fontSize ?? 27.0,
+              fontWeight: FontWeight.bold,
+              color: widget.titleLabel?.fontColor ??
+                  PalTheme.of(context).colors.light,
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            'Version $appVersion',
+            key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Version'),
+            style: TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox buildThanksButton() {
+    return SizedBox(
+      key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton'),
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 20.0,
+          right: 20.0,
+          bottom: 15.0,
+        ),
+        child: RaisedButton(
+          key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised'),
+          color: PalTheme.of(context).colors.dark,
+          onPressed: () {},
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Text(
+              widget.thanksButtonLabel?.text ?? 'Thank you !',
+              style: TextStyle(
+                fontSize: widget.thanksButtonLabel?.fontSize ?? 18.0,
+                color: widget.thanksButtonLabel?.fontColor ?? Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  SingleChildScrollView _buildReleaseNotes() {
+    return SingleChildScrollView(
+      child: Container(
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 27.0),
+          child: Column(
+            key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List'),
+            children: _buildReleaseNotesLabels(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildReleaseNotesLabels() {
+    List<Widget> labels = [];
+    int index = 0;
+    for (CustomLabel label in widget.changelogLabels) {
+      Widget textLabel = Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: _buildReleaseNoteLabel(label, index++),
+      );
+      labels.add(textLabel);
+    }
+    return labels;
+  }
+
+  Widget _buildReleaseNoteLabel(
+    CustomLabel label,
+    int index,
+  ) {
+    Color fontColor = label?.fontColor ?? Colors.white;
+    double fontSize = label?.fontSize ?? 15.0;
+
+    return RichText(
+      key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_$index'),
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        text: '•  ',
+        style: TextStyle(
+          color: fontColor,
+          fontSize: fontSize,
+          fontWeight: FontWeight.w900,
+        ),
+        children: <TextSpan>[
+          TextSpan(
+            text: label?.text,
+            style: TextStyle(
+              color: fontColor,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
       ),
     );
   }

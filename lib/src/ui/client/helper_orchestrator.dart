@@ -7,7 +7,6 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helper_factory.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_widget.dart';
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
 /// On each page visited we check if we have to show a new helper to user

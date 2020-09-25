@@ -6,6 +6,7 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/release_note_tile.dart';
 
 abstract class UserUpdateHelperView {}
@@ -37,17 +38,32 @@ class UserUpdateHelperPage extends StatelessWidget
     return _mvvmPageBuilder.build(
       key: UniqueKey(),
       context: context,
-      singleAnimControllerBuilder: (tickerProvider) => AnimationController(
-        vsync: tickerProvider,
-        duration: Duration(
-          milliseconds: 1100,
-        ),
-      ),
+      multipleAnimControllerBuilder: (tickerProvider) {
+        return [
+          AnimationController(
+            vsync: tickerProvider,
+            duration: Duration(
+              milliseconds: 1100,
+            ),
+          ),
+          AnimationController(
+            vsync: tickerProvider,
+            duration: Duration(
+              milliseconds: 5000,
+            ),
+          ),
+        ];
+      },
       animListener: (context, presenter, model) {
         if (model.changelogCascadeAnimation) {
-          context.animationController.forward().then(
-                (value) => presenter.onCascadeAnimationEnd(),
-              );
+          context.animationsControllers[0]
+              .forward()
+              .then((value) => presenter.onCascadeAnimationEnd());
+        }
+        if (model.progressBarAnimation) {
+          context.animationsControllers[1]
+              .forward()
+              .then((value) => presenter.onProgressBarAnimationEnd());
         }
       },
       presenterBuilder: (context) => UserUpdateHelperPresenter(
@@ -93,7 +109,7 @@ class UserUpdateHelperPage extends StatelessWidget
                     flex: 5,
                     child: _buildReleaseNotes(context, model),
                   ),
-                  buildThanksButton(context.buildContext, model),
+                  buildThanksButton(context, model, presenter),
                 ],
               ),
             ),
@@ -153,8 +169,9 @@ class UserUpdateHelperPage extends StatelessWidget
   }
 
   SizedBox buildThanksButton(
-    final BuildContext context,
+    final MvvmContext context,
     final UserUpdateHelperModel model,
+    final UserUpdateHelperPresenter presenter,
   ) {
     return SizedBox(
       key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton'),
@@ -167,20 +184,32 @@ class UserUpdateHelperPage extends StatelessWidget
         ),
         child: RaisedButton(
           key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised'),
-          color: PalTheme.of(context).colors.dark,
-          onPressed: () {},
+          color: PalTheme.of(context.buildContext).colors.dark,
+          onPressed: model.showThanksButton ? presenter.thanksButtonTap : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Text(
-              thanksButtonLabel?.text ?? 'Thank you !',
-              style: TextStyle(
-                fontSize: thanksButtonLabel?.fontSize ?? 18.0,
-                color: thanksButtonLabel?.fontColor ?? Colors.white,
-              ),
+          child: AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) =>
+                ScaleTransition(
+              child: child,
+              scale: animation,
             ),
+            child: model.showThanksButton
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Text(
+                      thanksButtonLabel?.text ?? 'Thank you !',
+                      style: TextStyle(
+                        fontSize: thanksButtonLabel?.fontSize ?? 18.0,
+                        color: thanksButtonLabel?.fontColor ?? Colors.white,
+                      ),
+                    ),
+                  )
+                : AnimatedProgressBar(
+                    animationController: context.animationsControllers[1],
+                  ),
           ),
         ),
       ),
@@ -215,7 +244,7 @@ class UserUpdateHelperPage extends StatelessWidget
       var stepTime = 1.0 / changelogLabels.length;
       var animationStart = stepTime * index;
       var animationEnd = stepTime + animationStart;
-      // var label = widget.changelogLabels[index];
+
       Widget textLabel = Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: ReleaseNoteTile(
@@ -223,7 +252,7 @@ class UserUpdateHelperPage extends StatelessWidget
           text: label?.text,
           fontColor: label?.fontColor,
           fontSize: label?.fontSize,
-          animationController: context.animationController,
+          animationController: context.animationsControllers[0],
           animationStart: animationStart,
           animationEnd: animationEnd,
         ),

@@ -17,6 +17,8 @@ class UserUpdateHelperPresenter
     this.viewModel.appVersion = '--';
     this.viewModel.helperOpacity = 0;
     this.viewModel.changelogCascadeAnimation = false;
+    this.viewModel.progressBarAnimation = false;
+    this.viewModel.showThanksButton = false;
 
     readAppInfo();
     startAnimations();
@@ -28,17 +30,29 @@ class UserUpdateHelperPresenter
   }
 
   startAnimations() async {
+    // Fullscreen background opacity animation
     await Future.delayed(Duration(milliseconds: 1000), () {
       this.viewModel.helperOpacity = 1;
       this.refreshView();
     });
+
+    // Changelog animation & progress bar
     await Future.delayed(Duration(milliseconds: 400), () {
       this.viewModel.changelogCascadeAnimation = true;
+      this.viewModel.progressBarAnimation = true;
       this.refreshAnimations();
     });
   }
 
+  thanksButtonTap() {}
+
   onCascadeAnimationEnd() {
-    this.viewModel.changelogCascadeAnimation = true;
+    this.viewModel.changelogCascadeAnimation = false;
+  }
+
+  onProgressBarAnimationEnd() {
+    this.viewModel.progressBarAnimation = false;
+    this.viewModel.showThanksButton = true;
+    this.refreshView();
   }
 }

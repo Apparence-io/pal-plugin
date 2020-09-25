@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 
+class PackageVersionReaderMock extends Mock implements PackageVersionReader {}
+
 void main() {
   group('[Client] Update helper widget', () {
+    var packageVersionReaderService = PackageVersionReaderMock();
+
+    when(packageVersionReaderService.init()).thenAnswer((_) => Future.value());
+    when(packageVersionReaderService.version).thenReturn('0.0.1');
+
     UserUpdateHelperPage userUpdateHelperWidget = UserUpdateHelperPage(
+      packageVersionReader: packageVersionReaderService,
       backgroundColor: Colors.blue,
       thanksButtonLabel: CustomLabel(
         text: 'Free Ademo',
@@ -61,6 +71,7 @@ void main() {
 
     testWidgets('should display all elements', (WidgetTester tester) async {
       await beforeEach(tester);
+      // await tester.pumpAndSettle(Duration(milliseconds: 2000));
       expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_Scaffold')),
           findsOneWidget);
 
@@ -111,31 +122,43 @@ void main() {
       await beforeEach(tester);
 
       expect(
-          find.byKey(
-              ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0')),
-          findsOneWidget);
+        find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0')),
+        findsOneWidget,
+      );
       expect(
-          find.byKey(
-              ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_1')),
-          findsOneWidget);
+        find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_1')),
+        findsOneWidget,
+      );
       expect(
-          find.byKey(
-              ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_2')),
-          findsOneWidget);
+        find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_2')),
+        findsOneWidget,
+      );
       expect(
-          find.byKey(
-              ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_3')),
-          findsOneWidget);
+        find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_3')),
+        findsOneWidget,
+      );
 
-      final richText0Finder = find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0'));
-      final richText1Finder = find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_1'));
-      final richText2Finder = find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_2'));
-      final richText3Finder = find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_3'));
-      final richText0Widget = tester.element(richText0Finder).widget as RichText;
-      final richText1Widget = tester.element(richText1Finder).widget as RichText;
-      final richText2Widget = tester.element(richText2Finder).widget as RichText;
-      final richText3Widget = tester.element(richText3Finder).widget as RichText;
-      
+      final richText0Finder = find.byKey(
+        ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0'),
+      );
+      final richText1Finder = find.byKey(
+        ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_1'),
+      );
+      final richText2Finder = find.byKey(
+        ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_2'),
+      );
+      final richText3Finder = find.byKey(
+        ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_3'),
+      );
+      final richText0Widget =
+          tester.element(richText0Finder).widget as RichText;
+      final richText1Widget =
+          tester.element(richText1Finder).widget as RichText;
+      final richText2Widget =
+          tester.element(richText2Finder).widget as RichText;
+      final richText3Widget =
+          tester.element(richText3Finder).widget as RichText;
+
       // FIXME: Impossible to use children without using the deprecated one
       final textSpan0 = richText0Widget.text.children.last as TextSpan;
       final textSpan1 = richText1Widget.text.children.last as TextSpan;

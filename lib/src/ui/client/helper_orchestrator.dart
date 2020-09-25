@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
 import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
@@ -58,15 +59,15 @@ class HelperOrchestrator extends InheritedWidget {
       popHelper();
     }
     try {
-      // final InAppUserEntity inAppUser =
-      //     await this.inAppUserClientService.getOrCreate();
-      // final List<HelperEntity> helpersToShow =
-      //     await this.helperClientService.getPageHelpers(route, inAppUser.id);
-      // if (helpersToShow != null && helpersToShow.length > 0) {
-      //   _showHelper(helpersToShow[0], inAppUser.id);
-      // }
+      final InAppUserEntity inAppUser =
+          await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow =
+          await this.helperClientService.getPageHelpers(route, inAppUser.id);
+      if (helpersToShow != null && helpersToShow.length > 0) {
+        _showHelper(helpersToShow[0], inAppUser.id);
+      }
       // DEBUG: REMOVE THIS
-      _showUpdateHelper();
+      // _showUpdateHelper();
       // DEBUG: END REMOVE
     } catch (e) {
       // Nothing to do

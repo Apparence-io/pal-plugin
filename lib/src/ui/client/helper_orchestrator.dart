@@ -60,16 +60,16 @@ class HelperOrchestrator extends InheritedWidget {
     }
     try {
       // DEBUG: REMOVE THIS
-      _showUpdateHelper();
+      // _showUpdateHelper();
       // DEBUG: END REMOVE
 
-      // final InAppUserEntity inAppUser =
-      //     await this.inAppUserClientService.getOrCreate();
-      // final List<HelperEntity> helpersToShow =
-      //     await this.helperClientService.getPageHelpers(route, inAppUser.id);
-      // if (helpersToShow != null && helpersToShow.length > 0) {
-      //   _showHelper(helpersToShow[0], inAppUser.id);
-      // }
+      final InAppUserEntity inAppUser =
+          await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow =
+          await this.helperClientService.getPageHelpers(route, inAppUser.id);
+      if (helpersToShow != null && helpersToShow.length > 0) {
+        _showHelper(helpersToShow[0], inAppUser.id);
+      }
     } catch (e) {
       // Nothing to do
     }

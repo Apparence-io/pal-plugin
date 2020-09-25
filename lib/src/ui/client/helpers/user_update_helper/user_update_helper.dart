@@ -18,12 +18,14 @@ class UserUpdateHelperPage extends StatelessWidget
   final List<CustomLabel> changelogLabels;
   final CustomLabel thanksButtonLabel;
   final PackageVersionReader packageVersionReader;
+  final Function onTrigger;
 
   UserUpdateHelperPage({
     Key key,
     @required this.backgroundColor,
     @required this.titleLabel,
     @required this.changelogLabels,
+    @required this.onTrigger,
     this.thanksButtonLabel,
     this.packageVersionReader,
   })  : assert(backgroundColor != null),
@@ -185,7 +187,7 @@ class UserUpdateHelperPage extends StatelessWidget
         child: RaisedButton(
           key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised'),
           color: PalTheme.of(context.buildContext).colors.dark,
-          onPressed: model.showThanksButton ? presenter.thanksButtonTap : null,
+          onPressed: model.showThanksButton ? onTrigger : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),

@@ -44,8 +44,6 @@ class UserUpdateHelperPresenter
     });
   }
 
-  thanksButtonTap() {}
-
   onCascadeAnimationEnd() {
     this.viewModel.changelogCascadeAnimation = false;
   }

@@ -6,7 +6,7 @@ import 'progress_bar.dart';
 /* Controller class : Takes all the variables needed, and transformes them before rendering */
 class ProgressBarWidget extends StatefulWidget {
   final double nbSteps;
-  final ValueNotifier<double> step;
+  final ValueNotifier<int> step;
 
   const ProgressBarWidget({Key key, this.nbSteps, this.step}) : super(key: key);
 
@@ -41,7 +41,7 @@ class _ProgressBarWidgetState extends State<ProgressBarWidget>
     this.animation =
         Tween<double>(begin: 0, end: this._stepScale * widget.step.value)
             .animate(this.controller);
-    this.prevStep = widget.step.value;
+    this.prevStep = widget.step.value.toDouble();
     // ANIMATES
     this.controller.forward();
     super.initState();
@@ -54,7 +54,7 @@ class _ProgressBarWidgetState extends State<ProgressBarWidget>
             begin: this._stepScale * this.prevStep,
             end: this._stepScale * widget.step.value)
         .animate(this.controller);
-    this.prevStep = widget.step.value;
+    this.prevStep = widget.step.value.toDouble();
     setState(() {
       this.controller.forward();
     });

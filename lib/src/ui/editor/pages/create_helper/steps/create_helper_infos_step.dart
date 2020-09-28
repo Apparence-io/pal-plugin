@@ -9,7 +9,6 @@ class CreateHelperInfosStep extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final CreateHelperModel model;
   final CreateHelperPresenter presenter;
-  final TextEditingController helperNameController;
   final Function() onFormChanged;
 
   const CreateHelperInfosStep({
@@ -17,7 +16,6 @@ class CreateHelperInfosStep extends StatelessWidget {
     @required this.formKey,
     @required this.model,
     @required this.presenter,
-    @required this.helperNameController,
     this.onFormChanged,
   }) : super(key: key);
 
@@ -60,7 +58,7 @@ class CreateHelperInfosStep extends StatelessWidget {
             widget: BorderedTextField(
               key: ValueKey('palCreateHelperTextFieldName'),
               hintText: 'My new helper',
-              controller: helperNameController,
+              controller: model.helperNameController,
               validator: (String value) =>
                   (value.isEmpty) ? 'Please enter a name' : null,
             ),

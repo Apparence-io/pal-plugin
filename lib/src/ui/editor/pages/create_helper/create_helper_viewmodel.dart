@@ -1,14 +1,5 @@
+import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-
-class HelperSteps {
-  final double index;
-  final String title;
-
-  HelperSteps({
-    this.index,
-    this.title,
-  });
-}
 
 class HelperTriggerTypeDisplay {
   final String key;
@@ -21,13 +12,23 @@ class HelperTriggerTypeDisplay {
 }
 
 class CreateHelperModel extends MVVMModel {
-  bool isFormValid;
   List<HelperTriggerTypeDisplay> triggerTypes;
+  GlobalKey<NavigatorState> nestedNavigationKey;
+  GlobalKey<FormState> formKey;
+  bool isFormValid;
   String selectedTriggerType;
+  List<String> stepsTitle;
+  ValueNotifier<int> step;
+  TextEditingController helperNameController;
 
   CreateHelperModel({
+    this.selectedTriggerType,
+    this.nestedNavigationKey,
+    this.formKey,
     this.isFormValid,
     this.triggerTypes,
-    this.selectedTriggerType,
+    this.stepsTitle,
+    this.step,
+    this.helperNameController,
   });
 }

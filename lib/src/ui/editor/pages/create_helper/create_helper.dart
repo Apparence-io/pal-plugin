@@ -30,6 +30,8 @@ abstract class CreateHelperView {
     CreateHelperPresenter presenter,
   );
   void launchHelperEditor(final CreateHelperModel model);
+  void changeStep(GlobalKey<NavigatorState> nestedNavigationKey, int index);
+  void popStep(GlobalKey<NavigatorState> nestedNavigationKey);
 }
 
 class CreateHelperPage extends StatefulWidget {
@@ -50,10 +52,6 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     implements CreateHelperView {
   final _mvvmPageBuilder =
       MVVMPageBuilder<CreateHelperPresenter, CreateHelperModel>();
-  final _formKey = GlobalKey<FormState>();
-  final GlobalKey<NavigatorState> _navigationKey = GlobalKey<NavigatorState>();
-  final _helperNameController = TextEditingController();
-  final ValueNotifier<double> _step = ValueNotifier<double>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -99,21 +97,19 @@ class _CreateHelperPageState extends State<CreateHelperPage>
                 top: 23.0,
                 bottom: 17.0,
               ),
-              child: _buildProgressBar(),
+              child: _buildProgressBar(model),
             ),
             Expanded(
               child: NestedNavigator(
-                navigationKey: _navigationKey,
+                navigationKey: model.nestedNavigationKey,
                 initialRoute: 'create/infos',
+                onWillPop: presenter.decrementStep,
                 routes: {
                   'create/infos': (context) => CreateHelperInfosStep(
-                        formKey: _formKey,
-                        presenter: presenter,
-                        model: model,
-                        helperNameController: _helperNameController,
-                        onFormChanged: () =>
-                            this.onFormChanged(model, presenter),
-                      ),
+                    formKey: model.formKey,
+                    model: model,
+                    presenter: presenter,
+                  ),
                   'create/type': (context) => CreateHelperTypeStep(),
                   'create/theme': (context) => CreateHelperThemeStep(),
                 },
@@ -123,7 +119,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
               padding: const EdgeInsets.only(bottom: 11.0),
               child: Container(
                 width: double.infinity,
-                child: _buildNextButton(model),
+                child: _buildNextButton(model, presenter),
               ),
             ),
           ],
@@ -132,27 +128,29 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     );
   }
 
-  Widget _buildProgressBar() {
+  Widget _buildProgressBar(final CreateHelperModel model) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Setup your helper',
+          model.stepsTitle[model.step.value],
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
         ),
-        SizedBox(height: 22),
         ProgressBarWidget(
           nbSteps: 3,
-          step: _step,
+          step: model.step,
         ),
       ],
     );
   }
 
-  Widget _buildNextButton(final CreateHelperModel model) {
+  Widget _buildNextButton(
+    final CreateHelperModel model,
+    final CreateHelperPresenter presenter,
+  ) {
     return RaisedButton(
       key: ValueKey('palCreateHelperNextButton'),
       disabledColor: PalTheme.of(context).colors.color4,
@@ -163,9 +161,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
         ),
       ),
       color: PalTheme.of(context).colors.color1,
-      onPressed: () {
-        _step.value++;
-      },
+      onPressed: presenter.incrementStep,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -177,7 +173,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     CreateHelperModel model,
     CreateHelperPresenter presenter,
   ) {
-    model.isFormValid = _formKey.currentState.validate();
+    model.isFormValid = model.formKey.currentState.validate();
     presenter.refreshView();
   }
 
@@ -190,7 +186,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     HelperEditorPageArguments args = HelperEditorPageArguments(
       widget.hostedAppNavigatorKey,
       widget.pageId,
-      helperName: _helperNameController?.value?.text,
+      helperName: '_helperNameController?.value?.text',
       triggerType: getHelperTriggerType(model.selectedTriggerType),
     );
     var elementFinder =
@@ -201,5 +197,30 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     );
     // Go back
     Navigator.of(context).pop(true);
+  }
+
+  @override
+  void changeStep(GlobalKey<NavigatorState> nestedNavigationKey, int index) {
+    String routeName;
+    switch (index) {
+      case 0:
+        routeName = 'infos';
+        break;
+      case 1:
+        routeName = 'type';
+        break;
+      case 2:
+        routeName = 'theme';
+        break;
+      default:
+    }
+
+    Navigator.of(nestedNavigationKey.currentContext)
+        .pushNamed('create/$routeName');
+  }
+
+  @override
+  void popStep(GlobalKey<NavigatorState> nestedNavigationKey) {
+    Navigator.of(nestedNavigationKey.currentContext).pop();
   }
 }

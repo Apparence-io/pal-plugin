@@ -4,12 +4,15 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos_step.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme_step.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type_step.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/widgets/nested_navigator.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
-import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
-import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
+import 'package:palplugin/src/ui/shared/widgets/progress_widget/progress_bar_widget.dart';
 
 class CreateHelperPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
@@ -48,7 +51,9 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   final _mvvmPageBuilder =
       MVVMPageBuilder<CreateHelperPresenter, CreateHelperModel>();
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<NavigatorState> _navigationKey = GlobalKey<NavigatorState>();
   final _helperNameController = TextEditingController();
+  final ValueNotifier<double> _step = ValueNotifier<double>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -83,45 +88,42 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     final CreateHelperPresenter presenter,
     final CreateHelperModel model,
   ) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Container(
-        width: double.infinity,
-        child: Stack(
+    return Container(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 65.0),
-              child: SingleChildScrollView(
-                key: ValueKey('palCreateHelperScrollList'),
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'packages/palplugin/assets/images/create_helper.png',
-                        key: ValueKey('palCreateHelperImage'),
-                        height: 205.0,
+              padding: const EdgeInsets.only(
+                top: 23.0,
+                bottom: 17.0,
+              ),
+              child: _buildProgressBar(),
+            ),
+            Expanded(
+              child: NestedNavigator(
+                navigationKey: _navigationKey,
+                initialRoute: 'create/infos',
+                routes: {
+                  'create/infos': (context) => CreateHelperInfosStep(
+                        formKey: _formKey,
+                        presenter: presenter,
+                        model: model,
+                        helperNameController: _helperNameController,
+                        onFormChanged: () =>
+                            this.onFormChanged(model, presenter),
                       ),
-                      SizedBox(height: 32.0),
-                      _buildForm(model, presenter),
-                    ],
-                  ),
-                ),
+                  'create/type': (context) => CreateHelperTypeStep(),
+                  'create/theme': (context) => CreateHelperThemeStep(),
+                },
               ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
+            Padding(
+              padding: const EdgeInsets.only(bottom: 11.0),
               child: Container(
                 width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                    bottom: 16.0,
-                  ),
-                  child: _buildNextButton(model),
-                ),
+                child: _buildNextButton(model),
               ),
             ),
           ],
@@ -130,45 +132,23 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     );
   }
 
-  Widget _buildForm(
-    final CreateHelperModel model,
-    final CreateHelperPresenter presenter,
-  ) {
-    return Form(
-      key: _formKey,
-      onChanged: () => onFormChanged(model, presenter),
-      child: Wrap(
-        runSpacing: 17.0,
-        children: [
-          BorderedTextField(
-            key: ValueKey('palCreateHelperTextFieldName'),
-            label: 'Name',
-            hintText: 'My new helper',
-            controller: _helperNameController,
-            validator: (String value) =>
-                (value.isEmpty) ? 'Please enter a name' : null,
+  Widget _buildProgressBar() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Setup your helper',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownButtonFormField(
-                key: ValueKey('palCreateHelperTypeDropdown'),
-                validator: (String value) => (value.isEmpty) ? 'Please select a type' : null,
-                value: model.triggerTypes.first.key,
-                onChanged: presenter.selectTriggerHelperType,
-                items: _buildDropdownArray(model),
-              ),
-              SizedBox(height: 4.0),
-              Text(
-                'Select the trigger type',
-                style: TextStyle(
-                  fontSize: 9.0,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: 22),
+        ProgressBarWidget(
+          nbSteps: 3,
+          step: _step,
+        ),
+      ],
     );
   }
 
@@ -183,25 +163,13 @@ class _CreateHelperPageState extends State<CreateHelperPage>
         ),
       ),
       color: PalTheme.of(context).colors.color1,
-      onPressed: model.isFormValid ? () => launchHelperEditor(model) : null,
+      onPressed: () {
+        _step.value++;
+      },
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
     );
-  }
-
-  List<DropdownMenuItem<String>> _buildDropdownArray(
-      final CreateHelperModel model) {
-    List<DropdownMenuItem<String>> dropdownArray = [];
-
-    model.triggerTypes.forEach((element) {
-      dropdownArray.add(DropdownMenuItem<String>(
-        value: element.key,
-        child: Text(element.description),
-      ));
-    });
-
-    return dropdownArray;
   }
 
   @override
@@ -225,7 +193,8 @@ class _CreateHelperPageState extends State<CreateHelperPage>
       helperName: _helperNameController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
     );
-    var elementFinder = ElementFinder(widget.hostedAppNavigatorKey.currentContext);
+    var elementFinder =
+        ElementFinder(widget.hostedAppNavigatorKey.currentContext);
     showOverlayed(
       widget.hostedAppNavigatorKey,
       HelperEditorPageBuilder(args, elementFinder: elementFinder).build,

@@ -1,5 +1,15 @@
 import 'package:mvvm_builder/mvvm_builder.dart';
 
+class HelperSteps {
+  final double index;
+  final String title;
+
+  HelperSteps({
+    this.index,
+    this.title,
+  });
+}
+
 class HelperTriggerTypeDisplay {
   final String key;
   final String description;

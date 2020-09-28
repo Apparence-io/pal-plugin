@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/theme.dart';
 
 /* Bar render class : Renders the progress bar with the given value */
 class ProgressBarRender extends StatefulWidget {
@@ -23,7 +24,7 @@ class _ProgressBarRenderState extends State<ProgressBarRender>{
             //* ANIMATION MOVES THE LEFT GRADIENT COLOR
             stops: [widget.value, 0],
             // IN THE ORDER BELOW : DARK / GREY
-            colors: [Colors.red,Color(0xFFC1BFD6)]),
+            colors: [PalTheme.of(context).colors.color3,Color(0xFFC1BFD6)]),
           ),
           // PROGRESS BAR HEIGHT
           child: Container(

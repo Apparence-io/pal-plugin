@@ -13,17 +13,26 @@ class CreateHelperPresenter
 
   @override
   Future onInit() async {
+    this.viewModel.nestedNavigationKey = GlobalKey<NavigatorState>();
+    this.viewModel.step = ValueNotifier<int>(0);
+
     this.viewModel.isFormValid = false;
     this.viewModel.stepsTitle = [
       'Setup your helper',
       'Choose your helper type',
       'Choose a theme',
     ];
-    this.viewModel.nestedNavigationKey = GlobalKey<NavigatorState>();
-    this.viewModel.formStep1Key = GlobalKey<FormState>();
+
+    // Setup steps
+    this.setupInfosStep();
+    this.setupTypeStep();
+    this.setupThemeStep();
+  }
+
+  setupInfosStep() {
+    this.viewModel.infosForm = GlobalKey<FormState>();
 
     this.viewModel.helperNameController = TextEditingController();
-
     this.viewModel.triggerTypes = [];
     HelperTriggerType.values.forEach((HelperTriggerType type) {
       this.viewModel.triggerTypes.add(
@@ -35,17 +44,22 @@ class CreateHelperPresenter
     });
     this.viewModel.selectedTriggerType =
         this.viewModel.triggerTypes?.first?.key;
-    this.viewModel.step = ValueNotifier<int>(0);
   }
 
-  selectTriggerHelperType(String newValue) {
-    this.viewModel.selectedTriggerType = newValue;
-    this.refreshView();
+  setupTypeStep() {
+    this.viewModel.selectedHelperType = null;
+  }
+
+  setupThemeStep() {
+    this.viewModel.selectedHelperTheme = null;
   }
 
   incrementStep() {
+    if (this.viewModel.step.value >= this.viewModel.stepsTitle.length - 1) {
+      this.viewInterface.launchHelperEditor(this.viewModel);
+      return;
+    }
     this.viewModel.step.value++;
-    this.viewModel.isFormValid = false;
     this.viewInterface.changeStep(
           this.viewModel.nestedNavigationKey,
           this.viewModel.step.value,
@@ -68,13 +82,13 @@ class CreateHelperPresenter
     switch (this.viewModel.step.value) {
       case 0:
         this.viewModel.isFormValid =
-            this.viewModel.formStep1Key.currentState.validate();
+            this.viewModel.infosForm.currentState.validate();
         break;
       case 1:
         this.viewModel.isFormValid = this.viewModel.selectedHelperType != null;
         break;
       case 2:
-        this.viewModel.isFormValid = this.viewModel.selectedHelperType != null;
+        this.viewModel.isFormValid = this.viewModel.selectedHelperTheme != null;
         break;
       default:
     }

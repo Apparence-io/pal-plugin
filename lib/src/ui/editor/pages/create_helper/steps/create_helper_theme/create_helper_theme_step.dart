@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
@@ -28,9 +27,10 @@ class CreateHelperThemeStep extends StatelessWidget {
 
   void _checkFormValid(int index) {
     bool isFormValid = false;
-    for (PreviewCard card in CreateHelperTypesStepModel.cards) {
+    for (PreviewThemeCard card in CreateHelperThemeStepModel.cards[model.selectedHelperType]) {
       if (card.isSelected) {
         isFormValid = true;
+        model.selectedHelperTheme = card.helperTheme;
       }
     }
     model.isFormValid = isFormValid;

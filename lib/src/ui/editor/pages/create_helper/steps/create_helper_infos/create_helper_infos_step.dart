@@ -45,13 +45,13 @@ class CreateHelperInfosStep extends StatelessWidget {
   }
 
   void _checkFormValid() {
-    model.isFormValid = model.formStep1Key.currentState.validate();
+    model.isFormValid = model.infosForm.currentState.validate();
     presenter.refreshView();
   }
 
   Widget _buildForm() {
     return Form(
-      key: model.formStep1Key,
+      key: model.infosForm,
       onChanged: _checkFormValid,
       autovalidate: true,
       child: Wrap(
@@ -79,7 +79,7 @@ class CreateHelperInfosStep extends StatelessWidget {
                       (value.isEmpty) ? 'Please select a type' : null,
                   value: model.triggerTypes.first.key,
                   autovalidate: true,
-                  onChanged: presenter.selectTriggerHelperType,
+                  onChanged: _onTriggerTypeChanged,
                   items: _buildDropdownArray(),
                 ),
               ),
@@ -88,6 +88,11 @@ class CreateHelperInfosStep extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _onTriggerTypeChanged(String newValue) {
+    model.selectedTriggerType = newValue;
+    presenter.refreshView();
   }
 
   List<DropdownMenuItem<String>> _buildDropdownArray() {

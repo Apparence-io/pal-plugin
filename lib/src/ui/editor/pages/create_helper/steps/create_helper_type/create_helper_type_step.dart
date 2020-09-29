@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card_swiper.dart';
 
 class CreateHelperTypeStep extends StatelessWidget {
@@ -25,12 +24,13 @@ class CreateHelperTypeStep extends StatelessWidget {
 
   void _checkFormValid(int index) {
     bool isFormValid = false;
-    for (PreviewCard card in CreateHelperTypesStepModel.cards) {
+    for (PreviewTypeCard card in CreateHelperTypesStepModel.cards) {
       if (card.isSelected) {
         isFormValid = true;
         model.selectedHelperType = card.helperType;
       }
     }
+    model.selectedHelperTheme = null;
     model.isFormValid = isFormValid;
     presenter.refreshView();
   }

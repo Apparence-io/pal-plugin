@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
@@ -28,6 +29,8 @@ class HelperEditorPageArguments {
   final String helperName;
   final int priority;
   final HelperTriggerType triggerType;
+  final HelperTheme helperTheme;
+  final HelperType helperType;
   final int versionMinId;
   final int versionMaxId;
 
@@ -37,6 +40,8 @@ class HelperEditorPageArguments {
     this.helperName,
     this.priority,
     this.triggerType,
+    this.helperTheme,
+    this.helperType,
     this.versionMinId,
     this.versionMaxId,
   });

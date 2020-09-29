@@ -1,28 +1,37 @@
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
 
 class CreateHelperModel extends MVVMModel {
-  List<HelperTriggerTypeDisplay> triggerTypes;
   GlobalKey<NavigatorState> nestedNavigationKey;
-  GlobalKey<FormState> formStep1Key;
   bool isFormValid;
-  String selectedTriggerType;
   List<String> stepsTitle;
   ValueNotifier<int> step;
+
+  // Step 1
+  GlobalKey<FormState> infosForm;
+  String selectedTriggerType;
   TextEditingController helperNameController;
+  List<HelperTriggerTypeDisplay> triggerTypes;
+  
+  // Step 2
   HelperType selectedHelperType;
+
+  // Step 3
+  HelperTheme selectedHelperTheme;
 
   CreateHelperModel({
     this.selectedTriggerType,
     this.nestedNavigationKey,
-    this.formStep1Key,
+    this.infosForm,
     this.isFormValid,
     this.triggerTypes,
     this.stepsTitle,
     this.step,
     this.helperNameController,
     this.selectedHelperType,
+    this.selectedHelperTheme,
   });
 }

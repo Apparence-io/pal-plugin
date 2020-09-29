@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/theme.dart';
 
 class PreviewCard {
   final String previewImage;
   final String title;
   final String description;
-  final HelperType helperType;
   bool isSelected;
 
   PreviewCard(
@@ -16,7 +14,6 @@ class PreviewCard {
     this.title,
     this.description, {
     this.isSelected = false,
-    this.helperType,
   });
 }
 

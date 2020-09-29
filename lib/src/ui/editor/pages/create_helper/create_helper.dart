@@ -179,14 +179,14 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   @override
   //FIXME put this in another class to deport logic
   void launchHelperEditor(final CreateHelperModel model) {
-    HapticFeedback.selectionClick();
-
     // Open editor overlay
     HelperEditorPageArguments args = HelperEditorPageArguments(
       widget.hostedAppNavigatorKey,
       widget.pageId,
-      helperName: '_helperNameController?.value?.text',
+      helperName: model.helperNameController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
+      helperTheme: model.selectedHelperTheme,
+      helperType: model.selectedHelperType,
     );
     var elementFinder =
         ElementFinder(widget.hostedAppNavigatorKey.currentContext);
@@ -227,7 +227,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter) {
     switch (model.step.value) {
       case 0:
-        model.isFormValid = model.formStep1Key.currentState.validate();
+        model.isFormValid = model.infosForm.currentState.validate();
         break;
       case 1:
         model.isFormValid = model.selectedHelperType != null;

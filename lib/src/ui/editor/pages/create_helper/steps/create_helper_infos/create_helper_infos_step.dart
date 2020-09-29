@@ -6,14 +6,12 @@ import 'package:palplugin/src/ui/editor/widgets/labeled_form.dart';
 import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
 
 class CreateHelperInfosStep extends StatelessWidget {
-  final GlobalKey<FormState> formKey;
   final CreateHelperModel model;
   final CreateHelperPresenter presenter;
   final Function() onFormChanged;
 
   const CreateHelperInfosStep({
     Key key,
-    @required this.formKey,
     @required this.model,
     @required this.presenter,
     this.onFormChanged,
@@ -27,7 +25,7 @@ class CreateHelperInfosStep extends StatelessWidget {
         key: ValueKey('palCreateHelperScrollList'),
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               _buildForm(),
@@ -46,10 +44,16 @@ class CreateHelperInfosStep extends StatelessWidget {
     );
   }
 
+  void _checkFormValid() {
+    model.isFormValid = model.formStep1Key.currentState.validate();
+    presenter.refreshView();
+  }
+
   Widget _buildForm() {
     return Form(
-      key: formKey,
-      onChanged: onFormChanged,
+      key: model.formStep1Key,
+      onChanged: _checkFormValid,
+      autovalidate: true,
       child: Wrap(
         runSpacing: 17.0,
         children: [
@@ -59,6 +63,7 @@ class CreateHelperInfosStep extends StatelessWidget {
               key: ValueKey('palCreateHelperTextFieldName'),
               hintText: 'My new helper',
               controller: model.helperNameController,
+              autovalidate: true,
               validator: (String value) =>
                   (value.isEmpty) ? 'Please enter a name' : null,
             ),
@@ -73,6 +78,7 @@ class CreateHelperInfosStep extends StatelessWidget {
                   validator: (String value) =>
                       (value.isEmpty) ? 'Please select a type' : null,
                   value: model.triggerTypes.first.key,
+                  autovalidate: true,
                   onChanged: presenter.selectTriggerHelperType,
                   items: _buildDropdownArray(),
                 ),

@@ -3,6 +3,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
 
 class CreateHelperPresenter
     extends Presenter<CreateHelperModel, CreateHelperView> {
@@ -19,7 +20,7 @@ class CreateHelperPresenter
       'Choose a theme',
     ];
     this.viewModel.nestedNavigationKey = GlobalKey<NavigatorState>();
-    this.viewModel.formKey = GlobalKey<FormState>();
+    this.viewModel.formStep1Key = GlobalKey<FormState>();
 
     this.viewModel.helperNameController = TextEditingController();
 
@@ -44,10 +45,12 @@ class CreateHelperPresenter
 
   incrementStep() {
     this.viewModel.step.value++;
+    this.viewModel.isFormValid = false;
     this.viewInterface.changeStep(
           this.viewModel.nestedNavigationKey,
           this.viewModel.step.value,
         );
+    this.checkValidStep();
     this.refreshView();
   }
 
@@ -57,6 +60,23 @@ class CreateHelperPresenter
     }
 
     this.viewModel.step.value--;
+    this.checkValidStep();
     this.refreshView();
+  }
+
+  void checkValidStep() {
+    switch (this.viewModel.step.value) {
+      case 0:
+        this.viewModel.isFormValid =
+            this.viewModel.formStep1Key.currentState.validate();
+        break;
+      case 1:
+        this.viewModel.isFormValid = this.viewModel.selectedHelperType != null;
+        break;
+      case 2:
+        this.viewModel.isFormValid = this.viewModel.selectedHelperType != null;
+        break;
+      default:
+    }
   }
 }

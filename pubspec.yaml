@@ -32,6 +32,15 @@ flutter:
   assets:
     - packages/palplugin/assets/images/create_helper.png
 
+    - packages/palplugin/assets/images/create_helper/types/helper_type_fullscreen.png
+    - packages/palplugin/assets/images/create_helper/types/helper_type_simple.png
+    - packages/palplugin/assets/images/create_helper/types/helper_type_update.png
+
+    - packages/palplugin/assets/images/create_helper/themes/black/helper_theme_black_fullscreen.png
+    - packages/palplugin/assets/images/create_helper/themes/black/helper_theme_black_simple.png
+    - packages/palplugin/assets/images/create_helper/themes/black/helper_theme_black_update.png
+
+
 #
 # For details regarding assets in packages, see
 # https://flutter.dev/assets-and-images/#from-packages

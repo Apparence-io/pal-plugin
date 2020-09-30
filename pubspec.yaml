@@ -32,6 +32,8 @@ flutter:
   assets:
     - packages/palplugin/assets/images/create_helper.png
 
+    - packages/palplugin/assets/images/logo.png
+
 #
 # For details regarding assets in packages, see
 # https://flutter.dev/assets-and-images/#from-packages

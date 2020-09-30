@@ -141,7 +141,7 @@ class PalThemeData {
 
   Color get toolbarBackgroundColor => colors.color5;
 
-  Color get floatingBubbleBackgroundColor => colors.dark;
+  Color get floatingBubbleBackgroundColor => colors.color1;
 
   Color get simpleHelperBackgroundColor => colors.black;
 

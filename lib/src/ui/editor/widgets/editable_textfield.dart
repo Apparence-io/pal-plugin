@@ -121,7 +121,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     validator: (String value) {
                       String error;
                       if (widget.minimumCharacterLength != null) {
-                        if (value.length <= widget.minimumCharacterLength) {
+                        if (value.length < widget.minimumCharacterLength) {
                           error = 'Minimum ${widget.minimumCharacterLength} ${widget.minimumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
                         }
                       }

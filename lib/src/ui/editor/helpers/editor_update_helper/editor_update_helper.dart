@@ -66,7 +66,7 @@ class EditorUpdateHelperPage extends StatelessWidget
               padding: const EdgeInsets.all(2.0),
               child: Form(
                 key: model.formKey,
-                autovalidate: true,
+                autovalidate: false,
                 onChanged: () {
                   if (onFormChanged != null) {
                     onFormChanged(model.formKey?.currentState?.validate());
@@ -164,6 +164,7 @@ class EditorUpdateHelperPage extends StatelessWidget
       ),
       hintText: viewModel.titleField?.hintText,
       onChanged: presenter.onTitleFieldChanged,
+      autovalidate: false,
       maximumCharacterLength: 60,
       minimumCharacterLength: 1,
       outsideTapStream: model.editableTextFieldController.stream,

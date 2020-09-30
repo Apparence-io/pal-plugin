@@ -6,8 +6,10 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_app_infos.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_logo.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/release_note_tile.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_release_note_tile.dart';
 
 abstract class UserUpdateHelperView {}
 
@@ -42,16 +44,32 @@ class UserUpdateHelperPage extends StatelessWidget
       context: context,
       multipleAnimControllerBuilder: (tickerProvider) {
         return [
+          // Changelog
           AnimationController(
             vsync: tickerProvider,
             duration: Duration(
               milliseconds: 1100,
             ),
           ),
+          // Progress bar
           AnimationController(
             vsync: tickerProvider,
             duration: Duration(
               milliseconds: 5000,
+            ),
+          ),
+          // Image logo
+          AnimationController(
+            vsync: tickerProvider,
+            duration: Duration(
+              milliseconds: 700,
+            ),
+          ),
+          // Title
+          AnimationController(
+            vsync: tickerProvider,
+            duration: Duration(
+              milliseconds: 700,
             ),
           ),
         ];
@@ -66,6 +84,16 @@ class UserUpdateHelperPage extends StatelessWidget
           context.animationsControllers[1]
               .forward()
               .then((value) => presenter.onProgressBarAnimationEnd());
+        }
+        if (model.imageAnimation) {
+          context.animationsControllers[2]
+              .forward()
+              .then((value) => presenter.onImageAnimationEnd());
+        }
+        if (model.titleAnimation) {
+          context.animationsControllers[3]
+              .forward()
+              .then((value) => presenter.onTitleAnimationEnd());
         }
       },
       presenterBuilder: (context) => UserUpdateHelperPresenter(
@@ -99,12 +127,12 @@ class UserUpdateHelperPage extends StatelessWidget
                   Flexible(
                     key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
                     flex: 4,
-                    child: buildIcon(),
+                    child: buildIcon(context),
                   ),
                   Flexible(
                     key: ValueKey('pal_UserUpdateHelperWidget_AppSummary'),
                     flex: 2,
-                    child: buildAppSummary(context.buildContext, model),
+                    child: buildAppSummary(context, model),
                   ),
                   Expanded(
                     key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes'),
@@ -121,51 +149,30 @@ class UserUpdateHelperPage extends StatelessWidget
     );
   }
 
-  Container buildIcon() {
+  Container buildIcon(
+    final MvvmContext context,
+  ) {
     return Container(
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.only(top: 10.0),
-        child: Image.asset(
-          'packages/palplugin/assets/images/create_helper.png',
-          key: ValueKey('pal_UserUpdateHelperWidget_Icon_Image'),
-          // height: 282.0,
+        child: AnimatedLogo(
+          animationController: context.animationsControllers[2],
         ),
       ),
     );
   }
 
   Container buildAppSummary(
-    final BuildContext context,
+    final MvvmContext context,
     final UserUpdateHelperModel model,
   ) {
     return Container(
       width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            titleLabel?.text ?? 'New application update',
-            key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
-            style: TextStyle(
-              fontSize: titleLabel?.fontSize ?? 27.0,
-              fontWeight: FontWeight.bold,
-              color: titleLabel?.fontColor ?? PalTheme.of(context).colors.light,
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text(
-            'Version ${model.appVersion}',
-            key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Version'),
-            style: TextStyle(
-              fontSize: 13.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ],
+      child: AnimatedAppInfos(
+        animationController: context.animationsControllers[3],
+        titleLabel: titleLabel,
+        appVersion: model.appVersion,
       ),
     );
   }
@@ -249,7 +256,7 @@ class UserUpdateHelperPage extends StatelessWidget
 
       Widget textLabel = Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
-        child: ReleaseNoteTile(
+        child: AnimatedReleaseNoteTile(
           index: index++,
           text: label?.text,
           fontColor: label?.fontColor,

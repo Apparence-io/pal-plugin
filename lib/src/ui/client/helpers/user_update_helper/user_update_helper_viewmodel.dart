@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 
 class UserUpdateHelperModel extends MVVMModel {
@@ -5,6 +6,8 @@ class UserUpdateHelperModel extends MVVMModel {
   String appVersion;
   bool changelogCascadeAnimation;
   bool progressBarAnimation;
+  bool titleAnimation;
+  bool imageAnimation;
   bool showThanksButton;
   
   UserUpdateHelperModel({
@@ -12,6 +15,8 @@ class UserUpdateHelperModel extends MVVMModel {
     this.appVersion,
     this.changelogCascadeAnimation,
     this.progressBarAnimation,
+    this.titleAnimation,
+    this.imageAnimation,
     this.showThanksButton,
   });
 }

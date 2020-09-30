@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ReleaseNoteTile extends AnimatedWidget {
+class AnimatedReleaseNoteTile extends AnimatedWidget {
   int index;
   String text;
   Color fontColor;
@@ -11,7 +11,7 @@ class ReleaseNoteTile extends AnimatedWidget {
   Animation<double> opacityAnim;
   Animation<double> verticalOffsetAnim;
 
-  ReleaseNoteTile({
+  AnimatedReleaseNoteTile({
     Key key,
     @required this.index,
     @required this.text,

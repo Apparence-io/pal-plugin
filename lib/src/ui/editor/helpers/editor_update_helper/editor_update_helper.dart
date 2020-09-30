@@ -59,6 +59,7 @@ class EditorUpdateHelperPage extends StatelessWidget
       body: GestureDetector(
         onTap: presenter.onOutsideTap,
         child: SafeArea(
+          bottom: false,
           child: Padding(
             padding:
                 EdgeInsets.only(bottom: (model.isKeyboardVisible ? 0.0 : 90.0)),
@@ -88,7 +89,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                           children: [
                             Expanded(
                               child: SingleChildScrollView(
-                                reverse: true,
+                                reverse: false,
                                 controller: model.scrollController,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -258,7 +259,7 @@ class EditorUpdateHelperPage extends StatelessWidget
   ) {
     if (model.scrollController.hasClients) {
       model.scrollController.animateTo(
-        0.0,
+        model.scrollController.position.maxScrollExtent,
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 500),
       );

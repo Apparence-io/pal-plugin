@@ -63,6 +63,7 @@ class _PreviewCardWidgetState extends State<PreviewCardWidget>
     _scale = 1 - _animationController.value;
 
     return GestureDetector(
+      key: ValueKey('pal_PreviewCard_${widget.index}'),
       onTapDown: _onTapDown,
       onTapUp: _onTapUp,
       onTapCancel: _onTapCancel,
@@ -149,6 +150,7 @@ class _PreviewCardWidgetState extends State<PreviewCardWidget>
         child: Center(
           child: Icon(
             Icons.check,
+            key: ValueKey('pal_PreviewCard_Check_${widget.index}'),
             color: Colors.white,
           ),
         ),

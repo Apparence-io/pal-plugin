@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/ui/shared/widgets/progress_widget/pulsing_circle.dart';
+import 'package:palplugin/src/ui/editor/widgets/progress_widget/pulsing_circle.dart';
 
 import 'progress_bar.dart';
 

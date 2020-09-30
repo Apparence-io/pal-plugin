@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/labeled_form.dart';
-import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
+import 'package:palplugin/src/ui/editor/widgets/bordered_text_field.dart';
 
 class CreateHelperInfosStep extends StatelessWidget {
   final CreateHelperModel model;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/dot_indicators.dart';
@@ -60,6 +61,7 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
             return Stack(
               children: [
                 PageView.builder(
+                  key: ValueKey('pal_PreviewCardSwiperWidget_PageView'),
                   controller: _controller,
                   itemCount: widget.cards.length,
                   onPageChanged: _onPageViewChange,
@@ -88,6 +90,7 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
   }
 
   void _onPageViewChange(int index) {
+    HapticFeedback.selectionClick();
     setState(() {
       _currentpage = index;
     });
@@ -128,10 +131,5 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
     if (widget.onCardSelected != null) {
       widget.onCardSelected(index);
     }
-  }
-
-  void _checkFormValid() {
-    // model.isFormValid = model.formStep1Key.currentState.validate();
-    // presenter.refreshView();
   }
 }

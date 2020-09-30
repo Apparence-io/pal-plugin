@@ -36,11 +36,11 @@ class HelperEditorPageArguments {
   HelperEditorPageArguments(
     this.hostedAppNavigatorKey,
     this.pageId, {
-    this.helperName,
+    @required this.helperName,
     this.priority,
-    this.triggerType,
-    this.helperTheme,
-    this.helperType,
+    @required this.triggerType,
+    @required this.helperTheme,
+    @required this.helperType,
     this.versionMinId,
     this.versionMaxId,
   });

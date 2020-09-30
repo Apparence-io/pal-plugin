@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_presenter.dart';
-import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
-import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import '../../screen_tester_utilities.dart';
 import '../../../pal_test_utilities.dart';
 
 void main() {
-  group('Anchored helper editor', () {
-
+  group('[Editor] Anchored helper', () {
     final _navigatorKey = GlobalKey<NavigatorState>();
 
     EditorAnchoredFullscreenPresenter presenter;
@@ -23,7 +18,10 @@ void main() {
     Scaffold _myHomeTest = Scaffold(
       body: Column(
         children: [
-          Text("text1", key: ValueKey("text1"),),
+          Text(
+            "text1",
+            key: ValueKey("text1"),
+          ),
           Text("text2", key: ValueKey("text2")),
           Padding(
             padding: EdgeInsets.only(top: 32),
@@ -40,21 +38,29 @@ void main() {
     // init pal + go to editor
     Future beforeEach(WidgetTester tester) async {
       await initAppWithPal(tester, _myHomeTest, _navigatorKey);
-      await showEditor(tester, _navigatorKey, HelperTriggerType.ON_SCREEN_VISIT);
-      await addHelperEditorByType(tester, HelperType.ANCHORED_OVERLAYED_HELPER);
-      var presenterFinder = await find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage"));
+      await pumpHelperWidget(
+        tester,
+        _navigatorKey,
+        HelperTriggerType.ON_SCREEN_VISIT,
+        HelperType.ANCHORED_OVERLAYED_HELPER,
+        HelperTheme.BLACK,
+      );
+      var presenterFinder = find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage"));
       expect(presenterFinder, findsOneWidget);
-      presenter = (presenterFinder.evaluate().first.widget as MVVMPage).presenter;
+      presenter =
+          (presenterFinder.evaluate().first.widget as MVVMPage).presenter;
     }
 
-    testWidgets('can add an anchored fullscreen helper', (WidgetTester tester) async {
+    testWidgets('can add an anchored fullscreen helper',
+        (WidgetTester tester) async {
       await beforeEach(tester);
       // expect to find only our helper type editor
-      expect(find.byType(ModalBottomSheetOptions), findsNothing);
       expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
     });
 
-    testWidgets('shows one container with borders for each element of user app page', (WidgetTester tester) async {
+    testWidgets(
+        'shows one container with borders for each element of user app page',
+        (WidgetTester tester) async {
       await beforeEach(tester);
       var refreshFinder = find.byKey(ValueKey("refreshButton"));
       expect(refreshFinder, findsOneWidget);
@@ -62,7 +68,8 @@ void main() {
       expect(find.byKey(ValueKey("elementContainer")), findsWidgets);
     });
 
-    testWidgets("tap on container's element select it as anchor", (WidgetTester tester) async {
+    testWidgets("tap on container's element select it as anchor",
+        (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
@@ -80,7 +87,8 @@ void main() {
       expect(presenter.viewModel.selectedAnchorKey, contains("text2"));
     });
 
-    testWidgets("if anchored selected => shows editable title + text content", (WidgetTester tester) async {
+    testWidgets("if anchored selected => shows editable title + text content",
+        (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
@@ -91,9 +99,10 @@ void main() {
       await tester.pumpAndSettle(Duration(milliseconds: 100));
       expect(find.text("My helper title"), findsOneWidget);
       expect(find.text("Lorem ipsum lorem ipsum lorem ipsum"), findsOneWidget);
-      expect(find.text("Ok, thanks !"), findsOneWidget, reason: "A positiv feedback button is available");
-      expect(find.text("This is not helping"), findsOneWidget, reason: "A negativ feedback button is available");
+      expect(find.text("Ok, thanks !"), findsOneWidget,
+          reason: "A positiv feedback button is available");
+      expect(find.text("This is not helping"), findsOneWidget,
+          reason: "A negativ feedback button is available");
     });
-
   });
 }

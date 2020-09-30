@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
@@ -12,8 +10,8 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/nested_navigator.dart';
+import 'package:palplugin/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
-import 'package:palplugin/src/ui/shared/widgets/progress_widget/progress_bar_widget.dart';
 
 class CreateHelperPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;

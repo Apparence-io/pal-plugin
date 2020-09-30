@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:palplugin/src/extensions/color_extension.dart';
-import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
+import 'package:palplugin/src/ui/editor/widgets/bordered_text_field.dart';
 
 class ColorPickerDialog extends StatefulWidget {
   final Function(Color) onColorSelected;

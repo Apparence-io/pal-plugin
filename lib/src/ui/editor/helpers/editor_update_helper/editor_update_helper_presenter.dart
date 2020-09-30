@@ -5,7 +5,9 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
 
 class EditorUpdateHelperPresenter
     extends Presenter<EditorUpdateHelperModel, EditorUpdateHelperView> {
@@ -62,13 +64,43 @@ class EditorUpdateHelperPresenter
 
     // Create the textfield
     String textFormMapKey = textFormFieldKey.toString();
-    this.viewInterface.addChangelogNoteTextField(
-          model,
-          textFormFieldKey,
-          textFormToolbarKey,
-          hintText,
+    this.updateHelperViewModel.changelogsFields?.putIfAbsent(
           textFormMapKey,
+          () => TextFormFieldNotifier(
+            text: '',
+            fontSize: 14.0,
+            fontColor: Colors.black87,
+          ),
         );
+
+    model.changelogsTextfieldWidgets.add(
+      EditableTextField(
+        textFormFieldKey: textFormFieldKey,
+        helperToolbarKey: textFormToolbarKey,
+        outsideTapStream: model.editableTextFieldController.stream,
+        hintText: hintText,
+        maximumCharacterLength: 120,
+        textStyle: TextStyle(
+          color: this
+              .updateHelperViewModel
+              .changelogsFields[textFormMapKey]
+              ?.fontColor
+              ?.value,
+          fontSize: this
+              .updateHelperViewModel
+              .changelogsFields[textFormMapKey]
+              ?.fontSize
+              ?.value,
+        ),
+        onChanged: (Key key, String newValue) {
+          this
+              .updateHelperViewModel
+              .changelogsFields[textFormMapKey]
+              ?.text
+              ?.value = newValue;
+        },
+      ),
+    );
 
     this.refreshView();
   }
@@ -86,6 +118,11 @@ class EditorUpdateHelperPresenter
     EditorUpdateHelperPresenter presenter,
   ) {
     this.viewInterface.showColorPickerDialog(context, presenter);
+  }
+
+  updateBackgroundColor(Color aColor) {
+    updateHelperViewModel.backgroundColor.value = aColor;
+    this.refreshView();
   }
 
   onOutsideTap() {

@@ -5,7 +5,6 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
@@ -15,13 +14,6 @@ abstract class EditorUpdateHelperView {
   void showColorPickerDialog(
     BuildContext context,
     EditorUpdateHelperPresenter presenter,
-  );
-  void addChangelogNoteTextField(
-    EditorUpdateHelperModel model,
-    Key textFormFieldKey,
-    Key textFormToolbarKey,
-    String hintText,
-    String textFormMapKey,
   );
   void scrollToBottomChangelogList(
     EditorUpdateHelperModel model,
@@ -255,49 +247,7 @@ class EditorUpdateHelperPage extends StatelessWidget
       context: context,
       child: ColorPickerDialog(
         placeholderColor: this.viewModel?.backgroundColor?.value,
-        onColorSelected: (Color aColor) {
-          this.viewModel.backgroundColor.value = aColor;
-          presenter.refreshView();
-        },
-      ),
-    );
-  }
-
-  @override
-  void addChangelogNoteTextField(
-    EditorUpdateHelperModel model,
-    Key textFormFieldKey,
-    Key textFormToolbarKey,
-    String hintText,
-    String textFormMapKey,
-  ) {
-    // Assign defaults values
-    this.viewModel.changelogsFields?.putIfAbsent(
-          textFormMapKey,
-          () => TextFormFieldNotifier(
-            text: '',
-            fontSize: 14.0,
-            fontColor: Colors.black87,
-          ),
-        );
-
-    model.changelogsTextfieldWidgets.add(
-      EditableTextField(
-        textFormFieldKey: textFormFieldKey,
-        helperToolbarKey: textFormToolbarKey,
-        outsideTapStream: model.editableTextFieldController.stream,
-        hintText: hintText,
-        maximumCharacterLength: 120,
-        textStyle: TextStyle(
-          color:
-              this.viewModel.changelogsFields[textFormMapKey]?.fontColor?.value,
-          fontSize:
-              this.viewModel.changelogsFields[textFormMapKey]?.fontSize?.value,
-        ),
-        onChanged: (Key key, String newValue) {
-          this.viewModel.changelogsFields[textFormMapKey]?.text?.value =
-              newValue;
-        },
+        onColorSelected: presenter.updateBackgroundColor,
       ),
     );
   }

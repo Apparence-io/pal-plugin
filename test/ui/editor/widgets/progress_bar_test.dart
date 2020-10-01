@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/shared/widgets/progress_widget/progress_bar_widget.dart';
-import 'package:palplugin/src/ui/shared/widgets/progress_widget/pulsing_circle.dart';
+import 'package:palplugin/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
+import 'package:palplugin/src/ui/editor/widgets/progress_widget/pulsing_circle.dart';
 
 void main() {
   group('Progress Bar', () {
-    ValueNotifier<double> notifier;
+    ValueNotifier<int> notifier;
     ProgressBarWidget widget;
 
     _setup(WidgetTester tester) async {

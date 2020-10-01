@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
@@ -14,7 +16,6 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
-import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
@@ -28,15 +29,19 @@ class HelperEditorPageArguments {
   final String helperName;
   final int priority;
   final HelperTriggerType triggerType;
+  final HelperTheme helperTheme;
+  final HelperType helperType;
   final int versionMinId;
   final int versionMaxId;
 
   HelperEditorPageArguments(
     this.hostedAppNavigatorKey,
     this.pageId, {
-    this.helperName,
+    @required this.helperName,
     this.priority,
-    this.triggerType,
+    @required this.triggerType,
+    @required this.helperTheme,
+    @required this.helperType,
     this.versionMinId,
     this.versionMaxId,
   });
@@ -121,8 +126,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
                   ? Stack(
                       key: ValueKey('palEditorModeInteractUI'),
                       children: [
-                        if (!model.isEditingWidget)
-                          _buildAddButton(context, presenter, model),
                         _buildValidationActions(context, presenter, model),
                         _buildBannerEditorMode(context),
                         if (model.toolbarIsVisible &&
@@ -167,22 +170,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
     );
   }
 
-  Widget _buildAddButton(
-    final BuildContext context,
-    final HelperEditorPresenter presenter,
-    final HelperEditorViewModel model,
-  ) {
-    return Positioned(
-      bottom: 16,
-      right: 16,
-      child: EditorButton.editMode(
-        PalTheme.of(context),
-        () => showHelperModal(context, presenter, model),
-        key: ValueKey("editModeButton"),
-      ),
-    );
-  }
-
   Widget _buildValidationActions(
     final BuildContext context,
     final HelperEditorPresenter presenter,
@@ -215,30 +202,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
               ),
           ),
         ],
-      ),
-    );
-  }
-
-  showHelperModal(
-    final BuildContext context,
-    final HelperEditorPresenter presenter,
-    final HelperEditorViewModel model,
-  ) {
-    showModalBottomSheetOptions(
-      context,
-      (context) => ModalBottomSheetOptions(
-        onValidate: (SheetOption anOption) {
-          // First dismiss the bottom modal sheet
-          Navigator.pop(context);
-          presenter.chooseHelperType(anOption.type);
-        },
-        options: model.availableHelperType.map(
-          (el) => SheetOption(
-            text: el.text,
-            icon: el.icon,
-            type: el.type,
-          )
-        ).toList(),
       ),
     );
   }

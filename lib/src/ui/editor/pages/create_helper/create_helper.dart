@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/widgets/nested_navigator.dart';
+import 'package:palplugin/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
-import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
-import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
 
 class CreateHelperPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
@@ -22,11 +24,10 @@ class CreateHelperPageArguments {
 }
 
 abstract class CreateHelperView {
-  void onFormChanged(
-    CreateHelperModel model,
-    CreateHelperPresenter presenter,
-  );
   void launchHelperEditor(final CreateHelperModel model);
+  void changeStep(GlobalKey<NavigatorState> nestedNavigationKey, int index);
+  void popStep(GlobalKey<NavigatorState> nestedNavigationKey);
+  void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter);
 }
 
 class CreateHelperPage extends StatefulWidget {
@@ -47,8 +48,6 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     implements CreateHelperView {
   final _mvvmPageBuilder =
       MVVMPageBuilder<CreateHelperPresenter, CreateHelperModel>();
-  final _formKey = GlobalKey<FormState>();
-  final _helperNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -83,96 +82,81 @@ class _CreateHelperPageState extends State<CreateHelperPage>
     final CreateHelperPresenter presenter,
     final CreateHelperModel model,
   ) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Container(
-        width: double.infinity,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 65.0),
-              child: SingleChildScrollView(
-                key: ValueKey('palCreateHelperScrollList'),
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        'packages/palplugin/assets/images/create_helper.png',
-                        key: ValueKey('palCreateHelperImage'),
-                        height: 205.0,
-                      ),
-                      SizedBox(height: 32.0),
-                      _buildForm(model, presenter),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                    bottom: 16.0,
-                  ),
-                  child: _buildNextButton(model),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildForm(
-    final CreateHelperModel model,
-    final CreateHelperPresenter presenter,
-  ) {
-    return Form(
-      key: _formKey,
-      onChanged: () => onFormChanged(model, presenter),
-      child: Wrap(
-        runSpacing: 17.0,
+    return Container(
+      width: double.infinity,
+      child: Column(
         children: [
-          BorderedTextField(
-            key: ValueKey('palCreateHelperTextFieldName'),
-            label: 'Name',
-            hintText: 'My new helper',
-            controller: _helperNameController,
-            validator: (String value) =>
-                (value.isEmpty) ? 'Please enter a name' : null,
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 23.0,
+              bottom: 17.0,
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: _buildProgressBar(model),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownButtonFormField(
-                key: ValueKey('palCreateHelperTypeDropdown'),
-                validator: (String value) => (value.isEmpty) ? 'Please select a type' : null,
-                value: model.triggerTypes.first.key,
-                onChanged: presenter.selectTriggerHelperType,
-                items: _buildDropdownArray(model),
-              ),
-              SizedBox(height: 4.0),
-              Text(
-                'Select the trigger type',
-                style: TextStyle(
-                  fontSize: 9.0,
-                ),
-              ),
-            ],
+          Expanded(
+            child: NestedNavigator(
+              navigationKey: model.nestedNavigationKey,
+              initialRoute: 'create/infos',
+              onWillPop: presenter.decrementStep,
+              routes: {
+                'create/infos': (context) => CreateHelperInfosStep(
+                      model: model,
+                      presenter: presenter,
+                    ),
+                'create/type': (context) => CreateHelperTypeStep(
+                      model: model,
+                      presenter: presenter,
+                    ),
+                'create/theme': (context) => CreateHelperThemeStep(
+                      model: model,
+                      presenter: presenter,
+                    ),
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 8.0,
+              bottom: 12.0,
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: Container(
+              width: double.infinity,
+              child: _buildNextButton(model, presenter),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNextButton(final CreateHelperModel model) {
+  Widget _buildProgressBar(final CreateHelperModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          model.stepsTitle[model.step.value],
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        SizedBox(height: 15.0),
+        ProgressBarWidget(
+          nbSteps: 3,
+          step: model.step,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNextButton(
+    final CreateHelperModel model,
+    final CreateHelperPresenter presenter,
+  ) {
     return RaisedButton(
       key: ValueKey('palCreateHelperNextButton'),
       disabledColor: PalTheme.of(context).colors.color4,
@@ -183,54 +167,75 @@ class _CreateHelperPageState extends State<CreateHelperPage>
         ),
       ),
       color: PalTheme.of(context).colors.color1,
-      onPressed: model.isFormValid ? () => launchHelperEditor(model) : null,
+      onPressed: (model.isFormValid) ? presenter.incrementStep : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
     );
   }
 
-  List<DropdownMenuItem<String>> _buildDropdownArray(
-      final CreateHelperModel model) {
-    List<DropdownMenuItem<String>> dropdownArray = [];
-
-    model.triggerTypes.forEach((element) {
-      dropdownArray.add(DropdownMenuItem<String>(
-        value: element.key,
-        child: Text(element.description),
-      ));
-    });
-
-    return dropdownArray;
-  }
-
-  @override
-  void onFormChanged(
-    CreateHelperModel model,
-    CreateHelperPresenter presenter,
-  ) {
-    model.isFormValid = _formKey.currentState.validate();
-    presenter.refreshView();
-  }
-
   @override
   //FIXME put this in another class to deport logic
   void launchHelperEditor(final CreateHelperModel model) {
-    HapticFeedback.selectionClick();
-
     // Open editor overlay
     HelperEditorPageArguments args = HelperEditorPageArguments(
       widget.hostedAppNavigatorKey,
       widget.pageId,
-      helperName: _helperNameController?.value?.text,
+      helperName: model.helperNameController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
+      helperTheme: model.selectedHelperTheme,
+      helperType: model.selectedHelperType,
     );
-    var elementFinder = ElementFinder(widget.hostedAppNavigatorKey.currentContext);
+    var elementFinder =
+        ElementFinder(widget.hostedAppNavigatorKey.currentContext);
     showOverlayed(
       widget.hostedAppNavigatorKey,
       HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
     );
     // Go back
     Navigator.of(context).pop(true);
+  }
+
+  @override
+  void changeStep(GlobalKey<NavigatorState> nestedNavigationKey, int index) {
+    String routeName;
+    switch (index) {
+      case 0:
+        routeName = 'infos';
+        break;
+      case 1:
+        routeName = 'type';
+        break;
+      case 2:
+        routeName = 'theme';
+        break;
+      default:
+    }
+
+    Navigator.of(nestedNavigationKey.currentContext)
+        .pushNamed('create/$routeName');
+  }
+
+  @override
+  void popStep(GlobalKey<NavigatorState> nestedNavigationKey) {
+    Navigator.of(nestedNavigationKey.currentContext).pop();
+  }
+
+  @override
+  void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter) {
+    switch (model.step.value) {
+      case 0:
+        model.isFormValid = model.infosForm.currentState.validate();
+        break;
+      case 1:
+        model.isFormValid = model.selectedHelperType != null;
+        break;
+      case 2:
+        model.isFormValid = model.selectedHelperType != null;
+        break;
+      default:
+    }
+
+    presenter.refreshView();
   }
 }

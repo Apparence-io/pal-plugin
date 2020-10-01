@@ -69,6 +69,8 @@ class HelperEditorPresenter
       versionMinId: basicArguments?.versionMinId ?? 1,
       versionMaxId: basicArguments?.versionMaxId ?? 2,
     );
+
+    this.chooseHelperType(basicArguments?.helperType);
   }
 
   checkIfEditableWidgetFormValid(bool isFormValid) {

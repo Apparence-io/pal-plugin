@@ -16,8 +16,8 @@ class BubbleOverlayButton extends StatefulWidget {
     Key key,
     @required this.screenSize,
     @required this.visibility,
-    this.height = 50.0,
-    this.width = 50.0,
+    this.height = 64.0,
+    this.width = 64.0,
     this.onTapCallback,
   }) : super(key: key);
 
@@ -125,9 +125,9 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
             backgroundColor: PalTheme.of(context).floatingBubbleBackgroundColor,
             radius: widget.width / 2,
             shadow: BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              spreadRadius: 10,
-              blurRadius: 35,
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 4,
+              blurRadius: 8,
               offset: Offset(0, 3),
             ),
             image: 'packages/palplugin/assets/images/logo.png',

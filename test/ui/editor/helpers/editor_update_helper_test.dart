@@ -116,17 +116,18 @@ void main() {
       expect(find.text('Enter your first update line here...'), findsOneWidget);
       expect(find.text('Enter update line here...'), findsNothing);
 
-      var addNoteButton =
-          find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'));
-      await tester.tap(addNoteButton);
+      presenter.addChangelogNote();
+      await tester.pump();
       await tester.pumpAndSettle();
       expect(presenter.updateHelperViewModel.changelogsFields.length, 2);
 
-      await tester.tap(addNoteButton);
+      presenter.addChangelogNote();
+      await tester.pump();
       await tester.pumpAndSettle();
       expect(presenter.updateHelperViewModel.changelogsFields.length, 3);
 
-      await tester.tap(addNoteButton);
+      presenter.addChangelogNote();
+      await tester.pump();
       await tester.pumpAndSettle();
       expect(presenter.updateHelperViewModel.changelogsFields.length, 4);
 
@@ -137,10 +138,8 @@ void main() {
 
     testWidgets('should change note', (WidgetTester tester) async {
       await beforeEach(tester);
-
-      var addNoteButton =
-          find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'));
-      await tester.tap(addNoteButton);
+      presenter.addChangelogNote();
+      await tester.pump();
       await tester.pumpAndSettle();
 
       var textField = find.byType(EditableTextField);
@@ -151,8 +150,8 @@ void main() {
       ValueKey changelogKey =
           ValueKey('pal_EditorUpdateHelperWidget_ReleaseNoteField_1');
       expect(
-          presenter
-              .updateHelperViewModel.changelogsFields[changelogKey.toString()].text.value,
+          presenter.updateHelperViewModel
+              .changelogsFields[changelogKey.toString()].text.value,
           'A note');
     });
   });

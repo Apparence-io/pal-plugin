@@ -101,9 +101,10 @@ class EditorUpdateHelperPage extends StatelessWidget
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 40.0),
-                                        child: Image.asset(
-                                          'packages/palplugin/assets/images/create_helper.png',
-                                          height: 200.0,
+                                        child: Icon(
+                                          Icons.image,
+                                          size: 200.0,
+                                          color: Color(0xFF898989),
                                         ),
                                       ),
                                       _buildTitleField(
@@ -201,7 +202,7 @@ class EditorUpdateHelperPage extends StatelessWidget
             displayShadow: false,
             onTapCallback: () {
               HapticFeedback.selectionClick();
-              presenter.addChangelogNote(model);
+              presenter.addChangelogNote();
               this.scrollToBottomChangelogList(model);
             },
           ),

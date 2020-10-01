@@ -42,10 +42,10 @@ class EditorUpdateHelperPresenter
       },
     );
 
-    this.addChangelogNote(this.viewModel);
+    this.addChangelogNote();
   }
 
-  addChangelogNote(EditorUpdateHelperModel model) {
+  addChangelogNote() {
     String hintText;
     if (this.viewModel.changelogsTextfieldWidgets.length <= 0) {
       hintText = 'Enter your first update line here...';
@@ -73,11 +73,11 @@ class EditorUpdateHelperPresenter
           ),
         );
 
-    model.changelogsTextfieldWidgets.add(
+    this.viewModel.changelogsTextfieldWidgets.add(
       EditableTextField(
         textFormFieldKey: textFormFieldKey,
         helperToolbarKey: textFormToolbarKey,
-        outsideTapStream: model.editableTextFieldController.stream,
+        outsideTapStream: this.viewModel.editableTextFieldController.stream,
         hintText: hintText,
         maximumCharacterLength: 120,
         textStyle: TextStyle(

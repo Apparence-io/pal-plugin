@@ -3,13 +3,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
+import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
@@ -47,6 +47,8 @@ abstract class HelperEditorView {
   addFullscreenHelperEditor(FullscreenHelperViewModel model, Function isValid);
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid);
+
+  addUpdateHelperEditor(UpdateHelperViewModel model, Function isValid);
 
   addAnchoredFullscreenEditor(HelperEditorPresenter presenter);
 
@@ -187,7 +189,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
     final HelperEditorViewModel model,
   ) {
     return Positioned(
-      bottom: 32,
+      bottom: 25,
       left: 16,
       right: 16,
       child: Row(
@@ -233,7 +235,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         options: model.availableHelperType.map(
           (el) => SheetOption(
             text: el.text,
-            icon: Icons.border_outer,
+            icon: el.icon,
             type: el.type,
           )
         ).toList(),
@@ -254,6 +256,13 @@ class HelperEditorPageBuilder implements HelperEditorView {
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid) {
     _helperToEdit = EditorSimpleHelperPage(
+      viewModel: model,
+      onFormChanged: isValid,
+    );
+  }
+
+  addUpdateHelperEditor(UpdateHelperViewModel model, Function isValid) {
+    _helperToEdit = EditorUpdateHelperPage(
       viewModel: model,
       onFormChanged: isValid,
     );

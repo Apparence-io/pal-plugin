@@ -6,6 +6,7 @@ class CircleIconButton extends StatelessWidget {
   final num radius;
   final Icon icon;
   final BoxShadow shadow;
+  final bool displayShadow;
   final Function onTapCallback;
   const CircleIconButton({
     Key key,
@@ -13,6 +14,7 @@ class CircleIconButton extends StatelessWidget {
     this.splashColor,
     this.radius = 20.0,
     this.shadow,
+    this.displayShadow = true,
     @required this.icon,
     this.onTapCallback,
   }) : super(key: key);
@@ -23,7 +25,7 @@ class CircleIconButton extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.transparent,
-        boxShadow: [
+        boxShadow: displayShadow ? [
           shadow ??
               BoxShadow(
                 color: Colors.black.withOpacity(onTapCallback != null ? 0.1 : 0.03),
@@ -31,7 +33,7 @@ class CircleIconButton extends StatelessWidget {
                 blurRadius: 9,
                 offset: Offset(0, 3), // changes position of shadow
               ),
-        ],
+        ] : null,
       ),
       child: ClipOval(
         child: Opacity(

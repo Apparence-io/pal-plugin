@@ -70,7 +70,7 @@ void main() {
       var helpersOptionsFinder = find.byType(ModalBottomSheetOptions);
       expect(helpersOptionsFinder, findsOneWidget);
       // check options
-      expect(find.byType(ListTile), findsNWidgets(3));
+      expect(find.byType(ListTile), findsNWidgets(4));
       expect(find.byKey(ValueKey("cancel")), findsOneWidget);
       expect(find.byKey(ValueKey("validate")), findsOneWidget);
     });

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_simple_entity.dart';
+import 'package:palplugin/src/database/entity/helper/create_helper_update_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/extensions/color_extension.dart';
@@ -16,6 +17,8 @@ class EditorFactory {
         return FullscreenHelperViewModel.fromHelperViewModel(model);
       case HelperType.SIMPLE_HELPER:
         return SimpleHelperViewModel.fromHelperViewModel(model);
+      case HelperType.UPDATE_HELPER:
+        return UpdateHelperViewModel.fromHelperViewModel(model);
       default:
         return null;
     }
@@ -30,6 +33,9 @@ class EditorFactory {
       case SimpleHelperViewModel:
         createHelperEntity = _buildSimpleHelper(model);
         break;
+      case UpdateHelperViewModel:
+        createHelperEntity = _buildUpdateHelper(model);
+        break;
       default:
     }
     return createHelperEntity;
@@ -42,10 +48,10 @@ class EditorFactory {
       priority: model.priority,
       versionMaxId: model.versionMaxId,
       versionMinId: model.versionMinId,
-      title: model.title?.value,
-      fontColor: model.fontColor?.value?.toHex(),
-      backgroundColor: model.backgroundColor?.value?.toHex(),
-      borderColor: model.borderColor?.value?.toHex(),
+      title: model.titleField?.text?.value,
+      fontColor: model.titleField?.fontColor?.value?.toHex(),
+      backgroundColor: model.titleField?.backgroundColor?.value?.toHex(),
+      borderColor: model.titleField?.borderColor?.value?.toHex(),
       languageId: model.languageId?.value,
     );
   }
@@ -57,16 +63,31 @@ class EditorFactory {
       priority: model.priority,
       versionMaxId: model.versionMaxId,
       versionMinId: model.versionMinId,
-      title: model.details?.value,
-      fontColor: colorToHex(model.fontColor?.value),
-      backgroundColor: colorToHex(model.backgroundColor?.value),
-      borderColor: colorToHex(model.borderColor?.value),
+      title: model.detailsField?.text?.value,
+      fontColor: model.detailsField?.fontColor?.value?.toHex(),
+      backgroundColor: model.detailsField?.backgroundColor?.value?.toHex(),
+      borderColor: model.detailsField?.borderColor?.value?.toHex(),
+      languageId: model.languageId?.value,
+    );
+  }
+
+  static CreateHelperUpdateEntity _buildUpdateHelper(UpdateHelperViewModel model) {
+    return CreateHelperUpdateEntity(
+      name: model.name,
+      triggerType: model.triggerType,
+      priority: model.priority,
+      versionMaxId: model.versionMaxId,
+      versionMinId: model.versionMinId,
+      title: model.titleField?.text?.value,
+      fontColor: model.titleField?.fontColor?.value?.toHex(),
+      backgroundColor: model.backgroundColor?.value?.toHex(),
+      // borderColor: model.titleBackgroundColor?.value?.toHex(),
       languageId: model.languageId?.value,
     );
   }
 
   // TODO: Move to global utils file
-  static String colorToHex(Color color) {
-    return '#${color.value.toRadixString(16).substring(2, 8)}';
-  }
+  // static String colorToHex(Color color) {
+  //   return '#${color.value.toRadixString(16).substring(2, 8)}';
+  // }
 }

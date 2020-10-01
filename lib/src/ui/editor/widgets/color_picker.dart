@@ -6,10 +6,12 @@ import 'package:palplugin/src/extensions/color_extension.dart';
 import 'package:palplugin/src/ui/shared/widgets/bordered_text_field.dart';
 
 class ColorPickerDialog extends StatefulWidget {
+  final Color placeholderColor;
   final Function(Color) onColorSelected;
 
   const ColorPickerDialog({
     Key key,
+    this.placeholderColor,
     @required this.onColorSelected,
   }) : super(key: key);
 
@@ -20,8 +22,15 @@ class ColorPickerDialog extends StatefulWidget {
 class _ColorPickerDialogState extends State<ColorPickerDialog> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final _hexColorController = TextEditingController();
-  Color _selectedColor = Color(0xFFa1e3f1);
-  bool isFormValid = false;
+  Color _selectedColor;
+  bool _isFormValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedColor = widget.placeholderColor ?? Color(0xFFa1e3f1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +45,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
             autovalidate: true,
             onChanged: () {
               setState(() {
-                isFormValid = _formKey?.currentState?.validate();
+                _isFormValid = _formKey?.currentState?.validate();
               });
             },
             child: Column(
@@ -90,7 +99,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            onPressed: isFormValid
+            onPressed: _isFormValid
                 ? () {
                     if (widget.onColorSelected != null) {
                       HapticFeedback.selectionClick();

@@ -32,7 +32,7 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
     super.initState();
     _controller = PageController(
       initialPage: _currentpage,
-      viewportFraction: 0.8,
+      viewportFraction: 0.9,
     );
   }
 
@@ -104,10 +104,10 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
 
     return Padding(
       padding: EdgeInsets.only(
-        left: 9.0,
-        right: 9.0,
+        left: 8.0,
+        right: 8.0,
         top: 10.0,
-        bottom: 50.0,
+        bottom: 60.0,
       ),
       child: PreviewCardWidget(
         index: index,

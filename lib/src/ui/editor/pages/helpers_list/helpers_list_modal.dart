@@ -8,7 +8,6 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
@@ -17,7 +16,6 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/widgets/helper_tile_w
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 
 abstract class HelpersListModalView {
-
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
 
   void processElement(Element element, {int n = 0});
@@ -27,12 +25,15 @@ abstract class HelpersListModalView {
     final HelpersListModalModel model,
   );
 
-  void openHelperCreationPage(final HelpersListModalModel model);
+  void openHelperCreationPage(
+    final String pageId,
+  );
+  void openAppSettingsPage();
 }
 
-class HelpersListModal extends StatefulWidget  {
-
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
+class HelpersListModal extends StatefulWidget {
+  final GlobalKey<NavigatorState>
+      hostedAppNavigatorKey; //FIXME remove this from here
 
   final GlobalKey repaintBoundaryKey;
   final BuildContext bottomModalContext;
@@ -52,7 +53,8 @@ class HelpersListModal extends StatefulWidget  {
   _HelpersListModalState createState() => _HelpersListModalState();
 }
 
-class _HelpersListModalState extends State<HelpersListModal> implements HelpersListModalView {
+class _HelpersListModalState extends State<HelpersListModal>
+    implements HelpersListModalView {
   final ScrollController listController = ScrollController();
 
   final _mvvmPageBuilder =
@@ -67,10 +69,9 @@ class _HelpersListModalState extends State<HelpersListModal> implements HelpersL
         this,
         loader: this.widget.loader ??
             HelpersListModalLoader(
-              EditorInjector.of(context).pageService,
-              EditorInjector.of(context).helperService,
-              EditorInjector.of(context).routeObserver
-            ),
+                EditorInjector.of(context).pageService,
+                EditorInjector.of(context).helperService,
+                EditorInjector.of(context).routeObserver),
         palEditModeStateService: this.widget.palEditModeStateService ??
             EditorInjector.of(context).palEditModeStateService,
       ),
@@ -221,24 +222,24 @@ class _HelpersListModalState extends State<HelpersListModal> implements HelpersL
             )
           ],
         ),
-        Row(
-          children: [
-            SizedBox(
-              height: 30.0,
-              width: 30.0,
-              child: FloatingActionButton(
-                heroTag: 'palHelpersListModalNew',
-                key: ValueKey('palHelpersListModalNew'),
-                // onPressed: () => openHelperCreationPage(context, model),
-                onPressed: presenter.onClickAdd,
-                child: Icon(
-                  Icons.add,
-                  size: 18.0,
-                ),
-                shape: CircleBorder(),
+        Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              _buildCircleButton(
+                'pal_HelpersListModal_Settings',
+                Icons.settings,
+                presenter.onClickSettings,
               ),
-            ),
-          ],
+              SizedBox(width: 13.0),
+              _buildCircleButton(
+                'pal_HelpersListModal_New',
+                Icons.add,
+                presenter.onClickAdd,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -254,7 +255,8 @@ class _HelpersListModalState extends State<HelpersListModal> implements HelpersL
   @override
   processElement(Element element, {int n = 0}) {
     if (element.widget.key != null) {
-      var parentObject = widget.repaintBoundaryKey.currentContext.findRenderObject();
+      var parentObject =
+          widget.repaintBoundaryKey.currentContext.findRenderObject();
       if (element.widget is Scaffold) {
         print("SCAFFOLD");
       }
@@ -292,7 +294,9 @@ class _HelpersListModalState extends State<HelpersListModal> implements HelpersL
   }
 
   @override
-  void openHelperCreationPage(final HelpersListModalModel model) async {
+  Future openHelperCreationPage(
+    final String pageId,
+  ) async {
     HapticFeedback.selectionClick();
     // Display the helper creation view
     final shouldOpenEditor = await Navigator.pushNamed(
@@ -300,7 +304,7 @@ class _HelpersListModalState extends State<HelpersListModal> implements HelpersL
       '/editor/new',
       arguments: CreateHelperPageArguments(
         widget.hostedAppNavigatorKey,
-        model.pageId,
+        pageId,
       ),
     );
 
@@ -308,5 +312,41 @@ class _HelpersListModalState extends State<HelpersListModal> implements HelpersL
       // Dismiss the bottom modal when next was tapped
       Navigator.pop(widget.bottomModalContext);
     }
+  }
+
+  @override
+  Future openAppSettingsPage() async {
+    HapticFeedback.selectionClick();
+    // Display the helper creation view
+    final shouldOpenEditor = await Navigator.pushNamed(
+      context,
+      '/settings',
+    );
+
+    if (shouldOpenEditor != null && shouldOpenEditor) {
+      // Dismiss the bottom modal when next was tapped
+      Navigator.pop(widget.bottomModalContext);
+    }
+  }
+
+  Widget _buildCircleButton(
+    final String key,
+    final IconData icon,
+    final Function callback,
+  ) {
+    return SizedBox(
+      height: 30.0,
+      width: 30.0,
+      child: FloatingActionButton(
+        heroTag: key,
+        key: ValueKey(key),
+        onPressed: callback,
+        child: Icon(
+          icon,
+          size: 18.0,
+        ),
+        shape: CircleBorder(),
+      ),
+    );
   }
 }

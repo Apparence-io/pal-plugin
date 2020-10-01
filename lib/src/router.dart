@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
@@ -20,8 +21,9 @@ Route<dynamic> route(RouteSettings settings) {
           hostedAppNavigatorKey: args.hostedAppNavigatorKey,
         ),
       );
-    case '/editor/:id':
-      return MaterialPageRoute(builder: (context) => Text('A route with id'));
+    case '/editor/helper':
+      var helper = settings.arguments;
+      return MaterialPageRoute(builder: (context) => HelperDetailsComponent(helper: helper,));
     case '/editor/:id/edit':
       return MaterialPageRoute(
           builder: (context) => Text('A route with id with edit'));

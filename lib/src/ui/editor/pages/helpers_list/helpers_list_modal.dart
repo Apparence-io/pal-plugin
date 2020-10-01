@@ -180,8 +180,7 @@ class _HelpersListModalState extends State<HelpersListModal> implements HelpersL
                 versionMax: helperEntity?.versionMax,
                 isDisabled: false,
                 onTapCallback: () {
-                  // TODO: Send params
-                  Navigator.pushNamed(context, '/editor/${helperEntity.id}');
+                  Navigator.pushNamed(context, '/editor/helper',arguments: helperEntity);
                 },
               );
             },

@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:application_icon/application_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';

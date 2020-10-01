@@ -3,6 +3,7 @@ import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/editor/finder/finder_service.dart';
 import 'package:palplugin/src/services/editor/page/page_editor_service.dart';
+import 'package:palplugin/src/services/editor/project/app_icon_grabber_delegate.dart';
 import 'package:palplugin/src/services/editor/project/project_editor_service.dart';
 import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
@@ -22,6 +23,8 @@ class EditorInjector extends InheritedWidget {
 
   final VersionEditorService _versionEditorService;
 
+  final AppIconGrabberDelegate _appIconGrabberDelegate;
+
   final PalEditModeStateService _palEditModeStateService;
 
   final FinderService _finderService;
@@ -40,6 +43,7 @@ class EditorInjector extends InheritedWidget {
         this._pageService = PageService.build(appContext.pageRepository),
         this._helperService = HelperService.build(appContext.helperRepository),
         this._finderService = FinderService(observer: routeObserver),
+        this._appIconGrabberDelegate = AppIconGrabberDelegate(),
         this._versionEditorService = VersionEditorService.build(
           versionRepository: appContext.versionRepository,
           packageVersionReader: PackageVersionReader()
@@ -64,4 +68,6 @@ class EditorInjector extends InheritedWidget {
   PalEditModeStateService get palEditModeStateService => this._palEditModeStateService;
 
   FinderService get finderService => this._finderService;
+
+  AppIconGrabberDelegate get appIconGrabberDelegate => this._appIconGrabberDelegate;
 }

@@ -32,6 +32,7 @@ class EditorInjector extends InheritedWidget {
 
   final PalRouteObserver routeObserver;
 
+
   EditorInjector({
     Key key,
     @required EditorAppContext appContext,
@@ -40,7 +41,7 @@ class EditorInjector extends InheritedWidget {
     @required GlobalKey boundaryChildKey,
   })  : assert(child != null && appContext != null),
         this._pageEditorService = PageEditorService.build(boundaryChildKey),
-        this._projectEditorService = ProjectEditorService.build(),
+        this._projectEditorService = ProjectEditorService.build(appContext.projectRepository),
         this._pageService = PageService.build(appContext.pageRepository),
         this._helperService = HelperService.build(appContext.helperRepository),
         this._finderService = FinderService(observer: routeObserver),
@@ -70,6 +71,8 @@ class EditorInjector extends InheritedWidget {
       this._palEditModeStateService;
 
   FinderService get finderService => this._finderService;
+
+  ProjectEditorService get projectEditorService => this._projectEditorService;
 
   AppIconGrabberDelegate get appIconGrabberDelegate =>
       this._appIconGrabberDelegate;

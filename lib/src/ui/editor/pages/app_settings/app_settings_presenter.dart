@@ -1,5 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/services/editor/project/app_icon_grabber_delegate.dart';
+import 'package:palplugin/src/services/editor/project/project_editor_service.dart';
 import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings.dart';
 import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings_viewmodel.dart';
@@ -7,16 +11,20 @@ import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings_viewmode
 class AppSettingsPresenter
     extends Presenter<AppSettingsModel, AppSettingsView> {
   final PackageVersionReader packageVersionReader;
+  final AppIconGrabberDelegate appIconGrabberDelegate;
+  final ProjectEditorService projectEditorService;
 
   AppSettingsPresenter(
     AppSettingsView viewInterface, {
     @required this.packageVersionReader,
+    @required this.projectEditorService,
+    @required this.appIconGrabberDelegate,
   }) : super(AppSettingsModel(), viewInterface);
 
   @override
   Future onInit() async {
-    this.viewModel.headerKey = GlobalKey();
     this.viewModel.appIconAnimation = false;
+    this.viewModel.isSendingAppIcon = false;
 
     readAppInfo();
     startAnimation();
@@ -25,9 +33,7 @@ class AppSettingsPresenter
   }
 
   afterLayout(Duration duration) {
-    RenderBox _headerRenderBox =
-        this.viewModel.headerKey.currentContext.findRenderObject();
-    this.viewModel.headerSize = _headerRenderBox.size;
+    this.viewModel.headerSize = this.viewInterface.getHeaderSize();
     this.refreshView();
   }
 
@@ -47,7 +53,16 @@ class AppSettingsPresenter
     this.viewModel.appVersion = this.packageVersionReader.version;
   }
 
-  refreshAppIcon() {
-    print('TEST');
+  refreshAppIcon() async {
+    this.viewModel.isSendingAppIcon = true;
+    this.refreshView();
+
+    Uint8List appIcon = await this.appIconGrabberDelegate.getClientAppIcon();
+    await this.projectEditorService.sendAppIcon(appIcon);
+    
+    this.viewModel.isSendingAppIcon = false;
+    this.refreshView();
+
+    this.viewInterface.showMessage('App icon updated successfully', true);
   }
 }

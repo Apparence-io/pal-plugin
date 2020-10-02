@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/editor/project/app_icon_grabber_delegate.dart';
+import 'package:palplugin/src/services/editor/project/project_editor_service.dart';
 import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/app_settings/widgets/animated_app_icon.dart';
+import 'package:palplugin/src/ui/editor/widgets/snackbar_mixin.dart';
 
 class AppSettingsPageArguments {
   final String pageId;
@@ -16,18 +18,27 @@ class AppSettingsPageArguments {
   );
 }
 
-abstract class AppSettingsView {}
+abstract class AppSettingsView {
+  showMessage(String message, bool success);
+  getHeaderSize();
+}
 
-const logoSize = 120.0;
-
-class AppSettingsPage extends StatelessWidget implements AppSettingsView {
+class AppSettingsPage extends StatelessWidget
+    with SnackbarMixin
+    implements AppSettingsView {
   final AppIconGrabberDelegate appIconGrabberDelegate;
   final PackageVersionReader packageVersionReader;
+  final ProjectEditorService projectEditorService;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey _headerKey = GlobalKey();
+  final double _logoSize = 120.0;
 
   AppSettingsPage({
     Key key,
     this.appIconGrabberDelegate,
     this.packageVersionReader,
+    this.projectEditorService,
   });
 
   final _mvvmPageBuilder =
@@ -42,6 +53,10 @@ class AppSettingsPage extends StatelessWidget implements AppSettingsView {
         this,
         packageVersionReader: packageVersionReader ??
             EditorInjector.of(context).packageVersionReader,
+        projectEditorService: projectEditorService ??
+            EditorInjector.of(context).projectEditorService,
+        appIconGrabberDelegate: appIconGrabberDelegate ??
+            EditorInjector.of(context).appIconGrabberDelegate,
       ),
       singleAnimControllerBuilder: (tickerProvider) {
         return AnimationController(
@@ -60,6 +75,7 @@ class AppSettingsPage extends StatelessWidget implements AppSettingsView {
       },
       builder: (context, presenter, model) {
         return Scaffold(
+          key: _scaffoldKey,
           extendBodyBehindAppBar: true,
           appBar: AppBar(
             title: Text('Pal settings'),
@@ -82,12 +98,13 @@ class AppSettingsPage extends StatelessWidget implements AppSettingsView {
       child: Padding(
         padding: EdgeInsets.only(
           top: (model.headerSize.height / 2) +
-              ((model.headerSize.height - logoSize) / 2),
+              ((model.headerSize.height - _logoSize) / 2),
         ),
         child: AnimatedAppIcon(
-          radius: logoSize / 2,
+          radius: _logoSize / 2,
           animationController: context.animationController,
           onTap: presenter.refreshAppIcon,
+          isSendingAppIcon: model.isSendingAppIcon,
         ),
       ),
     );
@@ -98,7 +115,7 @@ class AppSettingsPage extends StatelessWidget implements AppSettingsView {
     final AppSettingsModel model,
   ) {
     return Container(
-      key: model.headerKey,
+      key: _headerKey,
       decoration: BoxDecoration(
         gradient: PalTheme.of(context).settingsSilverGradient,
       ),
@@ -149,7 +166,7 @@ class AppSettingsPage extends StatelessWidget implements AppSettingsView {
     final AppSettingsModel model,
   ) {
     return ListView(
-      padding: EdgeInsets.only(top: (logoSize / 2) + 30.0),
+      padding: EdgeInsets.only(top: (_logoSize / 2) + 30.0),
       children: [
         Center(
           child: Text(
@@ -205,6 +222,17 @@ class AppSettingsPage extends StatelessWidget implements AppSettingsView {
         ),
       ],
     );
+  }
+
+  @override
+  showMessage(String message, bool success) {
+    return showSnackbarMessage(_scaffoldKey, message, success);
+  }
+
+  @override
+  getHeaderSize() {
+    RenderBox _headerRenderBox = _headerKey.currentContext.findRenderObject();
+    return _headerRenderBox.size;
   }
 
   // Widget _buildSaveButton(BuildContext context, final AppSettingsModel model) {

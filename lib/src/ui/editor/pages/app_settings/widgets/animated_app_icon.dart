@@ -7,6 +7,7 @@ import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 class AnimatedAppIcon extends AnimatedWidget {
   final double radius;
   final Function onTap;
+  final bool isSendingAppIcon;
   final AnimationController animationController;
 
   AnimatedAppIcon({
@@ -14,6 +15,7 @@ class AnimatedAppIcon extends AnimatedWidget {
     @required this.radius,
     @required this.animationController,
     this.onTap,
+    this.isSendingAppIcon = false,
   }) : super(key: key, listenable: animationController);
 
   @override
@@ -45,17 +47,18 @@ class AnimatedAppIcon extends AnimatedWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: CircleIconButton(
+                  isLoading: isSendingAppIcon,
                   icon: Icon(
                     Icons.refresh,
                     color: PalTheme.of(context).colors.light,
                   ),
                   backgroundColor: PalTheme.of(context).colors.dark,
-                  onTapCallback: () {
+                  onTapCallback: !isSendingAppIcon ? () {
                     if (onTap != null) {
                       HapticFeedback.selectionClick();
                       onTap();
                     }
-                  },
+                  } : null,
                 ),
               )
             ],

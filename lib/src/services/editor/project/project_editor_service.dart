@@ -1,21 +1,30 @@
 import 'dart:typed_data';
 
-abstract class ProjectEditorService {
+import 'package:palplugin/src/database/repository/project_repository.dart';
 
-  factory ProjectEditorService.build() => ProjectEditorHttpService();
+abstract class ProjectEditorService {
+  factory ProjectEditorService.build(
+    ProjectRepository projectRepository,
+  ) =>
+      ProjectEditorHttpService(projectRepository);
 
   Future sendAppIcon(Uint8List icon) => throw "not implemented yet";
 }
 
 class ProjectEditorHttpService implements ProjectEditorService {
+  final ProjectRepository projectRepository;
 
-  ProjectEditorHttpService();
+  ProjectEditorHttpService(this.projectRepository);
 
   @override
   Future sendAppIcon(Uint8List icon) async {
-    // TODO: Send icon to back using multipartImage
-    List<int> data = icon.toList();
-    print(data);
-  }
+    // TODO: I created a "create" & "update" method,
+    // but seems to be better to just use "send" method,
+    // and then Back will create OR update if already exist :)
+    await Future.delayed(Duration(milliseconds: 3500));
+    return Future.value(true);
 
+    // FIXME: MOCKED THING
+    // return this.projectRepository.createAppIcon(projectId, imageData, imageType, imageDate);
+  }
 }

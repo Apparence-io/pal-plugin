@@ -12,7 +12,6 @@ import 'package:palplugin/src/services/page_server.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 
 class EditorInjector extends InheritedWidget {
-
   final PageService _pageService;
 
   final HelperService _helperService;
@@ -29,6 +28,8 @@ class EditorInjector extends InheritedWidget {
 
   final FinderService _finderService;
 
+  final PackageVersionReader _packageVersionReader;
+
   final PalRouteObserver routeObserver;
 
   EditorInjector({
@@ -36,18 +37,18 @@ class EditorInjector extends InheritedWidget {
     @required EditorAppContext appContext,
     @required this.routeObserver,
     @required Widget child,
-    @required GlobalKey boundaryChildKey, 
+    @required GlobalKey boundaryChildKey,
   })  : assert(child != null && appContext != null),
         this._pageEditorService = PageEditorService.build(boundaryChildKey),
         this._projectEditorService = ProjectEditorService.build(),
         this._pageService = PageService.build(appContext.pageRepository),
         this._helperService = HelperService.build(appContext.helperRepository),
         this._finderService = FinderService(observer: routeObserver),
+        this._packageVersionReader = PackageVersionReader(),
         this._appIconGrabberDelegate = AppIconGrabberDelegate(),
         this._versionEditorService = VersionEditorService.build(
-          versionRepository: appContext.versionRepository,
-          packageVersionReader: PackageVersionReader()
-        ),
+            versionRepository: appContext.versionRepository,
+            packageVersionReader: PackageVersionReader()),
         this._palEditModeStateService = PalEditModeStateService.build(),
         super(key: key, child: child);
 
@@ -65,9 +66,13 @@ class EditorInjector extends InheritedWidget {
 
   PageService get pageService => this._pageService;
 
-  PalEditModeStateService get palEditModeStateService => this._palEditModeStateService;
+  PalEditModeStateService get palEditModeStateService =>
+      this._palEditModeStateService;
 
   FinderService get finderService => this._finderService;
 
-  AppIconGrabberDelegate get appIconGrabberDelegate => this._appIconGrabberDelegate;
+  AppIconGrabberDelegate get appIconGrabberDelegate =>
+      this._appIconGrabberDelegate;
+
+  PackageVersionReader get packageVersionReader => this._packageVersionReader;
 }

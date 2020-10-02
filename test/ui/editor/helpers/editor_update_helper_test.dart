@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
-import 'package:palplugin/src/ui/editor/widgets/modal_bottomsheet_options.dart';
 import '../../../pal_test_utilities.dart';
 
 void main() {
-  group('Update helper editor', () {
+  group('[Editor] Update helper', () {
     final _navigatorKey = GlobalKey<NavigatorState>();
 
     EditorUpdateHelperPresenter presenter;
@@ -40,23 +39,19 @@ void main() {
     // init pal + go to editor
     Future beforeEach(WidgetTester tester) async {
       await initAppWithPal(tester, _myHomeTest, _navigatorKey);
-      await showEditor(
-          tester, _navigatorKey, HelperTriggerType.ON_SCREEN_VISIT);
-      await addHelperEditorByType(tester, HelperType.UPDATE_HELPER);
-      var pageFinder =
+      await pumpHelperWidget(
+        tester,
+        _navigatorKey,
+        HelperTriggerType.ON_SCREEN_VISIT,
+        HelperType.UPDATE_HELPER,
+        HelperTheme.BLACK,
+      );
+      var presenterFinder =
           find.byKey(ValueKey("pal_EditorUpdateHelperWidget_Builder"));
-      var page = pageFinder.evaluate().first.widget as PresenterInherited<
+      var page = presenterFinder.evaluate().first.widget as PresenterInherited<
           EditorUpdateHelperPresenter, EditorUpdateHelperModel>;
       presenter = page.presenter;
     }
-
-    testWidgets('can add an anchored fullscreen helper',
-        (WidgetTester tester) async {
-      await beforeEach(tester);
-      // expect to find only our helper type editor
-      expect(find.byType(ModalBottomSheetOptions), findsNothing);
-      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
-    });
 
     testWidgets('should change background color', (WidgetTester tester) async {
       await beforeEach(tester);

@@ -229,13 +229,19 @@ class _HelpersListModalState extends State<HelpersListModal>
             children: [
               _buildCircleButton(
                 'pal_HelpersListModal_Settings',
-                Icons.settings,
+                Icon(
+                  Icons.settings,
+                  size: 20,
+                ),
                 presenter.onClickSettings,
               ),
-              SizedBox(width: 13.0),
+              SizedBox(width: 14.0),
               _buildCircleButton(
                 'pal_HelpersListModal_New',
-                Icons.add,
+                Icon(
+                  Icons.add,
+                  size: 25,
+                ),
                 presenter.onClickAdd,
               ),
             ],
@@ -331,20 +337,17 @@ class _HelpersListModalState extends State<HelpersListModal>
 
   Widget _buildCircleButton(
     final String key,
-    final IconData icon,
+    final Icon icon,
     final Function callback,
   ) {
     return SizedBox(
-      height: 30.0,
-      width: 30.0,
+      height: 32.0,
+      width: 32.0,
       child: FloatingActionButton(
         heroTag: key,
         key: ValueKey(key),
         onPressed: callback,
-        child: Icon(
-          icon,
-          size: 18.0,
-        ),
+        child: icon,
         shape: CircleBorder(),
       ),
     );

@@ -87,6 +87,7 @@ class AppSettingsPage extends StatelessWidget implements AppSettingsView {
         child: AnimatedAppIcon(
           radius: logoSize / 2,
           animationController: context.animationController,
+          onTap: presenter.refreshAppIcon,
         ),
       ),
     );

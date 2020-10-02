@@ -29,6 +29,7 @@ class AppSettingsPage extends StatelessWidget
   final AppIconGrabberDelegate appIconGrabberDelegate;
   final PackageVersionReader packageVersionReader;
   final ProjectEditorService projectEditorService;
+  final bool testMode;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final GlobalKey _headerKey = GlobalKey();
@@ -39,6 +40,7 @@ class AppSettingsPage extends StatelessWidget
     this.appIconGrabberDelegate,
     this.packageVersionReader,
     this.projectEditorService,
+    this.testMode = false,
   });
 
   final _mvvmPageBuilder =
@@ -94,6 +96,7 @@ class AppSettingsPage extends StatelessWidget
     final AppSettingsPresenter presenter,
   ) {
     return Align(
+      key: ValueKey('pal_AppSettingsPage_AppIcon'),
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(
@@ -105,6 +108,7 @@ class AppSettingsPage extends StatelessWidget
           animationController: context.animationController,
           onTap: presenter.refreshAppIcon,
           isSendingAppIcon: model.isSendingAppIcon,
+          testMode: testMode,
         ),
       ),
     );
@@ -128,6 +132,7 @@ class AppSettingsPage extends StatelessWidget
     final AppSettingsModel model,
   ) {
     return Stack(
+      key: ValueKey('pal_AppSettingsPage_Stack'),
       children: [
         Column(
           children: [
@@ -137,7 +142,11 @@ class AppSettingsPage extends StatelessWidget
             ),
             Expanded(
               flex: 25,
-              child: _buildBody(context.buildContext, model),
+              child: model.isLoadingAppInfo
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : _buildBody(context.buildContext, model),
             ),
             // Container(
             //   width: double.infinity,
@@ -170,7 +179,7 @@ class AppSettingsPage extends StatelessWidget
       children: [
         Center(
           child: Text(
-            'My Application name',
+            model.appName,
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 20,

@@ -9,6 +9,7 @@ class AnimatedAppIcon extends AnimatedWidget {
   final Function onTap;
   final bool isSendingAppIcon;
   final AnimationController animationController;
+  final bool testMode;
 
   AnimatedAppIcon({
     Key key,
@@ -16,6 +17,7 @@ class AnimatedAppIcon extends AnimatedWidget {
     @required this.animationController,
     this.onTap,
     this.isSendingAppIcon = false,
+    this.testMode = false,
   }) : super(key: key, listenable: animationController);
 
   @override
@@ -28,42 +30,46 @@ class AnimatedAppIcon extends AnimatedWidget {
         ),
       ),
       child: Container(
-          width: radius * 2,
-          height: radius * 2,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                spreadRadius: 4,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              ClipOval(child: AppIconImage()),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: CircleIconButton(
-                  isLoading: isSendingAppIcon,
-                  icon: Icon(
-                    Icons.refresh,
-                    color: PalTheme.of(context).colors.light,
-                  ),
-                  backgroundColor: PalTheme.of(context).colors.dark,
-                  onTapCallback: !isSendingAppIcon ? () {
-                    if (onTap != null) {
-                      HapticFeedback.selectionClick();
-                      onTap();
-                    }
-                  } : null,
-                ),
-              )
-            ],
-          ),
+        width: radius * 2,
+        height: radius * 2,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 4,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
+        child: Stack(
+          children: [
+            ClipOval(child: !testMode ? AppIconImage() : Container()),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: CircleIconButton(
+                key: ValueKey(
+                    'pal_AppSettingsPage_AnimatedAppIcon_RefreshButton'),
+                isLoading: isSendingAppIcon,
+                icon: Icon(
+                  Icons.refresh,
+                  color: PalTheme.of(context).colors.light,
+                ),
+                backgroundColor: PalTheme.of(context).colors.dark,
+                onTapCallback: !isSendingAppIcon
+                    ? () {
+                        if (onTap != null) {
+                          HapticFeedback.selectionClick();
+                          onTap();
+                        }
+                      }
+                    : null,
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

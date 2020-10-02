@@ -49,8 +49,15 @@ class AppSettingsPresenter
   }
 
   readAppInfo() async {
+    this.viewModel.isLoadingAppInfo = true;
+    this.refreshView();
+
     await this.packageVersionReader.init();
     this.viewModel.appVersion = this.packageVersionReader.version;
+    this.viewModel.appName = this.packageVersionReader.appName;
+    
+    this.viewModel.isLoadingAppInfo = false;
+    this.refreshView();
   }
 
   refreshAppIcon() async {

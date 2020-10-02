@@ -4,13 +4,17 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 class AppSettingsModel extends MVVMModel {
   Size headerSize;
   String appVersion;
+  String appName;
   bool appIconAnimation;
   bool isSendingAppIcon;
+  bool isLoadingAppInfo;
   
   AppSettingsModel({
     this.headerSize,
     this.appVersion,
+    this.appName,
     this.appIconAnimation,
     this.isSendingAppIcon,
+    this.isLoadingAppInfo,
   });
 }

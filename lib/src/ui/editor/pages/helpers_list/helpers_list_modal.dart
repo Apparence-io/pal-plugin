@@ -202,7 +202,13 @@ class _HelpersListModalState extends State<HelpersListModal>
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        Image.asset(
+          'packages/palplugin/assets/images/logo.png',
+          height: 36.0,
+        ),
+        SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

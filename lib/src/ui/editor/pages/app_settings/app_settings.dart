@@ -179,7 +179,7 @@ class AppSettingsPage extends StatelessWidget
       children: [
         Center(
           child: Text(
-            model.appName,
+            model.appName ?? 'My app',
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 20,
@@ -191,7 +191,7 @@ class AppSettingsPage extends StatelessWidget
         ),
         Center(
           child: Text(
-            'Version ${model.appVersion}',
+            'Version ${model.appVersion ?? '--'}',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 10.0,

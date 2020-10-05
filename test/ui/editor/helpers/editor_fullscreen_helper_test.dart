@@ -7,6 +7,7 @@ import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
 import '../../../pal_test_utilities.dart';
 
 void main() {
@@ -85,6 +86,33 @@ void main() {
       await tester.pump();
       await tester.enterText(titleField, 'Bonjour!');
       expect(find.text('Bonjour!'), findsOneWidget);
+    });
+
+    testWidgets('should change background color', (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      expect(presenter.fullscreenHelperViewModel.backgroundColor.value,
+          Colors.blueAccent);
+
+      var colorPickerButton = find.byKey(
+          ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
+      await tester.tap(colorPickerButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ColorPickerDialog), findsOneWidget);
+
+      var hecColorField =
+          find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
+      await tester.enterText(hecColorField, '#FFFFFF');
+      await tester.pumpAndSettle();
+
+      var validateColorButton =
+          find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
+      await tester.tap(validateColorButton);
+      await tester.pumpAndSettle();
+
+      expect(presenter.fullscreenHelperViewModel.backgroundColor.value,
+          Color(0xFFFFFFFF));
     });
   });
 }

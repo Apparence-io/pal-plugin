@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
+import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/color_picker.dart';
+import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_size_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
 enum ToolbarType { text, border }
@@ -296,7 +297,25 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   // Toolbar stuff
-  _onChangeTextFontSize() {}
+  _onChangeTextFontSize() {
+    showDialog(
+      context: context,
+      child: FontSizePickerDialog(
+        fontSize: _textStyle?.fontSize,
+        onFontSizeSelected: (double newFontSize) {
+          setState(() {
+            _textStyle = _textStyle.merge(
+              TextStyle(
+                fontSize: newFontSize,
+              ),
+            );
+            _isToolbarVisible = true;
+          });
+        },
+      ),
+    );
+  }
+
   _onChangeTextFont() {}
   _onChangeTextColor() {
     showDialog(
@@ -305,7 +324,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
         placeholderColor: _textStyle?.color,
         onColorSelected: (Color newColor) {
           setState(() {
-            _textStyle = widget.textStyle.merge(TextStyle(
+            _textStyle = _textStyle.merge(TextStyle(
               color: newColor,
             ));
             _isToolbarVisible = true;

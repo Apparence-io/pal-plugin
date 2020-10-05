@@ -12,7 +12,7 @@ class ColorPickerDialog extends StatefulWidget {
   const ColorPickerDialog({
     Key key,
     this.placeholderColor,
-    @required this.onColorSelected,
+    this.onColorSelected,
   }) : super(key: key);
 
   @override
@@ -42,7 +42,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
         content: SingleChildScrollView(
           child: Form(
             key: _formKey,
-            autovalidate: true,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: () {
               setState(() {
                 _isFormValid = _formKey?.currentState?.validate();

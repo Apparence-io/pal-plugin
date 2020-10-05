@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/theme.dart';
+import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
 enum ToolbarType { text, border }
@@ -149,6 +150,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
   bool _isToolbarVisible = false;
   FocusNode _focusNode = FocusNode();
   StreamSubscription _outsideSub;
+  TextStyle _textStyle;
 
   @override
   void initState() {
@@ -163,6 +165,8 @@ class _EditableTextFieldState extends State<EditableTextField> {
         this._onClose();
       }
     });
+
+    _textStyle = widget.textStyle;
   }
 
   @override
@@ -220,23 +224,19 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     keyboardType: widget.keyboardType,
                     maxLines: widget.maxLines,
                     onFieldSubmitted: _onFieldSubmitted,
-                    cursorColor: widget.textStyle.color,
+                    cursorColor: _textStyle?.color,
                     inputFormatters: widget.inputFormatters,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: widget.hintText,
                       hintStyle: TextStyle(
-                        color: widget.textStyle.color.withAlpha(80),
+                        color: _textStyle?.color?.withAlpha(80),
                         decoration: TextDecoration.none,
-                        fontSize: widget.textStyle.fontSize,
+                        fontSize: widget.textStyle?.fontSize,
                       ),
                     ),
                     textAlign: TextAlign.center,
-                    style: widget.textStyle ??
-                        TextStyle(
-                          color: PalTheme.of(context).simpleHelperFontColor,
-                          fontSize: 14.0,
-                        ),
+                    style: _textStyle,
                   ),
                 ),
               ),
@@ -298,7 +298,23 @@ class _EditableTextFieldState extends State<EditableTextField> {
   // Toolbar stuff
   _onChangeTextFontSize() {}
   _onChangeTextFont() {}
-  _onChangeTextColor() {}
+  _onChangeTextColor() {
+    showDialog(
+      context: context,
+      child: ColorPickerDialog(
+        placeholderColor: _textStyle?.color,
+        onColorSelected: (Color newColor) {
+          setState(() {
+            _textStyle = widget.textStyle.merge(TextStyle(
+              color: newColor,
+            ));
+            _isToolbarVisible = true;
+          });
+        },
+      ),
+    );
+  }
+
   _onChangeBorder() {}
   _onClose() {
     _focusNode.unfocus();

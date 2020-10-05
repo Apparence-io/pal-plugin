@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
+enum ToolbarType { text, border }
+
 class EditableTextField extends StatefulWidget {
   // Keys
   // static final GlobalKey<_EditableTextFieldState> globalKey = GlobalKey();
@@ -29,6 +31,7 @@ class EditableTextField extends StatefulWidget {
   final String hintText;
   final List<TextInputFormatter> inputFormatters;
   final Stream<bool> outsideTapStream;
+  final ToolbarType toolbarType;
 
   EditableTextField({
     Key key,
@@ -48,8 +51,95 @@ class EditableTextField extends StatefulWidget {
     this.inputFormatters,
     this.hintText = 'Edit me!',
     this.keyboardType,
+    this.toolbarType = ToolbarType.text,
     @required this.textStyle,
   }) : super();
+
+  factory EditableTextField.text({
+    Key key,
+    final Key textFormFieldKey,
+    final Key backgroundContainerKey,
+    final Key helperToolbarKey,
+    final bool autovalidate = true,
+    final BoxDecoration backgroundBoxDecoration,
+    final EdgeInsetsGeometry backgroundPadding,
+    final EdgeInsetsGeometry textFormFieldPadding,
+    final String Function(String) validator,
+    final Function(Key, String) onChanged,
+    final TextInputType keyboardType,
+    final TextStyle textStyle,
+    final int maxLines = 1,
+    final int maximumCharacterLength,
+    final int minimumCharacterLength,
+    final String hintText = 'Edit me!',
+    final List<TextInputFormatter> inputFormatters,
+    final Stream<bool> outsideTapStream,
+  }) {
+    return EditableTextField(
+      key: key,
+      textFormFieldKey: textFormFieldKey,
+      backgroundContainerKey: backgroundContainerKey,
+      helperToolbarKey: helperToolbarKey,
+      outsideTapStream: outsideTapStream,
+      maximumCharacterLength: maximumCharacterLength,
+      minimumCharacterLength: minimumCharacterLength,
+      onChanged: onChanged,
+      autovalidate: autovalidate,
+      backgroundPadding: backgroundPadding,
+      textFormFieldPadding: textFormFieldPadding,
+      validator: validator,
+      backgroundBoxDecoration: backgroundBoxDecoration,
+      maxLines: maxLines,
+      inputFormatters: inputFormatters,
+      hintText: hintText,
+      keyboardType: keyboardType,
+      textStyle: textStyle,
+      toolbarType: ToolbarType.text,
+    );
+  }
+
+  factory EditableTextField.border({
+    Key key,
+    final Key textFormFieldKey,
+    final Key backgroundContainerKey,
+    final Key helperToolbarKey,
+    final bool autovalidate = true,
+    final BoxDecoration backgroundBoxDecoration,
+    final EdgeInsetsGeometry backgroundPadding,
+    final EdgeInsetsGeometry textFormFieldPadding,
+    final String Function(String) validator,
+    final Function(Key, String) onChanged,
+    final TextInputType keyboardType,
+    final TextStyle textStyle,
+    final int maxLines = 1,
+    final int maximumCharacterLength,
+    final int minimumCharacterLength,
+    final String hintText = 'Edit me!',
+    final List<TextInputFormatter> inputFormatters,
+    final Stream<bool> outsideTapStream,
+  }) {
+    return EditableTextField(
+      key: key,
+      textFormFieldKey: textFormFieldKey,
+      backgroundContainerKey: backgroundContainerKey,
+      helperToolbarKey: helperToolbarKey,
+      outsideTapStream: outsideTapStream,
+      maximumCharacterLength: maximumCharacterLength,
+      minimumCharacterLength: minimumCharacterLength,
+      onChanged: onChanged,
+      autovalidate: autovalidate,
+      backgroundPadding: backgroundPadding,
+      textFormFieldPadding: textFormFieldPadding,
+      validator: validator,
+      backgroundBoxDecoration: backgroundBoxDecoration,
+      maxLines: maxLines,
+      inputFormatters: inputFormatters,
+      hintText: hintText,
+      keyboardType: keyboardType,
+      textStyle: textStyle,
+      toolbarType: ToolbarType.border,
+    );
+  }
 
   @override
   _EditableTextFieldState createState() => _EditableTextFieldState();
@@ -70,7 +160,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
     // Listen on stream when outside tap is detected
     _outsideSub = widget.outsideTapStream?.listen((event) {
       if (event) {
-        this._onCloseTap();
+        this._onClose();
       }
     });
   }
@@ -88,14 +178,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
       padding: const EdgeInsets.all(1.0),
       child: Column(
         children: [
-          if (_isToolbarVisible)
-            EditHelperToolbar(
-              key: widget.helperToolbarKey,
-              onChangeBorderTap: _onChangeBorderTap,
-              onCloseTap: _onCloseTap,
-              onChangeFontTap: _onChangeFontTap,
-              onEditTextTap: _onTextFieldTapped,
-            ),
+          if (_isToolbarVisible) _buildToolbar(widget.toolbarType),
           Padding(
             // FIXME: This is used to show element even if keyboard is shown
             // should be better to find a way to not use it :/
@@ -122,12 +205,14 @@ class _EditableTextFieldState extends State<EditableTextField> {
                       String error;
                       if (widget.minimumCharacterLength != null) {
                         if (value.length < widget.minimumCharacterLength) {
-                          error = 'Minimum ${widget.minimumCharacterLength} ${widget.minimumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
+                          error =
+                              'Minimum ${widget.minimumCharacterLength} ${widget.minimumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
                         }
                       }
                       if (widget.maximumCharacterLength != null) {
                         if (value.length >= widget.maximumCharacterLength) {
-                          error = 'Maximum ${widget.maximumCharacterLength} ${widget.maximumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
+                          error =
+                              'Maximum ${widget.maximumCharacterLength} ${widget.maximumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
                         }
                       }
                       return error;
@@ -162,6 +247,34 @@ class _EditableTextFieldState extends State<EditableTextField> {
     );
   }
 
+  _buildToolbar(ToolbarType toolbarType) {
+    Widget toolbar;
+    switch (toolbarType) {
+      case ToolbarType.text:
+        toolbar = EditHelperToolbar.text(
+          key: widget.helperToolbarKey,
+          onChangeTextColor: _onChangeTextColor,
+          onChangeTextFontSize: _onChangeTextFontSize,
+          onChangeTextFont: _onChangeTextFont,
+          onClose: _onClose,
+        );
+        break;
+      case ToolbarType.border:
+        toolbar = EditHelperToolbar.border(
+          key: widget.helperToolbarKey,
+          onChangeTextColor: _onChangeTextColor,
+          onChangeTextFontSize: _onChangeTextFontSize,
+          onChangeTextFont: _onChangeTextFont,
+          onChangeBorder: _onChangeBorder,
+          onClose: _onClose,
+        );
+        break;
+      default:
+    }
+
+    return toolbar;
+  }
+
   // Textfield stuff
   _onTextFieldTapped() {
     _focusNode.requestFocus();
@@ -179,18 +292,19 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   _onFieldSubmitted(String newValue) {
-    this._onCloseTap();
+    this._onClose();
   }
 
   // Toolbar stuff
-  _onChangeBorderTap() {}
-  _onCloseTap() {
+  _onChangeTextFontSize() {}
+  _onChangeTextFont() {}
+  _onChangeTextColor() {}
+  _onChangeBorder() {}
+  _onClose() {
     _focusNode.unfocus();
 
     setState(() {
       _isToolbarVisible = false;
     });
   }
-
-  _onChangeFontTap() {}
 }

@@ -12,7 +12,7 @@ import 'package:palplugin/src/ui/editor/pal_editmode_wrapper.dart';
 import 'injectors/editor_app/editor_app_injector.dart';
 
 // our production server address
-const PAL_SERVER_URL = 'http://217.182.88.6:8053';
+const PAL_SERVER_URL = 'http://217.182.88.6:8050';
 
 // Pal top widget
 class Pal extends StatelessWidget {

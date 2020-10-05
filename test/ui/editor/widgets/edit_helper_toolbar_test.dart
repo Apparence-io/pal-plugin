@@ -26,11 +26,11 @@ void main() {
     testWidgets('should display correctly', (WidgetTester tester) async {
       await _setup(tester);
 
-      expect(find.byKey(ValueKey('palToolbar')), findsOneWidget);
-      expect(find.byKey(ValueKey('palToolbarEditText')), findsOneWidget);
-      expect(find.byKey(ValueKey('palToolbarChangeBorder')), findsOneWidget);
-      expect(find.byKey(ValueKey('palToolbarChangeFont')), findsOneWidget);
-      expect(find.byKey(ValueKey('palToolbarClose')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_EditHelperToolbar')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_EditHelperToolbar_TextColor')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_EditHelperToolbar_TextFont')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_EditHelperToolbar_TextSize')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_EditHelperToolbar_Close')), findsOneWidget);
     });
   });
 }

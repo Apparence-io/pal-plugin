@@ -68,7 +68,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          EditableTextField(
+                          EditableTextField.text(
                             outsideTapStream:
                                 model.editableTextFieldController.stream,
                             helperToolbarKey: ValueKey(

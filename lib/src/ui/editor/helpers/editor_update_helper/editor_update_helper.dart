@@ -157,7 +157,7 @@ class EditorUpdateHelperPage extends StatelessWidget
     final EditorUpdateHelperPresenter presenter,
     final EditorUpdateHelperModel model,
   ) {
-    return EditableTextField(
+    return EditableTextField.text(
       helperToolbarKey: ValueKey(
         'pal_EditorUpdateHelperWidget_TitleToolbar',
       ),
@@ -218,7 +218,7 @@ class EditorUpdateHelperPage extends StatelessWidget
   ) {
     return SizedBox(
       width: double.infinity,
-      child: EditableTextField(
+      child: EditableTextField.text(
         helperToolbarKey: ValueKey(
           'pal_EditorUpdateHelperWidget_ThanksButtonToolbar',
         ),

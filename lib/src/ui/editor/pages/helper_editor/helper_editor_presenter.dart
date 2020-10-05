@@ -30,11 +30,9 @@ class HelperEditorPresenter
   @override
   void onInit() {
     viewModel.enableSave = false;
-    viewModel.toolbarIsVisible = false;
     viewModel.isLoading = false;
     viewModel.isEditingWidget = false;
     viewModel.isEditableWidgetValid = false;
-    viewModel.toolbarPosition = Offset.zero;
 
     // init the available helpers type we can create
     viewModel.availableHelperType = [
@@ -102,11 +100,6 @@ class HelperEditorPresenter
     }
     viewModel.isEditingWidget = true;
     refreshView();
-  }
-
-  hideToolbar() {
-    viewModel.toolbarIsVisible = false;
-    this.refreshView();
   }
 
   onClickClose() {

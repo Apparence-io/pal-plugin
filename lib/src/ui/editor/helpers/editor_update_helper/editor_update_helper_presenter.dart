@@ -74,7 +74,7 @@ class EditorUpdateHelperPresenter
         );
 
     this.viewModel.changelogsTextfieldWidgets.add(
-      EditableTextField(
+      EditableTextField.text(
         textFormFieldKey: textFormFieldKey,
         helperToolbarKey: textFormToolbarKey,
         outsideTapStream: this.viewModel.editableTextFieldController.stream,

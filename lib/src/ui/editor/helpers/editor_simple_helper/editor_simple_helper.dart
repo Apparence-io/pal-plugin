@@ -64,7 +64,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                   Expanded(child: Container()),
                   Container(
                     width: constraints.maxWidth * 0.8,
-                    child: EditableTextField(
+                    child: EditableTextField.text(
                       outsideTapStream:
                           model.editableTextFieldController.stream,
                       helperToolbarKey:

@@ -33,8 +33,16 @@ class FontEditorDialogPresenter
         );
   }
 
+  void changeFontSize(double fontSize) async {
+    this.viewModel.modifiedTextStyle = this.viewModel.modifiedTextStyle.merge(
+          TextStyle(fontSize: fontSize),
+        );
+    this.refreshView();
+  }
+
   void changeFontFamily(BuildContext context) async {
-    final String fontKey = await this.viewInterface.openFontFamilyPicker(context);
+    final String fontKey =
+        await this.viewInterface.openFontFamilyPicker(context);
 
     if (fontKey == null) {
       return;
@@ -48,11 +56,12 @@ class FontEditorDialogPresenter
   }
 
   void changeFontWeight(BuildContext context) async {
-    final String fontWeightKey = await this.viewInterface.openFontWeightPicker(context);
+    final String fontWeightKey =
+        await this.viewInterface.openFontWeightPicker(context);
 
     if (fontWeightKey == null) {
       return;
     }
-    // TODO: 
+    // TODO:
   }
 }

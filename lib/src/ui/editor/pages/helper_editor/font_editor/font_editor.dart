@@ -4,6 +4,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_list_tile.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_size_picker.dart';
 
 abstract class FontEditorDialogView {
   Future<String> openFontFamilyPicker(BuildContext context);
@@ -63,6 +64,12 @@ class FontEditorDialogPage extends StatelessWidget
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
+                ),
+                FontSizePicker(
+                  style: model.modifiedTextStyle,
+                  onFontSizeSelected: (double value) {
+                    presenter.changeFontSize(value);
+                  },
                 ),
                 Divider(),
                 ConstrainedBox(

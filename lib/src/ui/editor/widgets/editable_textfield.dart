@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/font_size_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
 enum ToolbarType { text, border }
@@ -255,7 +254,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
         toolbar = EditHelperToolbar.text(
           key: widget.helperToolbarKey,
           onChangeTextColor: _onChangeTextColor,
-          onChangeTextFontSize: _onChangeTextFontSize,
           onChangeTextFont: _onChangeTextFont,
           onClose: _onClose,
         );
@@ -264,7 +262,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
         toolbar = EditHelperToolbar.border(
           key: widget.helperToolbarKey,
           onChangeTextColor: _onChangeTextColor,
-          onChangeTextFontSize: _onChangeTextFontSize,
           onChangeTextFont: _onChangeTextFont,
           onChangeBorder: _onChangeBorder,
           onClose: _onClose,
@@ -297,24 +294,24 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   // Toolbar stuff
-  _onChangeTextFontSize() {
-    showDialog(
-      context: context,
-      child: FontSizePickerDialog(
-        fontSize: _textStyle?.fontSize,
-        onFontSizeSelected: (double newFontSize) {
-          setState(() {
-            _textStyle = _textStyle.merge(
-              TextStyle(
-                fontSize: newFontSize,
-              ),
-            );
-            _isToolbarVisible = true;
-          });
-        },
-      ),
-    );
-  }
+  // _onChangeTextFontSize() {
+  //   showDialog(
+  //     context: context,
+  //     child: FontSizePickerDialog(
+  //       fontSize: _textStyle?.fontSize,
+  //       onFontSizeSelected: (double newFontSize) {
+  //         setState(() {
+  //           _textStyle = _textStyle.merge(
+  //             TextStyle(
+  //               fontSize: newFontSize,
+  //             ),
+  //           );
+  //           _isToolbarVisible = true;
+  //         });
+  //       },
+  //     ),
+  //   );
+  // }
 
   _onChangeTextFont() {
     showDialog(

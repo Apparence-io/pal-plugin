@@ -16,7 +16,6 @@ class ToolbarAction {
 }
 
 class EditHelperToolbar extends StatelessWidget {
-  final Function onChangeTextFontSize;
   final Function onChangeTextFont;
   final Function onChangeTextColor;
   final Function onChangeBorder;
@@ -29,7 +28,6 @@ class EditHelperToolbar extends StatelessWidget {
 
   const EditHelperToolbar({
     Key key,
-    this.onChangeTextFontSize,
     this.onChangeTextFont,
     this.onChangeTextColor,
     this.onChangeBorder,
@@ -40,14 +38,12 @@ class EditHelperToolbar extends StatelessWidget {
 
   factory EditHelperToolbar.text({
     Key key,
-    Function onChangeTextFontSize,
     Function onChangeTextFont,
     Function onChangeTextColor,
     Function onClose,
     num bottomPadding = 8.0,
   }) {
     return EditHelperToolbar(
-      onChangeTextFontSize: onChangeTextFontSize,
       onChangeTextFont: onChangeTextFont,
       onChangeTextColor: onChangeTextColor,
       onCloseTap: onClose,
@@ -57,7 +53,6 @@ class EditHelperToolbar extends StatelessWidget {
 
   factory EditHelperToolbar.border({
     Key key,
-    Function onChangeTextFontSize,
     Function onChangeTextFont,
     Function onChangeTextColor,
     Function onChangeBorder,
@@ -65,7 +60,6 @@ class EditHelperToolbar extends StatelessWidget {
     num bottomPadding = 8.0,
   }) {
     return EditHelperToolbar(
-        onChangeTextFontSize: onChangeTextFontSize,
         onChangeTextFont: onChangeTextFont,
         onChangeTextColor: onChangeTextColor,
         onCloseTap: onClose,
@@ -129,23 +123,6 @@ class EditHelperToolbar extends StatelessWidget {
                         },
                         icon: Icon(
                           Icons.font_download,
-                          color: Colors.white,
-                          size: _iconsRadius,
-                        ),
-                      ),
-                      CircleIconButton(
-                        key: ValueKey('pal_EditHelperToolbar_TextSize'),
-                        radius: _toolbarHeight / 2,
-                        backgroundColor: Colors.transparent,
-                        onTapCallback: () {
-                          HapticFeedback.selectionClick();
-
-                          if (onChangeTextFontSize != null) {
-                            onChangeTextFontSize();
-                          }
-                        },
-                        icon: Icon(
-                          Icons.format_size,
                           color: Colors.white,
                           size: _iconsRadius,
                         ),

@@ -10,4 +10,6 @@ class PackageVersionReader {
   }
 
   String get version => info.version;
+
+  String get appName => info.appName;
 }

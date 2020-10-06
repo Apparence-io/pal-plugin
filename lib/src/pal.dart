@@ -69,6 +69,7 @@ class Pal extends StatelessWidget {
             userApp: child,
             hostedAppNavigatorKey: navigatorKey,
           ),
+          boundaryChildKey: navigatorKey, // FIXME: Need to send boundary here!
           appContext: EditorAppContext.of(context),
         )),
     );

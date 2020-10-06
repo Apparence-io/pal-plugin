@@ -24,7 +24,7 @@ class _FontPickerDialogState extends State<FontPickerDialog> {
   @override
   void initState() {
     super.initState();
-    
+
     _modifiedTextStyle = widget.actualTextStyle ?? TextStyle();
 
     WidgetsBinding.instance.addPostFrameCallback(afterFirstLayout);
@@ -45,7 +45,6 @@ class _FontPickerDialogState extends State<FontPickerDialog> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: AlertDialog(
         key: ValueKey('pal_FontPickerDialog'),
-        title: const Text('Select font'),
         content: SingleChildScrollView(
           child: Container(
             width: double.maxFinite,

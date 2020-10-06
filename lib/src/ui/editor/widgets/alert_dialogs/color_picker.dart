@@ -38,7 +38,6 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: AlertDialog(
         key: ValueKey('pal_ColorPickerAlertDialog'),
-        title: const Text('Pick a color'),
         content: SingleChildScrollView(
           child: Form(
             key: _formKey,

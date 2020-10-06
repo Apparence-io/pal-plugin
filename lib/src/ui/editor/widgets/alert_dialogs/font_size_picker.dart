@@ -33,7 +33,6 @@ class _FontSizePickerDialogState extends State<FontSizePickerDialog> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: AlertDialog(
         key: ValueKey('pal_FontSizePickerDialog'),
-        title: const Text('Change font size'),
         content: SingleChildScrollView(
           child: Column(
             children: [

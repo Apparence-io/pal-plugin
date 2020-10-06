@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/color_picker.dart';
+import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_picker/font_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_size_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
@@ -316,7 +317,25 @@ class _EditableTextFieldState extends State<EditableTextField> {
     );
   }
 
-  _onChangeTextFont() {}
+  _onChangeTextFont() {
+    showDialog(
+      context: context,
+      child: FontPickerDialog(
+        actualTextStyle: _textStyle,
+        // onFontSelected: (double newFontSize) {
+        //   setState(() {
+        //     _textStyle = _textStyle.merge(
+        //       TextStyle(
+        //         fontSize: newFontSize,
+        //       ),
+        //     );
+        //     _isToolbarVisible = true;
+        //   });
+        // },
+      ),
+    );
+  }
+
   _onChangeTextColor() {
     showDialog(
       context: context,

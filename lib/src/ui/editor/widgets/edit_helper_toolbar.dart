@@ -123,8 +123,8 @@ class EditHelperToolbar extends StatelessWidget {
                         onTapCallback: () {
                           HapticFeedback.selectionClick();
 
-                          if (onChangeTextFontSize != null) {
-                            onChangeTextFontSize();
+                          if (onChangeTextFont != null) {
+                            onChangeTextFont();
                           }
                         },
                         icon: Icon(

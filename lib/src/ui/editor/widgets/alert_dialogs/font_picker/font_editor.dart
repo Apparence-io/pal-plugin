@@ -28,7 +28,9 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
     super.initState();
 
     _modifiedTextStyle = widget.actualTextStyle ?? TextStyle();
-    _fontFamilyName = _modifiedTextStyle.fontFamily != null ? _modifiedTextStyle.fontFamily.toString() : 'Default';
+    _fontFamilyName = _modifiedTextStyle.fontFamily != null
+        ? _modifiedTextStyle.fontFamily.toString()
+        : 'Default';
 
     WidgetsBinding.instance.addPostFrameCallback(afterFirstLayout);
   }
@@ -78,6 +80,10 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
                         onTap: () async {
                           final fontKey = await Navigator.pushNamed(
                               context, '/editor/new/font-family');
+                          
+                          if (fontKey == null) {
+                            return;
+                          }
                           setState(() {
                             _fontFamilyName = fontKey;
                             _modifiedTextStyle = _modifiedTextStyle

@@ -94,12 +94,13 @@ class FontFamilyPickerPage extends StatelessWidget
                     child: CircularProgressIndicator(),
                   ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0, top: 20.0),
-            child: Text(
-              '${model.fonts.length.toString()} ${(model.fonts.length <= 1 ? 'result' : 'results')}',
+          if (!model.isLoading)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0, top: 20.0),
+              child: Text(
+                '${model.fonts.length.toString()} ${(model.fonts.length <= 1 ? 'result' : 'results')}',
+              ),
             ),
-          ),
         ],
       ),
     );

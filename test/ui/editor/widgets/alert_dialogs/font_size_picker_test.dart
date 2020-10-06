@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_size_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/font_size_picker.dart';
 
 void main() {
   group('Color picker', () {

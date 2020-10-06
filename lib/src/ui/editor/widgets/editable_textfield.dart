@@ -4,10 +4,9 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/color_picker.dart';
-import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_picker/font_editor.dart';
-import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_size_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/font_size_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
 enum ToolbarType { text, border }
@@ -320,7 +319,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
   _onChangeTextFont() {
     showDialog(
       context: context,
-      child: FontEditorDialog(
+      child: FontEditorDialogPage(
         actualTextStyle: _textStyle,
         // onFontSelected: (double newFontSize) {
         //   setState(() {

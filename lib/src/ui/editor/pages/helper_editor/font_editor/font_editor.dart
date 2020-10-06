@@ -1,51 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_picker/font_list_tile.dart';
+import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_presenter.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_list_tile.dart';
 
-class FontEditorDialog extends StatefulWidget {
+abstract class FontEditorDialogView {
+  Future<String> openFontFamilyPicker(BuildContext context);
+  Future<String> openFontWeightPicker(BuildContext context);
+}
+
+class FontEditorDialogPage extends StatelessWidget
+    implements FontEditorDialogView {
   final TextStyle actualTextStyle;
   final Function(String) onFontSelected;
-
-  const FontEditorDialog({
+  FontEditorDialogPage({
     Key key,
     this.actualTextStyle,
     this.onFontSelected,
-  }) : super(key: key);
+  });
 
-  @override
-  _FontEditorDialogState createState() => _FontEditorDialogState();
-}
-
-class _FontEditorDialogState extends State<FontEditorDialog> {
-  String _fontFamilyName;
-  TextStyle _modifiedTextStyle;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _modifiedTextStyle = widget.actualTextStyle ?? TextStyle();
-    _fontFamilyName = _modifiedTextStyle.fontFamily != null
-        ? _modifiedTextStyle.fontFamily.toString()
-        : 'Default';
-
-    WidgetsBinding.instance.addPostFrameCallback(afterFirstLayout);
-  }
-
-  void afterFirstLayout(Duration duration) {
-    // Override color to be always visible!
-    _modifiedTextStyle = _modifiedTextStyle.merge(
-      TextStyle(
-        color: PalTheme.of(context).colors.dark,
-      ),
-    );
-  }
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<FontEditorDialogPresenter, FontEditorDialogModel>();
 
   @override
   Widget build(BuildContext context) {
+    return _mvvmPageBuilder.build(
+      key: UniqueKey(),
+      context: context,
+      presenterBuilder: (context) =>
+          FontEditorDialogPresenter(this, actualTextStyle: actualTextStyle),
+      builder: (context, presenter, model) {
+        return this._buildPage(
+          context.buildContext,
+          presenter,
+          model,
+        );
+      },
+    );
+  }
+
+  Widget _buildPage(
+    final BuildContext context,
+    final FontEditorDialogPresenter presenter,
+    final FontEditorDialogModel model,
+  ) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: AlertDialog(
@@ -56,10 +55,11 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // TODO: Move size changer
                 Text(
                   'Preview',
                   key: ValueKey('pal_FontEditorDialog_Preview'),
-                  style: _modifiedTextStyle,
+                  style: model.modifiedTextStyle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -76,28 +76,19 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
                       FontListTile(
                         key: ValueKey('pal_FontEditorDialog_List_FontFamily'),
                         title: 'Font family',
-                        subTitle: _fontFamilyName,
+                        subTitle: model.fontFamilyName,
                         onTap: () async {
-                          final fontKey = await Navigator.pushNamed(
-                              context, '/editor/new/font-family');
-                          
-                          if (fontKey == null) {
-                            return;
-                          }
-                          setState(() {
-                            _fontFamilyName = fontKey;
-                            _modifiedTextStyle = _modifiedTextStyle
-                                .merge(GoogleFonts.asMap()[fontKey].call());
-                          });
+                          HapticFeedback.selectionClick();
+                          presenter.changeFontFamily(context);
                         },
                       ),
                       FontListTile(
                         key: ValueKey('pal_FontEditorDialog_List_FontWeight'),
                         title: 'Font weight',
                         subTitle: 'Normal',
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, '/editor/new/font-weight');
+                        onTap: () async {
+                          HapticFeedback.selectionClick();
+                          presenter.changeFontWeight(context);
                         },
                       ),
                     ],
@@ -125,10 +116,7 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
               ),
             ),
             onPressed: () {
-              if (widget.onFontSelected != null) {
-                HapticFeedback.selectionClick();
-                widget.onFontSelected('');
-              }
+              //TODO:
 
               Navigator.of(context).pop();
             },
@@ -136,5 +124,17 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
         ],
       ),
     );
+  }
+
+  @override
+  Future<String> openFontFamilyPicker(BuildContext context) async {
+    return await Navigator.pushNamed(context, '/editor/new/font-family')
+        as String;
+  }
+
+  @override
+  Future<String> openFontWeightPicker(BuildContext context) async {
+    return await Navigator.pushNamed(context, '/editor/new/font-weight')
+        as String;
   }
 }

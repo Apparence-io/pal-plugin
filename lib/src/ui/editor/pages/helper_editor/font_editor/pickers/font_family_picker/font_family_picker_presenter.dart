@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_family_picker/font_family_picker.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_family_picker/font_family_picker_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_viewmodel.dart';
 
 List<String> fontKeysConverter(int sar) {
   List<String> fontKeys = [];

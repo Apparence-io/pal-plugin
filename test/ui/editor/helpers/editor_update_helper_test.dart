@@ -6,7 +6,7 @@ import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/color_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
 import '../../../pal_test_utilities.dart';
 

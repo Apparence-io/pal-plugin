@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_family_picker/font_family_picker_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_family_picker/font_family_picker_viewmodel.dart';
@@ -61,33 +62,37 @@ class FontFamilyPickerPage extends StatelessWidget
             ),
           ),
           Expanded(
-            child: !model.isLoading ? ListView.builder(
-              shrinkWrap: true,
-              itemCount: model.fonts.length,
-              itemBuilder: (context, index) {
-                MapEntry<String, TextStyle> element =
-                    model.fonts.entries.elementAt(index);
-                TextStyle fontStyle =
-                    element.value.merge(TextStyle(fontSize: 23.0));
+            child: !model.isLoading
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: model.fonts.length,
+                    itemBuilder: (context, index) {
+                      final String key = model.fonts[index];
 
-                List<String> fontName =
-                    fontStyle.fontFamily.toString().split('_regular');
+                      TextStyle originalFontStyle =
+                          GoogleFonts.asMap()[key].call();
 
-                return ListTile(
-                  title: Text(
-                    '${fontName.first ?? 'Font family'}',
-                    style: fontStyle,
+                      TextStyle modifiedFontStyle = originalFontStyle.merge(
+                        TextStyle(fontSize: 23.0),
+                      );
+
+                      return ListTile(
+                        title: Text(
+                          key,
+                          style: modifiedFontStyle,
+                        ),
+                        onTap: () {
+                          Navigator.pop(
+                            context,
+                            key,
+                          );
+                        },
+                      );
+                    },
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
                   ),
-                  onTap: () {
-                    print(element.key);
-                    Navigator.pop(
-                      context,
-                      element.key,
-                    );
-                  },
-                );
-              },
-            ) : Center(child: CircularProgressIndicator(),),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0, top: 20.0),

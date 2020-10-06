@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_picker/font_list_tile.dart';
 
@@ -19,6 +20,7 @@ class FontEditorDialog extends StatefulWidget {
 }
 
 class _FontEditorDialogState extends State<FontEditorDialog> {
+  String _fontFamilyName;
   TextStyle _modifiedTextStyle;
 
   @override
@@ -26,6 +28,7 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
     super.initState();
 
     _modifiedTextStyle = widget.actualTextStyle ?? TextStyle();
+    _fontFamilyName = _modifiedTextStyle.fontFamily != null ? _modifiedTextStyle.fontFamily.toString() : 'Default';
 
     WidgetsBinding.instance.addPostFrameCallback(afterFirstLayout);
   }
@@ -71,9 +74,15 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
                       FontListTile(
                         key: ValueKey('pal_FontEditorDialog_List_FontFamily'),
                         title: 'Font family',
-                        subTitle: 'Roboto',
-                        onTap: () {
-                          Navigator.pushNamed(context, '/editor/new/font-family');
+                        subTitle: _fontFamilyName,
+                        onTap: () async {
+                          final fontKey = await Navigator.pushNamed(
+                              context, '/editor/new/font-family');
+                          setState(() {
+                            _fontFamilyName = fontKey;
+                            _modifiedTextStyle = _modifiedTextStyle
+                                .merge(GoogleFonts.asMap()[fontKey].call());
+                          });
                         },
                       ),
                       FontListTile(
@@ -81,7 +90,8 @@ class _FontEditorDialogState extends State<FontEditorDialog> {
                         title: 'Font weight',
                         subTitle: 'Normal',
                         onTap: () {
-                          Navigator.pushNamed(context, '/editor/new/font-weight');
+                          Navigator.pushNamed(
+                              context, '/editor/new/font-weight');
                         },
                       ),
                     ],

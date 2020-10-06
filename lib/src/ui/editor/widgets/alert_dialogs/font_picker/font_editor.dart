@@ -4,21 +4,21 @@ import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/widgets/alert_dialogs/font_picker/font_list_tile.dart';
 
-class FontPickerDialog extends StatefulWidget {
+class FontEditorDialog extends StatefulWidget {
   final TextStyle actualTextStyle;
   final Function(String) onFontSelected;
 
-  const FontPickerDialog({
+  const FontEditorDialog({
     Key key,
     this.actualTextStyle,
     this.onFontSelected,
   }) : super(key: key);
 
   @override
-  _FontPickerDialogState createState() => _FontPickerDialogState();
+  _FontEditorDialogState createState() => _FontEditorDialogState();
 }
 
-class _FontPickerDialogState extends State<FontPickerDialog> {
+class _FontEditorDialogState extends State<FontEditorDialog> {
   TextStyle _modifiedTextStyle;
 
   @override
@@ -44,7 +44,7 @@ class _FontPickerDialogState extends State<FontPickerDialog> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: AlertDialog(
-        key: ValueKey('pal_FontPickerDialog'),
+        key: ValueKey('pal_FontEditorDialog'),
         content: SingleChildScrollView(
           child: Container(
             width: double.maxFinite,
@@ -53,7 +53,7 @@ class _FontPickerDialogState extends State<FontPickerDialog> {
               children: [
                 Text(
                   'Preview',
-                  key: ValueKey('pal_FontPickerDialog_Preview'),
+                  key: ValueKey('pal_FontEditorDialog_Preview'),
                   style: _modifiedTextStyle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -65,20 +65,24 @@ class _FontPickerDialogState extends State<FontPickerDialog> {
                     maxHeight: MediaQuery.of(context).size.height * 0.4,
                   ),
                   child: ListView(
-                    key: ValueKey('pal_FontPickerDialog_List'),
+                    key: ValueKey('pal_FontEditorDialog_List'),
                     shrinkWrap: true,
                     children: [
                       FontListTile(
-                        key: ValueKey('pal_FontPickerDialog_List_FontFamily'),
+                        key: ValueKey('pal_FontEditorDialog_List_FontFamily'),
                         title: 'Font family',
                         subTitle: 'Roboto',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/editor/new/font-family');
+                        },
                       ),
                       FontListTile(
-                        key: ValueKey('pal_FontPickerDialog_List_FontWeight'),
+                        key: ValueKey('pal_FontEditorDialog_List_FontWeight'),
                         title: 'Font weight',
                         subTitle: 'Normal',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/editor/new/font-weight');
+                        },
                       ),
                     ],
                   ),
@@ -89,7 +93,7 @@ class _FontPickerDialogState extends State<FontPickerDialog> {
         ),
         actions: <Widget>[
           FlatButton(
-            key: ValueKey('pal_FontPickerDialog_CancelButton'),
+            key: ValueKey('pal_FontEditorDialog_CancelButton'),
             child: Text('Cancel'),
             onPressed: () {
               HapticFeedback.selectionClick();
@@ -97,7 +101,7 @@ class _FontPickerDialogState extends State<FontPickerDialog> {
             },
           ),
           FlatButton(
-            key: ValueKey('pal_FontPickerDialog_ValidateButton'),
+            key: ValueKey('pal_FontEditorDialog_ValidateButton'),
             child: Text(
               'Validate',
               style: TextStyle(

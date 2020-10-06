@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_family_picker/font_family_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_weight_picker/font_weight_picker.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey =
@@ -26,6 +28,10 @@ Route<dynamic> route(RouteSettings settings) {
           hostedAppNavigatorKey: args.hostedAppNavigatorKey,
         ),
       );
+    case '/editor/new/font-family':
+      return MaterialPageRoute(builder: (context) => FontFamilyPickerPage());
+    case '/editor/new/font-weight':
+      return MaterialPageRoute(builder: (context) => FontWeightPickerPage());
     case '/editor/:id':
       return MaterialPageRoute(builder: (context) => Text('A route with id'));
     case '/editor/:id/edit':

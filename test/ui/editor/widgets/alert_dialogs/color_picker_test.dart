@@ -31,8 +31,6 @@ void main() {
       expect(find.byKey(ValueKey('pal_ColorPickerAlertDialog_CancelButton')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton')), findsOneWidget);
 
-      expect(find.text('Pick a color'), findsOneWidget);
-
       expect(find.text('Cancel'), findsOneWidget);
       expect(find.text('Validate'), findsOneWidget);
 

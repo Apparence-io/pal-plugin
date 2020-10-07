@@ -29,7 +29,6 @@ void main() {
       expect(find.byKey(ValueKey('pal_EditHelperToolbar')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_EditHelperToolbar_TextColor')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_EditHelperToolbar_TextFont')), findsOneWidget);
-      expect(find.byKey(ValueKey('pal_EditHelperToolbar_TextSize')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_EditHelperToolbar_Close')), findsOneWidget);
     });
   });

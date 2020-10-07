@@ -56,7 +56,6 @@ class FontEditorDialogPage extends StatelessWidget
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // TODO: Move size changer
                 Text(
                   'Preview',
                   key: ValueKey('pal_FontEditorDialog_Preview'),

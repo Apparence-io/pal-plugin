@@ -54,35 +54,38 @@ void main() {
     }
 
     testWidgets('should textfield be present', (WidgetTester tester) async {
-        await _beforeEach(tester);
+      await _beforeEach(tester);
 
-        expect(find.byType(TextFormField), findsOneWidget);
-        expect(find.text('Edit me!'), findsOneWidget);
-      });
+      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.text('Edit me!'), findsOneWidget);
+    });
 
-      testWidgets('should close toolbar', (WidgetTester tester) async {
-        await _beforeEach(tester);
+    testWidgets('should close toolbar', (WidgetTester tester) async {
+      await _beforeEach(tester);
 
-        var simpleHelperDetailTextField = find.byKey(ValueKey('palSimpleHelperDetailField'));
-        await tester.tap(simpleHelperDetailTextField);
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(EditHelperToolbar), findsOneWidget);
+      var simpleHelperDetailTextField =
+          find.byKey(ValueKey('palSimpleHelperDetailField'));
+      await tester.tap(simpleHelperDetailTextField);
+      await tester.pumpAndSettle();
 
-        var closeButtonToolbar = find.byKey(ValueKey('palToolbarClose'));
-        await tester.tap(closeButtonToolbar);
-        await tester.pumpAndSettle();
+      expect(find.byType(EditHelperToolbar), findsOneWidget);
 
-        expect(find.byType(EditHelperToolbar), findsNothing);
-      });
+      var closeButtonToolbar =
+          find.byKey(ValueKey('pal_EditHelperToolbar_Close'));
+      await tester.tap(closeButtonToolbar);
+      await tester.pumpAndSettle();
 
-      testWidgets('should enter text', (WidgetTester tester) async {
-        await _beforeEach(tester);
+      expect(find.byType(EditHelperToolbar), findsNothing);
+    });
 
-        var simpleHelperDetailTextField = find.byKey(ValueKey('palSimpleHelperDetailField'));
-        await tester.enterText(simpleHelperDetailTextField, 'Hello!');
-        await tester.pumpAndSettle();
-        expect(find.text('Hello!'), findsOneWidget);
-      });
+    testWidgets('should enter text', (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      var simpleHelperDetailTextField =
+          find.byKey(ValueKey('palSimpleHelperDetailField'));
+      await tester.enterText(simpleHelperDetailTextField, 'Hello!');
+      await tester.pumpAndSettle();
+      expect(find.text('Hello!'), findsOneWidget);
+    });
   });
 }

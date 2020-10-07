@@ -29,8 +29,7 @@ void main() {
 
       expect(find.text('20px'), findsOneWidget);
 
-      var fontSizeSlider =
-          find.byKey(ValueKey('pal_FontSizePicker_Slider'));
+      var fontSizeSlider = find.byKey(ValueKey('pal_FontSizePicker_Slider'));
       await tester.drag(fontSizeSlider, const Offset(15.0, 0.0));
       await tester.pumpAndSettle();
 
@@ -64,7 +63,12 @@ void main() {
 Future _beforeEach(
   WidgetTester tester,
 ) async {
-  final component = FontEditorDialogPage();
+  final component = FontEditorDialogPage(
+    actualTextStyle: TextStyle(
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w400,
+    ),
+  );
   await tester.pumpWidget(
     MediaQuery(
       data: MediaQueryData(),

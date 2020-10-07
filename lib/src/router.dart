@@ -29,9 +29,17 @@ Route<dynamic> route(RouteSettings settings) {
         ),
       );
     case '/editor/new/font-family':
-      return MaterialPageRoute(builder: (context) => FontFamilyPickerPage());
+      FontFamilyPickerArguments args = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => FontFamilyPickerPage(
+                arguments: args,
+              ));
     case '/editor/new/font-weight':
-      return MaterialPageRoute(builder: (context) => FontWeightPickerPage());
+      FontWeightPickerArguments args = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => FontWeightPickerPage(
+                arguments: args,
+              ));
     case '/editor/:id':
       return MaterialPageRoute(builder: (context) => Text('A route with id'));
     case '/editor/:id/edit':

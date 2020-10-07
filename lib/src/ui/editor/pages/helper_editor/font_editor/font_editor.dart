@@ -5,20 +5,29 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_edi
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_list_tile.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_size_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 
 abstract class FontEditorDialogView {
-  Future<String> openFontFamilyPicker(BuildContext context);
-  Future<String> openFontWeightPicker(BuildContext context);
+  Future<String> openFontFamilyPicker(
+    BuildContext context,
+    FontKeys fontKeys,
+  );
+  Future<MapEntry<String, FontWeight>> openFontWeightPicker(
+    BuildContext context,
+    FontKeys fontKeys,
+  );
+  TextStyle defaultTextFieldPreviewColor();
 }
 
 class FontEditorDialogPage extends StatelessWidget
     implements FontEditorDialogView {
   final TextStyle actualTextStyle;
-  final Function(String) onFontSelected;
+  final Function(TextStyle, FontKeys) onFontModified;
   FontEditorDialogPage({
     Key key,
-    this.actualTextStyle,
-    this.onFontSelected,
+    @required this.actualTextStyle,
+    this.onFontModified,
   });
 
   final _mvvmPageBuilder =
@@ -82,7 +91,7 @@ class FontEditorDialogPage extends StatelessWidget
                       FontListTile(
                         key: ValueKey('pal_FontEditorDialog_List_FontFamily'),
                         title: 'Font family',
-                        subTitle: model.fontFamilyName,
+                        subTitle: model.fontKeys.fontFamilyNameKey,
                         onTap: () async {
                           HapticFeedback.selectionClick();
                           presenter.changeFontFamily(context);
@@ -91,7 +100,7 @@ class FontEditorDialogPage extends StatelessWidget
                       FontListTile(
                         key: ValueKey('pal_FontEditorDialog_List_FontWeight'),
                         title: 'Font weight',
-                        subTitle: 'Normal',
+                        subTitle: model.fontKeys.fontWeightNameKey,
                         onTap: () async {
                           HapticFeedback.selectionClick();
                           presenter.changeFontWeight(context);
@@ -122,9 +131,17 @@ class FontEditorDialogPage extends StatelessWidget
               ),
             ),
             onPressed: () {
-              //TODO:
-
+              HapticFeedback.selectionClick();
               Navigator.of(context).pop();
+
+              if (onFontModified != null) {
+                onFontModified(
+                  model.modifiedTextStyle.merge(
+                    TextStyle(color: actualTextStyle.color),
+                  ),
+                  model.fontKeys,
+                );
+              }
             },
           ),
         ],
@@ -133,14 +150,37 @@ class FontEditorDialogPage extends StatelessWidget
   }
 
   @override
-  Future<String> openFontFamilyPicker(BuildContext context) async {
-    return await Navigator.pushNamed(context, '/editor/new/font-family')
-        as String;
+  Future<String> openFontFamilyPicker(
+    BuildContext context,
+    FontKeys fontKeys,
+  ) async {
+    return await Navigator.pushNamed(
+      context,
+      '/editor/new/font-family',
+      arguments: FontFamilyPickerArguments(
+        fontFamilyName: fontKeys.fontFamilyNameKey,
+        fontWeightName: fontKeys.fontWeightNameKey,
+      ),
+    ) as String;
   }
 
   @override
-  Future<String> openFontWeightPicker(BuildContext context) async {
-    return await Navigator.pushNamed(context, '/editor/new/font-weight')
-        as String;
+  Future<MapEntry<String, FontWeight>> openFontWeightPicker(
+    BuildContext context,
+    FontKeys fontKeys,
+  ) async {
+    return await Navigator.pushNamed(
+      context,
+      '/editor/new/font-weight',
+      arguments: FontWeightPickerArguments(
+        fontFamilyName: fontKeys.fontFamilyNameKey,
+        fontWeightName: fontKeys.fontWeightNameKey,
+      ),
+    ) as MapEntry<String, FontWeight>;
+  }
+
+  @override
+  TextStyle defaultTextFieldPreviewColor() {
+    return TextStyle(color: Color(0xFF03045E));
   }
 }

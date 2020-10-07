@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_viewmodel.dart';
 
-abstract class FontWeightPickerView { }
+class FontWeightPickerArguments {
+  String fontFamilyName;
+  String fontWeightName;
 
-/// TODO: Doc
-class FontWeightPickerPage extends StatelessWidget implements FontWeightPickerView {
-  FontWeightPickerPage({Key key});
+  FontWeightPickerArguments({
+    @required this.fontFamilyName,
+    @required this.fontWeightName,
+  });
+}
 
-  final _mvvmPageBuilder = MVVMPageBuilder<FontWeightPickerPresenter, FontWeightPickerModel>();
+abstract class FontWeightPickerView {}
+
+/// Use this picker with FontEditor dialog only
+class FontWeightPickerPage extends StatelessWidget
+    implements FontWeightPickerView {
+  final FontWeightPickerArguments arguments;
+
+  FontWeightPickerPage({
+    Key key,
+    @required this.arguments,
+  });
+
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<FontWeightPickerPresenter, FontWeightPickerModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +37,13 @@ class FontWeightPickerPage extends StatelessWidget implements FontWeightPickerVi
       context: context,
       presenterBuilder: (context) => FontWeightPickerPresenter(
         this,
+        arguments,
       ),
       builder: (context, presenter, model) {
         return Scaffold(
-          key: ValueKey('FontWeightPicker'),
+          key: ValueKey('pal_FontWeightPicker'),
           appBar: AppBar(
-            title: Text('FontWeightPickerPage'),
+            title: Text('Font weight'),
           ),
           body: this._buildPage(context.buildContext, presenter, model),
         );
@@ -36,6 +56,40 @@ class FontWeightPickerPage extends StatelessWidget implements FontWeightPickerVi
     final FontWeightPickerPresenter presenter,
     final FontWeightPickerModel model,
   ) {
-    return Text('FontWeightPickerPage');
+    return ListView.builder(
+      key: ValueKey('pal_FontWeightPicker_ListView'),
+      shrinkWrap: true,
+      itemCount: model.fontWeights.length,
+      itemBuilder: (context, index) {
+        final map = model.fontWeights.entries.elementAt(index);
+
+        TextStyle originalFontStyle =
+            GoogleFonts.getFont(arguments.fontFamilyName);
+        TextStyle modifiedFontStyle = originalFontStyle.merge(
+          TextStyle(
+            fontSize: 23.0,
+            fontWeight: map.value,
+          ),
+        );
+
+        return ListTile(
+          key: ValueKey('pal_FontWeightPicker_ListView_ListTile$index'),
+          title: Text(
+            map.key,
+            style: modifiedFontStyle,
+          ),
+          trailing: (map.key == model.selectedFontWeightKey)
+              ? Icon(
+                  Icons.check,
+                  key: ValueKey('pal_FontWeightPicker_ListView_ListTile_Check$index'),
+                  color: PalTheme.of(context).colors.dark,
+                )
+              : null,
+          onTap: () {
+            Navigator.pop(context, map);
+          },
+        );
+      },
+    );
   }
 }

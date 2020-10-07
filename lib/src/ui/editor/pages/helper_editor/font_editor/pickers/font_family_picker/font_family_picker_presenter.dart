@@ -6,16 +6,20 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/
 class FontFamilyPickerPresenter
     extends Presenter<FontFamilyPickerModel, FontFamilyPickerView> {
   final FontFamilyPickerLoader loader;
+  final FontFamilyPickerArguments arguments;
 
   FontFamilyPickerPresenter(
     FontFamilyPickerView viewInterface,
     this.loader,
+    this.arguments,
   ) : super(FontFamilyPickerModel(), viewInterface);
 
   @override
   void onInit() {
     this.viewModel.originalFonts = [];
     this.viewModel.fonts = [];
+    this.viewModel.isLoading = false;
+    this.viewModel.selectedFontFamilyKey = arguments.fontFamilyName;
 
     this.setup();
   }

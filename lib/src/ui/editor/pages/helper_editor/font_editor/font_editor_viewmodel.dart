@@ -2,11 +2,21 @@ import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 
 class FontEditorDialogModel extends MVVMModel {
-  String fontFamilyName;
+  FontKeys fontKeys;
   TextStyle modifiedTextStyle;
 
   FontEditorDialogModel({
-    this.fontFamilyName,
+    this.fontKeys,
     this.modifiedTextStyle,
+  });
+}
+
+class FontKeys {
+  String fontFamilyNameKey;
+  String fontWeightNameKey;
+
+  FontKeys({
+    this.fontFamilyNameKey,
+    this.fontWeightNameKey,
   });
 }

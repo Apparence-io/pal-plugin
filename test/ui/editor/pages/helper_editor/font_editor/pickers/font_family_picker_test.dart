@@ -46,6 +46,11 @@ void main() {
 
       expect(find.byKey(ValueKey('pal_FontFamilyPicker_ListView_ListTile6')),
           findsNothing);
+
+      expect(find.byIcon(Icons.check), findsOneWidget);
+      expect(
+          find.byKey(ValueKey('pal_FontFamilyPicker_ListView_ListTile_Check3')),
+          findsOneWidget);
     });
 
     testWidgets('should search bar works', (WidgetTester tester) async {
@@ -84,6 +89,10 @@ Future _beforeEach(
 
   final component = FontFamilyPickerPage(
     loader: loader,
+    arguments: FontFamilyPickerArguments(
+      fontFamilyName: 'Finger Paint',
+      fontWeightName: 'Normal',
+    ),
   );
   await tester.pumpWidget(
     MediaQuery(

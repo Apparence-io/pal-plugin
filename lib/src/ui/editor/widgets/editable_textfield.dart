@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
@@ -293,41 +294,23 @@ class _EditableTextFieldState extends State<EditableTextField> {
     this._onClose();
   }
 
-  // Toolbar stuff
-  // _onChangeTextFontSize() {
-  //   showDialog(
-  //     context: context,
-  //     child: FontSizePickerDialog(
-  //       fontSize: _textStyle?.fontSize,
-  //       onFontSizeSelected: (double newFontSize) {
-  //         setState(() {
-  //           _textStyle = _textStyle.merge(
-  //             TextStyle(
-  //               fontSize: newFontSize,
-  //             ),
-  //           );
-  //           _isToolbarVisible = true;
-  //         });
-  //       },
-  //     ),
-  //   );
-  // }
-
   _onChangeTextFont() {
     showDialog(
       context: context,
       child: FontEditorDialogPage(
         actualTextStyle: _textStyle,
-        // onFontSelected: (double newFontSize) {
-        //   setState(() {
-        //     _textStyle = _textStyle.merge(
-        //       TextStyle(
-        //         fontSize: newFontSize,
-        //       ),
-        //     );
-        //     _isToolbarVisible = true;
-        //   });
-        // },
+        onFontModified: (
+          TextStyle newTextStyle,
+          FontKeys fontKeys,
+        ) {
+          // TODO: Send fontkeys strings to Backend!
+          setState(() {
+            _textStyle = _textStyle.merge(
+              newTextStyle,
+            );
+            _isToolbarVisible = true;
+          });
+        },
       ),
     );
   }

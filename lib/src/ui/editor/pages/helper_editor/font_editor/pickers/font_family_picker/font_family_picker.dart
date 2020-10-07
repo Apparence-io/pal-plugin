@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_viewmodel.dart';
 
+class FontFamilyPickerArguments {
+  String fontFamilyName;
+  String fontWeightName;
+
+  FontFamilyPickerArguments({
+    @required this.fontFamilyName,
+    @required this.fontWeightName,
+  });
+}
+
 abstract class FontFamilyPickerView {}
 
+/// Use this picker with FontEditor dialog only
 class FontFamilyPickerPage extends StatelessWidget
     implements FontFamilyPickerView {
+  final FontFamilyPickerArguments arguments;
   final FontFamilyPickerLoader loader;
 
   FontFamilyPickerPage({
     Key key,
     this.loader,
+    @required this.arguments,
   });
 
   final _mvvmPageBuilder =
@@ -28,6 +42,7 @@ class FontFamilyPickerPage extends StatelessWidget
       presenterBuilder: (context) => FontFamilyPickerPresenter(
         this,
         loader ?? FontFamilyPickerLoader(),
+        arguments,
       ),
       builder: (context, presenter, model) {
         return Scaffold(
@@ -78,9 +93,7 @@ class FontFamilyPickerPage extends StatelessWidget
                     itemBuilder: (context, index) {
                       final String key = model.fonts[index];
 
-                      TextStyle originalFontStyle =
-                          GoogleFonts.asMap()[key].call();
-
+                      TextStyle originalFontStyle = GoogleFonts.getFont(key);
                       TextStyle modifiedFontStyle = originalFontStyle.merge(
                         TextStyle(fontSize: 23.0),
                       );
@@ -92,6 +105,14 @@ class FontFamilyPickerPage extends StatelessWidget
                           key,
                           style: modifiedFontStyle,
                         ),
+                        trailing: (key == model.selectedFontFamilyKey)
+                            ? Icon(
+                                Icons.check,
+                                key: ValueKey(
+                                    'pal_FontFamilyPicker_ListView_ListTile_Check$index'),
+                                color: PalTheme.of(context).colors.dark,
+                              )
+                            : null,
                         onTap: () {
                           Navigator.pop(
                             context,

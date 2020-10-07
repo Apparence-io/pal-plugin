@@ -230,10 +230,11 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: widget.hintText,
-                      hintStyle: TextStyle(
-                        color: _textStyle?.color?.withAlpha(80),
-                        decoration: TextDecoration.none,
-                        fontSize: widget.textStyle?.fontSize,
+                      hintStyle: _textStyle.merge(
+                        TextStyle(
+                          color: _textStyle?.color?.withAlpha(80),
+                          decoration: TextDecoration.none,
+                        ),
                       ),
                     ),
                     textAlign: TextAlign.center,

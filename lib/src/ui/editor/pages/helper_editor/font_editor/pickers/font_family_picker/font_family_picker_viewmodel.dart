@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 
 class FontFamilyPickerModel extends MVVMModel {

@@ -1,21 +1,15 @@
-import 'package:flutter/foundation.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_viewmodel.dart';
-
-List<String> fontKeysConverter(int sar) {
-  List<String> fontKeys = [];
-  GoogleFonts.asMap().forEach((key, value) {
-    fontKeys.add(key);
-  });
-  return fontKeys;
-}
 
 class FontFamilyPickerPresenter
     extends Presenter<FontFamilyPickerModel, FontFamilyPickerView> {
+  final FontFamilyPickerLoader loader;
+
   FontFamilyPickerPresenter(
     FontFamilyPickerView viewInterface,
+    this.loader,
   ) : super(FontFamilyPickerModel(), viewInterface);
 
   @override
@@ -29,10 +23,10 @@ class FontFamilyPickerPresenter
   setup() async {
     this.viewModel.isLoading = true;
     this.refreshView();
-    
-    // Create font textstyles map in background (other isolate)
-    this.viewModel.originalFonts = await compute(fontKeysConverter, 0);
-    this.viewModel.fonts = List.from(this.viewModel.originalFonts);
+
+    FontFamilyPickerModel loadedViewModel = await this.loader.load();
+    this.viewModel.fonts = loadedViewModel.fonts;
+    this.viewModel.originalFonts = loadedViewModel.originalFonts;
 
     this.viewModel.isLoading = false;
     this.refreshView();

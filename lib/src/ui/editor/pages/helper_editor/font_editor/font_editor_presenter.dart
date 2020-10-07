@@ -18,7 +18,7 @@ class FontEditorDialogPresenter
   void onInit() {
     this.viewModel.modifiedTextStyle = TextStyle().merge(actualTextStyle);
     this.viewModel.fontKeys = FontKeys(
-      fontFamilyNameKey: actualTextStyle.fontFamily.toString().split('_regular').first,
+      fontFamilyNameKey: (actualTextStyle?.fontFamily != null) ? actualTextStyle.fontFamily.toString().split('_regular').first : 'Montserrat',
       fontWeightNameKey:
           FontWeightMapper.getFontKey(actualTextStyle.fontWeight),
     );

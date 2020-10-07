@@ -17,9 +17,8 @@ class FontEditorDialogPresenter
   @override
   void onInit() {
     this.viewModel.modifiedTextStyle = TextStyle().merge(actualTextStyle);
-
     this.viewModel.fontKeys = FontKeys(
-      fontFamilyNameKey: 'Montserrat',
+      fontFamilyNameKey: actualTextStyle.fontFamily.toString().split('_regular').first,
       fontWeightNameKey:
           FontWeightMapper.getFontKey(actualTextStyle.fontWeight),
     );
@@ -33,6 +32,7 @@ class FontEditorDialogPresenter
         .viewModel
         .modifiedTextStyle
         .merge(this.viewInterface.defaultTextFieldPreviewColor());
+    this.refreshView();
   }
 
   void changeFontSize(double fontSize) async {

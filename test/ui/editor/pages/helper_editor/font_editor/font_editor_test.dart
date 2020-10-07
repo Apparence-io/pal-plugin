@@ -36,6 +36,13 @@ void main() {
       expect(find.text('45px'), findsOneWidget);
     });
 
+    testWidgets('should display font infos', (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      expect(find.text('Roboto'), findsOneWidget);
+      expect(find.text('Normal'), findsOneWidget);
+    });
+
     testWidgets('should open font family picker', (WidgetTester tester) async {
       await _beforeEach(tester);
 
@@ -54,7 +61,7 @@ void main() {
           find.byKey(ValueKey('pal_FontEditorDialog_List_FontWeight'));
       await tester.tap(fontFamilyButton);
       await tester.pumpAndSettle();
-
+      
       expect(find.text('Font weight picker'), findsOneWidget);
     });
   });

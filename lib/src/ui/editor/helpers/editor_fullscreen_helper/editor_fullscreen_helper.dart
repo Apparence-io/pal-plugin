@@ -11,13 +11,33 @@ import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
 abstract class EditorFullScreenHelperView {
   void showColorPickerDialog(
-    BuildContext context,
+    FullscreenHelperViewModel viewModel,
     EditorFullScreenHelperPresenter presenter,
   );
 }
 
-class EditorFullScreenHelperPage extends StatelessWidget
-    implements EditorFullScreenHelperView {
+class EditorFullScreenHelper implements EditorFullScreenHelperView {
+  BuildContext context;
+
+  EditorFullScreenHelper(this.context);
+
+  @override
+  void showColorPickerDialog(
+    FullscreenHelperViewModel viewModel,
+    EditorFullScreenHelperPresenter presenter,
+  ) {
+    HapticFeedback.selectionClick();
+    showDialog(
+      context: this.context,
+      child: ColorPickerDialog(
+        placeholderColor: viewModel.backgroundColor?.value,
+        onColorSelected: presenter.updateBackgroundColor,
+      ),
+    );
+  }
+}
+
+class EditorFullScreenHelperPage extends StatelessWidget {
   final FullscreenHelperViewModel viewModel;
   final Function(bool) onFormChanged;
 
@@ -36,7 +56,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
       key: ValueKey('palEditorFullscreenHelperWidgetBuilder'),
       context: context,
       presenterBuilder: (context) =>
-          EditorFullScreenHelperPresenter(this, viewModel),
+          EditorFullScreenHelperPresenter(new EditorFullScreenHelper(context), viewModel),
       builder: (context, presenter, model) {
         return this._buildPage(context.buildContext, presenter, model);
       },
@@ -136,7 +156,7 @@ class EditorFullScreenHelperPage extends StatelessWidget
                         icon: Icon(Icons.invert_colors),
                         backgroundColor: PalTheme.of(context).colors.light,
                         onTapCallback: () =>
-                            presenter.changeBackgroundColor(context, presenter),
+                            presenter.changeBackgroundColor(viewModel, presenter),
                       ),
                     ),
                   ],
@@ -145,21 +165,6 @@ class EditorFullScreenHelperPage extends StatelessWidget
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  @override
-  void showColorPickerDialog(
-    BuildContext context,
-    EditorFullScreenHelperPresenter presenter,
-  ) {
-    HapticFeedback.selectionClick();
-    showDialog(
-      context: context,
-      child: ColorPickerDialog(
-        placeholderColor: this.viewModel?.backgroundColor?.value,
-        onColorSelected: presenter.updateBackgroundColor,
       ),
     );
   }

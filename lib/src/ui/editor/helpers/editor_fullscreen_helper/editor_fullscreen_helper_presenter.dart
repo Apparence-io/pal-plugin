@@ -54,4 +54,16 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     }
     return null;
   }
+
+  changeBackgroundColor(
+    FullscreenHelperViewModel viewModel,
+    EditorFullScreenHelperPresenter presenter,
+  ) {
+    this.viewInterface.showColorPickerDialog(viewModel, presenter);
+  }
+
+  updateBackgroundColor(Color aColor) {
+    fullscreenHelperViewModel.backgroundColor.value = aColor;
+    this.refreshView();
+  }
 }

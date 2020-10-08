@@ -27,13 +27,13 @@ void main() {
     testWidgets('should change font size', (WidgetTester tester) async {
       await _beforeEach(tester);
 
-      expect(find.text('20px'), findsOneWidget);
+      expect(find.text('20pt'), findsOneWidget);
 
       var fontSizeSlider = find.byKey(ValueKey('pal_FontSizePicker_Slider'));
       await tester.drag(fontSizeSlider, const Offset(15.0, 0.0));
       await tester.pumpAndSettle();
 
-      expect(find.text('45px'), findsOneWidget);
+      expect(find.text('45pt'), findsOneWidget);
     });
 
     testWidgets('should display font infos', (WidgetTester tester) async {

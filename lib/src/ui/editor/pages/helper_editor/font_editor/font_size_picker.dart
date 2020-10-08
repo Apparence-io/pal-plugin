@@ -54,7 +54,7 @@ class _FontSizePickerState extends State<FontSizePicker> {
           },
         ),
         Text(
-          _currentSliderValue.round().toString() + 'px',
+          '${_currentSliderValue.round().toString()}pt',
           key: ValueKey('pal_FontSizePicker_CurrentValue'),
         ),
       ],

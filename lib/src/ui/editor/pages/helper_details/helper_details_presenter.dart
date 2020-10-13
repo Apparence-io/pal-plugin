@@ -1,13 +1,20 @@
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/services/client/helper_client_service.dart';
 
+import '../../../../database/entity/helper/helper_entity.dart';
 import 'helper_details_model.dart';
 import 'helper_details_view.dart';
 
 class HelperDetailsPresenter extends Presenter<HelperDetailsModel,HelperDetailsInterface>{
   final HelperClientService service;
+  final HelperEntity helper;
   
-  HelperDetailsPresenter(MVVMModel viewModel, viewInterface, this.service) : super(viewModel, viewInterface);
+  HelperDetailsPresenter(HelperDetailsModel viewModel, viewInterface, this.service, this.helper) : super(viewModel, viewInterface){
+    viewModel.helperName = helper.name;
+    viewModel.helperMinVer = helper.versionMin;
+    viewModel.helperMaxVer = helper.versionMax;
+    viewModel.helperTriggerType = helper.triggerType;
+  }
 
 
   void deleteHelper() {

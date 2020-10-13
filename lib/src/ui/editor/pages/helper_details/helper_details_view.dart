@@ -23,20 +23,22 @@ class HelperDetailsComponent extends StatelessWidget implements HelperDetailsInt
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
       context: context,
-      presenterBuilder: (context) => HelperDetailsPresenter(HelperDetailsModel(), this, this.testHelperService ?? UserInjector.of(context).helperService),
+      presenterBuilder: (context) => HelperDetailsPresenter(HelperDetailsModel(),
+       this, this.testHelperService ?? UserInjector.of(context).helperService,
+       this.helper),
       builder: (context, presenter, model) => SafeArea(
         child: Scaffold(
           key: ValueKey("helperDetails"),
-          appBar: _buildAppBar(context.buildContext,presenter),
-          body: _buildBody(context.buildContext),
+          appBar: _buildAppBar(context.buildContext,presenter,model),
+          body: _buildBody(context.buildContext,model),
         ),
       ),
     );
   }
 
-  AppBar _buildAppBar(BuildContext context,HelperDetailsPresenter presenter ) => AppBar(
+  AppBar _buildAppBar(BuildContext context,HelperDetailsPresenter presenter, HelperDetailsModel model ) => AppBar(
         title: Text(
-          this.helper.name,
+          model.helperName,
           style: TextStyle(color: PalTheme.of(context).colors.color1),
         ),
         elevation: 0,
@@ -45,14 +47,14 @@ class HelperDetailsComponent extends StatelessWidget implements HelperDetailsInt
         actions: [FlatButton(key: ValueKey('deleteHelper'),onPressed: presenter.deleteHelper, child: Icon(Icons.delete)),Divider(endIndent: 14,)],
       );
 
-  _buildBody(BuildContext context) => Column(
+  _buildBody(BuildContext context, HelperDetailsModel model) => Column(
         children: [
-          _buildLine('Available on version', '${this.helper.versionMin} - ${this.helper.versionMax}',context,ValueKey('versions')),
-          _buildLine('Trigger mode', getHelperTriggerTypeDescription(this.helper.triggerType),context,ValueKey('triggerMode'))
+          _buildLine('Available on version', '${model.helperMinVer} - ${model.helperMaxVer}',context,ValueKey('versions')),
+          _buildLine('Trigger mode', getHelperTriggerTypeDescription(model.helperTriggerType),context,ValueKey('triggerMode'))
         ],
       );
 
-  _buildLine(String label, String text,BuildContext context, Key key) {
+  _buildLine(String label, String text,BuildContext context, Key key,) {
     TextStyle textStyle = TextStyle(
       color: PalTheme.of(context).colors.color1
     );

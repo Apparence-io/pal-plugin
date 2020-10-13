@@ -215,6 +215,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
       viewModel: model,
       onFormChanged: isValid,
     );
+    // _helperToEdit = EditorAnchoredFullscreenHelper(
+    //   // viewModel: model,
+    //   // onFormChanged: isValid,
+    // );
   }
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid) {

@@ -12,7 +12,7 @@ import 'package:palplugin/src/ui/editor/pal_editmode_wrapper.dart';
 import 'injectors/editor_app/editor_app_injector.dart';
 
 // our production server address
-const PAL_SERVER_URL = 'http://217.182.88.6:8053';
+const PAL_SERVER_URL = 'http://217.182.88.6:8050';
 
 // Pal top widget
 class Pal extends StatelessWidget {
@@ -46,7 +46,7 @@ class Pal extends StatelessWidget {
      navigatorKey = child.navigatorKey,
      navigatorObserver = child.navigatorObservers.firstWhere((element) => element is PalNavigatorObserver),
      super(key: key) {
-    assert(navigatorObserver != null, 'A navigator Observer of type PalObserver must be added to your MaterialApp');
+     assert(navigatorObserver != null, 'A navigator Observer of type PalObserver must be added to your MaterialApp');
   }
 
   @override
@@ -82,12 +82,15 @@ class Pal extends StatelessWidget {
       child: Builder(builder: (context) => UserInjector(
           routeObserver: navigatorObserver,
           child: Builder(
-            builder: (context) => HelperOrchestrator(
-              helperClientService: UserInjector.of(context).helperService,
-              inAppUserClientService: UserInjector.of(context).inAppUserClientService,
-              routeObserver: navigatorObserver,
-              child: child
-            ),
+            builder: (context) {
+              HelperOrchestrator.getInstance(
+                helperClientService: UserInjector.of(context).helperService,
+                inAppUserClientService: UserInjector.of(context).inAppUserClientService,
+                routeObserver: navigatorObserver,
+                navigatorKey: navigatorKey
+              );
+              return child;
+            }
           ),
           appContext: UserAppContext.of(context),
         )),

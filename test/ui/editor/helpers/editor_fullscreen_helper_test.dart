@@ -38,7 +38,7 @@ void main() {
 
     // init pal + go to editor
     Future _beforeEach(WidgetTester tester) async {
-      await initAppWithPal(tester, _myHomeTest, _navigatorKey);
+      await initAppWithPal(tester, _myHomeTest, _navigatorKey, editorModeEnabled: true);
       await pumpHelperWidget(
         tester,
         _navigatorKey,

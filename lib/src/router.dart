@@ -37,8 +37,7 @@ Route<dynamic> route(RouteSettings settings) {
 }
 
 //shows a page as overlay for our editor
-showOverlayed(
-    GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
+showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
   OverlayEntry helperOverlay = OverlayEntry(
     opaque: false,
     builder: builder,

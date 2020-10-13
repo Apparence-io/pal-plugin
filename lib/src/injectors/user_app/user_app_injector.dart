@@ -49,6 +49,5 @@ class UserInjector extends InheritedWidget {
 
   PackageVersionReader get packageVersionReader => this._packageVersionReader;
 
-  InAppUserClientService get inAppUserClientService =>
-      this._clientInAppUserService;
+  InAppUserClientService get inAppUserClientService => this._clientInAppUserService;
 }

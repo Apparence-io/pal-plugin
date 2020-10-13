@@ -16,17 +16,18 @@ Future initAppWithPal(
   Widget userApp,
   GlobalKey<NavigatorState> navigatorKey, {
   RouteFactory routeFactory,
+  bool editorModeEnabled = true
 }) async {
   BuildContext context;
   Pal app = Pal(
     appToken: "testtoken",
-    editorModeEnabled: true,
+    editorModeEnabled: editorModeEnabled,
     child: new MaterialApp(
       onGenerateRoute: routeFactory ??
-          (_) => MaterialPageRoute(builder: (ctx) {
-                context = ctx;
-                return userApp;
-              }),
+        (_) => MaterialPageRoute(builder: (ctx) {
+          context = ctx;
+          return userApp;
+        }),
       navigatorKey: navigatorKey,
       navigatorObservers: [PalNavigatorObserver.instance()],
     ),

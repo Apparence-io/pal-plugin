@@ -224,6 +224,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     },
                     keyboardType: widget.keyboardType,
                     maxLines: widget.maxLines,
+                    minLines: 1,
                     onFieldSubmitted: _onFieldSubmitted,
                     cursorColor: _textStyle?.color,
                     inputFormatters: widget.inputFormatters,

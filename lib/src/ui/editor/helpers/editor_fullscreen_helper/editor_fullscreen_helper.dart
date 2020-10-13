@@ -76,8 +76,10 @@ class EditorFullScreenHelperPage extends StatelessWidget
                             textFormFieldKey:
                                 ValueKey('palFullscreenHelperTitleField'),
                             onChanged: presenter.onTitleChanged,
-                            maximumCharacterLength: 20,
+                            maximumCharacterLength: 55,
                             minimumCharacterLength: 1,
+                            maxLines: 3,
+
                             textStyle: TextStyle(
                               color: viewModel.titleField?.fontColor?.value,
                               decoration: TextDecoration.none,

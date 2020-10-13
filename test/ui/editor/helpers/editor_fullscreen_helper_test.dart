@@ -7,7 +7,7 @@ import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import '../../../pal_test_utilities.dart';
 
 void main() {

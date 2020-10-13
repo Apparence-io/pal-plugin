@@ -223,7 +223,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                       return error;
                     },
                     keyboardType: widget.keyboardType,
-                    maxLines: widget.maxLines,
+                    maxLines: widget.maxLines ?? 1,
                     minLines: 1,
                     onFieldSubmitted: _onFieldSubmitted,
                     cursorColor: _textStyle?.color,

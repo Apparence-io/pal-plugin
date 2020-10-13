@@ -23,15 +23,19 @@ main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(ValueKey('Home')), findsOneWidget);
-      expect(find.byTooltip('Increment'), findsOneWidget);
-      expect(find.byIcon(Icons.add), findsOneWidget);
 
-      expect(find.text('Pal example'), findsOneWidget);
-      expect(find.text('You have pushed the button this many times:'),
-          findsOneWidget);
+      expect(find.text('Pal demo'), findsOneWidget);
 
-      expect(find.byKey(ValueKey('childRoute1Push')), findsOneWidget);
-      expect(find.byKey(ValueKey('childRoute2Push2')), findsOneWidget);
+      expect(find.text('Trending now'), findsOneWidget);
+
+      expect(find.text('Get a look here'), findsOneWidget);
+
+      expect(find.text('One more'), findsOneWidget);
+      expect(find.text('Second one'), findsOneWidget);
+
+      expect(find.byKey(ValueKey('card_KillBill')), findsOneWidget);
+      expect(find.byKey(ValueKey('card_Gump')), findsOneWidget);
+      expect(find.byKey(ValueKey('card_Joker')), findsOneWidget);
     });
 
     group('child navigation should work', () {
@@ -39,7 +43,7 @@ main() {
         await before(tester);
         await tester.pumpAndSettle();
 
-        Finder child1RouteButton = find.byKey(ValueKey('childRoute1Push'));
+        Finder child1RouteButton = find.byKey(ValueKey('card_Joker'));
         await tester.ensureVisible(child1RouteButton);
         await tester.tap(child1RouteButton);
         await tester.pumpAndSettle();
@@ -51,7 +55,7 @@ main() {
         await before(tester);
         await tester.pumpAndSettle();
 
-        Finder child1RouteButton = find.byKey(ValueKey('childRoute2Push2'));
+        Finder child1RouteButton = find.byKey(ValueKey('card_Gump'));
         await tester.ensureVisible(child1RouteButton);
         await tester.tap(child1RouteButton);
         await tester.pumpAndSettle();

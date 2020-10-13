@@ -23,7 +23,13 @@ class HomePage extends StatelessWidget implements HomeView {
           child: Scaffold(
             backgroundColor: Colors.white,
             appBar: _buildHeader(),
-            body: SingleChildScrollView(child: this._buildPage(context.buildContext, presenter, model)),
+            body: SingleChildScrollView(
+              child: this._buildPage(
+                context.buildContext,
+                presenter,
+                model,
+              ),
+            ),
             bottomNavigationBar: _buildBottomBar(context.buildContext),
             // floatingActionButton: FloatingActionButton(
             //   key: ValueKey("floatingActionAdd"),
@@ -47,14 +53,26 @@ class HomePage extends StatelessWidget implements HomeView {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: _buildCard("assets/images/joker.jpg", 400, "Trending now"),
+          child: GestureDetector(
+            onTap: () => pushToRoute1(context),
+            child: _buildCard(
+              'assets/images/joker.jpg',
+              400,
+              'Trending now',
+              'card_Joker',
+            ),
+          ),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(16, 16, 0, 0),
           child: Text(
             "Get a look here",
             key: ValueKey("getalook"),
-            style: TextStyle(color: Colors.blueGrey[500], fontSize: 21, fontWeight: FontWeight.bold),),
+            style: TextStyle(
+                color: Colors.blueGrey[500],
+                fontSize: 21,
+                fontWeight: FontWeight.bold),
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -63,13 +81,26 @@ class HomePage extends StatelessWidget implements HomeView {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 8, 16),
-                child: _buildCard("assets/images/gump.png", 200, "One more"),
+                child: GestureDetector(
+                  onTap: () => pushToRoute2(context),
+                  child: _buildCard(
+                    'assets/images/gump.png',
+                    200,
+                    'One more',
+                    'card_Gump',
+                  ),
+                ),
               ),
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(8, 8, 16, 16),
-                child: _buildCard("assets/images/kill_bill.jpg", 200, "Second one"),
+                child: _buildCard(
+                  'assets/images/kill_bill.jpg',
+                  200,
+                  'Second one',
+                  'card_KillBill',
+                ),
               ),
             ),
           ],
@@ -78,53 +109,78 @@ class HomePage extends StatelessWidget implements HomeView {
     );
   }
 
-  Container _buildCard(String imagePath, double height, String title) {
+  Container _buildCard(
+    String imagePath,
+    double height,
+    String title,
+    String key,
+  ) {
     return Container(
-          key: ValueKey("card"+title),
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
-            color: Colors.blue,
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit.cover
-            ),
-            boxShadow: [
-              BoxShadow(color: Colors.blueGrey[800].withOpacity(.2), blurRadius: 6, spreadRadius: 1, offset: Offset(0,3)),
-              BoxShadow(color: Colors.blueGrey[200].withOpacity(.9), blurRadius: 2, spreadRadius: 2, offset: Offset(0,3)),
-            ]
+      key: ValueKey(key),
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        color: Colors.blue,
+        image: DecorationImage(
+          image: AssetImage(imagePath),
+          fit: BoxFit.cover,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blueGrey[800].withOpacity(.2),
+            blurRadius: 6,
+            spreadRadius: 1,
+            offset: Offset(0, 3),
           ),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 90,
-              color: Colors.blueGrey[900].withOpacity(.8),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(title, style: TextStyle(color: Colors.white, fontSize: 21),),
-                    Padding(
-                      padding: const EdgeInsets.only(top:8.0),
-                      child: Text("Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum "
-                        "lorem ipsum lorem ipsum lorem ipsum lorem ",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white, fontSize: 14),),
-                    ),
-                  ],
+          BoxShadow(
+            color: Colors.blueGrey[200].withOpacity(.9),
+            blurRadius: 2,
+            spreadRadius: 2,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          height: 90,
+          color: Colors.blueGrey[900].withOpacity(.8),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(color: Colors.white, fontSize: 21),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    "Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum "
+                    "lorem ipsum lorem ipsum lorem ipsum lorem ",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 
   _buildHeader() {
     return AppBar(
-      title: Text('MyApp', style: TextStyle(color: Colors.blueGrey[900]),),
+      title: Text(
+        'Pal demo',
+        style: TextStyle(color: Colors.blueGrey[900]),
+      ),
       backgroundColor: Colors.white,
-
     );
   }
 
@@ -132,7 +188,10 @@ class HomePage extends StatelessWidget implements HomeView {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home, color: Colors.blueGrey,),
+          icon: Icon(
+            Icons.home,
+            color: Colors.blueGrey,
+          ),
           label: 'Home',
         ),
         BottomNavigationBarItem(

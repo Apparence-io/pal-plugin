@@ -128,28 +128,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
                       children: [
                         _buildValidationActions(context, presenter, model),
                         _buildBannerEditorMode(context),
-                        if (model.toolbarIsVisible &&
-                            model.toolbarPosition != null)
-                          Positioned(
-                            top: model.toolbarPosition.dy - 8.0,
-                            left: model.toolbarPosition.dx,
-                            right: model.toolbarPosition.dx,
-                            child: EditHelperToolbar(
-                              onChangeBorderTap: () {
-                                // TODO: To implement
-                              },
-                              onCloseTap: () {
-                                presenter.hideToolbar();
-                                unFocusCurrentTextField(context);
-                              },
-                              onChangeFontTap: () {
-                                // TODO: To implement
-                              },
-                              onEditTextTap: () {
-                                // TODO: To implement
-                              },
-                            ),
-                          )
                       ],
                     )
                   : Center(

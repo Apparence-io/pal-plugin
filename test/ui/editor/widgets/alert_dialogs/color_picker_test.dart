@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/widgets/color_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 
 void main() {
   group('Color picker', () {
@@ -30,8 +30,6 @@ void main() {
       expect(find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_ColorPickerAlertDialog_CancelButton')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton')), findsOneWidget);
-
-      expect(find.text('Pick a color'), findsOneWidget);
 
       expect(find.text('Cancel'), findsOneWidget);
       expect(find.text('Validate'), findsOneWidget);

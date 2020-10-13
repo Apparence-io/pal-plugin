@@ -8,12 +8,6 @@ class HelperEditorViewModel extends MVVMModel {
   bool enableSave;
   bool isLoading;
   bool isEditableWidgetValid;
-
-  // Toolbar stuff
-  bool toolbarIsVisible;
-  Offset toolbarPosition;
-  Size toolbarSize;
-  Size editedWidgetSize;
   bool isEditingWidget;
 
   // this is used to let user choose between all available type options

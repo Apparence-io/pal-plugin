@@ -55,8 +55,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
     return _mvvmPageBuilder.build(
       key: ValueKey('palEditorFullscreenHelperWidgetBuilder'),
       context: context,
-      presenterBuilder: (context) =>
-          EditorFullScreenHelperPresenter(new EditorFullScreenHelper(context), viewModel),
+      presenterBuilder: (context) => EditorFullScreenHelperPresenter(
+          new EditorFullScreenHelper(context), viewModel),
       builder: (context, presenter, model) {
         return this._buildPage(context.buildContext, presenter, model);
       },
@@ -89,78 +89,65 @@ class EditorFullScreenHelperPage extends StatelessWidget {
             },
             child: Container(
               color: viewModel.backgroundColor?.value,
-              child: SafeArea(
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            EditableTextField(
-                              outsideTapStream:
-                                  model.editableTextFieldController.stream,
-                              helperToolbarKey: ValueKey(
-                                  'palEditorFullscreenHelperWidgetToolbar'),
-                              textFormFieldKey:
-                                  ValueKey('palFullscreenHelperTitleField'),
-                              onChanged: presenter.onTitleChanged,
-                              maximumCharacterLength: 20,
-                              minimumCharacterLength: 1,
-                              textStyle: TextStyle(
-                                color: viewModel.titleField?.fontColor?.value,
-                                decoration: TextDecoration.none,
-                                fontSize: viewModel.titleField?.fontSize?.value,
-                              ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          EditableTextField.text(
+                            outsideTapStream:
+                                model.editableTextFieldController.stream,
+                            helperToolbarKey: ValueKey(
+                                'palEditorFullscreenHelperWidgetToolbar'),
+                            textFormFieldKey:
+                                ValueKey('palFullscreenHelperTitleField'),
+                            onChanged: presenter.onTitleChanged,
+                            maximumCharacterLength: 55,
+                            minimumCharacterLength: 1,
+                            maxLines: 3,
+                            textStyle: TextStyle(
+                              color: viewModel.titleField?.fontColor?.value,
+                              decoration: TextDecoration.none,
+                              fontSize: viewModel.titleField?.fontSize?.value,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 24.0),
-                              child: InkWell(
-                                key: ValueKey("positiveFeedback"),
-                                child: Text(
-                                  "Ok, thanks !",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                  textAlign: TextAlign.center,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24.0),
+                            child: InkWell(
+                              key: ValueKey("positiveFeedback"),
+                              child: Text(
+                                "Ok, thanks !",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  decoration: TextDecoration.underline,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0),
-                              child: InkWell(
-                                key: ValueKey("negativeFeedback"),
-                                child: Text(
-                                  "This is not helping",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                  ),
-                                  textAlign: TextAlign.center,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: InkWell(
+                              key: ValueKey("negativeFeedback"),
+                              child: Text(
+                                "This is not helping",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    Positioned(
-                      top: 20.0,
-                      left: 20.0,
-                      child: CircleIconButton(
-                        key: ValueKey(
-                            'pal_EditorFullScreenHelperPage_BackgroundColorPicker'),
-                        icon: Icon(Icons.invert_colors),
-                        backgroundColor: PalTheme.of(context).colors.light,
-                        onTapCallback: () =>
-                            presenter.changeBackgroundColor(viewModel, presenter),
-                      ),
-                    ),
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),

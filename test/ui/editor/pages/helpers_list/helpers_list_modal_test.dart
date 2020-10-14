@@ -53,7 +53,7 @@ main() {
           routes: {
             '/editor/new': (context) =>
                 Scaffold(body: Text('Welcome editor new')),
-            '/editor/3': (context) => Scaffold(body: Text('Helper 3')),
+            '/editor/helper': (context) => Scaffold(body: Text('Helper 3')),
           },
         ),
       );

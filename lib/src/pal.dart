@@ -49,6 +49,20 @@ class Pal extends StatelessWidget {
      assert(navigatorObserver != null, 'A navigator Observer of type PalObserver must be added to your MaterialApp');
   }
 
+  Pal.fromRouterApp({
+    Key key,
+    @required this.child,
+    @required this.appToken,
+    this.editorModeEnabled = true,
+    this.navigatorKey,
+    this.textDirection = TextDirection.ltr,
+  }) : assert(child != null, 'Pal must embbed a client application'),
+      assert(navigatorKey != null, 'Pal navigatorKey must not be null'),
+      navigatorObserver = PalNavigatorObserver.instance(),
+      super(key: key) {
+    assert(navigatorObserver != null, 'A navigator Observer of type PalObserver must be added to your MaterialApp');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(

@@ -64,7 +64,7 @@ void main() {
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
       when(helperClientServiceMock.getPageHelpers(any, any)).thenAnswer((_) => Future.value([]));
 
-      HelperOrchestrator.getInstance(
+      var orchestrator = HelperOrchestrator.getInstance(
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,
@@ -73,36 +73,34 @@ void main() {
       await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
       await tester.pumpAndSettle(Duration(seconds: 1));
       expect(find.text("New"), findsOneWidget);
-      // FIXME in test => routeObserver receives only null RouteSettings
-//      verify(helperClientServiceMock.getPageHelpers(any)).called(1);
-      navigatorKey.currentState.pushNamed("/test1");
+
+      // FIXME in test => routeObserver receives only null RouteSettings using this
+      // navigatorKey.currentState.pushNamed("/test1");
+      // expect(find.text("New1"), findsOneWidget);
+      await orchestrator.onChangePage("/test1");
+      verify(helperClientServiceMock.getPageHelpers("/test1", "db6b01e1-b649-4a17-949a-9ab320601001"), ).called(1);
       await tester.pumpAndSettle(Duration(seconds: 1));
-      expect(find.text("New1"), findsOneWidget);
-      // verify(helperClientServiceMock.getPageHelpers("/test1", any)).called(1);
     });
 
     testWidgets('changing page will dismiss current helper', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
-      when(helperClientServiceMock.getPageHelpers("test", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([
+      when(helperClientServiceMock.getPageHelpers("/test", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([
         HelperEntity(id: "1", name: "test1")
       ]));
-      when(helperClientServiceMock.getPageHelpers("route2", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([]));
-      var app = new MediaQuery(
-        data: MediaQueryData(),
-        child: MaterialApp(
-          navigatorKey: navigatorKey,
-          navigatorObservers: [routeObserver],
-          onGenerateRoute: route,
-          initialRoute: "/",
-        )
+      when(helperClientServiceMock.getPageHelpers("/route2", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([]));
+      var orchestrator = HelperOrchestrator.getInstance(
+        helperClientService: helperClientServiceMock,
+        inAppUserClientService: inAppUserClientService,
+        routeObserver: routeObserver,
+        navigatorKey: navigatorKey
       );
-      await initAppWithPal(tester, app, navigatorKey, editorModeEnabled: false, routeFactory: route);
+      await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
 
-      // await orchestrator.onChangePage("test");
-      // expect(orchestrator.helper.overlay, isNotNull);
-      // await orchestrator.onChangePage("route2");
-      // expect(orchestrator.helper.overlay, isNull);
+      await orchestrator.onChangePage("/test");
+      expect(orchestrator.overlay, isNotNull);
+      await orchestrator.onChangePage("/route2");
+      expect(orchestrator.overlay, isNull);
     });
 
     testWidgets('only one overlay at a time', (WidgetTester tester) async {
@@ -113,17 +111,14 @@ void main() {
         .thenAnswer((_) => Future.value([
           HelperEntity(id: "1", name: "test1")
         ]));
-      var app = new MediaQuery(
-        data: MediaQueryData(),
-        child: MaterialApp(
-          navigatorKey: navigatorKey,
-          navigatorObservers: [routeObserver],
-          onGenerateRoute: route,
-          initialRoute: "/",
-        )
+      var orchestrator = HelperOrchestrator.getInstance(
+        helperClientService: helperClientServiceMock,
+        inAppUserClientService: inAppUserClientService,
+        routeObserver: routeObserver,
+        navigatorKey: navigatorKey
       );
-      await initAppWithPal(tester, app, navigatorKey, editorModeEnabled: false, routeFactory: route);
-      // expect(orchestrator.helper.overlay, isNot(isList));
+      await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
+      expect(orchestrator.overlay, isNot(isList));
     });
 
   });

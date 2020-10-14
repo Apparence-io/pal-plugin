@@ -67,16 +67,15 @@ class HelperOrchestrator {
       // _showUpdateHelper();
       // _showSimpleHelper();
       // DEBUG: END REMOVE
-      final InAppUserEntity inAppUser =
-          await this.inAppUserClientService.getOrCreate();
-      final List<HelperEntity> helpersToShow =
-          await this.helperClientService.getPageHelpers(route, inAppUser.id);
+      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
       if (helpersToShow != null && helpersToShow.length > 0) {
         showHelper(helpersToShow[0], inAppUser.id);
       }
     } catch (e) {
       // Nothing to do
       // TODO log error to our server
+      print("on change page error $e");
     }
   }
 

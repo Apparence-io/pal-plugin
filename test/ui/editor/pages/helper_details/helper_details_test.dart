@@ -4,11 +4,11 @@ import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
 
-class MockHelperService extends Mock implements HelperClientService{}
+class MockHelperService extends Mock implements HelperService{}
 
 main() {
   group('Helper Details', () {
@@ -55,14 +55,14 @@ main() {
     testWidgets("Calls service on delete click", (tester) async {
       await _initPage(tester);
       
-      when(service.deleteHelper()).thenAnswer((realInvocation) => Future.value(null));
+      when(service.deleteHelper("testId")).thenAnswer((realInvocation) => Future.value(null));
 
       Finder delete = find.byKey(ValueKey('deleteHelper'));
       await tester.tap(delete);
 
       await tester.pump();
 
-      verify(service.deleteHelper()).called(1);
+      verify(service.deleteHelper("testId")).called(1);
     });
   });
 }

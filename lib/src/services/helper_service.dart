@@ -13,6 +13,8 @@ abstract class HelperService {
   );
 
   Future<Pageable<HelperEntity>> getPageHelpers(final String route, final int page, final int pageSize);
+
+  Future<bool> deleteHelper(String helperId);
 }
 
 class _HelperHttpService implements HelperService {
@@ -31,5 +33,11 @@ class _HelperHttpService implements HelperService {
     CreateHelperEntity createHelperEntity,
   ) {
     return this._helperRepository.createHelper(pageId, createHelperEntity);
+  }
+
+  @override
+  Future<bool> deleteHelper(String helperId) {
+    // TODO: implement deleteHelper
+    throw UnimplementedError();
   }
 }

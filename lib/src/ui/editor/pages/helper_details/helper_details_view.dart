@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
-import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 
 import 'helper_details_model.dart';
@@ -13,7 +13,7 @@ abstract class HelperDetailsInterface {}
 
 class HelperDetailsComponent extends StatelessWidget implements HelperDetailsInterface {
   final HelperEntity helper;
-  final HelperClientService testHelperService;
+  final HelperService testHelperService;
 
   final _mvvmPageBuilder = MVVMPageBuilder<HelperDetailsPresenter, HelperDetailsModel>();
 
@@ -24,7 +24,7 @@ class HelperDetailsComponent extends StatelessWidget implements HelperDetailsInt
     return _mvvmPageBuilder.build(
       context: context,
       presenterBuilder: (context) => HelperDetailsPresenter(HelperDetailsModel(),
-       this, this.testHelperService ?? UserInjector.of(context).helperService,
+       this, this.testHelperService ?? EditorInjector.of(context).helperService,
        this.helper),
       builder: (context, presenter, model) => SafeArea(
         child: Scaffold(

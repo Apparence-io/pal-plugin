@@ -1,12 +1,12 @@
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/services/client/helper_client_service.dart';
+import 'package:palplugin/src/services/helper_service.dart';
 
 import '../../../../database/entity/helper/helper_entity.dart';
 import 'helper_details_model.dart';
 import 'helper_details_view.dart';
 
 class HelperDetailsPresenter extends Presenter<HelperDetailsModel,HelperDetailsInterface>{
-  final HelperClientService service;
+  final HelperService service;
   final HelperEntity helper;
   
   HelperDetailsPresenter(HelperDetailsModel viewModel, viewInterface, this.service, this.helper) : super(viewModel, viewInterface){
@@ -18,6 +18,6 @@ class HelperDetailsPresenter extends Presenter<HelperDetailsModel,HelperDetailsI
 
 
   void deleteHelper() {
-    this.service.deleteHelper();
+    this.service.deleteHelper("testId");
   }
 }

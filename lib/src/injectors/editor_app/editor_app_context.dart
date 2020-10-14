@@ -16,8 +16,8 @@ class EditorAppContext {
   }
 
   @visibleForTesting
-  static create({@required url, @required String token}) {
-    _instance = HttpEditorAppContext.create(url: url, token: token);
+  static create(EditorAppContext editorAppContext) {
+    _instance = editorAppContext;
   }
 
   static EditorAppContext get instance {

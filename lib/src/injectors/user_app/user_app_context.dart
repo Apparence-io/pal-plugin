@@ -17,8 +17,8 @@ class UserAppContext {
   }
 
   @visibleForTesting
-  static create({@required url, @required String token}) {
-    _instance = HttpUserAppContext.create(url: url, token: token);
+  static create(UserAppContext userAppContext) {
+    _instance = userAppContext;
   }
 
   static UserAppContext get instance {

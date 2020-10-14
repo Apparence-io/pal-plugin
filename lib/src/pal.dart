@@ -47,6 +47,7 @@ class Pal extends StatelessWidget {
      navigatorObserver = child.navigatorObservers.firstWhere((element) => element is PalNavigatorObserver),
      super(key: key) {
      assert(navigatorObserver != null, 'A navigator Observer of type PalObserver must be added to your MaterialApp');
+     _init();
   }
 
   Pal.fromRouterApp({
@@ -61,6 +62,15 @@ class Pal extends StatelessWidget {
       navigatorObserver = PalNavigatorObserver.instance(),
       super(key: key) {
     assert(navigatorObserver != null, 'A navigator Observer of type PalObserver must be added to your MaterialApp');
+    _init();
+  }
+
+  _init() {
+    if(editorModeEnabled) {
+      EditorAppContext.init(url: PAL_SERVER_URL, token: this.appToken);
+    } else {
+      UserAppContext.init(url: PAL_SERVER_URL, token: this.appToken);
+    }
   }
 
   @override
@@ -74,41 +84,33 @@ class Pal extends StatelessWidget {
   }
 
   Widget buildEditorApp() {
-    return EditorAppContext.create(
-      url: PAL_SERVER_URL,
-      token: this.appToken,
-      child: Builder(builder: (context) => EditorInjector(
-          routeObserver: navigatorObserver,
-          child: PalEditModeWrapper(
-            userApp: child,
-            hostedAppNavigatorKey: navigatorKey,
-          ),
-          boundaryChildKey: navigatorKey, // FIXME: Need to send boundary here!
-          appContext: EditorAppContext.of(context),
-        )),
+    return EditorInjector(
+      routeObserver: navigatorObserver,
+      child: PalEditModeWrapper(
+        userApp: child,
+        hostedAppNavigatorKey: navigatorKey,
+      ),
+      boundaryChildKey: navigatorKey, // FIXME: Need to send boundary here!
+      appContext: EditorAppContext.instance
     );
   }
 
   Widget buildUserApp() {
-    return UserAppContext.create(
-      url: PAL_SERVER_URL,
-      token: this.appToken,
-      child: Builder(builder: (context) => UserInjector(
-          routeObserver: navigatorObserver,
-          child: Builder(
-            builder: (context) {
-              HelperOrchestrator.getInstance(
-                helperClientService: UserInjector.of(context).helperService,
-                inAppUserClientService: UserInjector.of(context).inAppUserClientService,
-                routeObserver: navigatorObserver,
-                navigatorKey: navigatorKey
-              );
-              return child;
-            }
-          ),
-          appContext: UserAppContext.of(context),
-        )),
-    );
+    return UserInjector(
+        routeObserver: navigatorObserver,
+        child: Builder(
+          builder: (context) {
+            HelperOrchestrator.getInstance(
+              helperClientService: UserInjector.of(context).helperService,
+              inAppUserClientService: UserInjector.of(context).inAppUserClientService,
+              routeObserver: navigatorObserver,
+              navigatorKey: navigatorKey
+            );
+            return child;
+          }
+        ),
+        appContext: UserAppContext.instance,
+      );
   }
 
 

@@ -45,6 +45,22 @@ class HelperOrchestrator {
     return _instance;
   }
 
+  @visibleForTesting
+  factory HelperOrchestrator.initForTesting({
+    GlobalKey<NavigatorState> navigatorKey,
+    PalRouteObserver routeObserver,
+    HelperClientService helperClientService,
+    InAppUserClientService inAppUserClientService})
+  {
+    _instance = HelperOrchestrator._(
+      routeObserver,
+      helperClientService,
+      inAppUserClientService,
+      navigatorKey
+    );
+    return _instance;
+  }
+
   HelperOrchestrator._(this.routeObserver, this.helperClientService, this.inAppUserClientService, this.navigatorKey):
     assert(routeObserver != null),
     assert(helperClientService != null),

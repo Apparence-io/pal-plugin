@@ -66,7 +66,6 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
   @override
   Widget build(BuildContext context) {
     _scale = 1 - _animationController.value;
-
     if (_position != null) {
       return Visibility(
         visible: widget.visibility.value,

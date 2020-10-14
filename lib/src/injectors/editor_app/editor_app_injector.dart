@@ -12,6 +12,7 @@ import 'package:palplugin/src/services/page_server.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 
 class EditorInjector extends InheritedWidget {
+
   final PageService _pageService;
 
   final HelperService _helperService;
@@ -31,7 +32,6 @@ class EditorInjector extends InheritedWidget {
   final PackageVersionReader _packageVersionReader;
 
   final PalRouteObserver routeObserver;
-
 
   EditorInjector({
     Key key,
@@ -57,9 +57,7 @@ class EditorInjector extends InheritedWidget {
       context.dependOnInheritedWidgetOfExactType<EditorInjector>();
 
   @override
-  bool updateShouldNotify(EditorInjector old) {
-    return false;
-  }
+  bool updateShouldNotify(EditorInjector old) => true;
 
   HelperService get helperService => this._helperService;
 

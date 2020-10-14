@@ -84,7 +84,9 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   }
 
   _onShowBubbleStateChanged() {
-    if (mounted) setState(() {});
+    if (mounted) setState(() {
+
+    });
   }
 
   _showHelpersListModal(BuildContext context) {

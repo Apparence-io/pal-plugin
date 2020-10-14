@@ -64,7 +64,7 @@ void main() {
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
       when(helperClientServiceMock.getPageHelpers(any, any)).thenAnswer((_) => Future.value([]));
 
-      var orchestrator = HelperOrchestrator.getInstance(
+      var orchestrator = HelperOrchestrator.initForTesting(
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,
@@ -89,7 +89,7 @@ void main() {
         HelperEntity(id: "1", name: "test1")
       ]));
       when(helperClientServiceMock.getPageHelpers("/route2", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([]));
-      var orchestrator = HelperOrchestrator.getInstance(
+      var orchestrator = HelperOrchestrator.initForTesting(
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,
@@ -111,7 +111,7 @@ void main() {
         .thenAnswer((_) => Future.value([
           HelperEntity(id: "1", name: "test1")
         ]));
-      var orchestrator = HelperOrchestrator.getInstance(
+      var orchestrator = HelperOrchestrator.initForTesting(
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,

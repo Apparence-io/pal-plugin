@@ -5,9 +5,37 @@ import 'package:palplugin/src/database/repository/page_repository.dart';
 import 'package:palplugin/src/database/repository/version_repository.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
+
+class UserAppContext {
+
+  static UserAppContext _instance;
+
+  static init({@required url, @required String token}) {
+    if(_instance == null) {
+      _instance = HttpUserAppContext.create(url: url, token: token);
+    }
+  }
+
+  static UserAppContext get instance {
+    if(_instance == null) {
+      throw "init needs to be called";
+    }
+    return _instance;
+  }
+
+  PageRepository get pageRepository => throw "not implemented";
+
+  HelperRepository get helperRepository => throw "not implemented";
+
+  VersionRepository get versionRepository => throw "not implemented";
+
+  InAppUserRepository get inAppUserRepository => throw "not implemented";
+
+}
+
 /// [UserAppContext] inherited class to provide some context to all childs
 ///  - this class will retain [HttpClient] to pass to all childs
-class UserAppContext extends InheritedWidget {
+class HttpUserAppContext implements UserAppContext {
 
   final PageRepository _pageRepository;
 
@@ -17,36 +45,20 @@ class UserAppContext extends InheritedWidget {
 
   final VersionRepository _versionRepository;
 
-  factory UserAppContext.create(
-      {Key key, @required Widget child, @required url, @required String token,}) =>
-      UserAppContext._private(
-        key: key,
-        child: child,
-        httpClient: url == null || token == null ? null : HttpClient.create(
-            url, token),
-      );
+  factory HttpUserAppContext.create(
+      {@required url, @required String token,}) {
+    return HttpUserAppContext._private(
+      httpClient: url == null || token == null ? null : HttpClient.create(url, token),
+    );
+  }
 
-
-  UserAppContext._private({
-    @required Key key,
-    @required Widget child,
+  HttpUserAppContext._private({
     @required HttpClient httpClient,
-  })  : assert(child != null),
-        assert(httpClient != null),
-        this._pageRepository = PageRepository(httpClient: httpClient),
-        this._helperRepository = HelperRepository(httpClient: httpClient),
-        this._versionRepository = VersionHttpRepository(httpClient: httpClient),
-        this._inAppUserRepository = InAppUserRepository(httpClient: httpClient),
-        super(key: key, child: child);
-
-  static UserAppContext of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<UserAppContext>();
-  }
-
-  @override
-  bool updateShouldNotify(UserAppContext old) {
-    return false;
-  }
+  }) : assert(httpClient != null),
+      this._pageRepository = PageRepository(httpClient: httpClient),
+      this._helperRepository = HelperRepository(httpClient: httpClient),
+      this._versionRepository = VersionHttpRepository(httpClient: httpClient),
+      this._inAppUserRepository = InAppUserRepository(httpClient: httpClient);
 
   PageRepository get pageRepository => this._pageRepository;
 

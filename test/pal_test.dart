@@ -28,16 +28,16 @@ void main() {
       return app;
     }
 
-    testWidgets('Create app with Pal in editor mode should inject EditorAppContext', (WidgetTester tester) async {
+    testWidgets('Create app with Pal in editor mode should inject EditorInjector', (WidgetTester tester) async {
       Pal app = _createApp(true);
       await tester.pumpWidget(app);
       var palFinder = find.byType(Pal).first;
-      var editorAppContextFinder = find.byType(EditorAppContext);
-      var userAppContextFinder = find.byType(UserAppContext);
+      var EditorInjectorFinder = find.byType(EditorInjector);
+      var userAppInjectFinder = find.byType(UserInjector);
 
       expect(palFinder, findsOneWidget);
-      expect(editorAppContextFinder, findsOneWidget);
-      expect(userAppContextFinder, findsNothing);
+      expect(EditorInjectorFinder, findsOneWidget);
+      expect(userAppInjectFinder, findsNothing);
       // the bubble button should be available to turn on editor
       expect(find.byType(BubbleOverlayButton), findsOneWidget);
     });

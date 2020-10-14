@@ -39,9 +39,7 @@ class UserInjector extends InheritedWidget {
       context.dependOnInheritedWidgetOfExactType<UserInjector>();
 
   @override
-  bool updateShouldNotify(UserInjector old) {
-    return false;
-  }
+  bool updateShouldNotify(UserInjector old) => true;
 
   PageClientService get pageService => this._pageService;
 

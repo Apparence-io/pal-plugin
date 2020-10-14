@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
@@ -28,6 +29,9 @@ Route<dynamic> route(RouteSettings settings) {
           hostedAppNavigatorKey: args.hostedAppNavigatorKey,
         ),
       );
+    case '/editor/helper':
+      var helper = settings.arguments;
+      return MaterialPageRoute(builder: (context) => HelperDetailsComponent(helper: helper,));
     case '/editor/new/font-family':
       FontFamilyPickerArguments args = settings.arguments;
       return MaterialPageRoute(

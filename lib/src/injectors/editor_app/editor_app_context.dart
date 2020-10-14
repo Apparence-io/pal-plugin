@@ -15,6 +15,11 @@ class EditorAppContext {
     }
   }
 
+  @visibleForTesting
+  static create({@required url, @required String token}) {
+    _instance = HttpEditorAppContext.create(url: url, token: token);
+  }
+
   static EditorAppContext get instance {
     if(_instance == null) {
       throw "init needs to be called";

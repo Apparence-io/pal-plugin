@@ -16,6 +16,11 @@ class UserAppContext {
     }
   }
 
+  @visibleForTesting
+  static create({@required url, @required String token}) {
+    _instance = HttpUserAppContext.create(url: url, token: token);
+  }
+
   static UserAppContext get instance {
     if(_instance == null) {
       throw "init needs to be called";

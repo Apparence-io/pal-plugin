@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:palplugin/src/ui/editor/widgets/nested_navigator.dart';
+import 'package:palplugin/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
 
 Future _before(WidgetTester tester) async {
   var app = MediaQuery(
@@ -30,11 +32,14 @@ void main() {
       expect(
           find.byKey(ValueKey('palCreateHelperTextFieldName')), findsOneWidget);
       expect(find.byKey(ValueKey('palCreateHelperNextButton')), findsOneWidget);
-      expect(find.byKey(ValueKey('palCreateHelperTypeDropdown')), findsOneWidget);
+      expect(
+          find.byKey(ValueKey('palCreateHelperTypeDropdown')), findsOneWidget);
       expect(find.text('Next'), findsOneWidget);
+      expect(find.byType(NestedNavigator), findsOneWidget);
+      expect(find.byType(ProgressBarWidget), findsOneWidget);
     });
 
-    testWidgets('should insert helper name', (WidgetTester tester) async {
+    testWidgets('should next button be active', (WidgetTester tester) async {
       await _before(tester);
 
       expect(
@@ -46,7 +51,7 @@ void main() {
 
       var helperName = find.byKey(ValueKey('palCreateHelperTextFieldName'));
       await tester.enterText(helperName, 'My awesome helper');
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(
           tester
@@ -56,12 +61,12 @@ void main() {
           isTrue);
     });
 
-    testWidgets('textfield name should be disabled when no value', (WidgetTester tester) async {
+    testWidgets('should next button be disabled', (WidgetTester tester) async {
       await _before(tester);
 
       var helperName = find.byKey(ValueKey('palCreateHelperTextFieldName'));
       await tester.enterText(helperName, '');
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       expect(
           tester
@@ -69,16 +74,6 @@ void main() {
                   find.byKey(ValueKey('palCreateHelperNextButton')))
               .enabled,
           isFalse);
-    });
-
-    testWidgets('should select on screen visit type', (WidgetTester tester) async {
-      await _before(tester);
-
-      var dropdownHelperType = find.byKey(ValueKey('palCreateHelperTypeDropdown'));
-      await tester.tap(dropdownHelperType);
-      await tester.pumpAndSettle();
-
-      // TODO: Can only be done when more type are added
     });
   });
 }

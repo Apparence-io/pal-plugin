@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/palplugin.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';

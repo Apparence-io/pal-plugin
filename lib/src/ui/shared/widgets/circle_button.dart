@@ -3,17 +3,23 @@ import 'package:flutter/material.dart';
 class CircleIconButton extends StatelessWidget {
   final Color backgroundColor;
   final Color splashColor;
+  final Color loadingColor;
   final num radius;
   final Icon icon;
   final BoxShadow shadow;
+  final bool displayShadow;
   final Function onTapCallback;
+  final bool isLoading;
   const CircleIconButton({
     Key key,
     this.backgroundColor = Colors.blue,
+    this.loadingColor = Colors.white,
     this.splashColor,
     this.radius = 20.0,
     this.shadow,
+    this.displayShadow = true,
     @required this.icon,
+    this.isLoading = false,
     this.onTapCallback,
   }) : super(key: key);
 
@@ -23,19 +29,22 @@ class CircleIconButton extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.transparent,
-        boxShadow: [
-          shadow ??
-              BoxShadow(
-                color: Colors.black.withOpacity(onTapCallback != null ? 0.1 : 0.03),
-                spreadRadius: 5,
-                blurRadius: 9,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-        ],
+        boxShadow: displayShadow
+            ? [
+                shadow ??
+                    BoxShadow(
+                      color: Colors.black
+                          .withOpacity(onTapCallback != null ? 0.1 : 0.03),
+                      spreadRadius: 5,
+                      blurRadius: 9,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+              ]
+            : null,
       ),
       child: ClipOval(
         child: Opacity(
-          opacity: onTapCallback != null ? 1 : 0.35,
+          opacity: (onTapCallback != null) ? 1 : 0.35,
           child: Material(
             color: backgroundColor,
             child: InkWell(
@@ -43,7 +52,15 @@ class CircleIconButton extends StatelessWidget {
               child: SizedBox(
                 width: radius * 2,
                 height: radius * 2,
-                child: icon,
+                child: (isLoading)
+                    ? Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: CircularProgressIndicator(
+                          backgroundColor: loadingColor,
+                          strokeWidth: 2.0,
+                        ),
+                      )
+                    : icon,
               ),
               onTap: onTapCallback,
             ),

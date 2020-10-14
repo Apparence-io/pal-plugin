@@ -13,12 +13,21 @@ class _PalThemeLightColors {
   static const Color gray = Color(0xFF4F4E57);
 
   static const Gradient gradient1 = const LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: <Color>[
-        white,
-        aqua,
-      ]);
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: <Color>[
+      white,
+      aqua,
+    ],
+  );
+  static const Gradient gradient2 = const LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: <Color>[
+      Color(0xFF0D055E),
+      Color(0xFF2C77B6),
+    ],
+  );
 }
 
 class _PalThemeColors {
@@ -34,17 +43,21 @@ class _PalThemeColors {
 
   final Gradient bottomNavEditorGradient;
 
-  const _PalThemeColors._(
-      {this.dark,
-      this.black,
-      this.color1,
-      this.color2,
-      this.color3,
-      this.color4,
-      this.color5,
-      this.accent,
-      this.light,
-      this.bottomNavEditorGradient});
+  final Gradient settingsSilverGradient;
+
+  const _PalThemeColors._({
+    this.dark,
+    this.black,
+    this.color1,
+    this.color2,
+    this.color3,
+    this.color4,
+    this.color5,
+    this.accent,
+    this.light,
+    this.bottomNavEditorGradient,
+    this.settingsSilverGradient,
+  });
 
   factory _PalThemeColors.light() => const _PalThemeColors._(
         dark: _PalThemeLightColors.dark,
@@ -57,6 +70,7 @@ class _PalThemeColors {
         light: _PalThemeLightColors.white,
         accent: _PalThemeLightColors.red,
         bottomNavEditorGradient: _PalThemeLightColors.gradient1,
+        settingsSilverGradient: _PalThemeLightColors.gradient2,
       );
 }
 
@@ -137,11 +151,13 @@ class PalThemeData {
 
   Gradient get bottomNavEditorGradient => colors.bottomNavEditorGradient;
 
+  Gradient get settingsSilverGradient => colors.settingsSilverGradient;
+
   Color get highlightColor => colors.color4;
 
   Color get toolbarBackgroundColor => colors.color5;
 
-  Color get floatingBubbleBackgroundColor => colors.dark;
+  Color get floatingBubbleBackgroundColor => colors.color1;
 
   Color get simpleHelperBackgroundColor => colors.black;
 

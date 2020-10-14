@@ -38,6 +38,7 @@ class _HelperClientHttpService implements HelperClientService {
     if(page == null || page.entities.length == 0) {
       return Future.value([]);
     }
+    await _packageVersionReader.init();
     return _helperRepository.getClientHelpers(
       page.entities.first.id,
       _packageVersionReader.version,

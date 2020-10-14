@@ -4,6 +4,7 @@ import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_ser
 import 'package:palplugin/src/services/client/helper_client_service.dart';
 import 'package:palplugin/src/services/client/page_client_service.dart';
 import 'package:palplugin/src/in_app_user_manager.dart';
+import 'package:palplugin/src/services/package_version.dart';
 
 import '../../pal_navigator_observer.dart';
 
@@ -15,6 +16,8 @@ class UserInjector extends InheritedWidget {
 
   final InAppUserClientService _clientInAppUserService;
 
+  final PackageVersionReader _packageVersionReader;
+
   final PalRouteObserver routeObserver;
 
   UserInjector({
@@ -25,6 +28,7 @@ class UserInjector extends InheritedWidget {
   })  : assert(child != null && appContext != null),
         this._pageService = PageClientService.build(appContext.pageRepository),
         this._helperService = HelperClientService.build(appContext),
+        this._packageVersionReader = PackageVersionReader(),
         this._clientInAppUserService = InAppUserClientService.build(
             appContext.inAppUserRepository),
         super(key: key, child: child){
@@ -43,6 +47,7 @@ class UserInjector extends InheritedWidget {
 
   HelperClientService get helperService => this._helperService;
 
-  InAppUserClientService get inAppUserClientService =>
-      this._clientInAppUserService;
+  PackageVersionReader get packageVersionReader => this._packageVersionReader;
+
+  InAppUserClientService get inAppUserClientService => this._clientInAppUserService;
 }

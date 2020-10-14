@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'dart:ui' as ui;
+
 
 /// this class defines a size configuration of a specific device
 class ScreenSize {

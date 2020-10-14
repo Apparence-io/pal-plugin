@@ -73,7 +73,7 @@ main() {
       expect(
           find.text('List of available helpers on this page'), findsOneWidget);
 
-      expect(find.byKey(ValueKey('palHelpersListModalNew')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_HelpersListModal_New')), findsOneWidget);
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
@@ -109,7 +109,7 @@ main() {
       await before(tester);
       await tester.pumpAndSettle();
 
-      Finder newButton = find.byKey(ValueKey('palHelpersListModalNew'));
+      Finder newButton = find.byKey(ValueKey('pal_HelpersListModal_New'));
       await tester.ensureVisible(newButton);
       await tester.tap(newButton);
       await tester.pumpAndSettle();

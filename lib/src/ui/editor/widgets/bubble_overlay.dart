@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
+import 'package:palplugin/src/ui/shared/widgets/circle_image.dart';
 
 class BubbleOverlayButton extends StatefulWidget {
-
   final ValueNotifier<bool> visibility;
 
   final double width, height;
@@ -17,8 +16,8 @@ class BubbleOverlayButton extends StatefulWidget {
     Key key,
     @required this.screenSize,
     @required this.visibility,
-    this.height = 50.0,
-    this.width = 50.0,
+    this.height = 64.0,
+    this.width = 64.0,
     this.onTapCallback,
   }) : super(key: key);
 
@@ -26,8 +25,12 @@ class BubbleOverlayButton extends StatefulWidget {
   _BubbleOverlayButtonState createState() => _BubbleOverlayButtonState();
 }
 
-class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
+class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
+    with SingleTickerProviderStateMixin {
   Offset _position;
+  AnimationController _animationController;
+  double _scale;
+  Duration _duration = Duration(milliseconds: 100);
 
   @override
   void initState() {
@@ -37,6 +40,15 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
       widget.screenSize.height - (widget.height * 2),
     );
     widget.visibility.addListener(_onVisibilityChange);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: _duration,
+      lowerBound: 0.0,
+      upperBound: 0.1,
+    )..addListener(() {
+        setState(() {});
+      });
+    super.initState();
   }
 
   _onVisibilityChange() {
@@ -46,11 +58,15 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
   @override
   void dispose() {
     widget.visibility.removeListener(_onVisibilityChange);
+    _animationController?.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    _scale = 1 - _animationController.value;
+
     if (_position != null) {
       return Visibility(
         visible: widget.visibility.value,
@@ -76,29 +92,47 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton> {
     }
   }
 
+  _onTapDown(TapDownDetails details) {
+    _animationController.forward();
+  }
+
+  _onTapUp(TapUpDetails details) {
+    Future.delayed(_duration, () {
+      _animationController.reverse();
+    });
+
+    HapticFeedback.selectionClick();
+    if (widget.onTapCallback != null) {
+      widget.onTapCallback();
+    }
+  }
+
+  _onTapCancel() {
+    _animationController.reverse();
+  }
+
   Widget _buildBubble() {
     return SizedBox(
       height: widget.height,
       width: widget.width,
-      child: CircleIconButton(
-        backgroundColor: PalTheme.of(context).floatingBubbleBackgroundColor,
-        radius: widget.width / 2,
-        shadow: BoxShadow(
-          color: Colors.black.withOpacity(0.25),
-          spreadRadius: 10,
-          blurRadius: 35,
-          offset: Offset(0, 3), // changes position of shadow
+      child: GestureDetector(
+        onTapDown: _onTapDown,
+        onTapUp: _onTapUp,
+        onTapCancel: _onTapCancel,
+        child: Transform.scale(
+          scale: _scale,
+          child: CircleImageButton(
+            backgroundColor: PalTheme.of(context).floatingBubbleBackgroundColor,
+            radius: widget.width / 2,
+            shadow: BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 4,
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+            image: 'packages/palplugin/assets/images/logo.png',
+          ),
         ),
-        icon: Icon(
-          Icons.menu,
-          color: Colors.white,
-        ),
-        onTapCallback: () {
-          HapticFeedback.selectionClick();
-          if (widget.onTapCallback != null) {
-            widget.onTapCallback();
-          }
-        },
       ),
     );
   }

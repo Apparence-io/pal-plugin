@@ -45,51 +45,59 @@ class EditorSimpleHelperPage extends StatelessWidget
   ) {
     return GestureDetector(
       key: ValueKey('palEditorSimpleHelperWidget'),
-      onTap: () {
-        // Close the toolbar & unfocus textfield
-        EditableTextField.globalKey.currentState.onCloseTap();
-      },
+      onTap: presenter.onOutsideTap,
       child: LayoutBuilder(builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: Container(
-            height: constraints.maxHeight,
-            width: constraints.maxWidth,
-            child: Column(
-              children: [
-                Expanded(child: Container()),
-                Container(
-                  width: constraints.maxWidth * 0.8,
-                  child: EditableTextField.floating(
-                    helperToolbarKey:
-                        ValueKey('palEditorSimpleHelperWidgetToolbar'),
-                    textFormFieldKey: ValueKey('palSimpleHelperDetailField'),
-                    textEditingController: model.detailsController,
-                    maxLines: null,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                          new RegExp('^(.*(\n.*){0,2})')),
-                    ],
-                    backgroundBoxDecoration: BoxDecoration(
-                      color: viewModel.backgroundColor?.value ??
-                          PalTheme.of(context).simpleHelperBackgroundColor,
-                      borderRadius: BorderRadius.circular(6.0),
-                    ),
-                    backgroundPadding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom > 0
-                            ? MediaQuery.of(context).viewInsets.bottom + 20.0
-                            : 110.0),
-                    textFormFieldPadding: const EdgeInsets.symmetric(
-                      vertical: 16.0,
-                      horizontal: 33.0,
-                    ),
-                    textStyle: TextStyle(
-                      color: viewModel.fontColor?.value ??
-                          PalTheme.of(context).simpleHelperFontColor,
-                      fontSize: viewModel.fontSize?.value ?? 14.0,
+        return Form(
+          key: model.formKey,
+          autovalidate: true,
+          onChanged: () {
+            if (onFormChanged != null) {
+              onFormChanged(model.formKey?.currentState?.validate());
+            }
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              height: constraints.maxHeight,
+              width: constraints.maxWidth,
+              child: Column(
+                children: [
+                  Expanded(child: Container()),
+                  Container(
+                    width: constraints.maxWidth * 0.8,
+                    child: EditableTextField.text(
+                      outsideTapStream:
+                          model.editableTextFieldController.stream,
+                      helperToolbarKey:
+                          ValueKey('palEditorSimpleHelperWidgetToolbar'),
+                      textFormFieldKey: ValueKey('palSimpleHelperDetailField'),
+                      onChanged: presenter.onDetailsFieldChanged,
+                      maxLines: null,
+                      maximumCharacterLength: 150,
+                      minimumCharacterLength: 1,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            new RegExp('^(.*(\n.*){0,2})')),
+                      ],
+                      backgroundBoxDecoration: BoxDecoration(
+                        color: viewModel.detailsField?.backgroundColor?.value,
+                        borderRadius: BorderRadius.circular(6.0),
+                      ),
+                      backgroundPadding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom > 0
+                              ? MediaQuery.of(context).viewInsets.bottom + 20.0
+                              : 110.0),
+                      textFormFieldPadding: const EdgeInsets.symmetric(
+                        vertical: 16.0,
+                        horizontal: 33.0,
+                      ),
+                      textStyle: TextStyle(
+                        color: viewModel.detailsField?.fontColor?.value,
+                        fontSize: viewModel.detailsField?.fontSize?.value,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

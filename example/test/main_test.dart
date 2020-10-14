@@ -3,16 +3,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pal_example/main.dart';
 
 main() {
-  MyApp myApp = MyApp();
+  _before(WidgetTester tester) async {
+    TestWidgetsFlutterBinding.ensureInitialized();
 
-  before(WidgetTester tester) async {
+    MyApp myApp = MyApp();
     await tester.pumpWidget(myApp);
   }
 
   group('Hosted app integration', () {
     testWidgets('should be visible', (tester) async {
-      await before(tester);
-      await tester.pumpAndSettle();
+      await _before(tester);
 
       expect(find.byKey(ValueKey('palMainStack')), findsOneWidget);
 
@@ -26,8 +26,7 @@ main() {
 
   group('Pal integration', () {
     testWidgets('should be visible', (tester) async {
-      await before(tester);
-      await tester.pumpAndSettle();
+      await _before(tester);
 
       expect(find.byKey(ValueKey('palMainStack')), findsOneWidget);
 
@@ -41,7 +40,7 @@ main() {
     // testWidgets('floating bubble should be tappable', (tester) async {
     //   await before(tester);
     //   await tester.pumpAndSettle();
-      
+
     //   Finder floatingBubble = find.byKey(ValueKey('palBubbleOverlay'));
     //   await tester.ensureVisible(floatingBubble);
     //   await tester.tap(floatingBubble);
@@ -69,9 +68,8 @@ main() {
     // });
 
     testWidgets('floating bubble should be draggable', (tester) async {
-      await before(tester);
-      await tester.pumpAndSettle();
-      
+      await _before(tester);
+
       // Check if the floating bubble exist & be visible
       Finder floatingBubble = find.byKey(ValueKey('palBubbleOverlay'));
       await tester.ensureVisible(floatingBubble);
@@ -83,9 +81,12 @@ main() {
       await tester.pumpAndSettle();
 
       // Test if the position of the bubble was modified by the offset
-      Offset newBubblePosition = tester.getCenter(find.byKey(ValueKey('palBubbleOverlay')));
-      expect(newBubblePosition.dx, equals(oldBubblePosition.dx + dragOffset.dx));
-      expect(newBubblePosition.dy, equals(oldBubblePosition.dy + dragOffset.dy));
+      Offset newBubblePosition =
+          tester.getCenter(find.byKey(ValueKey('palBubbleOverlay')));
+      expect(
+          newBubblePosition.dx, equals(oldBubblePosition.dx + dragOffset.dx));
+      expect(
+          newBubblePosition.dy, equals(oldBubblePosition.dy + dragOffset.dy));
     });
   });
 }

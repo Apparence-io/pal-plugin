@@ -54,8 +54,19 @@ class HelpersListModalPresenter
     this.refreshView();
   }
 
-  onClickAdd() {
-    this.viewInterface.openHelperCreationPage(this.viewModel);
-    this.palEditModeStateService.showEditorBubble.value = false;
+  onClickAdd() async {
+    showEditorBubble(false);
+    this.viewInterface.openHelperCreationPage(this.viewModel.pageId);
+    // showEditorBubble(true);
+  }
+
+  onClickSettings() async {
+    showEditorBubble(false);
+    this.viewInterface.openAppSettingsPage();
+    // showEditorBubble(true);
+  }
+
+  showEditorBubble(bool visible) {
+    this.palEditModeStateService.showEditorBubble.value = visible;
   }
 }

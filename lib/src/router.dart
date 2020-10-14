@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
-GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
+GlobalKey<NavigatorState> palNavigatorGlobalKey =
+    new GlobalKey<NavigatorState>();
 
 void globalPop() {
   Navigator.pop(palNavigatorGlobalKey.currentContext);
@@ -12,6 +16,10 @@ void globalPop() {
 
 Route<dynamic> route(RouteSettings settings) {
   switch (settings.name) {
+    case '/settings':
+      return MaterialPageRoute(
+        builder: (context) => AppSettingsPage(),
+      );
     case '/editor/new':
       CreateHelperPageArguments args = settings.arguments;
 
@@ -24,6 +32,20 @@ Route<dynamic> route(RouteSettings settings) {
     case '/editor/helper':
       var helper = settings.arguments;
       return MaterialPageRoute(builder: (context) => HelperDetailsComponent(helper: helper,));
+    case '/editor/new/font-family':
+      FontFamilyPickerArguments args = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => FontFamilyPickerPage(
+                arguments: args,
+              ));
+    case '/editor/new/font-weight':
+      FontWeightPickerArguments args = settings.arguments;
+      return MaterialPageRoute(
+          builder: (context) => FontWeightPickerPage(
+                arguments: args,
+              ));
+    case '/editor/:id':
+      return MaterialPageRoute(builder: (context) => Text('A route with id'));
     case '/editor/:id/edit':
       return MaterialPageRoute(
           builder: (context) => Text('A route with id with edit'));
@@ -39,8 +61,8 @@ showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder bui
     builder: builder,
   );
   Overlayed.of(hostedAppNavigatorKey.currentContext).entries.putIfAbsent(
-    OverlayKeys.EDITOR_OVERLAY_KEY,
-    () => helperOverlay,
-  );
+        OverlayKeys.EDITOR_OVERLAY_KEY,
+        () => helperOverlay,
+      );
   hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
 }

@@ -4,6 +4,7 @@ import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey =
@@ -44,6 +45,8 @@ Route<dynamic> route(RouteSettings settings) {
           builder: (context) => FontWeightPickerPage(
                 arguments: args,
               ));
+    case '/editor/media-gallery':
+      return MaterialPageRoute(builder: (context) => MediaGalleryPage());
     case '/editor/:id':
       return MaterialPageRoute(builder: (context) => Text('A route with id'));
     case '/editor/:id/edit':

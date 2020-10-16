@@ -6,6 +6,7 @@ import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/router.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
@@ -48,7 +49,6 @@ class HelperEditorPageArguments {
 }
 
 abstract class HelperEditorView {
-
   addFullscreenHelperEditor(FullscreenHelperViewModel model, Function isValid);
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid);
@@ -63,7 +63,6 @@ abstract class HelperEditorView {
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
-
   final ElementFinder elementFinder;
 
   final HelperEditorPageArguments helperEditorPageArguments;
@@ -72,7 +71,8 @@ class HelperEditorPageBuilder implements HelperEditorView {
 
   final HelperEditorLoader loader;
 
-  final _mvvmPageBuilder = MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
 
   Widget _helperToEdit;
 
@@ -88,12 +88,11 @@ class HelperEditorPageBuilder implements HelperEditorView {
       key: ValueKey("EditorPage"),
       context: context,
       presenterBuilder: (context) => HelperEditorPresenter(
-        this,
-        helperEditorPageArguments,
-        loader ?? HelperEditorLoader(),
-        helperService ?? EditorInjector.of(context).helperService,
-        elementFinder
-      ),
+          this,
+          helperEditorPageArguments,
+          loader ?? HelperEditorLoader(),
+          helperService ?? EditorInjector.of(context).helperService,
+          elementFinder),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
         presenter,
@@ -107,33 +106,38 @@ class HelperEditorPageBuilder implements HelperEditorView {
     final HelperEditorPresenter presenter,
     final HelperEditorViewModel model,
   ) {
-    return WillPopScope(
-      onWillPop: () {
-        removeOverlay();
-        return Future.value(false);
-      },
-      child: Material(
-        key: ValueKey("EditorMaterial"),
-        color: Colors.transparent,
-        shadowColor: Colors.transparent,
-        child: Container(
-          color: Colors.black.withOpacity(.2),
-          child: Stack(
-            children: [
-              if (model.isEditingWidget)
-                Positioned.fill(child: _helperToEdit),
-              (!model.isLoading)
-                  ? Stack(
-                      key: ValueKey('palEditorModeInteractUI'),
-                      children: [
-                        _buildValidationActions(context, presenter, model),
-                        _buildBannerEditorMode(context),
-                      ],
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    ),
-            ],
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: (RouteSettings settings) => route(settings),
+      theme: PalTheme.of(context).buildTheme(),
+      home: WillPopScope(
+        onWillPop: () {
+          removeOverlay();
+          return Future.value(false);
+        },
+        child: Material(
+          key: ValueKey("EditorMaterial"),
+          color: Colors.transparent,
+          shadowColor: Colors.transparent,
+          child: Container(
+            color: Colors.black.withOpacity(.2),
+            child: Stack(
+              children: [
+                if (model.isEditingWidget)
+                  Positioned.fill(child: _helperToEdit),
+                (!model.isLoading)
+                    ? Stack(
+                        key: ValueKey('palEditorModeInteractUI'),
+                        children: [
+                          _buildValidationActions(context, presenter, model),
+                          _buildBannerEditorMode(context),
+                        ],
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      ),
+              ],
+            ),
           ),
         ),
       ),
@@ -178,7 +182,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
                 },
                 key: ValueKey("editModeValidate"),
               ),
-          ),
+            ),
         ],
       ),
     );
@@ -214,7 +218,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   addAnchoredFullscreenEditor(HelperEditorPresenter presenter) {
-    _helperToEdit = EditorAnchoredFullscreenHelper( );
+    _helperToEdit = EditorAnchoredFullscreenHelper();
   }
 
   @override

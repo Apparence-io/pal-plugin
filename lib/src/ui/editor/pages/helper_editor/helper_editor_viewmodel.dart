@@ -56,7 +56,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
     fontColor: Colors.white,
     borderColor: Colors.greenAccent,
-    fontSize: 80.0,
+    fontSize: 60.0,
     text: '',
   );
 

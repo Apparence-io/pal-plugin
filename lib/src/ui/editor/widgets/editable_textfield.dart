@@ -190,7 +190,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
             padding: widget.backgroundPadding ?? EdgeInsets.zero,
             child: DottedBorder(
               dashPattern: [6, 3],
-              color: Colors.black45,
+              color: Colors.white.withAlpha(80),
               child: Container(
                 decoration: widget.backgroundBoxDecoration,
                 key: widget.backgroundContainerKey,

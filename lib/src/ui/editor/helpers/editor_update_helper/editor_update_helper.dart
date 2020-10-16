@@ -67,7 +67,7 @@ class EditorUpdateHelperPage extends StatelessWidget
               padding: const EdgeInsets.all(2.0),
               child: Form(
                 key: model.formKey,
-                autovalidate: false,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 onChanged: () {
                   if (onFormChanged != null) {
                     onFormChanged(model.formKey?.currentState?.validate());
@@ -77,7 +77,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                   strokeWidth: 2.0,
                   strokeCap: StrokeCap.round,
                   dashPattern: [10, 7],
-                  color: Colors.black54,
+                  color: Colors.white.withAlpha(80),
                   child: Container(
                     width: double.infinity,
                     color: viewModel.backgroundColor?.value,

@@ -6,18 +6,21 @@ import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
-class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperModel, EditorFullScreenHelperView>{
+class EditorFullScreenHelperPresenter
+    extends Presenter<EditorFullScreenHelperModel, EditorFullScreenHelperView> {
   final FullscreenHelperViewModel fullscreenHelperViewModel;
 
   EditorFullScreenHelperPresenter(
-    EditorFullScreenHelperView viewInterface, this.fullscreenHelperViewModel,
+    EditorFullScreenHelperView viewInterface,
+    this.fullscreenHelperViewModel,
   ) : super(EditorFullScreenHelperModel(), viewInterface);
 
   @override
   void onInit() {
     super.onInit();
 
-    this.viewModel.editableTextFieldController = StreamController<bool>.broadcast();
+    this.viewModel.editableTextFieldController =
+        StreamController<bool>.broadcast();
 
     this.viewModel.titleKey = GlobalKey();
     this.viewModel.formKey = GlobalKey<FormState>();
@@ -60,6 +63,13 @@ class EditorFullScreenHelperPresenter extends Presenter<EditorFullScreenHelperMo
     EditorFullScreenHelperPresenter presenter,
   ) {
     this.viewInterface.showColorPickerDialog(viewModel, presenter);
+  }
+
+  editMedia() async {
+    final selectedMedia = await this.viewInterface.pushToMediaGallery();
+
+    this.viewModel.selectedMedia = selectedMedia;
+    this.refreshView();
   }
 
   updateBackgroundColor(Color aColor) {

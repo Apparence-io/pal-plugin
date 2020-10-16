@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_simple_entity.dart';
 import 'package:palplugin/src/database/entity/helper/create_helper_update_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -56,19 +55,8 @@ class EditorFactory {
     );
   }
 
-  static CreateHelperSimpleEntity _buildSimpleHelper(SimpleHelperViewModel model) {
-    return CreateHelperSimpleEntity(
-      name: model.name,
-      triggerType: model.triggerType,
-      priority: model.priority,
-      versionMaxId: model.versionMaxId,
-      versionMinId: model.versionMinId,
-      title: model.detailsField?.text?.value,
-      fontColor: model.detailsField?.fontColor?.value?.toHex(),
-      backgroundColor: model.detailsField?.backgroundColor?.value?.toHex(),
-      borderColor: model.detailsField?.borderColor?.value?.toHex(),
-      languageId: model.languageId?.value,
-    );
+  static dynamic _buildSimpleHelper(SimpleHelperViewModel model) {
+    throw "not implemented now";
   }
 
   static CreateHelperUpdateEntity _buildUpdateHelper(UpdateHelperViewModel model) {

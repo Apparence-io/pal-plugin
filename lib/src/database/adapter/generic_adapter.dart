@@ -21,6 +21,10 @@ abstract class GenericEntityAdapter<T> {
 
   List<T> parseArray(String value) {
     List<dynamic> lst = json.decode(value);
+    return parseDynamicArray(lst);
+  }
+
+  List<T> parseDynamicArray(List<dynamic> lst) {
     List<T> result = List();
     lst.forEach((key) => result.add(parseMap(key)));
     return result;

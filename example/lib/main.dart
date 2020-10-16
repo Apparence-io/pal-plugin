@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pal_example/ui/pages/home/home_page.dart';
-import 'package:pal_example/ui/pages/route1/route1_page.dart';
-import 'package:pal_example/ui/pages/route2/route2_page.dart';
 import 'package:palplugin/palplugin.dart';
 
 import 'router.dart';
@@ -11,14 +8,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return Pal(
       editorModeEnabled: true,
-      appToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5YzgyMzlmOS1iMWVjLTQ3YTItYjg2Mi1mYTI3NGM0N2UwNmIiLCJ0eXBlIjoiUFJPSkVDVCIsImlhdCI6MTU5ODUyODk0OH0.4EAyk2jW4jkNlZbtosWzGDyY-U6INfO7XxoWX6PPU0c',
+      appToken:
+          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MWIxYTljNS1mODNjLTQ5OTMtYWRjOS0wOWY0Yzk0YWRmNjIiLCJ0eXBlIjoiUFJPSkVDVCIsImlhdCI6MTYwMjc2MjkyMH0.HDUIYt-gkrTGBww7lbydyhXB0Im8NeNVn36D4ZZWKYU',
       child: MaterialApp(
         key: ValueKey('hostedApp'),
         initialRoute: '/',
@@ -34,5 +31,4 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-
 }

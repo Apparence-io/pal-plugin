@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/database/repository/project_gallery_repository.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/editor/finder/finder_service.dart';
 import 'package:palplugin/src/services/editor/page/page_editor_service.dart';
 import 'package:palplugin/src/services/editor/project/app_icon_grabber_delegate.dart';
 import 'package:palplugin/src/services/editor/project/project_editor_service.dart';
+import 'package:palplugin/src/services/editor/project_gallery/project_gallery_editor_service.dart';
 import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/package_version.dart';
@@ -12,7 +14,6 @@ import 'package:palplugin/src/services/page_server.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 
 class EditorInjector extends InheritedWidget {
-
   final PageService _pageService;
 
   final HelperService _helperService;
@@ -31,6 +32,8 @@ class EditorInjector extends InheritedWidget {
 
   final PackageVersionReader _packageVersionReader;
 
+  final ProjectGalleryEditorService _projectGalleryEditorService;
+
   final PalRouteObserver routeObserver;
 
   EditorInjector({
@@ -41,10 +44,13 @@ class EditorInjector extends InheritedWidget {
     @required GlobalKey boundaryChildKey,
   })  : assert(child != null && appContext != null),
         this._pageEditorService = PageEditorService.build(boundaryChildKey),
-        this._projectEditorService = ProjectEditorService.build(appContext.projectRepository),
+        this._projectEditorService =
+            ProjectEditorService.build(appContext.projectRepository),
         this._pageService = PageService.build(appContext.pageRepository),
         this._helperService = HelperService.build(appContext.helperRepository),
         this._finderService = FinderService(observer: routeObserver),
+        this._projectGalleryEditorService = ProjectGalleryEditorService.build(
+            projectGalleryRepository: appContext.projectGalleryRepository),
         this._packageVersionReader = PackageVersionReader(),
         this._appIconGrabberDelegate = AppIconGrabberDelegate(),
         this._versionEditorService = VersionEditorService.build(
@@ -76,4 +82,6 @@ class EditorInjector extends InheritedWidget {
       this._appIconGrabberDelegate;
 
   PackageVersionReader get packageVersionReader => this._packageVersionReader;
+
+  ProjectGalleryEditorService get projectGalleryRepository => this._projectGalleryEditorService;
 }

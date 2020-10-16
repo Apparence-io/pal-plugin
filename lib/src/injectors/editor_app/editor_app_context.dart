@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/repository/helper_repository.dart';
 import 'package:palplugin/src/database/repository/page_repository.dart';
+import 'package:palplugin/src/database/repository/project_gallery_repository.dart';
 import 'package:palplugin/src/database/repository/project_repository.dart';
 import 'package:palplugin/src/database/repository/version_repository.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
@@ -34,6 +35,8 @@ class EditorAppContext {
   VersionRepository get versionRepository => throw "not implemented";
 
   ProjectRepository get projectRepository => throw "not implemented";
+
+  ProjectGalleryRepository get projectGalleryRepository => throw "not implemented";
 }
 
 /// [EditorAppContext] inherited class to provide some context to all childs
@@ -48,6 +51,8 @@ class HttpEditorAppContext implements  EditorAppContext {
 
   final ProjectRepository _projectRepository;
 
+  final ProjectGalleryRepository _projectGalleryRepository;
+
   factory HttpEditorAppContext.create(
       {@required url, @required String token,})
       => HttpEditorAppContext._private(
@@ -60,6 +65,7 @@ class HttpEditorAppContext implements  EditorAppContext {
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._projectRepository = ProjectRepository(httpClient: httpClient),
         this._helperRepository = HelperRepository(httpClient: httpClient),
+        this._projectGalleryRepository = ProjectGalleryHttpRepository(httpClient: httpClient),
         this._versionRepository = VersionHttpRepository(httpClient: httpClient);
 
   HelperRepository get helperRepository => this._helperRepository;
@@ -69,5 +75,7 @@ class HttpEditorAppContext implements  EditorAppContext {
   VersionRepository get versionRepository => _versionRepository;
 
   ProjectRepository get projectRepository => _projectRepository;
+
+  ProjectGalleryRepository get projectGalleryRepository => _projectGalleryRepository;
 
 }

@@ -6,6 +6,8 @@ import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery.dart';
+import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_background.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_media.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
@@ -15,7 +17,7 @@ abstract class EditorFullScreenHelperView {
     FullscreenHelperViewModel viewModel,
     EditorFullScreenHelperPresenter presenter,
   );
-  Future<GraphicEntity> pushToMediaGallery();
+  Future<GraphicEntity> pushToMediaGallery(final GraphicEntity media);
 }
 
 class EditorFullScreenHelper implements EditorFullScreenHelperView {
@@ -39,11 +41,14 @@ class EditorFullScreenHelper implements EditorFullScreenHelperView {
   }
 
   @override
-  Future<GraphicEntity> pushToMediaGallery() async {
+  Future<GraphicEntity> pushToMediaGallery(final GraphicEntity selectedMedia) async {
     final media = await Navigator.pushNamed(
       this.context,
       '/editor/media-gallery',
-    ) as dynamic;
+      arguments: MediaGalleryPageArguments(
+        selectedMedia,
+      ),
+    ) as GraphicEntity;
 
     return media;
   }

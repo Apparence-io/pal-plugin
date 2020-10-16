@@ -32,7 +32,10 @@ Route<dynamic> route(RouteSettings settings) {
       );
     case '/editor/helper':
       var helper = settings.arguments;
-      return MaterialPageRoute(builder: (context) => HelperDetailsComponent(helper: helper,));
+      return MaterialPageRoute(
+          builder: (context) => HelperDetailsComponent(
+                helper: helper,
+              ));
     case '/editor/new/font-family':
       FontFamilyPickerArguments args = settings.arguments;
       return MaterialPageRoute(
@@ -46,7 +49,8 @@ Route<dynamic> route(RouteSettings settings) {
                 arguments: args,
               ));
     case '/editor/media-gallery':
-      return MaterialPageRoute(builder: (context) => MediaGalleryPage());
+      MediaGalleryPageArguments args = settings.arguments;
+      return MaterialPageRoute(builder: (context) => MediaGalleryPage(media: args.media,));
     case '/editor/:id':
       return MaterialPageRoute(builder: (context) => Text('A route with id'));
     case '/editor/:id/edit':
@@ -58,7 +62,8 @@ Route<dynamic> route(RouteSettings settings) {
 }
 
 //shows a page as overlay for our editor
-showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
+showOverlayed(
+    GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
   OverlayEntry helperOverlay = OverlayEntry(
     opaque: false,
     builder: builder,

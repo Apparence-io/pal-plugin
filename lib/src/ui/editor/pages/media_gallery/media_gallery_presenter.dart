@@ -6,13 +6,16 @@ import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery_loader
 import 'media_gallery.dart';
 import 'media_gallery_viewmodel.dart';
 
-class MediaGalleryPresenter extends Presenter<MediaGalleryModel, MediaGalleryView>{
+class MediaGalleryPresenter
+    extends Presenter<MediaGalleryModel, MediaGalleryView> {
+  final GraphicEntity media;
   final MediaGalleryLoader loader;
 
   MediaGalleryPresenter(
     MediaGalleryView viewInterface, {
-      @required this.loader,
-    }) : super(MediaGalleryModel(), viewInterface);
+    this.media,
+    @required this.loader,
+  }) : super(MediaGalleryModel(), viewInterface);
 
   @override
   void onInit() {
@@ -23,7 +26,12 @@ class MediaGalleryPresenter extends Presenter<MediaGalleryModel, MediaGalleryVie
     this.loader.load().then((MediaGalleryModel res) {
       this.viewModel.medias = res.medias;
       this.viewModel.isLoading = false;
-      this.refreshView();
+
+      if (media != null) {
+        this.selectMedia(media);
+      } else {
+        this.refreshView();
+      }
     });
   }
 
@@ -48,5 +56,4 @@ class MediaGalleryPresenter extends Presenter<MediaGalleryModel, MediaGalleryVie
     this.viewModel.selectedMedia = media;
     this.refreshView();
   }
-
 }

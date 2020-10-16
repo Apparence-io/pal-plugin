@@ -66,7 +66,7 @@ class EditorFullScreenHelperPresenter
   }
 
   editMedia() async {
-    final selectedMedia = await this.viewInterface.pushToMediaGallery();
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.viewModel.selectedMedia);
 
     this.viewModel.selectedMedia = selectedMedia;
     this.refreshView();

@@ -9,15 +9,25 @@ import 'package:palplugin/src/ui/editor/pages/media_gallery/widgets/media_cell_w
 import 'media_gallery_presenter.dart';
 import 'media_gallery_viewmodel.dart';
 
+class MediaGalleryPageArguments {
+  final GraphicEntity media;
+
+  MediaGalleryPageArguments(
+    this.media,
+  );
+}
+
 abstract class MediaGalleryView {
   void popBackToEditor(final MediaGalleryModel model);
 }
 
 class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
+  final GraphicEntity media;
   final MediaGalleryLoader loader;
 
   MediaGalleryPage({
     Key key,
+    this.media,
     this.loader,
   });
 
@@ -37,6 +47,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
             MediaGalleryLoader(
               EditorInjector.of(context).projectGalleryRepository,
             ),
+        media: media,
       ),
       builder: (context, presenter, model) {
         return Scaffold(

@@ -33,6 +33,13 @@ void main() {
 
       expect(find.byType(MediaCellWidget), findsNWidgets(6));
     });
+
+    testWidgets('should select second cell', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      await tester.pump(Duration.zero);
+
+      expect(find.byIcon(Icons.check), findsOneWidget);
+    });
   });
 }
 

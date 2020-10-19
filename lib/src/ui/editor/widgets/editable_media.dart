@@ -10,12 +10,14 @@ class EditableMedia extends StatelessWidget {
   final double mediaSize;
   final String url;
   final Function onEdit;
+  final String editKey;
 
   EditableMedia({
     Key key,
     this.url,
     this.mediaSize = 200.0,
     this.onEdit,
+    @required this.editKey,
   }) : super(key: key);
 
   @override
@@ -47,8 +49,7 @@ class EditableMedia extends StatelessWidget {
               bottom: 0.0,
               right: 0.0,
               child: CircleIconButton(
-                key: ValueKey(
-                    'pal_EditorFullScreenHelperPage_BackgroundColorPicker'),
+                key: ValueKey(editKey),
                 icon: Icon(Icons.edit),
                 backgroundColor: PalTheme.of(context).colors.light,
                 onTapCallback: () {

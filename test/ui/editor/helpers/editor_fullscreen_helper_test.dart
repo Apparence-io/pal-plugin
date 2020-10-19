@@ -36,9 +36,29 @@ void main() {
       ),
     );
 
+    Route<dynamic> route(RouteSettings settings) {
+      switch (settings.name) {
+        case '/':
+          return MaterialPageRoute(builder: (context) => _myHomeTest);
+        case '/editor/media-gallery':
+          return MaterialPageRoute(
+              builder: (context) => Scaffold(
+                    key: ValueKey('mediaGallery'),
+                  ));
+        default:
+          throw 'unexpected Route';
+      }
+    }
+
     // init pal + go to editor
     Future _beforeEach(WidgetTester tester) async {
-      await initAppWithPal(tester, _myHomeTest, _navigatorKey, editorModeEnabled: true);
+      await initAppWithPal(
+        tester,
+        _myHomeTest,
+        _navigatorKey,
+        editorModeEnabled: true,
+        routeFactory: route,
+      );
       await pumpHelperWidget(
         tester,
         _navigatorKey,
@@ -113,6 +133,15 @@ void main() {
 
       expect(presenter.fullscreenHelperViewModel.backgroundColor.value,
           Color(0xFFFFFFFF));
+    });
+
+    testWidgets('should edit media', (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      expect(
+          find.byKey(ValueKey(
+              'pal_EditorFullScreenHelperPage_EditableMedia_EditButton')),
+          findsOneWidget);
     });
   });
 }

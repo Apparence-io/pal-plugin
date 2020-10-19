@@ -50,7 +50,7 @@ Route<dynamic> route(RouteSettings settings) {
               ));
     case '/editor/media-gallery':
       MediaGalleryPageArguments args = settings.arguments;
-      return MaterialPageRoute(builder: (context) => MediaGalleryPage(media: args.media,));
+      return MaterialPageRoute(builder: (context) => MediaGalleryPage(mediaId: args.mediaId,));
     case '/editor/:id':
       return MaterialPageRoute(builder: (context) => Text('A route with id'));
     case '/editor/:id/edit':

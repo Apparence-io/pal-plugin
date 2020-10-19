@@ -21,7 +21,7 @@ abstract class EditorUpdateHelperView {
   void scrollToBottomChangelogList(
     EditorUpdateHelperModel model,
   );
-  Future<GraphicEntity> pushToMediaGallery(final GraphicEntity media);
+  Future<GraphicEntity> pushToMediaGallery(final String mediaId);
 }
 
 class EditorUpdateHelperPage extends StatelessWidget
@@ -106,6 +106,8 @@ class EditorUpdateHelperPage extends StatelessWidget
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     EditableMedia(
+                                      editKey:
+                                          'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
                                       mediaSize: 123.0,
                                       onEdit: presenter.editMedia,
                                       url: viewModel.media?.url?.value,
@@ -248,13 +250,13 @@ class EditorUpdateHelperPage extends StatelessWidget
 
   @override
   Future<GraphicEntity> pushToMediaGallery(
-    final GraphicEntity selectedMedia,
+    final String mediaId,
   ) async {
     final media = await Navigator.pushNamed(
       _scaffoldKey.currentContext,
       '/editor/media-gallery',
       arguments: MediaGalleryPageArguments(
-        selectedMedia,
+        mediaId,
       ),
     ) as GraphicEntity;
 

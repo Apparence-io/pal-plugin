@@ -10,24 +10,24 @@ import 'media_gallery_presenter.dart';
 import 'media_gallery_viewmodel.dart';
 
 class MediaGalleryPageArguments {
-  final GraphicEntity media;
+  final String mediaId;
 
   MediaGalleryPageArguments(
-    this.media,
+    this.mediaId,
   );
 }
 
 abstract class MediaGalleryView {
-  void popBackToEditor(final MediaGalleryModel model);
+  void popBackToEditor(final GraphicEntity media);
 }
 
 class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
-  final GraphicEntity media;
+  final String mediaId;
   final MediaGalleryLoader loader;
 
   MediaGalleryPage({
     Key key,
-    this.media,
+    this.mediaId,
     this.loader,
   });
 
@@ -47,7 +47,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
             MediaGalleryLoader(
               EditorInjector.of(context).projectGalleryRepository,
             ),
-        media: media,
+        mediaId: mediaId,
       ),
       builder: (context, presenter, model) {
         return Scaffold(
@@ -86,6 +86,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'You can upload new image to your app gallery using web Pal admin.',
+                key: ValueKey('pal_MediaGalleryPage_Header_NoteText'),
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -96,6 +97,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
             child: (model.isLoading || model.isLoadingMore)
                 ? Center(child: CircularProgressIndicator())
                 : GridView.builder(
+                    key: ValueKey('pal_MediaGalleryPage_Body_Grid'),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4,
                       mainAxisSpacing: 2.0,
@@ -150,7 +152,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
           ),
         ),
         color: PalTheme.of(context).colors.color1,
-        onPressed: () => this.popBackToEditor(model),
+        onPressed: () => this.popBackToEditor(model.selectedMedia),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
@@ -159,7 +161,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
   }
 
   @override
-  void popBackToEditor(final MediaGalleryModel model) {
-    Navigator.pop(this._scaffoldKey.currentContext, model.selectedMedia);
+  void popBackToEditor(final GraphicEntity media) {
+    Navigator.pop(this._scaffoldKey.currentContext, media);
   }
 }

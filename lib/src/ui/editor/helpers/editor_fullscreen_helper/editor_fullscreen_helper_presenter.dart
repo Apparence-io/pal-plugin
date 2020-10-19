@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -27,12 +26,6 @@ class EditorFullScreenHelperPresenter
     this.viewModel.formKey = GlobalKey<FormState>();
 
     this.viewModel.helperOpacity = 1;
-
-    // Disable animation on editor mode ?
-    // Future.delayed(Duration(seconds: 1), () {
-    //   this.viewModel.helperOpacity = 1;
-    //   this.refreshView();
-    // });
   }
 
   onTitleChanged(Key key, String newValue) {
@@ -67,15 +60,10 @@ class EditorFullScreenHelperPresenter
   }
 
   editMedia() async {
-    final selectedMedia = await this.viewInterface.pushToMediaGallery(
-          GraphicEntity(
-            id: this.fullscreenHelperViewModel.media?.id?.value,
-            url: this.fullscreenHelperViewModel.media?.url?.value,
-          ),
-        );
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.fullscreenHelperViewModel.media?.id?.value);
 
-    this.fullscreenHelperViewModel.media?.url?.value = selectedMedia.url;
-    this.fullscreenHelperViewModel.media?.id?.value = selectedMedia.id;
+    this.fullscreenHelperViewModel.media?.url?.value = selectedMedia?.url;
+    this.fullscreenHelperViewModel.media?.id?.value = selectedMedia?.id;
     this.refreshView();
   }
 

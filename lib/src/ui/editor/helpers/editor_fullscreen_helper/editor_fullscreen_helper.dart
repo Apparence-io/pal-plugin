@@ -16,7 +16,7 @@ abstract class EditorFullScreenHelperView {
     FullscreenHelperViewModel viewModel,
     EditorFullScreenHelperPresenter presenter,
   );
-  Future<GraphicEntity> pushToMediaGallery(final GraphicEntity media);
+  Future<GraphicEntity> pushToMediaGallery(final String mediaId);
 }
 
 class EditorFullScreenHelper implements EditorFullScreenHelperView {
@@ -40,12 +40,12 @@ class EditorFullScreenHelper implements EditorFullScreenHelperView {
   }
 
   @override
-  Future<GraphicEntity> pushToMediaGallery(final GraphicEntity selectedMedia) async {
+  Future<GraphicEntity> pushToMediaGallery(final String mediaId) async {
     final media = await Navigator.pushNamed(
       this.context,
       '/editor/media-gallery',
       arguments: MediaGalleryPageArguments(
-        selectedMedia,
+        mediaId,
       ),
     ) as GraphicEntity;
 
@@ -122,6 +122,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             mediaSize: 123.0,
                             onEdit: presenter.editMedia,
                             url: viewModel.media?.url?.value,
+                            editKey: 'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
                           ),
                           SizedBox(height: 20),
                           EditableTextField.text(

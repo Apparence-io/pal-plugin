@@ -131,15 +131,10 @@ class EditorUpdateHelperPresenter
   }
 
   editMedia() async {
-    final selectedMedia = await this.viewInterface.pushToMediaGallery(
-          GraphicEntity(
-            id: this.updateHelperViewModel.media?.id?.value,
-            url: this.updateHelperViewModel.media?.url?.value,
-          ),
-        );
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.updateHelperViewModel.media?.id?.value);
 
-    this.updateHelperViewModel.media?.url?.value = selectedMedia.url;
-    this.updateHelperViewModel.media?.id?.value = selectedMedia.id;
+    this.updateHelperViewModel.media?.url?.value = selectedMedia?.url;
+    this.updateHelperViewModel.media?.id?.value = selectedMedia?.id;
     this.refreshView();
   }
 

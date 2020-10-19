@@ -8,12 +8,12 @@ import 'media_gallery_viewmodel.dart';
 
 class MediaGalleryPresenter
     extends Presenter<MediaGalleryModel, MediaGalleryView> {
-  final GraphicEntity media;
+  final String mediaId;
   final MediaGalleryLoader loader;
 
   MediaGalleryPresenter(
     MediaGalleryView viewInterface, {
-    this.media,
+    this.mediaId,
     @required this.loader,
   }) : super(MediaGalleryModel(), viewInterface);
 
@@ -27,9 +27,8 @@ class MediaGalleryPresenter
       this.viewModel.medias = res.medias;
       this.viewModel.isLoading = false;
 
-      if (media != null) {
-        // this.viewModel.selectedMedia = GraphicEntity(id: media.id);
-        this.selectMedia(media);
+      if (mediaId != null) {
+        this.selectMedia(GraphicEntity(id: mediaId));
       } else {
         this.refreshView();
       }
@@ -54,7 +53,11 @@ class MediaGalleryPresenter
   }
 
   selectMedia(GraphicEntity media) {
-    this.viewModel.selectedMedia = media;
+    if (media.id == this.viewModel.selectedMedia?.id) {
+      this.viewModel.selectedMedia = null;
+    } else {
+      this.viewModel.selectedMedia = media;
+    }
     this.refreshView();
   }
 }

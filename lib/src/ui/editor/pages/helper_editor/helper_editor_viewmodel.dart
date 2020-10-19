@@ -49,11 +49,24 @@ class HelperViewModel extends MVVMModel {
 class FullscreenHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
   final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
-
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
     fontColor: Colors.white,
-    borderColor: Colors.greenAccent,
     fontSize: 80.0,
+    text: '',
+  );
+  final TextFormFieldNotifier descriptionField = TextFormFieldNotifier(
+    fontColor: Color(0xFFCCC2),
+    fontSize: 14.0,
+    text: '',
+  );
+  final TextFormFieldNotifier positivButtonField = TextFormFieldNotifier(
+    fontColor: Color(0xFFCCC2),
+    fontSize: 14.0,
+    text: '',
+  );
+  final TextFormFieldNotifier negativButtonField = TextFormFieldNotifier(
+    fontColor: Color(0xFFCCC2),
+    fontSize: 14.0,
     text: '',
   );
 

@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 class TextFormFieldNotifier {
   String hintText;
   ValueNotifier<String> text;
+  ValueNotifier<String> fontFamily;
+  ValueNotifier<String> fontWeight;
   ValueNotifier<Color> fontColor;
   ValueNotifier<Color> backgroundColor;
   ValueNotifier<Color> borderColor;
@@ -13,6 +15,8 @@ class TextFormFieldNotifier {
   TextFormFieldNotifier({
     @required String text,
     @required Color fontColor,
+    String fontFamily,
+    String fontWeight,
     Color backgroundColor,
     Color borderColor,
     @required num fontSize,
@@ -20,6 +24,8 @@ class TextFormFieldNotifier {
   }) {
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);
+    this.fontFamily = ValueNotifier(fontFamily);
+    this.fontWeight = ValueNotifier(fontWeight);
     this.backgroundColor = ValueNotifier(backgroundColor);
     this.borderColor = ValueNotifier(borderColor);
     this.fontSize = ValueNotifier(fontSize);

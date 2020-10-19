@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/database/repository/editor/helper_editor_repository.dart';
 import 'package:palplugin/src/database/repository/helper_repository.dart';
 import 'package:palplugin/src/database/repository/page_repository.dart';
 import 'package:palplugin/src/database/repository/project_repository.dart';
@@ -11,7 +12,7 @@ class EditorAppContext extends InheritedWidget {
 
   final PageRepository _pageRepository;
 
-  final HelperRepository _helperRepository;
+  final EditorHelperRepository _editorHelperRepository;
 
   final VersionRepository _versionRepository;
 
@@ -34,7 +35,7 @@ class EditorAppContext extends InheritedWidget {
         assert(httpClient != null),
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._projectRepository = ProjectRepository(httpClient: httpClient),
-        this._helperRepository = HelperRepository(httpClient: httpClient),
+        this._editorHelperRepository = EditorHelperRepository(httpClient: httpClient),
         this._versionRepository = VersionHttpRepository(httpClient: httpClient),
         super(key: key, child: child);
 
@@ -47,7 +48,7 @@ class EditorAppContext extends InheritedWidget {
     return false;
   }
 
-  HelperRepository get helperRepository => this._helperRepository;
+  EditorHelperRepository get helperRepository => this._editorHelperRepository;
 
   PageRepository get pageRepository => this._pageRepository;
 

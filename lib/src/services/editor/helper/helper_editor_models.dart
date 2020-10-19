@@ -3,6 +3,31 @@ import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 
 ///-------------------------------
+/// KEYS to link data to right element
+///-------------------------------
+class SimpleHelperKeys {
+  static const CONTENT_KEY = "CONTENT";
+}
+
+class FullscreenHelperKeys {
+  static const TITLE_KEY = "TITLE_KEY";
+  static const DESCRIPTION_KEY = "DESCRIPTION_KEY";
+  static const POSITIV_KEY = "POSITIV_KEY";
+  static const NEGATIV_KEY = "NEGATIV_KEY";
+  static const IMAGE_KEY = "IMAGE_KEY";
+  static const BACKGROUND_KEY = "BACKGROUND_KEY";
+}
+
+class UpdatescreenHelperKeys {
+  static const TITLE_KEY = "TITLE_KEY";
+  static const LINES_KEY = "LINES_KEY";
+  static const POSITIV_KEY = "POSITIV_KEY";
+  static const NEGATIV_KEY = "NEGATIV_KEY";
+  static const IMAGE_KEY = "IMAGE_KEY";
+  static const BACKGROUND_KEY = "BACKGROUND_KEY";
+}
+
+///-------------------------------
 /// Base helper config
 ///-------------------------------
 class CreateHelperConfig {

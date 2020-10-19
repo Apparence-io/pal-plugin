@@ -12,13 +12,11 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_butto
 
 class HelperServiceMock extends Mock implements HelperService {}
 
-class HelperEditorLoaderMock extends Mock implements HelperEditorLoader {}
 
 Future _initPage(
   WidgetTester tester,
 ) async {
   HelperService helperService = HelperServiceMock();
-  HelperEditorLoader loader = HelperEditorLoaderMock();
 
   var app = new MediaQuery(
       data: MediaQueryData(),
@@ -37,7 +35,6 @@ Future _initPage(
                 helperType: HelperType.SIMPLE_HELPER,
                 helperTheme: HelperTheme.BLACK,
               ),
-              loader: loader,
               helperService: helperService,
             ).build),
           ),

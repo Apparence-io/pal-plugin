@@ -1,6 +1,5 @@
 import 'package:palplugin/src/database/adapter/generic_adapter.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/helper_full_screen_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 

@@ -1,6 +1,7 @@
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/database/repository/editor/helper_editor_repository.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
 
@@ -8,6 +9,8 @@ import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
 abstract class EditorHelperService {
 
   factory EditorHelperService.build(EditorHelperRepository helperRepository) => _EditorHelperHttpService(helperRepository);
+
+  Future<Pageable<HelperEntity>> getPage(final String route, final int page, final int pageSize);
 
   Future<HelperEntity> createSimpleHelper(final String pageId, final CreateSimpleHelper createArgs);
   
@@ -148,6 +151,11 @@ class _EditorHelperHttpService implements EditorHelperService {
         )
       ]
     ));
+  }
+
+  @override
+  Future<Pageable<HelperEntity>> getPage(String pageId, int page, int pageSize) {
+    return this._editorHelperRepository.getPage(pageId, page, pageSize);
   }
 
 }

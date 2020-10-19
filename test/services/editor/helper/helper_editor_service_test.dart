@@ -13,7 +13,7 @@ import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
-import '../../database/entity/helper_entity_matchers.dart';
+import '../../../database/entity/helper_entity_matchers.dart';
 
 class HttpClientMock extends Mock implements HttpClient {}
 

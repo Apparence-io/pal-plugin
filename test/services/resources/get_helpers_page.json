@@ -22,13 +22,7 @@
       "versionMinId": 1,
       "versionMin": "1.0.1",
       "versionMaxId": 2,
-      "versionMax": "1.0.2",
-      "fontColor": "#FFFFFFFF",
-      "backgroundColor": "#FFFFFFFF",
-      "borderColor": "#FFFFFFFF",
-      "title": "title",
-      "theme": "theme",
-      "languageId": 1
+      "versionMax": "1.0.2"
     }
   ]
 }

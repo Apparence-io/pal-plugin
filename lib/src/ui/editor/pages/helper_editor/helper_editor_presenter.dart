@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_update_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:palplugin/src/services/helper_service.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
-class HelperEditorPresenter
-    extends Presenter<HelperEditorViewModel, HelperEditorView> {
-  final HelperService helperService;
+class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
+
+  final EditorHelperService helperService;
 
   final ElementFinder elementFinder;
-
-  final HelperEditorLoader loader;
 
   final HelperEditorPageArguments basicArguments;
 
   HelperEditorPresenter(HelperEditorView viewInterface, this.basicArguments,
-      this.loader, this.helperService, this.elementFinder)
-      : super(HelperEditorViewModel(), viewInterface);
+    this.helperService, this.elementFinder)
+    : super(HelperEditorViewModel(), viewInterface);
 
   @override
   void onInit() {
@@ -106,22 +102,13 @@ class HelperEditorPresenter
     //TODO
   }
 
-  Future<HelperEntity> save(
-    String pageId,
-    HelperViewModel helperViewModel,
-  ) async {
+  Future<void> save(String pageId, HelperViewModel helperViewModel,) async {
     viewModel.isLoading = true;
     this.refreshView();
 
-    CreateHelperEntity createHelperEntity =
-        EditorFactory.build(helperViewModel);
-
-    HelperEntity helperEntity =
-        await this.helperService.createPageHelper(pageId, createHelperEntity);
+    //FIXME call create
     viewModel.isLoading = false;
     this.refreshView();
-
-    return helperEntity;
   }
 
   //----------------------------------------------------------------------

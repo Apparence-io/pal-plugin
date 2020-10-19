@@ -54,6 +54,11 @@ void main() {
       }
     }
 
+    setUp(() {
+      reset(inAppUserClientService);
+      reset(helperClientServiceMock);
+    });
+
     testWidgets('should create properly and accessible from children', (WidgetTester tester) async {
       await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
       expect(HelperOrchestrator.getInstance(), isNotNull);
@@ -64,7 +69,7 @@ void main() {
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
       when(helperClientServiceMock.getPageHelpers(any, any)).thenAnswer((_) => Future.value([]));
 
-      var orchestrator = HelperOrchestrator.getInstance(
+      var orchestrator = HelperOrchestrator.create(
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,

@@ -101,6 +101,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
                       mainAxisSpacing: 2.0,
                       crossAxisSpacing: 2.0,
                     ),
+                    controller: _gridListController,
                     padding: const EdgeInsets.all(2.0),
                     itemBuilder: (context, index) {
                       GraphicEntity media = model.medias[index];

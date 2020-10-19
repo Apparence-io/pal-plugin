@@ -52,7 +52,7 @@ class HelperViewModel extends MVVMModel {
 class FullscreenHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
   final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
-
+  final MediaNotifier media = MediaNotifier(key: 'header');
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
     fontColor: Colors.white,
     borderColor: Colors.greenAccent,
@@ -123,8 +123,8 @@ class SimpleHelperViewModel extends HelperViewModel {
 class UpdateHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
   final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
-  
   final Map<String, TextFormFieldNotifier> changelogsFields = {};
+  final MediaNotifier media = MediaNotifier(key: 'header');
   final TextFormFieldNotifier thanksButton = TextFormFieldNotifier(
     backgroundColor: Colors.black87,
     fontColor: Colors.black87,

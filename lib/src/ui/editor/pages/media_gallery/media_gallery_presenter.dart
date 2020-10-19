@@ -28,6 +28,7 @@ class MediaGalleryPresenter
       this.viewModel.isLoading = false;
 
       if (media != null) {
+        // this.viewModel.selectedMedia = GraphicEntity(id: media.id);
         this.selectMedia(media);
       } else {
         this.refreshView();

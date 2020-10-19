@@ -26,3 +26,19 @@ class TextFormFieldNotifier {
     this.hintText = hintText ?? text;
   }
 }
+
+class MediaNotifier {
+  ValueNotifier<String> key;
+  ValueNotifier<String> id;
+  ValueNotifier<String> url;
+
+  MediaNotifier({
+    String key,
+    String url,
+    String id,
+  }) {
+    this.key = ValueNotifier(key);
+    this.url = ValueNotifier(url);
+    this.id = ValueNotifier(id);
+  }
+}

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/graphic_entity.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
@@ -74,33 +75,33 @@ class EditorUpdateHelperPresenter
         );
 
     this.viewModel.changelogsTextfieldWidgets.add(
-      EditableTextField.text(
-        textFormFieldKey: textFormFieldKey,
-        helperToolbarKey: textFormToolbarKey,
-        outsideTapStream: this.viewModel.editableTextFieldController.stream,
-        hintText: hintText,
-        maximumCharacterLength: 120,
-        textStyle: TextStyle(
-          color: this
-              .updateHelperViewModel
-              .changelogsFields[textFormMapKey]
-              ?.fontColor
-              ?.value,
-          fontSize: this
-              .updateHelperViewModel
-              .changelogsFields[textFormMapKey]
-              ?.fontSize
-              ?.value,
-        ),
-        onChanged: (Key key, String newValue) {
-          this
-              .updateHelperViewModel
-              .changelogsFields[textFormMapKey]
-              ?.text
-              ?.value = newValue;
-        },
-      ),
-    );
+          EditableTextField.text(
+            textFormFieldKey: textFormFieldKey,
+            helperToolbarKey: textFormToolbarKey,
+            outsideTapStream: this.viewModel.editableTextFieldController.stream,
+            hintText: hintText,
+            maximumCharacterLength: 120,
+            textStyle: TextStyle(
+              color: this
+                  .updateHelperViewModel
+                  .changelogsFields[textFormMapKey]
+                  ?.fontColor
+                  ?.value,
+              fontSize: this
+                  .updateHelperViewModel
+                  .changelogsFields[textFormMapKey]
+                  ?.fontSize
+                  ?.value,
+            ),
+            onChanged: (Key key, String newValue) {
+              this
+                  .updateHelperViewModel
+                  .changelogsFields[textFormMapKey]
+                  ?.text
+                  ?.value = newValue;
+            },
+          ),
+        );
 
     this.refreshView();
   }
@@ -130,9 +131,15 @@ class EditorUpdateHelperPresenter
   }
 
   editMedia() async {
-    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.viewModel.selectedMedia);
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(
+          GraphicEntity(
+            id: this.updateHelperViewModel.media?.id?.value,
+            url: this.updateHelperViewModel.media?.url?.value,
+          ),
+        );
 
-    this.viewModel.selectedMedia = selectedMedia;
+    this.updateHelperViewModel.media?.url?.value = selectedMedia.url;
+    this.updateHelperViewModel.media?.id?.value = selectedMedia.id;
     this.refreshView();
   }
 

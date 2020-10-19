@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/graphic_entity.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -66,9 +67,15 @@ class EditorFullScreenHelperPresenter
   }
 
   editMedia() async {
-    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.viewModel.selectedMedia);
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(
+          GraphicEntity(
+            id: this.fullscreenHelperViewModel.media?.id?.value,
+            url: this.fullscreenHelperViewModel.media?.url?.value,
+          ),
+        );
 
-    this.viewModel.selectedMedia = selectedMedia;
+    this.fullscreenHelperViewModel.media?.url?.value = selectedMedia.url;
+    this.fullscreenHelperViewModel.media?.id?.value = selectedMedia.id;
     this.refreshView();
   }
 

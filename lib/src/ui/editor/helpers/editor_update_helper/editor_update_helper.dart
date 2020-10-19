@@ -1,4 +1,3 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
@@ -70,23 +69,23 @@ class EditorUpdateHelperPage extends StatelessWidget
           child: Padding(
             padding:
                 EdgeInsets.only(bottom: (model.isKeyboardVisible ? 0.0 : 90.0)),
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Form(
-                key: model.formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                onChanged: () {
-                  if (onFormChanged != null) {
-                    onFormChanged(model.formKey?.currentState?.validate());
-                  }
-                },
-                child: EditableBackground(
-                  backgroundColor: viewModel.backgroundColor?.value,
-                  circleIconKey:
-                      'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
-                  onColorChange: () =>
-                      presenter.changeBackgroundColor(context, presenter),
-                  widget: Container(
+            child: Form(
+              key: model.formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              onChanged: () {
+                if (onFormChanged != null) {
+                  onFormChanged(model.formKey?.currentState?.validate());
+                }
+              },
+              child: EditableBackground(
+                backgroundColor: viewModel.backgroundColor?.value,
+                circleIconKey:
+                    'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
+                onColorChange: () =>
+                    presenter.changeBackgroundColor(context, presenter),
+                widget: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Container(
                     width: double.infinity,
                     color: viewModel.backgroundColor?.value,
                     child: Column(
@@ -109,7 +108,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                                     EditableMedia(
                                       mediaSize: 123.0,
                                       onEdit: presenter.editMedia,
-                                      url: model.selectedMedia?.url,
+                                      url: viewModel.media?.url?.value,
                                     ),
                                     SizedBox(height: 40),
                                     _buildTitleField(context, presenter, model),

@@ -121,7 +121,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                           EditableMedia(
                             mediaSize: 123.0,
                             onEdit: presenter.editMedia,
-                            url: model.selectedMedia?.url,
+                            url: viewModel.media?.url?.value,
                           ),
                           SizedBox(height: 20),
                           EditableTextField.text(

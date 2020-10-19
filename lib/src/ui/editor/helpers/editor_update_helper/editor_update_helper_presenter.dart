@@ -129,6 +129,13 @@ class EditorUpdateHelperPresenter
     this.viewModel.editableTextFieldController.add(true);
   }
 
+  editMedia() async {
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.viewModel.selectedMedia);
+
+    this.viewModel.selectedMedia = selectedMedia;
+    this.refreshView();
+  }
+
   String validateDetailsTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';

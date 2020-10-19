@@ -7,7 +7,6 @@ import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_background.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_media.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';

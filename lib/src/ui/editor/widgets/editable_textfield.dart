@@ -198,7 +198,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
                   padding: widget.textFormFieldPadding ?? EdgeInsets.zero,
                   child: TextFormField(
                     key: widget.textFormFieldKey,
-                    autovalidate: widget.autovalidate,
+                    autovalidateMode: (widget.autovalidate)
+                        ? AutovalidateMode.onUserInteraction
+                        : AutovalidateMode.disabled,
                     focusNode: _focusNode,
                     onTap: _onTextFieldTapped,
                     onChanged: (String newValue) {
@@ -230,6 +232,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     inputFormatters: widget.inputFormatters,
                     decoration: InputDecoration(
                       border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
                       hintText: widget.hintText,
                       hintStyle: _textStyle.merge(
                         TextStyle(

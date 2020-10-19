@@ -122,7 +122,7 @@ class SimpleHelperViewModel extends HelperViewModel {
 
 class UpdateHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
-  final ValueNotifier<Color> backgroundColor = ValueNotifier(Color(0xFFBFEEF5));
+  final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
   
   final Map<String, TextFormFieldNotifier> changelogsFields = {};
   final TextFormFieldNotifier thanksButton = TextFormFieldNotifier(

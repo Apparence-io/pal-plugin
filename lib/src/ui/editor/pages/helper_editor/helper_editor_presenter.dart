@@ -40,7 +40,8 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
       versionMinId: basicArguments?.versionMinId ?? 1,
       versionMaxId: basicArguments?.versionMaxId ?? 2,
     );
-    this.chooseHelperType(basicArguments?.helperType);
+    viewModel.helperViewModel = EditorViewModelFactory.transform(viewModel.templateViewModel, basicArguments?.helperType);
+    chooseHelperType();
   }
 
   checkIfEditableWidgetFormValid(bool isFormValid) {
@@ -48,9 +49,8 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     this.refreshView();
   }
 
-  chooseHelperType(HelperType helperType) {
-    viewModel.helperViewModel = EditorViewModelFactory.transform(viewModel.templateViewModel, helperType,);
-    switch (helperType) {
+  chooseHelperType() {
+    switch (basicArguments?.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         viewInterface.addFullscreenHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;

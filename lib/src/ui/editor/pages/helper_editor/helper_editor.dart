@@ -6,6 +6,7 @@ import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
@@ -67,7 +68,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
 
   final HelperEditorPageArguments helperEditorPageArguments;
 
-  final HelperService helperService;
+  final EditorHelperService helperService;
 
   final _mvvmPageBuilder = MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
 
@@ -204,7 +205,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   addAnchoredFullscreenEditor(HelperEditorPresenter presenter) {
-    _helperToEdit = EditorAnchoredFullscreenHelper( );
+    _helperToEdit = EditorAnchoredFullscreenHelper();
   }
 
   @override

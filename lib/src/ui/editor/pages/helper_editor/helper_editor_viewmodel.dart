@@ -10,9 +10,6 @@ class HelperEditorViewModel extends MVVMModel {
   bool isEditableWidgetValid;
   bool isEditingWidget;
 
-  // this is used to let user choose between all available type options
-  List<HelperTypeOption> availableHelperType;
-
   // This the template view model with all default values
   HelperViewModel templateViewModel;
 
@@ -74,8 +71,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
           versionMaxId: versionMaxId,
         );
 
-  factory FullscreenHelperViewModel.fromHelperViewModel(
-          HelperViewModel model) =>
+  factory FullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model) =>
       FullscreenHelperViewModel(
         name: model.name,
         triggerType: model.triggerType,
@@ -111,7 +107,7 @@ class SimpleHelperViewModel extends HelperViewModel {
         );
 
   factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model) =>
-      SimpleHelperViewModel(
+    SimpleHelperViewModel(
         name: model.name,
         triggerType: model.triggerType,
         priority: model.priority,

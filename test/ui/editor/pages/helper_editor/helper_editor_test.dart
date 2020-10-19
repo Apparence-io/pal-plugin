@@ -7,7 +7,6 @@ import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 
 class HelperServiceMock extends Mock implements HelperService {}
@@ -44,7 +43,9 @@ Future _initPage(
 }
 
 void main() {
+
   group('Editor', () {
+
     testWidgets('should create page correctly', (WidgetTester tester) async {
       await _initPage(tester);
       // page exists
@@ -53,5 +54,6 @@ void main() {
       var editButtonFinder = find.byType(EditorButton);
       expect(editButtonFinder, findsNWidgets(2));
     });
+
   });
 }

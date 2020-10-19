@@ -166,7 +166,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
               child: EditorButton.validate(
                 PalTheme.of(context),
                 () async {
-                  await presenter.save(helperEditorPageArguments.pageId, model.helperViewModel);
+                  await presenter.save();
                   await Future.delayed(Duration(milliseconds: 500));
                   removeOverlay();
                 },

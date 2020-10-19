@@ -4,18 +4,19 @@ import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 
-class HelperServiceMock extends Mock implements HelperService {}
+class HelperServiceMock extends Mock implements EditorHelperService {}
 
 
 Future _initPage(
   WidgetTester tester,
 ) async {
-  HelperService helperService = HelperServiceMock();
+  var helperService = HelperServiceMock();
 
   var app = new MediaQuery(
       data: MediaQueryData(),

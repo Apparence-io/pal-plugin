@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 
 class HelperEditorViewModel extends MVVMModel {
@@ -51,23 +52,27 @@ class FullscreenHelperViewModel extends HelperViewModel {
   final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
     fontColor: Colors.white,
-    fontSize: 80.0,
+    fontSize: 80,
     text: '',
+    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier descriptionField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
-    fontSize: 14.0,
+    fontSize: 14,
     text: '',
+    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier positivButtonField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
-    fontSize: 14.0,
+    fontSize: 14,
     text: '',
+    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier negativButtonField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
-    fontSize: 14.0,
+    fontSize: 14,
     text: '',
+    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
 
   FullscreenHelperViewModel({
@@ -101,7 +106,7 @@ class SimpleHelperViewModel extends HelperViewModel {
     backgroundColor: Colors.black87,
     fontColor: Colors.white,
     borderColor: Colors.greenAccent,
-    fontSize: 14.0,
+    fontSize: 14,
     text: '',
   );
 
@@ -137,13 +142,13 @@ class UpdateHelperViewModel extends HelperViewModel {
   final TextFormFieldNotifier thanksButton = TextFormFieldNotifier(
     backgroundColor: Colors.black87,
     fontColor: Colors.black87,
-    fontSize: 24.0,
+    fontSize: 24,
     text: 'Thank you!',
   );
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
     backgroundColor: Colors.black87,
     fontColor: Colors.black87,
-    fontSize: 24.0,
+    fontSize: 24,
     text: '',
     hintText: 'Enter your title here...'
   );

@@ -6,13 +6,13 @@ import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
@@ -68,9 +68,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
 
   final HelperEditorPageArguments helperEditorPageArguments;
 
-  final HelperService helperService;
-
-  final HelperEditorLoader loader;
+  final EditorHelperService helperService;
 
   final _mvvmPageBuilder = MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
 
@@ -78,7 +76,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
 
   HelperEditorPageBuilder(
     this.helperEditorPageArguments, {
-    this.loader,
     this.helperService,
     this.elementFinder,
   });
@@ -90,7 +87,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
       presenterBuilder: (context) => HelperEditorPresenter(
         this,
         helperEditorPageArguments,
-        loader ?? HelperEditorLoader(),
         helperService ?? EditorInjector.of(context).helperService,
         elementFinder
       ),
@@ -171,8 +167,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
               child: EditorButton.validate(
                 PalTheme.of(context),
                 () async {
-                  await presenter.save(
-                      helperEditorPageArguments.pageId, model.helperViewModel);
+                  await presenter.save();
                   await Future.delayed(Duration(milliseconds: 500));
                   removeOverlay();
                 },
@@ -193,10 +188,6 @@ class HelperEditorPageBuilder implements HelperEditorView {
       viewModel: model,
       onFormChanged: isValid,
     );
-    // _helperToEdit = EditorAnchoredFullscreenHelper(
-    //   // viewModel: model,
-    //   // onFormChanged: isValid,
-    // );
   }
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid) {
@@ -214,7 +205,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   addAnchoredFullscreenEditor(HelperEditorPresenter presenter) {
-    _helperToEdit = EditorAnchoredFullscreenHelper( );
+    _helperToEdit = EditorAnchoredFullscreenHelper();
   }
 
   @override

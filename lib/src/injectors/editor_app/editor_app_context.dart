@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:palplugin/src/database/repository/editor/helper_editor_repository.dart';
 import 'package:palplugin/src/database/repository/helper_repository.dart';
 import 'package:palplugin/src/database/repository/page_repository.dart';
 import 'package:palplugin/src/database/repository/project_repository.dart';
@@ -27,7 +28,7 @@ class EditorAppContext {
     return _instance;
   }
 
-  HelperRepository get helperRepository => throw "not implemented";
+  EditorHelperRepository get helperRepository => throw "not implemented";
 
   PageRepository get pageRepository => throw "not implemented";
 
@@ -42,7 +43,7 @@ class HttpEditorAppContext implements  EditorAppContext {
 
   final PageRepository _pageRepository;
 
-  final HelperRepository _helperRepository;
+  final EditorHelperRepository _editorHelperRepository;
 
   final VersionRepository _versionRepository;
 
@@ -59,10 +60,10 @@ class HttpEditorAppContext implements  EditorAppContext {
   })  : assert(httpClient != null),
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._projectRepository = ProjectRepository(httpClient: httpClient),
-        this._helperRepository = HelperRepository(httpClient: httpClient),
+        this._editorHelperRepository = EditorHelperRepository(httpClient: httpClient),
         this._versionRepository = VersionHttpRepository(httpClient: httpClient);
 
-  HelperRepository get helperRepository => this._helperRepository;
+  EditorHelperRepository get helperRepository => this._editorHelperRepository;
 
   PageRepository get pageRepository => this._pageRepository;
 

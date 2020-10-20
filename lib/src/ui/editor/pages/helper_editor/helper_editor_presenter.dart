@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_update_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:palplugin/src/services/helper_service.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_loader.dart';
+import 'package:palplugin/src/extensions/color_extension.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 
 import 'helper_editor.dart';
@@ -15,16 +15,14 @@ import 'helper_editor_viewmodel.dart';
 
 class HelperEditorPresenter
     extends Presenter<HelperEditorViewModel, HelperEditorView> {
-  final HelperService helperService;
+  final EditorHelperService helperService;
 
   final ElementFinder elementFinder;
-
-  final HelperEditorLoader loader;
 
   final HelperEditorPageArguments basicArguments;
 
   HelperEditorPresenter(HelperEditorView viewInterface, this.basicArguments,
-      this.loader, this.helperService, this.elementFinder)
+      this.helperService, this.elementFinder)
       : super(HelperEditorViewModel(), viewInterface);
 
   @override
@@ -33,30 +31,6 @@ class HelperEditorPresenter
     viewModel.isLoading = false;
     viewModel.isEditingWidget = false;
     viewModel.isEditableWidgetValid = false;
-
-    // init the available helpers type we can create
-    viewModel.availableHelperType = [
-      HelperTypeOption(
-        'Simple helper box',
-        HelperType.SIMPLE_HELPER,
-        icon: Icons.chat_bubble_outline,
-      ),
-      HelperTypeOption(
-        'Fullscreen helper',
-        HelperType.HELPER_FULL_SCREEN,
-        icon: Icons.fullscreen,
-      ),
-      HelperTypeOption(
-        'Anchored fullscreen helper',
-        HelperType.ANCHORED_OVERLAYED_HELPER,
-      ),
-      HelperTypeOption(
-        'Update review helper',
-        HelperType.UPDATE_HELPER,
-        icon: Icons.list,
-      ),
-    ];
-
     // Create a template helper model
     // this template will be copied to edited widget
     viewModel.templateViewModel = HelperViewModel(
@@ -67,8 +41,9 @@ class HelperEditorPresenter
       versionMinId: basicArguments?.versionMinId ?? 1,
       versionMaxId: basicArguments?.versionMaxId ?? 2,
     );
-
-    this.chooseHelperType(basicArguments?.helperType);
+    viewModel.helperViewModel = EditorViewModelFactory.transform(
+        viewModel.templateViewModel, basicArguments?.helperType);
+    chooseHelperType();
   }
 
   checkIfEditableWidgetFormValid(bool isFormValid) {
@@ -76,9 +51,8 @@ class HelperEditorPresenter
     this.refreshView();
   }
 
-  chooseHelperType(HelperType helperType) {
-    initEditedWidgetData(helperType);
-    switch (helperType) {
+  chooseHelperType() {
+    switch (basicArguments?.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         viewInterface.addFullscreenHelperEditor(
             viewModel.helperViewModel, checkIfEditableWidgetFormValid);
@@ -106,34 +80,47 @@ class HelperEditorPresenter
     //TODO
   }
 
-  Future<HelperEntity> save(
-    String pageId,
-    HelperViewModel helperViewModel,
-  ) async {
+  Future<void> save() async {
     viewModel.isLoading = true;
     this.refreshView();
-
-    CreateHelperEntity createHelperEntity =
-        EditorFactory.build(helperViewModel);
-
-    HelperEntity helperEntity =
-        await this.helperService.createPageHelper(pageId, createHelperEntity);
+    try {
+      var _config = CreateHelperConfig(
+        name: basicArguments.helperName,
+        triggerType: basicArguments.triggerType,
+        priority: basicArguments.priority,
+        versionMinId: basicArguments.versionMinId,
+        versionMaxId: basicArguments.versionMaxId,
+      );
+      switch (basicArguments?.helperType) {
+        case HelperType.HELPER_FULL_SCREEN:
+          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
+          await helperService.createFullScreenHelper(basicArguments.pageId,
+              EditorEntityFactory.buildFullscreenArgs(_config, model));
+          break;
+        case HelperType.SIMPLE_HELPER:
+          var model = viewModel.helperViewModel as SimpleHelperViewModel;
+          await helperService.createSimpleHelper(basicArguments.pageId,
+              EditorEntityFactory.buildSimpleArgs(_config, model));
+          break;
+        // case HelperType.ANCHORED_OVERLAYED_HELPER:
+        //   break;
+        case HelperType.UPDATE_HELPER:
+          var model = viewModel.helperViewModel as UpdateHelperViewModel;
+          await helperService.createUpdateHelper(basicArguments.pageId,
+              EditorEntityFactory.buildUpdateArgs(_config, model));
+          break;
+        default:
+          throw "NOT_IMPLEMENTED_TYPE";
+          break;
+      }
+    } catch (e) {}
     viewModel.isLoading = false;
+    // TODO show a success screen
     this.refreshView();
-
-    return helperEntity;
   }
 
   //----------------------------------------------------------------------
   // PRIVATES
   //----------------------------------------------------------------------
 
-  // Simply copy all template data from [viewModel.defaultViewModel] to the
-  // actual edited widget view model
-  initEditedWidgetData(HelperType type) {
-    viewModel.helperViewModel = EditorFactory.init(
-      viewModel.templateViewModel,
-      type,
-    );
-  }
 }

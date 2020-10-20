@@ -1,17 +1,11 @@
-import 'dart:ui';
-
-import 'package:palplugin/src/database/entity/helper/create_helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_full_screen_entity.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_simple_entity.dart';
-import 'package:palplugin/src/database/entity/helper/create_helper_update_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/extensions/color_extension.dart';
 
-class EditorFactory {
-
-  //FIXME DELETE
-  static HelperViewModel init(HelperViewModel model, HelperType helperType) {
+class EditorViewModelFactory {
+  static HelperViewModel transform(
+      HelperViewModel model, HelperType helperType) {
     switch (helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         return FullscreenHelperViewModel.fromHelperViewModel(model);
@@ -23,71 +17,89 @@ class EditorFactory {
         return null;
     }
   }
+}
 
-  static CreateHelperEntity build(HelperViewModel model) {
-    CreateHelperEntity createHelperEntity;
-    switch (model.runtimeType) {
-      case FullscreenHelperViewModel:
-        createHelperEntity = _buildFullscreenHelper(model);
-        break;
-      case SimpleHelperViewModel:
-        createHelperEntity = _buildSimpleHelper(model);
-        break;
-      case UpdateHelperViewModel:
-        createHelperEntity = _buildUpdateHelper(model);
-        break;
-      default:
+class EditorEntityFactory {
+  static CreateFullScreenHelper buildFullscreenArgs(
+          CreateHelperConfig config, FullscreenHelperViewModel model) =>
+      CreateFullScreenHelper(
+        config: config,
+        title: HelperTextConfig(
+          text: model.titleField?.text?.value,
+          fontColor: model.titleField?.fontColor?.value?.toHex(),
+          fontWeight: model.titleField?.fontWeight?.value,
+          fontSize: model.titleField?.fontSize?.value,
+          fontFamily: model.titleField?.fontFamily?.value,
+        ),
+        description: HelperTextConfig(
+            text: model.descriptionField?.text?.value,
+            fontColor: model.descriptionField?.fontColor?.value?.toHex(),
+            fontWeight: model.descriptionField?.fontWeight?.value,
+            fontSize: model.descriptionField?.fontSize?.value,
+            fontFamily: model.descriptionField?.fontFamily?.value),
+        backgroundColor: model.backgroundColor.value.toHex(),
+        topImageId: "2513aeaezaed213254df", //FIXME missing value
+        positivButton: HelperTextConfig(
+            text: model.positivButtonField?.text?.value,
+            fontColor: model.positivButtonField?.fontColor?.value?.toHex(),
+            fontWeight: model.positivButtonField?.fontWeight?.value,
+            fontSize: model.positivButtonField?.fontSize?.value,
+            fontFamily: model.positivButtonField?.fontFamily?.value),
+        negativButton: HelperTextConfig(
+            text: model.negativButtonField?.text?.value,
+            fontColor: model.negativButtonField?.fontColor?.value?.toHex(),
+            fontWeight: model.negativButtonField?.fontWeight?.value,
+            fontSize: model.negativButtonField?.fontSize?.value,
+            fontFamily: model.negativButtonField?.fontFamily?.value),
+      );
+
+  static CreateSimpleHelper buildSimpleArgs(
+          CreateHelperConfig config, SimpleHelperViewModel model) =>
+      CreateSimpleHelper(
+        config: config,
+        title: model.detailsField?.text?.value,
+        fontColor: model.detailsField?.fontColor?.value?.toHex(),
+        fontWeight: model.detailsField?.fontWeight?.value,
+        fontSize: model.detailsField?.fontSize?.value,
+        fontFamily: model.detailsField?.fontFamily?.value,
+        backgroundColor: '#FFF', //FIXME missing value
+      );
+
+  static CreateUpdateHelper buildUpdateArgs(
+      CreateHelperConfig config, UpdateHelperViewModel model) {
+    List<HelperTextConfig> lines = [];
+
+    for (var note in model.changelogsFields.entries) {
+      lines.add(
+        HelperTextConfig(
+          text: note?.value?.text?.value,
+          fontColor: note?.value?.fontColor?.value?.toHex(),
+          fontWeight: note?.value?.fontWeight?.value,
+          fontSize: note?.value?.fontSize?.value,
+          fontFamily: note?.value?.fontFamily?.value,
+        ),
+      );
     }
-    return createHelperEntity;
-  }
 
-  static CreateHelperFullScreenEntity _buildFullscreenHelper(FullscreenHelperViewModel model) {
-    return CreateHelperFullScreenEntity(
-      name: model.name,
-      triggerType: model.triggerType,
-      priority: model.priority,
-      versionMaxId: model.versionMaxId,
-      versionMinId: model.versionMinId,
-      title: model.titleField?.text?.value,
-      fontColor: model.titleField?.fontColor?.value?.toHex(),
-      backgroundColor: model.titleField?.backgroundColor?.value?.toHex(),
-      borderColor: model.titleField?.borderColor?.value?.toHex(),
-      languageId: model.languageId?.value,
-    );
-  }
-
-  static CreateHelperSimpleEntity _buildSimpleHelper(SimpleHelperViewModel model) {
-    return CreateHelperSimpleEntity(
-      name: model.name,
-      triggerType: model.triggerType,
-      priority: model.priority,
-      versionMaxId: model.versionMaxId,
-      versionMinId: model.versionMinId,
-      title: model.detailsField?.text?.value,
-      fontColor: model.detailsField?.fontColor?.value?.toHex(),
-      backgroundColor: model.detailsField?.backgroundColor?.value?.toHex(),
-      borderColor: model.detailsField?.borderColor?.value?.toHex(),
-      languageId: model.languageId?.value,
-    );
-  }
-
-  static CreateHelperUpdateEntity _buildUpdateHelper(UpdateHelperViewModel model) {
-    return CreateHelperUpdateEntity(
-      name: model.name,
-      triggerType: model.triggerType,
-      priority: model.priority,
-      versionMaxId: model.versionMaxId,
-      versionMinId: model.versionMinId,
-      title: model.titleField?.text?.value,
-      fontColor: model.titleField?.fontColor?.value?.toHex(),
+    return CreateUpdateHelper(
+      config: config,
+      title: HelperTextConfig(
+        text: model.titleField?.text?.value,
+        fontColor: model.titleField?.fontColor?.value?.toHex(),
+        fontWeight: model.titleField?.fontWeight?.value,
+        fontSize: model.titleField?.fontSize?.value,
+        fontFamily: model.titleField?.fontFamily?.value,
+      ),
+      topImageId: "2513aeaezaed213254df", //FIXME missing value
       backgroundColor: model.backgroundColor?.value?.toHex(),
-      // borderColor: model.titleBackgroundColor?.value?.toHex(),
-      languageId: model.languageId?.value,
+      lines: lines,
+      positivButton: HelperTextConfig(
+        text: model.thanksButton?.text?.value,
+        fontColor: model.thanksButton?.fontColor?.value?.toHex(),
+        fontWeight: model.thanksButton?.fontWeight?.value,
+        fontSize: model.thanksButton?.fontSize?.value,
+        fontFamily: model.thanksButton?.fontFamily?.value,
+      ),
     );
   }
-
-  // TODO: Move to global utils file
-  // static String colorToHex(Color color) {
-  //   return '#${color.value.toRadixString(16).substring(2, 8)}';
-  // }
 }

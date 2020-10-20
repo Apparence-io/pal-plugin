@@ -4,6 +4,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
@@ -106,13 +107,17 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               textFormFieldKey:
                                   ValueKey('palFullscreenHelperTitleField'),
                               onChanged: presenter.onTitleChanged,
+                              onTextStyleChanged: presenter.onTitleTextStyleChanged,
                               maximumCharacterLength: 55,
                               minimumCharacterLength: 1,
                               maxLines: 3,
                               textStyle: TextStyle(
                                 color: viewModel.titleField?.fontColor?.value,
                                 decoration: TextDecoration.none,
-                                fontSize: viewModel.titleField?.fontSize?.value,
+                                fontSize: viewModel.titleField?.fontSize?.value
+                                    ?.toDouble(),
+                                fontWeight: FontWeightMapper.toFontWeight(
+                                    viewModel.titleField?.fontWeight?.value),
                               ),
                             ),
                             Padding(
@@ -156,8 +161,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             'pal_EditorFullScreenHelperPage_BackgroundColorPicker'),
                         icon: Icon(Icons.invert_colors),
                         backgroundColor: PalTheme.of(context).colors.light,
-                        onTapCallback: () =>
-                            presenter.changeBackgroundColor(viewModel, presenter),
+                        onTapCallback: () => presenter.changeBackgroundColor(
+                            viewModel, presenter),
                       ),
                     ),
                   ],

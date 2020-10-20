@@ -46,7 +46,7 @@ class HelperOrchestrator {
   }
 
   @visibleForTesting
-  factory HelperOrchestrator.initForTesting({
+  factory HelperOrchestrator.create({
     GlobalKey<NavigatorState> navigatorKey,
     PalRouteObserver routeObserver,
     HelperClientService helperClientService,

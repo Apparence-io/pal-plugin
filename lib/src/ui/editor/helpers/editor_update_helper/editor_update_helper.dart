@@ -5,6 +5,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
@@ -166,13 +167,15 @@ class EditorUpdateHelperPage extends StatelessWidget
       ),
       hintText: viewModel.titleField?.hintText,
       onChanged: presenter.onTitleFieldChanged,
+      onTextStyleChanged: presenter.onTitleTextStyleChanged,
       autovalidate: false,
       maximumCharacterLength: 60,
       minimumCharacterLength: 1,
       outsideTapStream: model.editableTextFieldController.stream,
       textStyle: TextStyle(
         color: viewModel.titleField?.fontColor?.value,
-        fontSize: viewModel.titleField?.fontSize?.value,
+        fontSize: viewModel.titleField?.fontSize?.value?.toDouble(),
+        fontWeight: FontWeightMapper.toFontWeight(viewModel.titleField?.fontWeight?.value),
       ),
     );
   }
@@ -227,6 +230,7 @@ class EditorUpdateHelperPage extends StatelessWidget
         ),
         outsideTapStream: model.editableTextFieldController.stream,
         onChanged: presenter.onThanksFieldChanged,
+        onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
         hintText: viewModel.thanksButton?.hintText,
         maximumCharacterLength: 25,
         backgroundBoxDecoration: BoxDecoration(

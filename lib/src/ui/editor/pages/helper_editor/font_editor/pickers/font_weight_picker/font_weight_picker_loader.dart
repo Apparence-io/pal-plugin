@@ -13,7 +13,7 @@ class FontWeightMapper {
     'Black': FontWeight.w900,
   };
 
-  static String getFontKey(FontWeight fontWeight) {
+  static String toFontKey(FontWeight fontWeight) {
     if (fontWeight == null) {
       return 'Normal';
     }
@@ -28,7 +28,7 @@ class FontWeightMapper {
     return key;
   }
 
-  static FontWeight getFontWeight(String key) {
+  static FontWeight toFontWeight(String key) {
     return map[key];
   }
 }

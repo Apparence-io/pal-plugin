@@ -5,6 +5,7 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
@@ -68,39 +69,41 @@ class EditorUpdateHelperPresenter
           textFormMapKey,
           () => TextFormFieldNotifier(
             text: '',
-            fontSize: 14.0,
+            fontSize: 14,
             fontColor: Colors.black87,
           ),
         );
 
     this.viewModel.changelogsTextfieldWidgets.add(
-      EditableTextField.text(
-        textFormFieldKey: textFormFieldKey,
-        helperToolbarKey: textFormToolbarKey,
-        outsideTapStream: this.viewModel.editableTextFieldController.stream,
-        hintText: hintText,
-        maximumCharacterLength: 120,
-        textStyle: TextStyle(
-          color: this
-              .updateHelperViewModel
-              .changelogsFields[textFormMapKey]
-              ?.fontColor
-              ?.value,
-          fontSize: this
-              .updateHelperViewModel
-              .changelogsFields[textFormMapKey]
-              ?.fontSize
-              ?.value,
-        ),
-        onChanged: (Key key, String newValue) {
-          this
-              .updateHelperViewModel
-              .changelogsFields[textFormMapKey]
-              ?.text
-              ?.value = newValue;
-        },
-      ),
-    );
+          EditableTextField.text(
+            textFormFieldKey: textFormFieldKey,
+            helperToolbarKey: textFormToolbarKey,
+            outsideTapStream: this.viewModel.editableTextFieldController.stream,
+            hintText: hintText,
+            maximumCharacterLength: 120,
+            textStyle: TextStyle(
+              color: this
+                  .updateHelperViewModel
+                  .changelogsFields[textFormMapKey]
+                  ?.fontColor
+                  ?.value,
+              fontSize: this
+                  .updateHelperViewModel
+                  .changelogsFields[textFormMapKey]
+                  ?.fontSize
+                  ?.value
+                  ?.toDouble(),
+            ),
+            onChanged: (Key key, String newValue) {
+              this
+                  .updateHelperViewModel
+                  .changelogsFields[textFormMapKey]
+                  ?.text
+                  ?.value = newValue;
+            },
+            onTextStyleChanged: this.onChangelogTextStyleFieldChanged,
+          ),
+        );
 
     this.refreshView();
   }
@@ -111,6 +114,50 @@ class EditorUpdateHelperPresenter
 
   onThanksFieldChanged(Key key, String newValue) {
     updateHelperViewModel.thanksButton?.text?.value = newValue;
+  }
+
+  onTitleTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
+    updateHelperViewModel.titleField?.fontColor?.value = newTextStyle?.color;
+
+    if (fontKeys != null) {
+      updateHelperViewModel.titleField?.fontWeight?.value =
+          fontKeys.fontWeightNameKey;
+      updateHelperViewModel.titleField?.fontFamily?.value =
+          fontKeys.fontFamilyNameKey;
+    }
+  }
+
+  onThanksTextStyleFieldChanged(
+    Key key,
+    TextStyle newTextStyle,
+    FontKeys fontKeys,
+  ) {
+    updateHelperViewModel.thanksButton?.fontColor?.value = newTextStyle?.color;
+
+    if (fontKeys != null) {
+      updateHelperViewModel.thanksButton?.fontWeight?.value =
+          fontKeys.fontWeightNameKey;
+      updateHelperViewModel.thanksButton?.fontFamily?.value =
+          fontKeys.fontFamilyNameKey;
+    }
+  }
+
+  onChangelogTextStyleFieldChanged(
+    Key key,
+    TextStyle newTextStyle,
+    FontKeys fontKeys,
+  ) {
+    updateHelperViewModel.changelogsFields[key.toString()]?.fontColor?.value =
+        newTextStyle?.color;
+    updateHelperViewModel.changelogsFields[key.toString()]?.fontSize?.value =
+        newTextStyle?.fontSize?.toInt();
+
+    if (fontKeys != null) {
+      updateHelperViewModel.changelogsFields[key.toString()]?.fontWeight
+          ?.value = fontKeys.fontWeightNameKey;
+      updateHelperViewModel.changelogsFields[key.toString()]?.fontFamily
+          ?.value = fontKeys.fontFamilyNameKey;
+    }
   }
 
   changeBackgroundColor(

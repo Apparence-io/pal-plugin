@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/page_server.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
@@ -9,7 +10,7 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_vi
 class HelpersListModalLoader {
 
   final PageService _pageService;
-  final HelperService _helperService;
+  final EditorHelperService _helperService;
   final PalRouteObserver _routeObserver;
   final _helpersOffset = 20;
   Pageable<HelperEntity> _pageable;
@@ -35,18 +36,14 @@ class HelpersListModalLoader {
     return _pageable != null && _pageable.last
         ? Future.value([])
         : this
-            ._helperService
-            .getPageHelpers(
+            ._helperService.getPage(
               pageId,
               _pageable == null ? 0 : ++_pageable.pageNumber,
               _helpersOffset,
-            )
-            .then(
-            (res) {
-              _pageable = res;
-              List<HelperEntity> helpers = this._pageable.entities.toList();
-
-              return helpers;
+            ).then(
+              (res) {
+                _pageable = res;
+                return this._pageable.entities.toList();
             },
           );
   }

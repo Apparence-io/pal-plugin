@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 // Put all notifiers models here
 
@@ -10,7 +12,7 @@ class TextFormFieldNotifier {
   ValueNotifier<Color> fontColor;
   ValueNotifier<Color> backgroundColor;
   ValueNotifier<Color> borderColor;
-  ValueNotifier<num> fontSize;
+  ValueNotifier<int> fontSize;
 
   TextFormFieldNotifier({
     @required String text,
@@ -19,16 +21,16 @@ class TextFormFieldNotifier {
     String fontWeight,
     Color backgroundColor,
     Color borderColor,
-    @required num fontSize,
+    @required int fontSize,
     String hintText,
   }) {
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);
-    this.fontFamily = ValueNotifier(fontFamily);
-    this.fontWeight = ValueNotifier(fontWeight);
-    this.backgroundColor = ValueNotifier(backgroundColor);
+    this.fontFamily = ValueNotifier(fontFamily ?? 'Montserrat');
+    this.fontWeight = ValueNotifier(fontWeight ?? FontWeightMapper.toFontKey(FontWeight.normal));
+    this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
     this.borderColor = ValueNotifier(borderColor);
-    this.fontSize = ValueNotifier(fontSize);
+    this.fontSize = ValueNotifier(fontSize ?? 14);
     this.hintText = hintText ?? text;
   }
 }

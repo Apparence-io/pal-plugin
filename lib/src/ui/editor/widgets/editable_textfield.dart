@@ -25,6 +25,7 @@ class EditableTextField extends StatefulWidget {
   final EdgeInsetsGeometry textFormFieldPadding;
   final String Function(String) validator;
   final Function(Key, String) onChanged;
+  final Function(Key, TextStyle, FontKeys) onTextStyleChanged;
   final TextInputType keyboardType;
   final TextStyle textStyle;
   final int maxLines;
@@ -44,6 +45,7 @@ class EditableTextField extends StatefulWidget {
     this.maximumCharacterLength,
     this.minimumCharacterLength,
     this.onChanged,
+    this.onTextStyleChanged,
     this.autovalidate = true,
     this.backgroundPadding,
     this.textFormFieldPadding,
@@ -68,6 +70,7 @@ class EditableTextField extends StatefulWidget {
     final EdgeInsetsGeometry textFormFieldPadding,
     final String Function(String) validator,
     final Function(Key, String) onChanged,
+    final Function(Key, TextStyle, FontKeys) onTextStyleChanged,
     final TextInputType keyboardType,
     final TextStyle textStyle,
     final int maxLines = 1,
@@ -85,6 +88,7 @@ class EditableTextField extends StatefulWidget {
       outsideTapStream: outsideTapStream,
       maximumCharacterLength: maximumCharacterLength,
       minimumCharacterLength: minimumCharacterLength,
+      onTextStyleChanged: onTextStyleChanged,
       onChanged: onChanged,
       autovalidate: autovalidate,
       backgroundPadding: backgroundPadding,
@@ -111,6 +115,7 @@ class EditableTextField extends StatefulWidget {
     final EdgeInsetsGeometry textFormFieldPadding,
     final String Function(String) validator,
     final Function(Key, String) onChanged,
+    final Function(Key, TextStyle, FontKeys) onTextStyleChanged,
     final TextInputType keyboardType,
     final TextStyle textStyle,
     final int maxLines = 1,
@@ -129,6 +134,7 @@ class EditableTextField extends StatefulWidget {
       maximumCharacterLength: maximumCharacterLength,
       minimumCharacterLength: minimumCharacterLength,
       onChanged: onChanged,
+      onTextStyleChanged: onTextStyleChanged,
       autovalidate: autovalidate,
       backgroundPadding: backgroundPadding,
       textFormFieldPadding: textFormFieldPadding,
@@ -312,6 +318,10 @@ class _EditableTextFieldState extends State<EditableTextField> {
             );
             _isToolbarVisible = true;
           });
+          if (widget.onTextStyleChanged != null) {
+            widget.onTextStyleChanged(
+                widget.textFormFieldKey, _textStyle, fontKeys);
+          }
         },
       ),
     );
@@ -329,6 +339,10 @@ class _EditableTextFieldState extends State<EditableTextField> {
             ));
             _isToolbarVisible = true;
           });
+          if (widget.onTextStyleChanged != null) {
+            widget.onTextStyleChanged(
+                widget.textFormFieldKey, _textStyle, null);
+          }
         },
       ),
     );

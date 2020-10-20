@@ -13,8 +13,8 @@ import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
-class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
-
+class HelperEditorPresenter
+    extends Presenter<HelperEditorViewModel, HelperEditorView> {
   final EditorHelperService helperService;
 
   final ElementFinder elementFinder;
@@ -22,8 +22,8 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
   final HelperEditorPageArguments basicArguments;
 
   HelperEditorPresenter(HelperEditorView viewInterface, this.basicArguments,
-    this.helperService, this.elementFinder)
-    : super(HelperEditorViewModel(), viewInterface);
+      this.helperService, this.elementFinder)
+      : super(HelperEditorViewModel(), viewInterface);
 
   @override
   void onInit() {
@@ -36,11 +36,13 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
     viewModel.templateViewModel = HelperViewModel(
       name: basicArguments?.helperName,
       priority: basicArguments?.priority ?? 0,
-      triggerType: basicArguments?.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
+      triggerType:
+          basicArguments?.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
       versionMinId: basicArguments?.versionMinId ?? 1,
       versionMaxId: basicArguments?.versionMaxId ?? 2,
     );
-    viewModel.helperViewModel = EditorViewModelFactory.transform(viewModel.templateViewModel, basicArguments?.helperType);
+    viewModel.helperViewModel = EditorViewModelFactory.transform(
+        viewModel.templateViewModel, basicArguments?.helperType);
     chooseHelperType();
   }
 
@@ -52,16 +54,19 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
   chooseHelperType() {
     switch (basicArguments?.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
-        viewInterface.addFullscreenHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        viewInterface.addFullscreenHelperEditor(
+            viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;
       case HelperType.SIMPLE_HELPER:
-        viewInterface.addSimpleHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        viewInterface.addSimpleHelperEditor(
+            viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         viewInterface.addAnchoredFullscreenEditor(this);
         break;
       case HelperType.UPDATE_HELPER:
-        viewInterface.addUpdateHelperEditor(viewModel.helperViewModel, checkIfEditableWidgetFormValid);
+        viewInterface.addUpdateHelperEditor(
+            viewModel.helperViewModel, checkIfEditableWidgetFormValid);
         break;
       default:
         throw "Not implemented type";
@@ -89,24 +94,26 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
       switch (basicArguments?.helperType) {
         case HelperType.HELPER_FULL_SCREEN:
           var model = viewModel.helperViewModel as FullscreenHelperViewModel;
-          await helperService.createFullScreenHelper(
-            basicArguments.pageId,
-            EditorEntityFactory.buildFullscreenArgs(_config, model)
-          );
+          await helperService.createFullScreenHelper(basicArguments.pageId,
+              EditorEntityFactory.buildFullscreenArgs(_config, model));
           break;
-        // case HelperType.SIMPLE_HELPER:
-        //   break;
+        case HelperType.SIMPLE_HELPER:
+          var model = viewModel.helperViewModel as SimpleHelperViewModel;
+          await helperService.createSimpleHelper(basicArguments.pageId,
+              EditorEntityFactory.buildSimpleArgs(_config, model));
+          break;
         // case HelperType.ANCHORED_OVERLAYED_HELPER:
         //   break;
-        // case HelperType.UPDATE_HELPER:
-        //   break;
+        case HelperType.UPDATE_HELPER:
+          var model = viewModel.helperViewModel as UpdateHelperViewModel;
+          await helperService.createUpdateHelper(basicArguments.pageId,
+              EditorEntityFactory.buildUpdateArgs(_config, model));
+          break;
         default:
           throw "NOT_IMPLEMENTED_TYPE";
           break;
       }
-    } catch (e) {
-
-    }
+    } catch (e) {}
     viewModel.isLoading = false;
     // TODO show a success screen
     this.refreshView();

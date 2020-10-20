@@ -4,6 +4,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
 
@@ -71,6 +72,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                           ValueKey('palEditorSimpleHelperWidgetToolbar'),
                       textFormFieldKey: ValueKey('palSimpleHelperDetailField'),
                       onChanged: presenter.onDetailsFieldChanged,
+                      onTextStyleChanged: presenter.onDetailsTextStyleChanged,
                       maxLines: null,
                       maximumCharacterLength: 150,
                       minimumCharacterLength: 1,
@@ -92,7 +94,10 @@ class EditorSimpleHelperPage extends StatelessWidget
                       ),
                       textStyle: TextStyle(
                         color: viewModel.detailsField?.fontColor?.value,
-                        fontSize: viewModel.detailsField?.fontSize?.value,
+                        fontSize:
+                            viewModel.detailsField?.fontSize?.value?.toDouble(),
+                        fontWeight: FontWeightMapper.toFontWeight(
+                            viewModel.detailsField?.fontWeight?.value),
                       ),
                     ),
                   ),

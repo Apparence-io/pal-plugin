@@ -20,7 +20,7 @@ class FontEditorDialogPresenter
     this.viewModel.fontKeys = FontKeys(
       fontFamilyNameKey: (actualTextStyle?.fontFamily != null) ? actualTextStyle.fontFamily.toString().split('_regular').first : 'Montserrat',
       fontWeightNameKey:
-          FontWeightMapper.getFontKey(actualTextStyle.fontWeight),
+          FontWeightMapper.toFontKey(actualTextStyle.fontWeight),
     );
 
     WidgetsBinding.instance.addPostFrameCallback(afterFirstLayout);

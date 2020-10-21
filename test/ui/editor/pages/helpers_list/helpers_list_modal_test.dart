@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
@@ -10,41 +11,52 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_vi
 
 class HelpersListModalLoaderMock extends Mock
     implements HelpersListModalLoader {}
+
+class EditorHelperServiceMock extends Mock implements EditorHelperService {}
+
 class PalEditModeStateServiceMock extends Mock
     implements PalEditModeStateService {}
 
 main() {
   group('Helpers list modal', () {
     HelpersListModalLoader loader = HelpersListModalLoaderMock();
-    PalEditModeStateService palEditModeStateService = PalEditModeStateService.build();
+    EditorHelperService helperService = EditorHelperServiceMock();
+    PalEditModeStateService palEditModeStateService =
+        PalEditModeStateService.build();
     HelpersListModal helpersListModal = HelpersListModal(
       loader: loader,
       palEditModeStateService: palEditModeStateService,
+      helperService: helperService,
     );
 
     when(loader.load()).thenAnswer(
-        (realInvocation) => Future.value(HelpersListModalModel(helpers: [
-              HelperEntity(
-                id: '1',
-                name: 'aName',
-                triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-                versionMin: '1.0.1',
-                versionMax: '2.0.0',
-              ),
-              HelperEntity(
-                id: '2',
-                name: 'aName 2',
-                triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-                versionMin: '1.0.2',
-              ),
-              HelperEntity(
-                id: '3',
-                name: 'aName 3',
-                triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-                versionMin: '1.8.2',
-                versionMax: '2.3.0',
-              ),
-            ])));
+      (realInvocation) => Future.value(
+        HelpersListModalModel(
+          helpers: [
+            HelperEntity(
+              id: '1',
+              name: 'aName',
+              triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+              versionMin: '1.0.1',
+              versionMax: '2.0.0',
+            ),
+            HelperEntity(
+              id: '2',
+              name: 'aName 2',
+              triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+              versionMin: '1.0.2',
+            ),
+            HelperEntity(
+              id: '3',
+              name: 'aName 3',
+              triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+              versionMin: '1.8.2',
+              versionMax: '2.3.0',
+            ),
+          ],
+        ),
+      ),
+    );
 
     before(WidgetTester tester) async {
       await tester.pumpWidget(
@@ -63,9 +75,7 @@ main() {
       await before(tester);
       await tester.pumpAndSettle();
 
-      expect(find.byKey(ValueKey('palHelpersListModal')), findsOneWidget);
-
-      expect(find.byKey(ValueKey('palHelpersListModalClose')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_HelpersListModal_Close')), findsOneWidget);
       expect(
           find.byKey(ValueKey('palHelpersListModalContent')), findsOneWidget);
 

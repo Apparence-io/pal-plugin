@@ -30,9 +30,11 @@ abstract class CreateHelperView {
   void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter);
 }
 
-class CreateHelperPage extends StatefulWidget {
+class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   CreateHelperPage({
     Key key,
@@ -40,15 +42,8 @@ class CreateHelperPage extends StatefulWidget {
     this.pageId,
   });
 
-  @override
-  _CreateHelperPageState createState() => _CreateHelperPageState();
-}
-
-class _CreateHelperPageState extends State<CreateHelperPage>
-    implements CreateHelperView {
   final _mvvmPageBuilder =
       MVVMPageBuilder<CreateHelperPresenter, CreateHelperModel>();
-
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
@@ -57,7 +52,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
       presenterBuilder: (context) => CreateHelperPresenter(this),
       builder: (context, presenter, model) {
         return Scaffold(
-          key: ValueKey('CreateHelper'),
+          key: _scaffoldKey,
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -125,7 +120,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
             ),
             child: Container(
               width: double.infinity,
-              child: _buildNextButton(model, presenter),
+              child: _buildNextButton(context, model, presenter),
             ),
           ),
         ],
@@ -154,6 +149,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   }
 
   Widget _buildNextButton(
+    final BuildContext context,
     final CreateHelperModel model,
     final CreateHelperPresenter presenter,
   ) {
@@ -179,21 +175,20 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   void launchHelperEditor(final CreateHelperModel model) {
     // Open editor overlay
     HelperEditorPageArguments args = HelperEditorPageArguments(
-      widget.hostedAppNavigatorKey,
-      widget.pageId,
+      hostedAppNavigatorKey,
+      pageId,
       helperName: model.helperNameController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
       helperTheme: model.selectedHelperTheme,
       helperType: model.selectedHelperType,
     );
-    var elementFinder =
-        ElementFinder(widget.hostedAppNavigatorKey.currentContext);
+    var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
     showOverlayed(
-      widget.hostedAppNavigatorKey,
+      hostedAppNavigatorKey,
       HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
     );
     // Go back
-    Navigator.of(context).pop(true);
+    Navigator.of(_scaffoldKey.currentContext).pop(true);
   }
 
   @override

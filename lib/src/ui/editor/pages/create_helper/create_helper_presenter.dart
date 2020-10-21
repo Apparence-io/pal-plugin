@@ -33,6 +33,7 @@ class CreateHelperPresenter
     this.viewModel.infosForm = GlobalKey<FormState>();
 
     this.viewModel.helperNameController = TextEditingController();
+    this.viewModel.minVersionController = TextEditingController();
     this.viewModel.triggerTypes = [];
     HelperTriggerType.values.forEach((HelperTriggerType type) {
       this.viewModel.triggerTypes.add(

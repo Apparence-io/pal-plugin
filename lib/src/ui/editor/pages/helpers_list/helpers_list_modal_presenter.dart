@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
@@ -9,6 +11,7 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_vi
 
 class HelpersListModalPresenter
     extends Presenter<HelpersListModalModel, HelpersListModalView> {
+  final EditorHelperService helperService;
   final HelpersListModalLoader loader;
   final PalEditModeStateService palEditModeStateService;
 
@@ -16,10 +19,15 @@ class HelpersListModalPresenter
     HelpersListModalView viewInterface, {
     @required this.loader,
     @required this.palEditModeStateService,
+    @required this.helperService,
   }) : super(HelpersListModalModel(), viewInterface);
 
   @override
   Future onInit() async {
+    this.load();
+  }
+
+  void load() {
     this.viewModel.isLoading = true;
     this.viewModel.noMore = false;
     this.viewModel.loadingMore = false;
@@ -68,5 +76,31 @@ class HelpersListModalPresenter
 
   showEditorBubble(bool visible) {
     this.palEditModeStateService.showEditorBubble.value = visible;
+  }
+
+  sendNewHelpersOrder(
+    int oldIndex,
+    int newIndex,
+  ) async {
+    Map<String, int> priority = {};
+    List<HelperEntity> modifiedHelpers;
+    if (newIndex < oldIndex) {
+      modifiedHelpers = this.viewModel.helpers.sublist(newIndex, oldIndex + 1);
+    } else {
+      modifiedHelpers = this.viewModel.helpers.sublist(oldIndex, newIndex  + 1);
+    }
+    for (var helper in modifiedHelpers) {
+      priority.putIfAbsent(helper.id, () => this.viewModel.helpers.indexOf(helper));
+    }
+
+    final result = await this.helperService.updateHelperPriority(
+          this.viewModel.pageId,
+          priority,
+        );
+    // Check if changing was succeded or not
+    if (result == null) {
+      // There is an error, reload helpers
+      this.load();
+    }
   }
 }

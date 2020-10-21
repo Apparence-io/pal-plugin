@@ -29,4 +29,24 @@ class EditorHelperRepository extends BaseHttpRepository {
     final Response response = await this.httpClient.get('editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
     return this._adapter.parsePage(response.body);
   }
+
+  Future<HelperEntity> updateHelperPriority(
+    final String pageId,
+    final Map<String, int> priority,
+  ) async {
+    // FIXME: Mocked
+    // final Response response = await this.httpClient.put('editor/pages/$pageId/helpers', body: {
+    //   oldIndex,
+    //   newIndex,
+    // });
+    // return this._adapter.parse(response.body);
+    //
+    await Future.delayed(Duration(milliseconds: 1200));
+    return Future.value(
+      HelperEntity(
+        id: '30',
+        name: 'test',
+      ),
+    );
+  }
 }

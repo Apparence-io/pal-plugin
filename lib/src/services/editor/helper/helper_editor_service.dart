@@ -19,6 +19,11 @@ abstract class EditorHelperService {
 
   Future<HelperEntity> createUpdateHelper(
       final String pageId, final CreateUpdateHelper createArgs);
+
+  Future<HelperEntity> updateHelperPriority(
+    final String pageId,
+    final Map<String, int> priority,
+  );
 }
 
 class _EditorHelperHttpService implements EditorHelperService {
@@ -173,5 +178,10 @@ class _EditorHelperHttpService implements EditorHelperService {
   Future<Pageable<HelperEntity>> getPage(
       String pageId, int page, int pageSize) {
     return this._editorHelperRepository.getPage(pageId, page, pageSize);
+  }
+
+  @override
+  Future<HelperEntity> updateHelperPriority(String pageId, Map<String, int> priority) {
+    return this._editorHelperRepository.updateHelperPriority(pageId, priority);
   }
 }

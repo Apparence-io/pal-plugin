@@ -109,7 +109,7 @@ void main() {
               fontSize: 14,
               fontFamily: "cortanaBis"),
           backgroundColor: "#CCF",
-          topImageId: "2513aeaezaed213254df");
+          topImageId: 13);
       // what our service should create from the args
       HelperEntity myHelper = HelperEntity(
           name: args.config.name,
@@ -197,7 +197,7 @@ void main() {
             )
           ],
           backgroundColor: "#CCF",
-          topImageId: "2513aeaezaed213254df");
+          topImageId: 13);
       // what our service should create
       HelperEntity myHelper = HelperEntity(
           name: args.config.name,

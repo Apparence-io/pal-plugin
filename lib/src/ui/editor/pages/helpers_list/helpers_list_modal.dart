@@ -394,6 +394,9 @@ class _HelpersListModalState extends State<HelpersListModal>
     HelpersListModalPresenter presenter,
     List<HelperEntity> helpers,
   ) {
+    // First backup list before re-organize
+    presenter.backupHelpersList();
+
     // Change on Front
     if (newIndex > oldIndex) {
       newIndex -= 1;

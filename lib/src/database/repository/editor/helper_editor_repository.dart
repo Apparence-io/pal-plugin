@@ -10,43 +10,40 @@ import 'package:palplugin/src/database/repository/base_repository.dart';
 import 'package:palplugin/src/services/http_client/base_client.dart';
 
 class EditorHelperRepository extends BaseHttpRepository {
-
   final HelperEntityAdapter _adapter = HelperEntityAdapter();
 
   EditorHelperRepository({@required HttpClient httpClient})
-    : super(httpClient: httpClient);
+      : super(httpClient: httpClient);
 
-  Future<HelperEntity> createHelper(final String pageId, final HelperEntity createHelper) async {
+  Future<HelperEntity> createHelper(
+      final String pageId, final HelperEntity createHelper) async {
     final Response response = await this
-      .httpClient
-      .post('editor/pages/$pageId/helpers', body: jsonEncode(createHelper));
-    if(response == null || response.body == null)
+        .httpClient
+        .post('editor/pages/$pageId/helpers', body: jsonEncode(createHelper));
+    if (response == null || response.body == null)
       throw new UnknownHttpError("NO_RESULT");
     return this._adapter.parse(response.body);
   }
 
-  Future<Pageable<HelperEntity>> getPage(String pageId, int page, int pageSize) async {
-    final Response response = await this.httpClient.get('editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
+  Future<Pageable<HelperEntity>> getPage(
+      String pageId, int page, int pageSize) async {
+    final Response response = await this
+        .httpClient
+        .get('editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
     return this._adapter.parsePage(response.body);
   }
 
-  Future<HelperEntity> updateHelperPriority(
+  Future<void> updateHelperPriority(
     final String pageId,
     final Map<String, int> priority,
   ) async {
     // FIXME: Mocked
-    // final Response response = await this.httpClient.put('editor/pages/$pageId/helpers', body: {
-    //   oldIndex,
-    //   newIndex,
-    // });
-    // return this._adapter.parse(response.body);
-    //
+    // await this.httpClient.patch(
+    //       'editor/pages/$pageId/helpers/priorities',
+    //       body: jsonEncode(priority),
+    //     );
+    // END
+
     await Future.delayed(Duration(milliseconds: 1200));
-    return Future.value(
-      HelperEntity(
-        id: '30',
-        name: 'test',
-      ),
-    );
   }
 }

@@ -78,29 +78,51 @@ class HelpersListModalPresenter
     this.palEditModeStateService.showEditorBubble.value = visible;
   }
 
+  backupHelpersList() {
+    this.viewModel.backupHelpers = List.from(this.viewModel.helpers);
+  }
+
   sendNewHelpersOrder(
     int oldIndex,
     int newIndex,
   ) async {
     Map<String, int> priority = {};
     List<HelperEntity> modifiedHelpers;
+
     if (newIndex < oldIndex) {
-      modifiedHelpers = this.viewModel.helpers.sublist(newIndex, oldIndex + 1);
+      modifiedHelpers = this.viewModel.helpers.sublist(
+            newIndex,
+            oldIndex + 1,
+          );
     } else {
-      modifiedHelpers = this.viewModel.helpers.sublist(oldIndex, newIndex  + 1);
+      if (newIndex < this.viewModel.helpers.length) {
+        newIndex++;
+      }
+      modifiedHelpers = this.viewModel.helpers.sublist(
+            oldIndex,
+            newIndex,
+          );
     }
     for (var helper in modifiedHelpers) {
-      priority.putIfAbsent(helper.id, () => this.viewModel.helpers.indexOf(helper));
+      priority.putIfAbsent(
+        helper.name,
+        () => this.viewModel.helpers.indexOf(helper),
+      );
+    }
+    for (var map in priority.entries) {
+      print(map);
     }
 
-    final result = await this.helperService.updateHelperPriority(
-          this.viewModel.pageId,
-          priority,
-        );
     // Check if changing was succeded or not
-    if (result == null) {
-      // There is an error, reload helpers
-      this.load();
+    try {
+      await this.helperService.updateHelperPriority(
+            this.viewModel.pageId,
+            priority,
+          );
+    } catch (error) {
+      // There is an error, revert change
+      this.viewModel.helpers = this.viewModel.backupHelpers;
+      this.refreshView();
     }
   }
 }

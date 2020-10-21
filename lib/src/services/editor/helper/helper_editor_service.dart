@@ -20,7 +20,7 @@ abstract class EditorHelperService {
   Future<HelperEntity> createUpdateHelper(
       final String pageId, final CreateUpdateHelper createArgs);
 
-  Future<HelperEntity> updateHelperPriority(
+  Future<void> updateHelperPriority(
     final String pageId,
     final Map<String, int> priority,
   );
@@ -181,7 +181,7 @@ class _EditorHelperHttpService implements EditorHelperService {
   }
 
   @override
-  Future<HelperEntity> updateHelperPriority(String pageId, Map<String, int> priority) {
+  Future<void> updateHelperPriority(String pageId, Map<String, int> priority) {
     return this._editorHelperRepository.updateHelperPriority(pageId, priority);
   }
 }

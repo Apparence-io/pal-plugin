@@ -37,13 +37,9 @@ class EditorHelperRepository extends BaseHttpRepository {
     final String pageId,
     final Map<String, int> priority,
   ) async {
-    // FIXME: Mocked
-    // await this.httpClient.patch(
-    //       'editor/pages/$pageId/helpers/priorities',
-    //       body: jsonEncode(priority),
-    //     );
-    // END
-
-    await Future.delayed(Duration(milliseconds: 1200));
+     await this.httpClient.patch(
+           'editor/pages/$pageId/helpers/priorities',
+           body: jsonEncode(priority),
+         );
   }
 }

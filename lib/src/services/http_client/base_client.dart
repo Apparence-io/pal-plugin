@@ -76,6 +76,17 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
         headers: headers, body: body, encoding: encoding));
   }
 
+  @override
+  Future<Response> patch(final url,
+      {Map<String, String> headers,
+        final body,
+        final Encoding encoding}) async {
+    headers = _initHeader(headers);
+
+    return this._checkResponse(await super.patch('${this._baseUrl}/$url',
+        headers: headers, body: body, encoding: encoding));
+  }
+
   Map<String, String> _initHeader(Map<String, String> headers) {
     if (headers == null) {
       headers = new Map();

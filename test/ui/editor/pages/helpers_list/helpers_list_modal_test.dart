@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
+import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+
+import '../../../../pal_test_utilities.dart';
 
 class HelpersListModalLoaderMock extends Mock
     implements HelpersListModalLoader {}
@@ -28,6 +32,7 @@ main() {
       palEditModeStateService: palEditModeStateService,
       helperService: helperService,
     );
+    HelpersListModalPresenter presenter;
 
     when(loader.load()).thenAnswer(
       (realInvocation) => Future.value(
@@ -35,7 +40,7 @@ main() {
           helpers: [
             HelperEntity(
               id: '1',
-              name: 'aName',
+              name: 'aName 1',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
               versionMin: '1.0.1',
               versionMax: '2.0.0',
@@ -69,19 +74,36 @@ main() {
           },
         ),
       );
+
+      final presenterFinder =
+          find.byKey(ValueKey('pal_HelpersListModal_MvvmBuilder'));
+      final page = presenterFinder.evaluate().first.widget
+          as PresenterInherited<HelpersListModalPresenter,
+              HelpersListModalModel>;
+      presenter = page.presenter;
+    }
+
+    void checkHelpersOrder(List<String> oldHelpers) {
+      List<String> newHelpersName = presenter.viewModel.helpers
+          .map((HelperEntity helperEntity) => helperEntity.name)
+          .toList();
+      expect(oldHelpers, orderedEquals(newHelpersName));
     }
 
     testWidgets('should display properly', (tester) async {
       await before(tester);
       await tester.pumpAndSettle();
 
-      expect(find.byKey(ValueKey('pal_HelpersListModal_Close')), findsOneWidget);
+      expect(
+          find.byKey(ValueKey('pal_HelpersListModal_Close')), findsOneWidget);
       expect(
           find.byKey(ValueKey('palHelpersListModalContent')), findsOneWidget);
 
       expect(find.text('PAL editor'), findsOneWidget);
       expect(
           find.text('List of available helpers on this page'), findsOneWidget);
+      expect(find.text('💡 You can re-order helpers by long tap on them.'),
+          findsOneWidget);
 
       expect(find.byKey(ValueKey('pal_HelpersListModal_New')), findsOneWidget);
       expect(find.byIcon(Icons.add), findsOneWidget);
@@ -91,7 +113,7 @@ main() {
       await before(tester);
       await tester.pumpAndSettle();
 
-      expect(find.text('aName'), findsOneWidget);
+      expect(find.text('aName 1'), findsOneWidget);
       expect(find.text('1.0.1 - 2.0.0'), findsOneWidget);
 
       expect(find.text('aName 2'), findsOneWidget);
@@ -107,7 +129,7 @@ main() {
       await before(tester);
       await tester.pumpAndSettle();
 
-      Finder helper3Button = find.byKey(ValueKey('palHelpersListModalTile2'));
+      Finder helper3Button = find.byKey(ValueKey('pal_HelpersListModal_Tile2'));
       await tester.ensureVisible(helper3Button);
       await tester.tap(helper3Button);
       await tester.pumpAndSettle();
@@ -125,6 +147,30 @@ main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Welcome editor new'), findsOneWidget);
+    });
+
+    testWidgets('should re-order helpers by drag & drop', (tester) async {
+      await before(tester);
+      when(helperService.updateHelperPriority(any, any))
+          .thenAnswer((realInvocation) => Future.value());
+      await tester.pumpAndSettle();
+
+      checkHelpersOrder(['aName 1', 'aName 2', 'aName 3']);
+      await longPressDrag(tester, find.text('aName 1'), find.text('aName 2'));
+      checkHelpersOrder(['aName 2', 'aName 3', 'aName 1']);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('should cancel drag & drop if any error occurs',
+        (tester) async {
+      await before(tester);
+      when(helperService.updateHelperPriority(any, any))
+          .thenAnswer((realInvocation) => throw 'an error :/');
+      await tester.pumpAndSettle();
+
+      checkHelpersOrder(['aName 1', 'aName 2', 'aName 3']);
+      await longPressDrag(tester, find.text('aName 1'), find.text('aName 2'));
+      checkHelpersOrder(['aName 1', 'aName 2', 'aName 3']);
     });
   });
 }

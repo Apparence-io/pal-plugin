@@ -7,7 +7,6 @@ import 'package:palplugin/src/services/editor/page/page_editor_service.dart';
 import 'package:palplugin/src/services/editor/project/app_icon_grabber_delegate.dart';
 import 'package:palplugin/src/services/editor/project/project_editor_service.dart';
 import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
-import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/services/page_server.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';

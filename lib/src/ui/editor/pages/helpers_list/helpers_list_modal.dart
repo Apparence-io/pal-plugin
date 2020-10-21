@@ -207,7 +207,7 @@ class _HelpersListModalState extends State<HelpersListModal>
     int index = 0;
     for (HelperEntity anHelper in model.helpers) {
       Widget cell = Padding(
-        key: ValueKey('palHelpersListModalTile${index++}'),
+        key: ValueKey('pal_HelpersListModal_Tile${index++}'),
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 24.0),
         child: HelperTileWidget(
           name: anHelper?.name,

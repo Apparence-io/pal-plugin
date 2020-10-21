@@ -24,6 +24,8 @@ abstract class EditorHelperService {
     final String pageId,
     final Map<String, int> priority,
   );
+
+  Future<bool> deleteHelper(String helperId);
 }
 
 class _EditorHelperHttpService implements EditorHelperService {
@@ -183,5 +185,11 @@ class _EditorHelperHttpService implements EditorHelperService {
   @override
   Future<void> updateHelperPriority(String pageId, Map<String, int> priority) {
     return this._editorHelperRepository.updateHelperPriority(pageId, priority);
+  }
+
+  @override
+  Future<bool> deleteHelper(String helperId) {
+    // TODO: implement deleteHelper
+    throw UnimplementedError();
   }
 }

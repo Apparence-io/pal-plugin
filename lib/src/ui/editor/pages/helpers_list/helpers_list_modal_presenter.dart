@@ -105,12 +105,9 @@ class HelpersListModalPresenter
     }
     for (var helper in modifiedHelpers) {
       priority.putIfAbsent(
-        helper.name,
+        helper.id,
         () => this.viewModel.helpers.indexOf(helper),
       );
-    }
-    for (var map in priority.entries) {
-      print(map);
     }
 
     // Check if changing was succeded or not

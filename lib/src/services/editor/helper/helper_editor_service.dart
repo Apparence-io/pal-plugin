@@ -11,6 +11,8 @@ abstract class EditorHelperService {
   Future<Pageable<HelperEntity>> getPage(
       final String route, final int page, final int pageSize);
 
+  Future<HelperEntity> _createHelper(String pageId, HelperEntity createHelper);
+
   Future<HelperEntity> createSimpleHelper(
       final String pageId, final CreateSimpleHelper createArgs);
 
@@ -35,7 +37,7 @@ class _EditorHelperHttpService implements EditorHelperService {
 
   Future<HelperEntity> createSimpleHelper(
       final String pageId, final CreateSimpleHelper createArgs) {
-    return _editorHelperRepository.createHelper(
+    return this._createHelper(
       pageId,
       HelperEntity(
         name: createArgs.config.name,
@@ -94,7 +96,7 @@ class _EditorHelperHttpService implements EditorHelperService {
       helperTexts[3].key = FullscreenHelperKeys.NEGATIV_KEY;
     helperTexts.removeWhere((element) => element == null);
 
-    return _editorHelperRepository.createHelper(
+    return this._createHelper(
       pageId,
       HelperEntity(
         name: createArgs.config.name,
@@ -152,7 +154,7 @@ class _EditorHelperHttpService implements EditorHelperService {
           key:
               "${UpdatescreenHelperKeys.LINES_KEY}:${createArgs.lines.indexOf(element)}"));
     }
-    return _editorHelperRepository.createHelper(
+    return this._createHelper(
         pageId,
         HelperEntity(
             name: createArgs.config.name,
@@ -191,5 +193,17 @@ class _EditorHelperHttpService implements EditorHelperService {
   Future<bool> deleteHelper(String helperId) {
     // TODO: implement deleteHelper
     throw UnimplementedError();
+  }
+
+  Future<HelperEntity> _createHelper(String pageId, HelperEntity createHelper) {
+    //TODO: Get page Id
+    // Create page Id if null
+    // TODO: Get min version Id
+    // Create max version Id if null
+    // Create Helper with page Id & min version Id
+    return _editorHelperRepository.createHelper(
+      pageId,
+      createHelper,
+    );
   }
 }

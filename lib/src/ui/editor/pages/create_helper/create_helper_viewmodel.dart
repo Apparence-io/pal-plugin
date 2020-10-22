@@ -13,6 +13,8 @@ class CreateHelperModel extends MVVMModel {
   // Step 1
   GlobalKey<FormState> infosForm;
   String selectedTriggerType;
+  String appVersion;
+  bool isAppVersionLoading;
   TextEditingController helperNameController;
   TextEditingController minVersionController;
   List<HelperTriggerTypeDisplay> triggerTypes;

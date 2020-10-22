@@ -10,10 +10,11 @@ class BorderedTextField extends StatelessWidget {
   final List<TextInputFormatter> inputFormatters;
   final bool enableSuggestions;
   final bool autovalidate;
+  final bool isLoading;
 
   const BorderedTextField({
     Key key,
-    @required this.hintText,
+    this.hintText,
     @required this.validator,
     @required this.controller,
     this.inputFormatters,
@@ -21,29 +22,47 @@ class BorderedTextField extends StatelessWidget {
     this.enableSuggestions = false,
     this.autovalidate = false,
     this.onValueChanged,
+    this.isLoading = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      autovalidateMode: (autovalidate)
-          ? AutovalidateMode.onUserInteraction
-          : AutovalidateMode.disabled,
-      controller: controller,
-      enableSuggestions: enableSuggestions,
-      keyboardType: textInputType,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(7.0))),
-        hintText: hintText,
-      ),
-      inputFormatters: inputFormatters,
-      validator: validator,
-      onChanged: (String newValue) {
-        if (this.onValueChanged != null) {
-          this.onValueChanged(newValue);
-        }
-      },
+    return Stack(
+      children: [
+        TextFormField(
+          autovalidateMode: (autovalidate)
+              ? AutovalidateMode.onUserInteraction
+              : AutovalidateMode.disabled,
+          controller: controller,
+          enableSuggestions: enableSuggestions,
+          keyboardType: textInputType,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+                borderRadius: const BorderRadius.all(Radius.circular(7.0))),
+            hintText: hintText,
+            
+          ),
+          inputFormatters: inputFormatters,
+          validator: validator,
+          onChanged: (String newValue) {
+            if (this.onValueChanged != null) {
+              this.onValueChanged(newValue);
+            }
+          },
+        ),
+        if (isLoading && hintText == null && (controller.text == null || controller.text.length <= 0))
+          Positioned(
+            top: 25.0,
+            left: 15,
+            child: SizedBox(
+              height: 10.0,
+              width: 10.0,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0,
+              ),
+            ),
+          )
+      ],
     );
   }
 }

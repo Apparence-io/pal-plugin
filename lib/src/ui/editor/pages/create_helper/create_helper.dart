@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/router.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
@@ -33,12 +35,14 @@ abstract class CreateHelperView {
 class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
+  final PackageVersionReader packageVersionReader;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   CreateHelperPage({
     Key key,
     this.hostedAppNavigatorKey,
+    this.packageVersionReader,
     this.pageId,
   });
 
@@ -49,7 +53,11 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     return _mvvmPageBuilder.build(
       key: UniqueKey(),
       context: context,
-      presenterBuilder: (context) => CreateHelperPresenter(this),
+      presenterBuilder: (context) => CreateHelperPresenter(
+        this,
+        packageVersionReader: packageVersionReader ??
+            EditorInjector.of(context).packageVersionReader,
+      ),
       builder: (context, presenter, model) {
         return Scaffold(
           key: _scaffoldKey,

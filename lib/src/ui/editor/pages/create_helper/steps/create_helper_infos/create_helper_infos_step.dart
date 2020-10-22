@@ -38,15 +38,17 @@ class CreateHelperInfosStep extends StatelessWidget {
   }
 
   void _checkFormValid() {
-    model.isFormValid = model.infosForm.currentState.validate();
-    presenter.refreshView();
+    if (!model.isAppVersionLoading) {
+      model.isFormValid = model.infosForm.currentState.validate();
+      presenter.refreshView();
+    }
   }
 
   Widget _buildForm() {
     return Form(
       key: model.infosForm,
       onChanged: _checkFormValid,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: AutovalidateMode.disabled,
       child: Wrap(
         runSpacing: 17.0,
         children: [
@@ -73,10 +75,11 @@ class CreateHelperInfosStep extends StatelessWidget {
             label: 'Minimum version',
             widget: BorderedTextField(
               key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
-              hintText: '1.0.0',
+              // hintText: '1.0.0',
               textInputType: TextInputType.numberWithOptions(decimal: true),
               controller: model.minVersionController,
               validator: _checkValidVersion,
+              isLoading: model.isAppVersionLoading,
             ),
           ),
         ],

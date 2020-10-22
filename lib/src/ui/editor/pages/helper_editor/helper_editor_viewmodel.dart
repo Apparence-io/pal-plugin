@@ -59,19 +59,19 @@ class FullscreenHelperViewModel extends HelperViewModel {
   final TextFormFieldNotifier descriptionField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
     fontSize: 14,
-    text: '',
+    text: 'Une description',
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier positivButtonField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
     fontSize: 14,
-    text: '',
+    text: 'A poisitiv button',
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier negativButtonField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
     fontSize: 14,
-    text: '',
+    text: 'A negativ button',
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
 

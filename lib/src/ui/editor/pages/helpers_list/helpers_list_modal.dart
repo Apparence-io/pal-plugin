@@ -75,7 +75,7 @@ class _HelpersListModalState extends State<HelpersListModal>
         this,
         loader: this.widget.loader ??
             HelpersListModalLoader(
-                EditorInjector.of(context).pageService,
+                EditorInjector.of(context).pageEditorService,
                 EditorInjector.of(context).helperService,
                 EditorInjector.of(context).routeObserver),
         palEditModeStateService: this.widget.palEditModeStateService ??

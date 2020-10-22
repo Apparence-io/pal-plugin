@@ -17,8 +17,10 @@ class PageRepository extends BaseHttpRepository {
   Future<PageEntity> createPage(
     final PageEntity createPage,
   ) async {
-    final Response response =
-        await this.httpClient.post('pages', body: jsonEncode(createPage));
+    final Response response = await this.httpClient.post('editor/pages',
+        body: jsonEncode({
+          'route': createPage.route,
+        }));
     return this._adapter.parse(response.body);
   }
 
@@ -27,14 +29,21 @@ class PageRepository extends BaseHttpRepository {
     return this._adapter.parsePage(response.body);
   }
 
-  Future<Pageable<PageEntity>> getPage(final String route) async {
-    final Response response = await this.httpClient.get('editor/pages?route=$route');
-    return this._adapter.parsePage(response.body);
+  Future<PageEntity> getPage(final String route) {
+    return this
+        .httpClient
+        .get('editor/pages?route=$route&pageSize=1')
+        .then((res) {
+      Pageable<PageEntity> pages = _adapter.parsePage(res.body);
+      return (pages.entities != null && pages.entities.length > 0)
+          ? pages.entities.first
+          : null;
+    });
   }
 
   Future<Pageable<PageEntity>> getClientPage(final String route) async {
-    final Response response = await this.httpClient.get('client/pages?route=$route');
+    final Response response =
+        await this.httpClient.get('client/pages?route=$route');
     return this._adapter.parsePage(response.body);
   }
-
 }

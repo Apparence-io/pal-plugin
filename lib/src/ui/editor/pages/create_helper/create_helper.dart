@@ -186,6 +186,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       hostedAppNavigatorKey,
       pageId,
       helperName: model.helperNameController?.value?.text,
+      helperMinVersion: model.minVersionController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
       helperTheme: model.selectedHelperTheme,
       helperType: model.selectedHelperType,

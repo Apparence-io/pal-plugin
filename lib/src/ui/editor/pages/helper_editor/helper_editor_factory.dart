@@ -38,7 +38,7 @@ class EditorEntityFactory {
             fontSize: model.descriptionField?.fontSize?.value,
             fontFamily: model.descriptionField?.fontFamily?.value),
         backgroundColor: model.backgroundColor.value.toHex(),
-        topImageId: 13, //FIXME missing value
+        topImageUrl: 'https://i.picsum.photos/id/943/200/200.jpg', //FIXME missing value
         positivButton: HelperTextConfig(
             text: model.positivButtonField?.text?.value,
             fontColor: model.positivButtonField?.fontColor?.value?.toHex(),

@@ -11,8 +11,6 @@ abstract class EditorHelperService {
   Future<Pageable<HelperEntity>> getPage(
       final String route, final int page, final int pageSize);
 
-  Future<HelperEntity> _createHelper(String pageId, HelperEntity createHelper);
-
   Future<HelperEntity> createSimpleHelper(
       final String pageId, final CreateSimpleHelper createArgs);
 
@@ -37,7 +35,7 @@ class _EditorHelperHttpService implements EditorHelperService {
 
   Future<HelperEntity> createSimpleHelper(
       final String pageId, final CreateSimpleHelper createArgs) {
-    return this._createHelper(
+    return _editorHelperRepository.createHelper(
       pageId,
       HelperEntity(
         name: createArgs.config.name,
@@ -60,7 +58,7 @@ class _EditorHelperHttpService implements EditorHelperService {
         helperBoxes: [
           HelperBoxEntity(
             key: SimpleHelperKeys.CONTENT_KEY,
-            color: createArgs.backgroundColor,
+            backgroundColor: createArgs.backgroundColor,
           )
         ],
       ),
@@ -96,7 +94,7 @@ class _EditorHelperHttpService implements EditorHelperService {
       helperTexts[3].key = FullscreenHelperKeys.NEGATIV_KEY;
     helperTexts.removeWhere((element) => element == null);
 
-    return this._createHelper(
+    return _editorHelperRepository.createHelper(
       pageId,
       HelperEntity(
         name: createArgs.config.name,
@@ -110,12 +108,12 @@ class _EditorHelperHttpService implements EditorHelperService {
         helperBoxes: [
           HelperBoxEntity(
             key: FullscreenHelperKeys.BACKGROUND_KEY,
-            color: createArgs.backgroundColor,
+            backgroundColor: createArgs.backgroundColor,
           )
         ],
         helperImages: [
           HelperImageEntity(
-              id: createArgs.topImageId, key: FullscreenHelperKeys.IMAGE_KEY)
+              url: createArgs.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
         ],
       ),
     );
@@ -154,7 +152,7 @@ class _EditorHelperHttpService implements EditorHelperService {
           key:
               "${UpdatescreenHelperKeys.LINES_KEY}:${createArgs.lines.indexOf(element)}"));
     }
-    return this._createHelper(
+    return _editorHelperRepository.createHelper(
         pageId,
         HelperEntity(
             name: createArgs.config.name,
@@ -168,7 +166,7 @@ class _EditorHelperHttpService implements EditorHelperService {
             helperBoxes: [
               HelperBoxEntity(
                 key: UpdatescreenHelperKeys.BACKGROUND_KEY,
-                color: createArgs.backgroundColor,
+                backgroundColor: createArgs.backgroundColor,
               )
             ],
             helperImages: [

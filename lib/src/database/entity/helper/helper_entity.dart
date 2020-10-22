@@ -169,7 +169,7 @@ class HelperImageEntity {
     'url': url,
   };
 
-  HelperImageEntity({@required this.id, @required this.key, this.url});
+  HelperImageEntity({this.id, @required this.key, @required this.url});
 
   @override
   bool operator ==(Object other) =>
@@ -226,14 +226,14 @@ class HelperTextEntity {
 
 class HelperBoxEntity {
   int id;
-  String color;
+  String backgroundColor;
   String key;
 
-  HelperBoxEntity({this.id, @required this.color, @required this.key});
+  HelperBoxEntity({this.id, @required this.backgroundColor, @required this.key});
 
   Map<String, dynamic> toJson() => {
     'id': id,
-    'color': color,
+    'backgroundColor': backgroundColor,
     'key': key,
   };
 
@@ -242,16 +242,16 @@ class HelperBoxEntity {
       identical(this, other) ||
       other is HelperBoxEntity &&
           id == other.id &&
-          color == other.color &&
+          backgroundColor == other.backgroundColor &&
           key == other.key;
 
   @override
-  int get hashCode => id.hashCode ^ color.hashCode ^ key.hashCode;
+  int get hashCode => id.hashCode ^ backgroundColor.hashCode ^ key.hashCode;
 
   factory HelperBoxEntity.copy(HelperBoxEntity from) {
     return HelperBoxEntity(
       id: from.id,
-      color: from.color,
+      backgroundColor: from.backgroundColor,
       key: from.key,
     );
   }

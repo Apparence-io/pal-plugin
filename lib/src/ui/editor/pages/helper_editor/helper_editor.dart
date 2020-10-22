@@ -6,7 +6,10 @@ import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
+import 'package:palplugin/src/services/editor/page/page_editor_service.dart';
+import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
@@ -25,6 +28,7 @@ class HelperEditorPageArguments {
   final String pageId;
 
   final String helperName;
+  final String helperMinVersion;
   final int priority;
   final HelperTriggerType triggerType;
   final HelperTheme helperTheme;
@@ -36,6 +40,7 @@ class HelperEditorPageArguments {
     this.hostedAppNavigatorKey,
     this.pageId, {
     @required this.helperName,
+    @required this.helperMinVersion,
     this.priority,
     @required this.triggerType,
     @required this.helperTheme,
@@ -46,7 +51,6 @@ class HelperEditorPageArguments {
 }
 
 abstract class HelperEditorView {
-
   addFullscreenHelperEditor(FullscreenHelperViewModel model, Function isValid);
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid);
@@ -61,20 +65,24 @@ abstract class HelperEditorView {
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
-
   final ElementFinder elementFinder;
-
   final HelperEditorPageArguments helperEditorPageArguments;
-
   final EditorHelperService helperService;
+  final VersionEditorService versionEditorService;
+  final PalRouteObserver routeObserver;
+  final PageEditorService pageService;
 
-  final _mvvmPageBuilder = MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
 
   Widget _helperToEdit;
 
   HelperEditorPageBuilder(
     this.helperEditorPageArguments, {
     this.helperService,
+    this.routeObserver,
+    this.pageService,
+    this.versionEditorService,
     this.elementFinder,
   });
 
@@ -84,9 +92,12 @@ class HelperEditorPageBuilder implements HelperEditorView {
       context: context,
       presenterBuilder: (context) => HelperEditorPresenter(
         this,
-        helperEditorPageArguments,
-        helperService ?? EditorInjector.of(context).helperService,
-        elementFinder
+        basicArguments: helperEditorPageArguments,
+        helperService: helperService ?? EditorInjector.of(context).helperService,
+        pageService: pageService ?? EditorInjector.of(context).pageEditorService,
+        versionEditorService: versionEditorService ?? EditorInjector.of(context).versionEditorService,
+        routeObserver: routeObserver ?? EditorInjector.of(context).routeObserver,
+        elementFinder: elementFinder,
       ),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
@@ -114,8 +125,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
           color: Colors.black.withOpacity(.2),
           child: Stack(
             children: [
-              if (model.isEditingWidget)
-                Positioned.fill(child: _helperToEdit),
+              if (model.isEditingWidget) Positioned.fill(child: _helperToEdit),
               (!model.isLoading)
                   ? Stack(
                       key: ValueKey('palEditorModeInteractUI'),
@@ -156,7 +166,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         children: [
           EditorButton.cancel(
             PalTheme.of(context),
-            () => removeOverlay(),
+            presenter.onEditorClose,
             key: ValueKey("editModeCancel"),
           ),
           if (model.isEditingWidget)
@@ -164,14 +174,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
               padding: EdgeInsets.only(left: 16),
               child: EditorButton.validate(
                 PalTheme.of(context),
-                () async {
-                  await presenter.save();
-                  await Future.delayed(Duration(milliseconds: 500));
-                  removeOverlay();
-                },
+                presenter.onEditorValidate,
                 key: ValueKey("editModeValidate"),
               ),
-          ),
+            ),
         ],
       ),
     );

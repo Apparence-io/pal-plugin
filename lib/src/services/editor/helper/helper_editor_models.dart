@@ -31,15 +31,19 @@ class UpdatescreenHelperKeys {
 /// Base helper config
 ///-------------------------------
 class CreateHelperConfig {
+  String pageId;
   String name;
   HelperTriggerType triggerType;
+  HelperType helperType;
   int priority;
   int versionMinId;
   int versionMaxId;
 
   CreateHelperConfig({
+    @required this.pageId,
     @required this.name,
     @required this.triggerType,
+    @required this.helperType,
     this.priority,
     this.versionMinId,
     this.versionMaxId,
@@ -78,7 +82,7 @@ class CreateFullScreenHelper {
   CreateHelperConfig config;
   HelperTextConfig title, description, positivButton, negativButton;
   String backgroundColor;
-  int topImageId;
+  String topImageUrl;
 
   CreateFullScreenHelper({
     @required this.config,
@@ -87,7 +91,7 @@ class CreateFullScreenHelper {
     this.positivButton,
     this.negativButton,
     @required this.backgroundColor,
-    this.topImageId});
+    this.topImageUrl});
 }
 
 ///-------------------------------

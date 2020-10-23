@@ -141,7 +141,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          model.stepsTitle[model.step.value],
+          (model?.step?.value != null) ? model.stepsTitle[model?.step?.value] : '',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,

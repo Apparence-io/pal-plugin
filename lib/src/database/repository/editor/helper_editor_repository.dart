@@ -12,8 +12,9 @@ import 'package:palplugin/src/services/http_client/base_client.dart';
 class EditorHelperRepository extends BaseHttpRepository {
   final HelperEntityAdapter _adapter = HelperEntityAdapter();
 
-  EditorHelperRepository({@required HttpClient httpClient})
-      : super(httpClient: httpClient);
+  EditorHelperRepository({
+    @required HttpClient httpClient,
+  }) : super(httpClient: httpClient);
 
   Future<HelperEntity> createHelper(
       final String pageId, final HelperEntity createHelper) async {

@@ -8,7 +8,7 @@ import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_
 
 class CreateHelperPresenter
     extends Presenter<CreateHelperModel, CreateHelperView> {
-  final PackageVersionReader packageVersionReader;
+  PackageVersionReader packageVersionReader;
 
   CreateHelperPresenter(
     CreateHelperView viewInterface, {
@@ -39,6 +39,8 @@ class CreateHelperPresenter
     this.viewModel.helperNameController = TextEditingController();
     this.viewModel.minVersionController = TextEditingController();
 
+    this.viewModel.isAppVersionLoading = false;
+
     // Trigger type dropdown
     this.viewModel.triggerTypes = [];
     HelperTriggerType.values.forEach((HelperTriggerType type) {
@@ -52,6 +54,10 @@ class CreateHelperPresenter
     this.viewModel.selectedTriggerType =
         this.viewModel.triggerTypes?.first?.key;
     
+    readAppVersion();
+  }
+
+  readAppVersion() async {
     // Load app version
     this.viewModel.isAppVersionLoading = true;
     this.refreshView();

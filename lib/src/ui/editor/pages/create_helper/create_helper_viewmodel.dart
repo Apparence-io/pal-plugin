@@ -30,6 +30,8 @@ class CreateHelperModel extends MVVMModel {
     this.minVersionController,
     this.nestedNavigationKey,
     this.infosForm,
+    this.appVersion,
+    this.isAppVersionLoading,
     this.isFormValid,
     this.triggerTypes,
     this.stepsTitle,

@@ -55,7 +55,7 @@ class CreateHelperInfosStep extends StatelessWidget {
           LabeledForm(
             label: 'Name',
             widget: BorderedTextField(
-              key: ValueKey('palCreateHelperTextFieldName'),
+              key: ValueKey('pal_CreateHelper_TextField_Name'),
               hintText: 'My new helper',
               controller: model.helperNameController,
               validator: _checkHelperName,

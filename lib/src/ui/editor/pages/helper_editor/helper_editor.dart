@@ -286,7 +286,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   @override
-  removeOverlay() {
+  removeOverlay() async {
     Overlayed.removeOverlay(
       helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,

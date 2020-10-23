@@ -5,6 +5,8 @@ import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
 
 class CreateHelperPresenter
     extends Presenter<CreateHelperModel, CreateHelperView> {
@@ -53,7 +55,7 @@ class CreateHelperPresenter
     });
     this.viewModel.selectedTriggerType =
         this.viewModel.triggerTypes?.first?.key;
-    
+
     readAppVersion();
   }
 
@@ -70,10 +72,18 @@ class CreateHelperPresenter
 
   setupTypeStep() {
     this.viewModel.selectedHelperType = null;
+    for (var helperType in CreateHelperThemeStepModel.cards.entries) {
+      for (var card in helperType.value) {
+        card.isSelected = false;
+      }
+    }
   }
 
   setupThemeStep() {
     this.viewModel.selectedHelperTheme = null;
+    for (var card in CreateHelperTypesStepModel.cards) {
+      card.isSelected = false;
+    }
   }
 
   incrementStep() {

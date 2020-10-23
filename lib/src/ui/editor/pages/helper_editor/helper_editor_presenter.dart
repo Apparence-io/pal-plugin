@@ -160,7 +160,7 @@ class HelperEditorPresenter
     viewModel.isHelperCreating = false;
     this.refreshView();
 
-    await Future.delayed(Duration(milliseconds: 2500));
+    await Future.delayed(Duration(milliseconds: 2200));
 
     viewModel.loadingOpacity = 0;
     this.refreshView();

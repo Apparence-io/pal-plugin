@@ -43,7 +43,7 @@ void main() {
           find.byKey(ValueKey('pal_CreateHelper_TextField_Name')), findsOneWidget);
       expect(find.byKey(ValueKey('palCreateHelperNextButton')), findsOneWidget);
       expect(
-          find.byKey(ValueKey('palCreateHelperTypeDropdown')), findsOneWidget);
+          find.byKey(ValueKey('pal_CreateHelper_Dropdown_Type')), findsOneWidget);
       expect(find.text('Next'), findsOneWidget);
       expect(find.byType(NestedNavigator), findsOneWidget);
       expect(find.byType(ProgressBarWidget), findsOneWidget);

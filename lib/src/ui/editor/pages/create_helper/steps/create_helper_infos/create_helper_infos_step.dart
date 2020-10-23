@@ -64,7 +64,7 @@ class CreateHelperInfosStep extends StatelessWidget {
           LabeledForm(
             label: 'Trigger type',
             widget: DropdownButtonFormField(
-              key: ValueKey('palCreateHelperTypeDropdown'),
+              key: ValueKey('pal_CreateHelper_Dropdown_Type'),
               validator: _checkHelperTriggerType,
               value: model.triggerTypes.first.key,
               onChanged: _onTriggerTypeChanged,
@@ -75,7 +75,6 @@ class CreateHelperInfosStep extends StatelessWidget {
             label: 'Minimum version',
             widget: BorderedTextField(
               key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
-              // hintText: '1.0.0',
               textInputType: TextInputType.numberWithOptions(decimal: true),
               controller: model.minVersionController,
               validator: _checkValidVersion,

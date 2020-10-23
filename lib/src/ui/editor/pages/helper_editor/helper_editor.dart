@@ -18,6 +18,7 @@ import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simp
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:palplugin/src/ui/editor/pal_editmode_wrapper.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
@@ -72,6 +73,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
   final VersionEditorService versionEditorService;
   final PalRouteObserver routeObserver;
   final PageEditorService pageService;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
@@ -122,11 +124,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
         removeOverlay();
         return Future.value(false);
       },
-      child: Material(
-        key: ValueKey("EditorMaterial"),
-        color: Colors.transparent,
-        shadowColor: Colors.transparent,
-        child: Container(
+      child: Scaffold(
+        key: _scaffoldKey,
+        backgroundColor: Colors.transparent,
+        body: Container(
           color: Colors.black.withOpacity(.2),
           child: Stack(
             children: [
@@ -291,5 +292,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
       helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,
     );
+    ShowHelpersListNotification().dispatch(_scaffoldKey.currentContext);
+    ShowBubbleNotification().dispatch(_scaffoldKey.currentContext);
   }
 }

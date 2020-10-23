@@ -7,6 +7,12 @@ import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.da
 import 'package:palplugin/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 
+class PalGlobalNotification extends Notification {}
+
+class ShowHelpersListNotification extends PalGlobalNotification {}
+
+class ShowBubbleNotification extends PalGlobalNotification {}
+
 class PalEditModeWrapper extends StatefulWidget {
   // this is the client embedded application that wanna use our Pal
   final MaterialApp userApp;
@@ -55,25 +61,35 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
             theme: PalTheme.of(context).buildTheme(),
             home: LayoutBuilder(
               builder: (context, constraints) {
-                return Stack(
-                  key: ValueKey('palMainStack'),
-                  children: [
-                    // The app
-                    RepaintBoundary(
-                      key: _repaintBoundaryKey,
-                      child: widget.userApp,
-                    ),
-                    // Build the floating widget above the app
-                    BubbleOverlayButton(
-                      key: ValueKey('palBubbleOverlay'),
-                      visibility: palEditModeStateService.showEditorBubble,
-                      screenSize: Size(
-                        constraints.maxWidth,
-                        constraints.maxHeight,
+                return NotificationListener<PalGlobalNotification>(
+                  onNotification: (notification) {
+                    if (notification is ShowHelpersListNotification) {
+                      _showHelpersListModal(context);
+                    } else if (notification is ShowBubbleNotification) {
+                      setState(() {});
+                    }
+                    return true;
+                  },
+                  child: Stack(
+                    key: ValueKey('palMainStack'),
+                    children: [
+                      // The app
+                      RepaintBoundary(
+                        key: _repaintBoundaryKey,
+                        child: widget.userApp,
                       ),
-                      onTapCallback: () => _showHelpersListModal(context),
-                    ),
-                  ],
+                      // Build the floating widget above the app
+                      BubbleOverlayButton(
+                        key: ValueKey('palBubbleOverlay'),
+                        visibility: palEditModeStateService.showEditorBubble,
+                        screenSize: Size(
+                          constraints.maxWidth,
+                          constraints.maxHeight,
+                        ),
+                        onTapCallback: () => _showHelpersListModal(context),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -84,9 +100,7 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   }
 
   _onShowBubbleStateChanged() {
-    if (mounted) setState(() {
-
-    });
+    if (mounted) setState(() {});
   }
 
   _showHelpersListModal(BuildContext context) {

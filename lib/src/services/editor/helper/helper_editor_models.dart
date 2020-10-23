@@ -78,7 +78,7 @@ class CreateFullScreenHelper {
   CreateHelperConfig config;
   HelperTextConfig title, description, positivButton, negativButton;
   String backgroundColor;
-  String topImageId;
+  int topImageId;
 
   CreateFullScreenHelper({
     @required this.config,
@@ -98,7 +98,7 @@ class CreateUpdateHelper {
   HelperTextConfig title, positivButton, negativButton;
   List<HelperTextConfig> lines;
   String backgroundColor;
-  String topImageId;
+  int topImageId;
 
   CreateUpdateHelper({
     @required this.config,

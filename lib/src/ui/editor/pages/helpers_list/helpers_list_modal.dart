@@ -8,6 +8,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
@@ -17,18 +18,21 @@ import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 
 abstract class HelpersListModalView {
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
-
   void processElement(Element element, {int n = 0});
-
   Future<void> capturePng(
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   );
-
   void openHelperCreationPage(
     final String pageId,
   );
   void openAppSettingsPage();
+  void reorganizeHelper(
+    final int oldIndex,
+    final int newIndex,
+    final HelpersListModalPresenter presenter,
+    final List<HelperEntity> helpers,
+  );
 }
 
 class HelpersListModal extends StatefulWidget {
@@ -39,10 +43,12 @@ class HelpersListModal extends StatefulWidget {
   final BuildContext bottomModalContext;
   final HelpersListModalLoader loader;
   final PalEditModeStateService palEditModeStateService;
+  final EditorHelperService helperService;
 
   HelpersListModal({
     Key key,
     this.loader,
+    this.helperService,
     this.hostedAppNavigatorKey,
     this.repaintBoundaryKey,
     this.bottomModalContext,
@@ -63,7 +69,7 @@ class _HelpersListModalState extends State<HelpersListModal>
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
-      key: UniqueKey(),
+      key: ValueKey('pal_HelpersListModal_MvvmBuilder'),
       context: context,
       presenterBuilder: (context) => HelpersListModalPresenter(
         this,
@@ -74,10 +80,11 @@ class _HelpersListModalState extends State<HelpersListModal>
                 EditorInjector.of(context).routeObserver),
         palEditModeStateService: this.widget.palEditModeStateService ??
             EditorInjector.of(context).palEditModeStateService,
+        helperService: this.widget.helperService ??
+            EditorInjector.of(context).helperService,
       ),
       builder: (context, presenter, model) {
         return Scaffold(
-          key: ValueKey('palHelpersListModal'),
           body: this._buildPage(
             context.buildContext,
             presenter,
@@ -111,10 +118,23 @@ class _HelpersListModalState extends State<HelpersListModal>
             ),
           ),
           Padding(
+            padding: const EdgeInsets.only(
+              bottom: 5.0,
+              top: 2.0,
+            ),
+            child: Text(
+              '💡 You can re-order helpers by long tap on them.',
+              key: ValueKey('pal_HelpersListModal_ReorderTip'),
+              style: TextStyle(
+                fontSize: 9.0,
+              ),
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: _buildFooter(context),
+              child: _buildCloseButton(context),
             ),
           )
         ],
@@ -122,13 +142,13 @@ class _HelpersListModalState extends State<HelpersListModal>
     );
   }
 
-  Widget _buildFooter(
+  Widget _buildCloseButton(
     final BuildContext context,
   ) {
     return SizedBox(
       width: double.infinity,
       child: OutlineButton(
-        key: ValueKey('palHelpersListModalClose'),
+        key: ValueKey('pal_HelpersListModal_Close'),
         child: Text(
           'Close',
           style: TextStyle(
@@ -156,35 +176,22 @@ class _HelpersListModalState extends State<HelpersListModal>
     final HelpersListModalModel model,
   ) {
     return (model.helpers != null)
-        ? ListView.separated(
-            padding:
-                const EdgeInsets.symmetric(vertical: 20.0, horizontal: 24.0),
-            key: ValueKey('palHelpersListModalContent'),
-            separatorBuilder: (context, index) => SizedBox(
-              height: 12,
+        ? ReorderableListView(
+            onReorder: (oldIndex, newIndex) => this.reorganizeHelper(
+              oldIndex,
+              newIndex,
+              presenter,
+              model.helpers,
             ),
-            controller: listController
+            padding: const EdgeInsets.only(top: 8.0),
+            key: ValueKey('palHelpersListModalContent'),
+            scrollController: listController
               ..addListener(() {
                 if (this.listController.position.extentAfter <= 100) {
                   presenter.loadMore();
                 }
               }),
-            itemCount: model.helpers.length,
-            itemBuilder: (context, index) {
-              HelperEntity helperEntity = model.helpers[index];
-
-              return HelperTileWidget(
-                key: ValueKey('palHelpersListModalTile$index'),
-                name: helperEntity?.name,
-                trigger: helperTriggerTypeToString(helperEntity?.triggerType),
-                versionMin: helperEntity?.versionMin,
-                versionMax: helperEntity?.versionMax,
-                isDisabled: false,
-                onTapCallback: () {
-                  Navigator.pushNamed(context, '/editor/helper',arguments: helperEntity);
-                },
-              );
-            },
+            children: _buildHelpersList(model),
           )
         : Center(
             key: ValueKey('palHelpersListModalNoHelpers'),
@@ -192,6 +199,30 @@ class _HelpersListModalState extends State<HelpersListModal>
                 ? CircularProgressIndicator()
                 : Text('No helpers on this page.'),
           );
+  }
+
+  List<Widget> _buildHelpersList(HelpersListModalModel model) {
+    List<Widget> helpers = [];
+
+    int index = 0;
+    for (HelperEntity anHelper in model.helpers) {
+      Widget cell = Padding(
+        key: ValueKey('pal_HelpersListModal_Tile${index++}'),
+        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 24.0),
+        child: HelperTileWidget(
+          name: anHelper?.name,
+          trigger: helperTriggerTypeToString(anHelper?.triggerType),
+          versionMin: anHelper?.versionMin,
+          versionMax: anHelper?.versionMax,
+          isDisabled: false,
+          onTapCallback: () {
+            Navigator.pushNamed(context, '/editor/helper', arguments: anHelper);
+          },
+        ),
+      );
+      helpers.add(cell);
+    }
+    return helpers;
   }
 
   Widget _buildHeader(
@@ -218,9 +249,7 @@ class _HelpersListModalState extends State<HelpersListModal>
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(
-              height: 3.0,
-            ),
+            SizedBox(height: 3.0),
             Text(
               'List of available helpers on this page',
               style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w300),
@@ -356,5 +385,27 @@ class _HelpersListModalState extends State<HelpersListModal>
         shape: CircleBorder(),
       ),
     );
+  }
+
+  @override
+  void reorganizeHelper(
+    int oldIndex,
+    int newIndex,
+    HelpersListModalPresenter presenter,
+    List<HelperEntity> helpers,
+  ) {
+    // First backup list before re-organize
+    presenter.backupHelpersList();
+
+    // Change on Front
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final HelperEntity helperEntity = helpers.removeAt(oldIndex);
+    helpers.insert(newIndex, helperEntity);
+    presenter.refreshView();
+
+    // Then submit change on back
+    presenter.sendNewHelpersOrder(oldIndex, newIndex);
   }
 }

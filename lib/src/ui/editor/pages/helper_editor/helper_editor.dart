@@ -7,7 +7,6 @@ import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
-import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
@@ -15,7 +14,6 @@ import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simp
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
-import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
 

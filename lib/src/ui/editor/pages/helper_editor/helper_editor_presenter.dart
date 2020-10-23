@@ -1,13 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
-import 'package:palplugin/src/services/helper_service.dart';
-import 'package:palplugin/src/extensions/color_extension.dart';
 import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
 
 import 'helper_editor.dart';

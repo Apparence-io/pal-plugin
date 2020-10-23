@@ -3,7 +3,6 @@ import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
-import 'package:palplugin/src/services/helper_service.dart';
 import 'package:palplugin/src/services/page_server.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 

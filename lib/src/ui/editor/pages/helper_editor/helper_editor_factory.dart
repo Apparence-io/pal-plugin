@@ -38,7 +38,7 @@ class EditorEntityFactory {
             fontSize: model.descriptionField?.fontSize?.value,
             fontFamily: model.descriptionField?.fontFamily?.value),
         backgroundColor: model.backgroundColor.value.toHex(),
-        topImageId: "2513aeaezaed213254df", //FIXME missing value
+        topImageId: 13, //FIXME missing value
         positivButton: HelperTextConfig(
             text: model.positivButtonField?.text?.value,
             fontColor: model.positivButtonField?.fontColor?.value?.toHex(),
@@ -90,7 +90,7 @@ class EditorEntityFactory {
         fontSize: model.titleField?.fontSize?.value,
         fontFamily: model.titleField?.fontFamily?.value,
       ),
-      topImageId: "2513aeaezaed213254df", //FIXME missing value
+      topImageId: 12, //FIXME missing value
       backgroundColor: model.backgroundColor?.value?.toHex(),
       lines: lines,
       positivButton: HelperTextConfig(

@@ -6,7 +6,7 @@ import 'media_gallery_viewmodel.dart';
 
 class MediaGalleryLoader {
   final ProjectGalleryEditorService _projectGalleryEditorService;
-  final _mediasOffset = 20;
+  final _mediasOffset = 30;
   Pageable<GraphicEntity> _pageable;
 
   MediaGalleryLoader(

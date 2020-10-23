@@ -67,6 +67,8 @@ class _MediaCellWidgetState extends State<MediaCellWidget>
             ),
             Container(
               decoration: BoxDecoration(
+                image: DecorationImage(image: CachedNetworkImageProvider(widget.url),
+                fit: BoxFit.cover),
                 border: Border.all(
                   color: PalTheme.of(context).colors.color1,
                   width: 6.0,

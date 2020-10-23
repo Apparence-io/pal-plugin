@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/graphic_entity.dart';
@@ -75,63 +76,66 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
     final MediaGalleryPresenter presenter,
     final MediaGalleryModel model,
   ) {
-    return GestureDetector(
-      onTap: () => presenter.selectMedia(null),
-      child: Column(
-        children: [
-          Container(
-            key: ValueKey('pal_MediaGalleryPage_Header'),
-            color: PalTheme.of(context).colors.color1,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'You can upload new image to your app gallery using web Pal admin.',
-                key: ValueKey('pal_MediaGalleryPage_Header_NoteText'),
-                style: TextStyle(
-                  color: Colors.white,
-                ),
+    return Column(
+      children: [
+        Container(
+          key: ValueKey('pal_MediaGalleryPage_Header'),
+          color: PalTheme.of(context).colors.color1,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'You can upload new image to your app gallery using web Pal admin.',
+              key: ValueKey('pal_MediaGalleryPage_Header_NoteText'),
+              style: TextStyle(
+                color: Colors.white,
               ),
             ),
           ),
-          Expanded(
-            child: (model.isLoading || model.isLoadingMore)
-                ? Center(child: CircularProgressIndicator())
-                : GridView.builder(
-                    key: ValueKey('pal_MediaGalleryPage_Body_Grid'),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
-                      mainAxisSpacing: 2.0,
-                      crossAxisSpacing: 2.0,
-                    ),
-                    controller: _gridListController,
-                    padding: const EdgeInsets.all(2.0),
-                    itemBuilder: (context, index) {
-                      GraphicEntity media = model.medias[index];
-
-                      return MediaCellWidget(
-                        id: media.id,
-                        url: media.url,
-                        isSelected: model.selectedMedia?.id == media.id,
-                        onTap: () => presenter.selectMedia(media),
-                      );
-                    },
-                    itemCount: model.medias.length,
+        ),
+        Expanded(
+          child: (model.isLoading)
+              ? Center(child: CircularProgressIndicator())
+              : GridView.builder(
+                  key: ValueKey('pal_MediaGalleryPage_Body_Grid'),
+                  controller: this._gridListController
+                    ..addListener(() {
+                      if (this._gridListController.position.extentAfter <=
+                          100) {
+                        presenter.loadMore();
+                      }
+                    }),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 2.0,
+                    crossAxisSpacing: 2.0,
                   ),
+                  padding: const EdgeInsets.all(2.0),
+                  itemBuilder: (context, index) {
+                    GraphicEntity media = model.medias[index];
+                    return MediaCellWidget(
+                      id: media.id,
+                      url: media.url,
+                      isSelected: model.selectedMedia?.id == media.id,
+                      onTap: () => presenter.selectMedia(media),
+                    );
+                  },
+                  itemCount: model.medias.length,
+                ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+            bottom: 12.0,
+            left: 16.0,
+            right: 16.0,
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0,
-              bottom: 12.0,
-              left: 16.0,
-              right: 16.0,
-            ),
-            child: Container(
-              width: double.infinity,
-              child: _buildSelectButton(context, presenter, model),
-            ),
+          child: Container(
+            width: double.infinity,
+            child: _buildSelectButton(context, presenter, model),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

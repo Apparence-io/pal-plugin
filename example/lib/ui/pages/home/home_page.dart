@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget implements HomeView {
                   'assets/images/spiderMan3.jpg',
                   200,
                   'Second one',
-                  'card_KillBill',
+                  'card_SpiderMan',
                 ),
               ),
             ),

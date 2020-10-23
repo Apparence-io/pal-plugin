@@ -66,7 +66,8 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
                     if (notification is ShowHelpersListNotification) {
                       _showHelpersListModal(context);
                     } else if (notification is ShowBubbleNotification) {
-                      setState(() {});
+                      // TODO: Maybe improve this
+                      palEditModeStateService.showEditorBubble.value = true;
                     }
                     return true;
                   },

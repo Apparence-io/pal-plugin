@@ -26,12 +26,13 @@ class MediaGalleryPresenter
     this.loader.load().then((MediaGalleryModel res) {
       this.viewModel.medias = res.medias;
       this.viewModel.isLoading = false;
-
-      if (mediaId != null) {
-        this.selectMedia(GraphicEntity(id: mediaId));
-      } else {
-        this.refreshView();
+      for (var media in res.medias) {
+        if(media.id == mediaId){
+          this.selectMedia(media);
+          break;
+        } 
       }
+      this.refreshView();
     });
   }
 

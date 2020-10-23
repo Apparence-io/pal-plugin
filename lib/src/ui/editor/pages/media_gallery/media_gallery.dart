@@ -51,21 +51,27 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
         mediaId: mediaId,
       ),
       builder: (context, presenter, model) {
-        return Scaffold(
-          key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(
-              'My image gallery',
-              style: TextStyle(
+        return WillPopScope(
+          onWillPop: (){
+            this.popBackToEditor(model.selectedMedia);
+            return Future.value(false);
+          },
+                  child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              title: Text(
+                'My image gallery',
+                style: TextStyle(
+                  color: PalTheme.of(context.buildContext).colors.dark,
+                ),
+              ),
+              iconTheme: IconThemeData(
                 color: PalTheme.of(context.buildContext).colors.dark,
               ),
+              backgroundColor: PalTheme.of(context.buildContext).colors.light,
             ),
-            iconTheme: IconThemeData(
-              color: PalTheme.of(context.buildContext).colors.dark,
-            ),
-            backgroundColor: PalTheme.of(context.buildContext).colors.light,
+            body: this._buildPage(context.buildContext, presenter, model),
           ),
-          body: this._buildPage(context.buildContext, presenter, model),
         );
       },
     );

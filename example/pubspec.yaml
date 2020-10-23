@@ -59,7 +59,7 @@ flutter:
     - packages/palplugin/assets/images/logo.png
     - assets/images/gump.png
     - assets/images/joker.jpg
-    - assets/images/kill_bill.jpg
+    - assets/images/spiderMan3.jpg
     - assets/images/truman.png
 
   # An image asset can refer to one or more resolution-specific "variants", see

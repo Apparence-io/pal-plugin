@@ -10,6 +10,9 @@ class HelperEditorViewModel extends MVVMModel {
   bool isLoading;
   bool isEditableWidgetValid;
   bool isEditingWidget;
+  double loadingOpacity;
+  bool isHelperCreated;
+  bool isHelperCreating;
 
   // This the template view model with all default values
   HelperViewModel templateViewModel;

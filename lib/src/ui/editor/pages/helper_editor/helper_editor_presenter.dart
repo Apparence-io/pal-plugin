@@ -40,6 +40,10 @@ class HelperEditorPresenter
     viewModel.isLoading = false;
     viewModel.isEditingWidget = false;
     viewModel.isEditableWidgetValid = false;
+    viewModel.loadingOpacity = 0;
+    viewModel.isHelperCreated = false;
+    viewModel.isHelperCreating = false;
+
     // Create a template helper model
     // this template will be copied to edited widget
     viewModel.templateViewModel = HelperViewModel(
@@ -96,7 +100,9 @@ class HelperEditorPresenter
     }
 
     String pageId = await this.pageService.getOrCreatePageId(route.name);
-    int versionMinId = await this.versionEditorService.getOrCreateVersionId(basicArguments?.helperMinVersion);
+    int versionMinId = await this
+        .versionEditorService
+        .getOrCreateVersionId(basicArguments?.helperMinVersion);
 
     var helperBasicConfig = CreateHelperConfig(
       pageId: pageId,
@@ -109,13 +115,21 @@ class HelperEditorPresenter
     );
 
     await this.save(helperBasicConfig);
-    await Future.delayed(Duration(milliseconds: 500));
-    this.viewInterface.removeOverlay();
   }
 
   Future<void> save(CreateHelperConfig config) async {
     viewModel.isLoading = true;
+    viewModel.isHelperCreating = true;
     this.refreshView();
+
+    // Trigger opacity animation
+    await Future.delayed(Duration(milliseconds: 200));
+    viewModel.loadingOpacity = 1;
+    this.refreshView();
+
+    // Wait for animation complete
+    await Future.delayed(Duration(milliseconds: 400));
+
     try {
       switch (config?.helperType) {
         case HelperType.HELPER_FULL_SCREEN:
@@ -139,10 +153,27 @@ class HelperEditorPresenter
           throw "NOT_IMPLEMENTED_TYPE";
           break;
       }
-    } catch (e) {}
-    viewModel.isLoading = false;
-    // TODO show a success screen
+      viewModel.isHelperCreated = true;
+    } catch (e) {
+      viewModel.isHelperCreated = false;
+    }
+    viewModel.isHelperCreating = false;
     this.refreshView();
+
+    await Future.delayed(Duration(milliseconds: 2500));
+
+    viewModel.loadingOpacity = 0;
+    this.refreshView();
+
+    Future.delayed(Duration(milliseconds: 400), () {
+      viewModel.isLoading = false;
+      this.refreshView();
+    });
+
+    if (viewModel.isHelperCreated) {
+      await Future.delayed(Duration(milliseconds: 500));
+      this.viewInterface.removeOverlay();
+    }
   }
 
   //----------------------------------------------------------------------

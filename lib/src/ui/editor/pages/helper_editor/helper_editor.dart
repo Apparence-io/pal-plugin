@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
@@ -93,10 +94,14 @@ class HelperEditorPageBuilder implements HelperEditorView {
       presenterBuilder: (context) => HelperEditorPresenter(
         this,
         basicArguments: helperEditorPageArguments,
-        helperService: helperService ?? EditorInjector.of(context).helperService,
-        pageService: pageService ?? EditorInjector.of(context).pageEditorService,
-        versionEditorService: versionEditorService ?? EditorInjector.of(context).versionEditorService,
-        routeObserver: routeObserver ?? EditorInjector.of(context).routeObserver,
+        helperService:
+            helperService ?? EditorInjector.of(context).helperService,
+        pageService:
+            pageService ?? EditorInjector.of(context).pageEditorService,
+        versionEditorService: versionEditorService ??
+            EditorInjector.of(context).versionEditorService,
+        routeObserver:
+            routeObserver ?? EditorInjector.of(context).routeObserver,
         elementFinder: elementFinder,
       ),
       builder: (mContext, presenter, model) => _buildEditorPage(
@@ -134,14 +139,77 @@ class HelperEditorPageBuilder implements HelperEditorView {
                         _buildBannerEditorMode(context),
                       ],
                     )
-                  : Center(
-                      child: CircularProgressIndicator(),
+                  : AnimatedOpacity(
+                      duration: Duration(milliseconds: 400),
+                      opacity: model.loadingOpacity,
+                      child: Stack(
+                        children: [
+                          BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                            child: Container(
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: (model.isHelperCreating)
+                                  ? _buildLoadingScreen()
+                                  : _buildCreationStatusScreen(model),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _buildLoadingScreen() {
+    return [
+      CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+      ),
+      SizedBox(height: 25.0),
+      Text(
+        'Creating your helper...',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0,
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildCreationStatusScreen(HelperEditorViewModel model) {
+    return [
+      model.isHelperCreated
+          ? Icon(
+              Icons.check,
+              color: Colors.green,
+              size: 100.0,
+            )
+          : Icon(
+              Icons.close,
+              color: Colors.red,
+              size: 100.0,
+            ),
+      SizedBox(height: 25.0),
+      Text(
+        (model.isHelperCreated)
+            ? 'Helper created 👍'
+            : 'An error occured 😐\nPlease try again.',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0,
+        ),
+      ),
+    ];
   }
 
   Widget _buildBannerEditorMode(BuildContext context) {

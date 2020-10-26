@@ -68,17 +68,17 @@ class FullscreenHelperViewModel extends HelperViewModel {
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier positivButtonField = TextFormFieldNotifier(
-    fontColor: Color(0xFFCCC2),
-    fontSize: 14,
-    text: 'A poisitiv button',
-    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
+    fontColor: Colors.white,
+    fontSize: 23,
+    text: 'Ok, thanks !',
+    fontWeight: FontWeightMapper.toFontKey(FontWeight.bold),
   );
   final TextFormFieldNotifier negativButtonField = TextFormFieldNotifier(
-    fontColor: Color(0xFFCCC2),
-    fontSize: 14,
-    text: 'A negativ button',
-    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
-    );
+    text: 'This is not helping',
+    fontWeight: FontWeightMapper.toFontKey(FontWeight.bold),
+    fontColor: Colors.white,
+    fontSize: 13,
+  );
 
   FullscreenHelperViewModel({
     @required String name,
@@ -94,7 +94,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
           versionMaxId: versionMaxId,
         );
 
-  factory FullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model) =>
+  factory FullscreenHelperViewModel.fromHelperViewModel(
+          HelperViewModel model) =>
       FullscreenHelperViewModel(
         name: model.name,
         triggerType: model.triggerType,
@@ -130,7 +131,7 @@ class SimpleHelperViewModel extends HelperViewModel {
         );
 
   factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model) =>
-    SimpleHelperViewModel(
+      SimpleHelperViewModel(
         name: model.name,
         triggerType: model.triggerType,
         priority: model.priority,
@@ -151,12 +152,11 @@ class UpdateHelperViewModel extends HelperViewModel {
     text: 'Thank you!',
   );
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
-    backgroundColor: Colors.black87,
-    fontColor: Colors.black87,
-    fontSize: 24,
-    text: '',
-    hintText: 'Enter your title here...'
-  );
+      backgroundColor: Colors.black87,
+      fontColor: Colors.black87,
+      fontSize: 24,
+      text: '',
+      hintText: 'Enter your title here...');
 
   UpdateHelperViewModel({
     @required String name,

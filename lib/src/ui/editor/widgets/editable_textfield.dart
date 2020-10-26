@@ -211,13 +211,13 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     validator: (String value) {
                       String error;
                       if (widget.minimumCharacterLength != null) {
-                        if (value.length < widget.minimumCharacterLength) {
+                        if (value != null && value.length < widget.minimumCharacterLength) {
                           error =
                               'Minimum ${widget.minimumCharacterLength} ${widget.minimumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
                         }
                       }
                       if (widget.maximumCharacterLength != null) {
-                        if (value.length >= widget.maximumCharacterLength) {
+                        if (value != null && value.length >= widget.maximumCharacterLength) {
                           error =
                               'Maximum ${widget.maximumCharacterLength} ${widget.maximumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
                         }
@@ -237,7 +237,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
                       hintStyle: _textStyle.merge(
                         TextStyle(
                           color: _textStyle?.color?.withAlpha(80),
-                          decoration: TextDecoration.none,
                         ),
                       ),
                     ),

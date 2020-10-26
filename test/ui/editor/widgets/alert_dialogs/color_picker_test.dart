@@ -33,8 +33,6 @@ void main() {
 
       expect(find.text('Cancel'), findsOneWidget);
       expect(find.text('Validate'), findsOneWidget);
-
-      expect(find.text('Please enter valid color'), findsOneWidget);
     });
 
     testWidgets('should change color by entering new hex value', (WidgetTester tester) async {

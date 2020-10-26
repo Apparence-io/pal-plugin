@@ -3,12 +3,12 @@ import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/pal_navigator_observer.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
-import 'package:palplugin/src/services/page_server.dart';
+import 'package:palplugin/src/services/editor/page/page_editor_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 
 class HelpersListModalLoader {
 
-  final PageService _pageService;
+  final PageEditorService _pageService;
   final EditorHelperService _helperService;
   final PalRouteObserver _routeObserver;
   final _helpersOffset = 20;
@@ -53,10 +53,10 @@ class HelpersListModalLoader {
       return Future.value();
     }
     return this._pageService.getPage(route.name).then(
-      (resPages) {
+      (resPage) {
         String routeId;
-        if (resPages != null && resPages.totalElements > 0) {
-          routeId = resPages.entities[0].id;
+        if (resPage != null && resPage.id != null && resPage.id.length > 0) {
+          routeId = resPage.id;
         }
         return routeId;
       },

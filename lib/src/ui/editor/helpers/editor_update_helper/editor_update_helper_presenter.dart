@@ -81,7 +81,9 @@ class EditorUpdateHelperPresenter
             helperToolbarKey: textFormToolbarKey,
             outsideTapStream: this.viewModel.editableTextFieldController.stream,
             hintText: hintText,
+            minimumCharacterLength: 1,
             maximumCharacterLength: 120,
+            autovalidate: AutovalidateMode.always,
             textStyle: TextStyle(
               color: this
                   .updateHelperViewModel
@@ -107,6 +109,14 @@ class EditorUpdateHelperPresenter
         );
 
     this.refreshView();
+    // wait for UI to be updated
+    Future.delayed(Duration(milliseconds: 500), () {
+      if (textFieldId > 0) callonFormChanged();
+    });
+  }
+
+  callonFormChanged() {
+    this.viewInterface.callOnFormChanged(this.viewModel);
   }
 
   onTitleFieldChanged(Key key, String newValue) {
@@ -181,14 +191,24 @@ class EditorUpdateHelperPresenter
     final selectedMedia = await this
         .viewInterface
         .pushToMediaGallery(this.updateHelperViewModel.media?.id?.value);
-    
-      this.updateHelperViewModel.media?.url?.value = selectedMedia?.url;
-      this.updateHelperViewModel.media?.id?.value = selectedMedia?.id;
+
+    this.updateHelperViewModel.media?.url?.value = selectedMedia?.url;
+    this.updateHelperViewModel.media?.id?.value = selectedMedia?.id;
 
     this.refreshView();
   }
 
-  String validateDetailsTextField(String currentValue) {
+  String validateTitleTextField(String currentValue) {
+    if (currentValue.length <= 0) {
+      return 'Please enter some text';
+    }
+    if (currentValue.length > 45) {
+      return 'Maximum 45 characters';
+    }
+    return null;
+  }
+
+  String validateChangelogTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';
     }

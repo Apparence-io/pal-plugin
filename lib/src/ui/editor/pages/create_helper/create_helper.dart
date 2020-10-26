@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/router.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
@@ -30,34 +32,35 @@ abstract class CreateHelperView {
   void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter);
 }
 
-class CreateHelperPage extends StatefulWidget {
+class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
+  final PackageVersionReader packageVersionReader;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   CreateHelperPage({
     Key key,
     this.hostedAppNavigatorKey,
+    this.packageVersionReader,
     this.pageId,
   });
 
-  @override
-  _CreateHelperPageState createState() => _CreateHelperPageState();
-}
-
-class _CreateHelperPageState extends State<CreateHelperPage>
-    implements CreateHelperView {
   final _mvvmPageBuilder =
       MVVMPageBuilder<CreateHelperPresenter, CreateHelperModel>();
-
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
       key: UniqueKey(),
       context: context,
-      presenterBuilder: (context) => CreateHelperPresenter(this),
+      presenterBuilder: (context) => CreateHelperPresenter(
+        this,
+        packageVersionReader: packageVersionReader ??
+            EditorInjector.of(context).packageVersionReader,
+      ),
       builder: (context, presenter, model) {
         return Scaffold(
-          key: ValueKey('CreateHelper'),
+          key: _scaffoldKey,
           appBar: AppBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -125,7 +128,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
             ),
             child: Container(
               width: double.infinity,
-              child: _buildNextButton(model, presenter),
+              child: _buildNextButton(context, model, presenter),
             ),
           ),
         ],
@@ -138,7 +141,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          model.stepsTitle[model.step.value],
+          (model?.step?.value != null) ? model.stepsTitle[model?.step?.value] : '',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -154,6 +157,7 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   }
 
   Widget _buildNextButton(
+    final BuildContext context,
     final CreateHelperModel model,
     final CreateHelperPresenter presenter,
   ) {
@@ -179,21 +183,21 @@ class _CreateHelperPageState extends State<CreateHelperPage>
   void launchHelperEditor(final CreateHelperModel model) {
     // Open editor overlay
     HelperEditorPageArguments args = HelperEditorPageArguments(
-      widget.hostedAppNavigatorKey,
-      widget.pageId,
+      hostedAppNavigatorKey,
+      pageId,
       helperName: model.helperNameController?.value?.text,
+      helperMinVersion: model.minVersionController?.value?.text,
       triggerType: getHelperTriggerType(model.selectedTriggerType),
       helperTheme: model.selectedHelperTheme,
       helperType: model.selectedHelperType,
     );
-    var elementFinder =
-        ElementFinder(widget.hostedAppNavigatorKey.currentContext);
+    var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
     showOverlayed(
-      widget.hostedAppNavigatorKey,
+      hostedAppNavigatorKey,
       HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
     );
     // Go back
-    Navigator.of(context).pop(true);
+    Navigator.of(_scaffoldKey.currentContext).pop(true);
   }
 
   @override

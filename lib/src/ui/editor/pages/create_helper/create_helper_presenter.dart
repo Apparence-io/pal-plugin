@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/services/package_version.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
+import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
 
 class CreateHelperPresenter
     extends Presenter<CreateHelperModel, CreateHelperView> {
+  PackageVersionReader packageVersionReader;
+
   CreateHelperPresenter(
-    CreateHelperView viewInterface,
-  ) : super(CreateHelperModel(), viewInterface);
+    CreateHelperView viewInterface, {
+    @required this.packageVersionReader,
+  }) : super(CreateHelperModel(), viewInterface);
 
   @override
   Future onInit() async {
@@ -29,10 +35,15 @@ class CreateHelperPresenter
     this.setupThemeStep();
   }
 
-  setupInfosStep() {
+  setupInfosStep() async {
     this.viewModel.infosForm = GlobalKey<FormState>();
 
     this.viewModel.helperNameController = TextEditingController();
+    this.viewModel.minVersionController = TextEditingController();
+
+    this.viewModel.isAppVersionLoading = false;
+
+    // Trigger type dropdown
     this.viewModel.triggerTypes = [];
     HelperTriggerType.values.forEach((HelperTriggerType type) {
       this.viewModel.triggerTypes.add(
@@ -44,14 +55,35 @@ class CreateHelperPresenter
     });
     this.viewModel.selectedTriggerType =
         this.viewModel.triggerTypes?.first?.key;
+
+    readAppVersion();
+  }
+
+  readAppVersion() async {
+    // Load app version
+    this.viewModel.isAppVersionLoading = true;
+    this.refreshView();
+    await this.packageVersionReader.init();
+    this.viewModel.appVersion = this.packageVersionReader.version;
+    this.viewModel.minVersionController.text = this.viewModel.appVersion;
+    this.viewModel.isAppVersionLoading = false;
+    this.refreshView();
   }
 
   setupTypeStep() {
     this.viewModel.selectedHelperType = null;
+    for (var helperType in CreateHelperThemeStepModel.cards.entries) {
+      for (var card in helperType.value) {
+        card.isSelected = false;
+      }
+    }
   }
 
   setupThemeStep() {
     this.viewModel.selectedHelperTheme = null;
+    for (var card in CreateHelperTypesStepModel.cards) {
+      card.isSelected = false;
+    }
   }
 
   incrementStep() {

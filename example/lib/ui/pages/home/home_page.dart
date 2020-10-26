@@ -96,10 +96,10 @@ class HomePage extends StatelessWidget implements HomeView {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(8, 8, 16, 16),
                 child: _buildCard(
-                  'assets/images/kill_bill.jpg',
+                  'assets/images/spiderMan3.jpg',
                   200,
                   'Second one',
-                  'card_KillBill',
+                  'card_SpiderMan',
                 ),
               ),
             ),
@@ -144,7 +144,13 @@ class HomePage extends StatelessWidget implements HomeView {
         alignment: Alignment.bottomCenter,
         child: Container(
           height: 90,
-          color: Colors.blueGrey[900].withOpacity(.8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(16),
+              bottomLeft: Radius.circular(16),
+            ),
+            color: Colors.blueGrey[900].withOpacity(.8),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

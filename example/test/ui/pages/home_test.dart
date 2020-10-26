@@ -33,7 +33,7 @@ main() {
       expect(find.text('One more'), findsOneWidget);
       expect(find.text('Second one'), findsOneWidget);
 
-      expect(find.byKey(ValueKey('card_KillBill')), findsOneWidget);
+      expect(find.byKey(ValueKey('card_SpiderMan')), findsOneWidget);
       expect(find.byKey(ValueKey('card_Gump')), findsOneWidget);
       expect(find.byKey(ValueKey('card_Joker')), findsOneWidget);
     });

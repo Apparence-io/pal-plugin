@@ -19,11 +19,10 @@ class EditableTextField extends StatefulWidget {
   final Key helperToolbarKey;
 
   // Textfield stuff
-  final bool autovalidate;
+  final AutovalidateMode autovalidate;
   final BoxDecoration backgroundBoxDecoration;
   final EdgeInsetsGeometry backgroundPadding;
   final EdgeInsetsGeometry textFormFieldPadding;
-  final String Function(String) validator;
   final Function(Key, String) onChanged;
   final Function(Key, TextStyle, FontKeys) onTextStyleChanged;
   final TextInputType keyboardType;
@@ -46,10 +45,9 @@ class EditableTextField extends StatefulWidget {
     this.minimumCharacterLength,
     this.onChanged,
     this.onTextStyleChanged,
-    this.autovalidate = true,
+    this.autovalidate = AutovalidateMode.onUserInteraction,
     this.backgroundPadding,
     this.textFormFieldPadding,
-    this.validator,
     this.backgroundBoxDecoration,
     this.maxLines = 1,
     this.inputFormatters,
@@ -64,7 +62,7 @@ class EditableTextField extends StatefulWidget {
     final Key textFormFieldKey,
     final Key backgroundContainerKey,
     final Key helperToolbarKey,
-    final bool autovalidate = true,
+    final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
     final BoxDecoration backgroundBoxDecoration,
     final EdgeInsetsGeometry backgroundPadding,
     final EdgeInsetsGeometry textFormFieldPadding,
@@ -93,7 +91,6 @@ class EditableTextField extends StatefulWidget {
       autovalidate: autovalidate,
       backgroundPadding: backgroundPadding,
       textFormFieldPadding: textFormFieldPadding,
-      validator: validator,
       backgroundBoxDecoration: backgroundBoxDecoration,
       maxLines: maxLines,
       inputFormatters: inputFormatters,
@@ -109,7 +106,7 @@ class EditableTextField extends StatefulWidget {
     final Key textFormFieldKey,
     final Key backgroundContainerKey,
     final Key helperToolbarKey,
-    final bool autovalidate = true,
+    final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
     final BoxDecoration backgroundBoxDecoration,
     final EdgeInsetsGeometry backgroundPadding,
     final EdgeInsetsGeometry textFormFieldPadding,
@@ -138,7 +135,6 @@ class EditableTextField extends StatefulWidget {
       autovalidate: autovalidate,
       backgroundPadding: backgroundPadding,
       textFormFieldPadding: textFormFieldPadding,
-      validator: validator,
       backgroundBoxDecoration: backgroundBoxDecoration,
       maxLines: maxLines,
       inputFormatters: inputFormatters,
@@ -204,9 +200,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                   padding: widget.textFormFieldPadding ?? EdgeInsets.zero,
                   child: TextFormField(
                     key: widget.textFormFieldKey,
-                    autovalidateMode: (widget.autovalidate)
-                        ? AutovalidateMode.onUserInteraction
-                        : AutovalidateMode.disabled,
+                    autovalidateMode: widget.autovalidate,
                     focusNode: _focusNode,
                     onTap: _onTextFieldTapped,
                     onChanged: (String newValue) {

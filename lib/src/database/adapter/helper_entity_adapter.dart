@@ -78,7 +78,7 @@ class HelperBoxEntityAdapter extends GenericEntityAdapter<HelperBoxEntity> {
     return HelperBoxEntity(
       id: map['id'],
       key: map['key'],
-      color: map['color'],
+      backgroundColor: map['backgroundColor'],
     );
   }
 }

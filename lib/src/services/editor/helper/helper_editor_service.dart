@@ -58,7 +58,7 @@ class _EditorHelperHttpService implements EditorHelperService {
         helperBoxes: [
           HelperBoxEntity(
             key: SimpleHelperKeys.CONTENT_KEY,
-            color: createArgs.backgroundColor,
+            backgroundColor: createArgs.backgroundColor,
           )
         ],
       ),
@@ -108,12 +108,12 @@ class _EditorHelperHttpService implements EditorHelperService {
         helperBoxes: [
           HelperBoxEntity(
             key: FullscreenHelperKeys.BACKGROUND_KEY,
-            color: createArgs.backgroundColor,
+            backgroundColor: createArgs.backgroundColor,
           )
         ],
         helperImages: [
           HelperImageEntity(
-              id: createArgs.topImageId, key: FullscreenHelperKeys.IMAGE_KEY)
+              url: createArgs.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
         ],
       ),
     );
@@ -166,12 +166,12 @@ class _EditorHelperHttpService implements EditorHelperService {
             helperBoxes: [
               HelperBoxEntity(
                 key: UpdatescreenHelperKeys.BACKGROUND_KEY,
-                color: createArgs.backgroundColor,
+                backgroundColor: createArgs.backgroundColor,
               )
             ],
             helperImages: [
               HelperImageEntity(
-                  id: createArgs.topImageId,
+                  url: createArgs.topImageUrl,
                   key: UpdatescreenHelperKeys.IMAGE_KEY)
             ]));
   }
@@ -191,5 +191,17 @@ class _EditorHelperHttpService implements EditorHelperService {
   Future<bool> deleteHelper(String helperId) {
     // TODO: implement deleteHelper
     throw UnimplementedError();
+  }
+
+  Future<HelperEntity> _createHelper(String pageId, HelperEntity createHelper) {
+    //TODO: Get page Id
+    // Create page Id if null
+    // TODO: Get min version Id
+    // Create max version Id if null
+    // Create Helper with page Id & min version Id
+    return _editorHelperRepository.createHelper(
+      pageId,
+      createHelper,
+    );
   }
 }

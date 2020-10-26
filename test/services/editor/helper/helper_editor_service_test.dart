@@ -64,7 +64,7 @@ void main() {
           ],
           helperBoxes: [
             HelperBoxEntity(
-              color: "#FFF",
+              backgroundColor: "#FFF",
               key: SimpleHelperKeys.CONTENT_KEY,
             )
           ]);
@@ -90,6 +90,8 @@ void main() {
       // the args of our service creation method
       var args = CreateFullScreenHelper(
           config: CreateHelperConfig(
+            pageId: '',
+            helperType: HelperType.HELPER_FULL_SCREEN,
             name: 'my helper name 2',
             triggerType: HelperTriggerType.ON_SCREEN_VISIT,
             priority: 1,
@@ -109,7 +111,7 @@ void main() {
               fontSize: 14,
               fontFamily: "cortanaBis"),
           backgroundColor: "#CCF",
-          topImageId: 13);
+          topImageUrl: "http://image.png/");
       // what our service should create from the args
       HelperEntity myHelper = HelperEntity(
           name: args.config.name,
@@ -139,12 +141,12 @@ void main() {
           ],
           helperImages: [
             HelperImageEntity(
-                id: args.topImageId, key: FullscreenHelperKeys.IMAGE_KEY)
+                url: args.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
           ],
           helperBoxes: [
             HelperBoxEntity(
                 key: FullscreenHelperKeys.BACKGROUND_KEY,
-                color: args.backgroundColor)
+                backgroundColor: args.backgroundColor)
           ]);
       // what http will result
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
@@ -197,7 +199,7 @@ void main() {
             )
           ],
           backgroundColor: "#CCF",
-          topImageId: 13);
+          topImageUrl: 'url');
       // what our service should create
       HelperEntity myHelper = HelperEntity(
           name: args.config.name,
@@ -235,12 +237,12 @@ void main() {
           ],
           helperImages: [
             HelperImageEntity(
-                id: args.topImageId, key: FullscreenHelperKeys.IMAGE_KEY)
+                url: args.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
           ],
           helperBoxes: [
             HelperBoxEntity(
                 key: FullscreenHelperKeys.BACKGROUND_KEY,
-                color: args.backgroundColor)
+                backgroundColor: args.backgroundColor)
           ]);
       // what http will result
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";

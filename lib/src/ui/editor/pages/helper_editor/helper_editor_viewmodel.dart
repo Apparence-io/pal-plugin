@@ -50,9 +50,11 @@ class HelperViewModel extends MVVMModel {
 class FullscreenHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
   final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
+  final MediaNotifier media = MediaNotifier(key: 'header');
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
     fontColor: Colors.white,
-    fontSize: 80,
+    borderColor: Colors.greenAccent,
+    fontSize: 60,
     text: '',
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
@@ -69,11 +71,10 @@ class FullscreenHelperViewModel extends HelperViewModel {
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier negativButtonField = TextFormFieldNotifier(
-    fontColor: Color(0xFFCCC2),
-    fontSize: 14,
     text: '',
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
-  );
+    fontColor: Color(0xFFCCC2),
+    fontSize: 14,);
 
   FullscreenHelperViewModel({
     @required String name,
@@ -136,9 +137,9 @@ class SimpleHelperViewModel extends HelperViewModel {
 
 class UpdateHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
-  final ValueNotifier<Color> backgroundColor = ValueNotifier(Color(0xFFBFEEF5));
-  
+  final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.blueAccent);
   final Map<String, TextFormFieldNotifier> changelogsFields = {};
+  final MediaNotifier media = MediaNotifier(key: 'header');
   final TextFormFieldNotifier thanksButton = TextFormFieldNotifier(
     backgroundColor: Colors.black87,
     fontColor: Colors.black87,

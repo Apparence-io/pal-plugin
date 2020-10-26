@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/graphic_entity.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
@@ -174,6 +175,17 @@ class EditorUpdateHelperPresenter
 
   onOutsideTap() {
     this.viewModel.editableTextFieldController.add(true);
+  }
+
+  editMedia() async {
+    final selectedMedia = await this
+        .viewInterface
+        .pushToMediaGallery(this.updateHelperViewModel.media?.id?.value);
+    
+      this.updateHelperViewModel.media?.url?.value = selectedMedia?.url;
+      this.updateHelperViewModel.media?.id?.value = selectedMedia?.id;
+
+    this.refreshView();
   }
 
   String validateDetailsTextField(String currentValue) {

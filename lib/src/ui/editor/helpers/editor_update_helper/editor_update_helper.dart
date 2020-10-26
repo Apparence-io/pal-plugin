@@ -1,13 +1,16 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:palplugin/src/database/entity/graphic_entity.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery.dart';
+import 'package:palplugin/src/ui/editor/widgets/editable_background.dart';
+import 'package:palplugin/src/ui/editor/widgets/editable_media.dart';
 import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
 
@@ -19,6 +22,7 @@ abstract class EditorUpdateHelperView {
   void scrollToBottomChangelogList(
     EditorUpdateHelperModel model,
   );
+  Future<GraphicEntity> pushToMediaGallery(final String mediaId);
 }
 
 class EditorUpdateHelperPage extends StatelessWidget
@@ -34,6 +38,7 @@ class EditorUpdateHelperPage extends StatelessWidget
 
   final _mvvmPageBuilder =
       MVVMPageBuilder<EditorUpdateHelperPresenter, EditorUpdateHelperModel>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +61,7 @@ class EditorUpdateHelperPage extends StatelessWidget
     final EditorUpdateHelperModel model,
   ) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomPadding: true,
       body: GestureDetector(
         onTap: presenter.onOutsideTap,
@@ -64,82 +70,67 @@ class EditorUpdateHelperPage extends StatelessWidget
           child: Padding(
             padding:
                 EdgeInsets.only(bottom: (model.isKeyboardVisible ? 0.0 : 90.0)),
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Form(
-                key: model.formKey,
-                autovalidate: false,
-                onChanged: () {
-                  if (onFormChanged != null) {
-                    onFormChanged(model.formKey?.currentState?.validate());
-                  }
-                },
-                child: DottedBorder(
-                  strokeWidth: 2.0,
-                  strokeCap: StrokeCap.round,
-                  dashPattern: [10, 7],
-                  color: Colors.black54,
+            child: Form(
+              key: model.formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              onChanged: () {
+                if (onFormChanged != null) {
+                  onFormChanged(model.formKey?.currentState?.validate());
+                }
+              },
+              child: EditableBackground(
+                backgroundColor: viewModel.backgroundColor?.value,
+                circleIconKey:
+                    'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
+                onColorChange: () =>
+                    presenter.changeBackgroundColor(context, presenter),
+                widget: Padding(
+                  padding: const EdgeInsets.all(2.0),
                   child: Container(
                     width: double.infinity,
                     color: viewModel.backgroundColor?.value,
-                    child: Stack(
-                      fit: StackFit.expand,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: SingleChildScrollView(
-                                reverse: false,
-                                controller: model.scrollController,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 40.0),
-                                        child: Icon(
-                                          Icons.image,
-                                          size: 200.0,
-                                          color: Color(0xFF898989),
-                                        ),
-                                      ),
-                                      _buildTitleField(
-                                          context, presenter, model),
-                                      SizedBox(height: 25.0),
-                                      _buildChangelogFields(
-                                          context, presenter, model),
-                                    ],
-                                  ),
+                        Expanded(
+                          child: Center(
+                            child: SingleChildScrollView(
+                              reverse: false,
+                              controller: model.scrollController,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 10.0,
+                                  right: 10.0,
+                                  top: 25.0,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    EditableMedia(
+                                      editKey:
+                                          'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
+                                      mediaSize: 123.0,
+                                      onEdit: presenter.editMedia,
+                                      url: viewModel.media?.url?.value,
+                                    ),
+                                    SizedBox(height: 40),
+                                    _buildTitleField(context, presenter, model),
+                                    SizedBox(height: 25.0),
+                                    _buildChangelogFields(
+                                        context, presenter, model),
+                                  ],
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: 15.0,
-                                left: 10.0,
-                                right: 10.0,
-                              ),
-                              child:
-                                  _buildThanksButton(context, presenter, model),
-                            ),
-                          ],
-                        ),
-                        Positioned(
-                          top: 20.0,
-                          left: 20.0,
-                          child: CircleIconButton(
-                            key: ValueKey(
-                                'pal_EditorUpdateHelperWidget_BackgroundColorPicker'),
-                            icon: Icon(Icons.invert_colors),
-                            backgroundColor: PalTheme.of(context).colors.light,
-                            onTapCallback: () => presenter
-                                .changeBackgroundColor(context, presenter),
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 15.0,
+                            left: 10.0,
+                            right: 10.0,
+                          ),
+                          child: _buildThanksButton(context, presenter, model),
                         ),
                       ],
                     ),
@@ -248,7 +239,9 @@ class EditorUpdateHelperPage extends StatelessWidget
 
   @override
   void showColorPickerDialog(
-      BuildContext context, EditorUpdateHelperPresenter presenter) {
+    BuildContext context,
+    EditorUpdateHelperPresenter presenter,
+  ) {
     HapticFeedback.selectionClick();
     showDialog(
       context: context,
@@ -257,6 +250,21 @@ class EditorUpdateHelperPage extends StatelessWidget
         onColorSelected: presenter.updateBackgroundColor,
       ),
     );
+  }
+
+  @override
+  Future<GraphicEntity> pushToMediaGallery(
+    final String mediaId,
+  ) async {
+    final media = await Navigator.pushNamed(
+      _scaffoldKey.currentContext,
+      '/editor/media-gallery',
+      arguments: MediaGalleryPageArguments(
+        mediaId,
+      ),
+    ) as GraphicEntity;
+
+    return media;
   }
 
   scrollToBottomChangelogList(

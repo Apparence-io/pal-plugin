@@ -196,7 +196,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
             padding: widget.backgroundPadding ?? EdgeInsets.zero,
             child: DottedBorder(
               dashPattern: [6, 3],
-              color: Colors.black45,
+              color: Colors.white.withAlpha(80),
               child: Container(
                 decoration: widget.backgroundBoxDecoration,
                 key: widget.backgroundContainerKey,
@@ -204,7 +204,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
                   padding: widget.textFormFieldPadding ?? EdgeInsets.zero,
                   child: TextFormField(
                     key: widget.textFormFieldKey,
-                    autovalidate: widget.autovalidate,
+                    autovalidateMode: (widget.autovalidate)
+                        ? AutovalidateMode.onUserInteraction
+                        : AutovalidateMode.disabled,
                     focusNode: _focusNode,
                     onTap: _onTextFieldTapped,
                     onChanged: (String newValue) {
@@ -236,6 +238,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     inputFormatters: widget.inputFormatters,
                     decoration: InputDecoration(
                       border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
                       hintText: widget.hintText,
                       hintStyle: _textStyle.merge(
                         TextStyle(

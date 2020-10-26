@@ -28,12 +28,6 @@ class EditorFullScreenHelperPresenter
     this.viewModel.formKey = GlobalKey<FormState>();
 
     this.viewModel.helperOpacity = 1;
-
-    // Disable animation on editor mode ?
-    // Future.delayed(Duration(seconds: 1), () {
-    //   this.viewModel.helperOpacity = 1;
-    //   this.refreshView();
-    // });
   }
 
   onTitleChanged(Key key, String newValue) {
@@ -79,6 +73,14 @@ class EditorFullScreenHelperPresenter
     EditorFullScreenHelperPresenter presenter,
   ) {
     this.viewInterface.showColorPickerDialog(viewModel, presenter);
+  }
+
+  editMedia() async {
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.fullscreenHelperViewModel.media?.id?.value);
+
+    this.fullscreenHelperViewModel.media?.url?.value = selectedMedia?.url;
+    this.fullscreenHelperViewModel.media?.id?.value = selectedMedia?.id;
+    this.refreshView();
   }
 
   updateBackgroundColor(Color aColor) {

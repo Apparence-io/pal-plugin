@@ -57,7 +57,7 @@ void main() {
       await beforeEach(tester);
 
       expect(presenter.updateHelperViewModel.backgroundColor.value,
-          Color(0xFFBFEEF5));
+          Colors.blueAccent);
 
       var colorPickerButton = find.byKey(
           ValueKey('pal_EditorUpdateHelperWidget_BackgroundColorPicker'));
@@ -148,6 +148,15 @@ void main() {
           presenter.updateHelperViewModel
               .changelogsFields[changelogKey.toString()].text.value,
           'A note');
+    });
+
+    testWidgets('should edit media', (WidgetTester tester) async {
+      await beforeEach(tester);
+
+      expect(
+          find.byKey(ValueKey(
+              'pal_EditorUpdateHelperWidget_EditableMedia_EditButton')),
+          findsOneWidget);
     });
   });
 }

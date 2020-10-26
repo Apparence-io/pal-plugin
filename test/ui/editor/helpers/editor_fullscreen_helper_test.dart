@@ -82,7 +82,7 @@ void main() {
     testWidgets('should textfield present', (WidgetTester tester) async {
       await _beforeEach(tester);
 
-      expect(find.byType(TextField), findsOneWidget);
+      expect(find.byType(TextField), findsNWidgets(3));
       expect(find.text('Edit me!'), findsOneWidget);
     });
 

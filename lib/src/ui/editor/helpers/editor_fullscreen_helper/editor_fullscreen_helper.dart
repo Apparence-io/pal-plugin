@@ -149,7 +149,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 24.0),
+                            padding: const EdgeInsets.only(top: 40.0),
                             child: InkWell(
                               key: ValueKey(
                                   'pal_EditorFullScreenHelper_ThanksButton'),

@@ -10,7 +10,12 @@ class UserFullscreenHelperWidget extends StatefulWidget {
   final Function onTrigger;
 
   UserFullscreenHelperWidget(
-      {this.bgColor, this.textColor, this.helperText, this.textSize, this.onTrigger, Key key})
+      {this.bgColor,
+      this.textColor,
+      this.helperText,
+      this.textSize,
+      this.onTrigger,
+      Key key})
       : assert(bgColor != null),
         assert(textColor != null),
         assert(helperText != null),
@@ -86,7 +91,9 @@ class _UserFullscreenHelperWidgetState
                           child: Text(
                             "This is not helping",
                             style: TextStyle(
-                                color: widget.textColor, fontSize: 10),
+                              color: widget.textColor,
+                              fontSize: 10,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                           onTap: this.widget.onTrigger,

@@ -7,6 +7,8 @@ import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_ser
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helper_factory.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 
 import 'helpers/simple_helper_widget.dart';
@@ -15,7 +17,6 @@ import 'helpers/simple_helper_widget.dart';
 /// On each page visited we check if we have to show a new helper to user
 /// There is a variety of Helper types.
 class HelperOrchestrator {
-
   static HelperOrchestrator _instance;
 
   final PalRouteObserver routeObserver;
@@ -23,48 +24,39 @@ class HelperOrchestrator {
   final HelperClientService helperClientService;
 
   final InAppUserClientService inAppUserClientService;
-  
+
   final GlobalKey<NavigatorState> navigatorKey;
 
   OverlayEntry overlay;
 
-  factory HelperOrchestrator.getInstance({
-    GlobalKey<NavigatorState> navigatorKey,
-    PalRouteObserver routeObserver, 
-    HelperClientService helperClientService, 
-    InAppUserClientService inAppUserClientService}) 
-  {
-    if(_instance == null) {
-      _instance = HelperOrchestrator._(
-        routeObserver, 
-        helperClientService, 
-        inAppUserClientService, 
-        navigatorKey
-      );
+  factory HelperOrchestrator.getInstance(
+      {GlobalKey<NavigatorState> navigatorKey,
+      PalRouteObserver routeObserver,
+      HelperClientService helperClientService,
+      InAppUserClientService inAppUserClientService}) {
+    if (_instance == null) {
+      _instance = HelperOrchestrator._(routeObserver, helperClientService,
+          inAppUserClientService, navigatorKey);
     }
     return _instance;
   }
 
   @visibleForTesting
-  factory HelperOrchestrator.create({
-    GlobalKey<NavigatorState> navigatorKey,
-    PalRouteObserver routeObserver,
-    HelperClientService helperClientService,
-    InAppUserClientService inAppUserClientService})
-  {
-    _instance = HelperOrchestrator._(
-      routeObserver,
-      helperClientService,
-      inAppUserClientService,
-      navigatorKey
-    );
+  factory HelperOrchestrator.create(
+      {GlobalKey<NavigatorState> navigatorKey,
+      PalRouteObserver routeObserver,
+      HelperClientService helperClientService,
+      InAppUserClientService inAppUserClientService}) {
+    _instance = HelperOrchestrator._(routeObserver, helperClientService,
+        inAppUserClientService, navigatorKey);
     return _instance;
   }
 
-  HelperOrchestrator._(this.routeObserver, this.helperClientService, this.inAppUserClientService, this.navigatorKey):
-    assert(routeObserver != null),
-    assert(helperClientService != null),
-    assert(inAppUserClientService != null) {
+  HelperOrchestrator._(this.routeObserver, this.helperClientService,
+      this.inAppUserClientService, this.navigatorKey)
+      : assert(routeObserver != null),
+        assert(helperClientService != null),
+        assert(inAppUserClientService != null) {
     this.routeObserver.routeSettings.listen((RouteSettings newRoute) async {
       if (newRoute == null || newRoute.name == null) {
         return;
@@ -82,12 +74,13 @@ class HelperOrchestrator {
       // DEBUG: REMOVE THIS
       // _showUpdateHelper();
       // _showSimpleHelper();
+      _showFullScreenHelper();
       // DEBUG: END REMOVE
-      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
-      final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
-      if (helpersToShow != null && helpersToShow.length > 0) {
-        showHelper(helpersToShow[0], inAppUser.id);
-      }
+      // final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
+      // final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
+      // if (helpersToShow != null && helpersToShow.length > 0) {
+      //   showHelper(helpersToShow[0], inAppUser.id);
+      // }
     } catch (e) {
       // Nothing to do
       // TODO log error to our server
@@ -107,34 +100,49 @@ class HelperOrchestrator {
   @visibleForTesting
   showHelper(final HelperEntity helper, final String inAppUserId) {
     OverlayEntry entry = OverlayEntry(
-      opaque: false,
-      builder: (context) => PalTheme(
-        theme: PalThemeData.light(),
-        child: HelperFactory.build(helper, onTrigger: () async {
-          await helperClientService.triggerHelper(helper.pageId, helper.id, inAppUserId);
-          this.popHelper();
-        }),
-      )
-    );
+        opaque: false,
+        builder: (context) => PalTheme(
+              theme: PalThemeData.light(),
+              child: HelperFactory.build(helper, onTrigger: () async {
+                await helperClientService.triggerHelper(
+                    helper.pageId, helper.id, inAppUserId);
+                this.popHelper();
+              }),
+            ));
     var overlay = navigatorKey.currentState.overlay;
     overlay.insert(entry);
     this.overlay = entry;
   }
 
-
   // DEBUG: REMOVE THIS
   _showSpecificHelper(Widget helperToShow) {
     OverlayEntry entry = OverlayEntry(
-      opaque: false,
-      builder: (context) => PalTheme(
-        theme: PalThemeData.light(),
-        child: Builder(
-          builder: (context) => helperToShow,
-        ),
-      ));
+        opaque: false,
+        builder: (context) => PalTheme(
+              theme: PalThemeData.light(),
+              child: Builder(
+                builder: (context) => helperToShow,
+              ),
+            ));
     var overlay = navigatorKey.currentState.overlay;
     overlay.insert(entry);
     this.overlay = entry;
+  }
+
+  _showFullScreenHelper() {
+    _showSpecificHelper(
+      UserFullScreenHelperPage(
+        backgroundColor: Colors.blueAccent,
+        titleLabel: CustomLabel(
+          text: 'Test ta mere',
+          fontSize: 60.0,
+          fontColor: Colors.white,
+        ),
+        onTrigger: () async {
+          this.popHelper();
+        },
+      ),
+    );
   }
 
   _showUpdateHelper() {
@@ -180,11 +188,12 @@ class HelperOrchestrator {
     );
   }
 
-  _showSimpleHelper(){
+  _showSimpleHelper() {
     _showSpecificHelper(ToastLayout(
       toaster: Toaster(
         title: "Tip",
-        description: "You can just disable notification by going in your profile and click on notifications tab > disable notifications",
+        description:
+            "You can just disable notification by going in your profile and click on notifications tab > disable notifications",
       ),
       onDismissed: (res) => popHelper(),
     ));

@@ -30,10 +30,10 @@ class EditorFullScreenHelperPresenter
     this.viewModel.helperOpacity = 1;
   }
 
+  // Title
   onTitleChanged(Key key, String newValue) {
     fullscreenHelperViewModel.titleField?.text?.value = newValue;
   }
-
   onTitleTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
     fullscreenHelperViewModel.titleField?.fontColor?.value =
         newTextStyle?.color;
@@ -44,6 +44,42 @@ class EditorFullScreenHelperPresenter
       fullscreenHelperViewModel.titleField?.fontWeight?.value =
           fontKeys.fontWeightNameKey;
       fullscreenHelperViewModel.titleField?.fontFamily?.value =
+          fontKeys.fontFamilyNameKey;
+    }
+  }
+
+  // Positiv button
+  onPositivTextChanged(Key key, String newValue) {
+    fullscreenHelperViewModel.positivButtonField?.text?.value = newValue;
+  }
+  onPositivTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
+    fullscreenHelperViewModel.positivButtonField?.fontColor?.value =
+        newTextStyle?.color;
+    fullscreenHelperViewModel.positivButtonField?.fontSize?.value =
+        newTextStyle?.fontSize?.toInt();
+
+    if (fontKeys != null) {
+      fullscreenHelperViewModel.positivButtonField?.fontWeight?.value =
+          fontKeys.fontWeightNameKey;
+      fullscreenHelperViewModel.positivButtonField?.fontFamily?.value =
+          fontKeys.fontFamilyNameKey;
+    }
+  }
+
+  // Negativ button
+  onNegativTextChanged(Key key, String newValue) {
+    fullscreenHelperViewModel.negativButtonField?.text?.value = newValue;
+  }
+  onNegativTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
+    fullscreenHelperViewModel.negativButtonField?.fontColor?.value =
+        newTextStyle?.color;
+    fullscreenHelperViewModel.negativButtonField?.fontSize?.value =
+        newTextStyle?.fontSize?.toInt();
+
+    if (fontKeys != null) {
+      fullscreenHelperViewModel.negativButtonField?.fontWeight?.value =
+          fontKeys.fontWeightNameKey;
+      fullscreenHelperViewModel.negativButtonField?.fontFamily?.value =
           fontKeys.fontFamilyNameKey;
     }
   }

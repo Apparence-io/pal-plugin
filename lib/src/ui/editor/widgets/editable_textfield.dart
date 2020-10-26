@@ -243,7 +243,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
                       hintStyle: _textStyle.merge(
                         TextStyle(
                           color: _textStyle?.color?.withAlpha(80),
-                          decoration: TextDecoration.none,
                         ),
                       ),
                     ),

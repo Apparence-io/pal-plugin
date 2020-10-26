@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/graphic_entity.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
@@ -123,7 +124,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             mediaSize: 123.0,
                             onEdit: presenter.editMedia,
                             url: viewModel.media?.url?.value,
-                            editKey: 'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
+                            editKey:
+                                'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
                           ),
                           SizedBox(height: 20),
                           EditableTextField.text(
@@ -141,40 +143,89 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               color: viewModel.titleField?.fontColor?.value,
                               decoration: TextDecoration.none,
                               fontSize: viewModel.titleField?.fontSize?.value
-                                    ?.toDouble(),
-                                fontWeight: FontWeightMapper.toFontWeight(
-                                    viewModel.titleField?.fontWeight?.value),
+                                  ?.toDouble(),
+                              fontWeight: FontWeightMapper.toFontWeight(
+                                  viewModel.titleField?.fontWeight?.value),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 24.0),
                             child: InkWell(
-                              key: ValueKey("positiveFeedback"),
-                              child: Text(
-                                "Ok, thanks !",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 23,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.bold,
+                              key: ValueKey(
+                                  'pal_EditorFullScreenHelper_ThanksButton'),
+                              child: EditableTextField.text(
+                                helperToolbarKey: ValueKey(
+                                  'pal_EditorFullScreenHelper_ThanksButtonToolbar',
                                 ),
-                                textAlign: TextAlign.center,
+                                textFormFieldKey: ValueKey(
+                                  'pal_EditorFullScreenHelper_ThanksButtonField',
+                                ),
+                                outsideTapStream:
+                                    model.editableTextFieldController.stream,
+                                onChanged: presenter.onPositivTextChanged,
+                                onTextStyleChanged:
+                                    presenter.onPositivTextStyleChanged,
+                                hintText:
+                                    viewModel.positivButtonField?.hintText,
+                                maximumCharacterLength: 25,
+                                textStyle: TextStyle(
+                                  color: viewModel
+                                      .positivButtonField?.fontColor?.value,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: viewModel
+                                      .positivButtonField?.fontSize?.value
+                                      ?.toDouble(),
+                                  fontWeight: FontWeightMapper.toFontWeight(
+                                    viewModel
+                                        .positivButtonField?.fontWeight?.value,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 16.0),
                             child: InkWell(
-                              key: ValueKey("negativeFeedback"),
-                              child: Text(
-                                "This is not helping",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
+                              key: ValueKey(
+                                  'pal_EditorFullScreenHelper_NegativButton'),
+                              child: EditableTextField.text(
+                                helperToolbarKey: ValueKey(
+                                  'pal_EditorFullScreenHelper_ThanksButtonToolbar',
                                 ),
-                                textAlign: TextAlign.center,
+                                textFormFieldKey: ValueKey(
+                                  'pal_EditorFullScreenHelper_ThanksButtonField',
+                                ),
+                                outsideTapStream:
+                                    model.editableTextFieldController.stream,
+                                onChanged: presenter.onPositivTextChanged,
+                                onTextStyleChanged:
+                                    presenter.onPositivTextStyleChanged,
+                                hintText:
+                                    viewModel.negativButtonField?.hintText,
+                                maximumCharacterLength: 25,
+                                textStyle: TextStyle(
+                                  color: viewModel
+                                      .negativButtonField?.fontColor?.value,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: viewModel
+                                      .negativButtonField?.fontSize?.value
+                                      ?.toDouble(),
+                                  fontWeight: FontWeightMapper.toFontWeight(
+                                    viewModel
+                                        .negativButtonField?.fontWeight?.value,
+                                  ),
+                                ),
                               ),
+
+                              // Text(
+                              //   "This is not helping",
+                              //   style: TextStyle(
+                              //     color: Colors.white,
+                              //     fontSize: 13,
+                              //     fontWeight: FontWeight.bold,
+                              //   ),
+                              //   textAlign: TextAlign.center,
+                              // ),
                             ),
                           ),
                         ],

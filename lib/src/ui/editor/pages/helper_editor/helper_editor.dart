@@ -251,6 +251,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
               child: EditorButton.validate(
                 PalTheme.of(context),
                 presenter.onEditorValidate,
+                isEnabled: model.isEditableWidgetValid,
                 key: ValueKey("editModeValidate"),
               ),
             ),

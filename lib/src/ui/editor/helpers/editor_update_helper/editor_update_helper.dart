@@ -23,6 +23,8 @@ abstract class EditorUpdateHelperView {
     EditorUpdateHelperModel model,
   );
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
+
+  void callOnFormChanged(EditorUpdateHelperModel model);
 }
 
 class EditorUpdateHelperPage extends StatelessWidget
@@ -72,11 +74,9 @@ class EditorUpdateHelperPage extends StatelessWidget
                 EdgeInsets.only(bottom: (model.isKeyboardVisible ? 0.0 : 90.0)),
             child: Form(
               key: model.formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+              autovalidateMode: AutovalidateMode.always,
               onChanged: () {
-                if (onFormChanged != null) {
-                  onFormChanged(model.formKey?.currentState?.validate());
-                }
+                presenter.callonFormChanged();
               },
               child: EditableBackground(
                 backgroundColor: viewModel.backgroundColor?.value,
@@ -159,14 +159,16 @@ class EditorUpdateHelperPage extends StatelessWidget
       hintText: viewModel.titleField?.hintText,
       onChanged: presenter.onTitleFieldChanged,
       onTextStyleChanged: presenter.onTitleTextStyleChanged,
-      autovalidate: false,
+      validator: presenter.validateTitleTextField,
+      autovalidate: AutovalidateMode.disabled,
       maximumCharacterLength: 60,
       minimumCharacterLength: 1,
       outsideTapStream: model.editableTextFieldController.stream,
       textStyle: TextStyle(
         color: viewModel.titleField?.fontColor?.value,
         fontSize: viewModel.titleField?.fontSize?.value?.toDouble(),
-        fontWeight: FontWeightMapper.toFontWeight(viewModel.titleField?.fontWeight?.value),
+        fontWeight: FontWeightMapper.toFontWeight(
+            viewModel.titleField?.fontWeight?.value),
       ),
     );
   }
@@ -276,6 +278,13 @@ class EditorUpdateHelperPage extends StatelessWidget
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 500),
       );
+    }
+  }
+
+  @override
+  void callOnFormChanged(EditorUpdateHelperModel model) {
+    if (onFormChanged != null) {
+      onFormChanged(model.formKey?.currentState?.validate());
     }
   }
 }

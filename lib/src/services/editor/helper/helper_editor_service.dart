@@ -172,7 +172,6 @@ class _EditorHelperHttpService implements EditorHelperService {
             helperImages: [
               HelperImageEntity(
                   url: createArgs.topImageUrl,
-                  id: createArgs.topImageId,
                   key: UpdatescreenHelperKeys.IMAGE_KEY)
             ]));
   }

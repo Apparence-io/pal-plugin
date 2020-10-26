@@ -102,7 +102,7 @@ class CreateUpdateHelper {
   HelperTextConfig title, positivButton, negativButton;
   List<HelperTextConfig> lines;
   String backgroundColor;
-  int topImageId;
+  String topImageId;
   String topImageUrl;
 
   CreateUpdateHelper({

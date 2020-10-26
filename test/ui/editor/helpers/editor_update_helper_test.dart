@@ -113,17 +113,17 @@ void main() {
 
       presenter.addChangelogNote();
       await tester.pump();
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
       expect(presenter.updateHelperViewModel.changelogsFields.length, 2);
 
       presenter.addChangelogNote();
       await tester.pump();
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
       expect(presenter.updateHelperViewModel.changelogsFields.length, 3);
 
       presenter.addChangelogNote();
       await tester.pump();
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
       expect(presenter.updateHelperViewModel.changelogsFields.length, 4);
 
       expect(find.byType(EditableTextField), findsNWidgets(6));

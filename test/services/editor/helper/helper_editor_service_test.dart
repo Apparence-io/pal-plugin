@@ -199,7 +199,7 @@ void main() {
             )
           ],
           backgroundColor: "#CCF",
-          topImageId: 13);
+          topImageUrl: 'url');
       // what our service should create
       HelperEntity myHelper = HelperEntity(
           name: args.config.name,
@@ -237,7 +237,7 @@ void main() {
           ],
           helperImages: [
             HelperImageEntity(
-                id: args.topImageId, key: FullscreenHelperKeys.IMAGE_KEY)
+                url: args.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
           ],
           helperBoxes: [
             HelperBoxEntity(

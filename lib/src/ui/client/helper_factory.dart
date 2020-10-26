@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/ui/client/helpers/simple_helper_widget.dart';
-import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
-import 'package:palplugin/src/extensions/color_extension.dart';
+import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
 
 class HelperFactory {
 
@@ -15,12 +14,12 @@ class HelperFactory {
   }
 
   static Widget _createHelperFullScreen(final HelperEntity helper, final Function onTrigger){
-    return UserFullscreenHelperWidget(
+    return UserFullScreenHelperPage(
       // helperText: helper.title, //FIXME
       // bgColor: HexColor.fromHex(helper.backgroundColor),
       // textColor: HexColor.fromHex(helper.fontColor),
-      textSize: 18,
-      onTrigger: onTrigger,
+      // textSize: 18,
+      // onTrigger: onTrigger,
     );
   }
 

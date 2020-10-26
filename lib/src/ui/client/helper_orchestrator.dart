@@ -8,7 +8,6 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helper_factory.dart';
 import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper_widget.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 
 import 'helpers/simple_helper_widget.dart';
@@ -74,13 +73,13 @@ class HelperOrchestrator {
       // DEBUG: REMOVE THIS
       // _showUpdateHelper();
       // _showSimpleHelper();
-      _showFullScreenHelper();
+      // _showFullScreenHelper();
       // DEBUG: END REMOVE
-      // final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
-      // final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
-      // if (helpersToShow != null && helpersToShow.length > 0) {
-      //   showHelper(helpersToShow[0], inAppUser.id);
-      // }
+      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
+      if (helpersToShow != null && helpersToShow.length > 0) {
+        showHelper(helpersToShow[0], inAppUser.id);
+      }
     } catch (e) {
       // Nothing to do
       // TODO log error to our server
@@ -134,11 +133,15 @@ class HelperOrchestrator {
       UserFullScreenHelperPage(
         backgroundColor: Colors.blueAccent,
         titleLabel: CustomLabel(
-          text: 'Test ta mere',
+          text: 'A simple test',
           fontSize: 60.0,
           fontColor: Colors.white,
         ),
-        onTrigger: () async {
+        mediaUrl: 'https://picsum.photos/200/300',
+        onPositivButtonTap: () async {
+          this.popHelper();
+        },
+        onNegativButtonTap: () async {
           this.popHelper();
         },
       ),

@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 
 class UserUpdateHelperModel extends MVVMModel {

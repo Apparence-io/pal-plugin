@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Pal(
-      editorModeEnabled: false,
+      editorModeEnabled: true,
       appToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MWIxYTljNS1mODNjLTQ5OTMtYWRjOS0wOWY0Yzk0YWRmNjIiLCJ0eXBlIjoiUFJPSkVDVCIsImlhdCI6MTYwMjc2MjkyMH0.HDUIYt-gkrTGBww7lbydyhXB0Im8NeNVn36D4ZZWKYU',
       child: MaterialApp(
         key: ValueKey('hostedApp'),

@@ -143,5 +143,15 @@ void main() {
               'pal_EditorFullScreenHelperPage_EditableMedia_EditButton')),
           findsOneWidget);
     });
+
+    testWidgets('should edit fullscreen positiv button', (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      var titleField = find.byKey(ValueKey('pal_EditorFullScreenHelper_ThanksButtonField'));
+      await tester.tap(titleField.first);
+      await tester.pump();
+      await tester.enterText(titleField, 'Ok !');
+      expect(find.text('Ok !'), findsOneWidget);
+    });
   });
 }

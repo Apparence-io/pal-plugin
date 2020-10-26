@@ -190,17 +190,17 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   'pal_EditorFullScreenHelper_NegativButton'),
                               child: EditableTextField.text(
                                 helperToolbarKey: ValueKey(
-                                  'pal_EditorFullScreenHelper_ThanksButtonToolbar',
-                                ),
-                                textFormFieldKey: ValueKey(
-                                  'pal_EditorFullScreenHelper_ThanksButtonField',
-                                ),
-                                outsideTapStream:
-                                    model.editableTextFieldController.stream,
-                                onChanged: presenter.onPositivTextChanged,
-                                onTextStyleChanged:
-                                    presenter.onPositivTextStyleChanged,
-                                hintText:
+                                'pal_EditorFullScreenHelper_NegativButtonToolbar',
+                              ),
+                              textFormFieldKey: ValueKey(
+                                'pal_EditorFullScreenHelper_NegativButtonField',
+                              ),
+                              outsideTapStream:
+                                  model.editableTextFieldController.stream,
+                              onChanged: presenter.onNegativTextChanged,
+                              onTextStyleChanged:
+                                  presenter.onNegativTextStyleChanged,
+                              hintText:
                                     viewModel.negativButtonField?.hintText,
                                 maximumCharacterLength: 25,
                                 textStyle: TextStyle(
@@ -216,16 +216,6 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
-                              // Text(
-                              //   "This is not helping",
-                              //   style: TextStyle(
-                              //     color: Colors.white,
-                              //     fontSize: 13,
-                              //     fontWeight: FontWeight.bold,
-                              //   ),
-                              //   textAlign: TextAlign.center,
-                              // ),
                             ),
                           ),
                         ],

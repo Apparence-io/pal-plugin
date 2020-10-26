@@ -184,7 +184,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 16.0),
+                            padding: const EdgeInsets.only(top: 10.0),
                             child: InkWell(
                               key: ValueKey(
                                   'pal_EditorFullScreenHelper_NegativButton'),
@@ -206,7 +206,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 textStyle: TextStyle(
                                   color: viewModel
                                       .negativButtonField?.fontColor?.value,
-                                  decoration: TextDecoration.underline,
+                                  decoration: TextDecoration.none,
                                   fontSize: viewModel
                                       .negativButtonField?.fontSize?.value
                                       ?.toDouble(),

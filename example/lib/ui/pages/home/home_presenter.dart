@@ -6,9 +6,4 @@ class HomePresenter extends Presenter<HomeModel, HomeView> {
   HomePresenter(
     HomeView viewInterface,
   ) : super(HomeModel(), viewInterface);
-
-  void incrementCounter() {
-    this.viewModel.counter++;
-    this.refreshView();
-  }
 }

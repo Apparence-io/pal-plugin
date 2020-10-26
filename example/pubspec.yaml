@@ -57,10 +57,9 @@ flutter:
   # /!\ DO NOT ADD THIS ASSET ON YOUR APP
   assets:
     - packages/palplugin/assets/images/logo.png
-    - assets/images/gump.png
-    - assets/images/joker.jpg
-    - assets/images/spiderMan3.jpg
-    - assets/images/truman.png
+    - assets/images/posters/gump.png
+    - assets/images/posters/joker.jpg
+    - assets/images/posters/truman.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

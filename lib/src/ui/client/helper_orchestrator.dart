@@ -75,6 +75,7 @@ class HelperOrchestrator {
       // _showSimpleHelper();
       // _showFullScreenHelper();
       // DEBUG: END REMOVE
+
       final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
       final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
       if (helpersToShow != null && helpersToShow.length > 0) {
@@ -88,6 +89,8 @@ class HelperOrchestrator {
   }
 
   bool popHelper() {
+    // TODO: We need to animate widget disapear first
+    // and then remove transparent overlay
     if (overlay != null) {
       overlay.remove();
       overlay = null;
@@ -136,6 +139,16 @@ class HelperOrchestrator {
           text: 'A simple test',
           fontSize: 60.0,
           fontColor: Colors.white,
+        ),
+        positivLabel: CustomLabel(
+          text: 'Positiv !',
+          fontColor: Colors.green,
+          fontSize: 22.0,
+        ),
+        negativLabel: CustomLabel(
+          text: 'Negativ !',
+          fontColor: Colors.red,
+          fontSize: 22.0,
         ),
         mediaUrl: 'https://picsum.photos/200/300',
         onPositivButtonTap: () async {

@@ -22,7 +22,7 @@ main() {
       await before(tester);
       await tester.pumpAndSettle();
 
-      expect(find.byKey(ValueKey('Home')), findsOneWidget);
+      expect(find.byKey(ValueKey('demo_HomePage')), findsOneWidget);
 
       expect(find.text('Pal demo'), findsOneWidget);
 
@@ -33,9 +33,9 @@ main() {
       expect(find.text('One more'), findsOneWidget);
       expect(find.text('Second one'), findsOneWidget);
 
-      expect(find.byKey(ValueKey('card_SpiderMan')), findsOneWidget);
-      expect(find.byKey(ValueKey('card_Gump')), findsOneWidget);
-      expect(find.byKey(ValueKey('card_Joker')), findsOneWidget);
+      expect(find.byKey(ValueKey('demo_HomePage_Cards_Truman')), findsOneWidget);
+      expect(find.byKey(ValueKey('demo_HomePage_Cards_Gump')), findsOneWidget);
+      expect(find.byKey(ValueKey('demo_HomePage_Cards_Joker')), findsOneWidget);
     });
 
     group('child navigation should work', () {
@@ -43,7 +43,7 @@ main() {
         await before(tester);
         await tester.pumpAndSettle();
 
-        Finder child1RouteButton = find.byKey(ValueKey('card_Joker'));
+        Finder child1RouteButton = find.byKey(ValueKey('demo_HomePage_Cards_Joker'));
         await tester.ensureVisible(child1RouteButton);
         await tester.tap(child1RouteButton);
         await tester.pumpAndSettle();
@@ -55,7 +55,7 @@ main() {
         await before(tester);
         await tester.pumpAndSettle();
 
-        Finder child1RouteButton = find.byKey(ValueKey('card_Gump'));
+        Finder child1RouteButton = find.byKey(ValueKey('demo_HomePage_Cards_Gump'));
         await tester.ensureVisible(child1RouteButton);
         await tester.tap(child1RouteButton);
         await tester.pumpAndSettle();

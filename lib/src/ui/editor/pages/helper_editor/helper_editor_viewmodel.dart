@@ -10,6 +10,9 @@ class HelperEditorViewModel extends MVVMModel {
   bool isLoading;
   bool isEditableWidgetValid;
   bool isEditingWidget;
+  double loadingOpacity;
+  bool isHelperCreated;
+  bool isHelperCreating;
 
   // This the template view model with all default values
   HelperViewModel templateViewModel;
@@ -61,20 +64,21 @@ class FullscreenHelperViewModel extends HelperViewModel {
   final TextFormFieldNotifier descriptionField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
     fontSize: 14,
-    text: '',
+    text: 'Une description',
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier positivButtonField = TextFormFieldNotifier(
     fontColor: Color(0xFFCCC2),
     fontSize: 14,
-    text: '',
+    text: 'A poisitiv button',
     fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
   );
   final TextFormFieldNotifier negativButtonField = TextFormFieldNotifier(
-    text: '',
-    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
     fontColor: Color(0xFFCCC2),
-    fontSize: 14,);
+    fontSize: 14,
+    text: 'A negativ button',
+    fontWeight: FontWeightMapper.toFontKey(FontWeight.normal),
+    );
 
   FullscreenHelperViewModel({
     @required String name,

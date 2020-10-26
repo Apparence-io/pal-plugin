@@ -33,6 +33,7 @@ abstract class HelpersListModalView {
     final HelpersListModalPresenter presenter,
     final List<HelperEntity> helpers,
   );
+  void onCloseButton();
 }
 
 class HelpersListModal extends StatefulWidget {
@@ -61,8 +62,9 @@ class HelpersListModal extends StatefulWidget {
 
 class _HelpersListModalState extends State<HelpersListModal>
     implements HelpersListModalView {
-  final ScrollController listController = ScrollController();
+  final ScrollController _listController = ScrollController();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
 
@@ -75,7 +77,7 @@ class _HelpersListModalState extends State<HelpersListModal>
         this,
         loader: this.widget.loader ??
             HelpersListModalLoader(
-                EditorInjector.of(context).pageService,
+                EditorInjector.of(context).pageEditorService,
                 EditorInjector.of(context).helperService,
                 EditorInjector.of(context).routeObserver),
         palEditModeStateService: this.widget.palEditModeStateService ??
@@ -156,10 +158,7 @@ class _HelpersListModalState extends State<HelpersListModal>
             color: Theme.of(context).accentColor,
           ),
         ),
-        onPressed: () {
-          HapticFeedback.selectionClick();
-          Navigator.pop(context);
-        },
+        onPressed: onCloseButton,
         borderSide: BorderSide(
           color: Theme.of(context).accentColor,
         ),
@@ -185,9 +184,9 @@ class _HelpersListModalState extends State<HelpersListModal>
             ),
             padding: const EdgeInsets.only(top: 8.0),
             key: ValueKey('palHelpersListModalContent'),
-            scrollController: listController
+            scrollController: _listController
               ..addListener(() {
-                if (this.listController.position.extentAfter <= 100) {
+                if (_listController.position.extentAfter <= 100) {
                   presenter.loadMore();
                 }
               }),
@@ -407,5 +406,11 @@ class _HelpersListModalState extends State<HelpersListModal>
 
     // Then submit change on back
     presenter.sendNewHelpersOrder(oldIndex, newIndex);
+  }
+
+  @override
+  void onCloseButton() {
+    HapticFeedback.selectionClick();
+    Navigator.pop(context);
   }
 }

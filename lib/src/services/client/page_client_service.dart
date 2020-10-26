@@ -1,5 +1,4 @@
 import 'package:palplugin/src/database/entity/page_entity.dart';
-import 'package:palplugin/src/database/entity/pageable.dart';
 import 'package:palplugin/src/database/repository/page_repository.dart';
 
 abstract class PageClientService {
@@ -16,7 +15,6 @@ class _PageClientHttpService implements PageClientService {
 
   @override
   Future<PageEntity> getPage(String route) {
-    return this._pageRepository.getPage(route)
-      .then((res) => res.entities.length > 0 ? res.entities.first : null);
+    return this._pageRepository.getPage(route);
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
@@ -6,8 +7,12 @@ import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:palplugin/src/pal_navigator_observer.dart';
+import 'package:palplugin/src/pal_notifications.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/router.dart';
+import 'package:palplugin/src/services/editor/page/page_editor_service.dart';
+import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
@@ -26,6 +31,7 @@ class HelperEditorPageArguments {
   final String pageId;
 
   final String helperName;
+  final String helperMinVersion;
   final int priority;
   final HelperTriggerType triggerType;
   final HelperTheme helperTheme;
@@ -37,6 +43,7 @@ class HelperEditorPageArguments {
     this.hostedAppNavigatorKey,
     this.pageId, {
     @required this.helperName,
+    @required this.helperMinVersion,
     this.priority,
     @required this.triggerType,
     @required this.helperTheme,
@@ -62,10 +69,12 @@ abstract class HelperEditorView {
 
 class HelperEditorPageBuilder implements HelperEditorView {
   final ElementFinder elementFinder;
-
   final HelperEditorPageArguments helperEditorPageArguments;
-
   final EditorHelperService helperService;
+  final VersionEditorService versionEditorService;
+  final PalRouteObserver routeObserver;
+  final PageEditorService pageService;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelperEditorPresenter, HelperEditorViewModel>();
@@ -75,6 +84,9 @@ class HelperEditorPageBuilder implements HelperEditorView {
   HelperEditorPageBuilder(
     this.helperEditorPageArguments, {
     this.helperService,
+    this.routeObserver,
+    this.pageService,
+    this.versionEditorService,
     this.elementFinder,
   });
 
@@ -84,9 +96,16 @@ class HelperEditorPageBuilder implements HelperEditorView {
       context: context,
       presenterBuilder: (context) => HelperEditorPresenter(
         this,
-        helperEditorPageArguments,
-        helperService ?? EditorInjector.of(context).helperService,
-        elementFinder
+        basicArguments: helperEditorPageArguments,
+        helperService:
+            helperService ?? EditorInjector.of(context).helperService,
+        pageService:
+            pageService ?? EditorInjector.of(context).pageEditorService,
+        versionEditorService: versionEditorService ??
+            EditorInjector.of(context).versionEditorService,
+        routeObserver:
+            routeObserver ?? EditorInjector.of(context).routeObserver,
+        elementFinder: elementFinder,
       ),
       builder: (mContext, presenter, model) => _buildEditorPage(
         mContext.buildContext,
@@ -110,11 +129,9 @@ class HelperEditorPageBuilder implements HelperEditorView {
           removeOverlay();
           return Future.value(false);
         },
-        child: Material(
-          key: ValueKey("EditorMaterial"),
-          color: Colors.transparent,
-          shadowColor: Colors.transparent,
-          child: Container(
+        child: Scaffold(
+          key: _scaffoldKey,
+          body: Container(
             color: Colors.black.withOpacity(.2),
             child: Stack(
               children: [
@@ -128,8 +145,29 @@ class HelperEditorPageBuilder implements HelperEditorView {
                           _buildBannerEditorMode(context),
                         ],
                       )
-                    : Center(
-                        child: CircularProgressIndicator(),
+                    : AnimatedOpacity(
+                        duration: Duration(milliseconds: 400),
+                        opacity: model.loadingOpacity,
+                        child: Stack(
+                          children: [
+                            BackdropFilter(
+                              filter:
+                                  ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                              child: Container(
+                                color: Colors.black54,
+                              ),
+                            ),
+                            Center(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: (model.isHelperCreating)
+                                    ? _buildLoadingScreen()
+                                    : _buildCreationStatusScreen(model),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
               ],
             ),
@@ -137,6 +175,49 @@ class HelperEditorPageBuilder implements HelperEditorView {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildLoadingScreen() {
+    return [
+      CircularProgressIndicator(
+        valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+      ),
+      SizedBox(height: 25.0),
+      Text(
+        'Creating your helper...',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0,
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildCreationStatusScreen(HelperEditorViewModel model) {
+    return [
+      model.isHelperCreated
+          ? Icon(
+              Icons.check,
+              color: Colors.green,
+              size: 100.0,
+            )
+          : Icon(
+              Icons.close,
+              color: Colors.red,
+              size: 100.0,
+            ),
+      SizedBox(height: 25.0),
+      Text(
+        (model.isHelperCreated)
+            ? 'Helper created 👍'
+            : 'An error occured 😐\nPlease try again.',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22.0,
+        ),
+      ),
+    ];
   }
 
   Widget _buildBannerEditorMode(BuildContext context) {
@@ -161,7 +242,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
         children: [
           EditorButton.cancel(
             PalTheme.of(context),
-            () => removeOverlay(),
+            presenter.onEditorClose,
             key: ValueKey("editModeCancel"),
           ),
           if (model.isEditingWidget)
@@ -169,11 +250,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
               padding: EdgeInsets.only(left: 16),
               child: EditorButton.validate(
                 PalTheme.of(context),
-                () async {
-                  await presenter.save();
-                  await Future.delayed(Duration(milliseconds: 500));
-                  removeOverlay();
-                },
+                presenter.onEditorValidate,
                 key: ValueKey("editModeValidate"),
               ),
             ),
@@ -217,10 +294,12 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   @override
-  removeOverlay() {
+  removeOverlay() async {
     Overlayed.removeOverlay(
       helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,
     );
+    ShowHelpersListNotification().dispatch(_scaffoldKey.currentContext);
+    ShowBubbleNotification().dispatch(_scaffoldKey.currentContext);
   }
 }

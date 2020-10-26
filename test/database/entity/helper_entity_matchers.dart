@@ -81,7 +81,7 @@ class HelperEntityMatcher extends Matcher {
       if(testId && first.id != second.id) {
         return false;
       }
-      var isSame = first.color == second.color &&
+      var isSame = first.backgroundColor == second.backgroundColor &&
         first.key == second.key;
       if(!isSame)
         return false;

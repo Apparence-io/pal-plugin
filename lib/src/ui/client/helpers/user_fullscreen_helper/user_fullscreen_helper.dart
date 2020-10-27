@@ -13,6 +13,7 @@ import 'user_fullscreen_helper_viewmodel.dart';
 abstract class UserFullScreenHelperView {
   void onPositivButtonCallback();
   void onNegativButtonCallback();
+  void disposeAnimation();
 }
 
 class UserFullScreenHelperPage extends StatelessWidget
@@ -24,6 +25,7 @@ class UserFullScreenHelperPage extends StatelessWidget
   final String mediaUrl;
   final Function onPositivButtonTap;
   final Function onNegativButtonTap;
+  MvvmContext _mvvmContext;
 
   UserFullScreenHelperPage({
     Key key,
@@ -74,6 +76,7 @@ class UserFullScreenHelperPage extends StatelessWidget
         ];
       },
       animListener: (context, presenter, model) {
+        _mvvmContext = context;
         if (model.mediaAnimation) {
           context.animationsControllers[0]
               .forward()
@@ -236,5 +239,15 @@ class UserFullScreenHelperPage extends StatelessWidget
   void onPositivButtonCallback() {
     HapticFeedback.selectionClick();
     this.onPositivButtonTap();
+  }
+
+  @override
+  void disposeAnimation() {
+    _mvvmContext.animationsControllers[0].stop();
+    _mvvmContext.animationsControllers[1].stop();
+    _mvvmContext.animationsControllers[2].stop();
+    _mvvmContext.animationsControllers[0].dispose();
+    _mvvmContext.animationsControllers[1].dispose();
+    _mvvmContext.animationsControllers[2].dispose();
   }
 }

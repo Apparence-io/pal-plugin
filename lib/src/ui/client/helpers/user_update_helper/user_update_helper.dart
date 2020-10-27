@@ -9,12 +9,13 @@ import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_app_infos.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_logo.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_release_note_tile.dart';
 import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
 
-abstract class UserUpdateHelperView {}
+abstract class UserUpdateHelperView {
+  void disposeAnimation();
+}
 
 class UserUpdateHelperPage extends StatelessWidget
     implements UserUpdateHelperView {
@@ -25,6 +26,7 @@ class UserUpdateHelperPage extends StatelessWidget
   final PackageVersionReader packageVersionReader;
   final String mediaUrl;
   final Function onTrigger;
+  MvvmContext _mvvmContext;
 
   UserUpdateHelperPage({
     Key key,
@@ -80,6 +82,7 @@ class UserUpdateHelperPage extends StatelessWidget
         ];
       },
       animListener: (context, presenter, model) {
+        _mvvmContext = context;
         if (model.changelogCascadeAnimation) {
           context.animationsControllers[0]
               .forward()
@@ -158,20 +161,22 @@ class UserUpdateHelperPage extends StatelessWidget
     final MvvmContext context,
   ) {
     return Container(
-       width: double.infinity,
+      width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.all(25.0),
         child: AnimatedScaleWidget(
           widget: ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
             child: CachedNetworkImage(
+              key: ValueKey('pal_UserUpdateHelperWidget_Image'),
               imageUrl: mediaUrl,
               fit: BoxFit.cover,
-              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+              placeholder: (context, url) =>
+                  Center(child: CircularProgressIndicator()),
               errorWidget: (BuildContext context, String url, dynamic error) {
-                return Image.asset('packages/palplugin/assets/images/create_helper.png');
+                return Image.asset(
+                    'packages/palplugin/assets/images/create_helper.png');
               },
-              
             ),
           ),
           animationController: context.animationsControllers[2],
@@ -228,10 +233,12 @@ class UserUpdateHelperPage extends StatelessWidget
                     child: Text(
                       thanksButtonLabel?.text ?? 'Thank you !',
                       style: TextStyle(
-                        fontSize: thanksButtonLabel?.fontSize ?? 18.0,
-                        color: thanksButtonLabel?.fontColor ?? Colors.white,
-                        fontWeight: thanksButtonLabel?.fontWeight ?? FontWeight.normal
-                      ).merge(
+                              fontSize: thanksButtonLabel?.fontSize ?? 18.0,
+                              color:
+                                  thanksButtonLabel?.fontColor ?? Colors.white,
+                              fontWeight: thanksButtonLabel?.fontWeight ??
+                                  FontWeight.normal)
+                          .merge(
                         GoogleFonts.getFont(
                             titleLabel?.fontFamily ?? 'Montserrat'),
                       ),
@@ -288,5 +295,17 @@ class UserUpdateHelperPage extends StatelessWidget
       labels.add(textLabel);
     }
     return labels;
+  }
+
+  @override
+  void disposeAnimation() {
+    _mvvmContext.animationsControllers[0].stop();
+    _mvvmContext.animationsControllers[1].stop();
+    _mvvmContext.animationsControllers[2].stop();
+    _mvvmContext.animationsControllers[3].stop();
+    _mvvmContext.animationsControllers[0].dispose();
+    _mvvmContext.animationsControllers[1].dispose();
+    _mvvmContext.animationsControllers[2].dispose();
+    _mvvmContext.animationsControllers[3].dispose();
   }
 }

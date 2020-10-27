@@ -48,7 +48,9 @@ void main() {
         ),
       );
       await tester.pumpWidget(app);
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 700));
 
       final presenterFinder = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
       final page = presenterFinder.evaluate().first.widget as PresenterInherited<UserFullScreenHelperPresenter, UserFullScreenHelperModel>;
@@ -121,18 +123,18 @@ void main() {
 
     testWidgets('should tap on positiv button', (WidgetTester tester) async {
       await _beforeEach(tester);
-
+      await tester.pump(Duration(milliseconds: 1000));
       final positivButton = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
       await tester.tap(positivButton);
-      await tester.pumpAndSettle();
+      await tester.pump(Duration(milliseconds: 1000));
     });
 
     testWidgets('should tap on negativ button', (WidgetTester tester) async {
       await _beforeEach(tester);
-
+      await tester.pump(Duration(milliseconds: 1000));
       final negativButton = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'));
       await tester.tap(negativButton);
-      await tester.pumpAndSettle();
+      await tester.pump(Duration(milliseconds: 1000));
     });
   });
 }

@@ -35,6 +35,8 @@ void main() {
         ),
       );
       await tester.pumpWidget(app);
+      await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 500));
     }
 
     testWidgets('widget is created as overlay', (WidgetTester tester) async {

@@ -155,6 +155,7 @@ class UserFullScreenHelperPage extends StatelessWidget
         borderRadius: BorderRadius.circular(15.0),
         child: CachedNetworkImage(
           imageUrl: mediaUrl,
+          fit: BoxFit.cover,
           placeholder: (context, url) => Center(child: CircularProgressIndicator()),
           errorWidget: (BuildContext context, String url, dynamic error) {
             return Image.asset('packages/palplugin/assets/images/create_helper.png');

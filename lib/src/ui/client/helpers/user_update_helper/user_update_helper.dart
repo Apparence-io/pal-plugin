@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
@@ -10,6 +11,7 @@ import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/anima
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_logo.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_release_note_tile.dart';
+import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
 
 abstract class UserUpdateHelperView {}
 
@@ -20,6 +22,7 @@ class UserUpdateHelperPage extends StatelessWidget
   final List<CustomLabel> changelogLabels;
   final CustomLabel thanksButtonLabel;
   final PackageVersionReader packageVersionReader;
+  final String mediaUrl;
   final Function onTrigger;
 
   UserUpdateHelperPage({
@@ -28,6 +31,7 @@ class UserUpdateHelperPage extends StatelessWidget
     @required this.titleLabel,
     @required this.changelogLabels,
     @required this.onTrigger,
+    this.mediaUrl,
     this.thanksButtonLabel,
     this.packageVersionReader,
   })  : assert(backgroundColor != null),
@@ -149,14 +153,26 @@ class UserUpdateHelperPage extends StatelessWidget
     );
   }
 
-  Container buildIcon(
+  Widget buildIcon(
     final MvvmContext context,
   ) {
     return Container(
-      width: double.infinity,
+       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: AnimatedLogo(
+        padding: const EdgeInsets.all(25.0),
+        child: AnimatedScaleWidget(
+          widget: ClipRRect(
+            borderRadius: BorderRadius.circular(15.0),
+            child: CachedNetworkImage(
+              imageUrl: mediaUrl,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+              errorWidget: (BuildContext context, String url, dynamic error) {
+                return Image.asset('packages/palplugin/assets/images/create_helper.png');
+              },
+              
+            ),
+          ),
           animationController: context.animationsControllers[2],
         ),
       ),

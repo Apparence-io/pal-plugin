@@ -23,7 +23,6 @@ class UpdatescreenHelperKeys {
   static const TITLE_KEY = "TITLE_KEY"; // mandatory
   static const LINES_KEY = "LINES_KEY"; //first mandatory
   static const POSITIV_KEY = "POSITIV_KEY"; // not mandatory
-  static const NEGATIV_KEY = "NEGATIV_KEY"; //TODO to remove
   static const IMAGE_KEY = "IMAGE_KEY"; // not mandatory
   static const BACKGROUND_KEY = "BACKGROUND_KEY";// mandatory
 }

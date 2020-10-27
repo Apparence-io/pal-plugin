@@ -139,8 +139,6 @@ class _EditorHelperHttpService implements EditorHelperService {
     helperTexts[0].key = UpdatescreenHelperKeys.TITLE_KEY;
     if (helperTexts[1] != null)
       helperTexts[1].key = UpdatescreenHelperKeys.POSITIV_KEY;
-    if (helperTexts[2] != null)
-      helperTexts[2].key = UpdatescreenHelperKeys.NEGATIV_KEY;
     helperTexts.removeWhere((element) => element == null);
     for (var element in createArgs.lines) {
       helperTexts.add(HelperTextEntity(

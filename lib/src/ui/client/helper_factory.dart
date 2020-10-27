@@ -148,16 +148,19 @@ class HelperFactory {
   static Widget _createUpdateHelper(
       final HelperEntity helper, final Function onTrigger) {
     return UserUpdateHelperPage(
-        onTrigger: () {
-          onTrigger(true);
-        },
-        backgroundColor: _parseBoxBackground(
-            UpdatescreenHelperKeys.BACKGROUND_KEY, helper.helperBoxes),
-        thanksButtonLabel: _parseTextLabel(
-            UpdatescreenHelperKeys.POSITIV_KEY, helper.helperTexts),
-        titleLabel: _parseTextLabel(
-            UpdatescreenHelperKeys.TITLE_KEY, helper.helperTexts),
-        changelogLabels: _parseChangeLogLabel(
-            UpdatescreenHelperKeys.LINES_KEY, helper.helperTexts));
+      onTrigger: () {
+        onTrigger(true);
+      },
+      backgroundColor: _parseBoxBackground(
+          UpdatescreenHelperKeys.BACKGROUND_KEY, helper.helperBoxes),
+      thanksButtonLabel: _parseTextLabel(
+          UpdatescreenHelperKeys.POSITIV_KEY, helper.helperTexts),
+      titleLabel:
+          _parseTextLabel(UpdatescreenHelperKeys.TITLE_KEY, helper.helperTexts),
+      changelogLabels: _parseChangeLogLabel(
+          UpdatescreenHelperKeys.LINES_KEY, helper.helperTexts),
+      mediaUrl:
+          _parseImageUrl(UpdatescreenHelperKeys.IMAGE_KEY, helper.helperImages),
+    );
   }
 }

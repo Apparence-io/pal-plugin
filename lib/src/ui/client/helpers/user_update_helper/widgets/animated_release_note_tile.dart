@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:palplugin/src/ui/client/helper_client_models.dart';
 
 class AnimatedReleaseNoteTile extends AnimatedWidget {
   int index;
-  String text;
-  Color fontColor;
-  double fontSize;
+  final CustomLabel customLabel;
   final AnimationController animationController;
   final double animationStart;
   final double animationEnd;
@@ -14,9 +14,7 @@ class AnimatedReleaseNoteTile extends AnimatedWidget {
   AnimatedReleaseNoteTile({
     Key key,
     @required this.index,
-    @required this.text,
-    this.fontColor,
-    this.fontSize,
+    @required this.customLabel,
     @required this.animationController,
     @required this.animationStart,
     @required this.animationEnd,
@@ -45,9 +43,10 @@ class AnimatedReleaseNoteTile extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color fontColorDefault = fontColor ?? Colors.white;
-    double fontSizeDefault = fontSize ?? 15.0;
-
+    Color fontColorDefault = this.customLabel.fontColor ?? Colors.white;
+    double fontSizeDefault = this.customLabel.fontSize ?? 15.0;
+    FontWeight fontWeightDefault = this.customLabel.fontWeight ?? FontWeight.normal;
+    String fontFamilyDefault = this.customLabel.fontFamily ?? 'Montserrat';
     return Transform.translate(
       offset: Offset(0, verticalOffsetAnim.value),
       child: Opacity(
@@ -61,15 +60,15 @@ class AnimatedReleaseNoteTile extends AnimatedWidget {
               color: fontColorDefault,
               fontSize: fontSizeDefault,
               fontWeight: FontWeight.w900,
-            ),
+            ).merge(GoogleFonts.getFont(fontFamilyDefault)),
             children: <TextSpan>[
               TextSpan(
-                text: this.text,
+                text: this.customLabel.text,
                 style: TextStyle(
                   color: fontColorDefault,
                   fontSize: fontSizeDefault,
-                  fontWeight: FontWeight.w400,
-                ),
+                  fontWeight: fontWeightDefault,
+                ).merge(GoogleFonts.getFont(fontFamilyDefault))
               ),
             ],
           ),

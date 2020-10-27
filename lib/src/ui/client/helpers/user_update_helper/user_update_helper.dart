@@ -279,9 +279,7 @@ class UserUpdateHelperPage extends StatelessWidget
         padding: const EdgeInsets.only(bottom: 8.0),
         child: AnimatedReleaseNoteTile(
           index: index++,
-          text: label?.text,
-          fontColor: label?.fontColor,
-          fontSize: label?.fontSize,
+          customLabel: label,
           animationController: context.animationsControllers[0],
           animationStart: animationStart,
           animationEnd: animationEnd,

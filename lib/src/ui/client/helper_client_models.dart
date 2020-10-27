@@ -5,7 +5,10 @@ class CustomLabel {
   Color fontColor;
   Color backgroundColor;
   Color borderColor;
-  num fontSize;
+  double fontSize;
+  String fontFamily;
+  String fontWeight;
+  
 
   CustomLabel({
     this.text,
@@ -13,5 +16,7 @@ class CustomLabel {
     this.backgroundColor,
     this.borderColor,
     @required this.fontSize,
+    this.fontFamily,
+    this.fontWeight
   });
 }

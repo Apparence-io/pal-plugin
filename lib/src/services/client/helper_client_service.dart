@@ -15,7 +15,7 @@ class HelperClientService {
 
   Future<List<HelperEntity>> getPageHelpers(final String route, final String inAppUserId) => throw "not implemented";
 
-  Future triggerHelper(final String pageId, final String helperId, final String inAppUserId) => throw "not implemented";
+  Future triggerHelper(final String pageId, final String helperId, final String inAppUserId, final bool positiveFeedback) => throw "not implemented";
 }
 
 class _HelperClientHttpService implements HelperClientService {
@@ -43,7 +43,7 @@ class _HelperClientHttpService implements HelperClientService {
   }
 
   @override
-  Future triggerHelper(final String pageId, final String helperId, final String inAppUserId) {
-    return this._helperRepository.clientTriggerHelper(pageId, helperId, inAppUserId);
+  Future triggerHelper(final String pageId, final String helperId, final String inAppUserId, final bool positiveFeedback) {
+    return this._helperRepository.clientTriggerHelper(pageId, helperId, inAppUserId, positiveFeedback);
   }
 }

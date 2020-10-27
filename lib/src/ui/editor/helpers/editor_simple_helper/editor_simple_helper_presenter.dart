@@ -63,4 +63,9 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     }
     return null;
   }
+
+  updateBackgroundColor(Color aColor) {
+    simpleHelperViewModel.backgroundColor.value = aColor;
+    this.refreshView();
+  }
 }

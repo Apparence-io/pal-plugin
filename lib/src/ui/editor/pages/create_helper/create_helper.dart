@@ -85,53 +85,55 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     final CreateHelperPresenter presenter,
     final CreateHelperModel model,
   ) {
-    return Container(
-      width: double.infinity,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 23.0,
-              bottom: 17.0,
-              left: 16.0,
-              right: 16.0,
+    return SafeArea(
+      child: Container(
+        width: double.infinity,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 23.0,
+                bottom: 17.0,
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: _buildProgressBar(model),
             ),
-            child: _buildProgressBar(model),
-          ),
-          Expanded(
-            child: NestedNavigator(
-              navigationKey: model.nestedNavigationKey,
-              initialRoute: 'create/infos',
-              onWillPop: presenter.decrementStep,
-              routes: {
-                'create/infos': (context) => CreateHelperInfosStep(
-                      model: model,
-                      presenter: presenter,
-                    ),
-                'create/type': (context) => CreateHelperTypeStep(
-                      model: model,
-                      presenter: presenter,
-                    ),
-                'create/theme': (context) => CreateHelperThemeStep(
-                      model: model,
-                      presenter: presenter,
-                    ),
-              },
+            Expanded(
+              child: NestedNavigator(
+                navigationKey: model.nestedNavigationKey,
+                initialRoute: 'create/infos',
+                onWillPop: presenter.decrementStep,
+                routes: {
+                  'create/infos': (context) => CreateHelperInfosStep(
+                        model: model,
+                        presenter: presenter,
+                      ),
+                  'create/type': (context) => CreateHelperTypeStep(
+                        model: model,
+                        presenter: presenter,
+                      ),
+                  'create/theme': (context) => CreateHelperThemeStep(
+                        model: model,
+                        presenter: presenter,
+                      ),
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0,
-              bottom: 12.0,
-              left: 16.0,
-              right: 16.0,
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+                left: 16.0,
+                right: 16.0,
+              ),
+              child: Container(
+                width: double.infinity,
+                child: _buildNextButton(context, model, presenter),
+              ),
             ),
-            child: Container(
-              width: double.infinity,
-              child: _buildNextButton(context, model, presenter),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -141,7 +143,9 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          (model?.step?.value != null) ? model.stepsTitle[model?.step?.value] : '',
+          (model?.step?.value != null)
+              ? model.stepsTitle[model?.step?.value]
+              : '',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,

@@ -131,45 +131,51 @@ class HelperEditorPageBuilder implements HelperEditorView {
         },
         child: Scaffold(
           key: _scaffoldKey,
-          body: Container(
-            color: Colors.black.withOpacity(.2),
-            child: Stack(
-              children: [
-                if (model.isEditingWidget)
-                  Positioned.fill(child: _helperToEdit),
-                (!model.isLoading)
-                    ? Stack(
-                        key: ValueKey('palEditorModeInteractUI'),
-                        children: [
-                          _buildValidationActions(context, presenter, model),
-                          _buildBannerEditorMode(context),
-                        ],
-                      )
-                    : AnimatedOpacity(
-                        duration: Duration(milliseconds: 400),
-                        opacity: model.loadingOpacity,
-                        child: Stack(
+          backgroundColor: Colors.transparent,
+          body: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+            child: Container(
+              color: Colors.black.withOpacity(.4),
+              child: Stack(
+                children: [
+                  if (model.isEditingWidget)
+                    Positioned.fill(child: _helperToEdit),
+                  (!model.isLoading)
+                      ? Stack(
+                          key: ValueKey('palEditorModeInteractUI'),
                           children: [
-                            BackdropFilter(
-                              filter:
-                                  ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                              child: Container(
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: (model.isHelperCreating)
-                                    ? _buildLoadingScreen()
-                                    : _buildCreationStatusScreen(model),
-                              ),
-                            ),
+                            if (!model.isKeyboardOpened)
+                              _buildValidationActions(
+                                  context, presenter, model),
+                            _buildBannerEditorMode(context),
                           ],
+                        )
+                      : AnimatedOpacity(
+                          duration: Duration(milliseconds: 400),
+                          opacity: model.loadingOpacity,
+                          child: Stack(
+                            children: [
+                              BackdropFilter(
+                                filter:
+                                    ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                                child: Container(
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: (model.isHelperCreating)
+                                      ? _buildLoadingScreen()
+                                      : _buildCreationStatusScreen(model),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

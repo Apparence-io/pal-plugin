@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
@@ -43,6 +44,7 @@ class HelperEditorPresenter
     viewModel.loadingOpacity = 0;
     viewModel.isHelperCreated = false;
     viewModel.isHelperCreating = false;
+    viewModel.isKeyboardOpened = false;
 
     // Create a template helper model
     // this template will be copied to edited widget
@@ -57,6 +59,13 @@ class HelperEditorPresenter
     viewModel.helperViewModel = EditorViewModelFactory.transform(
         viewModel.templateViewModel, basicArguments?.helperType);
     chooseHelperType();
+
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) {
+        viewModel.isKeyboardOpened = visible;
+        this.refreshView();
+      },
+    );
   }
 
   checkIfEditableWidgetFormValid(bool isFormValid) {

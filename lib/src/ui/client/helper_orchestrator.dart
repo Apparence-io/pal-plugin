@@ -76,14 +76,12 @@ class HelperOrchestrator {
       // _showFullScreenHelper();
       // DEBUG: END REMOVE
 
-      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
-      final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
+      final InAppUserEntity inAppUser =
+          await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow =
+          await this.helperClientService.getPageHelpers(route, inAppUser.id);
       if (helpersToShow != null && helpersToShow.length > 0) {
-        for (var helper in helpersToShow) {
-          if(helper.name == "Dimitri")
-           showHelper(helper, inAppUser.id);
-        }
-       
+        showHelper(helpersToShow[0], inAppUser.id);
       }
     } catch (e) {
       // Nothing to do

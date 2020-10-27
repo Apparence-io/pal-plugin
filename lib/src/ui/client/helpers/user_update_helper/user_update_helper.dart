@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
 import 'package:palplugin/src/services/package_version.dart';
@@ -229,6 +230,10 @@ class UserUpdateHelperPage extends StatelessWidget
                       style: TextStyle(
                         fontSize: thanksButtonLabel?.fontSize ?? 18.0,
                         color: thanksButtonLabel?.fontColor ?? Colors.white,
+                        fontWeight: thanksButtonLabel?.fontWeight ?? FontWeight.normal
+                      ).merge(
+                        GoogleFonts.getFont(
+                            titleLabel?.fontFamily ?? 'Montserrat'),
                       ),
                     ),
                   )

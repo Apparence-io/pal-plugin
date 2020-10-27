@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
@@ -158,9 +159,9 @@ class UserFullScreenHelperPage extends StatelessWidget
           fit: BoxFit.cover,
           placeholder: (context, url) => Center(child: CircularProgressIndicator()),
           errorWidget: (BuildContext context, String url, dynamic error) {
-            return Image.asset('packages/palplugin/assets/images/create_helper.png');
+            return Image.asset(
+                'packages/palplugin/assets/images/create_helper.png');
           },
-          
         ),
       ),
       animationController: context.animationsControllers[0],
@@ -175,10 +176,10 @@ class UserFullScreenHelperPage extends StatelessWidget
           titleLabel?.text ?? 'Title',
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: titleLabel?.fontColor ?? Colors.white,
-              fontSize: titleLabel?.fontSize ?? 60.0,
-              fontWeight: titleLabel?.fontWeight,
-              fontFamily: titleLabel?.fontFamily ?? 'Montserrat'),
+            color: titleLabel?.fontColor ?? Colors.white,
+            fontSize: titleLabel?.fontSize ?? 60.0,
+            fontWeight: titleLabel?.fontWeight,
+          ).merge(GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat')),
         ),
       ),
     );
@@ -202,8 +203,8 @@ class UserFullScreenHelperPage extends StatelessWidget
                 decoration: TextDecoration.underline,
                 fontSize: positivLabel?.fontSize ?? 23.0,
                 fontWeight: positivLabel?.fontWeight ?? FontWeight.bold,
-                fontFamily: positivLabel?.fontFamily ?? 'Montserrat',
-              ),
+              ).merge(GoogleFonts.getFont(
+                  positivLabel?.fontFamily ?? 'Montserrat')),
             ),
           ),
           FlatButton(
@@ -216,8 +217,8 @@ class UserFullScreenHelperPage extends StatelessWidget
                 color: negativLabel?.fontColor ?? Colors.white,
                 fontSize: negativLabel?.fontSize ?? 13.0,
                 fontWeight: negativLabel?.fontWeight ?? FontWeight.bold,
-                fontFamily: negativLabel?.fontFamily ?? 'Montserrat',
-              ),
+              ).merge(
+                  GoogleFonts.getFont(negativLabel?.fontFamily ?? 'Montserrat')),
             ),
           )
         ],

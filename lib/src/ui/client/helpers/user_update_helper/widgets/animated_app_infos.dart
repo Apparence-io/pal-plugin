@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 
@@ -6,7 +7,7 @@ class AnimatedAppInfos extends AnimatedWidget {
   final AnimationController animationController;
   final CustomLabel titleLabel;
   final String appVersion;
-  
+
   Animation<double> opacityAnim;
   Animation<double> verticalOffsetAnim;
 
@@ -38,10 +39,11 @@ class AnimatedAppInfos extends AnimatedWidget {
               key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
               style: TextStyle(
                 fontSize: titleLabel?.fontSize ?? 27.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: titleLabel?.fontWeight ?? FontWeight.normal,
                 color:
                     titleLabel?.fontColor ?? PalTheme.of(context).colors.light,
-              ),
+              ).merge(
+                  GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat')),
             ),
             SizedBox(
               height: 10.0,

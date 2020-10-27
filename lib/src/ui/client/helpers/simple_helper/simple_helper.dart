@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_presenter.dart';
 import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.dart';
@@ -183,10 +184,13 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
-                this.descriptionLabel.text,
+                descriptionLabel?.text ?? '',
                 style: TextStyle(
-                    color: this.descriptionLabel.fontColor,
-                    fontSize: this.descriptionLabel.fontSize),
+                  color: descriptionLabel.fontColor ?? Colors.white,
+                  fontSize: descriptionLabel.fontSize ?? 14.0,
+                  fontWeight: descriptionLabel.fontWeight ?? FontWeight.normal,
+                ).merge(
+                  GoogleFonts.getFont(descriptionLabel?.fontFamily ?? 'Montserrat')),
                 maxLines: 10,
               ),
             ),

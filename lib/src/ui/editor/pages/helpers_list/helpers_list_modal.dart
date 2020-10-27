@@ -174,7 +174,7 @@ class _HelpersListModalState extends State<HelpersListModal>
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   ) {
-    return (model.helpers != null)
+    return (model.helpers != null && model.helpers.length > 0)
         ? ReorderableListView(
             onReorder: (oldIndex, newIndex) => this.reorganizeHelper(
               oldIndex,

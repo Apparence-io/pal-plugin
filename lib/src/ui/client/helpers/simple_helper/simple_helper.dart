@@ -7,11 +7,16 @@ import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_view
 
 import '../../helper_client_models.dart';
 
-abstract class SimpleHelperView {}
+abstract class SimpleHelperView {
+  void disposeAnimation();
+}
 
 class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
   final CustomLabel descriptionLabel;
   final Color backgroundColor;
+
+  // FIXME: Add in MVVM Builder a way to dispose all animations in presenter.
+  MvvmContext _mvvmContext;
 
   SimpleHelperPage(
       {Key key,
@@ -32,6 +37,8 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
         this,
       ),
       builder: (context, presenter, model) {
+        _mvvmContext = context;
+
         return Container(
           width: MediaQuery.of(context.buildContext).size.width,
           decoration: BoxDecoration(
@@ -158,5 +165,11 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
         ),
       ),
     );
+  }
+
+  @override
+  void disposeAnimation() {
+    _mvvmContext.animationController.stop();
+    _mvvmContext.animationController.dispose();
   }
 }

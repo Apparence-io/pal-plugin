@@ -14,6 +14,12 @@ class SimpleHelperPresenter extends Presenter<SimpleHelperModel, SimpleHelperVie
     startAnimation();
   
   }
+
+  @override
+  void onDestroy() {
+    this.viewInterface.disposeAnimation();
+  }
+
   void startAnimation() async{
      await Future.delayed(Duration(milliseconds: 350), () {
       this.viewModel.thumbAnimation = true;

@@ -41,6 +41,7 @@ class _SimpleHelperLayoutState extends State<SimpleHelperLayout> with SingleTick
 
   @override
   void dispose() {
+    _controllerAnim.dispose();
     super.dispose();
   }
 

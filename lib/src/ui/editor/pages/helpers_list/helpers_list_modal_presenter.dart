@@ -36,6 +36,7 @@ class HelpersListModalPresenter
       this.viewModel.helpers = res.helpers;
       this.viewModel.pageId = res.pageId;
       this.viewModel.isLoading = false;
+
       this.refreshView();
     });
   }

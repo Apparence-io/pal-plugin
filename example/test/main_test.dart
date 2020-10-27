@@ -14,13 +14,13 @@ main() {
     testWidgets('should be visible', (tester) async {
       await _before(tester);
 
-      expect(find.byKey(ValueKey('palMainStack')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_MainStack')), findsOneWidget);
 
       Finder hostedApp = find.byKey(ValueKey('hostedApp'));
       expect(hostedApp, findsOneWidget);
       await tester.ensureVisible(hostedApp);
 
-      expect(find.byKey(ValueKey('Home')), findsOneWidget);
+      expect(find.byKey(ValueKey('demo_HomePage')), findsOneWidget);
     });
   });
 
@@ -28,7 +28,7 @@ main() {
     testWidgets('should be visible', (tester) async {
       await _before(tester);
 
-      expect(find.byKey(ValueKey('palMainStack')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_MainStack')), findsOneWidget);
 
       Finder palBubble = find.byKey(ValueKey('palBubbleOverlay'));
       expect(palBubble, findsOneWidget);

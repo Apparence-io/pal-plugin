@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget implements HomeView {
   @override
   Widget build(BuildContext context) {
     return MVVMPage<HomePresenter, HomeModel>(
-      key: ValueKey('Home'),
+      key: ValueKey('demo_HomePage'),
       presenter: HomePresenter(this),
       builder: (context, presenter, model) {
         return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -31,12 +31,6 @@ class HomePage extends StatelessWidget implements HomeView {
               ),
             ),
             bottomNavigationBar: _buildBottomBar(context.buildContext),
-            // floatingActionButton: FloatingActionButton(
-            //   key: ValueKey("floatingActionAdd"),
-            //   onPressed: presenter.incrementCounter,
-            //   tooltip: 'Increment',
-            //   child: Icon(Icons.add),
-            // ),
           ),
         );
       },
@@ -56,18 +50,18 @@ class HomePage extends StatelessWidget implements HomeView {
           child: GestureDetector(
             onTap: () => pushToRoute1(context),
             child: _buildCard(
-              'assets/images/joker.jpg',
+              'assets/images/posters/joker.jpg',
               400,
               'Trending now',
-              'card_Joker',
+              'demo_HomePage_Cards_Joker',
             ),
           ),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(16, 16, 0, 0),
           child: Text(
-            "Get a look here",
-            key: ValueKey("getalook"),
+            'Get a look here',
+            key: ValueKey('getalook'),
             style: TextStyle(
                 color: Colors.blueGrey[500],
                 fontSize: 21,
@@ -84,10 +78,10 @@ class HomePage extends StatelessWidget implements HomeView {
                 child: GestureDetector(
                   onTap: () => pushToRoute2(context),
                   child: _buildCard(
-                    'assets/images/gump.png',
+                    'assets/images/posters/gump.png',
                     200,
                     'One more',
-                    'card_Gump',
+                    'demo_HomePage_Cards_Gump',
                   ),
                 ),
               ),
@@ -96,10 +90,10 @@ class HomePage extends StatelessWidget implements HomeView {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(8, 8, 16, 16),
                 child: _buildCard(
-                  'assets/images/spiderMan3.jpg',
+                  'assets/images/posters/truman.png',
                   200,
                   'Second one',
-                  'card_SpiderMan',
+                  'demo_HomePage_Cards_Truman',
                 ),
               ),
             ),
@@ -163,8 +157,8 @@ class HomePage extends StatelessWidget implements HomeView {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
-                    "Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum "
-                    "lorem ipsum lorem ipsum lorem ipsum lorem ",
+                    'Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum '
+                    'lorem ipsum lorem ipsum lorem ipsum lorem ',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,

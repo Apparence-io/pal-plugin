@@ -67,7 +67,7 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
                     return true;
                   },
                   child: Stack(
-                    key: ValueKey('palMainStack'),
+                    key: ValueKey('pal_MainStack'),
                     children: [
                       // The app
                       RepaintBoundary(

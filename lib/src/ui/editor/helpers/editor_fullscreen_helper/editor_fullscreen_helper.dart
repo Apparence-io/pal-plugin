@@ -88,6 +88,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
     final EditorFullScreenHelperModel model,
   ) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomPadding: true,
       body: GestureDetector(
         key: ValueKey('palEditorFullscreenHelperWidget'),
@@ -104,18 +105,18 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                 onFormChanged(model.formKey?.currentState?.validate());
               }
             },
-            child: SafeArea(
-              child: EditableBackground(
-                backgroundColor: viewModel.backgroundColor?.value,
-                circleIconKey:
-                    'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
-                onColorChange: () =>
-                    presenter.changeBackgroundColor(viewModel, presenter),
-                widget: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+            child: EditableBackground(
+              backgroundColor: viewModel.backgroundColor?.value,
+              circleIconKey:
+                  'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
+              onColorChange: () =>
+                  presenter.changeBackgroundColor(viewModel, presenter),
+              widget: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: SafeArea(
                     child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(vertical: 25.0),
+                      padding: EdgeInsets.only(top: 25.0, bottom: 30.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -189,17 +190,17 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   'pal_EditorFullScreenHelper_NegativButton'),
                               child: EditableTextField.text(
                                 helperToolbarKey: ValueKey(
-                                'pal_EditorFullScreenHelper_NegativButtonToolbar',
-                              ),
-                              textFormFieldKey: ValueKey(
-                                'pal_EditorFullScreenHelper_NegativButtonField',
-                              ),
-                              outsideTapStream:
-                                  model.editableTextFieldController.stream,
-                              onChanged: presenter.onNegativTextChanged,
-                              onTextStyleChanged:
-                                  presenter.onNegativTextStyleChanged,
-                              hintText:
+                                  'pal_EditorFullScreenHelper_NegativButtonToolbar',
+                                ),
+                                textFormFieldKey: ValueKey(
+                                  'pal_EditorFullScreenHelper_NegativButtonField',
+                                ),
+                                outsideTapStream:
+                                    model.editableTextFieldController.stream,
+                                onChanged: presenter.onNegativTextChanged,
+                                onTextStyleChanged:
+                                    presenter.onNegativTextStyleChanged,
+                                hintText:
                                     viewModel.negativButtonField?.hintText,
                                 maximumCharacterLength: 25,
                                 textStyle: TextStyle(

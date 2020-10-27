@@ -10,6 +10,7 @@ class HelperEditorViewModel extends MVVMModel {
   bool isLoading;
   bool isEditableWidgetValid;
   bool isEditingWidget;
+  bool isKeyboardOpened;
   double loadingOpacity;
   bool isHelperCreated;
   bool isHelperCreating;
@@ -107,11 +108,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
 
 class SimpleHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
-
+  final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.black87);
   final TextFormFieldNotifier detailsField = TextFormFieldNotifier(
-    backgroundColor: Colors.black87,
     fontColor: Colors.white,
-    borderColor: Colors.greenAccent,
     fontSize: 14,
     text: '',
   );

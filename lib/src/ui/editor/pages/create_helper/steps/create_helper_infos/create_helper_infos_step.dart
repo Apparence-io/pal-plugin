@@ -22,15 +22,17 @@ class CreateHelperInfosStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: SingleChildScrollView(
-        key: ValueKey('palCreateHelperScrollList'),
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              _buildForm(),
-            ],
+      child: Scaffold(
+        body: SingleChildScrollView(
+          key: ValueKey('palCreateHelperScrollList'),
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                _buildForm(),
+              ],
+            ),
           ),
         ),
       ),

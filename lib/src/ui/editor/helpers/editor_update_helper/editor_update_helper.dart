@@ -65,6 +65,7 @@ class EditorUpdateHelperPage extends StatelessWidget
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: true,
+      backgroundColor: Colors.transparent,
       body: GestureDetector(
         onTap: presenter.onOutsideTap,
         child: SafeArea(

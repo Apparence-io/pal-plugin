@@ -38,7 +38,7 @@ class EditorEntityFactory {
             fontSize: model.descriptionField?.fontSize?.value,
             fontFamily: model.descriptionField?.fontFamily?.value),
         backgroundColor: model.backgroundColor.value.toHex(),
-        topImageUrl: 'https://i.picsum.photos/id/943/200/200.jpg', //FIXME missing value
+        topImageUrl: model?.media?.url?.value,
         positivButton: HelperTextConfig(
             text: model.positivButtonField?.text?.value,
             fontColor: model.positivButtonField?.fontColor?.value?.toHex(),
@@ -62,7 +62,7 @@ class EditorEntityFactory {
         fontWeight: model.detailsField?.fontWeight?.value,
         fontSize: model.detailsField?.fontSize?.value,
         fontFamily: model.detailsField?.fontFamily?.value,
-        backgroundColor: '#FFF', //FIXME missing value
+        backgroundColor: model?.backgroundColor?.value?.toHex(),
       );
 
   static CreateUpdateHelper buildUpdateArgs(
@@ -90,7 +90,7 @@ class EditorEntityFactory {
         fontSize: model.titleField?.fontSize?.value,
         fontFamily: model.titleField?.fontFamily?.value,
       ),
-      topImageId: model.media.id.value, //FIXME missing value
+      topImageId: model.media?.url?.value,
       topImageUrl: model.media.url.value,
       backgroundColor: model.backgroundColor?.value?.toHex(),
       lines: lines,

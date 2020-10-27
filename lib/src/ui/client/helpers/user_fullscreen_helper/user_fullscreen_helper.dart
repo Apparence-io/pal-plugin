@@ -155,6 +155,11 @@ class UserFullScreenHelperPage extends StatelessWidget
         borderRadius: BorderRadius.circular(15.0),
         child: CachedNetworkImage(
           imageUrl: mediaUrl,
+          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+          errorWidget: (BuildContext context, String url, dynamic error) {
+            return Image.asset('packages/palplugin/assets/images/create_helper.png');
+          },
+          
         ),
       ),
       animationController: context.animationsControllers[0],
@@ -169,16 +174,17 @@ class UserFullScreenHelperPage extends StatelessWidget
           titleLabel?.text ?? 'Title',
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: titleLabel?.fontColor ?? Colors.white,
-            backgroundColor: titleLabel?.backgroundColor,
-            fontSize: titleLabel?.fontSize ?? 60.0,
-          ),
+              color: titleLabel?.fontColor ?? Colors.white,
+              fontSize: titleLabel?.fontSize ?? 60.0,
+              fontWeight: titleLabel?.fontWeight,
+              fontFamily: titleLabel?.fontFamily ?? 'Montserrat'),
         ),
       ),
     );
   }
 
-  Widget _buildFeedback(MvvmContext context, UserFullScreenHelperPresenter presenter) {
+  Widget _buildFeedback(
+      MvvmContext context, UserFullScreenHelperPresenter presenter) {
     return AnimatedTranslateWidget(
       position: Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset(0.0, 0.0)),
       animationController: context.animationsControllers[2],
@@ -193,9 +199,9 @@ class UserFullScreenHelperPage extends StatelessWidget
               style: TextStyle(
                 color: positivLabel?.fontColor ?? Colors.white,
                 decoration: TextDecoration.underline,
-                backgroundColor: positivLabel?.backgroundColor,
                 fontSize: positivLabel?.fontSize ?? 23.0,
-                fontWeight: FontWeight.bold,
+                fontWeight: positivLabel?.fontWeight ?? FontWeight.bold,
+                fontFamily: positivLabel?.fontFamily ?? 'Montserrat',
               ),
             ),
           ),
@@ -207,10 +213,9 @@ class UserFullScreenHelperPage extends StatelessWidget
               negativLabel?.text ?? 'This is not helping',
               style: TextStyle(
                 color: negativLabel?.fontColor ?? Colors.white,
-                backgroundColor: negativLabel?.backgroundColor,
                 fontSize: negativLabel?.fontSize ?? 13.0,
-                fontWeight: FontWeight.bold,
-                //TODO: Add font weight & family
+                fontWeight: negativLabel?.fontWeight ?? FontWeight.bold,
+                fontFamily: negativLabel?.fontFamily ?? 'Montserrat',
               ),
             ),
           )

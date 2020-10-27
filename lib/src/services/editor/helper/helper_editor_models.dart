@@ -7,24 +7,25 @@ import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 ///-------------------------------
 class SimpleHelperKeys {
   static const CONTENT_KEY = "CONTENT";
+   static const BACKGROUND_KEY = "BACKGROUND_KEY"; // mandatory
 }
 
 class FullscreenHelperKeys {
-  static const TITLE_KEY = "TITLE_KEY";
-  static const DESCRIPTION_KEY = "DESCRIPTION_KEY";
-  static const POSITIV_KEY = "POSITIV_KEY";
-  static const NEGATIV_KEY = "NEGATIV_KEY";
-  static const IMAGE_KEY = "IMAGE_KEY";
-  static const BACKGROUND_KEY = "BACKGROUND_KEY";
+  static const TITLE_KEY = "TITLE_KEY"; // mandatory
+  static const DESCRIPTION_KEY = "DESCRIPTION_KEY"; //TODO for next release
+  static const POSITIV_KEY = "POSITIV_KEY"; // not mandatory
+  static const NEGATIV_KEY = "NEGATIV_KEY"; // not mandatory
+  static const IMAGE_KEY = "IMAGE_KEY"; // not mandatory
+  static const BACKGROUND_KEY = "BACKGROUND_KEY"; // mandatory
 }
 
 class UpdatescreenHelperKeys {
-  static const TITLE_KEY = "TITLE_KEY";
-  static const LINES_KEY = "LINES_KEY";
-  static const POSITIV_KEY = "POSITIV_KEY";
-  static const NEGATIV_KEY = "NEGATIV_KEY";
-  static const IMAGE_KEY = "IMAGE_KEY";
-  static const BACKGROUND_KEY = "BACKGROUND_KEY";
+  static const TITLE_KEY = "TITLE_KEY"; // mandatory
+  static const LINES_KEY = "LINES_KEY"; //first mandatory
+  static const POSITIV_KEY = "POSITIV_KEY"; // not mandatory
+  static const NEGATIV_KEY = "NEGATIV_KEY"; //TODO to remove
+  static const IMAGE_KEY = "IMAGE_KEY"; // not mandatory
+  static const BACKGROUND_KEY = "BACKGROUND_KEY";// mandatory
 }
 
 ///-------------------------------

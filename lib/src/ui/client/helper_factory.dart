@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:palplugin/src/extensions/color_extension.dart';
+import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 import 'helpers/simple_helper/widget/simple_helper_layout.dart';
 
@@ -24,27 +27,96 @@ class HelperFactory {
     return null;
   }
 
-  static Widget _createHelperFullScreen(final HelperEntity helper, final Function onTrigger){
+  static Widget _createHelperFullScreen(
+    final HelperEntity helper,
+    final Function onTrigger,
+  ) {
     return UserFullScreenHelperPage(
-      // helperText: helper.title, //FIXME
-      // bgColor: HexColor.fromHex(helper.backgroundColor),
-      // textColor: HexColor.fromHex(helper.fontColor),
-      // textSize: 18,
-      // onTrigger: onTrigger,
+      titleLabel: _parseTextLabel(
+        FullscreenHelperKeys.TITLE_KEY,
+        helper.helperTexts,
+      ),
+      mediaUrl: _parseImageUrl(
+        FullscreenHelperKeys.IMAGE_KEY,
+        helper.helperImages,
+      ),
+      backgroundColor: _parseBoxBackground(
+        FullscreenHelperKeys.BACKGROUND_KEY,
+        helper.helperBoxes,
+      ),
+      positivLabel: _parseTextLabel(
+        FullscreenHelperKeys.POSITIV_KEY,
+        helper.helperTexts,
+      ),
+      negativLabel: _parseTextLabel(
+        FullscreenHelperKeys.NEGATIV_KEY,
+        helper.helperTexts,
+      ),
+      onPositivButtonTap: () => onTrigger(true),
+      onNegativButtonTap: () => onTrigger(false),
     );
   }
 
+  static CustomLabel _parseTextLabel(
+    final String key,
+    final List<HelperTextEntity> helperTexts,
+  ) {
+    for (HelperTextEntity helperText in helperTexts) {
+      if (key == helperText?.key) {
+        return CustomLabel(
+          text: helperText?.value,
+          fontColor: HexColor.fromHex(helperText?.fontColor),
+          fontSize: helperText?.fontSize?.toDouble(),
+          fontFamily: helperText?.fontFamily,
+          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+        );
+      }
+    }
+    return null;
+  }
+
+  static String _parseImageUrl(
+    final String key,
+    final List<HelperImageEntity> helperImages,
+  ) {
+    for (HelperImageEntity helperImage in helperImages) {
+      if (key == helperImage?.key) {
+        return helperImage?.url;
+      }
+    }
+    return null;
+  }
+
+  static Color _parseBoxBackground(
+    final String key,
+    final List<HelperBoxEntity> helperBoxes,
+  ) {
+    for (HelperBoxEntity helperBox in helperBoxes) {
+      if (key == helperBox?.key) {
+        return HexColor.fromHex(helperBox?.backgroundColor);
+      }
+    }
+    return null;
+  }
+
+  static Color _parseBorder(
+    final String key,
+    final List<HelperBorderEntity> helperBorders,
+  ) {
+    for (HelperBorderEntity helperBorder in helperBorders) {
+      if (key == helperBorder?.key) {
+        return HexColor.fromHex(helperBorder?.color);
+      }
+    }
+    return null;
+  }
 
   static Widget _createSimpleHelper(
       final HelperEntity helper, final Function onTrigger) {
     return SimpleHelperLayout(
       toaster: SimpleHelperPage(
-        descriptionLabel: CustomLabel(
-            fontColor: Colors.white,
-            fontSize: 14,
-            text:
-                "You can just disable notification by going in your profile and click on notifications tab > disable notifications"),
-        backgroundColor: Colors.black,
+        descriptionLabel:_parseTextLabel(SimpleHelperKeys.CONTENT_KEY, helper.helperTexts,),
+        backgroundColor: _parseBoxBackground(SimpleHelperKeys.CONTENT_KEY, helper.helperBoxes), // TODO change to BACKGROUND KEY
       ),
       onDismissed: (res) => onTrigger(res == DismissDirection.startToEnd),
     );
@@ -53,7 +125,7 @@ class HelperFactory {
   //TODO
   static Widget _createUpdateHelper(
       final HelperEntity helper, final Function onTrigger) {
-  return SimpleHelperLayout(
+    return SimpleHelperLayout(
       toaster: SimpleHelperPage(
         descriptionLabel: CustomLabel(
             fontColor: Colors.white,

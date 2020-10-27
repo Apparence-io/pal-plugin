@@ -79,7 +79,7 @@ class HelperOrchestrator {
       final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
       final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
       if (helpersToShow != null && helpersToShow.length > 0) {
-        showHelper(helpersToShow[0], inAppUser.id);
+        showHelper(helpersToShow[186], inAppUser.id);
       }
     } catch (e) {
       // Nothing to do

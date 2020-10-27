@@ -65,7 +65,7 @@ void main() {
           helperBoxes: [
             HelperBoxEntity(
               backgroundColor: "#FFF",
-              key: SimpleHelperKeys.CONTENT_KEY,
+              key: SimpleHelperKeys.BACKGROUND_KEY,
             )
           ]);
       // what http will result

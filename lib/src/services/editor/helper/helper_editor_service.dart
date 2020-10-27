@@ -57,7 +57,7 @@ class _EditorHelperHttpService implements EditorHelperService {
         ],
         helperBoxes: [
           HelperBoxEntity(
-            key: SimpleHelperKeys.CONTENT_KEY,
+            key: SimpleHelperKeys.BACKGROUND_KEY,
             backgroundColor: createArgs.backgroundColor,
           )
         ],

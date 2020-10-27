@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_presenter.dart';
 import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.dart';
+import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
 
 import '../../helper_client_models.dart';
 
@@ -39,40 +40,68 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
       builder: (context, presenter, model) {
         _mvvmContext = context;
 
-        return Container(
-          width: MediaQuery.of(context.buildContext).size.width,
-          decoration: BoxDecoration(
-              color: this.backgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black26,
-                    offset: Offset(0, 8),
-                    blurRadius: 8,
-                    spreadRadius: 2)
-              ]),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                _buildLeft(context),
-                 _buildContent(),
-                _buildRight(context),
-              ],
+        return AnimatedTranslateWidget(
+          position:
+              Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0)),
+          animationController: context.animationsControllers[0],
+          widget: SafeArea(
+            child: Container(
+              width: MediaQuery.of(context.buildContext).size.width,
+              decoration: BoxDecoration(
+                  color: this.backgroundColor,
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 8),
+                        blurRadius: 8,
+                        spreadRadius: 2)
+                  ]),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    _buildLeft(context),
+                    _buildContent(),
+                    _buildRight(context),
+                  ],
+                ),
+              ),
             ),
           ),
         );
       },
-      singleAnimControllerBuilder: (tick){
-         return AnimationController(vsync: tick, duration: Duration(milliseconds: 500));
+      multipleAnimControllerBuilder: (tickerProvider) {
+        return [
+          // Box transition
+          AnimationController(
+            vsync: tickerProvider,
+            duration: Duration(
+              milliseconds: 1100,
+            ),
+          ),
+          // Thumb
+          AnimationController(
+            vsync: tickerProvider,
+            duration: Duration(
+              milliseconds: 500,
+            ),
+          ),
+        ];
       },
       animListener: (context, presenter, model) {
-        if(model.thumbAnimation){
-          context.animationController
-              .repeat(reverse: true);
-              }
+        if (model.boxTransitionAnimation) {
+          context.animationsControllers[0]
+              .forward()
+              .then((value) => presenter.onBoxAnimationEnd());
+        }
+        if (model.thumbAnimation) {
+          context.animationsControllers[1]
+              .repeat(reverse: true)
+              .then((value) => presenter.onThumbAnimationEnd());
+        }
       },
     );
   }
@@ -86,9 +115,9 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
         children: <Widget>[
           Container(height: 16),
           AnimatedBuilder(
-            animation: mvvmContext.animationController,
+            animation: mvvmContext.animationsControllers[1],
             builder: (context, child) => Transform.scale(
-              scale: sin(mvvmContext.animationController.value) * pi / 2,
+              scale: sin(mvvmContext.animationsControllers[1].value) * pi / 2,
               child: child,
             ),
             child: Padding(
@@ -119,9 +148,9 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
         children: <Widget>[
           Container(height: 16),
           AnimatedBuilder(
-            animation: mvvmContext.animationController,
+            animation: mvvmContext.animationsControllers[1],
             builder: (context, child) => Transform.scale(
-              scale: sin(mvvmContext.animationController.value) * pi / 2,
+              scale: sin(mvvmContext.animationsControllers[1].value) * pi / 2,
               child: child,
             ),
             child: Padding(
@@ -169,7 +198,9 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
 
   @override
   void disposeAnimation() {
-    _mvvmContext.animationController.stop();
-    _mvvmContext.animationController.dispose();
+    _mvvmContext.animationsControllers[0].stop();
+    _mvvmContext.animationsControllers[1].stop();
+    _mvvmContext.animationsControllers[0].dispose();
+    _mvvmContext.animationsControllers[1].dispose();
   }
 }

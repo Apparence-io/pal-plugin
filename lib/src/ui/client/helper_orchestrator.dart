@@ -114,6 +114,11 @@ class HelperOrchestrator {
               }),
             ));
     var overlay = navigatorKey.currentState.overlay;
+
+    // If there is already an helper, remove it and show the next one (useful when we change page fastly)
+    if (this.overlay != null) {
+      this.overlay.remove();
+    }
     overlay.insert(entry);
     this.overlay = entry;
   }

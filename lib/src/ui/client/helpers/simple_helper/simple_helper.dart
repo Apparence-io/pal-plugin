@@ -61,7 +61,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     _buildLeft(context),

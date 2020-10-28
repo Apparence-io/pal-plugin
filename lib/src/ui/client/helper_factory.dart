@@ -152,15 +152,25 @@ class HelperFactory {
         onTrigger(true);
       },
       backgroundColor: _parseBoxBackground(
-          UpdatescreenHelperKeys.BACKGROUND_KEY, helper.helperBoxes),
+        UpdatescreenHelperKeys.BACKGROUND_KEY,
+        helper.helperBoxes,
+      ),
       thanksButtonLabel: _parseTextLabel(
-          UpdatescreenHelperKeys.POSITIV_KEY, helper.helperTexts),
-      titleLabel:
-          _parseTextLabel(UpdatescreenHelperKeys.TITLE_KEY, helper.helperTexts),
+        UpdatescreenHelperKeys.POSITIV_KEY,
+        helper.helperTexts,
+      ),
+      titleLabel: _parseTextLabel(
+        UpdatescreenHelperKeys.TITLE_KEY,
+        helper.helperTexts,
+      ),
       changelogLabels: _parseChangeLogLabel(
-          UpdatescreenHelperKeys.LINES_KEY, helper.helperTexts),
-      mediaUrl:
-          _parseImageUrl(UpdatescreenHelperKeys.IMAGE_KEY, helper.helperImages),
+        UpdatescreenHelperKeys.LINES_KEY,
+        helper.helperTexts,
+      ),
+      mediaUrl: _parseImageUrl(
+        UpdatescreenHelperKeys.IMAGE_KEY,
+        helper.helperImages,
+      ),
     );
   }
 }

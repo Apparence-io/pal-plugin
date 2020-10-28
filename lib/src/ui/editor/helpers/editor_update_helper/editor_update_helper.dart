@@ -228,13 +228,16 @@ class EditorUpdateHelperPage extends StatelessWidget
         hintText: viewModel.thanksButton?.hintText,
         maximumCharacterLength: 25,
         backgroundBoxDecoration: BoxDecoration(
-          color: PalTheme.of(context).colors.color1,
+          color: PalTheme.of(context).colors.dark,
           borderRadius: BorderRadius.circular(10.0),
         ),
         textStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 22.0,
-          fontWeight: FontWeight.w400,
+          color: viewModel.thanksButton?.fontColor?.value ?? Colors.white,
+          fontSize: viewModel.thanksButton?.fontSize?.value?.toDouble() ?? 22.0,
+          fontWeight: FontWeightMapper.toFontWeight(
+                viewModel.thanksButton?.fontWeight?.value,
+              ) ??
+              FontWeight.w400,
         ),
       ),
     );

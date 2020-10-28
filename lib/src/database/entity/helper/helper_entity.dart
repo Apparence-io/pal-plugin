@@ -169,7 +169,7 @@ class HelperImageEntity {
     'url': url,
   };
 
-  HelperImageEntity({this.id, @required this.key, @required this.url});
+  HelperImageEntity({this.id, this.key, @required this.url});
 
   @override
   bool operator ==(Object other) =>

@@ -23,10 +23,12 @@ abstract class FontEditorDialogView {
 class FontEditorDialogPage extends StatelessWidget
     implements FontEditorDialogView {
   final TextStyle actualTextStyle;
+  final String fontFamilyKey;
   final Function(TextStyle, FontKeys) onFontModified;
   FontEditorDialogPage({
     Key key,
     @required this.actualTextStyle,
+    this.fontFamilyKey,
     this.onFontModified,
   });
 
@@ -38,8 +40,11 @@ class FontEditorDialogPage extends StatelessWidget
     return _mvvmPageBuilder.build(
       key: UniqueKey(),
       context: context,
-      presenterBuilder: (context) =>
-          FontEditorDialogPresenter(this, actualTextStyle: actualTextStyle),
+      presenterBuilder: (context) => FontEditorDialogPresenter(
+        this,
+        actualTextStyle: actualTextStyle,
+        fontFamilyKey: fontFamilyKey,
+      ),
       builder: (context, presenter, model) {
         return this._buildPage(
           context.buildContext,

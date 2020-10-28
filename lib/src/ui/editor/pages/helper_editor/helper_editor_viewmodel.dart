@@ -145,9 +145,9 @@ class UpdateHelperViewModel extends HelperViewModel {
   final Map<String, TextFormFieldNotifier> changelogsFields = {};
   final MediaNotifier media = MediaNotifier(key: 'header');
   final TextFormFieldNotifier thanksButton = TextFormFieldNotifier(
-    backgroundColor: Colors.black87,
-    fontColor: Colors.black87,
-    fontSize: 24,
+    // backgroundColor: Colors.black87,
+    fontColor: Colors.white,
+    fontSize: 22,
     text: 'Thank you!',
   );
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(

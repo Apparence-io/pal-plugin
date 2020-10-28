@@ -166,6 +166,7 @@ class HelperEditorPresenter
     } catch (e) {
       viewModel.isHelperCreated = false;
     }
+    this.viewInterface.triggerHaptic();
     viewModel.isHelperCreating = false;
     this.refreshView();
 

@@ -75,6 +75,7 @@ Future _beforeEach(
       fontFamily: 'Roboto',
       fontWeight: FontWeight.w400,
     ),
+    fontFamilyKey: 'Roboto' ,
   );
   await tester.pumpWidget(
     MediaQuery(

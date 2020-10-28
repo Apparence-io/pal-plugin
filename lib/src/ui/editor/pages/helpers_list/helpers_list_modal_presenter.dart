@@ -83,6 +83,11 @@ class HelpersListModalPresenter
     this.viewModel.backupHelpers = List.from(this.viewModel.helpers);
   }
 
+  removeHelper(final HelperEntity helper) {
+    this.viewModel.helpers.remove(helper);
+    this.refreshView();
+  }
+
   sendNewHelpersOrder(
     int oldIndex,
     int newIndex,

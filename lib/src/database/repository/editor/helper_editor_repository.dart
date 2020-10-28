@@ -38,9 +38,18 @@ class EditorHelperRepository extends BaseHttpRepository {
     final String pageId,
     final Map<String, int> priority,
   ) async {
-     await this.httpClient.patch(
-           'editor/pages/$pageId/helpers/priorities',
-           body: jsonEncode(priority),
-         );
+    await this.httpClient.patch(
+          'editor/pages/$pageId/helpers/priorities',
+          body: jsonEncode(priority),
+        );
+  }
+
+  Future<void> deleteHelper(
+    final String pageId,
+    final String helperId,
+  ) async {
+    await this.httpClient.delete(
+          'editor/pages/$pageId/helpers/$helperId',
+        );
   }
 }

@@ -25,7 +25,7 @@ abstract class EditorHelperService {
     final Map<String, int> priority,
   );
 
-  Future<bool> deleteHelper(String helperId);
+  Future<void> deleteHelper(String pageId, String helperId);
 }
 
 class _EditorHelperHttpService implements EditorHelperService {
@@ -205,9 +205,8 @@ class _EditorHelperHttpService implements EditorHelperService {
   }
 
   @override
-  Future<bool> deleteHelper(String helperId) {
-    // TODO: implement deleteHelper
-    throw UnimplementedError();
+  Future<void> deleteHelper(String pageId, String helperId) {
+    return this._editorHelperRepository.deleteHelper(pageId, helperId);
   }
 
   Future<HelperEntity> _createHelper(String pageId, HelperEntity createHelper) {

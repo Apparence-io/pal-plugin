@@ -7,4 +7,6 @@ class HelperDetailsModel extends MVVMModel {
   String helperMinVer;
   String helperMaxVer;
   HelperTriggerType helperTriggerType;
+  bool isDeleting;
+  bool isDeleteSuccess;
 }

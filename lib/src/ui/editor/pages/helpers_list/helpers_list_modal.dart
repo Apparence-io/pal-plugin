@@ -10,6 +10,7 @@ import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
@@ -27,6 +28,11 @@ abstract class HelpersListModalView {
     final String pageId,
   );
   void openAppSettingsPage();
+  void openHelperDetailPage(
+    final HelperEntity helperEntity,
+    final String pageId,
+    final HelpersListModalPresenter presenter,
+  );
   void reorganizeHelper(
     final int oldIndex,
     final int newIndex,
@@ -190,7 +196,7 @@ class _HelpersListModalState extends State<HelpersListModal>
                   presenter.loadMore();
                 }
               }),
-            children: _buildHelpersList(model),
+            children: _buildHelpersList(model, presenter),
           )
         : Center(
             key: ValueKey('palHelpersListModalNoHelpers'),
@@ -200,7 +206,7 @@ class _HelpersListModalState extends State<HelpersListModal>
           );
   }
 
-  List<Widget> _buildHelpersList(HelpersListModalModel model) {
+  List<Widget> _buildHelpersList(HelpersListModalModel model, HelpersListModalPresenter presenter) {
     List<Widget> helpers = [];
 
     int index = 0;
@@ -214,9 +220,7 @@ class _HelpersListModalState extends State<HelpersListModal>
           versionMin: anHelper?.versionMin,
           versionMax: anHelper?.versionMax,
           isDisabled: false,
-          onTapCallback: () {
-            Navigator.pushNamed(context, '/editor/helper', arguments: anHelper);
-          },
+          onTapCallback: () => this.openHelperDetailPage(anHelper, model.pageId, presenter),
         ),
       );
       helpers.add(cell);
@@ -350,6 +354,29 @@ class _HelpersListModalState extends State<HelpersListModal>
     if (shouldOpenEditor != null && shouldOpenEditor) {
       // Dismiss the bottom modal when next was tapped
       Navigator.pop(widget.bottomModalContext);
+    }
+  }
+
+  @override
+  Future openHelperDetailPage(
+    final HelperEntity helperEntity,
+    final String pageId,
+    final HelpersListModalPresenter presenter,
+  ) async {
+    HapticFeedback.selectionClick();
+
+    // Display the helper detail view
+    final deletedHelperEntity = await Navigator.pushNamed(
+      context,
+      '/editor/helper',
+      arguments: HelperDetailsComponentArguments(
+        helperEntity,
+        pageId,
+      ),
+    );
+
+    if (deletedHelperEntity != null) {
+      presenter.removeHelper(deletedHelperEntity as HelperEntity);
     }
   }
 

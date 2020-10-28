@@ -31,11 +31,13 @@ Route<dynamic> route(RouteSettings settings) {
         ),
       );
     case '/editor/helper':
-      var helper = settings.arguments;
+      HelperDetailsComponentArguments arguments = settings.arguments;
+
       return MaterialPageRoute(
-          builder: (context) => HelperDetailsComponent(
-                helper: helper,
-              ));
+        builder: (context) => HelperDetailsComponent(
+          arguments: arguments,
+        ),
+      );
     case '/editor/new/font-family':
       FontFamilyPickerArguments args = settings.arguments;
       return MaterialPageRoute(
@@ -50,12 +52,15 @@ Route<dynamic> route(RouteSettings settings) {
               ));
     case '/editor/media-gallery':
       MediaGalleryPageArguments args = settings.arguments;
-      return MaterialPageRoute(builder: (context) => MediaGalleryPage(mediaId: args.mediaId,));
-    case '/editor/:id':
-      return MaterialPageRoute(builder: (context) => Text('A route with id'));
-    case '/editor/:id/edit':
       return MaterialPageRoute(
-          builder: (context) => Text('A route with id with edit'));
+          builder: (context) => MediaGalleryPage(
+                mediaId: args.mediaId,
+              ));
+    // case '/editor/:id':
+    //   return MaterialPageRoute(builder: (context) => Text('A route with id'));
+    // case '/editor/:id/edit':
+    //   return MaterialPageRoute(
+    //       builder: (context) => Text('A route with id with edit'));
     default:
       throw 'unexpected Route';
   }

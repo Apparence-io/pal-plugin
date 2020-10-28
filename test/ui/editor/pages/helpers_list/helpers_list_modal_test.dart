@@ -122,7 +122,7 @@ main() {
       expect(find.text('aName 3'), findsOneWidget);
       expect(find.text('1.8.2 - 2.3.0'), findsOneWidget);
 
-      expect(find.text('ON_SCREEN_VISIT'), findsNWidgets(3));
+      expect(find.text('On screen visit'), findsNWidgets(3));
     });
 
     testWidgets('should tap on helper', (tester) async {

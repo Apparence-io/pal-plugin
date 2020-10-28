@@ -24,10 +24,10 @@ abstract class HelpersListModalView {
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   );
-  void openHelperCreationPage(
+  Future<bool> openHelperCreationPage(
     final String pageId,
   );
-  void openAppSettingsPage();
+  Future<void> openAppSettingsPage();
   void openHelperDetailPage(
     final HelperEntity helperEntity,
     final String pageId,
@@ -110,10 +110,7 @@ class _HelpersListModalState extends State<HelpersListModal>
   ) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: 15.0,
-          bottom: 5.0
-        ),
+        padding: const EdgeInsets.only(top: 15.0, bottom: 5.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -220,7 +217,7 @@ class _HelpersListModalState extends State<HelpersListModal>
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 24.0),
         child: HelperTileWidget(
           name: anHelper?.name,
-          trigger: helperTriggerTypeToString(anHelper?.triggerType),
+          trigger: getHelperTriggerTypeDescription(anHelper?.triggerType),
           versionMin: anHelper?.versionMin,
           versionMax: anHelper?.versionMax,
           isDisabled: false,
@@ -342,7 +339,7 @@ class _HelpersListModalState extends State<HelpersListModal>
   }
 
   @override
-  Future openHelperCreationPage(
+  Future<bool> openHelperCreationPage(
     final String pageId,
   ) async {
     HapticFeedback.selectionClick();
@@ -360,6 +357,7 @@ class _HelpersListModalState extends State<HelpersListModal>
       // Dismiss the bottom modal when next was tapped
       Navigator.pop(widget.bottomModalContext);
     }
+    return shouldOpenEditor;
   }
 
   @override

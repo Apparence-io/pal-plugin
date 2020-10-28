@@ -68,6 +68,10 @@ abstract class HelperEditorView {
   removeOverlay();
 
   triggerHaptic();
+
+  showBubble(bool isVisible);
+
+  showHelpersList();
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
@@ -309,12 +313,23 @@ class HelperEditorPageBuilder implements HelperEditorView {
       helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,
     );
-    ShowHelpersListNotification().dispatch(_scaffoldKey.currentContext);
-    ShowBubbleNotification().dispatch(_scaffoldKey.currentContext);
+    
+    this.showBubble(true);
+    this.showHelpersList();
   }
 
   @override
   triggerHaptic() {
     HapticFeedback.mediumImpact();
+  }
+
+  @override
+  showBubble(bool isVisible) {
+    ShowBubbleNotification(isVisible).dispatch(_scaffoldKey.currentContext);
+  }
+
+  @override
+  showHelpersList() {
+    ShowHelpersListNotification().dispatch(_scaffoldKey.currentContext);
   }
 }

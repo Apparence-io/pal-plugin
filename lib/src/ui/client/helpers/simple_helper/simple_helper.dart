@@ -10,7 +10,6 @@ import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart
 import '../../helper_client_models.dart';
 
 abstract class SimpleHelperView {
-  void disposeAnimation();
 }
 
 class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
@@ -201,11 +200,4 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
     );
   }
 
-  @override
-  void disposeAnimation() {
-    _mvvmContext.animationsControllers[0].stop();
-    _mvvmContext.animationsControllers[1].stop();
-    _mvvmContext.animationsControllers[0].dispose();
-    _mvvmContext.animationsControllers[1].dispose();
-  }
 }

@@ -31,11 +31,6 @@ class UserUpdateHelperPresenter
     this.viewModel.appVersion = this.packageVersionReader.version;
   }
 
-  @override
-  void onDestroy() {
-    this.viewInterface.disposeAnimation();
-  }
-
   startAnimations() async {
     // Fullscreen background opacity animation
     await Future.delayed(Duration(milliseconds: 1000), () {

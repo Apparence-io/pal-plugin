@@ -17,10 +17,6 @@ class SimpleHelperPresenter
     startAnimation();
   }
 
-  @override
-  void onDestroy() {
-    this.viewInterface.disposeAnimation();
-  }
 
   void startAnimation() async {
     await Future.delayed(Duration(milliseconds: 350), () {

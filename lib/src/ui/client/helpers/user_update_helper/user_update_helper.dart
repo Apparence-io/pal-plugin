@@ -14,7 +14,6 @@ import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/anima
 import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
 
 abstract class UserUpdateHelperView {
-  void disposeAnimation();
 }
 
 class UserUpdateHelperPage extends StatelessWidget
@@ -296,17 +295,5 @@ class UserUpdateHelperPage extends StatelessWidget
       labels.add(textLabel);
     }
     return labels;
-  }
-
-  @override
-  void disposeAnimation() {
-    _mvvmContext.animationsControllers[0].stop();
-    _mvvmContext.animationsControllers[1].stop();
-    _mvvmContext.animationsControllers[2].stop();
-    _mvvmContext.animationsControllers[3].stop();
-    _mvvmContext.animationsControllers[0].dispose();
-    _mvvmContext.animationsControllers[1].dispose();
-    _mvvmContext.animationsControllers[2].dispose();
-    _mvvmContext.animationsControllers[3].dispose();
   }
 }

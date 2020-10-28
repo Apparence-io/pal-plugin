@@ -18,10 +18,7 @@ class UserFullScreenHelperPresenter
 
     startAnimations();
   }
-  @override
-  void onDestroy(){
-    this.viewInterface.disposeAnimation();
-  }
+
 
   startAnimations() async {
     // Fullscreen background opacity animation

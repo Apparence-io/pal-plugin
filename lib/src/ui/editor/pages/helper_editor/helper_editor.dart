@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
@@ -65,6 +66,8 @@ abstract class HelperEditorView {
   unFocusCurrentTextField(final BuildContext context);
 
   removeOverlay();
+
+  triggerHaptic();
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
@@ -308,5 +311,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
     );
     ShowHelpersListNotification().dispatch(_scaffoldKey.currentContext);
     ShowBubbleNotification().dispatch(_scaffoldKey.currentContext);
+  }
+
+  @override
+  triggerHaptic() {
+    HapticFeedback.mediumImpact();
   }
 }

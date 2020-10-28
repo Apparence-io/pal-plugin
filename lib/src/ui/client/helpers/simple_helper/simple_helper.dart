@@ -185,6 +185,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
                 descriptionLabel?.text ?? '',
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   color: descriptionLabel.fontColor ?? Colors.white,
                   fontSize: descriptionLabel.fontSize ?? 14.0,

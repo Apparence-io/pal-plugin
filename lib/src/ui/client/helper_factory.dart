@@ -139,7 +139,7 @@ class HelperFactory {
           helper.helperTexts,
         ),
         backgroundColor: _parseBoxBackground(SimpleHelperKeys.BACKGROUND_KEY,
-            helper.helperBoxes), // TODO change to BACKGROUND KEY
+            helper.helperBoxes),
       ),
       onDismissed: (res) => onTrigger(res == DismissDirection.startToEnd),
     );

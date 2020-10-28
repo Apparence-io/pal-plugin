@@ -127,7 +127,10 @@ class UserFullScreenHelperPage extends StatelessWidget
                     Flexible(
                       key: ValueKey('pal_UserFullScreenHelperPage_Media'),
                       flex: 3,
-                      child: _buildMedia(context),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal : 20.0),
+                        child: _buildMedia(context),
+                      ),
                     ),
                   Flexible(
                     key: ValueKey('pal_UserFullScreenHelperPage_Title'),

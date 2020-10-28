@@ -132,11 +132,12 @@ class UserUpdateHelperPage extends StatelessWidget
             child: Container(
               child: Column(
                 children: [
-                  Flexible(
-                    key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
-                    flex: 4,
-                    child: buildIcon(context),
-                  ),
+                  if (mediaUrl != null && mediaUrl.length > 0)
+                    Flexible(
+                      key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
+                      flex: 4,
+                      child: buildMedia(context),
+                    ),
                   Flexible(
                     key: ValueKey('pal_UserUpdateHelperWidget_AppSummary'),
                     flex: 2,
@@ -157,7 +158,7 @@ class UserUpdateHelperPage extends StatelessWidget
     );
   }
 
-  Widget buildIcon(
+  Widget buildMedia(
     final MvvmContext context,
   ) {
     return Container(

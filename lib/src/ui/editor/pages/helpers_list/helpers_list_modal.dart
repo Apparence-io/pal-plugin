@@ -108,44 +108,47 @@ class _HelpersListModalState extends State<HelpersListModal>
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 15.0,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: _buildHeader(context, model, presenter),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: _buildList(context, presenter, model),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 15.0,
+          bottom: 5.0
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: _buildHeader(context, model, presenter),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 5.0,
-              top: 2.0,
-            ),
-            child: Text(
-              '💡 You can re-order helpers by long tap on them.',
-              key: ValueKey('pal_HelpersListModal_ReorderTip'),
-              style: TextStyle(
-                fontSize: 9.0,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: _buildList(context, presenter, model),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: _buildCloseButton(context),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 5.0,
+                top: 2.0,
+              ),
+              child: Text(
+                '💡 You can re-order helpers by long tap on them.',
+                key: ValueKey('pal_HelpersListModal_ReorderTip'),
+                style: TextStyle(
+                  fontSize: 9.0,
+                ),
+              ),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildCloseButton(context),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -206,7 +209,8 @@ class _HelpersListModalState extends State<HelpersListModal>
           );
   }
 
-  List<Widget> _buildHelpersList(HelpersListModalModel model, HelpersListModalPresenter presenter) {
+  List<Widget> _buildHelpersList(
+      HelpersListModalModel model, HelpersListModalPresenter presenter) {
     List<Widget> helpers = [];
 
     int index = 0;
@@ -220,7 +224,8 @@ class _HelpersListModalState extends State<HelpersListModal>
           versionMin: anHelper?.versionMin,
           versionMax: anHelper?.versionMax,
           isDisabled: false,
-          onTapCallback: () => this.openHelperDetailPage(anHelper, model.pageId, presenter),
+          onTapCallback: () =>
+              this.openHelperDetailPage(anHelper, model.pageId, presenter),
         ),
       );
       helpers.add(cell);

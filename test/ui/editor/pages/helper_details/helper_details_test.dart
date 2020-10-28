@@ -26,7 +26,7 @@ main() {
       WidgetTester tester,
     ) async {
       HelperDetailsComponent component = HelperDetailsComponent(
-        helper: helper,
+        arguments: HelperDetailsComponentArguments(helper, 'page-id'),
         testHelperService: service,
       );
 
@@ -43,9 +43,13 @@ main() {
       await tester.pumpWidget(app);
     }
 
-    testWidgets("Loads properly", (tester) async {
+    testWidgets('should load properly', (tester) async {
       await _initPage(tester);
-      expect(find.byKey(ValueKey('helperDetails')), findsOneWidget);
+      
+      expect(find.byKey(ValueKey('pal_HelperDetailsComponent_Builder')), findsOneWidget);
+      expect(find.byKey(ValueKey('deleteHelper')), findsOneWidget);
+      expect(find.text('Available on version'), findsOneWidget);
+      expect(find.text('Trigger mode'), findsOneWidget);
     });
 
     testWidgets("Finds versions and trigger type", (tester) async {
@@ -58,18 +62,50 @@ main() {
           equals(getHelperTriggerTypeDescription(helper.triggerType)));
     });
 
-    testWidgets("Calls service on delete click", (tester) async {
+    testWidgets('should remove helper', (tester) async {
       await _initPage(tester);
 
-      when(service.deleteHelper("testId"))
+      when(service.deleteHelper('page-id', helper.id))
           .thenAnswer((realInvocation) => Future.value(null));
 
       Finder delete = find.byKey(ValueKey('deleteHelper'));
       await tester.tap(delete);
-
       await tester.pumpAndSettle();
 
-      verify(service.deleteHelper("testId")).called(1);
+      expect(
+          find.byKey(
+              ValueKey('pal_HelperDetailsComponent_DeleteDialog_Android')),
+          findsOneWidget);
+
+      final approveButton = find.byKey(
+          ValueKey('pal_HelperDetailsComponent_DeleteDialog_Android_Approve'));
+      await tester.tap(approveButton);
+      await tester.pumpAndSettle();
+
+      verify(service.deleteHelper('page-id', helper.id)).called(1);
+    });
+
+    testWidgets('should cancel dialog', (tester) async {
+      await _initPage(tester);
+
+      Finder delete = find.byKey(ValueKey('deleteHelper'));
+      await tester.tap(delete);
+      await tester.pumpAndSettle();
+
+      expect(
+          find.byKey(
+              ValueKey('pal_HelperDetailsComponent_DeleteDialog_Android')),
+          findsOneWidget);
+
+      final approveButton = find.byKey(
+          ValueKey('pal_HelperDetailsComponent_DeleteDialog_Android_Cancel'));
+      await tester.tap(approveButton);
+      await tester.pumpAndSettle();
+
+      expect(
+          find.byKey(
+              ValueKey('pal_HelperDetailsComponent_DeleteDialog_Android')),
+          findsNothing);
     });
   });
 }

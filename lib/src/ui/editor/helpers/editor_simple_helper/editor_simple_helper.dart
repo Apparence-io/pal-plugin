@@ -89,7 +89,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                             onChanged: presenter.onDetailsFieldChanged,
                             onTextStyleChanged:
                                 presenter.onDetailsTextStyleChanged,
-                            maxLines: null,
+                            maxLines: 3,
                             maximumCharacterLength: 150,
                             minimumCharacterLength: 1,
                             inputFormatters: [

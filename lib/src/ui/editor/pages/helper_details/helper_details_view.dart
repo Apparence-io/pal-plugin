@@ -190,14 +190,19 @@ class HelperDetailsComponent extends StatelessWidget
         context: _scaffoldKey.currentContext,
         builder: (context) {
           return CupertinoAlertDialog(
+            key: ValueKey('pal_HelperDetailsComponent_DeleteDialog_iOS'),
             title: Text(title),
             content: Text(content),
             actions: <Widget>[
               CupertinoDialogAction(
+                key: ValueKey(
+                    'pal_HelperDetailsComponent_DeleteDialog_iOS_Cancel'),
                 child: Text(cancelAction),
                 onPressed: () => this.onDialogCancel(context),
               ),
               CupertinoDialogAction(
+                key: ValueKey(
+                    'pal_HelperDetailsComponent_DeleteDialog_iOS_Approve'),
                 child: Text(
                   yesAction,
                   style: TextStyle(color: Colors.redAccent),
@@ -213,14 +218,19 @@ class HelperDetailsComponent extends StatelessWidget
         context: _scaffoldKey.currentContext,
         builder: (context) {
           return AlertDialog(
+            key: ValueKey('pal_HelperDetailsComponent_DeleteDialog_Android'),
             title: Text(title),
             content: Text(content),
             actions: <Widget>[
               FlatButton(
+                key: ValueKey(
+                    'pal_HelperDetailsComponent_DeleteDialog_Android_Cancel'),
                 child: Text(cancelAction),
                 onPressed: () => this.onDialogCancel(context),
               ),
               FlatButton(
+                key: ValueKey(
+                    'pal_HelperDetailsComponent_DeleteDialog_Android_Approve'),
                 child: Text(
                   yesAction,
                   style: TextStyle(color: Colors.redAccent),

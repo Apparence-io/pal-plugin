@@ -154,6 +154,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
   FocusNode _focusNode = FocusNode();
   StreamSubscription _outsideSub;
   TextStyle _textStyle;
+  String _fontFamilyKey;
 
   @override
   void initState() {
@@ -161,6 +162,8 @@ class _EditableTextFieldState extends State<EditableTextField> {
 
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);
+
+    _fontFamilyKey = 'Montserrat';
 
     // Listen on stream when outside tap is detected
     _outsideSub = widget.outsideTapStream?.listen((event) {
@@ -211,13 +214,15 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     validator: (String value) {
                       String error;
                       if (widget.minimumCharacterLength != null) {
-                        if (value != null && value.length < widget.minimumCharacterLength) {
+                        if (value != null &&
+                            value.length < widget.minimumCharacterLength) {
                           error =
                               'Minimum ${widget.minimumCharacterLength} ${widget.minimumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
                         }
                       }
                       if (widget.maximumCharacterLength != null) {
-                        if (value != null && value.length >= widget.maximumCharacterLength) {
+                        if (value != null &&
+                            value.length >= widget.maximumCharacterLength) {
                           error =
                               'Maximum ${widget.maximumCharacterLength} ${widget.maximumCharacterLength <= 1 ? 'character' : 'characters'} allowed';
                         }
@@ -303,20 +308,28 @@ class _EditableTextFieldState extends State<EditableTextField> {
       context: context,
       child: FontEditorDialogPage(
         actualTextStyle: _textStyle,
+        fontFamilyKey: _fontFamilyKey,
         onFontModified: (
           TextStyle newTextStyle,
           FontKeys fontKeys,
         ) {
-          // TODO: Send fontkeys strings to Backend!
           setState(() {
             _textStyle = _textStyle.merge(
               newTextStyle,
             );
             _isToolbarVisible = true;
           });
+
+          if (fontKeys?.fontFamilyNameKey != null && fontKeys.fontFamilyNameKey.length > 0) {
+            _fontFamilyKey = fontKeys.fontFamilyNameKey;
+          }
+
           if (widget.onTextStyleChanged != null) {
             widget.onTextStyleChanged(
-                widget.textFormFieldKey, _textStyle, fontKeys);
+              widget.textFormFieldKey,
+              _textStyle,
+              fontKeys,
+            );
           }
         },
       ),

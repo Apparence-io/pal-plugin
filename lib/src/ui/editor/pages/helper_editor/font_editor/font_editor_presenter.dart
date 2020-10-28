@@ -8,17 +8,19 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/
 class FontEditorDialogPresenter
     extends Presenter<FontEditorDialogModel, FontEditorDialogView> {
   final TextStyle actualTextStyle;
+  final String fontFamilyKey;
 
   FontEditorDialogPresenter(
     FontEditorDialogView viewInterface, {
     @required this.actualTextStyle,
+    this.fontFamilyKey,
   }) : super(FontEditorDialogModel(), viewInterface);
 
   @override
   void onInit() {
     this.viewModel.modifiedTextStyle = TextStyle().merge(actualTextStyle);
     this.viewModel.fontKeys = FontKeys(
-      fontFamilyNameKey: (actualTextStyle?.fontFamily != null) ? actualTextStyle.fontFamily.toString().split('_regular').first : 'Montserrat',
+      fontFamilyNameKey: (fontFamilyKey != null && fontFamilyKey.length > 0) ? fontFamilyKey : 'Montserrat',
       fontWeightNameKey:
           FontWeightMapper.toFontKey(actualTextStyle.fontWeight),
     );

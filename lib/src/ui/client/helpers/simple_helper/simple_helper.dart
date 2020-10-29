@@ -16,9 +16,6 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
   final CustomLabel descriptionLabel;
   final Color backgroundColor;
 
-  // FIXME: Add in MVVM Builder a way to dispose all animations in presenter.
-  MvvmContext _mvvmContext;
-
   SimpleHelperPage(
       {Key key,
       @required this.descriptionLabel,
@@ -38,8 +35,6 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
         this,
       ),
       builder: (context, presenter, model) {
-        _mvvmContext = context;
-
         return AnimatedTranslateWidget(
           position:
               Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset(0.0, 0.0)),

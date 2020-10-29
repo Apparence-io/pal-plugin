@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
@@ -13,8 +14,7 @@ import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/anima
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_release_note_tile.dart';
 import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
 
-abstract class UserUpdateHelperView {
-}
+abstract class UserUpdateHelperView {}
 
 class UserUpdateHelperPage extends StatelessWidget
     implements UserUpdateHelperView {
@@ -25,7 +25,6 @@ class UserUpdateHelperPage extends StatelessWidget
   final PackageVersionReader packageVersionReader;
   final String mediaUrl;
   final Function onTrigger;
-  MvvmContext _mvvmContext;
 
   UserUpdateHelperPage({
     Key key,
@@ -81,7 +80,6 @@ class UserUpdateHelperPage extends StatelessWidget
         ];
       },
       animListener: (context, presenter, model) {
-        _mvvmContext = context;
         if (model.changelogCascadeAnimation) {
           context.animationsControllers[0]
               .forward()
@@ -216,7 +214,12 @@ class UserUpdateHelperPage extends StatelessWidget
         child: RaisedButton(
           key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised'),
           color: PalTheme.of(context.buildContext).colors.dark,
-          onPressed: model.showThanksButton ? onTrigger : null,
+          onPressed: model.showThanksButton
+              ? () {
+                  HapticFeedback.selectionClick();
+                  onTrigger();
+                }
+              : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -233,12 +236,11 @@ class UserUpdateHelperPage extends StatelessWidget
                     child: Text(
                       thanksButtonLabel?.text ?? 'Thank you !',
                       style: TextStyle(
-                              fontSize: thanksButtonLabel?.fontSize ?? 18.0,
-                              color:
-                                  thanksButtonLabel?.fontColor ?? Colors.white,
-                              fontWeight: thanksButtonLabel?.fontWeight ??
-                                  FontWeight.normal)
-                          .merge(
+                        fontSize: thanksButtonLabel?.fontSize ?? 18.0,
+                        color: thanksButtonLabel?.fontColor ?? Colors.white,
+                        fontWeight:
+                            thanksButtonLabel?.fontWeight ?? FontWeight.normal,
+                      ).merge(
                         GoogleFonts.getFont(
                             titleLabel?.fontFamily ?? 'Montserrat'),
                       ),

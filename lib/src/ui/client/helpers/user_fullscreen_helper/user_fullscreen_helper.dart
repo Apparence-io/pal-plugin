@@ -11,6 +11,12 @@ import 'user_fullscreen_helper_presenter.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
 
 abstract class UserFullScreenHelperView {
+  void playAnimation(
+    MvvmContext context,
+    bool isReversed,
+    int index,
+    Function callback,
+  );
   void onPositivButtonCallback();
   void onNegativButtonCallback();
 }
@@ -24,7 +30,6 @@ class UserFullScreenHelperPage extends StatelessWidget
   final String mediaUrl;
   final Function onPositivButtonTap;
   final Function onNegativButtonTap;
-  MvvmContext _mvvmContext;
 
   UserFullScreenHelperPage({
     Key key,
@@ -75,21 +80,29 @@ class UserFullScreenHelperPage extends StatelessWidget
         ];
       },
       animListener: (context, presenter, model) {
-        _mvvmContext = context;
         if (model.mediaAnimation) {
-          context.animationsControllers[0]
-              .forward()
-              .then((value) => presenter.onMediaAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            0,
+            presenter.onMediaAnimationEnd,
+          );
         }
         if (model.titleAnimation) {
-          context.animationsControllers[1]
-              .forward()
-              .then((value) => presenter.onTitleAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            1,
+            presenter.onTitleAnimationEnd,
+          );
         }
         if (model.feedbackAnimation) {
-          context.animationsControllers[2]
-              .forward()
-              .then((value) => presenter.onFeedbackAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            2,
+            presenter.onFeedbackAnimationEnd,
+          );
         }
       },
       presenterBuilder: (context) => UserFullScreenHelperPresenter(
@@ -127,7 +140,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                       key: ValueKey('pal_UserFullScreenHelperPage_Media'),
                       flex: 3,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal : 20.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: _buildMedia(context),
                       ),
                     ),
@@ -162,7 +175,8 @@ class UserFullScreenHelperPage extends StatelessWidget
         child: CachedNetworkImage(
           imageUrl: mediaUrl,
           fit: BoxFit.cover,
-          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+          placeholder: (context, url) =>
+              Center(child: CircularProgressIndicator()),
           errorWidget: (BuildContext context, String url, dynamic error) {
             return Image.asset(
                 'packages/palplugin/assets/images/create_helper.png');
@@ -200,7 +214,10 @@ class UserFullScreenHelperPage extends StatelessWidget
           FlatButton(
             key:
                 ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
-            onPressed: presenter.onPositivButtonCallback,
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              presenter.onPositivButtonCallback();
+            },
             child: Text(
               positivLabel?.text ?? 'Ok, thanks !',
               style: TextStyle(
@@ -215,15 +232,18 @@ class UserFullScreenHelperPage extends StatelessWidget
           FlatButton(
             key:
                 ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
-            onPressed: presenter.onNegativButtonCallback,
+            onPressed: () {
+              HapticFeedback.selectionClick();
+              presenter.onNegativButtonCallback();
+            },
             child: Text(
               negativLabel?.text ?? 'This is not helping',
               style: TextStyle(
                 color: negativLabel?.fontColor ?? Colors.white,
                 fontSize: negativLabel?.fontSize ?? 13.0,
                 fontWeight: negativLabel?.fontWeight ?? FontWeight.bold,
-              ).merge(
-                  GoogleFonts.getFont(negativLabel?.fontFamily ?? 'Montserrat')),
+              ).merge(GoogleFonts.getFont(
+                  negativLabel?.fontFamily ?? 'Montserrat')),
             ),
           )
         ],
@@ -233,13 +253,29 @@ class UserFullScreenHelperPage extends StatelessWidget
 
   @override
   void onNegativButtonCallback() {
-    HapticFeedback.selectionClick();
     this.onNegativButtonTap();
   }
 
   @override
   void onPositivButtonCallback() {
-    HapticFeedback.selectionClick();
     this.onPositivButtonTap();
+  }
+
+  @override
+  void playAnimation(
+    MvvmContext context,
+    bool isReversed,
+    int index,
+    Function callback,
+  ) {
+    if (isReversed) {
+      context.animationsControllers[index]
+          .reverse()
+          .then((value) => callback());
+    } else {
+      context.animationsControllers[index]
+          .forward()
+          .then((value) => callback());
+    }
   }
 }

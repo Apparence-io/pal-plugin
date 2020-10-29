@@ -171,7 +171,7 @@ class HelperOrchestrator {
   _showUpdateHelper() {
     _showSpecificHelper(
       UserUpdateHelperPage(
-        onTrigger: () async {
+        onPositivButtonTap: () async {
           this.popHelper();
         },
         backgroundColor: Color(0xff60b2d5),

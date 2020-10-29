@@ -148,7 +148,7 @@ class HelperFactory {
   static Widget _createUpdateHelper(
       final HelperEntity helper, final Function onTrigger) {
     return UserUpdateHelperPage(
-      onTrigger: () {
+      onPositivButtonTap: () {
         onTrigger(true);
       },
       backgroundColor: _parseBoxBackground(

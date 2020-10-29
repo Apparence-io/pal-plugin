@@ -9,12 +9,20 @@ import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_app_infos.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_release_note_tile.dart';
 import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
+import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
 
-abstract class UserUpdateHelperView {}
+abstract class UserUpdateHelperView {
+  void playAnimation(
+    MvvmContext context,
+    bool isReversed,
+    int index,
+    Function callback,
+  );
+  void onThanksButtonCallback();
+}
 
 class UserUpdateHelperPage extends StatelessWidget
     implements UserUpdateHelperView {
@@ -24,14 +32,14 @@ class UserUpdateHelperPage extends StatelessWidget
   final CustomLabel thanksButtonLabel;
   final PackageVersionReader packageVersionReader;
   final String mediaUrl;
-  final Function onTrigger;
+  final Function onPositivButtonTap;
 
   UserUpdateHelperPage({
     Key key,
     @required this.backgroundColor,
     @required this.titleLabel,
     @required this.changelogLabels,
-    @required this.onTrigger,
+    @required this.onPositivButtonTap,
     this.mediaUrl,
     this.thanksButtonLabel,
     this.packageVersionReader,
@@ -81,24 +89,36 @@ class UserUpdateHelperPage extends StatelessWidget
       },
       animListener: (context, presenter, model) {
         if (model.changelogCascadeAnimation) {
-          context.animationsControllers[0]
-              .forward()
-              .then((value) => presenter.onCascadeAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            0,
+            presenter.onCascadeAnimationEnd,
+          );
         }
         if (model.progressBarAnimation) {
-          context.animationsControllers[1]
-              .forward()
-              .then((value) => presenter.onProgressBarAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            1,
+            presenter.onProgressBarAnimationEnd,
+          );
         }
         if (model.imageAnimation) {
-          context.animationsControllers[2]
-              .forward()
-              .then((value) => presenter.onImageAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            2,
+            presenter.onImageAnimationEnd,
+          );
         }
         if (model.titleAnimation) {
-          context.animationsControllers[3]
-              .forward()
-              .then((value) => presenter.onTitleAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            3,
+            presenter.onTitleAnimationEnd,
+          );
         }
       },
       presenterBuilder: (context) => UserUpdateHelperPresenter(
@@ -133,19 +153,19 @@ class UserUpdateHelperPage extends StatelessWidget
                     Flexible(
                       key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
                       flex: 4,
-                      child: buildMedia(context),
+                      child: _buildMedia(context),
                     ),
                   Flexible(
                     key: ValueKey('pal_UserUpdateHelperWidget_AppSummary'),
                     flex: 2,
-                    child: buildAppSummary(context, model),
+                    child: _buildAppSummary(context, model),
                   ),
                   Expanded(
                     key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes'),
                     flex: 5,
                     child: _buildReleaseNotes(context, model),
                   ),
-                  buildThanksButton(context, model, presenter),
+                  _buildThanksButton(context, model, presenter),
                 ],
               ),
             ),
@@ -155,7 +175,7 @@ class UserUpdateHelperPage extends StatelessWidget
     );
   }
 
-  Widget buildMedia(
+  Widget _buildMedia(
     final MvvmContext context,
   ) {
     return Container(
@@ -168,12 +188,13 @@ class UserUpdateHelperPage extends StatelessWidget
             child: CachedNetworkImage(
               key: ValueKey('pal_UserUpdateHelperWidget_Image'),
               imageUrl: mediaUrl,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
               placeholder: (context, url) =>
                   Center(child: CircularProgressIndicator()),
               errorWidget: (BuildContext context, String url, dynamic error) {
                 return Image.asset(
-                    'packages/palplugin/assets/images/create_helper.png');
+                  'packages/palplugin/assets/images/create_helper.png',
+                );
               },
             ),
           ),
@@ -183,21 +204,49 @@ class UserUpdateHelperPage extends StatelessWidget
     );
   }
 
-  Container buildAppSummary(
+  Container _buildAppSummary(
     final MvvmContext context,
     final UserUpdateHelperModel model,
   ) {
     return Container(
       width: double.infinity,
-      child: AnimatedAppInfos(
+      child: AnimatedTranslateWidget(
+        position: Tween<Offset>(begin: Offset(-1.0, 0.0), end: Offset(0, 0)),
         animationController: context.animationsControllers[3],
-        titleLabel: titleLabel,
-        appVersion: model.appVersion,
+        widget: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              titleLabel?.text ?? 'New application update',
+              key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
+              style: TextStyle(
+                fontSize: titleLabel?.fontSize ?? 27.0,
+                fontWeight: titleLabel?.fontWeight ?? FontWeight.normal,
+                color: titleLabel?.fontColor ??
+                    PalTheme.of(context.buildContext).colors.light,
+              ).merge(
+                GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat'),
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              'Version ${model.appVersion ?? '1.0.0'}',
+              key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Version'),
+              style: TextStyle(
+                fontSize: 13.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  SizedBox buildThanksButton(
+  SizedBox _buildThanksButton(
     final MvvmContext context,
     final UserUpdateHelperModel model,
     final UserUpdateHelperPresenter presenter,
@@ -217,7 +266,7 @@ class UserUpdateHelperPage extends StatelessWidget
           onPressed: model.showThanksButton
               ? () {
                   HapticFeedback.selectionClick();
-                  onTrigger();
+                  presenter.onThanksButtonCallback();
                 }
               : null,
           shape: RoundedRectangleBorder(
@@ -297,5 +346,30 @@ class UserUpdateHelperPage extends StatelessWidget
       labels.add(textLabel);
     }
     return labels;
+  }
+
+  @override
+  void playAnimation(
+    MvvmContext context,
+    bool isReversed,
+    int index,
+    Function callback,
+  ) {
+    if (isReversed) {
+      context.animationsControllers[index]
+          .reverse()
+          .then((value) => callback());
+    } else {
+      context.animationsControllers[index]
+          .forward()
+          .then((value) => callback());
+    }
+  }
+
+  @override
+  void onThanksButtonCallback() {
+    if (this.onPositivButtonTap != null) {
+      this.onPositivButtonTap();
+    }
   }
 }

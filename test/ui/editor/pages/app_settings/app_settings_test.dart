@@ -35,15 +35,15 @@ void main() {
       expect(find.text('Beta account member'), findsOneWidget);
     });
 
-    testWidgets('should change app icon', (WidgetTester tester) async {
-      await _beforeEach(tester);
+    // testWidgets('should change app icon', (WidgetTester tester) async {
+    //   await _beforeEach(tester);
 
-      var updateAppIconButton = find.byKey(ValueKey('pal_AppSettingsPage_AnimatedAppIcon_RefreshButton'));
-      await tester.tap(updateAppIconButton);
-      await tester.pumpAndSettle();
+    //   var updateAppIconButton = find.byKey(ValueKey('pal_AppSettingsPage_AnimatedAppIcon_RefreshButton'));
+    //   await tester.tap(updateAppIconButton);
+    //   await tester.pumpAndSettle();
 
-      expect(find.byType(SnackBar), findsOneWidget);
-    });
+    //   expect(find.byType(SnackBar), findsOneWidget);
+    // });
   });
 }
 

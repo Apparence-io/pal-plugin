@@ -7,9 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
+import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
@@ -23,10 +25,15 @@ abstract class HelpersListModalView {
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   );
-  void openHelperCreationPage(
+  Future<bool> openHelperCreationPage(
     final String pageId,
   );
-  void openAppSettingsPage();
+  Future<void> openAppSettingsPage();
+  void openHelperDetailPage(
+    final HelperEntity helperEntity,
+    final String pageId,
+    final HelpersListModalPresenter presenter,
+  );
   void reorganizeHelper(
     final int oldIndex,
     final int newIndex,
@@ -102,44 +109,46 @@ class _HelpersListModalState extends State<HelpersListModal>
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 15.0,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: _buildHeader(context, model, presenter),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: _buildList(context, presenter, model),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15.0, bottom: 5.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: _buildHeader(context, model, presenter),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              bottom: 5.0,
-              top: 2.0,
-            ),
-            child: Text(
-              '💡 You can re-order helpers by long tap on them.',
-              key: ValueKey('pal_HelpersListModal_ReorderTip'),
-              style: TextStyle(
-                fontSize: 9.0,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: _buildList(context, presenter, model),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: _buildCloseButton(context),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 5.0,
+                top: 2.0,
+              ),
+              child: !model.isLoading && model.helpers.length != 0
+                  ? Text(
+                      '💡 You can re-order helpers by long tap on them.',
+                      key: ValueKey('pal_HelpersListModal_ReorderTip'),
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ),
+                    )
+                  : Container(),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildCloseButton(context),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -174,7 +183,7 @@ class _HelpersListModalState extends State<HelpersListModal>
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   ) {
-    return (model.helpers != null)
+    return (model.helpers != null && model.helpers.length > 0)
         ? ReorderableListView(
             onReorder: (oldIndex, newIndex) => this.reorganizeHelper(
               oldIndex,
@@ -190,7 +199,7 @@ class _HelpersListModalState extends State<HelpersListModal>
                   presenter.loadMore();
                 }
               }),
-            children: _buildHelpersList(model),
+            children: _buildHelpersList(model, presenter),
           )
         : Center(
             key: ValueKey('palHelpersListModalNoHelpers'),
@@ -200,7 +209,8 @@ class _HelpersListModalState extends State<HelpersListModal>
           );
   }
 
-  List<Widget> _buildHelpersList(HelpersListModalModel model) {
+  List<Widget> _buildHelpersList(
+      HelpersListModalModel model, HelpersListModalPresenter presenter) {
     List<Widget> helpers = [];
 
     int index = 0;
@@ -210,13 +220,13 @@ class _HelpersListModalState extends State<HelpersListModal>
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 24.0),
         child: HelperTileWidget(
           name: anHelper?.name,
-          trigger: helperTriggerTypeToString(anHelper?.triggerType),
+          trigger: getHelperTriggerTypeDescription(anHelper?.triggerType),
           versionMin: anHelper?.versionMin,
           versionMax: anHelper?.versionMax,
           isDisabled: false,
-          onTapCallback: () {
-            Navigator.pushNamed(context, '/editor/helper', arguments: anHelper);
-          },
+          type: getHelperTypeDescription(anHelper?.type),
+          onTapCallback: () =>
+              this.openHelperDetailPage(anHelper, model.pageId, presenter),
         ),
       );
       helpers.add(cell);
@@ -333,7 +343,7 @@ class _HelpersListModalState extends State<HelpersListModal>
   }
 
   @override
-  Future openHelperCreationPage(
+  Future<bool> openHelperCreationPage(
     final String pageId,
   ) async {
     HapticFeedback.selectionClick();
@@ -350,6 +360,30 @@ class _HelpersListModalState extends State<HelpersListModal>
     if (shouldOpenEditor != null && shouldOpenEditor) {
       // Dismiss the bottom modal when next was tapped
       Navigator.pop(widget.bottomModalContext);
+    }
+    return shouldOpenEditor;
+  }
+
+  @override
+  Future openHelperDetailPage(
+    final HelperEntity helperEntity,
+    final String pageId,
+    final HelpersListModalPresenter presenter,
+  ) async {
+    HapticFeedback.selectionClick();
+
+    // Display the helper detail view
+    final deletedHelperEntity = await Navigator.pushNamed(
+      context,
+      '/editor/helper',
+      arguments: HelperDetailsComponentArguments(
+        helperEntity,
+        pageId,
+      ),
+    );
+
+    if (deletedHelperEntity != null) {
+      presenter.removeHelper(deletedHelperEntity as HelperEntity);
     }
   }
 

@@ -25,7 +25,7 @@ abstract class EditorHelperService {
     final Map<String, int> priority,
   );
 
-  Future<bool> deleteHelper(String helperId);
+  Future<void> deleteHelper(String pageId, String helperId);
 }
 
 class _EditorHelperHttpService implements EditorHelperService {
@@ -57,7 +57,7 @@ class _EditorHelperHttpService implements EditorHelperService {
         ],
         helperBoxes: [
           HelperBoxEntity(
-            key: SimpleHelperKeys.CONTENT_KEY,
+            key: SimpleHelperKeys.BACKGROUND_KEY,
             backgroundColor: createArgs.backgroundColor,
           )
         ],
@@ -70,6 +70,8 @@ class _EditorHelperHttpService implements EditorHelperService {
       String pageId, CreateFullScreenHelper createArgs) {
     if (createArgs.title == null || createArgs.description == null)
       throw "TITLE_AND_DESCRIPTION_REQUIRED";
+
+    // Texts
     var helperTexts = [
       createArgs.title,
       createArgs.description,
@@ -94,6 +96,16 @@ class _EditorHelperHttpService implements EditorHelperService {
       helperTexts[3].key = FullscreenHelperKeys.NEGATIV_KEY;
     helperTexts.removeWhere((element) => element == null);
 
+    // Images
+    var helperImages = [createArgs.topImageUrl]
+        .map((mediaUrl) => (mediaUrl != null && mediaUrl.length > 0)
+            ? HelperImageEntity(url: mediaUrl)
+            : null)
+        .toList();
+    if (helperImages[0] != null)
+      helperImages[0].key = FullscreenHelperKeys.IMAGE_KEY;
+    helperImages.removeWhere((element) => element == null);
+
     return _editorHelperRepository.createHelper(
       pageId,
       HelperEntity(
@@ -111,10 +123,7 @@ class _EditorHelperHttpService implements EditorHelperService {
             backgroundColor: createArgs.backgroundColor,
           )
         ],
-        helperImages: [
-          HelperImageEntity(
-              url: createArgs.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
-        ],
+        helperImages: helperImages,
       ),
     );
   }
@@ -139,8 +148,6 @@ class _EditorHelperHttpService implements EditorHelperService {
     helperTexts[0].key = UpdatescreenHelperKeys.TITLE_KEY;
     if (helperTexts[1] != null)
       helperTexts[1].key = UpdatescreenHelperKeys.POSITIV_KEY;
-    if (helperTexts[2] != null)
-      helperTexts[2].key = UpdatescreenHelperKeys.NEGATIV_KEY;
     helperTexts.removeWhere((element) => element == null);
     for (var element in createArgs.lines) {
       helperTexts.add(HelperTextEntity(
@@ -152,28 +159,38 @@ class _EditorHelperHttpService implements EditorHelperService {
           key:
               "${UpdatescreenHelperKeys.LINES_KEY}:${createArgs.lines.indexOf(element)}"));
     }
+
+    // Images
+    // TODO: Create function
+    var helperImages = [createArgs.topImageUrl]
+        .map((mediaUrl) => (mediaUrl != null && mediaUrl.length > 0)
+            ? HelperImageEntity(url: mediaUrl)
+            : null)
+        .toList();
+    if (helperImages[0] != null)
+      helperImages[0].key = UpdatescreenHelperKeys.IMAGE_KEY;
+    helperImages.removeWhere((element) => element == null);
+
     return _editorHelperRepository.createHelper(
-        pageId,
-        HelperEntity(
-            name: createArgs.config.name,
-            type: HelperType.UPDATE_HELPER,
-            triggerType: createArgs.config.triggerType,
-            priority: createArgs.config.priority,
-            versionMinId: createArgs.config.versionMinId,
-            versionMaxId: createArgs.config.versionMaxId,
-            pageId: pageId,
-            helperTexts: helperTexts,
-            helperBoxes: [
-              HelperBoxEntity(
-                key: UpdatescreenHelperKeys.BACKGROUND_KEY,
-                backgroundColor: createArgs.backgroundColor,
-              )
-            ],
-            helperImages: [
-              HelperImageEntity(
-                  url: createArgs.topImageUrl,
-                  key: UpdatescreenHelperKeys.IMAGE_KEY)
-            ]));
+      pageId,
+      HelperEntity(
+        name: createArgs.config.name,
+        type: HelperType.UPDATE_HELPER,
+        triggerType: createArgs.config.triggerType,
+        priority: createArgs.config.priority,
+        versionMinId: createArgs.config.versionMinId,
+        versionMaxId: createArgs.config.versionMaxId,
+        pageId: pageId,
+        helperTexts: helperTexts,
+        helperBoxes: [
+          HelperBoxEntity(
+            key: UpdatescreenHelperKeys.BACKGROUND_KEY,
+            backgroundColor: createArgs.backgroundColor,
+          )
+        ],
+        helperImages: helperImages,
+      ),
+    );
   }
 
   @override
@@ -188,9 +205,8 @@ class _EditorHelperHttpService implements EditorHelperService {
   }
 
   @override
-  Future<bool> deleteHelper(String helperId) {
-    // TODO: implement deleteHelper
-    throw UnimplementedError();
+  Future<void> deleteHelper(String pageId, String helperId) {
+    return this._editorHelperRepository.deleteHelper(pageId, helperId);
   }
 
   Future<HelperEntity> _createHelper(String pageId, HelperEntity createHelper) {

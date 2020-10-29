@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
@@ -10,6 +11,12 @@ import 'user_fullscreen_helper_presenter.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
 
 abstract class UserFullScreenHelperView {
+  void playAnimation(
+    MvvmContext context,
+    bool isReversed,
+    int index,
+    Function callback,
+  );
   void onPositivButtonCallback();
   void onNegativButtonCallback();
 }
@@ -74,19 +81,28 @@ class UserFullScreenHelperPage extends StatelessWidget
       },
       animListener: (context, presenter, model) {
         if (model.mediaAnimation) {
-          context.animationsControllers[0]
-              .forward()
-              .then((value) => presenter.onMediaAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            0,
+            presenter.onMediaAnimationEnd,
+          );
         }
         if (model.titleAnimation) {
-          context.animationsControllers[1]
-              .forward()
-              .then((value) => presenter.onTitleAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            1,
+            presenter.onTitleAnimationEnd,
+          );
         }
         if (model.feedbackAnimation) {
-          context.animationsControllers[2]
-              .forward()
-              .then((value) => presenter.onFeedbackAnimationEnd());
+          this.playAnimation(
+            context,
+            model.isReversedAnimations,
+            2,
+            presenter.onFeedbackAnimationEnd,
+          );
         }
       },
       presenterBuilder: (context) => UserFullScreenHelperPresenter(
@@ -123,7 +139,10 @@ class UserFullScreenHelperPage extends StatelessWidget
                     Flexible(
                       key: ValueKey('pal_UserFullScreenHelperPage_Media'),
                       flex: 3,
-                      child: _buildMedia(context),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: _buildMedia(context),
+                      ),
                     ),
                   Flexible(
                     key: ValueKey('pal_UserFullScreenHelperPage_Title'),
@@ -155,6 +174,13 @@ class UserFullScreenHelperPage extends StatelessWidget
         borderRadius: BorderRadius.circular(15.0),
         child: CachedNetworkImage(
           imageUrl: mediaUrl,
+          fit: BoxFit.cover,
+          placeholder: (context, url) =>
+              Center(child: CircularProgressIndicator()),
+          errorWidget: (BuildContext context, String url, dynamic error) {
+            return Image.asset(
+                'packages/palplugin/assets/images/create_helper.png');
+          },
         ),
       ),
       animationController: context.animationsControllers[0],
@@ -170,47 +196,75 @@ class UserFullScreenHelperPage extends StatelessWidget
           textAlign: TextAlign.center,
           style: TextStyle(
             color: titleLabel?.fontColor ?? Colors.white,
-            backgroundColor: titleLabel?.backgroundColor,
             fontSize: titleLabel?.fontSize ?? 60.0,
-          ),
+            fontWeight: titleLabel?.fontWeight,
+          ).merge(GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat')),
         ),
       ),
     );
   }
 
-  Widget _buildFeedback(MvvmContext context, UserFullScreenHelperPresenter presenter) {
+  Widget _buildFeedback(
+      MvvmContext context, UserFullScreenHelperPresenter presenter) {
     return AnimatedTranslateWidget(
       position: Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset(0.0, 0.0)),
       animationController: context.animationsControllers[2],
       widget: Column(
         children: [
-          FlatButton(
-            key:
-                ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
-            onPressed: presenter.onPositivButtonCallback,
-            child: Text(
-              positivLabel?.text ?? 'Ok, thanks !',
-              style: TextStyle(
-                color: positivLabel?.fontColor ?? Colors.white,
-                decoration: TextDecoration.underline,
-                backgroundColor: positivLabel?.backgroundColor,
-                fontSize: positivLabel?.fontSize ?? 23.0,
-                fontWeight: FontWeight.bold,
+          SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+              key: ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_PositivButton'),
+              onPressed: () {
+                HapticFeedback.selectionClick();
+                presenter.onPositivButtonCallback();
+              },
+              color: Colors.greenAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Text(
+                  positivLabel?.text ?? 'Ok, thanks !',
+                  style: TextStyle(
+                    color: positivLabel?.fontColor ?? Colors.white,
+                    fontSize: positivLabel?.fontSize ?? 23.0,
+                    fontWeight: positivLabel?.fontWeight ?? FontWeight.bold,
+                  ).merge(GoogleFonts.getFont(
+                      positivLabel?.fontFamily ?? 'Montserrat')),
+                ),
               ),
             ),
           ),
-          FlatButton(
-            key:
-                ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
-            onPressed: presenter.onNegativButtonCallback,
-            child: Text(
-              negativLabel?.text ?? 'This is not helping',
-              style: TextStyle(
-                color: negativLabel?.fontColor ?? Colors.white,
-                backgroundColor: negativLabel?.backgroundColor,
-                fontSize: negativLabel?.fontSize ?? 13.0,
-                fontWeight: FontWeight.bold,
-                //TODO: Add font weight & family
+          SizedBox(
+            height: 10.0,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+              key: ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_NegativButton'),
+              onPressed: () {
+                HapticFeedback.selectionClick();
+                presenter.onNegativButtonCallback();
+              },
+              color: Colors.redAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Text(
+                  negativLabel?.text ?? 'This is not helping',
+                  style: TextStyle(
+                    color: negativLabel?.fontColor ?? Colors.white,
+                    fontSize: negativLabel?.fontSize ?? 13.0,
+                    fontWeight: negativLabel?.fontWeight ?? FontWeight.bold,
+                  ).merge(GoogleFonts.getFont(
+                      negativLabel?.fontFamily ?? 'Montserrat')),
+                ),
               ),
             ),
           )
@@ -221,13 +275,29 @@ class UserFullScreenHelperPage extends StatelessWidget
 
   @override
   void onNegativButtonCallback() {
-    HapticFeedback.selectionClick();
     this.onNegativButtonTap();
   }
 
   @override
   void onPositivButtonCallback() {
-    HapticFeedback.selectionClick();
     this.onPositivButtonTap();
+  }
+
+  @override
+  void playAnimation(
+    MvvmContext context,
+    bool isReversed,
+    int index,
+    Function callback,
+  ) {
+    if (isReversed) {
+      context.animationsControllers[index]
+          .reverse()
+          .then((value) => callback());
+    } else {
+      context.animationsControllers[index]
+          .forward()
+          .then((value) => callback());
+    }
   }
 }

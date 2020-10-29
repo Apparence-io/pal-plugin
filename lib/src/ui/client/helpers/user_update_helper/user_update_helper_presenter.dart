@@ -21,6 +21,7 @@ class UserUpdateHelperPresenter
     this.viewModel.imageAnimation = false;
     this.viewModel.titleAnimation = false;
     this.viewModel.showThanksButton = false;
+    this.viewModel.isReversedAnimations = false;
 
     readAppInfo();
     startAnimations();
@@ -32,6 +33,8 @@ class UserUpdateHelperPresenter
   }
 
   startAnimations() async {
+    this.viewModel.isReversedAnimations = false;
+
     // Fullscreen background opacity animation
     await Future.delayed(Duration(milliseconds: 1000), () {
       this.viewModel.helperOpacity = 1;
@@ -52,6 +55,32 @@ class UserUpdateHelperPresenter
     });
   }
 
+  Future reverseAnimations() async {
+    this.viewModel.isReversedAnimations = true;
+
+    await Future.delayed(Duration(milliseconds: 0), () {
+      this.viewModel.changelogCascadeAnimation = true;
+      this.refreshAnimations();
+    });
+
+    await Future.delayed(Duration(milliseconds: 800), () {
+      this.viewModel.titleAnimation = true;
+      this.refreshAnimations();
+    });
+
+    await Future.delayed(Duration(milliseconds: 200), () {
+      this.viewModel.imageAnimation = true;
+      this.refreshAnimations();
+    });
+
+    await Future.delayed(Duration(milliseconds: 500), () {
+      this.viewModel.helperOpacity = 0;
+      this.refreshView();
+    });
+
+    await Future.delayed(Duration(milliseconds: 500));
+  }
+
   onCascadeAnimationEnd() {
     this.viewModel.changelogCascadeAnimation = false;
   }
@@ -68,5 +97,10 @@ class UserUpdateHelperPresenter
 
   onImageAnimationEnd() {
     this.viewModel.imageAnimation = false;
+  }
+
+  onThanksButtonCallback() async {
+    await this.reverseAnimations();
+    this.viewInterface.onThanksButtonCallback();
   }
 }

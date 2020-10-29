@@ -5,11 +5,13 @@ class UserFullScreenHelperModel extends MVVMModel {
   bool mediaAnimation;
   bool titleAnimation;
   bool feedbackAnimation;
+  bool isReversedAnimations;
 
   UserFullScreenHelperModel({
     this.helperOpacity,
     this.mediaAnimation,
     this.titleAnimation,
     this.feedbackAnimation,
+    this.isReversedAnimations,
   });
 }

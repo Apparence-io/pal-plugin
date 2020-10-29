@@ -70,8 +70,8 @@ class EditorUpdateHelperPresenter
           textFormMapKey,
           () => TextFormFieldNotifier(
             text: '',
-            fontSize: 14,
-            fontColor: Colors.black87,
+            fontSize: 18,
+            fontColor: Colors.white,
           ),
         );
 
@@ -129,6 +129,8 @@ class EditorUpdateHelperPresenter
 
   onTitleTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
     updateHelperViewModel.titleField?.fontColor?.value = newTextStyle?.color;
+    updateHelperViewModel.titleField?.fontSize?.value =
+        newTextStyle?.fontSize?.toInt();
 
     if (fontKeys != null) {
       updateHelperViewModel.titleField?.fontWeight?.value =
@@ -144,6 +146,8 @@ class EditorUpdateHelperPresenter
     FontKeys fontKeys,
   ) {
     updateHelperViewModel.thanksButton?.fontColor?.value = newTextStyle?.color;
+    updateHelperViewModel.thanksButton?.fontSize?.value =
+        newTextStyle?.fontSize?.toInt();
 
     if (fontKeys != null) {
       updateHelperViewModel.thanksButton?.fontWeight?.value =

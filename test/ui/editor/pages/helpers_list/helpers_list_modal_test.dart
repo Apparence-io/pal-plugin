@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
 import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
@@ -43,12 +44,14 @@ main() {
               name: 'aName 1',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
               versionMin: '1.0.1',
+              type: HelperType.SIMPLE_HELPER,
               versionMax: '2.0.0',
             ),
             HelperEntity(
               id: '2',
               name: 'aName 2',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+              type: HelperType.HELPER_FULL_SCREEN,
               versionMin: '1.0.2',
             ),
             HelperEntity(
@@ -56,6 +59,7 @@ main() {
               name: 'aName 3',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
               versionMin: '1.8.2',
+              type: HelperType.UPDATE_HELPER,
               versionMax: '2.3.0',
             ),
           ],
@@ -114,15 +118,25 @@ main() {
       await tester.pumpAndSettle();
 
       expect(find.text('aName 1'), findsOneWidget);
-      expect(find.text('1.0.1 - 2.0.0'), findsOneWidget);
+      expect(find.text('1.0.1 '), findsOneWidget);
+      expect(find.text(' 2.0.0'), findsOneWidget);
 
       expect(find.text('aName 2'), findsOneWidget);
-      expect(find.text('1.0.2 - last'), findsOneWidget);
+      expect(find.text('1.0.2 '), findsOneWidget);
+      expect(find.text(' last'), findsOneWidget);
 
       expect(find.text('aName 3'), findsOneWidget);
-      expect(find.text('1.8.2 - 2.3.0'), findsOneWidget);
+      expect(find.text('1.8.2 '), findsOneWidget);
+      expect(find.text(' 2.3.0'), findsOneWidget);
 
-      expect(find.text('ON_SCREEN_VISIT'), findsNWidgets(3));
+      expect(find.text('Overlayed bottom'),
+          findsNWidgets(1));
+      expect(
+          find.text('Fullscreen'), findsNWidgets(1));
+      expect(find.text('Update overlay'),
+          findsNWidgets(1));
+          expect(find.text('On screen visit'),
+          findsNWidgets(3));
     });
 
     testWidgets('should tap on helper', (tester) async {

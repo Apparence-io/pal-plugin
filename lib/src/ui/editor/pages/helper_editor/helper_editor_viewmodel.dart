@@ -10,6 +10,7 @@ class HelperEditorViewModel extends MVVMModel {
   bool isLoading;
   bool isEditableWidgetValid;
   bool isEditingWidget;
+  bool isKeyboardOpened;
   double loadingOpacity;
   bool isHelperCreated;
   bool isHelperCreating;
@@ -107,11 +108,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
 
 class SimpleHelperViewModel extends HelperViewModel {
   final ValueNotifier<int> languageId = ValueNotifier(1);
-
+  final ValueNotifier<Color> backgroundColor = ValueNotifier(Colors.black87);
   final TextFormFieldNotifier detailsField = TextFormFieldNotifier(
-    backgroundColor: Colors.black87,
     fontColor: Colors.white,
-    borderColor: Colors.greenAccent,
     fontSize: 14,
     text: '',
   );
@@ -146,15 +145,15 @@ class UpdateHelperViewModel extends HelperViewModel {
   final Map<String, TextFormFieldNotifier> changelogsFields = {};
   final MediaNotifier media = MediaNotifier(key: 'header');
   final TextFormFieldNotifier thanksButton = TextFormFieldNotifier(
-    backgroundColor: Colors.black87,
-    fontColor: Colors.black87,
-    fontSize: 24,
+    // backgroundColor: Colors.black87,
+    fontColor: Colors.white,
+    fontSize: 22,
     text: 'Thank you!',
   );
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
       backgroundColor: Colors.black87,
-      fontColor: Colors.black87,
-      fontSize: 24,
+      fontColor: Colors.white,
+      fontSize: 36,
       text: '',
       hintText: 'Enter your title here...');
 

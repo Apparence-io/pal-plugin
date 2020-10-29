@@ -36,6 +36,7 @@ class HelpersListModalPresenter
       this.viewModel.helpers = res.helpers;
       this.viewModel.pageId = res.pageId;
       this.viewModel.isLoading = false;
+
       this.refreshView();
     });
   }
@@ -64,22 +65,31 @@ class HelpersListModalPresenter
 
   onClickAdd() async {
     showEditorBubble(false);
-    this.viewInterface.openHelperCreationPage(this.viewModel.pageId);
-    // showEditorBubble(true);
+    final shouldOpenEditor = await this.viewInterface.openHelperCreationPage(this.viewModel.pageId);
+    if (shouldOpenEditor != null) {
+      // Editor is opened, hide bubble
+      showEditorBubble(false);
+    } else {
+      showEditorBubble(true);
+    }
   }
 
   onClickSettings() async {
-    showEditorBubble(false);
-    this.viewInterface.openAppSettingsPage();
-    // showEditorBubble(true);
+    await this.viewInterface.openAppSettingsPage();
   }
 
   showEditorBubble(bool visible) {
     this.palEditModeStateService.showEditorBubble.value = visible;
+    this.refreshView();
   }
 
   backupHelpersList() {
     this.viewModel.backupHelpers = List.from(this.viewModel.helpers);
+  }
+
+  removeHelper(final HelperEntity helper) {
+    this.viewModel.helpers.remove(helper);
+    this.refreshView();
   }
 
   sendNewHelpersOrder(

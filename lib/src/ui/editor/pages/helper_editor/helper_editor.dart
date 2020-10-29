@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
@@ -65,6 +66,12 @@ abstract class HelperEditorView {
   unFocusCurrentTextField(final BuildContext context);
 
   removeOverlay();
+
+  triggerHaptic();
+
+  showBubble(bool isVisible);
+
+  showHelpersList();
 }
 
 class HelperEditorPageBuilder implements HelperEditorView {
@@ -131,45 +138,51 @@ class HelperEditorPageBuilder implements HelperEditorView {
         },
         child: Scaffold(
           key: _scaffoldKey,
-          body: Container(
-            color: Colors.black.withOpacity(.2),
-            child: Stack(
-              children: [
-                if (model.isEditingWidget)
-                  Positioned.fill(child: _helperToEdit),
-                (!model.isLoading)
-                    ? Stack(
-                        key: ValueKey('palEditorModeInteractUI'),
-                        children: [
-                          _buildValidationActions(context, presenter, model),
-                          _buildBannerEditorMode(context),
-                        ],
-                      )
-                    : AnimatedOpacity(
-                        duration: Duration(milliseconds: 400),
-                        opacity: model.loadingOpacity,
-                        child: Stack(
+          backgroundColor: Colors.transparent,
+          body: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+            child: Container(
+              color: Colors.black.withOpacity(.4),
+              child: Stack(
+                children: [
+                  if (model.isEditingWidget)
+                    Positioned.fill(child: _helperToEdit),
+                  (!model.isLoading)
+                      ? Stack(
+                          key: ValueKey('palEditorModeInteractUI'),
                           children: [
-                            BackdropFilter(
-                              filter:
-                                  ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                              child: Container(
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: (model.isHelperCreating)
-                                    ? _buildLoadingScreen()
-                                    : _buildCreationStatusScreen(model),
-                              ),
-                            ),
+                            if (!model.isKeyboardOpened)
+                              _buildValidationActions(
+                                  context, presenter, model),
+                            _buildBannerEditorMode(context),
                           ],
+                        )
+                      : AnimatedOpacity(
+                          duration: Duration(milliseconds: 400),
+                          opacity: model.loadingOpacity,
+                          child: Stack(
+                            children: [
+                              BackdropFilter(
+                                filter:
+                                    ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                                child: Container(
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: (model.isHelperCreating)
+                                      ? _buildLoadingScreen()
+                                      : _buildCreationStatusScreen(model),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -300,7 +313,23 @@ class HelperEditorPageBuilder implements HelperEditorView {
       helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,
     );
+    
+    this.showBubble(true);
+    this.showHelpersList();
+  }
+
+  @override
+  triggerHaptic() {
+    HapticFeedback.mediumImpact();
+  }
+
+  @override
+  showBubble(bool isVisible) {
+    ShowBubbleNotification(isVisible).dispatch(_scaffoldKey.currentContext);
+  }
+
+  @override
+  showHelpersList() {
     ShowHelpersListNotification().dispatch(_scaffoldKey.currentContext);
-    ShowBubbleNotification().dispatch(_scaffoldKey.currentContext);
   }
 }

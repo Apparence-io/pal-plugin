@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
@@ -16,9 +17,11 @@ class CreateHelperTypeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PreviewCardSwiperWidget(
-      cards: CreateHelperTypesStepModel.cards,
-      onCardSelected: _checkFormValid,
+    return Scaffold(
+      body: PreviewCardSwiperWidget(
+        cards: CreateHelperTypesStepModel.cards,
+        onCardSelected: _checkFormValid,
+      ),
     );
   }
 

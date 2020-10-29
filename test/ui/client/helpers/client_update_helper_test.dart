@@ -50,6 +50,7 @@ void main() {
           fontSize: 19.0,
         ),
       ],
+      mediaUrl: 'https://picsum.photos/id/237/200/300',
     );
 
     beforeEach(WidgetTester tester) async {
@@ -66,18 +67,20 @@ void main() {
         ),
       );
       await tester.pumpWidget(app);
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 5000));
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 700));
     }
 
     testWidgets('should display all elements', (WidgetTester tester) async {
       await beforeEach(tester);
-      // await tester.pumpAndSettle(Duration(milliseconds: 2000));
       expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_Scaffold')),
           findsOneWidget);
 
       expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_Icon')),
           findsOneWidget);
-      expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_Icon_Image')),
+      expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_Image')),
           findsOneWidget);
 
       expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_AppSummary')),
@@ -97,6 +100,7 @@ void main() {
 
       expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_ThanksButton')),
           findsOneWidget);
+
     });
 
     testWidgets('should display correct title', (WidgetTester tester) async {
@@ -111,6 +115,7 @@ void main() {
     testWidgets('should display correct thanks button',
         (WidgetTester tester) async {
       await beforeEach(tester);
+      await tester.pump(Duration(milliseconds: 4000));
       expect(find.text('Free Ademo'), findsOneWidget);
       var buttonFinder = find
           .byKey(ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised'));
@@ -119,8 +124,7 @@ void main() {
     });
 
     testWidgets('should display release notes', (WidgetTester tester) async {
-      await beforeEach(tester);
-
+      await beforeEach(tester);  
       expect(
         find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0')),
         findsOneWidget,

@@ -8,6 +8,7 @@ class UserUpdateHelperModel extends MVVMModel {
   bool titleAnimation;
   bool imageAnimation;
   bool showThanksButton;
+  bool isReversedAnimations;
   
   UserUpdateHelperModel({
     this.helperOpacity,
@@ -17,5 +18,6 @@ class UserUpdateHelperModel extends MVVMModel {
     this.titleAnimation,
     this.imageAnimation,
     this.showThanksButton,
+    this.isReversedAnimations,
   });
 }

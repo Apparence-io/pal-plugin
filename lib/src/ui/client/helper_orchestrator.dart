@@ -76,8 +76,10 @@ class HelperOrchestrator {
       // _showFullScreenHelper();
       // DEBUG: END REMOVE
 
-      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
-      final List<HelperEntity> helpersToShow = await this.helperClientService.getPageHelpers(route, inAppUser.id);
+      final InAppUserEntity inAppUser =
+          await this.inAppUserClientService.getOrCreate();
+      final List<HelperEntity> helpersToShow =
+          await this.helperClientService.getPageHelpers(route, inAppUser.id);
       if (helpersToShow != null && helpersToShow.length > 0) {
         showHelper(helpersToShow[0], inAppUser.id);
       }
@@ -89,8 +91,6 @@ class HelperOrchestrator {
   }
 
   bool popHelper() {
-    // TODO: We need to animate widget disapear first
-    // and then remove transparent overlay
     if (overlay != null) {
       overlay.remove();
       overlay = null;
@@ -112,6 +112,11 @@ class HelperOrchestrator {
               }),
             ));
     var overlay = navigatorKey.currentState.overlay;
+
+    // If there is already an helper, remove it and show the next one (useful when we change page fastly)
+    if (this.overlay != null) {
+      this.overlay.remove();
+    }
     overlay.insert(entry);
     this.overlay = entry;
   }
@@ -164,7 +169,7 @@ class HelperOrchestrator {
   _showUpdateHelper() {
     _showSpecificHelper(
       UserUpdateHelperPage(
-        onTrigger: () async {
+        onPositivButtonTap: () async {
           this.popHelper();
         },
         backgroundColor: Color(0xff60b2d5),

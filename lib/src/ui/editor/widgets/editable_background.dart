@@ -37,11 +37,13 @@ class EditableBackground extends StatelessWidget {
               Positioned(
                 top: 20.0,
                 left: 20.0,
-                child: CircleIconButton(
-                  key: ValueKey(circleIconKey),
-                  icon: Icon(Icons.invert_colors),
-                  backgroundColor: PalTheme.of(context).colors.light,
-                  onTapCallback: onColorChange,
+                child: SafeArea(
+                  child: CircleIconButton(
+                    key: ValueKey(circleIconKey),
+                    icon: Icon(Icons.invert_colors),
+                    backgroundColor: PalTheme.of(context).colors.light,
+                    onTapCallback: onColorChange,
+                  ),
                 ),
               ),
             ],

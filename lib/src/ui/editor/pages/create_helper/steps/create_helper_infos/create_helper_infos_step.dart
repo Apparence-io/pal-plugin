@@ -22,15 +22,17 @@ class CreateHelperInfosStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: SingleChildScrollView(
-        key: ValueKey('palCreateHelperScrollList'),
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              _buildForm(),
-            ],
+      child: Scaffold(
+        body: SingleChildScrollView(
+          key: ValueKey('palCreateHelperScrollList'),
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                _buildForm(),
+              ],
+            ),
           ),
         ),
       ),
@@ -72,7 +74,7 @@ class CreateHelperInfosStep extends StatelessWidget {
             ),
           ),
           LabeledForm(
-            label: 'Minimum version',
+            label: 'Minimum app version',
             widget: BorderedTextField(
               key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
               textInputType: TextInputType.numberWithOptions(decimal: true),
@@ -104,7 +106,12 @@ class CreateHelperInfosStep extends StatelessWidget {
 
   // Check fields
   String _checkHelperName(String value) {
-    return (value.isEmpty) ? 'Please enter a name' : null;
+    if (value.isEmpty) {
+      return 'Please enter a name';
+    } else if (value.length >= 45) {
+      return 'Maximum 45 character allowed';
+    }
+    return null;
   }
 
   String _checkHelperTriggerType(String value) {

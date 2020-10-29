@@ -152,8 +152,8 @@ class UpdateHelperViewModel extends HelperViewModel {
   );
   final TextFormFieldNotifier titleField = TextFormFieldNotifier(
       backgroundColor: Colors.black87,
-      fontColor: Colors.black87,
-      fontSize: 24,
+      fontColor: Colors.white,
+      fontSize: 36,
       text: '',
       hintText: 'Enter your title here...');
 

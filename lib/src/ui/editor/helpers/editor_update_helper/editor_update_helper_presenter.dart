@@ -70,8 +70,8 @@ class EditorUpdateHelperPresenter
           textFormMapKey,
           () => TextFormFieldNotifier(
             text: '',
-            fontSize: 14,
-            fontColor: Colors.black87,
+            fontSize: 18,
+            fontColor: Colors.white,
           ),
         );
 

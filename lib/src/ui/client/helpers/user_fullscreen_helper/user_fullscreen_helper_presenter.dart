@@ -59,6 +59,8 @@ class UserFullScreenHelperPresenter
       this.viewModel.helperOpacity = 0;
       this.refreshView();
     });
+
+    await Future.delayed(Duration(milliseconds: 500));
   }
 
   onTitleAnimationEnd() {

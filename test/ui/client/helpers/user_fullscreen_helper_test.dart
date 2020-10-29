@@ -129,6 +129,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
       await tester.pump(Duration(milliseconds: 200));
       await tester.pump(Duration(milliseconds: 1000));
+      await tester.pump(Duration(milliseconds: 500));
     });
 
     testWidgets('should tap on negativ button', (WidgetTester tester) async {
@@ -139,6 +140,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
       await tester.pump(Duration(milliseconds: 200));
       await tester.pump(Duration(milliseconds: 1000));
+      await tester.pump(Duration(milliseconds: 500));
     });
   });
 }

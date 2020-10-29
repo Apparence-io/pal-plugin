@@ -126,6 +126,8 @@ void main() {
       await tester.pump(Duration(milliseconds: 1000));
       final positivButton = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
       await tester.tap(positivButton);
+      await tester.pump(Duration(milliseconds: 100));
+      await tester.pump(Duration(milliseconds: 200));
       await tester.pump(Duration(milliseconds: 1000));
     });
 
@@ -134,6 +136,8 @@ void main() {
       await tester.pump(Duration(milliseconds: 1000));
       final negativButton = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'));
       await tester.tap(negativButton);
+      await tester.pump(Duration(milliseconds: 100));
+      await tester.pump(Duration(milliseconds: 200));
       await tester.pump(Duration(milliseconds: 1000));
     });
   });

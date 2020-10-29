@@ -129,13 +129,15 @@ class _HelpersListModalState extends State<HelpersListModal>
                 bottom: 5.0,
                 top: 2.0,
               ),
-              child: Text(
-                '💡 You can re-order helpers by long tap on them.',
-                key: ValueKey('pal_HelpersListModal_ReorderTip'),
-                style: TextStyle(
-                  fontSize: 9.0,
-                ),
-              ),
+              child: !model.isLoading && model.helpers.length != 0
+                  ? Text(
+                      '💡 You can re-order helpers by long tap on them.',
+                      key: ValueKey('pal_HelpersListModal_ReorderTip'),
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ),
+                    )
+                  : Container(),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),

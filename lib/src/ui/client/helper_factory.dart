@@ -131,17 +131,26 @@ class HelperFactory {
   }
 
   static Widget _createSimpleHelper(
-      final HelperEntity helper, final Function onTrigger) {
+    final HelperEntity helper,
+    final Function onTrigger,
+  ) {
+    GlobalKey<SimpleHelperLayoutState> _simpleHelperLayoutKey = GlobalKey();
     return SimpleHelperLayout(
+      key: _simpleHelperLayoutKey,
       toaster: SimpleHelperPage(
         descriptionLabel: _parseTextLabel(
           SimpleHelperKeys.CONTENT_KEY,
           helper.helperTexts,
         ),
-        backgroundColor: _parseBoxBackground(SimpleHelperKeys.BACKGROUND_KEY,
-            helper.helperBoxes),
+        backgroundColor: _parseBoxBackground(
+          SimpleHelperKeys.BACKGROUND_KEY,
+          helper.helperBoxes,
+        ),
       ),
-      onDismissed: (res) => onTrigger(res == DismissDirection.startToEnd),
+      onDismissed: (res) async {
+        await _simpleHelperLayoutKey.currentState.reverseAnimations();
+        onTrigger(res == DismissDirection.startToEnd);
+      },
     );
   }
 

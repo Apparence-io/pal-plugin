@@ -35,6 +35,7 @@ void main() {
         ),
       );
       await tester.pumpWidget(app);
+      await tester.pump(Duration(milliseconds: 1300));
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pump(Duration(milliseconds: 500));
     }

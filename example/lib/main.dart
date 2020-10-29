@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
     return Pal(
       editorModeEnabled: true,
       appToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MWIxYTljNS1mODNjLTQ5OTMtYWRjOS0wOWY0Yzk0YWRmNjIiLCJ0eXBlIjoiUFJPSkVDVCIsImlhdCI6MTYwMjc2MjkyMH0.HDUIYt-gkrTGBww7lbydyhXB0Im8NeNVn36D4ZZWKYU',
+      // --- your app is here --
       child: MaterialApp(
         key: ValueKey('hostedApp'),
         initialRoute: '/',
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
       ),
+      // --- your app is here --
     );
   }
 

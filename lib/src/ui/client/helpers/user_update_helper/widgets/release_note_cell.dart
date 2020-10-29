@@ -1,57 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:palplugin/src/ui/client/helper_client_models.dart';
+import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
 
-class AnimatedReleaseNoteTile extends AnimatedWidget {
-  int index;
+class ReleaseNoteCell extends StatelessWidget {
+  final int index;
   final CustomLabel customLabel;
   final AnimationController animationController;
-  final double animationStart;
-  final double animationEnd;
-  Animation<double> opacityAnim;
-  Animation<double> verticalOffsetAnim;
+  final Curve positionCurve;
+  final Curve opacityCurve;
 
-  AnimatedReleaseNoteTile({
+  const ReleaseNoteCell({
     Key key,
     @required this.index,
     @required this.customLabel,
     @required this.animationController,
-    @required this.animationStart,
-    @required this.animationEnd,
-  }) : super(key: key, listenable: animationController) {
-    this.opacityAnim = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: animationController,
-        curve: Interval(
-          animationStart,
-          animationEnd,
-          curve: Curves.decelerate,
-        ),
-      ),
-    );
-    this.verticalOffsetAnim = Tween<double>(begin: -20, end: 0).animate(
-      CurvedAnimation(
-        parent: animationController,
-        curve: Interval(
-          animationStart,
-          animationEnd,
-          curve: Curves.decelerate,
-        ),
-      ),
-    );
-  }
+    this.positionCurve,
+    this.opacityCurve,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Color fontColorDefault = this.customLabel.fontColor ?? Colors.white;
     double fontSizeDefault = this.customLabel.fontSize ?? 15.0;
-    FontWeight fontWeightDefault = this.customLabel.fontWeight ?? FontWeight.normal;
+    FontWeight fontWeightDefault =
+        this.customLabel.fontWeight ?? FontWeight.normal;
     String fontFamilyDefault = this.customLabel.fontFamily ?? 'Montserrat';
-    return Transform.translate(
-      offset: Offset(0, verticalOffsetAnim.value),
-      child: Opacity(
-        opacity: opacityAnim != null ? opacityAnim.value : 1,
-        child: RichText(
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: AnimatedTranslateWidget(
+        animationController: animationController,
+        positionCurve: positionCurve,
+        opacityCurve: opacityCurve,
+        widget: RichText(
           key: ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_$index'),
           textAlign: TextAlign.center,
           text: TextSpan(
@@ -60,7 +43,9 @@ class AnimatedReleaseNoteTile extends AnimatedWidget {
               color: fontColorDefault,
               fontSize: fontSizeDefault,
               fontWeight: FontWeight.w900,
-            ).merge(GoogleFonts.getFont(fontFamilyDefault)),
+            ).merge(
+              GoogleFonts.getFont(fontFamilyDefault),
+            ),
             children: <TextSpan>[
               TextSpan(
                 text: this.customLabel.text,
@@ -68,7 +53,9 @@ class AnimatedReleaseNoteTile extends AnimatedWidget {
                   color: fontColorDefault,
                   fontSize: fontSizeDefault,
                   fontWeight: fontWeightDefault,
-                ).merge(GoogleFonts.getFont(fontFamilyDefault))
+                ).merge(
+                  GoogleFonts.getFont(fontFamilyDefault),
+                ),
               ),
             ],
           ),

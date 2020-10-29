@@ -5,6 +5,8 @@ class AnimatedTranslateWidget extends AnimatedWidget {
   final Tween<double> opacity;
   final Tween<Offset> position;
   final Widget widget;
+  final Curve positionCurve;
+  final Curve opacityCurve;
 
   AnimatedTranslateWidget({
     Key key,
@@ -12,6 +14,8 @@ class AnimatedTranslateWidget extends AnimatedWidget {
     @required this.widget,
     this.opacity,
     this.position,
+    this.positionCurve = Curves.ease,
+    this.opacityCurve = Curves.ease,
   }) : super(key: key, listenable: animationController);
 
   @override
@@ -20,7 +24,12 @@ class AnimatedTranslateWidget extends AnimatedWidget {
       opacity: ((opacity?.begin != null && opacity?.end != null)
               ? opacity
               : Tween<double>(begin: 0, end: 1))
-          .animate(animationController),
+          .animate(
+        CurvedAnimation(
+          parent: animationController,
+          curve: opacityCurve,
+        ),
+      ),
       child: SlideTransition(
         position: ((position?.begin != null && position?.end != null)
                 ? position
@@ -28,7 +37,7 @@ class AnimatedTranslateWidget extends AnimatedWidget {
             .animate(
           CurvedAnimation(
             parent: animationController,
-            curve: Curves.ease,
+            curve: positionCurve,
           ),
         ),
         child: widget,

@@ -10,7 +10,7 @@ import 'package:palplugin/src/ui/client/helper_client_models.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_release_note_tile.dart';
+import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/release_note_cell.dart';
 import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
 import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
 
@@ -333,17 +333,23 @@ class UserUpdateHelperPage extends StatelessWidget
       var animationStart = stepTime * index;
       var animationEnd = stepTime + animationStart;
 
-      Widget textLabel = Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: AnimatedReleaseNoteTile(
+      labels.add(
+        ReleaseNoteCell(
           index: index++,
           customLabel: label,
           animationController: context.animationsControllers[0],
-          animationStart: animationStart,
-          animationEnd: animationEnd,
+          positionCurve: Interval(
+            animationStart,
+            animationEnd,
+            curve: Curves.decelerate,
+          ),
+          opacityCurve: Interval(
+            animationStart,
+            animationEnd,
+            curve: Curves.decelerate,
+          ),
         ),
       );
-      labels.add(textLabel);
     }
     return labels;
   }

@@ -91,8 +91,6 @@ class HelperOrchestrator {
   }
 
   bool popHelper() {
-    // TODO: We need to animate widget disapear first
-    // and then remove transparent overlay
     if (overlay != null) {
       overlay.remove();
       overlay = null;

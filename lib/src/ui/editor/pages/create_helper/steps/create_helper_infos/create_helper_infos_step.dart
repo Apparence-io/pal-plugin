@@ -74,7 +74,7 @@ class CreateHelperInfosStep extends StatelessWidget {
             ),
           ),
           LabeledForm(
-            label: 'Minimum version',
+            label: 'Minimum app version',
             widget: BorderedTextField(
               key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
               textInputType: TextInputType.numberWithOptions(decimal: true),

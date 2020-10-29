@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:palplugin/src/database/entity/helper/helper_type.dart';
 import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
 import 'package:palplugin/src/services/pal/pal_state_service.dart';
@@ -223,6 +224,7 @@ class _HelpersListModalState extends State<HelpersListModal>
           versionMin: anHelper?.versionMin,
           versionMax: anHelper?.versionMax,
           isDisabled: false,
+          type: getHelperTypeDescription(anHelper?.type),
           onTapCallback: () =>
               this.openHelperDetailPage(anHelper, model.pageId, presenter),
         ),

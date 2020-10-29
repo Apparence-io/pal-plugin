@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:palplugin/src/database/entity/graphic_entity.dart';
+import 'package:palplugin/src/theme.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
 import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
@@ -136,7 +137,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             textFormFieldKey:
                                 ValueKey('palFullscreenHelperTitleField'),
                             onChanged: presenter.onTitleChanged,
-                            onTextStyleChanged: presenter.onTitleTextStyleChanged,
+                            onTextStyleChanged:
+                                presenter.onTitleTextStyleChanged,
                             maximumCharacterLength: 55,
                             minimumCharacterLength: 1,
                             maxLines: 3,
@@ -161,6 +163,10 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 textFormFieldKey: ValueKey(
                                   'pal_EditorFullScreenHelper_ThanksButtonField',
                                 ),
+                                backgroundBoxDecoration: BoxDecoration(
+                                  color: Colors.greenAccent.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
                                 outsideTapStream:
                                     model.editableTextFieldController.stream,
                                 onChanged: presenter.onPositivTextChanged,
@@ -172,7 +178,6 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 textStyle: TextStyle(
                                   color: viewModel
                                       .positivButtonField?.fontColor?.value,
-                                  decoration: TextDecoration.underline,
                                   fontSize: viewModel
                                       .positivButtonField?.fontSize?.value
                                       ?.toDouble(),
@@ -195,6 +200,10 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 ),
                                 textFormFieldKey: ValueKey(
                                   'pal_EditorFullScreenHelper_NegativButtonField',
+                                ),
+                                backgroundBoxDecoration: BoxDecoration(
+                                  color: Colors.redAccent.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 outsideTapStream:
                                     model.editableTextFieldController.stream,

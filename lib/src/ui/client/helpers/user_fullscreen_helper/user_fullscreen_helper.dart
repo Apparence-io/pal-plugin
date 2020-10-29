@@ -211,39 +211,61 @@ class UserFullScreenHelperPage extends StatelessWidget
       animationController: context.animationsControllers[2],
       widget: Column(
         children: [
-          FlatButton(
-            key:
-                ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              presenter.onPositivButtonCallback();
-            },
-            child: Text(
-              positivLabel?.text ?? 'Ok, thanks !',
-              style: TextStyle(
-                color: positivLabel?.fontColor ?? Colors.white,
-                decoration: TextDecoration.underline,
-                fontSize: positivLabel?.fontSize ?? 23.0,
-                fontWeight: positivLabel?.fontWeight ?? FontWeight.bold,
-              ).merge(GoogleFonts.getFont(
-                  positivLabel?.fontFamily ?? 'Montserrat')),
+          SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+              key: ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_PositivButton'),
+              onPressed: () {
+                HapticFeedback.selectionClick();
+                presenter.onPositivButtonCallback();
+              },
+              color: Colors.greenAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Text(
+                  positivLabel?.text ?? 'Ok, thanks !',
+                  style: TextStyle(
+                    color: positivLabel?.fontColor ?? Colors.white,
+                    fontSize: positivLabel?.fontSize ?? 23.0,
+                    fontWeight: positivLabel?.fontWeight ?? FontWeight.bold,
+                  ).merge(GoogleFonts.getFont(
+                      positivLabel?.fontFamily ?? 'Montserrat')),
+                ),
+              ),
             ),
           ),
-          FlatButton(
-            key:
-                ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              presenter.onNegativButtonCallback();
-            },
-            child: Text(
-              negativLabel?.text ?? 'This is not helping',
-              style: TextStyle(
-                color: negativLabel?.fontColor ?? Colors.white,
-                fontSize: negativLabel?.fontSize ?? 13.0,
-                fontWeight: negativLabel?.fontWeight ?? FontWeight.bold,
-              ).merge(GoogleFonts.getFont(
-                  negativLabel?.fontFamily ?? 'Montserrat')),
+          SizedBox(
+            height: 10.0,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: RaisedButton(
+              key: ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_NegativButton'),
+              onPressed: () {
+                HapticFeedback.selectionClick();
+                presenter.onNegativButtonCallback();
+              },
+              color: Colors.redAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Text(
+                  negativLabel?.text ?? 'This is not helping',
+                  style: TextStyle(
+                    color: negativLabel?.fontColor ?? Colors.white,
+                    fontSize: negativLabel?.fontSize ?? 13.0,
+                    fontWeight: negativLabel?.fontWeight ?? FontWeight.bold,
+                  ).merge(GoogleFonts.getFont(
+                      negativLabel?.fontFamily ?? 'Montserrat')),
+                ),
+              ),
             ),
           )
         ],

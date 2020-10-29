@@ -8,10 +8,12 @@ class HelperTileWidget extends StatelessWidget {
   final String versionMax;
   final bool isDisabled;
   final Function onTapCallback;
+  final String type;
 
   const HelperTileWidget({
     Key key,
     @required this.name,
+    this.type,
     this.trigger,
     this.versionMax,
     this.versionMin,
@@ -24,7 +26,7 @@ class HelperTileWidget extends StatelessWidget {
     const borderRadius = 8.0;
 
     return Container(
-      height: 48.0,
+      height: 56.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         color: Colors.white,
@@ -45,7 +47,7 @@ class HelperTileWidget extends StatelessWidget {
           child: InkWell(
             onTap: () {
               HapticFeedback.selectionClick();
-              
+
               if (onTapCallback != null) {
                 onTapCallback();
               }
@@ -92,19 +94,38 @@ class HelperTileWidget extends StatelessWidget {
       children: [
         Text(
           name,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontSize: 13.0,
+            fontSize: 16.0,
           ),
         ),
         SizedBox(
-          height: 3.0,
+          height: 5.0,
         ),
-        Text(
-          trigger,
-          style: TextStyle(
-            fontSize: 9.0,
-            fontWeight: FontWeight.w300,
-          ),
+        Row(
+          children: [
+            Text(
+              type,
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Text(
+              '- ',
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Text(
+              trigger,
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -118,22 +139,37 @@ class HelperTileWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          'Versions',
+          'Available versions',
           style: TextStyle(
-            fontSize: 9.0,
+            fontSize: 10.0,
             color: Theme.of(context).accentColor,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(
-          height: 1.0,
+          height: 5.0,
         ),
-        Text(
-          '${versionMin ?? 'first'} - ${versionMax ?? 'last'}',
-          style: TextStyle(
-            fontSize: 9.0,
-            fontWeight: FontWeight.w300,
-          ),
+        Row(
+          children: [
+            Text(
+              '${versionMin ?? 'first'} ',
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward,
+              size: 10.0,
+            ),
+            Text(
+              ' ${versionMax ?? 'last'}',
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ],
         ),
       ],
     );

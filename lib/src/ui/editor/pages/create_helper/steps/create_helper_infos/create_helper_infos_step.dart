@@ -106,7 +106,12 @@ class CreateHelperInfosStep extends StatelessWidget {
 
   // Check fields
   String _checkHelperName(String value) {
-    return (value.isEmpty) ? 'Please enter a name' : null;
+    if (value.isEmpty) {
+      return 'Please enter a name';
+    } else if (value.length >= 45) {
+      return 'Maximum 45 character allowed';
+    }
+    return null;
   }
 
   String _checkHelperTriggerType(String value) {

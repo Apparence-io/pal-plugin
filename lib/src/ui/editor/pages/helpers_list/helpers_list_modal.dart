@@ -17,6 +17,7 @@ import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal_presente
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/widgets/helper_tile_widget.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_details/helper_details_model.dart';
 
 abstract class HelpersListModalView {
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
@@ -373,17 +374,26 @@ class _HelpersListModalState extends State<HelpersListModal>
     HapticFeedback.selectionClick();
 
     // Display the helper detail view
-    final deletedHelperEntity = await Navigator.pushNamed(
+    final helperDetailsPopState = await Navigator.pushNamed(
       context,
       '/editor/helper',
       arguments: HelperDetailsComponentArguments(
+        widget.hostedAppNavigatorKey,
         helperEntity,
         pageId,
       ),
-    );
+    ) as HelperDetailsPopState;
 
-    if (deletedHelperEntity != null) {
-      presenter.removeHelper(deletedHelperEntity as HelperEntity);
+    if (helperDetailsPopState != null) {
+      switch (helperDetailsPopState) {
+        case HelperDetailsPopState.deleted:
+          presenter.removeHelper(helperEntity);
+          break;
+        case HelperDetailsPopState.editorOpened:
+          Navigator.pop(widget.bottomModalContext);
+          break;
+        default:
+      }
     }
   }
 

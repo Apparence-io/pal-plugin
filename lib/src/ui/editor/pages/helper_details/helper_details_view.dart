@@ -1,15 +1,18 @@
 import 'dart:io';
+import 'package:mvvm_builder/mvvm_builder.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/widgets/snackbar_mixin.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/router.dart';
 
 import 'helper_details_model.dart';
 import 'helper_details_presenter.dart';
@@ -27,13 +30,16 @@ abstract class HelperDetailsInterface {
   );
   void showMessage(String message, bool success);
   void popBackToList();
+  void launchHelperEditor();
 }
 
 class HelperDetailsComponentArguments {
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final HelperEntity helper;
   final String pageId;
 
   HelperDetailsComponentArguments(
+    this.hostedAppNavigatorKey,
     this.helper,
     this.pageId,
   );
@@ -90,7 +96,15 @@ class HelperDetailsComponent extends StatelessWidget
         ),
       ),
       actions: [
-        FlatButton(
+        CupertinoButton(
+          key: ValueKey('editHelper'),
+          onPressed: () => this.launchHelperEditor(),
+          child: Icon(
+            Icons.edit,
+            color: PalTheme.of(context).colors.dark,
+          ),
+        ),
+        CupertinoButton(
           key: ValueKey('deleteHelper'),
           onPressed: (!model.isDeleting)
               ? () => this.showDeleteDialog(presenter)
@@ -269,6 +283,27 @@ class HelperDetailsComponent extends StatelessWidget
 
   @override
   void popBackToList() {
-    Navigator.pop(_scaffoldKey.currentContext, arguments?.helper);
+    Navigator.pop(_scaffoldKey.currentContext, HelperDetailsPopState.deleted);
+  }
+
+  @override
+  void launchHelperEditor() {
+    // Open editor overlay
+    HelperEditorPageArguments args = HelperEditorPageArguments(
+      arguments?.hostedAppNavigatorKey,
+      arguments?.pageId,
+      helperName: arguments?.helper?.name,
+      helperMinVersion: arguments?.helper?.versionMin,
+      triggerType: arguments?.helper?.triggerType,
+      helperTheme: null, // TODO: Add theme feature
+      helperType: arguments?.helper?.type,
+    );
+    var elementFinder = ElementFinder(arguments?.hostedAppNavigatorKey?.currentContext);
+    showOverlayed(
+      arguments?.hostedAppNavigatorKey,
+      HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
+    );
+    // Go back
+    Navigator.of(_scaffoldKey.currentContext).pop(HelperDetailsPopState.editorOpened);
   }
 }

@@ -34,6 +34,7 @@ class EditableTextField extends StatefulWidget {
   final List<TextInputFormatter> inputFormatters;
   final Stream<bool> outsideTapStream;
   final ToolbarType toolbarType;
+  final String initialValue;
 
   EditableTextField({
     Key key,
@@ -53,6 +54,7 @@ class EditableTextField extends StatefulWidget {
     this.inputFormatters,
     this.hintText = 'Edit me!',
     this.keyboardType,
+    this.initialValue,
     this.toolbarType = ToolbarType.text,
     @required this.textStyle,
   }) : super();
@@ -77,6 +79,7 @@ class EditableTextField extends StatefulWidget {
     final String hintText = 'Edit me!',
     final List<TextInputFormatter> inputFormatters,
     final Stream<bool> outsideTapStream,
+    final String initialValue,
   }) {
     return EditableTextField(
       key: key,
@@ -98,6 +101,7 @@ class EditableTextField extends StatefulWidget {
       keyboardType: keyboardType,
       textStyle: textStyle,
       toolbarType: ToolbarType.text,
+      initialValue: initialValue,
     );
   }
 
@@ -121,6 +125,7 @@ class EditableTextField extends StatefulWidget {
     final String hintText = 'Edit me!',
     final List<TextInputFormatter> inputFormatters,
     final Stream<bool> outsideTapStream,
+    final String initialValue,
   }) {
     return EditableTextField(
       key: key,
@@ -142,6 +147,7 @@ class EditableTextField extends StatefulWidget {
       keyboardType: keyboardType,
       textStyle: textStyle,
       toolbarType: ToolbarType.border,
+      initialValue: initialValue,
     );
   }
 
@@ -229,6 +235,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                       }
                       return error;
                     },
+                    initialValue: widget.initialValue,
                     keyboardType: widget.keyboardType,
                     maxLines: widget.maxLines ?? 1,
                     minLines: 1,
@@ -320,7 +327,8 @@ class _EditableTextFieldState extends State<EditableTextField> {
             _isToolbarVisible = true;
           });
 
-          if (fontKeys?.fontFamilyNameKey != null && fontKeys.fontFamilyNameKey.length > 0) {
+          if (fontKeys?.fontFamilyNameKey != null &&
+              fontKeys.fontFamilyNameKey.length > 0) {
             _fontFamilyKey = fontKeys.fontFamilyNameKey;
           }
 

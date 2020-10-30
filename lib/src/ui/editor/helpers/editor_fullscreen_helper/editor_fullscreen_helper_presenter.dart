@@ -90,6 +90,10 @@ class EditorFullScreenHelperPresenter
     super.onDestroy();
   }
 
+  googleCustomFont(String fontFamily) {
+    this.viewInterface.googleCustomFont(fontFamily);
+  }
+
   onOutsideTap() {
     this.viewModel.editableTextFieldController.add(true);
   }

@@ -44,6 +44,7 @@ class EditorUpdateHelperPresenter
       },
     );
 
+    // TODO: Read template note
     this.addChangelogNote();
   }
 

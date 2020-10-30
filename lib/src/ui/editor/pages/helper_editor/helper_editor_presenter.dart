@@ -48,16 +48,25 @@ class HelperEditorPresenter
 
     // Create a template helper model
     // this template will be copied to edited widget
-    viewModel.templateViewModel = HelperViewModel(
-      name: basicArguments?.helperName,
-      priority: basicArguments?.priority ?? 0,
-      triggerType:
-          basicArguments?.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
-      versionMinId: basicArguments?.versionMinId ?? 1,
-      versionMaxId: basicArguments?.versionMaxId ?? 2,
-    );
+    viewModel.templateViewModel = basicArguments?.templateViewModel;
+    // if (viewModel.templateViewModel == null) {
+    //   viewModel.templateViewModel = HelperViewModel(
+    //     name: basicArguments?.helperName,
+    //     priority: basicArguments?.priority ?? 0,
+    //     triggerType:
+    //         basicArguments?.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
+    //     versionMinId: basicArguments?.versionMinId ?? 1,
+    //     versionMaxId: basicArguments?.versionMaxId ?? 2,
+    //   );
+    // }
     viewModel.helperViewModel = EditorViewModelFactory.transform(
-        viewModel.templateViewModel, basicArguments?.helperType);
+      viewModel.templateViewModel,
+    );
+    // TODO: Append sended extra value if any
+    // viewModel.helperViewModel = EditorViewModelFactory.merge(
+    //   viewModel.templateViewModel,
+    //   basicArguments?.templateViewModel,
+    // );
     chooseHelperType();
 
     KeyboardVisibilityNotification().addNewListener(
@@ -74,7 +83,7 @@ class HelperEditorPresenter
   }
 
   chooseHelperType() {
-    switch (basicArguments?.helperType) {
+    switch (viewModel?.helperViewModel?.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         viewInterface.addFullscreenHelperEditor(
             viewModel.helperViewModel, checkIfEditableWidgetFormValid);
@@ -115,12 +124,12 @@ class HelperEditorPresenter
 
     var helperBasicConfig = CreateHelperConfig(
       pageId: pageId,
-      name: basicArguments.helperName,
-      triggerType: basicArguments.triggerType,
-      helperType: basicArguments.helperType,
-      priority: basicArguments.priority,
+      name: basicArguments?.templateViewModel?.name,
+      triggerType: basicArguments?.templateViewModel?.triggerType,
+      helperType: basicArguments?.templateViewModel?.helperType,
+      priority: basicArguments?.templateViewModel?.priority,
       versionMinId: versionMinId,
-      versionMaxId: basicArguments.versionMaxId,
+      versionMaxId: basicArguments?.templateViewModel?.versionMaxId,
     );
 
     await this.save(helperBasicConfig);

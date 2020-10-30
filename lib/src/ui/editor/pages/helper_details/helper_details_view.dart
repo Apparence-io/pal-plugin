@@ -13,6 +13,7 @@ import 'package:pal/src/ui/editor/widgets/snackbar_mixin.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import 'package:pal/src/router.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 
 import 'helper_details_model.dart';
 import 'helper_details_presenter.dart';
@@ -99,8 +100,7 @@ class HelperDetailsComponent extends StatelessWidget
         CupertinoButton(
           key: ValueKey('editHelper'),
           disabledColor: PalTheme.of(context).colors.dark.withOpacity(0.7),
-          onPressed:
-              (!model.isDeleting) ? this.launchHelperEditor : null,
+          onPressed: (!model.isDeleting) ? this.launchHelperEditor : null,
           child: Icon(
             Icons.edit,
             color: PalTheme.of(context).colors.dark,
@@ -295,11 +295,7 @@ class HelperDetailsComponent extends StatelessWidget
     HelperEditorPageArguments args = HelperEditorPageArguments(
       arguments?.hostedAppNavigatorKey,
       arguments?.pageId,
-      helperName: arguments?.helper?.name,
-      helperMinVersion: arguments?.helper?.versionMin,
-      triggerType: arguments?.helper?.triggerType,
-      helperTheme: null, // TODO: Add theme feature
-      helperType: arguments?.helper?.type,
+      templateViewModel: EditorViewModelFactory.build(arguments?.helper),
     );
     var elementFinder =
         ElementFinder(arguments?.hostedAppNavigatorKey?.currentContext);

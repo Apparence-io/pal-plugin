@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/theme.dart';
@@ -19,6 +20,7 @@ abstract class EditorFullScreenHelperView {
     EditorFullScreenHelperPresenter presenter,
   );
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
+  TextStyle googleCustomFont(String fontFamily);
 }
 
 class EditorFullScreenHelper implements EditorFullScreenHelperView {
@@ -52,6 +54,13 @@ class EditorFullScreenHelper implements EditorFullScreenHelperView {
     ) as GraphicEntity;
 
     return media;
+  }
+
+  @override
+  TextStyle googleCustomFont(String fontFamily) {
+    return (fontFamily != null && fontFamily.length > 0)
+        ? GoogleFonts.getFont(fontFamily)
+        : null;
   }
 }
 
@@ -142,13 +151,19 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             maximumCharacterLength: 55,
                             minimumCharacterLength: 1,
                             maxLines: 3,
+                            initialValue: viewModel?.titleField?.text?.value,
                             textStyle: TextStyle(
                               color: viewModel.titleField?.fontColor?.value,
                               decoration: TextDecoration.none,
                               fontSize: viewModel.titleField?.fontSize?.value
                                   ?.toDouble(),
                               fontWeight: FontWeightMapper.toFontWeight(
-                                  viewModel.titleField?.fontWeight?.value),
+                                viewModel.titleField?.fontWeight?.value,
+                              ),
+                            ).merge(
+                              presenter.googleCustomFont(
+                                viewModel.titleField?.fontFamily?.value,
+                              ),
                             ),
                           ),
                           Padding(
@@ -172,6 +187,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 onChanged: presenter.onPositivTextChanged,
                                 onTextStyleChanged:
                                     presenter.onPositivTextStyleChanged,
+                                initialValue:
+                                    viewModel.positivButtonField?.text?.value,
                                 hintText:
                                     viewModel.positivButtonField?.hintText,
                                 maximumCharacterLength: 25,
@@ -184,6 +201,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   fontWeight: FontWeightMapper.toFontWeight(
                                     viewModel
                                         .positivButtonField?.fontWeight?.value,
+                                  ),
+                                ).merge(
+                                  presenter.googleCustomFont(
+                                    viewModel
+                                        .positivButtonField?.fontFamily?.value,
                                   ),
                                 ),
                               ),
@@ -213,6 +235,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 hintText:
                                     viewModel.negativButtonField?.hintText,
                                 maximumCharacterLength: 25,
+                                initialValue:
+                                    viewModel.negativButtonField?.text?.value,
                                 textStyle: TextStyle(
                                   color: viewModel
                                       .negativButtonField?.fontColor?.value,
@@ -223,6 +247,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   fontWeight: FontWeightMapper.toFontWeight(
                                     viewModel
                                         .negativButtonField?.fontWeight?.value,
+                                  ),
+                                ).merge(
+                                  presenter.googleCustomFont(
+                                    viewModel
+                                        .negativButtonField?.fontFamily?.value,
                                   ),
                                 ),
                               ),

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
-import 'package:pal/src/extensions/color_extension.dart';
-import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 import 'helpers/simple_helper/widget/simple_helper_layout.dart';
 
@@ -32,23 +29,23 @@ class HelperFactory {
     final Function onTrigger,
   ) {
     return UserFullScreenHelperPage(
-      titleLabel: _parseTextLabel(
+      titleLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
         helper.helperTexts,
       ),
-      mediaUrl: _parseImageUrl(
+      mediaUrl: HelperSharedFactory.parseImageUrl(
         FullscreenHelperKeys.IMAGE_KEY,
         helper.helperImages,
       ),
-      backgroundColor: _parseBoxBackground(
+      backgroundColor: HelperSharedFactory.parseBoxBackground(
         FullscreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
-      positivLabel: _parseTextLabel(
+      positivLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
-      negativLabel: _parseTextLabel(
+      negativLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts,
       ),
@@ -57,78 +54,59 @@ class HelperFactory {
     );
   }
 
-  static CustomLabel _parseTextLabel(
-    final String key,
-    final List<HelperTextEntity> helperTexts,
-  ) {
-    for (HelperTextEntity helperText in helperTexts) {
-      if (key == helperText?.key) {
-        return CustomLabel(
-          text: helperText?.value,
-          fontColor: HexColor.fromHex(helperText?.fontColor),
-          fontSize: helperText?.fontSize?.toDouble(),
-          fontFamily: helperText?.fontFamily,
-          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
-        );
-      }
-    }
-    return null;
-  }
+  // static CustomLabel _parseTextLabel(
+  //   final String key,
+  //   final List<HelperTextEntity> helperTexts,
+  // ) {
+  //   for (HelperTextEntity helperText in helperTexts) {
+  //     if (key == helperText?.key) {
+  //       return CustomLabel(
+  //         text: helperText?.value,
+  //         fontColor: HexColor.fromHex(helperText?.fontColor),
+  //         fontSize: helperText?.fontSize?.toDouble(),
+  //         fontFamily: helperText?.fontFamily,
+  //         fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+  //       );
+  //     }
+  //   }
+  //   return null;
+  // }
 
-  static String _parseImageUrl(
-    final String key,
-    final List<HelperImageEntity> helperImages,
-  ) {
-    for (HelperImageEntity helperImage in helperImages) {
-      if (key == helperImage?.key) {
-        return helperImage?.url;
-      }
-    }
-    return null;
-  }
+  // static String _parseImageUrl(
+  //   final String key,
+  //   final List<HelperImageEntity> helperImages,
+  // ) {
+  //   for (HelperImageEntity helperImage in helperImages) {
+  //     if (key == helperImage?.key) {
+  //       return helperImage?.url;
+  //     }
+  //   }
+  //   return null;
+  // }
 
-  static Color _parseBoxBackground(
-    final String key,
-    final List<HelperBoxEntity> helperBoxes,
-  ) {
-    for (HelperBoxEntity helperBox in helperBoxes) {
-      if (key == helperBox?.key) {
-        return HexColor.fromHex(helperBox?.backgroundColor);
-      }
-    }
-    return null;
-  }
+  // static Color _parseBoxBackground(
+  //   final String key,
+  //   final List<HelperBoxEntity> helperBoxes,
+  // ) {
+  //   for (HelperBoxEntity helperBox in helperBoxes) {
+  //     if (key == helperBox?.key) {
+  //       return HexColor.fromHex(helperBox?.backgroundColor);
+  //     }
+  //   }
+  //   return null;
+  // }
 
-  static Color _parseBorder(
-    final String key,
-    final List<HelperBorderEntity> helperBorders,
-  ) {
-    for (HelperBorderEntity helperBorder in helperBorders) {
-      if (key == helperBorder?.key) {
-        return HexColor.fromHex(helperBorder?.color);
-      }
-    }
-    return null;
-  }
-
-  static List<CustomLabel> _parseChangeLogLabel(
-    final String key,
-    final List<HelperTextEntity> helperTexts,
-  ) {
-    List<CustomLabel> customLabels = [];
-    for (HelperTextEntity helperText in helperTexts) {
-      if (helperText.key.startsWith(key)) {
-        customLabels.add(CustomLabel(
-          text: helperText?.value,
-          fontColor: HexColor.fromHex(helperText?.fontColor),
-          fontSize: helperText?.fontSize?.toDouble(),
-          fontFamily: helperText?.fontFamily,
-          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
-        ));
-      }
-    }
-    return customLabels;
-  }
+  // static Color _parseBorder(
+  //   final String key,
+  //   final List<HelperBorderEntity> helperBorders,
+  // ) {
+  //   for (HelperBorderEntity helperBorder in helperBorders) {
+  //     if (key == helperBorder?.key) {
+  //       return HexColor.fromHex(helperBorder?.color);
+  //     }
+  //   }
+  //   return null;
+  // }
 
   static Widget _createSimpleHelper(
     final HelperEntity helper,
@@ -138,11 +116,11 @@ class HelperFactory {
     return SimpleHelperLayout(
       key: _simpleHelperLayoutKey,
       toaster: SimpleHelperPage(
-        descriptionLabel: _parseTextLabel(
+        descriptionLabel: HelperSharedFactory.parseTextLabel(
           SimpleHelperKeys.CONTENT_KEY,
           helper.helperTexts,
         ),
-        backgroundColor: _parseBoxBackground(
+        backgroundColor: HelperSharedFactory.parseBoxBackground(
           SimpleHelperKeys.BACKGROUND_KEY,
           helper.helperBoxes,
         ),
@@ -160,23 +138,23 @@ class HelperFactory {
       onPositivButtonTap: () {
         onTrigger(true);
       },
-      backgroundColor: _parseBoxBackground(
+      backgroundColor: HelperSharedFactory.parseBoxBackground(
         UpdatescreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
-      thanksButtonLabel: _parseTextLabel(
+      thanksButtonLabel: HelperSharedFactory.parseTextLabel(
         UpdatescreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
-      titleLabel: _parseTextLabel(
+      titleLabel: HelperSharedFactory.parseTextLabel(
         UpdatescreenHelperKeys.TITLE_KEY,
         helper.helperTexts,
       ),
-      changelogLabels: _parseChangeLogLabel(
+      changelogLabels: HelperSharedFactory.parseTextsLabel(
         UpdatescreenHelperKeys.LINES_KEY,
         helper.helperTexts,
       ),
-      mediaUrl: _parseImageUrl(
+      mediaUrl: HelperSharedFactory.parseImageUrl(
         UpdatescreenHelperKeys.IMAGE_KEY,
         helper.helperImages,
       ),

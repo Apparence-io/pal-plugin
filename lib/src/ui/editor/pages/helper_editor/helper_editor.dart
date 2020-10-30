@@ -30,27 +30,33 @@ import 'helper_editor_viewmodel.dart';
 class HelperEditorPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final String pageId;
-
-  final String helperName;
   final String helperMinVersion;
-  final int priority;
-  final HelperTriggerType triggerType;
-  final HelperTheme helperTheme;
-  final HelperType helperType;
-  final int versionMinId;
-  final int versionMaxId;
+  final String helperMaxVersion;
+
+  final HelperViewModel templateViewModel;
+  // final String helperName;
+  // final String helperMinVersion;
+  // final int priority;
+  // final HelperTriggerType triggerType;
+  // final HelperTheme helperTheme;
+  // final HelperType helperType;
+  // final int versionMinId;
+  // final int versionMaxId;
 
   HelperEditorPageArguments(
     this.hostedAppNavigatorKey,
     this.pageId, {
-    @required this.helperName,
-    @required this.helperMinVersion,
-    this.priority,
-    @required this.triggerType,
-    @required this.helperTheme,
-    @required this.helperType,
-    this.versionMinId,
-    this.versionMaxId,
+    this.helperMinVersion,
+    this.helperMaxVersion,
+    this.templateViewModel,
+    // @required this.helperName,
+    // @required this.helperMinVersion,
+    // this.priority,
+    // @required this.triggerType,
+    // @required this.helperTheme,
+    // @required this.helperType,
+    // this.versionMinId,
+    // this.versionMaxId,
   });
 }
 
@@ -313,7 +319,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
       helperEditorPageArguments.hostedAppNavigatorKey.currentContext,
       OverlayKeys.EDITOR_OVERLAY_KEY,
     );
-    
+
     this.showBubble(true);
     this.showHelpersList();
   }

@@ -2,17 +2,32 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/extensions/color_extension.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 
 class EditorViewModelFactory {
   static HelperViewModel transform(
-      HelperViewModel model, HelperType helperType) {
-    switch (helperType) {
+    HelperViewModel model,
+  ) {
+    switch (model?.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         return FullscreenHelperViewModel.fromHelperViewModel(model);
       case HelperType.SIMPLE_HELPER:
         return SimpleHelperViewModel.fromHelperViewModel(model);
       case HelperType.UPDATE_HELPER:
         return UpdateHelperViewModel.fromHelperViewModel(model);
+      default:
+        return null;
+    }
+  }
+
+  static HelperViewModel build(HelperEntity helperEntity) {
+    switch (helperEntity?.type) {
+      case HelperType.HELPER_FULL_SCREEN:
+        return FullscreenHelperViewModel.fromHelperEntity(helperEntity);
+      case HelperType.SIMPLE_HELPER:
+        return SimpleHelperViewModel.fromHelperEntity(helperEntity);
+      case HelperType.UPDATE_HELPER:
+        return UpdateHelperViewModel.fromHelperEntity(helperEntity);
       default:
         return null;
     }

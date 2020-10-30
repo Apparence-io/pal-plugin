@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
@@ -15,6 +16,7 @@ abstract class EditorSimpleHelperView {
     SimpleHelperViewModel viewModel,
     EditorSimpleHelperPresenter presenter,
   );
+  TextStyle googleCustomFont(String fontFamily);
 }
 
 class EditorSimpleHelperPage extends StatelessWidget
@@ -92,9 +94,13 @@ class EditorSimpleHelperPage extends StatelessWidget
                             maxLines: 3,
                             maximumCharacterLength: 150,
                             minimumCharacterLength: 1,
+                            initialValue: viewModel?.detailsField?.text?.value,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
-                                  new RegExp('^(.*(\n.*){0,2})')),
+                                new RegExp(
+                                  '^(.*(\n.*){0,2})',
+                                ),
+                              ),
                             ],
                             backgroundBoxDecoration: BoxDecoration(
                               color: viewModel?.backgroundColor?.value ??
@@ -118,7 +124,12 @@ class EditorSimpleHelperPage extends StatelessWidget
                               fontSize: viewModel.detailsField?.fontSize?.value
                                   ?.toDouble(),
                               fontWeight: FontWeightMapper.toFontWeight(
-                                  viewModel.detailsField?.fontWeight?.value),
+                                viewModel.detailsField?.fontWeight?.value,
+                              ),
+                            ).merge(
+                              googleCustomFont(
+                                viewModel.detailsField?.fontFamily?.value,
+                              ),
                             ),
                           ),
                         ),
@@ -161,5 +172,12 @@ class EditorSimpleHelperPage extends StatelessWidget
         onColorSelected: presenter.updateBackgroundColor,
       ),
     );
+  }
+
+  @override
+  TextStyle googleCustomFont(String fontFamily) {
+    return (fontFamily != null && fontFamily.length > 0)
+        ? GoogleFonts.getFont(fontFamily)
+        : null;
   }
 }

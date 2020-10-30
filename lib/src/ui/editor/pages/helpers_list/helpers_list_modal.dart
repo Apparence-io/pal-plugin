@@ -30,10 +30,9 @@ abstract class HelpersListModalView {
     final String pageId,
   );
   Future<void> openAppSettingsPage();
-  void openHelperDetailPage(
+  Future<HelperDetailsPopState> openHelperDetailPage(
     final HelperEntity helperEntity,
     final String pageId,
-    final HelpersListModalPresenter presenter,
   );
   void reorganizeHelper(
     final int oldIndex,
@@ -42,6 +41,7 @@ abstract class HelpersListModalView {
     final List<HelperEntity> helpers,
   );
   void onCloseButton();
+  void popModalDialog();
 }
 
 class HelpersListModal extends StatefulWidget {
@@ -226,8 +226,12 @@ class _HelpersListModalState extends State<HelpersListModal>
           versionMax: anHelper?.versionMax,
           isDisabled: false,
           type: getHelperTypeDescription(anHelper?.type),
-          onTapCallback: () =>
-              this.openHelperDetailPage(anHelper, model.pageId, presenter),
+          onTapCallback: () {
+            HapticFeedback.selectionClick();
+            presenter.onClickHelper(anHelper);
+          },
+          // onTapCallback: () =>
+          //     this.openHelperDetailPage(anHelper, model.pageId, presenter),
         ),
       );
       helpers.add(cell);
@@ -366,13 +370,10 @@ class _HelpersListModalState extends State<HelpersListModal>
   }
 
   @override
-  Future openHelperDetailPage(
+  Future<HelperDetailsPopState> openHelperDetailPage(
     final HelperEntity helperEntity,
     final String pageId,
-    final HelpersListModalPresenter presenter,
   ) async {
-    HapticFeedback.selectionClick();
-
     // Display the helper detail view
     final helperDetailsPopState = await Navigator.pushNamed(
       context,
@@ -384,17 +385,7 @@ class _HelpersListModalState extends State<HelpersListModal>
       ),
     ) as HelperDetailsPopState;
 
-    if (helperDetailsPopState != null) {
-      switch (helperDetailsPopState) {
-        case HelperDetailsPopState.deleted:
-          presenter.removeHelper(helperEntity);
-          break;
-        case HelperDetailsPopState.editorOpened:
-          Navigator.pop(widget.bottomModalContext);
-          break;
-        default:
-      }
-    }
+    return helperDetailsPopState;
   }
 
   @override
@@ -456,5 +447,10 @@ class _HelpersListModalState extends State<HelpersListModal>
   void onCloseButton() {
     HapticFeedback.selectionClick();
     Navigator.pop(context);
+  }
+
+  @override
+  void popModalDialog() {
+    Navigator.pop(widget.bottomModalContext);
   }
 }

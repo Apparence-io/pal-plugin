@@ -98,7 +98,9 @@ class HelperDetailsComponent extends StatelessWidget
       actions: [
         CupertinoButton(
           key: ValueKey('editHelper'),
-          onPressed: () => this.launchHelperEditor(),
+          disabledColor: PalTheme.of(context).colors.dark.withOpacity(0.7),
+          onPressed:
+              (!model.isDeleting) ? this.launchHelperEditor : null,
           child: Icon(
             Icons.edit,
             color: PalTheme.of(context).colors.dark,
@@ -106,6 +108,7 @@ class HelperDetailsComponent extends StatelessWidget
         ),
         CupertinoButton(
           key: ValueKey('deleteHelper'),
+          disabledColor: PalTheme.of(context).colors.black.withOpacity(0.7),
           onPressed: (!model.isDeleting)
               ? () => this.showDeleteDialog(presenter)
               : null,
@@ -298,12 +301,14 @@ class HelperDetailsComponent extends StatelessWidget
       helperTheme: null, // TODO: Add theme feature
       helperType: arguments?.helper?.type,
     );
-    var elementFinder = ElementFinder(arguments?.hostedAppNavigatorKey?.currentContext);
+    var elementFinder =
+        ElementFinder(arguments?.hostedAppNavigatorKey?.currentContext);
     showOverlayed(
       arguments?.hostedAppNavigatorKey,
       HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
     );
     // Go back
-    Navigator.of(_scaffoldKey.currentContext).pop(HelperDetailsPopState.editorOpened);
+    Navigator.of(_scaffoldKey.currentContext)
+        .pop(HelperDetailsPopState.editorOpened);
   }
 }

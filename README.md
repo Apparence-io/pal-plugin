@@ -16,5 +16,8 @@ No code editor for all your app screens directly in your app
 [Wanna know more? Click here](http://pal-plugin.tech)
 
 ## Getting started
+
+> First join our beta list [here](http://pal-plugin.tech), we will send you a link that will allow you to create a project and get a TOKEN required by our plugin.
+
 [Full documentation is available here](http://doc.pal-plugin.tech)
 

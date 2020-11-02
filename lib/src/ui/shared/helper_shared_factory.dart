@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/extensions/color_extension.dart';
 import 'package:palplugin/src/ui/shared/helper_shared_viewmodels.dart';
@@ -50,37 +48,47 @@ class HelperSharedFactory {
     return null;
   }
 
-  static String parseImageUrl(
+  static HelperImageViewModel parseImageUrl(
     final String key,
     final List<HelperImageEntity> helperImages,
   ) {
     for (HelperImageEntity helperImage in helperImages) {
       if (key == helperImage?.key) {
-        return helperImage?.url;
+        return HelperImageViewModel(
+          id: helperImage?.id,
+          url: helperImage?.url,
+        );
       }
     }
     return null;
   }
 
-  static Color parseBoxBackground(
+  static HelperBoxViewModel parseBoxBackground(
     final String key,
     final List<HelperBoxEntity> helperBoxes,
   ) {
     for (HelperBoxEntity helperBox in helperBoxes) {
       if (key == helperBox?.key) {
-        return HexColor.fromHex(helperBox?.backgroundColor);
+        return HelperBoxViewModel(
+            id: helperBox?.id,
+            backgroundColor: HexColor.fromHex(helperBox?.backgroundColor));
       }
     }
     return null;
   }
 
-  static Color parseBorder(
+  static HelperBorderViewModel parseBorder(
     final String key,
     final List<HelperBorderEntity> helperBorders,
   ) {
     for (HelperBorderEntity helperBorder in helperBorders) {
       if (key == helperBorder?.key) {
-        return HexColor.fromHex(helperBorder?.color);
+        return HelperBorderViewModel(
+          id: helperBorder?.id,
+          style: helperBorder?.style,
+          color: HexColor.fromHex(helperBorder?.color),
+          width: helperBorder?.width,
+        );
       }
     }
     return null;

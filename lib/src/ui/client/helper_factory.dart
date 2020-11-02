@@ -33,11 +33,11 @@ class HelperFactory {
         FullscreenHelperKeys.TITLE_KEY,
         helper.helperTexts,
       ),
-      mediaUrl: HelperSharedFactory.parseImageUrl(
+      headerImageViewModel: HelperSharedFactory.parseImageUrl(
         FullscreenHelperKeys.IMAGE_KEY,
         helper.helperImages,
       ),
-      backgroundColor: HelperSharedFactory.parseBoxBackground(
+      helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         FullscreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
@@ -120,7 +120,7 @@ class HelperFactory {
           SimpleHelperKeys.CONTENT_KEY,
           helper.helperTexts,
         ),
-        backgroundColor: HelperSharedFactory.parseBoxBackground(
+        helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
           SimpleHelperKeys.BACKGROUND_KEY,
           helper.helperBoxes,
         ),
@@ -138,7 +138,7 @@ class HelperFactory {
       onPositivButtonTap: () {
         onTrigger(true);
       },
-      backgroundColor: HelperSharedFactory.parseBoxBackground(
+      helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         UpdatescreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
@@ -154,7 +154,7 @@ class HelperFactory {
         UpdatescreenHelperKeys.LINES_KEY,
         helper.helperTexts,
       ),
-      mediaUrl: HelperSharedFactory.parseImageUrl(
+      helperImageViewModel: HelperSharedFactory.parseImageUrl(
         UpdatescreenHelperKeys.IMAGE_KEY,
         helper.helperImages,
       ),

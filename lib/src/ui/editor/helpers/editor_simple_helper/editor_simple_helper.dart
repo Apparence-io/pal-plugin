@@ -103,7 +103,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                               ),
                             ],
                             backgroundBoxDecoration: BoxDecoration(
-                              color: viewModel?.backgroundColor?.value ??
+                              color: viewModel?.bodyBox?.backgroundColor?.value ??
                                   PalTheme.of(context).colors.light,
                               borderRadius: BorderRadius.circular(6.0),
                             ),
@@ -168,7 +168,7 @@ class EditorSimpleHelperPage extends StatelessWidget
     showDialog(
       context: _scaffoldKey.currentContext,
       child: ColorPickerDialog(
-        placeholderColor: viewModel.backgroundColor?.value,
+        placeholderColor: viewModel.bodyBox?.backgroundColor?.value,
         onColorSelected: presenter.updateBackgroundColor,
       ),
     );

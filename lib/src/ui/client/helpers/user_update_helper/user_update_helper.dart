@@ -26,24 +26,24 @@ abstract class UserUpdateHelperView {
 
 class UserUpdateHelperPage extends StatelessWidget
     implements UserUpdateHelperView {
-  final Color backgroundColor;
+  final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
   final List<HelperTextViewModel> changelogLabels;
   final HelperTextViewModel thanksButtonLabel;
   final PackageVersionReader packageVersionReader;
-  final String mediaUrl;
+  final HelperImageViewModel helperImageViewModel;
   final Function onPositivButtonTap;
 
   UserUpdateHelperPage({
     Key key,
-    @required this.backgroundColor,
+    @required this.helperBoxViewModel,
     @required this.titleLabel,
     @required this.changelogLabels,
     @required this.onPositivButtonTap,
-    this.mediaUrl,
+    this.helperImageViewModel,
     this.thanksButtonLabel,
     this.packageVersionReader,
-  })  : assert(backgroundColor != null),
+  })  : assert(helperBoxViewModel != null),
         assert(titleLabel != null),
         assert(changelogLabels != null);
 
@@ -142,14 +142,14 @@ class UserUpdateHelperPage extends StatelessWidget
       opacity: model.helperOpacity,
       child: Scaffold(
         key: ValueKey('pal_UserUpdateHelperWidget_Scaffold'),
-        backgroundColor: backgroundColor,
+        backgroundColor: helperBoxViewModel?.backgroundColor,
         body: SafeArea(
           child: Container(
             width: double.infinity,
             child: Container(
               child: Column(
                 children: [
-                  if (mediaUrl != null && mediaUrl.length > 0)
+                  if (helperImageViewModel?.url != null && helperImageViewModel.url.length > 0)
                     Flexible(
                       key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
                       flex: 4,
@@ -187,7 +187,7 @@ class UserUpdateHelperPage extends StatelessWidget
             borderRadius: BorderRadius.circular(15.0),
             child: CachedNetworkImage(
               key: ValueKey('pal_UserUpdateHelperWidget_Image'),
-              imageUrl: mediaUrl,
+              imageUrl: helperImageViewModel?.url,
               fit: BoxFit.contain,
               placeholder: (context, url) =>
                   Center(child: CircularProgressIndicator()),

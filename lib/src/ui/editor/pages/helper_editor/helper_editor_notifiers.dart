@@ -39,16 +39,46 @@ class TextFormFieldNotifier {
 }
 
 class MediaNotifier {
-  String id;
-  ValueNotifier<String> key;
+  int id;
+  String uuid;
+  // ValueNotifier<String> key;
   ValueNotifier<String> url;
 
   MediaNotifier({
-    String key,
+    // String key,
     String url,
     int id,
+    String uuid,
   }) {
-    this.key = ValueNotifier(key);
+    this.id = id;
+    this.uuid = uuid;
+    // this.key = ValueNotifier(key);
     this.url = ValueNotifier(url);
   }
 }
+
+class LanguageNotifier {
+  int id;
+  // TODO: Create an ID ?
+
+  LanguageNotifier({
+    int id,
+  }) {
+    this.id = id;
+  }
+}
+
+class BoxNotifier {
+  int id;
+  ValueNotifier<Color> backgroundColor;
+
+  BoxNotifier({
+    int id,
+    Color backgroundColor
+  }) {
+    this.id = id;
+    this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
+  }
+}
+
+// TODO: Create border notifier

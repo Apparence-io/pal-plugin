@@ -30,23 +30,13 @@ class CreateHelperConfig {
 ///-------------------------------
 class CreateSimpleHelper {
   CreateHelperConfig config;
-  String title;
-  String fontColor;
-  String fontWeight;
-  String fontFamily;
-  int fontSize;
-  String backgroundColor;
-  String borderColor;
+  HelperTextConfig titleText;
+  HelperBoxConfig boxConfig;
 
   CreateSimpleHelper({
     @required this.config,
-    @required this.title,
-    @required this.fontColor,
-    @required this.backgroundColor,
-    @required this.fontFamily,
-    @required this.fontWeight,
-    @required this.fontSize,
-    this.borderColor,
+    @required this.titleText,
+    @required this.boxConfig,
   });
 }
 
@@ -56,8 +46,8 @@ class CreateSimpleHelper {
 class CreateFullScreenHelper {
   CreateHelperConfig config;
   HelperTextConfig title, description, positivButton, negativButton;
-  String backgroundColor;
-  String topImageUrl;
+  HelperMediaConfig mediaHeader;
+  HelperBoxConfig bodyBox;
 
   CreateFullScreenHelper({
     @required this.config,
@@ -65,8 +55,9 @@ class CreateFullScreenHelper {
     @required this.description,
     this.positivButton,
     this.negativButton,
-    @required this.backgroundColor,
-    this.topImageUrl});
+    @required this.bodyBox,
+    this.mediaHeader,
+  });
 }
 
 ///-------------------------------
@@ -76,20 +67,18 @@ class CreateUpdateHelper {
   CreateHelperConfig config;
   HelperTextConfig title, positivButton, negativButton;
   List<HelperTextConfig> lines;
-  String backgroundColor;
-  String topImageId;
-  String topImageUrl;
+  HelperBoxConfig bodyBox;
+  HelperMediaConfig headerMedia;
 
   CreateUpdateHelper({
     @required this.config,
     @required this.title,
     @required this.lines,
-    @required this.topImageId,
-    @required this.topImageUrl,
+    @required this.headerMedia,
     this.positivButton,
     this.negativButton,
-    this.backgroundColor,
-});
+    this.bodyBox,
+  });
 }
 
 ///-------------------------------
@@ -104,13 +93,33 @@ class HelperTextConfig {
   String fontFamily;
   int fontSize;
 
-  HelperTextConfig({
+  HelperTextConfig(
+      {this.id,
+      @required this.text,
+      @required this.fontColor,
+      @required this.fontWeight,
+      @required this.fontFamily,
+      @required this.fontSize});
+}
+
+class HelperMediaConfig {
+  int id;
+  String url;
+
+  HelperMediaConfig({
     this.id,
-    @required this.text,
-    @required this.fontColor,
-    @required this.fontWeight,
-    @required this.fontFamily,
-    @required this.fontSize
+    this.url,
+  });
+}
+
+class HelperBoxConfig {
+  int id;
+  String color;
+  // TODO: Missing params ?
+
+  HelperBoxConfig({
+    this.id,
+    this.color,
   });
 }
 

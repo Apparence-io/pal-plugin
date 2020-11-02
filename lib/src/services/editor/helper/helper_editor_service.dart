@@ -69,18 +69,18 @@ class _EditorHelperHttpService implements EditorHelperService {
       pageId: pageId,
       helperTexts: [
         HelperTextEntity(
-          fontColor: createArgs.fontColor,
-          fontWeight: createArgs.fontWeight,
-          fontSize: createArgs.fontSize,
-          value: createArgs.title,
-          fontFamily: createArgs.fontFamily,
+          fontColor: createArgs.titleText?.fontColor,
+          fontWeight: createArgs.titleText.fontWeight,
+          fontSize: createArgs.titleText.fontSize,
+          value: createArgs.titleText.text,
+          fontFamily: createArgs.titleText.fontFamily,
           key: SimpleHelperKeys.CONTENT_KEY,
         )
       ],
       helperBoxes: [
         HelperBoxEntity(
           key: SimpleHelperKeys.BACKGROUND_KEY,
-          backgroundColor: createArgs.backgroundColor,
+          backgroundColor: createArgs.boxConfig?.color,
         )
       ],
     );
@@ -126,9 +126,12 @@ class _EditorHelperHttpService implements EditorHelperService {
 
     // Images
     // TODO: Create function
-    var helperImages = [createArgs.topImageUrl]
-        .map((mediaUrl) => (mediaUrl != null && mediaUrl.length > 0)
-            ? HelperImageEntity(url: mediaUrl)
+    var helperImages = [createArgs.headerMedia]
+        .map((media) => (media?.url != null && media.url.length > 0)
+            ? HelperImageEntity(
+                id: media.id,
+                url: media.url,
+              )
             : null)
         .toList();
     if (helperImages[0] != null)
@@ -146,8 +149,9 @@ class _EditorHelperHttpService implements EditorHelperService {
       helperTexts: helperTexts,
       helperBoxes: [
         HelperBoxEntity(
+          id: createArgs.bodyBox?.id,
           key: UpdatescreenHelperKeys.BACKGROUND_KEY,
-          backgroundColor: createArgs.backgroundColor,
+          backgroundColor: createArgs.bodyBox.color,
         )
       ],
       helperImages: helperImages,
@@ -188,9 +192,12 @@ class _EditorHelperHttpService implements EditorHelperService {
     helperTexts.removeWhere((element) => element == null);
 
     // Images
-    var helperImages = [createArgs.topImageUrl]
-        .map((mediaUrl) => (mediaUrl != null && mediaUrl.length > 0)
-            ? HelperImageEntity(url: mediaUrl)
+    var helperImages = [createArgs.mediaHeader]
+        .map((media) => (media?.url != null && media.url.length > 0)
+            ? HelperImageEntity(
+                id: media.id,
+                url: media.url,
+              )
             : null)
         .toList();
     if (helperImages[0] != null)
@@ -209,7 +216,7 @@ class _EditorHelperHttpService implements EditorHelperService {
       helperBoxes: [
         HelperBoxEntity(
           key: FullscreenHelperKeys.BACKGROUND_KEY,
-          backgroundColor: createArgs.backgroundColor,
+          backgroundColor: createArgs.bodyBox.color,
         )
       ],
       helperImages: helperImages,

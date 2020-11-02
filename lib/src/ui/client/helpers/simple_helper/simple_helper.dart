@@ -12,13 +12,13 @@ abstract class SimpleHelperView {}
 
 class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
   final HelperTextViewModel descriptionLabel;
-  final Color backgroundColor;
+  final HelperBoxViewModel helperBoxViewModel;
 
-  SimpleHelperPage(
-      {Key key,
-      @required this.descriptionLabel,
-      @required this.backgroundColor})
-      : assert(backgroundColor != null),
+  SimpleHelperPage({
+    Key key,
+    @required this.descriptionLabel,
+    @required this.helperBoxViewModel,
+  })  : assert(helperBoxViewModel != null),
         assert(descriptionLabel != null);
 
   final _mvvmPageBuilder =
@@ -52,7 +52,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: this.backgroundColor,
+                            color: this.helperBoxViewModel?.backgroundColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8.0)),
                             boxShadow: [

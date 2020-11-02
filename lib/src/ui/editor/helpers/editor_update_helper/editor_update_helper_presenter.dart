@@ -227,7 +227,7 @@ class EditorUpdateHelperPresenter
   }
 
   updateBackgroundColor(Color aColor) {
-    updateHelperViewModel.backgroundColor.value = aColor;
+    updateHelperViewModel.bodyBox.backgroundColor.value = aColor;
     this.refreshView();
   }
 
@@ -239,10 +239,10 @@ class EditorUpdateHelperPresenter
     final selectedMedia = await this
         .viewInterface
     // FIXME: Int or String ??
-        .pushToMediaGallery(this.updateHelperViewModel.media?.id); 
+        .pushToMediaGallery(this.updateHelperViewModel.media?.uuid); 
 
     this.updateHelperViewModel.media?.url?.value = selectedMedia?.url;
-    this.updateHelperViewModel.media?.id = selectedMedia?.id;
+    this.updateHelperViewModel.media?.uuid = selectedMedia?.id;
 
     this.refreshView();
   }

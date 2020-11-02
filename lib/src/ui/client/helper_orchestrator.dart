@@ -139,7 +139,9 @@ class HelperOrchestrator {
   _showFullScreenHelper() {
     _showSpecificHelper(
       UserFullScreenHelperPage(
-        backgroundColor: Colors.blueAccent,
+        helperBoxViewModel: HelperBoxViewModel(
+          backgroundColor: Colors.blueAccent,
+        ),
         titleLabel: HelperTextViewModel(
           text: 'A simple test',
           fontSize: 60.0,
@@ -155,7 +157,9 @@ class HelperOrchestrator {
           fontColor: Colors.red,
           fontSize: 22.0,
         ),
-        mediaUrl: 'https://picsum.photos/200/300',
+        headerImageViewModel: HelperImageViewModel(
+          url: 'https://picsum.photos/200/300',
+        ),
         onPositivButtonTap: () async {
           this.popHelper();
         },
@@ -172,7 +176,9 @@ class HelperOrchestrator {
         onPositivButtonTap: () async {
           this.popHelper();
         },
-        backgroundColor: Color(0xff60b2d5),
+        helperBoxViewModel: HelperBoxViewModel(
+          backgroundColor: Color(0xff60b2d5),
+        ),
         thanksButtonLabel: HelperTextViewModel(
           text: 'Thank you !',
           fontColor: Colors.white,
@@ -217,7 +223,9 @@ class HelperOrchestrator {
             fontSize: 14.0,
             text:
                 "You can just disable notification by going in your profile and click on notifications tab > disable notifications"),
-        backgroundColor: Colors.black,
+        helperBoxViewModel: HelperBoxViewModel(
+          backgroundColor: Colors.black,
+        ),
       ),
       onDismissed: (res) {
         popHelper();

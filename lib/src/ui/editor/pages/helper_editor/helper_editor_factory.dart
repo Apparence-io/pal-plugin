@@ -57,8 +57,14 @@ class EditorEntityFactory {
           fontSize: model.descriptionField?.fontSize?.value,
           fontFamily: model.descriptionField?.fontFamily?.value,
         ),
-        backgroundColor: model.backgroundColor.value.toHex(),
-        topImageUrl: model?.media?.url?.value,
+        mediaHeader: HelperMediaConfig(
+          id: model.media?.id,
+          url: model.media?.url?.value,
+        ),
+        bodyBox: HelperBoxConfig(
+          id: model.bodyBox?.id,
+          color: model.bodyBox?.backgroundColor?.value?.toHex(),
+        ),
         positivButton: HelperTextConfig(
           id: model.positivButtonField?.id,
           text: model.positivButtonField?.text?.value,
@@ -81,16 +87,23 @@ class EditorEntityFactory {
           CreateHelperConfig config, SimpleHelperViewModel model) =>
       CreateSimpleHelper(
         config: config,
-        title: model.detailsField?.text?.value,
-        fontColor: model.detailsField?.fontColor?.value?.toHex(),
-        fontWeight: model.detailsField?.fontWeight?.value,
-        fontSize: model.detailsField?.fontSize?.value,
-        fontFamily: model.detailsField?.fontFamily?.value,
-        backgroundColor: model?.backgroundColor?.value?.toHex(),
+        boxConfig: HelperBoxConfig(
+          id: model.bodyBox?.id,
+          color: model.bodyBox?.backgroundColor?.value?.toHex(),
+        ),
+        titleText: HelperTextConfig(
+          text: model.detailsField?.text?.value,
+          fontColor: model.detailsField?.fontColor?.value?.toHex(),
+          fontWeight: model.detailsField?.fontWeight?.value,
+          fontSize: model.detailsField?.fontSize?.value,
+          fontFamily: model.detailsField?.fontFamily?.value,
+        ),
       );
 
   static CreateUpdateHelper buildUpdateArgs(
-      CreateHelperConfig config, UpdateHelperViewModel model) {
+    CreateHelperConfig config,
+    UpdateHelperViewModel model,
+  ) {
     List<HelperTextConfig> lines = [];
 
     for (var note in model.changelogsFields.entries) {
@@ -116,9 +129,14 @@ class EditorEntityFactory {
         fontSize: model.titleField?.fontSize?.value,
         fontFamily: model.titleField?.fontFamily?.value,
       ),
-      topImageId: model.media?.url?.value,
-      topImageUrl: model.media.url.value,
-      backgroundColor: model.backgroundColor?.value?.toHex(),
+      headerMedia: HelperMediaConfig(
+        id: model.media?.id,
+        url: model.media?.url?.value,
+      ),
+      bodyBox: HelperBoxConfig(
+        id: model.bodyBox?.id,
+        color: model.bodyBox?.backgroundColor?.value?.toHex(),
+      ),
       lines: lines,
       positivButton: HelperTextConfig(
         id: model.thanksButton?.id,

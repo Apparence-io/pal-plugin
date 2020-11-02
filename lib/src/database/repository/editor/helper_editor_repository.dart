@@ -18,9 +18,11 @@ class EditorHelperRepository extends BaseHttpRepository {
 
   Future<HelperEntity> createHelper(
       final String pageId, final HelperEntity createHelper) async {
-    final Response response = await this
-        .httpClient
-        .post('editor/pages/$pageId/helpers', body: jsonEncode(createHelper));
+    final payload = jsonEncode(createHelper);
+    final Response response = await this.httpClient.post(
+          'editor/pages/$pageId/helpers',
+          body: payload,
+        );
     if (response == null || response.body == null)
       throw new UnknownHttpError("NO_RESULT");
     return this._adapter.parse(response.body);

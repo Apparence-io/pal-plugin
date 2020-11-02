@@ -60,8 +60,8 @@ class HelperViewModel extends MVVMModel {
 }
 
 class FullscreenHelperViewModel extends HelperViewModel {
-  ValueNotifier<int> languageId;
-  ValueNotifier<Color> backgroundColor;
+  LanguageNotifier language;
+  BoxNotifier bodyBox;
   MediaNotifier media;
   TextFormFieldNotifier titleField;
   TextFormFieldNotifier descriptionField;
@@ -76,9 +76,10 @@ class FullscreenHelperViewModel extends HelperViewModel {
     @required HelperTheme helperTheme,
     int versionMaxId,
     int languageId,
-    Color backgroundColor,
-    String topImageUrl,
-    HelperTextViewModel titleLabel,
+    // For edit mode only
+    HelperBoxViewModel boxViewModel,
+    HelperImageViewModel helperImageViewModel,
+    HelperTextViewModel titleViewModel,
     HelperTextViewModel descriptionLabel,
     HelperTextViewModel positivButtonLabel,
     HelperTextViewModel negativButtonLabel,
@@ -91,22 +92,27 @@ class FullscreenHelperViewModel extends HelperViewModel {
           helperTheme: helperTheme,
           helperType: HelperType.HELPER_FULL_SCREEN,
         ) {
-    this.languageId = ValueNotifier(languageId ?? 1);
-    this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
+    this.language = LanguageNotifier(
+      id: languageId ?? 1,
+    );
+    this.bodyBox = BoxNotifier(
+      id: boxViewModel?.id,
+      backgroundColor: boxViewModel?.backgroundColor ?? Colors.blueAccent,
+    );
     this.media = MediaNotifier(
-      key: 'header',
-      url: topImageUrl,
+      id: helperImageViewModel?.id,
+      url: helperImageViewModel?.url,
     );
     this.titleField = TextFormFieldNotifier(
-      id: titleLabel?.id,
-      fontColor: titleLabel?.fontColor ?? Colors.white,
-      fontSize: titleLabel?.fontSize?.toInt() ?? 60,
-      fontFamily: titleLabel?.fontFamily,
-      text: titleLabel?.text ?? '',
-      fontWeight: FontWeightMapper.toFontKey(titleLabel?.fontWeight),
+      id: titleViewModel?.id,
+      fontColor: titleViewModel?.fontColor ?? Colors.white,
+      fontSize: titleViewModel?.fontSize?.toInt() ?? 60,
+      fontFamily: titleViewModel?.fontFamily,
+      text: titleViewModel?.text ?? '',
+      fontWeight: FontWeightMapper.toFontKey(titleViewModel?.fontWeight),
     );
     this.descriptionField = TextFormFieldNotifier(
-      id: titleLabel?.id,
+      id: descriptionLabel?.id,
       fontColor: descriptionLabel?.fontColor ?? Color(0xFFCCC2),
       fontSize: descriptionLabel?.fontSize?.toInt() ?? 14,
       text: descriptionLabel?.text ?? 'Une description',
@@ -145,8 +151,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
     );
 
     if (model is FullscreenHelperViewModel) {
-      fullscreenHelper.backgroundColor = model?.backgroundColor;
-      fullscreenHelper.languageId = model?.languageId;
+      fullscreenHelper.bodyBox = model?.bodyBox;
+      fullscreenHelper.language = model?.language;
       fullscreenHelper.titleField = model?.titleField;
       fullscreenHelper.descriptionField = model?.descriptionField;
       fullscreenHelper.positivButtonField = model?.positivButtonField;
@@ -166,11 +172,11 @@ class FullscreenHelperViewModel extends HelperViewModel {
       versionMinId: helperEntity?.versionMinId,
       versionMaxId: helperEntity?.versionMaxId,
       helperTheme: null,
-      backgroundColor: HelperSharedFactory.parseBoxBackground(
+      boxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,
         helperEntity?.helperBoxes,
       ),
-      titleLabel: HelperSharedFactory.parseTextLabel(
+      titleViewModel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
         helperEntity?.helperTexts,
       ),
@@ -186,7 +192,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
         FullscreenHelperKeys.NEGATIV_KEY,
         helperEntity?.helperTexts,
       ),
-      topImageUrl: HelperSharedFactory.parseImageUrl(
+      helperImageViewModel: HelperSharedFactory.parseImageUrl(
         FullscreenHelperKeys.IMAGE_KEY,
         helperEntity?.helperImages,
       ),
@@ -195,8 +201,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
 }
 
 class SimpleHelperViewModel extends HelperViewModel {
-  ValueNotifier<int> languageId;
-  ValueNotifier<Color> backgroundColor;
+  LanguageNotifier language;
+  BoxNotifier bodyBox;
   TextFormFieldNotifier detailsField;
 
   SimpleHelperViewModel({
@@ -207,7 +213,7 @@ class SimpleHelperViewModel extends HelperViewModel {
     HelperTheme helperTheme,
     int versionMaxId,
     int languageId,
-    Color backgroundColor,
+    HelperBoxViewModel helperBoxViewModel,
     HelperTextViewModel detailsField,
   }) : super(
           name: name,
@@ -218,8 +224,13 @@ class SimpleHelperViewModel extends HelperViewModel {
           helperType: HelperType.SIMPLE_HELPER,
           helperTheme: helperTheme,
         ) {
-    this.languageId = ValueNotifier(languageId ?? 1);
-    this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.black87);
+    this.language = LanguageNotifier(
+      id: languageId ?? 1,
+    );
+    this.bodyBox = BoxNotifier(
+      id: helperBoxViewModel?.id,
+      backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.black87,
+    );
     this.detailsField = TextFormFieldNotifier(
       id: detailsField?.id,
       fontColor: detailsField?.fontColor ?? Colors.white,
@@ -241,8 +252,8 @@ class SimpleHelperViewModel extends HelperViewModel {
     );
 
     if (model is SimpleHelperViewModel) {
-      simpleHelper.backgroundColor = model?.backgroundColor;
-      simpleHelper.languageId = model?.languageId;
+      simpleHelper.bodyBox = model?.bodyBox;
+      simpleHelper.language = model?.language;
       simpleHelper.detailsField = model?.detailsField;
     }
     return simpleHelper;
@@ -256,7 +267,7 @@ class SimpleHelperViewModel extends HelperViewModel {
       versionMinId: helperEntity?.versionMinId,
       versionMaxId: helperEntity?.versionMaxId,
       helperTheme: null,
-      backgroundColor: HelperSharedFactory.parseBoxBackground(
+      helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,
         helperEntity?.helperBoxes,
       ),
@@ -269,8 +280,8 @@ class SimpleHelperViewModel extends HelperViewModel {
 }
 
 class UpdateHelperViewModel extends HelperViewModel {
-  ValueNotifier<int> languageId;
-  ValueNotifier<Color> backgroundColor;
+  LanguageNotifier language;
+  BoxNotifier bodyBox;
   Map<String, TextFormFieldNotifier> changelogsFields;
   MediaNotifier media;
   TextFormFieldNotifier thanksButton;
@@ -284,9 +295,9 @@ class UpdateHelperViewModel extends HelperViewModel {
     @required HelperTheme helperTheme,
     int versionMaxId,
     int languageId,
-    Color backgroundColor,
+    HelperBoxViewModel helperBoxViewModel,
     Map<String, TextFormFieldNotifier> changelogsLabels,
-    String mediaUrl,
+    HelperImageViewModel helperImageViewModel,
     HelperTextViewModel titleLabel,
     HelperTextViewModel positivButtonLabel,
   }) : super(
@@ -298,10 +309,18 @@ class UpdateHelperViewModel extends HelperViewModel {
           helperType: HelperType.UPDATE_HELPER,
           helperTheme: helperTheme,
         ) {
-    this.languageId = ValueNotifier(languageId ?? 1);
-    this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
+    this.language = LanguageNotifier(
+      id: languageId ?? 1,
+    );
+    this.bodyBox = BoxNotifier(
+      id: helperBoxViewModel?.id,
+      backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.blueAccent,
+    );
     this.changelogsFields = changelogsLabels ?? {};
-    this.media = MediaNotifier(key: 'header', url: mediaUrl);
+    this.media = MediaNotifier(
+      id: helperImageViewModel?.id,
+      url: helperImageViewModel?.url,
+    );
     this.thanksButton = TextFormFieldNotifier(
       // backgroundColor: Colors.black87,
       id: positivButtonLabel?.id,
@@ -334,8 +353,8 @@ class UpdateHelperViewModel extends HelperViewModel {
     );
 
     if (model is UpdateHelperViewModel) {
-      updateHelper.backgroundColor = model?.backgroundColor;
-      updateHelper.languageId = model?.languageId;
+      updateHelper.bodyBox = model?.bodyBox;
+      updateHelper.language = model?.language;
       updateHelper.titleField = model?.titleField;
       updateHelper.thanksButton = model?.thanksButton;
       updateHelper.changelogsFields = model?.changelogsFields;
@@ -374,7 +393,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       versionMinId: helperEntity?.versionMinId,
       versionMaxId: helperEntity?.versionMaxId,
       helperTheme: null,
-      backgroundColor: HelperSharedFactory.parseBoxBackground(
+      helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,
         helperEntity?.helperBoxes,
       ),
@@ -386,7 +405,7 @@ class UpdateHelperViewModel extends HelperViewModel {
         UpdatescreenHelperKeys.POSITIV_KEY,
         helperEntity?.helperTexts,
       ),
-      mediaUrl: HelperSharedFactory.parseImageUrl(
+      helperImageViewModel: HelperSharedFactory.parseImageUrl(
         UpdatescreenHelperKeys.IMAGE_KEY,
         helperEntity?.helperImages,
       ),

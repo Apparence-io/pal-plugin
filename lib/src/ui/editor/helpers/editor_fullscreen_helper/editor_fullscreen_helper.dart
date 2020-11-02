@@ -37,7 +37,7 @@ class EditorFullScreenHelper implements EditorFullScreenHelperView {
     showDialog(
       context: this.context,
       child: ColorPickerDialog(
-        placeholderColor: viewModel.backgroundColor?.value,
+        placeholderColor: viewModel.bodyBox.backgroundColor?.value,
         onColorSelected: presenter.updateBackgroundColor,
       ),
     );
@@ -116,7 +116,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
               }
             },
             child: EditableBackground(
-              backgroundColor: viewModel.backgroundColor?.value,
+              backgroundColor: viewModel.bodyBox.backgroundColor?.value,
               circleIconKey:
                   'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
               onColorChange: () =>

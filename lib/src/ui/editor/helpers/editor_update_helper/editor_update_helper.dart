@@ -80,7 +80,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                 presenter.callonFormChanged();
               },
               child: EditableBackground(
-                backgroundColor: viewModel.backgroundColor?.value,
+                backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
                 circleIconKey:
                     'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
                 onColorChange: () =>
@@ -89,7 +89,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                   padding: const EdgeInsets.all(2.0),
                   child: Container(
                     width: double.infinity,
-                    color: viewModel.backgroundColor?.value,
+                    color: viewModel.bodyBox?.backgroundColor?.value,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -254,7 +254,7 @@ class EditorUpdateHelperPage extends StatelessWidget
     showDialog(
       context: context,
       child: ColorPickerDialog(
-        placeholderColor: this.viewModel?.backgroundColor?.value,
+        placeholderColor: this.viewModel?.bodyBox?.backgroundColor?.value,
         onColorSelected: presenter.updateBackgroundColor,
       ),
     );

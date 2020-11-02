@@ -34,7 +34,9 @@ class EditorFullScreenHelperPresenter
   onTitleChanged(String id, String newValue) {
     fullscreenHelperViewModel.titleField?.text?.value = newValue;
   }
-  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
+
+  onTitleTextStyleChanged(
+      String id, TextStyle newTextStyle, FontKeys fontKeys) {
     fullscreenHelperViewModel.titleField?.fontColor?.value =
         newTextStyle?.color;
     fullscreenHelperViewModel.titleField?.fontSize?.value =
@@ -52,7 +54,9 @@ class EditorFullScreenHelperPresenter
   onPositivTextChanged(String id, String newValue) {
     fullscreenHelperViewModel.positivButtonField?.text?.value = newValue;
   }
-  onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
+
+  onPositivTextStyleChanged(
+      String id, TextStyle newTextStyle, FontKeys fontKeys) {
     fullscreenHelperViewModel.positivButtonField?.fontColor?.value =
         newTextStyle?.color;
     fullscreenHelperViewModel.positivButtonField?.fontSize?.value =
@@ -70,7 +74,9 @@ class EditorFullScreenHelperPresenter
   onNegativTextChanged(String id, String newValue) {
     fullscreenHelperViewModel.negativButtonField?.text?.value = newValue;
   }
-  onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
+
+  onNegativTextStyleChanged(
+      String id, TextStyle newTextStyle, FontKeys fontKeys) {
     fullscreenHelperViewModel.negativButtonField?.fontColor?.value =
         newTextStyle?.color;
     fullscreenHelperViewModel.negativButtonField?.fontSize?.value =
@@ -116,15 +122,17 @@ class EditorFullScreenHelperPresenter
   }
 
   editMedia() async {
-    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.fullscreenHelperViewModel.media?.id.toString());
+    final selectedMedia = await this
+        .viewInterface
+        .pushToMediaGallery(this.fullscreenHelperViewModel.media?.uuid);
 
     this.fullscreenHelperViewModel.media?.url?.value = selectedMedia?.url;
-    this.fullscreenHelperViewModel.media?.id = selectedMedia?.id;
+    this.fullscreenHelperViewModel.media?.uuid = selectedMedia?.id;
     this.refreshView();
   }
 
   updateBackgroundColor(Color aColor) {
-    fullscreenHelperViewModel.backgroundColor.value = aColor;
+    fullscreenHelperViewModel.bodyBox.backgroundColor.value = aColor;
     this.refreshView();
   }
 }

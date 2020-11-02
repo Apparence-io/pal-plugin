@@ -5,6 +5,10 @@
 </p>
 <p align="center">
     <img src="https://img.shields.io/badge/status-beta-brightgreen"/>
+    <img src="https://app.bitrise.io/app/83910b8783f1bf6a/status.svg?token=AZYUldjPs6PnJjBYlBfXCg&branch=master"/>
+    <a href="https://codecov.io/gl/apparence:pal/pal-flutter">
+      <img src="https://codecov.io/gl/apparence:pal/pal-flutter/branch/\x6d6173746572/graph/badge.svg?token=VSU0MWER5H"/>
+    </a>
 </p>
 
 # Pal - The Flutter onboarding editor (beta)

@@ -94,6 +94,7 @@ class EditorSimpleHelperPage extends StatelessWidget
                             maxLines: 3,
                             maximumCharacterLength: 150,
                             minimumCharacterLength: 1,
+                            fontFamilyKey: viewModel?.detailsField?.fontFamily?.value,
                             initialValue: viewModel?.detailsField?.text?.value,
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(

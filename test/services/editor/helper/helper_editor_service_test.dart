@@ -28,20 +28,23 @@ void main() {
       var pageId = 'DJKLSQLKDJLQ132154a';
       // the args of our service creation method
       var args = CreateSimpleHelper(
+        boxConfig: HelperBoxConfig(color: '#FFF'),
+        titleText: HelperTextConfig(
+          text: "Today tips is now this lorem ipsum lorem ipsum...",
+          fontColor: "#CCC",
+          fontWeight: "w100",
+          fontSize: 21,
+          fontFamily: "cortana",
+        ),
         config: CreateHelperConfig(
           name: 'my helper name',
           triggerType: HelperTriggerType.ON_SCREEN_VISIT,
           priority: 1,
           versionMinId: 25, //FIXME
           versionMaxId: 25, //FIXME
+          pageId: '',
+          helperType: HelperType.SIMPLE_HELPER,
         ),
-        title: "Today tips is now this lorem ipsum lorem ipsum...",
-        fontColor: "#CCC",
-        fontWeight: "w100",
-        fontSize: 21,
-        fontFamily: "cortana",
-        backgroundColor: "#FFF",
-        borderColor: "#CCC",
       );
       // the entity creation request that our service should create
       HelperEntity myHelper = HelperEntity(

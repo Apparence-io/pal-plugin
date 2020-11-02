@@ -192,6 +192,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 hintText:
                                     viewModel.positivButtonField?.hintText,
                                 maximumCharacterLength: 25,
+                                fontFamilyKey: viewModel
+                                    .positivButtonField?.fontFamily?.value,
                                 textStyle: TextStyle(
                                   color: viewModel
                                       .positivButtonField?.fontColor?.value,
@@ -235,6 +237,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 hintText:
                                     viewModel.negativButtonField?.hintText,
                                 maximumCharacterLength: 25,
+                                fontFamilyKey: viewModel
+                                    .negativButtonField?.fontFamily?.value,
                                 initialValue:
                                     viewModel.negativButtonField?.text?.value,
                                 textStyle: TextStyle(

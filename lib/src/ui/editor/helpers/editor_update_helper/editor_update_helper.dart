@@ -164,6 +164,7 @@ class EditorUpdateHelperPage extends StatelessWidget
       autovalidate: AutovalidateMode.disabled,
       maximumCharacterLength: 60,
       minimumCharacterLength: 1,
+      fontFamilyKey: viewModel?.titleField?.fontFamily?.value,
       outsideTapStream: model.editableTextFieldController.stream,
       initialValue: viewModel?.titleField?.text?.value,
       textStyle: TextStyle(
@@ -228,6 +229,7 @@ class EditorUpdateHelperPage extends StatelessWidget
         onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
         hintText: viewModel.thanksButton?.hintText,
         maximumCharacterLength: 25,
+        fontFamilyKey: viewModel?.thanksButton?.fontFamily?.value,
         initialValue: viewModel?.thanksButton?.text?.value,
         backgroundBoxDecoration: BoxDecoration(
           color: PalTheme.of(context).colors.dark,

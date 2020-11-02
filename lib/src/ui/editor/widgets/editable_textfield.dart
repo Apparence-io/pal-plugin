@@ -36,6 +36,7 @@ class EditableTextField extends StatefulWidget {
   final Stream<bool> outsideTapStream;
   final ToolbarType toolbarType;
   final String initialValue;
+  final String fontFamilyKey;
 
   EditableTextField({
     Key key,
@@ -53,6 +54,7 @@ class EditableTextField extends StatefulWidget {
     this.textFormFieldPadding,
     this.backgroundBoxDecoration,
     this.maxLines = 1,
+    this.fontFamilyKey,
     this.inputFormatters,
     this.hintText = 'Edit me!',
     this.keyboardType,
@@ -83,6 +85,7 @@ class EditableTextField extends StatefulWidget {
     final List<TextInputFormatter> inputFormatters,
     final Stream<bool> outsideTapStream,
     final String initialValue,
+    final String fontFamilyKey,
   }) {
     return EditableTextField(
       key: key,
@@ -95,6 +98,7 @@ class EditableTextField extends StatefulWidget {
       minimumCharacterLength: minimumCharacterLength,
       onTextStyleChanged: onTextStyleChanged,
       onChanged: onChanged,
+      fontFamilyKey: fontFamilyKey,
       autovalidate: autovalidate,
       backgroundPadding: backgroundPadding,
       textFormFieldPadding: textFormFieldPadding,
@@ -131,6 +135,7 @@ class EditableTextField extends StatefulWidget {
     final List<TextInputFormatter> inputFormatters,
     final Stream<bool> outsideTapStream,
     final String initialValue,
+    final String fontFamilyKey,
   }) {
     return EditableTextField(
       key: key,
@@ -154,6 +159,7 @@ class EditableTextField extends StatefulWidget {
       textStyle: textStyle,
       toolbarType: ToolbarType.border,
       initialValue: initialValue,
+      fontFamilyKey: fontFamilyKey,
     );
   }
 
@@ -175,7 +181,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);
 
-    _fontFamilyKey = 'Montserrat';
+    _fontFamilyKey = widget.fontFamilyKey ?? 'Montserrat';
 
     // Listen on stream when outside tap is detected
     _outsideSub = widget.outsideTapStream?.listen((event) {
@@ -220,7 +226,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     onTap: _onTextFieldTapped,
                     onChanged: (String newValue) {
                       if (widget.onChanged != null) {
-                        widget.onChanged(widget.id ?? widget.textFormFieldKey.toString(), newValue);
+                        widget.onChanged(
+                            widget.id ?? widget.textFormFieldKey.toString(),
+                            newValue);
                       }
                     },
                     validator: (String value) {

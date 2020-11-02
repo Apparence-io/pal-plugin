@@ -128,13 +128,15 @@ class EditorUpdateHelperPresenter
       helperToolbarKey: textFormToolbarKey,
       outsideTapStream: this.viewModel.editableTextFieldController.stream,
       hintText: hintText,
-      initialValue: this
-          .updateHelperViewModel
-          .changelogsFields[textFieldId]
-          ?.text
-          ?.value,
+      initialValue:
+          this.updateHelperViewModel.changelogsFields[textFieldId]?.text?.value,
       minimumCharacterLength: 1,
       maximumCharacterLength: 120,
+      fontFamilyKey: this
+          .updateHelperViewModel
+          .changelogsFields[textFieldId]
+          ?.fontFamily
+          ?.value,
       autovalidate: AutovalidateMode.always,
       textStyle: TextStyle(
         color: this
@@ -150,8 +152,7 @@ class EditorUpdateHelperPresenter
             ?.toDouble(),
       ),
       onChanged: (String id, String newValue) {
-        this.updateHelperViewModel.changelogsFields[id]?.text?.value =
-            newValue;
+        this.updateHelperViewModel.changelogsFields[id]?.text?.value = newValue;
       },
       onTextStyleChanged: this.onChangelogTextStyleFieldChanged,
     );
@@ -169,7 +170,8 @@ class EditorUpdateHelperPresenter
     updateHelperViewModel.thanksButton?.text?.value = newValue;
   }
 
-  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
+  onTitleTextStyleChanged(
+      String id, TextStyle newTextStyle, FontKeys fontKeys) {
     updateHelperViewModel.titleField?.fontColor?.value = newTextStyle?.color;
     updateHelperViewModel.titleField?.fontSize?.value =
         newTextStyle?.fontSize?.toInt();
@@ -204,7 +206,7 @@ class EditorUpdateHelperPresenter
     TextStyle newTextStyle,
     FontKeys fontKeys,
   ) {
-        print(id);
+    print(id);
 
     updateHelperViewModel.changelogsFields[id]?.fontColor?.value =
         newTextStyle?.color;
@@ -212,10 +214,10 @@ class EditorUpdateHelperPresenter
         newTextStyle?.fontSize?.toInt();
 
     if (fontKeys != null) {
-      updateHelperViewModel.changelogsFields[id]?.fontWeight
-          ?.value = fontKeys.fontWeightNameKey;
-      updateHelperViewModel.changelogsFields[id]?.fontFamily
-          ?.value = fontKeys.fontFamilyNameKey;
+      updateHelperViewModel.changelogsFields[id]?.fontWeight?.value =
+          fontKeys.fontWeightNameKey;
+      updateHelperViewModel.changelogsFields[id]?.fontFamily?.value =
+          fontKeys.fontFamilyNameKey;
     }
   }
 
@@ -238,8 +240,8 @@ class EditorUpdateHelperPresenter
   editMedia() async {
     final selectedMedia = await this
         .viewInterface
-    // FIXME: Int or String ??
-        .pushToMediaGallery(this.updateHelperViewModel.media?.uuid); 
+        // FIXME: Int or String ??
+        .pushToMediaGallery(this.updateHelperViewModel.media?.uuid);
 
     this.updateHelperViewModel.media?.url?.value = selectedMedia?.url;
     this.updateHelperViewModel.media?.uuid = selectedMedia?.id;

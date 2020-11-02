@@ -9,6 +9,7 @@ import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 const Duration kLongPressTimeout = Duration(milliseconds: 500);
 const Duration kPressTimeout = Duration(milliseconds: 100);
@@ -49,10 +50,12 @@ Future pumpHelperWidget(
   HelperEditorPageArguments args = HelperEditorPageArguments(
     navigatorKey,
     "widget.pageId",
-    helperName: "helper name",
-    triggerType: triggerType,
-    helperType: type,
-    helperTheme: theme,
+    templateViewModel: HelperViewModel(
+      name: "helper name",
+      triggerType: triggerType,
+      helperType: type,
+      helperTheme: theme,
+    ),
   );
   var _elementFinder = ElementFinder(navigatorKey.currentContext);
   showOverlayed(

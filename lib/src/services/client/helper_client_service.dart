@@ -1,8 +1,8 @@
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/repository/helper_repository.dart';
-import 'package:palplugin/src/database/repository/page_repository.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
-import 'package:palplugin/src/services/package_version.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/repository/helper_repository.dart';
+import 'package:pal/src/database/repository/page_repository.dart';
+import 'package:pal/src/injectors/user_app/user_app_context.dart';
+import 'package:pal/src/services/package_version.dart';
 
 class HelperClientService {
 

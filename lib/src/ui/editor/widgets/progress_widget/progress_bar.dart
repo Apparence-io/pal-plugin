@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/theme.dart';
+import 'package:pal/src/theme.dart';
 
 /* Bar render class : Renders the progress bar with the given value */
 class ProgressBarRender extends StatefulWidget {

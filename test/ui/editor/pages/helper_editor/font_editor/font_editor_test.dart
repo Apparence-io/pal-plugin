@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_size_picker.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_size_picker.dart';
 
 void main() {
   group('Font editor dialog', () {

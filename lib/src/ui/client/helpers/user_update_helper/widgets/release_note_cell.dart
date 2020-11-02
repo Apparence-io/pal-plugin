@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:palplugin/src/ui/client/helper_client_models.dart';
-import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/ui/client/helper_client_models.dart';
+import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 
 class ReleaseNoteCell extends StatelessWidget {
   final int index;

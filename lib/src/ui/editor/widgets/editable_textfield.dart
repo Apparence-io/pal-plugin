@@ -4,10 +4,10 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
 enum ToolbarType { text, border }
 

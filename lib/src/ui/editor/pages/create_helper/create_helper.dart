@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/router.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/widgets/nested_navigator.dart';
-import 'package:palplugin/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
-import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/router.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/widgets/nested_navigator.dart';
+import 'package:pal/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 class CreateHelperPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;

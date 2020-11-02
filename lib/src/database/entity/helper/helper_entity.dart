@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
 
 
 

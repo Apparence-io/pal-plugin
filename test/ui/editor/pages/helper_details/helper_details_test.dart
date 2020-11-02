@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/helper_details/helper_details_view.dart';
 
 class MockHelperService extends Mock implements EditorHelperService {}
 

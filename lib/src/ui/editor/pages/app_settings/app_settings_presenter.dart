@@ -2,11 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/services/editor/project/app_icon_grabber_delegate.dart';
-import 'package:palplugin/src/services/editor/project/project_editor_service.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings.dart';
-import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings_viewmodel.dart';
+import 'package:pal/src/services/editor/project/app_icon_grabber_delegate.dart';
+import 'package:pal/src/services/editor/project/project_editor_service.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/ui/editor/pages/app_settings/app_settings.dart';
+import 'package:pal/src/ui/editor/pages/app_settings/app_settings_viewmodel.dart';
 
 class AppSettingsPresenter
     extends Presenter<AppSettingsModel, AppSettingsView> {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/client/helper_client_models.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/client/helper_client_models.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
 
 void main() {
   group('Simple Toaster overlay helper', () {

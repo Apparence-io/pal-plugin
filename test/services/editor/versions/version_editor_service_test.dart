@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/pageable.dart';
-import 'package:palplugin/src/database/entity/version_entity.dart';
-import 'package:palplugin/src/database/repository/version_repository.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
-import 'package:palplugin/src/services/http_client/base_client.dart';
+import 'package:pal/src/database/entity/pageable.dart';
+import 'package:pal/src/database/entity/version_entity.dart';
+import 'package:pal/src/database/repository/version_repository.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/services/editor/versions/version_editor_service.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 class HttpClientMock extends Mock implements HttpClient {} 
 

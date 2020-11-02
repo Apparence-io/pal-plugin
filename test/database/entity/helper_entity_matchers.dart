@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 
 class HelperEntityMatcher extends Matcher {
   final HelperEntity expected;

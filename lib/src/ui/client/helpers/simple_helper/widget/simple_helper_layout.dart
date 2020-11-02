@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 
 class SimpleHelperLayout extends StatefulWidget {
   final SimpleHelperPage toaster;

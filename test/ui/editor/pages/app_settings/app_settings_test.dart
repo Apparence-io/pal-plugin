@@ -3,11 +3,11 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/services/editor/project/app_icon_grabber_delegate.dart';
-import 'package:palplugin/src/services/editor/project/project_editor_service.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings.dart';
+import 'package:pal/src/services/editor/project/app_icon_grabber_delegate.dart';
+import 'package:pal/src/services/editor/project/project_editor_service.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/app_settings/app_settings.dart';
 
 class PackageVersionReaderMock extends Mock implements PackageVersionReader {}
 

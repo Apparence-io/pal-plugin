@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 
 class AnchoredHelper extends StatefulWidget {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card_swiper.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card_swiper.dart';
 
 class CreateHelperPresenterMock extends Mock implements CreateHelperPresenter {}
 

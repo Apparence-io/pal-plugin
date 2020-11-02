@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
-import 'package:palplugin/src/database/adapter/page_entity_adapter.dart';
-import 'package:palplugin/src/database/entity/page_entity.dart';
-import 'package:palplugin/src/database/repository/base_repository.dart';
-import 'package:palplugin/src/services/http_client/base_client.dart';
+import 'package:pal/src/database/adapter/page_entity_adapter.dart';
+import 'package:pal/src/database/entity/page_entity.dart';
+import 'package:pal/src/database/repository/base_repository.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 class ProjectRepository extends BaseHttpRepository {
   final PageEntityAdapter _adapter = PageEntityAdapter();

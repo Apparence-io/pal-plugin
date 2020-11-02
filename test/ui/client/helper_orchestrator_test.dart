@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
-import 'package:palplugin/src/pal_navigator_observer.dart';
-import 'package:palplugin/src/services/client/helper_client_service.dart';
-import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
-import 'package:palplugin/src/services/client/page_client_service.dart';
-import 'package:palplugin/src/ui/client/helper_orchestrator.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/in_app_user_entity.dart';
+import 'package:pal/src/pal_navigator_observer.dart';
+import 'package:pal/src/services/client/helper_client_service.dart';
+import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
+import 'package:pal/src/services/client/page_client_service.dart';
+import 'package:pal/src/ui/client/helper_orchestrator.dart';
 
 import '../../pal_test_utilities.dart';
 

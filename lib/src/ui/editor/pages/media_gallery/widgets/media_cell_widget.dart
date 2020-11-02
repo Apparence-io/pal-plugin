@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/theme.dart';
+import 'package:pal/src/theme.dart';
 
 class MediaCellWidget extends StatefulWidget {
   final String id;

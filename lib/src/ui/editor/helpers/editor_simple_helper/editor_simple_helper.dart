@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
-import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
+import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 abstract class EditorSimpleHelperView {
   void showColorPickerDialog(

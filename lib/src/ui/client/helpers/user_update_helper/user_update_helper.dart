@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/client/helper_client_models.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/widgets/release_note_cell.dart';
-import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
-import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/injectors/user_app/user_app_injector.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/client/helper_client_models.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/widgets/release_note_cell.dart';
+import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
+import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 
 abstract class UserUpdateHelperView {
   void playAnimation(
@@ -193,7 +193,7 @@ class UserUpdateHelperPage extends StatelessWidget
                   Center(child: CircularProgressIndicator()),
               errorWidget: (BuildContext context, String url, dynamic error) {
                 return Image.asset(
-                  'packages/palplugin/assets/images/create_helper.png',
+                  'packages/pal/assets/images/create_helper.png',
                 );
               },
             ),

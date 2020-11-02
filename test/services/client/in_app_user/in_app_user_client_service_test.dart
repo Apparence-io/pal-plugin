@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
-import 'package:palplugin/src/database/repository/in_app_user_repository.dart';
-import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
-import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_storage.dart';
-import 'package:palplugin/src/services/http_client/base_client.dart';
+import 'package:pal/src/database/entity/in_app_user_entity.dart';
+import 'package:pal/src/database/repository/in_app_user_repository.dart';
+import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
+import 'package:pal/src/services/client/in_app_user/in_app_user_client_storage.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 class _HttpClientMock extends Mock implements HttpClient{}
 

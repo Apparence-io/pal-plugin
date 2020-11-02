@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/ui/editor/pages/app_settings/app_settings.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_details/helper_details_view.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
+import 'package:pal/src/ui/editor/pages/app_settings/app_settings.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_details/helper_details_view.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
+import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey =
     new GlobalKey<NavigatorState>();

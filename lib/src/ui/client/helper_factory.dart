@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/extensions/color_extension.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
-import 'package:palplugin/src/ui/client/helper_client_models.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/extensions/color_extension.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/ui/client/helper_client_models.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 import 'helpers/simple_helper/widget/simple_helper_layout.dart';
 

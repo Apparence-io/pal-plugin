@@ -1,4 +1,4 @@
-import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
+import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
 
 
 void setInAppUserManagerService(InAppUserClientService inAppUserClientService){

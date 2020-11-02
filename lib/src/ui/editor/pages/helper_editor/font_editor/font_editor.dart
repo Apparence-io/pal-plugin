@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_presenter.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_list_tile.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_size_picker.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_presenter.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_list_tile.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_size_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 
 abstract class FontEditorDialogView {
   Future<String> openFontFamilyPicker(

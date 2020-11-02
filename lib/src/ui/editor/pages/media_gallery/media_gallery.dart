@@ -1,11 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery_loader.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/widgets/media_cell_widget.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery_loader.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/widgets/media_cell_widget.dart';
 
 import 'media_gallery_presenter.dart';
 import 'media_gallery_viewmodel.dart';

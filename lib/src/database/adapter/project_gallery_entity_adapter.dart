@@ -1,4 +1,4 @@
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'generic_adapter.dart';
 
 class ProjectGalleryEntityAdapter extends GenericEntityAdapter<GraphicEntity> {

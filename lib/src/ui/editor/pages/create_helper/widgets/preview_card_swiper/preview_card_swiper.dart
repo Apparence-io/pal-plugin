@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/dot_indicators.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/dot_indicators.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card.dart';
 
 class PreviewCardSwiperWidget extends StatefulWidget {
   final List<PreviewCard> cards;

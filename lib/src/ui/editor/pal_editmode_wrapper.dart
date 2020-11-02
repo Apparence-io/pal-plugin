@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/pal_notifications.dart';
-import 'package:palplugin/src/router.dart';
-import 'package:palplugin/src/services/pal/pal_state_service.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
-import 'package:palplugin/src/ui/editor/widgets/bubble_overlay.dart';
-import 'package:palplugin/src/ui/shared/widgets/overlayed.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/pal_notifications.dart';
+import 'package:pal/src/router.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
+import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
+import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 class PalEditModeWrapper extends StatefulWidget {
   // this is the client embedded application that wanna use our Pal

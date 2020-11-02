@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:palplugin/src/ui/editor/widgets/editable_background.dart';
-import 'package:palplugin/src/ui/editor/widgets/editable_media.dart';
-import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
+import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
+import 'package:pal/src/ui/editor/widgets/editable_background.dart';
+import 'package:pal/src/ui/editor/widgets/editable_media.dart';
+import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 
 abstract class EditorFullScreenHelperView {
   void showColorPickerDialog(

@@ -1,8 +1,8 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 class EditableBackground extends StatelessWidget {
   final Color backgroundColor;

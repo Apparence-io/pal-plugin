@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
+import 'package:pal/src/database/entity/helper/helper_theme.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
 
 class CreateHelperModel extends MVVMModel {
   GlobalKey<NavigatorState> nestedNavigationKey;

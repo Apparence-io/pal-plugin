@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
+import 'package:pal/src/database/entity/helper/helper_theme.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
+import 'package:pal/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
 import '../../screen_tester_utilities.dart';
 import '../../../pal_test_utilities.dart';
 

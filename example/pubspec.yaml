@@ -28,7 +28,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
 
-  palplugin:
+  pal:
     path: ../
   mvvm_builder: ^2.1.3+2
 
@@ -56,7 +56,7 @@ flutter:
   # ONLY USEFUL FOR TEST
   # /!\ DO NOT ADD THIS ASSET ON YOUR APP
   assets:
-    - packages/palplugin/assets/images/logo.png
+    - packages/pal/assets/images/logo.png
     - assets/images/posters/gump.png
     - assets/images/posters/joker.jpg
     - assets/images/posters/truman.png

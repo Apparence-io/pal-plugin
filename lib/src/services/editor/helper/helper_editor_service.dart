@@ -1,8 +1,8 @@
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/database/entity/pageable.dart';
-import 'package:palplugin/src/database/repository/editor/helper_editor_repository.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/database/entity/pageable.dart';
+import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 
 abstract class EditorHelperService {
   factory EditorHelperService.build(EditorHelperRepository helperRepository) =>

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
 
 class CreateHelperPresenter
     extends Presenter<CreateHelperModel, CreateHelperView> {

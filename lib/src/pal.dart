@@ -1,15 +1,15 @@
-library palplugin;
+library pal;
 
 import 'package:flutter/material.dart';
-import 'package:palplugin/palplugin.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
-import 'package:palplugin/src/ui/client/helper_orchestrator.dart';
-import 'package:palplugin/src/ui/editor/pal_editmode_wrapper.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/injectors/user_app/user_app_context.dart';
+import 'package:pal/src/injectors/user_app/user_app_injector.dart';
+import 'package:pal/src/ui/client/helper_orchestrator.dart';
+import 'package:pal/src/ui/editor/pal_editmode_wrapper.dart';
 
 import 'injectors/editor_app/editor_app_injector.dart';
+import 'pal_navigator_observer.dart';
 
 // our production server address
 const PAL_SERVER_URL = bool.hasEnvironment("SERVER_URL") ? String.fromEnvironment("SERVER_URL") : 'http://217.182.88.6:9040';

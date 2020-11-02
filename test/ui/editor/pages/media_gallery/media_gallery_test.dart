@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery_loader.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/widgets/media_cell_widget.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery_loader.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/widgets/media_cell_widget.dart';
 
 class _MediaGalleryLoaderMock extends Mock implements MediaGalleryLoader {}
 

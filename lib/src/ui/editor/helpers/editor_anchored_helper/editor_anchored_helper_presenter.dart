@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/services/editor/finder/finder_service.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/services/editor/finder/finder_service.dart';
+import 'package:pal/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 import 'editor_anchored_helper.dart';
 

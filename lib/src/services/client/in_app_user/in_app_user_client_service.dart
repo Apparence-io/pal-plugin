@@ -1,6 +1,6 @@
-import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
-import 'package:palplugin/src/database/repository/in_app_user_repository.dart';
-import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_storage.dart';
+import 'package:pal/src/database/entity/in_app_user_entity.dart';
+import 'package:pal/src/database/repository/in_app_user_repository.dart';
+import 'package:pal/src/services/client/in_app_user/in_app_user_client_storage.dart';
 
 abstract class InAppUserClientService {
   Future<InAppUserEntity> getOrCreate();

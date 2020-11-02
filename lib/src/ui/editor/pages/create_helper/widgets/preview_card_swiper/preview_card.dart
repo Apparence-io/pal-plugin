@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/theme.dart';
+import 'package:pal/src/theme.dart';
 
 class PreviewCard {
   final String previewImage;

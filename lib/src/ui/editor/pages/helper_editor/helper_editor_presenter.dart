@@ -1,15 +1,15 @@
 import 'package:flutter/widgets.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/pal_navigator_observer.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
-import 'package:palplugin/src/services/editor/page/page_editor_service.dart';
-import 'package:palplugin/src/services/editor/versions/version_editor_service.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
-import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/pal_navigator_observer.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/editor/page/page_editor_service.dart';
+import 'package:pal/src/services/editor/versions/version_editor_service.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';

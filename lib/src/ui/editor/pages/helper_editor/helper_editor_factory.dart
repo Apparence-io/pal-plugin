@@ -1,7 +1,7 @@
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:palplugin/src/extensions/color_extension.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/extensions/color_extension.dart';
 
 class EditorViewModelFactory {
   static HelperViewModel transform(

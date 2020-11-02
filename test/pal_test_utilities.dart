@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:palplugin/palplugin.dart';
-import 'package:palplugin/src/database/entity/helper/helper_theme.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
-import 'package:palplugin/src/router.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor.dart';
-import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/pal.dart';
+import 'package:pal/src/database/entity/helper/helper_theme.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
+import 'package:pal/src/injectors/user_app/user_app_context.dart';
+import 'package:pal/src/router.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 const Duration kLongPressTimeout = Duration(milliseconds: 500);
 const Duration kPressTimeout = Duration(milliseconds: 100);

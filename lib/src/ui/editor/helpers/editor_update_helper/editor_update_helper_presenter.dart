@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
-import 'package:palplugin/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
+import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 
 class EditorUpdateHelperPresenter
     extends Presenter<EditorUpdateHelperModel, EditorUpdateHelperView> {

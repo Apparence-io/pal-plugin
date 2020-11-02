@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
-import 'package:palplugin/src/database/entity/pageable.dart';
-import 'package:palplugin/src/database/repository/project_gallery_repository.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/database/entity/pageable.dart';
+import 'package:pal/src/database/repository/project_gallery_repository.dart';
 
 abstract class ProjectGalleryEditorService {
   factory ProjectGalleryEditorService.build({

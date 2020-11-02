@@ -1,5 +1,5 @@
-import 'package:palplugin/src/database/adapter/generic_adapter.dart';
-import 'package:palplugin/src/database/entity/in_app_user_entity.dart';
+import 'package:pal/src/database/adapter/generic_adapter.dart';
+import 'package:pal/src/database/entity/in_app_user_entity.dart';
 
 class InAppUserEntityAdapter extends GenericEntityAdapter<InAppUserEntity> {
   @override

@@ -1,4 +1,4 @@
-import 'package:palplugin/src/services/http_client/base_client.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 class BaseHttpRepository {
   final HttpClient httpClient;

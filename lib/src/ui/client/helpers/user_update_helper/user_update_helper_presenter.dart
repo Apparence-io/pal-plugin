@@ -1,7 +1,7 @@
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
 
 class UserUpdateHelperPresenter
     extends Presenter<UserUpdateHelperModel, UserUpdateHelperView> {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/widgets/edit_helper_toolbar.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
 void main() {
   group('Helper toolbar', () {

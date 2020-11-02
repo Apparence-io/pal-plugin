@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/shared/widgets/circle_image.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/shared/widgets/circle_image.dart';
 
 class BubbleOverlayButton extends StatefulWidget {
   final ValueNotifier<bool> visibility;
@@ -129,7 +129,7 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
               blurRadius: 8,
               offset: Offset(0, 3),
             ),
-            image: 'packages/palplugin/assets/images/logo.png',
+            image: 'packages/pal/assets/images/logo.png',
           ),
         ),
       ),

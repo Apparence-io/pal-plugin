@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/palplugin.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/services/editor/finder/finder_service.dart';
-import 'package:palplugin/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/pal.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/services/editor/finder/finder_service.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 import '../../../pal_test_utilities.dart';
 

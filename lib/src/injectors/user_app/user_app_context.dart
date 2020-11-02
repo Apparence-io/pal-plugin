@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/database/repository/helper_repository.dart';
-import 'package:palplugin/src/database/repository/in_app_user_repository.dart';
-import 'package:palplugin/src/database/repository/page_repository.dart';
-import 'package:palplugin/src/database/repository/version_repository.dart';
-import 'package:palplugin/src/services/http_client/base_client.dart';
+import 'package:pal/src/database/repository/helper_repository.dart';
+import 'package:pal/src/database/repository/in_app_user_repository.dart';
+import 'package:pal/src/database/repository/page_repository.dart';
+import 'package:pal/src/database/repository/version_repository.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 
 class UserAppContext {

@@ -1,6 +1,6 @@
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
-import 'package:palplugin/src/database/entity/pageable.dart';
-import 'package:palplugin/src/services/editor/project_gallery/project_gallery_editor_service.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/database/entity/pageable.dart';
+import 'package:pal/src/services/editor/project_gallery/project_gallery_editor_service.dart';
 
 import 'media_gallery_viewmodel.dart';
 

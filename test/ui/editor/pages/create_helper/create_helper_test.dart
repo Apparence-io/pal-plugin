@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/services/package_version.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper.dart';
-import 'package:palplugin/src/ui/editor/widgets/nested_navigator.dart';
-import 'package:palplugin/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
+import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:pal/src/ui/editor/widgets/nested_navigator.dart';
+import 'package:pal/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
 
 class _PackageVersionReaderMock extends Mock implements PackageVersionReader {}
 

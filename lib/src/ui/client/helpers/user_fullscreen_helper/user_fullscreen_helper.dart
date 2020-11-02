@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/ui/client/helper_client_models.dart';
-import 'package:palplugin/src/ui/client/widgets/animated/animated_scale.dart';
-import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/ui/client/helper_client_models.dart';
+import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
+import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 
 import 'user_fullscreen_helper_presenter.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
@@ -179,7 +179,7 @@ class UserFullScreenHelperPage extends StatelessWidget
               Center(child: CircularProgressIndicator()),
           errorWidget: (BuildContext context, String url, dynamic error) {
             return Image.asset(
-                'packages/palplugin/assets/images/create_helper.png');
+                'packages/pal/assets/images/create_helper.png');
           },
         ),
       ),

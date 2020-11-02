@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:palplugin/src/database/repository/project_repository.dart';
+import 'package:pal/src/database/repository/project_repository.dart';
 
 abstract class ProjectEditorService {
   factory ProjectEditorService.build(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/theme.dart';
-import 'package:palplugin/src/ui/client/helper_client_models.dart';
-import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_presenter.dart';
-import 'package:palplugin/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
+import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/client/helper_client_models.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_presenter.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
 
 void main() {
   UserFullScreenHelperPresenter presenter;

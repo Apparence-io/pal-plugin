@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
-import 'package:palplugin/src/ui/editor/pages/media_gallery/media_gallery_loader.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery_loader.dart';
 
 import 'media_gallery.dart';
 import 'media_gallery_viewmodel.dart';

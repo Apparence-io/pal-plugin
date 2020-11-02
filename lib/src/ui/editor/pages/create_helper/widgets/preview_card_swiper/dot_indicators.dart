@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/theme.dart';
+import 'package:pal/src/theme.dart';
 
 class DotIndicatorsWidget extends StatelessWidget {
   final int pagesCount;

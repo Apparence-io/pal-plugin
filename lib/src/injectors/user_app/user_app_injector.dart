@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
-import 'package:palplugin/src/services/client/in_app_user/in_app_user_client_service.dart';
-import 'package:palplugin/src/services/client/helper_client_service.dart';
-import 'package:palplugin/src/services/client/page_client_service.dart';
-import 'package:palplugin/src/in_app_user_manager.dart';
-import 'package:palplugin/src/services/package_version.dart';
+import 'package:pal/src/injectors/user_app/user_app_context.dart';
+import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
+import 'package:pal/src/services/client/helper_client_service.dart';
+import 'package:pal/src/services/client/page_client_service.dart';
+import 'package:pal/src/in_app_user_manager.dart';
+import 'package:pal/src/services/package_version.dart';
 
 import '../../pal_navigator_observer.dart';
 

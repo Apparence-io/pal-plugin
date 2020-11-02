@@ -1,5 +1,5 @@
-import 'package:palplugin/src/database/entity/page_entity.dart';
-import 'package:palplugin/src/database/repository/page_repository.dart';
+import 'package:pal/src/database/entity/page_entity.dart';
+import 'package:pal/src/database/repository/page_repository.dart';
 
 abstract class PageClientService {
 

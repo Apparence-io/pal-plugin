@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.dart';
 
 class SimpleHelperPresenter
     extends Presenter<SimpleHelperModel, SimpleHelperView> {

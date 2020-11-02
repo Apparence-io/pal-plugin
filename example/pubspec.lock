@@ -235,7 +235,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.3"
-  palplugin:
+  pal:
     dependency: "direct main"
     description:
       path: ".."

@@ -1,5 +1,5 @@
-import 'package:palplugin/src/database/adapter/generic_adapter.dart';
-import 'package:palplugin/src/database/entity/page_entity.dart';
+import 'package:pal/src/database/adapter/generic_adapter.dart';
+import 'package:pal/src/database/entity/page_entity.dart';
 
 class PageEntityAdapter extends GenericEntityAdapter<PageEntity> {
   @override

@@ -1,5 +1,5 @@
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 
 import 'helper_details_model.dart';
 import 'helper_details_view.dart';

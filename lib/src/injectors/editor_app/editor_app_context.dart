@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/database/repository/editor/helper_editor_repository.dart';
-import 'package:palplugin/src/database/repository/helper_repository.dart';
-import 'package:palplugin/src/database/repository/page_repository.dart';
-import 'package:palplugin/src/database/repository/project_gallery_repository.dart';
-import 'package:palplugin/src/database/repository/project_repository.dart';
-import 'package:palplugin/src/database/repository/version_repository.dart';
-import 'package:palplugin/src/services/http_client/base_client.dart';
+import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
+import 'package:pal/src/database/repository/helper_repository.dart';
+import 'package:pal/src/database/repository/page_repository.dart';
+import 'package:pal/src/database/repository/project_gallery_repository.dart';
+import 'package:pal/src/database/repository/project_repository.dart';
+import 'package:pal/src/database/repository/version_repository.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 class EditorAppContext {
 

@@ -1,5 +1,5 @@
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/graphic_entity.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 
 class MediaGalleryModel extends MVVMModel {
   List<GraphicEntity> medias;

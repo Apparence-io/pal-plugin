@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_presenter.dart';
-import 'package:palplugin/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/client/widgets/animated/animated_translate.dart';
-import 'package:palplugin/src/ui/shared/widgets/circle_button.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper_presenter.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.dart';
+import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 import '../../helper_client_models.dart';
 

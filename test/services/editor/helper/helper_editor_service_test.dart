@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:palplugin/src/database/adapter/helper_entity_adapter.dart';
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:palplugin/src/database/entity/helper/helper_type.dart';
-import 'package:palplugin/src/database/repository/editor/helper_editor_repository.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_models.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
-import 'package:palplugin/src/services/http_client/base_client.dart';
+import 'package:pal/src/database/adapter/helper_entity_adapter.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 class HttpClientMock extends Mock implements HttpClient {}
 

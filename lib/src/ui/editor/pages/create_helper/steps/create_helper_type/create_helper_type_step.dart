@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
-import 'package:palplugin/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card_swiper.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card_swiper.dart';
 
 class CreateHelperTypeStep extends StatelessWidget {
   final CreateHelperModel model;

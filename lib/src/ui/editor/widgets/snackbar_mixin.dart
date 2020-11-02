@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:palplugin/src/theme.dart';
+import 'package:pal/src/theme.dart';
 
 class SnackbarMixin {
   showSnackbarMessage(

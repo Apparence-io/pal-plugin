@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:palplugin/palplugin.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_context.dart';
-import 'package:palplugin/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_context.dart';
-import 'package:palplugin/src/injectors/user_app/user_app_injector.dart';
-import 'package:palplugin/src/ui/editor/widgets/bubble_overlay.dart';
+import 'package:pal/pal.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/injectors/user_app/user_app_context.dart';
+import 'package:pal/src/injectors/user_app/user_app_injector.dart';
+import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 
 void main() {
   group('test main plugin start', () {

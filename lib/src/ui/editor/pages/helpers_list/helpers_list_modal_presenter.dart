@@ -2,12 +2,12 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/services/editor/helper/helper_editor_service.dart';
-import 'package:palplugin/src/services/pal/pal_state_service.dart';
-import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
-import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
-import 'package:palplugin/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
+import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
+import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
+import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 
 class HelpersListModalPresenter
     extends Presenter<HelpersListModalModel, HelpersListModalView> {

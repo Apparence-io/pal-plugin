@@ -12,7 +12,7 @@ import 'injectors/editor_app/editor_app_injector.dart';
 import 'pal_navigator_observer.dart';
 
 // our production server address
-const PAL_SERVER_URL = bool.hasEnvironment("SERVER_URL") ? String.fromEnvironment("SERVER_URL") : 'http://217.182.88.6:9040';
+const String PAL_SERVER_URL = const String.fromEnvironment("SERVER_URL", defaultValue: "http://217.182.88.6:9040");
 
 // Pal top widget
 class Pal extends StatelessWidget {
@@ -20,10 +20,10 @@ class Pal extends StatelessWidget {
   /// application child to display Pal over it.
   final MaterialApp child;
 
-  // reference to the Navigator state of the child app
+  /// reference to the Navigator state of the child app
   final GlobalKey<NavigatorState> navigatorKey;
 
-  // used to manage state of current page
+  /// used to manage state of current page
   final PalNavigatorObserver navigatorObserver;
 
   /// disable or enable the editor mode.
@@ -66,6 +66,9 @@ class Pal extends StatelessWidget {
   }
 
   _init() {
+    debugPrint("-- init Pal plugin --");
+    debugPrint("starting on server $PAL_SERVER_URL");
+    // TODO refactoring split client Key and editor Key
     if(editorModeEnabled) {
       EditorAppContext.init(url: PAL_SERVER_URL, token: this.appToken);
     } else {
@@ -90,7 +93,7 @@ class Pal extends StatelessWidget {
         userApp: child,
         hostedAppNavigatorKey: navigatorKey,
       ),
-      boundaryChildKey: navigatorKey, // FIXME: Need to send boundary here!
+      boundaryChildKey: navigatorKey,
       appContext: EditorAppContext.instance
     );
   }

@@ -6,6 +6,8 @@ void main() {
   runApp(MyApp());
 }
 
+const String APPLICATION_TOKEN = "Paste your token here";
+
 class MyApp extends StatelessWidget {
 
   final _navigatorKey = GlobalKey<NavigatorState>();
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Pal(
       editorModeEnabled: true,
-      appToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MWIxYTljNS1mODNjLTQ5OTMtYWRjOS0wOWY0Yzk0YWRmNjIiLCJ0eXBlIjoiUFJPSkVDVCIsImlhdCI6MTYwMjc2MjkyMH0.HDUIYt-gkrTGBww7lbydyhXB0Im8NeNVn36D4ZZWKYU',
+      appToken: APPLICATION_TOKEN, // don't forget to give us a token (create it from the web dashboard configuration tab)
       // --- your app is here --
       child: MaterialApp(
         key: ValueKey('hostedApp'),

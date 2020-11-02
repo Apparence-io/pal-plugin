@@ -96,8 +96,8 @@ class EditorFullScreenHelperPresenter
     super.onDestroy();
   }
 
-  googleCustomFont(String fontFamily) {
-    this.viewInterface.googleCustomFont(fontFamily);
+  TextStyle googleCustomFont(String fontFamily) {
+    return this.viewInterface.googleCustomFont(fontFamily);
   }
 
   onOutsideTap() {

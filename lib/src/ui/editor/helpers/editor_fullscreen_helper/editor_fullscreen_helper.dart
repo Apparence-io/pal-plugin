@@ -151,6 +151,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             maximumCharacterLength: 55,
                             minimumCharacterLength: 1,
                             maxLines: 3,
+                            fontFamilyKey: viewModel?.titleField?.fontFamily?.value,
                             initialValue: viewModel?.titleField?.text?.value,
                             textStyle: TextStyle(
                               color: viewModel.titleField?.fontColor?.value,
@@ -161,6 +162,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                 viewModel.titleField?.fontWeight?.value,
                               ),
                             ).merge(
+                              // GoogleFonts.getFont(viewModel.titleField?.fontFamily?.value)
                               presenter.googleCustomFont(
                                 viewModel.titleField?.fontFamily?.value,
                               ),

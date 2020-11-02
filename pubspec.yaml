@@ -3,6 +3,9 @@ description: The no code Flutter onboarding editor
 version: 0.0.1
 author: Apparence
 homepage: http://pal-plugin.tech
+repository: https://github.com/Apparence-io/pal-plugin
+issue_tracker: https://github.com/Apparence-io/pal-plugin/issues
+documentation: http:doc.pal-plugin.tech
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

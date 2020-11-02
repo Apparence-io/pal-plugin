@@ -3,8 +3,11 @@
 		<img src="https://github.com/Apparence-io/pal-plugin/blob/master/example/assets/images/icon.jpg" width="200px" alt="pal logo" style="border-radius:50%">
 	</a>
 </p>
+<p align="center">
+    <img src="https://img.shields.io/badge/status-beta-brightgreen"/>
+</p>
 
-# Pal - The Flutter onboarding editor
+# Pal - The Flutter onboarding editor (beta)
 
 Pal is the onboarding editor dedicated to Flutter apps.
 

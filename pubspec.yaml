@@ -1,8 +1,8 @@
 name: palplugin
-description: A flutter plugin for your friend
+description: The Flutter onboarding editor
 version: 0.0.1
-author: null
-homepage: null
+author: Apparence
+homepage: http://pal-plugin.tech
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

@@ -150,7 +150,13 @@ class EditorUpdateHelperPresenter
             ?.fontSize
             ?.value
             ?.toDouble(),
-      ),
+      ).merge(this.viewInterface.googleCustomFont(
+            this
+                .updateHelperViewModel
+                .changelogsFields[textFieldId]
+                ?.fontFamily
+                ?.value,
+          )),
       onChanged: (String id, String newValue) {
         this.updateHelperViewModel.changelogsFields[id]?.text?.value = newValue;
       },

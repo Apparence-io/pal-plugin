@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/theme.dart';
@@ -23,8 +24,8 @@ abstract class EditorUpdateHelperView {
     EditorUpdateHelperModel model,
   );
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
-
   void callOnFormChanged(EditorUpdateHelperModel model);
+  TextStyle googleCustomFont(String fontFamily);
 }
 
 class EditorUpdateHelperPage extends StatelessWidget
@@ -171,8 +172,9 @@ class EditorUpdateHelperPage extends StatelessWidget
         color: viewModel.titleField?.fontColor?.value,
         fontSize: viewModel.titleField?.fontSize?.value?.toDouble(),
         fontWeight: FontWeightMapper.toFontWeight(
-            viewModel.titleField?.fontWeight?.value),
-      ),
+          viewModel.titleField?.fontWeight?.value,
+        ),
+      ).merge(googleCustomFont(viewModel.titleField?.fontFamily?.value)),
     );
   }
 
@@ -242,7 +244,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                 viewModel.thanksButton?.fontWeight?.value,
               ) ??
               FontWeight.w400,
-        ),
+        ).merge(googleCustomFont(viewModel.thanksButton?.fontFamily?.value)),
       ),
     );
   }
@@ -294,5 +296,12 @@ class EditorUpdateHelperPage extends StatelessWidget
     if (onFormChanged != null) {
       onFormChanged(model.formKey?.currentState?.validate());
     }
+  }
+
+  @override
+  TextStyle googleCustomFont(String fontFamily) {
+    return (fontFamily != null && fontFamily.length > 0)
+        ? GoogleFonts.getFont(fontFamily)
+        : null;
   }
 }

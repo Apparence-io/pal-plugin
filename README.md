@@ -11,7 +11,7 @@
 
 Pal is the onboarding editor dedicated to Flutter apps.
 
-*What does it mean ?*
+**What does it mean ?** <br/>
 No code editor for all your app screens directly in your app
 * Go to a screen where you want to add helper
 * Select your helper type

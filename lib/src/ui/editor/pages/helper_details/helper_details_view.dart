@@ -295,6 +295,9 @@ class HelperDetailsComponent extends StatelessWidget
     HelperEditorPageArguments args = HelperEditorPageArguments(
       arguments?.hostedAppNavigatorKey,
       arguments?.pageId,
+      isOnEditMode: true,
+      helperMinVersion: arguments?.helper?.versionMin,
+      helperMaxVersion: arguments?.helper?.versionMax,
       templateViewModel: EditorViewModelFactory.build(arguments?.helper),
     );
     var elementFinder =

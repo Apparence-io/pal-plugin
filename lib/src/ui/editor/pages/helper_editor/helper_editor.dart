@@ -32,7 +32,7 @@ class HelperEditorPageArguments {
   final String pageId;
   final String helperMinVersion;
   final String helperMaxVersion;
-
+  final bool isOnEditMode;
   final HelperViewModel templateViewModel;
   // final String helperName;
   // final String helperMinVersion;
@@ -49,6 +49,7 @@ class HelperEditorPageArguments {
     this.helperMinVersion,
     this.helperMaxVersion,
     this.templateViewModel,
+    this.isOnEditMode = false,
     // @required this.helperName,
     // @required this.helperMinVersion,
     // this.priority,

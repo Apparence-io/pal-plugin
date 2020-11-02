@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 
 class PackageVersionReaderMock extends Mock implements PackageVersionReader {}

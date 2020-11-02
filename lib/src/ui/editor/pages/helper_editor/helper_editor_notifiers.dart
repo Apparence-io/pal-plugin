@@ -6,6 +6,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_w
 
 class TextFormFieldNotifier {
   String hintText;
+  int id;
   ValueNotifier<String> text;
   ValueNotifier<String> fontFamily;
   ValueNotifier<String> fontWeight;
@@ -15,6 +16,7 @@ class TextFormFieldNotifier {
   ValueNotifier<int> fontSize;
 
   TextFormFieldNotifier({
+    int id,
     @required String text,
     @required Color fontColor,
     String fontFamily,
@@ -24,6 +26,7 @@ class TextFormFieldNotifier {
     @required int fontSize,
     String hintText,
   }) {
+    this.id = id;
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);
     this.fontFamily = ValueNotifier(fontFamily ?? 'Montserrat');
@@ -36,17 +39,16 @@ class TextFormFieldNotifier {
 }
 
 class MediaNotifier {
+  String id;
   ValueNotifier<String> key;
-  ValueNotifier<String> id;
   ValueNotifier<String> url;
 
   MediaNotifier({
     String key,
     String url,
-    String id,
+    int id,
   }) {
     this.key = ValueNotifier(key);
     this.url = ValueNotifier(url);
-    this.id = ValueNotifier(id);
   }
 }

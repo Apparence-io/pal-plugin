@@ -132,6 +132,12 @@ class HelperEditorPresenter
       versionMaxId: basicArguments?.templateViewModel?.versionMaxId,
     );
 
+    if (basicArguments.isOnEditMode) {
+      await this.updateHelper(helperBasicConfig);
+    } else {
+      await this.createHelper(helperBasicConfig);
+    }
+
     await this.save(helperBasicConfig);
   }
 
@@ -148,6 +154,27 @@ class HelperEditorPresenter
     // Wait for animation complete
     await Future.delayed(Duration(milliseconds: 400));
 
+    this.viewInterface.triggerHaptic();
+    viewModel.isHelperCreating = false;
+    this.refreshView();
+
+    await Future.delayed(Duration(milliseconds: 2200));
+
+    viewModel.loadingOpacity = 0;
+    this.refreshView();
+
+    Future.delayed(Duration(milliseconds: 400), () {
+      viewModel.isLoading = false;
+      this.refreshView();
+    });
+
+    if (viewModel.isHelperCreated) {
+      await Future.delayed(Duration(milliseconds: 500));
+      this.viewInterface.removeOverlay();
+    }
+  }
+
+  Future createHelper(CreateHelperConfig config) async {
     try {
       switch (config?.helperType) {
         case HelperType.HELPER_FULL_SCREEN:
@@ -175,23 +202,35 @@ class HelperEditorPresenter
     } catch (e) {
       viewModel.isHelperCreated = false;
     }
-    this.viewInterface.triggerHaptic();
-    viewModel.isHelperCreating = false;
-    this.refreshView();
+  }
 
-    await Future.delayed(Duration(milliseconds: 2200));
-
-    viewModel.loadingOpacity = 0;
-    this.refreshView();
-
-    Future.delayed(Duration(milliseconds: 400), () {
-      viewModel.isLoading = false;
-      this.refreshView();
-    });
-
-    if (viewModel.isHelperCreated) {
-      await Future.delayed(Duration(milliseconds: 500));
-      this.viewInterface.removeOverlay();
+  Future updateHelper(CreateHelperConfig config) async {
+    try {
+      switch (config?.helperType) {
+        case HelperType.HELPER_FULL_SCREEN:
+          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
+          await helperService.updateFullScreenHelper(config.pageId,
+              EditorEntityFactory.buildFullscreenArgs(config, model));
+          break;
+        case HelperType.SIMPLE_HELPER:
+          var model = viewModel.helperViewModel as SimpleHelperViewModel;
+          await helperService.updateSimpleHelper(config.pageId,
+              EditorEntityFactory.buildSimpleArgs(config, model));
+          break;
+        // case HelperType.ANCHORED_OVERLAYED_HELPER:
+        //   break;
+        case HelperType.UPDATE_HELPER:
+          var model = viewModel.helperViewModel as UpdateHelperViewModel;
+          await helperService.updateUpdateHelper(config.pageId,
+              EditorEntityFactory.buildUpdateArgs(config, model));
+          break;
+        default:
+          throw "NOT_IMPLEMENTED_TYPE";
+          break;
+      }
+      viewModel.isHelperCreated = true;
+    } catch (e) {
+      viewModel.isHelperCreated = false;
     }
   }
 

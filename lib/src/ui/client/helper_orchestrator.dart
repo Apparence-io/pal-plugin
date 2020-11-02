@@ -5,12 +5,12 @@ import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helper_factory.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
 /// On each page visited we check if we have to show a new helper to user
@@ -140,17 +140,17 @@ class HelperOrchestrator {
     _showSpecificHelper(
       UserFullScreenHelperPage(
         backgroundColor: Colors.blueAccent,
-        titleLabel: CustomLabel(
+        titleLabel: HelperTextViewModel(
           text: 'A simple test',
           fontSize: 60.0,
           fontColor: Colors.white,
         ),
-        positivLabel: CustomLabel(
+        positivLabel: HelperTextViewModel(
           text: 'Positiv !',
           fontColor: Colors.green,
           fontSize: 22.0,
         ),
-        negativLabel: CustomLabel(
+        negativLabel: HelperTextViewModel(
           text: 'Negativ !',
           fontColor: Colors.red,
           fontSize: 22.0,
@@ -173,33 +173,33 @@ class HelperOrchestrator {
           this.popHelper();
         },
         backgroundColor: Color(0xff60b2d5),
-        thanksButtonLabel: CustomLabel(
+        thanksButtonLabel: HelperTextViewModel(
           text: 'Thank you !',
           fontColor: Colors.white,
           fontSize: 18.0,
         ),
-        titleLabel: CustomLabel(
+        titleLabel: HelperTextViewModel(
           text: 'New application update',
           fontColor: Colors.white,
           fontSize: 27.0,
         ),
         changelogLabels: [
-          CustomLabel(
+          HelperTextViewModel(
             text: 'My second app awesome feature',
             fontColor: Colors.white,
             fontSize: 14.0,
           ),
-          CustomLabel(
+          HelperTextViewModel(
             text: 'Another feature very useful',
             fontColor: Colors.white,
             fontSize: 14.0,
           ),
-          CustomLabel(
+          HelperTextViewModel(
             text: 'Any other feature',
             fontColor: Colors.white,
             fontSize: 14.0,
           ),
-          CustomLabel(
+          HelperTextViewModel(
             text: 'My last app awesome feature I wanna be sure you aware of',
             fontColor: Colors.white,
             fontSize: 14.0,
@@ -212,7 +212,7 @@ class HelperOrchestrator {
   _showSimpleHelper() {
     _showSpecificHelper(SimpleHelperLayout(
       toaster: SimpleHelperPage(
-        descriptionLabel: CustomLabel(
+        descriptionLabel: HelperTextViewModel(
             fontColor: Colors.white,
             fontSize: 14.0,
             text:

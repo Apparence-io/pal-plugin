@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
 import 'package:palplugin/src/extensions/color_extension.dart';
-import 'package:palplugin/src/ui/client/helper_client_models.dart';
+import 'package:palplugin/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 ///-------------------------------
@@ -31,13 +31,13 @@ class UpdatescreenHelperKeys {
 }
 
 class HelperSharedFactory {
-  static CustomLabel parseTextLabel(
+  static HelperTextViewModel parseTextLabel(
     final String key,
     final List<HelperTextEntity> helperTexts,
   ) {
     for (HelperTextEntity helperText in helperTexts) {
       if (key == helperText?.key) {
-        return CustomLabel(
+        return HelperTextViewModel(
           id: helperText?.id,
           text: helperText?.value,
           fontColor: HexColor.fromHex(helperText?.fontColor),
@@ -86,15 +86,15 @@ class HelperSharedFactory {
     return null;
   }
 
-  static List<CustomLabel> parseTextsLabel(
+  static List<HelperTextViewModel> parseTextsLabel(
     final String key,
     final List<HelperTextEntity> helperTexts,
   ) {
-    List<CustomLabel> customLabels = [];
+    List<HelperTextViewModel> customLabels = [];
     for (HelperTextEntity helperText in helperTexts) {
       if (helperText.key.startsWith(key)) {
         customLabels.add(
-          CustomLabel(
+          HelperTextViewModel(
             id: helperText?.id,
             text: helperText?.value,
             fontColor: HexColor.fromHex(helperText?.fontColor),

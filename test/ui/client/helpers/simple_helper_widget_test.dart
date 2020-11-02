@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
 

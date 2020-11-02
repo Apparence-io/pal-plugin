@@ -116,10 +116,10 @@ class EditorFullScreenHelperPresenter
   }
 
   editMedia() async {
-    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.fullscreenHelperViewModel.media?.id?.value);
+    final selectedMedia = await this.viewInterface.pushToMediaGallery(this.fullscreenHelperViewModel.media?.id.toString());
 
     this.fullscreenHelperViewModel.media?.url?.value = selectedMedia?.url;
-    this.fullscreenHelperViewModel.media?.id?.value = selectedMedia?.id;
+    this.fullscreenHelperViewModel.media?.id = selectedMedia?.id;
     this.refreshView();
   }
 

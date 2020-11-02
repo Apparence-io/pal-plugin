@@ -36,10 +36,13 @@ class EditorViewModelFactory {
 
 class EditorEntityFactory {
   static CreateFullScreenHelper buildFullscreenArgs(
-          CreateHelperConfig config, FullscreenHelperViewModel model) =>
+    CreateHelperConfig config,
+    FullscreenHelperViewModel model,
+  ) =>
       CreateFullScreenHelper(
         config: config,
         title: HelperTextConfig(
+          id: model.titleField?.id,
           text: model.titleField?.text?.value,
           fontColor: model.titleField?.fontColor?.value?.toHex(),
           fontWeight: model.titleField?.fontWeight?.value,
@@ -47,25 +50,31 @@ class EditorEntityFactory {
           fontFamily: model.titleField?.fontFamily?.value,
         ),
         description: HelperTextConfig(
-            text: model.descriptionField?.text?.value,
-            fontColor: model.descriptionField?.fontColor?.value?.toHex(),
-            fontWeight: model.descriptionField?.fontWeight?.value,
-            fontSize: model.descriptionField?.fontSize?.value,
-            fontFamily: model.descriptionField?.fontFamily?.value),
+          id: model.descriptionField?.id,
+          text: model.descriptionField?.text?.value,
+          fontColor: model.descriptionField?.fontColor?.value?.toHex(),
+          fontWeight: model.descriptionField?.fontWeight?.value,
+          fontSize: model.descriptionField?.fontSize?.value,
+          fontFamily: model.descriptionField?.fontFamily?.value,
+        ),
         backgroundColor: model.backgroundColor.value.toHex(),
         topImageUrl: model?.media?.url?.value,
         positivButton: HelperTextConfig(
-            text: model.positivButtonField?.text?.value,
-            fontColor: model.positivButtonField?.fontColor?.value?.toHex(),
-            fontWeight: model.positivButtonField?.fontWeight?.value,
-            fontSize: model.positivButtonField?.fontSize?.value,
-            fontFamily: model.positivButtonField?.fontFamily?.value),
+          id: model.positivButtonField?.id,
+          text: model.positivButtonField?.text?.value,
+          fontColor: model.positivButtonField?.fontColor?.value?.toHex(),
+          fontWeight: model.positivButtonField?.fontWeight?.value,
+          fontSize: model.positivButtonField?.fontSize?.value,
+          fontFamily: model.positivButtonField?.fontFamily?.value,
+        ),
         negativButton: HelperTextConfig(
-            text: model.negativButtonField?.text?.value,
-            fontColor: model.negativButtonField?.fontColor?.value?.toHex(),
-            fontWeight: model.negativButtonField?.fontWeight?.value,
-            fontSize: model.negativButtonField?.fontSize?.value,
-            fontFamily: model.negativButtonField?.fontFamily?.value),
+          id: model.negativButtonField?.id,
+          text: model.negativButtonField?.text?.value,
+          fontColor: model.negativButtonField?.fontColor?.value?.toHex(),
+          fontWeight: model.negativButtonField?.fontWeight?.value,
+          fontSize: model.negativButtonField?.fontSize?.value,
+          fontFamily: model.negativButtonField?.fontFamily?.value,
+        ),
       );
 
   static CreateSimpleHelper buildSimpleArgs(
@@ -87,6 +96,7 @@ class EditorEntityFactory {
     for (var note in model.changelogsFields.entries) {
       lines.add(
         HelperTextConfig(
+          id: note?.value?.id,
           text: note?.value?.text?.value,
           fontColor: note?.value?.fontColor?.value?.toHex(),
           fontWeight: note?.value?.fontWeight?.value,
@@ -99,6 +109,7 @@ class EditorEntityFactory {
     return CreateUpdateHelper(
       config: config,
       title: HelperTextConfig(
+        id: model.titleField?.id,
         text: model.titleField?.text?.value,
         fontColor: model.titleField?.fontColor?.value?.toHex(),
         fontWeight: model.titleField?.fontWeight?.value,
@@ -110,6 +121,7 @@ class EditorEntityFactory {
       backgroundColor: model.backgroundColor?.value?.toHex(),
       lines: lines,
       positivButton: HelperTextConfig(
+        id: model.thanksButton?.id,
         text: model.thanksButton?.text?.value,
         fontColor: model.thanksButton?.fontColor?.value?.toHex(),
         fontWeight: model.thanksButton?.fontWeight?.value,

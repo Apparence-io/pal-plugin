@@ -6,8 +6,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_w
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 class HelperEditorViewModel extends MVVMModel {
   bool enableSave;
@@ -78,10 +78,10 @@ class FullscreenHelperViewModel extends HelperViewModel {
     int languageId,
     Color backgroundColor,
     String topImageUrl,
-    CustomLabel titleLabel,
-    CustomLabel descriptionLabel,
-    CustomLabel positivButtonLabel,
-    CustomLabel negativButtonLabel,
+    HelperTextViewModel titleLabel,
+    HelperTextViewModel descriptionLabel,
+    HelperTextViewModel positivButtonLabel,
+    HelperTextViewModel negativButtonLabel,
   }) : super(
           name: name,
           triggerType: triggerType,
@@ -98,6 +98,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       url: topImageUrl,
     );
     this.titleField = TextFormFieldNotifier(
+      id: titleLabel?.id,
       fontColor: titleLabel?.fontColor ?? Colors.white,
       fontSize: titleLabel?.fontSize?.toInt() ?? 60,
       fontFamily: titleLabel?.fontFamily,
@@ -105,6 +106,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontWeight: FontWeightMapper.toFontKey(titleLabel?.fontWeight),
     );
     this.descriptionField = TextFormFieldNotifier(
+      id: titleLabel?.id,
       fontColor: descriptionLabel?.fontColor ?? Color(0xFFCCC2),
       fontSize: descriptionLabel?.fontSize?.toInt() ?? 14,
       text: descriptionLabel?.text ?? 'Une description',
@@ -112,6 +114,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontFamily: descriptionLabel?.fontFamily,
     );
     this.positivButtonField = TextFormFieldNotifier(
+      id: positivButtonLabel?.id,
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 23,
       text: positivButtonLabel?.text ?? 'Ok, thanks !',
@@ -121,6 +124,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontFamily: positivButtonLabel?.fontFamily,
     );
     this.negativButtonField = TextFormFieldNotifier(
+      id: negativButtonLabel?.id,
       text: negativButtonLabel?.text ?? 'This is not helping',
       fontWeight: FontWeightMapper.toFontKey(
           negativButtonLabel?.fontWeight ?? FontWeight.bold),
@@ -204,7 +208,7 @@ class SimpleHelperViewModel extends HelperViewModel {
     int versionMaxId,
     int languageId,
     Color backgroundColor,
-    CustomLabel detailsField,
+    HelperTextViewModel detailsField,
   }) : super(
           name: name,
           triggerType: triggerType,
@@ -217,6 +221,7 @@ class SimpleHelperViewModel extends HelperViewModel {
     this.languageId = ValueNotifier(languageId ?? 1);
     this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.black87);
     this.detailsField = TextFormFieldNotifier(
+      id: detailsField?.id,
       fontColor: detailsField?.fontColor ?? Colors.white,
       fontSize: detailsField?.fontSize?.toInt() ?? 14,
       fontFamily: detailsField?.fontFamily,
@@ -282,8 +287,8 @@ class UpdateHelperViewModel extends HelperViewModel {
     Color backgroundColor,
     Map<String, TextFormFieldNotifier> changelogsLabels,
     String mediaUrl,
-    CustomLabel titleLabel,
-    CustomLabel positivButtonLabel,
+    HelperTextViewModel titleLabel,
+    HelperTextViewModel positivButtonLabel,
   }) : super(
           name: name,
           triggerType: triggerType,
@@ -299,6 +304,7 @@ class UpdateHelperViewModel extends HelperViewModel {
     this.media = MediaNotifier(key: 'header', url: mediaUrl);
     this.thanksButton = TextFormFieldNotifier(
       // backgroundColor: Colors.black87,
+      id: positivButtonLabel?.id,
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 22,
       text: positivButtonLabel?.text ?? 'Thank you!',
@@ -307,6 +313,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       fontFamily: positivButtonLabel?.fontFamily,
     );
     this.titleField = TextFormFieldNotifier(
+      id: titleLabel?.id,
       fontColor: titleLabel?.fontColor ?? Colors.white,
       fontSize: titleLabel?.fontSize?.toInt() ?? 36,
       text: titleLabel?.text ?? '',
@@ -340,7 +347,7 @@ class UpdateHelperViewModel extends HelperViewModel {
 
   factory UpdateHelperViewModel.fromHelperEntity(HelperEntity helperEntity) {
     Map<String, TextFormFieldNotifier> changelogsMap = {};
-    List<CustomLabel> changelogs = HelperSharedFactory.parseTextsLabel(
+    List<HelperTextViewModel> changelogs = HelperSharedFactory.parseTextsLabel(
       UpdatescreenHelperKeys.LINES_KEY,
       helperEntity?.helperTexts,
     );
@@ -350,6 +357,7 @@ class UpdateHelperViewModel extends HelperViewModel {
         changelogsMap.putIfAbsent(
           'template_${changelog.id.toString()}',
           () => TextFormFieldNotifier(
+            id: changelog?.id,
             text: changelog?.text ?? '',
             fontColor: changelog?.fontColor ?? Colors.white,
             fontSize: changelog?.fontSize?.toInt() ?? 18,

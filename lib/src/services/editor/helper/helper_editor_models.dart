@@ -97,6 +97,7 @@ class CreateUpdateHelper {
 /// use this in helpers with multiple text
 ///-------------------------------
 class HelperTextConfig {
+  int id;
   String text;
   String fontColor;
   String fontWeight;
@@ -104,6 +105,7 @@ class HelperTextConfig {
   int fontSize;
 
   HelperTextConfig({
+    this.id,
     @required this.text,
     @required this.fontColor,
     @required this.fontWeight,
@@ -111,3 +113,5 @@ class HelperTextConfig {
     @required this.fontSize
   });
 }
+
+// TODO: Create config for media

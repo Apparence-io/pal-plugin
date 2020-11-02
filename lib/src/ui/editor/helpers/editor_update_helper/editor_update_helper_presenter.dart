@@ -238,10 +238,11 @@ class EditorUpdateHelperPresenter
   editMedia() async {
     final selectedMedia = await this
         .viewInterface
-        .pushToMediaGallery(this.updateHelperViewModel.media?.id?.value);
+    // FIXME: Int or String ??
+        .pushToMediaGallery(this.updateHelperViewModel.media?.id); 
 
     this.updateHelperViewModel.media?.url?.value = selectedMedia?.url;
-    this.updateHelperViewModel.media?.id?.value = selectedMedia?.id;
+    this.updateHelperViewModel.media?.id = selectedMedia?.id;
 
     this.refreshView();
   }

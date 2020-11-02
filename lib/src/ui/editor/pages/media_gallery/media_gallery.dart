@@ -120,7 +120,8 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
                   itemBuilder: (context, index) {
                     GraphicEntity media = model.medias[index];
                     return MediaCellWidget(
-                      id: media.id,
+    // FIXME: Int or String ??
+                      id: media.id.toString(),
                       url: media.url,
                       isSelected: model.selectedMedia?.id == media.id,
                       onTap: () => presenter.selectMedia(media),

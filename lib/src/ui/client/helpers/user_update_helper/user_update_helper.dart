@@ -6,13 +6,13 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/widgets/release_note_cell.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 abstract class UserUpdateHelperView {
   void playAnimation(
@@ -27,9 +27,9 @@ abstract class UserUpdateHelperView {
 class UserUpdateHelperPage extends StatelessWidget
     implements UserUpdateHelperView {
   final Color backgroundColor;
-  final CustomLabel titleLabel;
-  final List<CustomLabel> changelogLabels;
-  final CustomLabel thanksButtonLabel;
+  final HelperTextViewModel titleLabel;
+  final List<HelperTextViewModel> changelogLabels;
+  final HelperTextViewModel thanksButtonLabel;
   final PackageVersionReader packageVersionReader;
   final String mediaUrl;
   final Function onPositivButtonTap;
@@ -328,7 +328,7 @@ class UserUpdateHelperPage extends StatelessWidget
   ) {
     List<Widget> labels = [];
     int index = 0;
-    for (CustomLabel label in changelogLabels) {
+    for (HelperTextViewModel label in changelogLabels) {
       var stepTime = 1.0 / changelogLabels.length;
       var animationStart = stepTime * index;
       var animationEnd = stepTime + animationStart;

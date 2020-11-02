@@ -6,12 +6,12 @@ import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
-import '../../helper_client_models.dart';
+import '../../../shared/helper_shared_viewmodels.dart';
 
 abstract class SimpleHelperView {}
 
 class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
-  final CustomLabel descriptionLabel;
+  final HelperTextViewModel descriptionLabel;
   final Color backgroundColor;
 
   SimpleHelperPage(

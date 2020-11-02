@@ -190,6 +190,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
       pageId,
+      isOnEditMode: false,
       templateViewModel: HelperViewModel(
         helperType: model.selectedHelperType,
         helperTheme: model.selectedHelperTheme,

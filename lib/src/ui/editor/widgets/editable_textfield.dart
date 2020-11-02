@@ -14,6 +14,7 @@ enum ToolbarType { text, border }
 class EditableTextField extends StatefulWidget {
   // Keys
   // static final GlobalKey<_EditableTextFieldState> globalKey = GlobalKey();
+  final String id;
   final Key textFormFieldKey;
   final Key backgroundContainerKey;
   final Key helperToolbarKey;
@@ -23,8 +24,8 @@ class EditableTextField extends StatefulWidget {
   final BoxDecoration backgroundBoxDecoration;
   final EdgeInsetsGeometry backgroundPadding;
   final EdgeInsetsGeometry textFormFieldPadding;
-  final Function(Key, String) onChanged;
-  final Function(Key, TextStyle, FontKeys) onTextStyleChanged;
+  final Function(String, String) onChanged;
+  final Function(String, TextStyle, FontKeys) onTextStyleChanged;
   final TextInputType keyboardType;
   final TextStyle textStyle;
   final int maxLines;
@@ -38,6 +39,7 @@ class EditableTextField extends StatefulWidget {
 
   EditableTextField({
     Key key,
+    this.id,
     this.textFormFieldKey,
     this.backgroundContainerKey,
     this.helperToolbarKey,
@@ -61,6 +63,7 @@ class EditableTextField extends StatefulWidget {
 
   factory EditableTextField.text({
     Key key,
+    final String id,
     final Key textFormFieldKey,
     final Key backgroundContainerKey,
     final Key helperToolbarKey,
@@ -69,8 +72,8 @@ class EditableTextField extends StatefulWidget {
     final EdgeInsetsGeometry backgroundPadding,
     final EdgeInsetsGeometry textFormFieldPadding,
     final String Function(String) validator,
-    final Function(Key, String) onChanged,
-    final Function(Key, TextStyle, FontKeys) onTextStyleChanged,
+    final Function(String, String) onChanged,
+    final Function(String, TextStyle, FontKeys) onTextStyleChanged,
     final TextInputType keyboardType,
     final TextStyle textStyle,
     final int maxLines = 1,
@@ -83,6 +86,7 @@ class EditableTextField extends StatefulWidget {
   }) {
     return EditableTextField(
       key: key,
+      id: id,
       textFormFieldKey: textFormFieldKey,
       backgroundContainerKey: backgroundContainerKey,
       helperToolbarKey: helperToolbarKey,
@@ -107,6 +111,7 @@ class EditableTextField extends StatefulWidget {
 
   factory EditableTextField.border({
     Key key,
+    final String id,
     final Key textFormFieldKey,
     final Key backgroundContainerKey,
     final Key helperToolbarKey,
@@ -115,8 +120,8 @@ class EditableTextField extends StatefulWidget {
     final EdgeInsetsGeometry backgroundPadding,
     final EdgeInsetsGeometry textFormFieldPadding,
     final String Function(String) validator,
-    final Function(Key, String) onChanged,
-    final Function(Key, TextStyle, FontKeys) onTextStyleChanged,
+    final Function(String, String) onChanged,
+    final Function(String, TextStyle, FontKeys) onTextStyleChanged,
     final TextInputType keyboardType,
     final TextStyle textStyle,
     final int maxLines = 1,
@@ -129,6 +134,7 @@ class EditableTextField extends StatefulWidget {
   }) {
     return EditableTextField(
       key: key,
+      id: id,
       textFormFieldKey: textFormFieldKey,
       backgroundContainerKey: backgroundContainerKey,
       helperToolbarKey: helperToolbarKey,
@@ -214,7 +220,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     onTap: _onTextFieldTapped,
                     onChanged: (String newValue) {
                       if (widget.onChanged != null) {
-                        widget.onChanged(widget.textFormFieldKey, newValue);
+                        widget.onChanged(widget.id ?? widget.textFormFieldKey.toString(), newValue);
                       }
                     },
                     validator: (String value) {
@@ -334,7 +340,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
 
           if (widget.onTextStyleChanged != null) {
             widget.onTextStyleChanged(
-              widget.textFormFieldKey,
+              widget.id ?? widget.textFormFieldKey.toString(),
               _textStyle,
               fontKeys,
             );
@@ -358,7 +364,10 @@ class _EditableTextFieldState extends State<EditableTextField> {
           });
           if (widget.onTextStyleChanged != null) {
             widget.onTextStyleChanged(
-                widget.textFormFieldKey, _textStyle, null);
+              widget.id ?? widget.textFormFieldKey.toString(),
+              _textStyle,
+              null,
+            );
           }
         },
       ),

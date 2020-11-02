@@ -31,10 +31,10 @@ class EditorFullScreenHelperPresenter
   }
 
   // Title
-  onTitleChanged(Key key, String newValue) {
+  onTitleChanged(String id, String newValue) {
     fullscreenHelperViewModel.titleField?.text?.value = newValue;
   }
-  onTitleTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
+  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
     fullscreenHelperViewModel.titleField?.fontColor?.value =
         newTextStyle?.color;
     fullscreenHelperViewModel.titleField?.fontSize?.value =
@@ -49,10 +49,10 @@ class EditorFullScreenHelperPresenter
   }
 
   // Positiv button
-  onPositivTextChanged(Key key, String newValue) {
+  onPositivTextChanged(String id, String newValue) {
     fullscreenHelperViewModel.positivButtonField?.text?.value = newValue;
   }
-  onPositivTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
+  onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
     fullscreenHelperViewModel.positivButtonField?.fontColor?.value =
         newTextStyle?.color;
     fullscreenHelperViewModel.positivButtonField?.fontSize?.value =
@@ -67,10 +67,10 @@ class EditorFullScreenHelperPresenter
   }
 
   // Negativ button
-  onNegativTextChanged(Key key, String newValue) {
+  onNegativTextChanged(String id, String newValue) {
     fullscreenHelperViewModel.negativButtonField?.text?.value = newValue;
   }
-  onNegativTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
+  onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
     fullscreenHelperViewModel.negativButtonField?.fontColor?.value =
         newTextStyle?.color;
     fullscreenHelperViewModel.negativButtonField?.fontSize?.value =

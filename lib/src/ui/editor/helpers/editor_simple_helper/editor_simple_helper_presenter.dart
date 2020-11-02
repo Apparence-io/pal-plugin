@@ -32,7 +32,7 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     super.onDestroy();
   }
 
-  onDetailsFieldChanged(Key key, String newValue) {
+  onDetailsFieldChanged(String id, String newValue) {
     simpleHelperViewModel.detailsField?.text?.value = newValue;
   }
 
@@ -40,7 +40,7 @@ class EditorSimpleHelperPresenter extends Presenter<EditorSimpleHelperModel, Edi
     this.viewModel.editableTextFieldController.add(true);
   }
 
-  onDetailsTextStyleChanged(Key key, TextStyle newTextStyle, FontKeys fontKeys) {
+  onDetailsTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) {
     simpleHelperViewModel.detailsField?.fontColor?.value =
         newTextStyle?.color;
     simpleHelperViewModel.detailsField?.fontSize?.value =

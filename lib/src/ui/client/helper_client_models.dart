@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class CustomLabel {
+  int id;
   String text;
   Color fontColor;
   // Color backgroundColor;
@@ -11,6 +12,7 @@ class CustomLabel {
   
 
   CustomLabel({
+    this.id,
     this.text,
     @required this.fontColor,
     // this.backgroundColor,
@@ -20,3 +22,5 @@ class CustomLabel {
     this.fontWeight
   });
 }
+
+// TODO: Create others model for box, image etc.

@@ -348,7 +348,7 @@ class UpdateHelperViewModel extends HelperViewModel {
     if (changelogs != null && changelogs.length > 0) {
       for (var changelog in changelogs) {
         changelogsMap.putIfAbsent(
-          changelog.text,
+          'template_${changelog.id.toString()}',
           () => TextFormFieldNotifier(
             text: changelog?.text ?? '',
             fontColor: changelog?.fontColor ?? Colors.white,

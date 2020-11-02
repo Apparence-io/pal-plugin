@@ -10,7 +10,7 @@ import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/
 ///-------------------------------
 class SimpleHelperKeys {
   static const CONTENT_KEY = "CONTENT";
-   static const BACKGROUND_KEY = "BACKGROUND_KEY"; // mandatory
+  static const BACKGROUND_KEY = "BACKGROUND_KEY"; // mandatory
 }
 
 class FullscreenHelperKeys {
@@ -27,7 +27,7 @@ class UpdatescreenHelperKeys {
   static const LINES_KEY = "LINES_KEY"; //first mandatory
   static const POSITIV_KEY = "POSITIV_KEY"; // not mandatory
   static const IMAGE_KEY = "IMAGE_KEY"; // not mandatory
-  static const BACKGROUND_KEY = "BACKGROUND_KEY";// mandatory
+  static const BACKGROUND_KEY = "BACKGROUND_KEY"; // mandatory
 }
 
 class HelperSharedFactory {
@@ -38,6 +38,7 @@ class HelperSharedFactory {
     for (HelperTextEntity helperText in helperTexts) {
       if (key == helperText?.key) {
         return CustomLabel(
+          id: helperText?.id,
           text: helperText?.value,
           fontColor: HexColor.fromHex(helperText?.fontColor),
           fontSize: helperText?.fontSize?.toDouble(),
@@ -92,13 +93,16 @@ class HelperSharedFactory {
     List<CustomLabel> customLabels = [];
     for (HelperTextEntity helperText in helperTexts) {
       if (helperText.key.startsWith(key)) {
-        customLabels.add(CustomLabel(
-          text: helperText?.value,
-          fontColor: HexColor.fromHex(helperText?.fontColor),
-          fontSize: helperText?.fontSize?.toDouble(),
-          fontFamily: helperText?.fontFamily,
-          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
-        ));
+        customLabels.add(
+          CustomLabel(
+            id: helperText?.id,
+            text: helperText?.value,
+            fontColor: HexColor.fromHex(helperText?.fontColor),
+            fontSize: helperText?.fontSize?.toDouble(),
+            fontFamily: helperText?.fontFamily,
+            fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+          ),
+        );
       }
     }
     return customLabels;

@@ -24,7 +24,7 @@ class BorderedTextField extends StatelessWidget {
     this.autovalidate = false,
     this.onValueChanged,
     this.isLoading = true,
-    this.textCapitalization,
+    this.textCapitalization = TextCapitalization.none,
   }) : super(key: key);
 
   @override

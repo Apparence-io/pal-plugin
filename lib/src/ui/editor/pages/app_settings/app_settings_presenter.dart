@@ -25,8 +25,10 @@ class AppSettingsPresenter
   Future onInit() async {
     this.viewModel.appIconAnimation = false;
     this.viewModel.isSendingAppIcon = false;
+    this.viewModel.isLoadingAppInfo = false;
+    await this.getAppIcon();
 
-    readAppInfo();
+    this.readAppInfo();
     startAnimation();
 
     WidgetsBinding.instance.addPostFrameCallback(afterLayout);
@@ -55,7 +57,7 @@ class AppSettingsPresenter
     await this.packageVersionReader.init();
     this.viewModel.appVersion = this.packageVersionReader.version;
     this.viewModel.appName = this.packageVersionReader.appName;
-    
+
     this.viewModel.isLoadingAppInfo = false;
     this.refreshView();
   }
@@ -65,11 +67,50 @@ class AppSettingsPresenter
     this.refreshView();
 
     Uint8List appIcon = await this.appIconGrabberDelegate.getClientAppIcon();
-    await this.projectEditorService.sendAppIcon(appIcon);
-    
-    this.viewModel.isSendingAppIcon = false;
-    this.refreshView();
+    if (this.viewModel.appIconId == null) {
+      //Create app icon
+      this._createAppIcon(appIcon);
+    } else {
+      // update app icon
+      this._updateAppIcon(appIcon, this.viewModel.appIconId);
+    }
+  }
 
-    this.viewInterface.showMessage('App icon updated successfully', true);
+  void _createAppIcon(Uint8List appIcon) {
+    this.projectEditorService.sendAppIcon(appIcon, "png").then((appIcon) {
+      this.viewModel.appIconId = appIcon.id;
+      this.viewModel.appIconUrl = appIcon.url;
+      this.viewModel.isSendingAppIcon = false;
+      this.refreshView();
+      this.viewInterface.showMessage('App icon updated successfully', true);
+    }).catchError((onError) {
+      this.viewModel.isSendingAppIcon = false;
+      this.refreshView();
+      this.viewInterface.showMessage('error while saving app Icon', false);
+    });
+  }
+
+  void _updateAppIcon(Uint8List appIcon, String appIconId) {
+    this
+        .projectEditorService
+        .updateAppIcon(appIconId, appIcon, "png")
+        .then((appIcon) {
+      this.viewModel.appIconId = appIcon.id;
+      this.viewModel.appIconUrl = appIcon.url;
+      this.viewModel.isSendingAppIcon = false;
+      this.refreshView();
+      this.viewInterface.showMessage('App icon updated successfully', true);
+    }).catchError((onError) {
+      this.viewModel.isSendingAppIcon = false;
+      this.refreshView();
+      this.viewInterface.showMessage('error while saving app Icon', false);
+    });
+  }
+
+  Future getAppIcon() {
+    return this.projectEditorService.getAppIcon().then((appIcon) {
+        this.viewModel.appIconId = appIcon.id;
+        this.viewModel.appIconUrl = appIcon.url;
+    });
   }
 }

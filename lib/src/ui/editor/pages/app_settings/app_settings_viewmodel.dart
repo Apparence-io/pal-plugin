@@ -8,7 +8,9 @@ class AppSettingsModel extends MVVMModel {
   bool appIconAnimation;
   bool isSendingAppIcon;
   bool isLoadingAppInfo;
-  
+  String appIconUrl;
+  String appIconId;
+
   AppSettingsModel({
     this.headerSize,
     this.appVersion,
@@ -18,3 +20,6 @@ class AppSettingsModel extends MVVMModel {
     this.isLoadingAppInfo,
   });
 }
+
+
+

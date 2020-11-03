@@ -46,29 +46,27 @@ class AnimatedAppIcon extends AnimatedWidget {
         child: Stack(
           children: [
             ClipOval(child: !testMode ? AppIconImage() : Container()),
-            IgnorePointer(
-              child: Opacity(
-                opacity: 0.5,
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: CircleIconButton(
-                    key: ValueKey(
-                        'pal_AppSettingsPage_AnimatedAppIcon_RefreshButton'),
-                    isLoading: isSendingAppIcon,
-                    icon: Icon(
-                      Icons.refresh,
-                      color: PalTheme.of(context).colors.light,
-                    ),
-                    backgroundColor: PalTheme.of(context).colors.dark,
-                    onTapCallback: !isSendingAppIcon
-                        ? () {
-                            if (onTap != null) {
-                              HapticFeedback.selectionClick();
-                              onTap();
-                            }
-                          }
-                        : null,
+            Opacity(
+              opacity: 0.5,
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: CircleIconButton(
+                  key: ValueKey(
+                      'pal_AppSettingsPage_AnimatedAppIcon_RefreshButton'),
+                  isLoading: isSendingAppIcon,
+                  icon: Icon(
+                    Icons.refresh,
+                    color: PalTheme.of(context).colors.light,
                   ),
+                  backgroundColor: PalTheme.of(context).colors.dark,
+                  onTapCallback: !isSendingAppIcon
+                      ? () {
+                          if (onTap != null) {
+                            HapticFeedback.selectionClick();
+                            onTap();
+                          }
+                        }
+                      : null,
                 ),
               ),
             )

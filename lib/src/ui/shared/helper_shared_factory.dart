@@ -98,6 +98,7 @@ class HelperSharedFactory {
     final String key,
     final List<HelperTextEntity> helperTexts,
   ) {
+    // TODO: Reorganize array from back ?
     List<HelperTextViewModel> customLabels = [];
     for (HelperTextEntity helperText in helperTexts) {
       if (helperText.key.startsWith(key)) {

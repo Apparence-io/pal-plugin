@@ -85,6 +85,12 @@ main() {
       verify(service.deleteHelper('page-id', helper.id)).called(1);
     });
 
+    testWidgets('should edit an helper', (tester) async {
+      await _initPage(tester);
+
+      expect(find.byIcon(Icons.edit), findsOneWidget);
+    });
+
     testWidgets('should cancel dialog', (tester) async {
       await _initPage(tester);
 

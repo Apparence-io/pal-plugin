@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 void main() {
   group('Simple Toaster overlay helper', () {

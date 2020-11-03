@@ -1,7 +1,7 @@
-import 'package:palplugin/src/database/entity/helper/helper_entity.dart';
-import 'package:palplugin/src/extensions/color_extension.dart';
-import 'package:palplugin/src/ui/shared/helper_shared_viewmodels.dart';
-import 'package:palplugin/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/extensions/color_extension.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 ///-------------------------------
 /// KEYS to link data to right element

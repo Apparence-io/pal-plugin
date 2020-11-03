@@ -5,6 +5,7 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_presenter.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 void main() {
   UserFullScreenHelperPresenter presenter;
 

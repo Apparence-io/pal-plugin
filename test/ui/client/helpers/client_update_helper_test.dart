@@ -4,6 +4,7 @@ import 'package:mockito/mockito.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 class PackageVersionReaderMock extends Mock implements PackageVersionReader {}
 

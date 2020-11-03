@@ -24,7 +24,7 @@ class EditorButton extends StatelessWidget {
       : super(key: key);
 
   factory EditorButton.validate(PalThemeData theme, Function onPressed,
-          {Key key, bool isEnabled = true }) =>
+          {Key key, bool isEnabled = true}) =>
       EditorButton(
           onPressed: onPressed,
           size: 52,
@@ -57,21 +57,17 @@ class EditorButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-          ignoring : !this.isEnabled,
-          child: Opacity(
-          opacity: this.isEnabled ? 1 : 0.7,
-            child: CircleIconButton(
-          icon: icon,
-          radius: size / 2,
-          backgroundColor: bgColor,
-          onTapCallback: (onPressed != null) ? () {
-            HapticFeedback.selectionClick();
+    return CircleIconButton(
+      icon: icon,
+      radius: size / 2,
+      backgroundColor: bgColor,
+      onTapCallback: (onPressed != null && this.isEnabled)
+          ? () {
+              HapticFeedback.selectionClick();
 
-            onPressed();
-          } : null,
-        ),
-      ),
+              onPressed();
+            }
+          : null,
     );
   }
 }

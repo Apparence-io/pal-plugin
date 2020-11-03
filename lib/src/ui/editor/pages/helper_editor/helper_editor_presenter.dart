@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
@@ -40,7 +39,6 @@ class HelperEditorPresenter
     viewModel.enableSave = false;
     viewModel.isLoading = false;
     viewModel.isEditingWidget = false;
-    viewModel.isEditableWidgetValid = false;
     viewModel.loadingOpacity = 0;
     viewModel.isHelperCreated = false;
     viewModel.isHelperCreating = false;
@@ -61,6 +59,9 @@ class HelperEditorPresenter
         this.refreshView();
       },
     );
+
+    // If user edit an helper, it was always valid the first time
+    viewModel.isEditableWidgetValid = basicArguments?.isOnEditMode;
   }
 
   checkIfEditableWidgetFormValid(bool isFormValid) {

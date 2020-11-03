@@ -236,8 +236,11 @@ class HelperBoxEntity {
   String backgroundColor;
   String key;
 
-  HelperBoxEntity(
-      {this.id, @required this.backgroundColor, @required this.key});
+  HelperBoxEntity({
+    this.id,
+    @required this.backgroundColor,
+    this.key,
+  });
 
   Map<String, dynamic> toJson() => {
         'id': id,

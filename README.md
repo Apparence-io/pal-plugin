@@ -12,9 +12,9 @@
 Pal is the onboarding editor dedicated to Flutter apps.
 
 No code editor for all your app screens directly in your app
-* 1 - Go to a screen where you want to add helper
-* 2 - Select your helper type
-* 3 - Select and customize your theme
+* Go to a screen where you want to add helper
+* Select your helper type
+* Select and customize your theme
 
 [Wanna know more? Click here](http://pal-plugin.tech)
 

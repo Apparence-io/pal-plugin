@@ -11,6 +11,7 @@ class BorderedTextField extends StatelessWidget {
   final bool enableSuggestions;
   final bool autovalidate;
   final bool isLoading;
+  final TextCapitalization textCapitalization;
 
   const BorderedTextField({
     Key key,
@@ -23,6 +24,7 @@ class BorderedTextField extends StatelessWidget {
     this.autovalidate = false,
     this.onValueChanged,
     this.isLoading = true,
+    this.textCapitalization,
   }) : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class BorderedTextField extends StatelessWidget {
           controller: controller,
           enableSuggestions: enableSuggestions,
           keyboardType: textInputType,
+          textCapitalization: textCapitalization,
           decoration: InputDecoration(
             border: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(7.0))),

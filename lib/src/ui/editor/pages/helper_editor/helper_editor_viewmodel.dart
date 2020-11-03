@@ -40,6 +40,7 @@ class HelperTypeOption {
 }
 
 class HelperViewModel extends MVVMModel {
+  final String id;
   final String name;
   final HelperTriggerType triggerType;
   final int priority;
@@ -49,6 +50,7 @@ class HelperViewModel extends MVVMModel {
   final HelperType helperType;
 
   HelperViewModel({
+    this.id,
     @required this.name,
     @required this.triggerType,
     this.priority,
@@ -69,6 +71,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
   TextFormFieldNotifier negativButtonField;
 
   FullscreenHelperViewModel({
+    String id,
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
@@ -84,6 +87,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
     HelperTextViewModel positivButtonLabel,
     HelperTextViewModel negativButtonLabel,
   }) : super(
+          id: id,
           name: name,
           triggerType: triggerType,
           priority: priority,
@@ -166,6 +170,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
   factory FullscreenHelperViewModel.fromHelperEntity(
       HelperEntity helperEntity) {
     return FullscreenHelperViewModel(
+      id: helperEntity?.id,
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
@@ -206,6 +211,7 @@ class SimpleHelperViewModel extends HelperViewModel {
   TextFormFieldNotifier detailsField;
 
   SimpleHelperViewModel({
+    String id,
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
@@ -216,6 +222,7 @@ class SimpleHelperViewModel extends HelperViewModel {
     HelperBoxViewModel helperBoxViewModel,
     HelperTextViewModel detailsField,
   }) : super(
+          id: id,
           name: name,
           triggerType: triggerType,
           priority: priority,
@@ -261,6 +268,7 @@ class SimpleHelperViewModel extends HelperViewModel {
 
   factory SimpleHelperViewModel.fromHelperEntity(HelperEntity helperEntity) {
     return SimpleHelperViewModel(
+      id: helperEntity?.id,
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
@@ -288,6 +296,7 @@ class UpdateHelperViewModel extends HelperViewModel {
   TextFormFieldNotifier titleField;
 
   UpdateHelperViewModel({
+    String id,
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
@@ -301,6 +310,7 @@ class UpdateHelperViewModel extends HelperViewModel {
     HelperTextViewModel titleLabel,
     HelperTextViewModel positivButtonLabel,
   }) : super(
+          id: id,
           name: name,
           triggerType: triggerType,
           priority: priority,
@@ -387,6 +397,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       }
     }
     return UpdateHelperViewModel(
+      id: helperEntity?.id,
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,

@@ -6,6 +6,7 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 /// Base helper config
 ///-------------------------------
 class CreateHelperConfig {
+  String id;
   String pageId;
   String name;
   HelperTriggerType triggerType;
@@ -15,6 +16,7 @@ class CreateHelperConfig {
   int versionMaxId;
 
   CreateHelperConfig({
+    this.id,
     @required this.pageId,
     @required this.name,
     @required this.triggerType,

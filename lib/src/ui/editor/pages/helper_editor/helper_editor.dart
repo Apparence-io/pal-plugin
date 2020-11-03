@@ -4,9 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:pal/src/database/entity/helper/helper_theme.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/pal_notifications.dart';
@@ -34,14 +31,6 @@ class HelperEditorPageArguments {
   final String helperMaxVersion;
   final bool isOnEditMode;
   final HelperViewModel templateViewModel;
-  // final String helperName;
-  // final String helperMinVersion;
-  // final int priority;
-  // final HelperTriggerType triggerType;
-  // final HelperTheme helperTheme;
-  // final HelperType helperType;
-  // final int versionMinId;
-  // final int versionMaxId;
 
   HelperEditorPageArguments(
     this.hostedAppNavigatorKey,
@@ -50,14 +39,6 @@ class HelperEditorPageArguments {
     this.helperMaxVersion,
     this.templateViewModel,
     this.isOnEditMode = false,
-    // @required this.helperName,
-    // @required this.helperMinVersion,
-    // this.priority,
-    // @required this.triggerType,
-    // @required this.helperTheme,
-    // @required this.helperType,
-    // this.versionMinId,
-    // this.versionMaxId,
   });
 }
 
@@ -204,7 +185,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
       ),
       SizedBox(height: 25.0),
       Text(
-        'Creating your helper...',
+        !helperEditorPageArguments.isOnEditMode ? 'Creating your helper...' : 'Updating your helper...',
         style: TextStyle(
           color: Colors.white,
           fontSize: 22.0,
@@ -229,7 +210,7 @@ class HelperEditorPageBuilder implements HelperEditorView {
       SizedBox(height: 25.0),
       Text(
         (model.isHelperCreated)
-            ? 'Helper created 👍'
+            ? (!helperEditorPageArguments.isOnEditMode) ? 'Helper created 👍' : 'Helper updated 😎'
             : 'An error occured 😐\nPlease try again.',
         textAlign: TextAlign.center,
         style: TextStyle(

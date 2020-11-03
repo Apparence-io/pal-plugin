@@ -109,7 +109,8 @@ class HelperEditorPresenter
         .versionEditorService
         .getOrCreateVersionId(basicArguments?.helperMinVersion);
 
-    var helperBasicConfig = CreateHelperConfig(
+    final helperBasicConfig = CreateHelperConfig(
+      id: basicArguments?.templateViewModel?.id,
       pageId: pageId,
       name: basicArguments?.templateViewModel?.name,
       triggerType: basicArguments?.templateViewModel?.triggerType,
@@ -118,12 +119,6 @@ class HelperEditorPresenter
       versionMinId: versionMinId,
       versionMaxId: basicArguments?.templateViewModel?.versionMaxId,
     );
-
-    if (basicArguments.isOnEditMode) {
-      await this.updateHelper(helperBasicConfig);
-    } else {
-      await this.createHelper(helperBasicConfig);
-    }
 
     await this.save(helperBasicConfig);
   }
@@ -140,6 +135,13 @@ class HelperEditorPresenter
 
     // Wait for animation complete
     await Future.delayed(Duration(milliseconds: 400));
+
+    // Update or create
+    if (basicArguments.isOnEditMode) {
+      await this.updateHelper(config);
+    } else {
+      await this.createHelper(config);
+    }
 
     this.viewInterface.triggerHaptic();
     viewModel.isHelperCreating = false;

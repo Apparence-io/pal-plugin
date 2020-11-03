@@ -61,6 +61,7 @@ class CreateHelperInfosStep extends StatelessWidget {
               hintText: 'My new helper',
               controller: model.helperNameController,
               validator: _checkHelperName,
+              textCapitalization: TextCapitalization.sentences,
             ),
           ),
           LabeledForm(

@@ -60,6 +60,7 @@ class _EditorHelperHttpService implements EditorHelperService {
     CreateSimpleHelper createArgs,
   ) {
     return HelperEntity(
+      id: createArgs.config.id,
       name: createArgs.config.name,
       type: HelperType.SIMPLE_HELPER,
       triggerType: createArgs.config.triggerType,
@@ -79,6 +80,7 @@ class _EditorHelperHttpService implements EditorHelperService {
       ],
       helperBoxes: [
         HelperBoxEntity(
+          id: createArgs.boxConfig?.id,
           key: SimpleHelperKeys.BACKGROUND_KEY,
           backgroundColor: createArgs.boxConfig?.color,
         )
@@ -139,6 +141,7 @@ class _EditorHelperHttpService implements EditorHelperService {
     helperImages.removeWhere((element) => element == null);
 
     return HelperEntity(
+      id: createArgs.config.id,
       name: createArgs.config.name,
       type: HelperType.UPDATE_HELPER,
       triggerType: createArgs.config.triggerType,
@@ -205,6 +208,7 @@ class _EditorHelperHttpService implements EditorHelperService {
     helperImages.removeWhere((element) => element == null);
 
     return HelperEntity(
+      id: createArgs.config.id,
       name: createArgs.config.name,
       type: HelperType.HELPER_FULL_SCREEN,
       triggerType: createArgs.config.triggerType,
@@ -215,6 +219,7 @@ class _EditorHelperHttpService implements EditorHelperService {
       helperTexts: helperTexts,
       helperBoxes: [
         HelperBoxEntity(
+          id: createArgs.bodyBox?.id,
           key: FullscreenHelperKeys.BACKGROUND_KEY,
           backgroundColor: createArgs.bodyBox.color,
         )

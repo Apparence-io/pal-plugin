@@ -10,12 +10,15 @@
       "request": "launch",
       "program": "./test/"
     },
-
     {
       "name": "Flutter",
       "program": "example/lib/main.dart",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "args": [
+        "--dart-define",
+        "SERVER_URL=http://217.182.88.6:8050"
+      ]
     }
   ]
 }

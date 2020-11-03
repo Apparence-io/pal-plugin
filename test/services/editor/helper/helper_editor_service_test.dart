@@ -9,6 +9,7 @@ import 'package:pal/src/database/repository/editor/helper_editor_repository.dart
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 class HttpClientMock extends Mock implements HttpClient {}
 
@@ -92,65 +93,72 @@ void main() {
       var pageId = 'DJKLSQLKDJLQ132154a';
       // the args of our service creation method
       var args = CreateFullScreenHelper(
-          config: CreateHelperConfig(
-            pageId: '',
-            helperType: HelperType.HELPER_FULL_SCREEN,
-            name: 'my helper name 2',
-            triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-            priority: 1,
-            versionMinId: 25, //FIXME
-            versionMaxId: 25, //FIXME
-          ),
-          title: HelperTextConfig(
-              text: "Today tips is now this lorem ipsum lorem ipsum...",
-              fontColor: "#CCC",
-              fontWeight: "w100",
-              fontSize: 21,
-              fontFamily: "cortana"),
-          description: HelperTextConfig(
-              text: "Description lorem ipsum...",
-              fontColor: "#CCC2",
-              fontWeight: "w400",
-              fontSize: 14,
-              fontFamily: "cortanaBis"),
-          backgroundColor: "#CCF",
-          topImageUrl: "http://image.png/");
-      // what our service should create from the args
-      HelperEntity myHelper = HelperEntity(
-          name: args.config.name,
-          type: HelperType.HELPER_FULL_SCREEN,
+        config: CreateHelperConfig(
+          pageId: '',
+          helperType: HelperType.HELPER_FULL_SCREEN,
+          name: 'my helper name 2',
           triggerType: HelperTriggerType.ON_SCREEN_VISIT,
           priority: 1,
           versionMinId: 25, //FIXME
           versionMaxId: 25, //FIXME
-          pageId: pageId,
-          helperTexts: [
-            HelperTextEntity(
-              value: args.title.text,
-              fontColor: args.title.fontColor,
-              fontWeight: args.title.fontWeight,
-              fontSize: args.title.fontSize,
-              fontFamily: args.title.fontFamily,
-              key: FullscreenHelperKeys.TITLE_KEY,
-            ),
-            HelperTextEntity(
-              value: args.description.text,
-              fontColor: args.description.fontColor,
-              fontWeight: args.description.fontWeight,
-              fontSize: args.description.fontSize,
-              fontFamily: args.description.fontFamily,
-              key: FullscreenHelperKeys.DESCRIPTION_KEY,
-            ),
-          ],
-          helperImages: [
-            HelperImageEntity(
-                url: args.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
-          ],
-          helperBoxes: [
-            HelperBoxEntity(
-                key: FullscreenHelperKeys.BACKGROUND_KEY,
-                backgroundColor: args.backgroundColor)
-          ]);
+        ),
+        title: HelperTextConfig(
+            text: "Today tips is now this lorem ipsum lorem ipsum...",
+            fontColor: "#CCC",
+            fontWeight: "w100",
+            fontSize: 21,
+            fontFamily: "cortana"),
+        description: HelperTextConfig(
+            text: "Description lorem ipsum...",
+            fontColor: "#CCC2",
+            fontWeight: "w400",
+            fontSize: 14,
+            fontFamily: "cortanaBis"),
+        bodyBox: HelperBoxConfig(
+          color: '#CCF',
+        ),
+        mediaHeader: HelperMediaConfig(url: "http://image.png/"),
+      );
+      // what our service should create from the args
+      HelperEntity myHelper = HelperEntity(
+        name: args.config.name,
+        type: HelperType.HELPER_FULL_SCREEN,
+        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+        priority: 1,
+        versionMinId: 25, //FIXME
+        versionMaxId: 25, //FIXME
+        pageId: pageId,
+        helperTexts: [
+          HelperTextEntity(
+            value: args.title.text,
+            fontColor: args.title.fontColor,
+            fontWeight: args.title.fontWeight,
+            fontSize: args.title.fontSize,
+            fontFamily: args.title.fontFamily,
+            key: FullscreenHelperKeys.TITLE_KEY,
+          ),
+          HelperTextEntity(
+            value: args.description.text,
+            fontColor: args.description.fontColor,
+            fontWeight: args.description.fontWeight,
+            fontSize: args.description.fontSize,
+            fontFamily: args.description.fontFamily,
+            key: FullscreenHelperKeys.DESCRIPTION_KEY,
+          ),
+        ],
+        helperImages: [
+          HelperImageEntity(
+            url: args.mediaHeader.url,
+            key: FullscreenHelperKeys.IMAGE_KEY,
+          )
+        ],
+        helperBoxes: [
+          HelperBoxEntity(
+            key: FullscreenHelperKeys.BACKGROUND_KEY,
+            backgroundColor: args.bodyBox.color,
+          )
+        ],
+      );
       // what http will result
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
       var reqHelperJson = HelperEntityAdapter().toJson(myHelper);
@@ -171,38 +179,41 @@ void main() {
       var pageId = 'DJKLSQLKDJLQ132154a';
       // the args of our service creation method
       var args = CreateUpdateHelper(
-          config: CreateHelperConfig(
-            name: 'my helper name 2',
-            triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-            priority: 1,
-            versionMinId: 25, //FIXME
-            versionMaxId: 25, //FIXME
+        config: CreateHelperConfig(
+          name: 'my helper name 2',
+          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+          priority: 1,
+          versionMinId: 25, //FIXME
+          versionMaxId: 25, //FIXME
+          pageId: '',
+          helperType: HelperType.UPDATE_HELPER,
+        ),
+        title: HelperTextConfig(
+          text: "Today tips is now this lorem ipsum lorem ipsum...",
+          fontColor: "#CCC",
+          fontWeight: "w100",
+          fontSize: 21,
+          fontFamily: "cortana",
+        ),
+        lines: [
+          HelperTextConfig(
+            text: "Line 1",
+            fontColor: "#CCC2",
+            fontWeight: "w100E",
+            fontSize: 212,
+            fontFamily: "cortana2",
           ),
-          title: HelperTextConfig(
-            text: "Today tips is now this lorem ipsum lorem ipsum...",
-            fontColor: "#CCC",
-            fontWeight: "w100",
-            fontSize: 21,
-            fontFamily: "cortana",
-          ),
-          lines: [
-            HelperTextConfig(
-              text: "Line 1",
-              fontColor: "#CCC2",
-              fontWeight: "w100E",
-              fontSize: 212,
-              fontFamily: "cortana2",
-            ),
-            HelperTextConfig(
-              text: "Line 2",
-              fontColor: "#CCC2",
-              fontWeight: "w100E",
-              fontSize: 212,
-              fontFamily: "cortana2",
-            )
-          ],
-          backgroundColor: "#CCF",
-          topImageUrl: 'url');
+          HelperTextConfig(
+            text: "Line 2",
+            fontColor: "#CCC2",
+            fontWeight: "w100E",
+            fontSize: 212,
+            fontFamily: "cortana2",
+          )
+        ],
+        bodyBox: HelperBoxConfig(color: '#CCF'),
+        headerMedia: HelperMediaConfig(url: 'url'),
+      );
       // what our service should create
       HelperEntity myHelper = HelperEntity(
           name: args.config.name,
@@ -240,12 +251,15 @@ void main() {
           ],
           helperImages: [
             HelperImageEntity(
-                url: args.topImageUrl, key: FullscreenHelperKeys.IMAGE_KEY)
+              url: args.headerMedia.url,
+              key: FullscreenHelperKeys.IMAGE_KEY,
+            )
           ],
           helperBoxes: [
             HelperBoxEntity(
-                key: FullscreenHelperKeys.BACKGROUND_KEY,
-                backgroundColor: args.backgroundColor)
+              key: FullscreenHelperKeys.BACKGROUND_KEY,
+              backgroundColor: args.bodyBox.color,
+            )
           ]);
       // what http will result
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";

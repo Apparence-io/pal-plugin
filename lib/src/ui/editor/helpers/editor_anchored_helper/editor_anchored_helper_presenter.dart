@@ -1,20 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/services/editor/finder/finder_service.dart';
 import 'package:pal/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
-import 'package:pal/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 import 'editor_anchored_helper.dart';
 
 // this is the key used in our editor to inject all widgets in
 const EDITOR_PARENT_NODE_KEY = "EditorPage";
 
-class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
-
+class EditorAnchoredFullscreenPresenter extends Presenter<
+    AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
   final FinderService finderService;
 
-  EditorAnchoredFullscreenPresenter(EditorAnchoredFullscreenHelperView viewInterface, this.finderService)
-    : super(AnchoredFullscreenHelperViewModel(), viewInterface) {
+  EditorAnchoredFullscreenPresenter(
+      EditorAnchoredFullscreenHelperView viewInterface, this.finderService)
+      : super(
+            AnchoredFullscreenHelperViewModel(
+                helper: HelperViewModel(
+              name: 'test',
+              triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+              helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
+            )),
+            viewInterface) {
     viewModel.userPageElements = Map();
     viewModel.title = "My helper title";
     viewModel.description = "Lorem ipsum lorem ipsum lorem ipsum";
@@ -30,13 +39,14 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   Future scanElements() async {
     var elements = await finderService.scan();
     // var bounds = elementFinder.scan(omitChildsOf: ValueKey(EDITOR_PARENT_NODE_KEY));
-    viewModel.userPageElements = elements.map((key, value) => new MapEntry(key, new WidgetElementModel(value.bounds, value.offset)));
+    viewModel.userPageElements = elements.map((key, value) =>
+        new MapEntry(key, new WidgetElementModel(value.bounds, value.offset)));
     refreshView();
   }
 
   Future onTapElement(String key) async {
     var previouslySelected = viewModel.selectedAnchor;
-    if(previouslySelected != null) {
+    if (previouslySelected != null) {
       previouslySelected.value.selected = false;
     }
     viewModel.userPageElements[key].selected = true;
@@ -45,5 +55,3 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     refreshView();
   }
 }
-
-

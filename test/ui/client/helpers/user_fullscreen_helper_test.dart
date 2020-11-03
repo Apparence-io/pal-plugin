@@ -7,27 +7,30 @@ import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
 void main() {
   UserFullScreenHelperPresenter presenter;
-  
+
   group('[Client] Fullscreen helper', () {
     UserFullScreenHelperPage userFullScreenHelperPage =
         UserFullScreenHelperPage(
-      backgroundColor: Colors.blueAccent,
-      titleLabel: CustomLabel(
+      helperBoxViewModel:
+          HelperBoxViewModel(backgroundColor: Colors.blueAccent),
+      titleLabel: HelperTextViewModel(
         text: 'A simple test',
         fontSize: 60.0,
         fontColor: Colors.white,
       ),
-      positivLabel: CustomLabel(
+      positivLabel: HelperTextViewModel(
         text: 'Positiv button',
         fontSize: 14.0,
         fontColor: Colors.red,
       ),
-      negativLabel: CustomLabel(
+      negativLabel: HelperTextViewModel(
         text: 'Negativ button',
         fontSize: 12.0,
         fontColor: Colors.black,
       ),
-      mediaUrl: 'https://picsum.photos/200/300',
+      headerImageViewModel: HelperImageViewModel(
+        url: 'https://picsum.photos/200/300',
+      ),
       onPositivButtonTap: () async {},
       onNegativButtonTap: () async {},
     );
@@ -50,12 +53,15 @@ void main() {
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
 
-      final presenterFinder = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
-      final page = presenterFinder.evaluate().first.widget as PresenterInherited<UserFullScreenHelperPresenter, UserFullScreenHelperModel>;
+      final presenterFinder =
+          find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
+      final page = presenterFinder.evaluate().first.widget
+          as PresenterInherited<UserFullScreenHelperPresenter,
+              UserFullScreenHelperModel>;
       presenter = page.presenter;
     }
 
-    testWidgets('should crash when no background color was provided',
+    testWidgets('should crash when no box was provided',
         (WidgetTester tester) async {
       bool hasThrow = false;
       try {
@@ -65,7 +71,7 @@ void main() {
         await tester.pumpWidget(app);
       } catch (e) {
         hasThrow = true;
-        expect(e.toString().contains("'backgroundColor != null': is not true"),
+        expect(e.toString().contains("'helperBoxViewModel != null': is not true"),
             isTrue);
       }
       expect(hasThrow, isTrue);
@@ -76,13 +82,15 @@ void main() {
       bool hasThrow = false;
       try {
         UserFullScreenHelperPage helperWidget = UserFullScreenHelperPage(
-          backgroundColor: Colors.black,
-          positivLabel: CustomLabel(
+          helperBoxViewModel: HelperBoxViewModel(
+            backgroundColor: Colors.black,
+          ),
+          positivLabel: HelperTextViewModel(
             text: 'test',
             fontColor: Colors.white,
             fontSize: 23.0,
           ),
-          negativLabel: CustomLabel(
+          negativLabel: HelperTextViewModel(
             text: 'test',
             fontColor: Colors.white,
             fontSize: 23.0,
@@ -103,14 +111,24 @@ void main() {
     testWidgets('should have valid UI', (WidgetTester tester) async {
       await _beforeEach(tester);
 
-      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage')), findsOneWidget);
-      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Media')), findsOneWidget);
-      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title')), findsOneWidget);
-      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback')), findsOneWidget);
-      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')), findsOneWidget);
-      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton')), findsOneWidget);
+      expect(
+          find.byKey(ValueKey('pal_UserFullScreenHelperPage')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Media')),
+          findsOneWidget);
+      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title')),
+          findsOneWidget);
+      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback')),
+          findsOneWidget);
+      expect(
+          find.byKey(
+              ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')),
+          findsOneWidget);
+      expect(
+          find.byKey(
+              ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton')),
+          findsOneWidget);
     });
-    
+
     testWidgets('should have valid data', (WidgetTester tester) async {
       await _beforeEach(tester);
 
@@ -122,7 +140,8 @@ void main() {
     testWidgets('should tap on positiv button', (WidgetTester tester) async {
       await _beforeEach(tester);
       await tester.pump(Duration(milliseconds: 1000));
-      final positivButton = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
+      final positivButton = find.byKey(
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
       await tester.tap(positivButton);
       await tester.pump(Duration(milliseconds: 100));
       await tester.pump(Duration(milliseconds: 200));
@@ -133,7 +152,8 @@ void main() {
     testWidgets('should tap on negativ button', (WidgetTester tester) async {
       await _beforeEach(tester);
       await tester.pump(Duration(milliseconds: 1000));
-      final negativButton = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'));
+      final negativButton = find.byKey(
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'));
       await tester.tap(negativButton);
       await tester.pump(Duration(milliseconds: 100));
       await tester.pump(Duration(milliseconds: 200));

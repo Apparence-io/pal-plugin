@@ -15,6 +15,8 @@ class EditorViewModelFactory {
         return SimpleHelperViewModel.fromHelperViewModel(model);
       case HelperType.UPDATE_HELPER:
         return UpdateHelperViewModel.fromHelperViewModel(model);
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        return model;
       default:
         return null;
     }

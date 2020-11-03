@@ -49,24 +49,10 @@ class HelperEditorPresenter
     // Create a template helper model
     // this template will be copied to edited widget
     viewModel.templateViewModel = basicArguments?.templateViewModel;
-    // if (viewModel.templateViewModel == null) {
-    //   viewModel.templateViewModel = HelperViewModel(
-    //     name: basicArguments?.helperName,
-    //     priority: basicArguments?.priority ?? 0,
-    //     triggerType:
-    //         basicArguments?.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
-    //     versionMinId: basicArguments?.versionMinId ?? 1,
-    //     versionMaxId: basicArguments?.versionMaxId ?? 2,
-    //   );
-    // }
     viewModel.helperViewModel = EditorViewModelFactory.transform(
       viewModel.templateViewModel,
     );
-    // TODO: Append sended extra value if any
-    // viewModel.helperViewModel = EditorViewModelFactory.merge(
-    //   viewModel.templateViewModel,
-    //   basicArguments?.templateViewModel,
-    // );
+
     chooseHelperType();
 
     KeyboardVisibilityNotification().addNewListener(

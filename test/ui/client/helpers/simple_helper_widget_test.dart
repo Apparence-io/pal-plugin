@@ -10,12 +10,14 @@ void main() {
     var component = SimpleHelperLayout(
       toaster: SimpleHelperPage(
         key: ValueKey("toast"),
-        descriptionLabel: CustomLabel(
+        helperBoxViewModel: HelperBoxViewModel(
+          backgroundColor: Colors.black,
+        ),
+        descriptionLabel: HelperTextViewModel(
             fontColor: Colors.white,
             fontSize: 14.0,
             text:
                 "You can just disable notification by going in your profile and click on notifications tab > disable notifications"),
-        backgroundColor: Colors.black,
       ),
       onDismissed: (res) => print("dismissed..."),
     );

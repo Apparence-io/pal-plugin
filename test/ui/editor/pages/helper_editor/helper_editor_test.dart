@@ -11,10 +11,14 @@ import 'package:pal/src/services/editor/versions/version_editor_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 class _HelperServiceMock extends Mock implements EditorHelperService {}
+
 class _PageEditorServiceMock extends Mock implements PageEditorService {}
+
 class _VersionEditorServiceMock extends Mock implements VersionEditorService {}
+
 class _PalNavigatorObserverMock extends Mock implements PalNavigatorObserver {}
 
 Future _initPage(
@@ -38,10 +42,12 @@ Future _initPage(
               null,
               '',
               helperMinVersion: '1.0.0',
-              helperName: 'A name',
-              triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-              helperType: HelperType.SIMPLE_HELPER,
-              helperTheme: HelperTheme.BLACK,
+              templateViewModel: HelperViewModel(
+                name: 'A name',
+                triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+                helperType: HelperType.SIMPLE_HELPER,
+                helperTheme: HelperTheme.BLACK,
+              ),
             ),
             helperService: helperService,
             pageService: pageEditorService,

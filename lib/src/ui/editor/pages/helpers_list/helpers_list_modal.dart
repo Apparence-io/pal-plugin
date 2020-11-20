@@ -130,7 +130,7 @@ class _HelpersListModalState extends State<HelpersListModal>
                 bottom: 5.0,
                 top: 2.0,
               ),
-              child: !model.isLoading && model.helpers != null && model.helpers.length != 0
+              child: !model.isLoading && (model?.helpers != null && model.helpers.isNotEmpty)
                   ? Text(
                       '💡 You can re-order helpers by long tap on them.',
                       key: ValueKey('pal_HelpersListModal_ReorderTip'),

@@ -2,35 +2,34 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
-import 'package:pal/src/database/adapter/page_entity_adapter.dart';
-import 'package:pal/src/database/entity/page_entity.dart';
+import 'package:http/http.dart';
+import 'package:pal/src/database/adapter/app_icon_entity.dart';
+import 'package:pal/src/database/entity/app_icon_entity.dart';
 import 'package:pal/src/database/repository/base_repository.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 
 class ProjectRepository extends BaseHttpRepository {
-  final PageEntityAdapter _adapter = PageEntityAdapter();
+  final AppIconEntityAdapter _adapter = AppIconEntityAdapter();
 
   ProjectRepository({@required HttpClient httpClient})
       : super(httpClient: httpClient);
 
-  Future<PageEntity> createAppIcon(
-    String projectId,
+  Future<AppIconEntity> createAppIcon(
     Uint8List imageData,
     String imageType,
-    DateTime imageDate,
   ) async {
     var result = await httpClient
         .multipartImage(
-          'settings',
+          'editor/app-icon',
           fileData: imageData.toList(),
           imageType: imageType,
-          fileFieldName: 'appicon',
-          filename: 'appicon',
+          fileFieldName: 'appIcon',
+          filename: 'appIcon',
         )
         .timeout(Duration(seconds: 60))
         .catchError((onError) {
-          throw 'ERROR_UPLOADING_APP_ICON';
-        });
+      throw 'ERROR_UPLOADING_APP_ICON';
+    });
     var stream = result.stream.transform(utf8.decoder);
     var jsonResult = await stream.first;
     if (result.statusCode >= 300) {
@@ -40,25 +39,23 @@ class ProjectRepository extends BaseHttpRepository {
     return _adapter.parse(jsonResult);
   }
 
-  Future<PageEntity> updateAppIcon(
-    String projectId,
+  Future<AppIconEntity> updateAppIcon(
+    String appIconId,
     Uint8List imageData,
     String imageType,
-    DateTime imageDate,
   ) async {
     var result = await httpClient
         .multipartImage(
-          'settings',
+          'editor/app-icon/$appIconId',
           fileData: imageData.toList(),
           imageType: imageType,
-          fileFieldName: 'appicon',
-          filename: 'appicon',
-          httpMethod: 'PUT',
+          fileFieldName: 'appIcon',
+          filename: 'appIcon',
         )
         .timeout(Duration(seconds: 60))
         .catchError((onError) {
-          throw 'ERROR_UPLOADING_APP_ICON';
-        });
+      throw 'ERROR_UPLOADING_APP_ICON';
+    });
     var stream = result.stream.transform(utf8.decoder);
     var jsonResult = await stream.first;
     if (result.statusCode >= 300) {
@@ -68,4 +65,9 @@ class ProjectRepository extends BaseHttpRepository {
     return _adapter.parse(jsonResult);
   }
 
+  Future<AppIconEntity> getAppIcon() async {
+    final Response response =
+        await this.httpClient.get('editor/app-icon');
+    return this._adapter.parse(response.body);
+  }
 }

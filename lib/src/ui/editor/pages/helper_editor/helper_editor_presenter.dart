@@ -94,9 +94,7 @@ class HelperEditorPresenter
     refreshView();
   }
 
-  onEditorClose() {
-    this.viewInterface.removeOverlay();
-  }
+  onEditorClose() => this.viewInterface.removeOverlay();
 
   onEditorValidate() async {
     RouteSettings route = await routeObserver.routeSettings.first;
@@ -137,11 +135,7 @@ class HelperEditorPresenter
     await Future.delayed(Duration(milliseconds: 400));
 
     // Update or create
-    if (basicArguments.isOnEditMode) {
-      await this.updateHelper(config);
-    } else {
-      await this.createHelper(config);
-    }
+    await _saveHelper(config);
 
     this.viewInterface.triggerHaptic();
     viewModel.isHelperCreating = false;
@@ -163,68 +157,39 @@ class HelperEditorPresenter
     }
   }
 
-  Future createHelper(CreateHelperConfig config) async {
-    try {
-      switch (config?.helperType) {
-        case HelperType.HELPER_FULL_SCREEN:
-          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
-          await helperService.saveFullScreenHelper(config.pageId,
-              EditorEntityFactory.buildFullscreenArgs(config, model));
-          break;
-        case HelperType.SIMPLE_HELPER:
-          var model = viewModel.helperViewModel as SimpleHelperViewModel;
-          await helperService.saveSimpleHelper(config.pageId,
-              EditorEntityFactory.buildSimpleArgs(config, model));
-          break;
-        // case HelperType.ANCHORED_OVERLAYED_HELPER:
-        //   break;
-        case HelperType.UPDATE_HELPER:
-          var model = viewModel.helperViewModel as UpdateHelperViewModel;
-          await helperService.saveUpdateHelper(config.pageId,
-              EditorEntityFactory.buildUpdateArgs(config, model));
-          break;
-        default:
-          throw "NOT_IMPLEMENTED_TYPE";
-          break;
-      }
-      viewModel.isHelperCreated = true;
-    } catch (e) {
-      viewModel.isHelperCreated = false;
-    }
-  }
-
-  Future updateHelper(CreateHelperConfig config) async {
-    try {
-      switch (config?.helperType) {
-        case HelperType.HELPER_FULL_SCREEN:
-          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
-          await helperService.saveFullScreenHelper(config.pageId,
-              EditorEntityFactory.buildFullscreenArgs(config, model));
-          break;
-        case HelperType.SIMPLE_HELPER:
-          var model = viewModel.helperViewModel as SimpleHelperViewModel;
-          await helperService.saveSimpleHelper(config.pageId,
-              EditorEntityFactory.buildSimpleArgs(config, model));
-          break;
-        // case HelperType.ANCHORED_OVERLAYED_HELPER:
-        //   break;
-        case HelperType.UPDATE_HELPER:
-          var model = viewModel.helperViewModel as UpdateHelperViewModel;
-          await helperService.saveUpdateHelper(config.pageId,
-              EditorEntityFactory.buildUpdateArgs(config, model));
-          break;
-        default:
-          throw "NOT_IMPLEMENTED_TYPE";
-          break;
-      }
-      viewModel.isHelperCreated = true;
-    } catch (e) {
-      viewModel.isHelperCreated = false;
-    }
-  }
-
   //----------------------------------------------------------------------
   // PRIVATES
   //----------------------------------------------------------------------
+
+  Future _saveHelper(CreateHelperConfig config) async {
+    try {
+      switch (config?.helperType) {
+        case HelperType.HELPER_FULL_SCREEN:
+          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
+          await helperService.saveFullScreenHelper(config.pageId,
+              EditorEntityFactory.buildFullscreenArgs(config, model));
+          break;
+        case HelperType.SIMPLE_HELPER:
+          var model = viewModel.helperViewModel as SimpleHelperViewModel;
+          await helperService.saveSimpleHelper(config.pageId,
+              EditorEntityFactory.buildSimpleArgs(config, model));
+          break;
+        // case HelperType.ANCHORED_OVERLAYED_HELPER:
+        //   break;
+        case HelperType.UPDATE_HELPER:
+          var model = viewModel.helperViewModel as UpdateHelperViewModel;
+          await helperService.saveUpdateHelper(config.pageId,
+              EditorEntityFactory.buildUpdateArgs(config, model));
+          break;
+        default:
+          throw "NOT_IMPLEMENTED_TYPE";
+          break;
+      }
+      viewModel.isHelperCreated = true;
+    } catch (e) {
+      viewModel.isHelperCreated = false;
+    }
+  }
+
 
 }

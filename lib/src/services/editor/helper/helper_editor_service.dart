@@ -5,6 +5,8 @@ import 'package:pal/src/database/repository/editor/helper_editor_repository.dart
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
+import 'helper_editor_model_adapter.dart';
+
 abstract class EditorHelperService {
   
   factory EditorHelperService.build(EditorHelperRepository helperRepository) =>
@@ -24,9 +26,13 @@ abstract class EditorHelperService {
   /// providing [args.config.id] will makes an update
   Future<HelperEntity> saveUpdateHelper(final String pageId, final CreateUpdateHelper createArgs);
 
-
+  /// Change helperPriority
+  /// Priority depends on Helper type
+  /// => the lower it is, the most chance we gonna show it
   Future<void> updateHelperPriority(final String pageId, final Map<String, int> priority);
 
+  /// Delete an helper, we won't let your recover it.
+  /// For stats we keep it in our database / TODO make a force arg to remove it completely
   Future<void> deleteHelper(String pageId, String helperId);
 }
 
@@ -35,191 +41,32 @@ class _EditorHelperHttpService implements EditorHelperService {
 
   _EditorHelperHttpService(this._editorHelperRepository);
 
-  // TODO: Move all _parse funcs into a factory ?
-  HelperEntity _parseSimpleHelper(String pageId, CreateSimpleHelper createArgs) {
-    return HelperEntity(
-      id: createArgs.config.id,
-      name: createArgs.config.name,
-      type: HelperType.SIMPLE_HELPER,
-      triggerType: createArgs.config.triggerType,
-      priority: createArgs.config.priority,
-      versionMinId: createArgs.config.versionMinId,
-      versionMaxId: createArgs.config.versionMaxId,
-      pageId: pageId,
-      helperTexts: [
-        HelperTextEntity(
-          fontColor: createArgs.titleText?.fontColor,
-          fontWeight: createArgs.titleText.fontWeight,
-          fontSize: createArgs.titleText.fontSize,
-          value: createArgs.titleText.text,
-          fontFamily: createArgs.titleText.fontFamily,
-          key: SimpleHelperKeys.CONTENT_KEY,
-        )
-      ],
-      helperBoxes: [
-        HelperBoxEntity(
-          id: createArgs.boxConfig?.id,
-          key: SimpleHelperKeys.BACKGROUND_KEY,
-          backgroundColor: createArgs.boxConfig?.color,
-        )
-      ],
-    );
-  }
-
-  HelperEntity _parseUpdateHelper(
-    String pageId,
-    CreateUpdateHelper createArgs,
-  ) {
-    if (createArgs.title == null || createArgs.lines == null)
-      throw "TITLE_AND_LINES_REQUIRED";
-    var helperTexts =
-        [createArgs.title, createArgs.positivButton, createArgs.negativButton]
-            .map((element) => element?.text != null
-                ? HelperTextEntity(
-                    id: element?.id,
-                    fontColor: element.fontColor,
-                    fontWeight: element.fontWeight,
-                    fontSize: element.fontSize,
-                    value: element.text,
-                    fontFamily: element.fontFamily,
-                  )
-                : null)
-            .toList();
-    helperTexts[0].key = UpdatescreenHelperKeys.TITLE_KEY;
-    if (helperTexts[1] != null)
-      helperTexts[1].key = UpdatescreenHelperKeys.POSITIV_KEY;
-    helperTexts.removeWhere((element) => element == null);
-    for (var element in createArgs.lines) {
-      helperTexts.add(
-        HelperTextEntity(
-          id: element?.id,
-          fontColor: element.fontColor,
-          fontWeight: element.fontWeight,
-          fontSize: element.fontSize,
-          value: element.text,
-          fontFamily: element.fontFamily,
-          key:
-              "${UpdatescreenHelperKeys.LINES_KEY}:${createArgs.lines.indexOf(element)}",
-        ),
-      );
-    }
-
-    // Images
-    // TODO: Create function
-    var helperImages = [createArgs.headerMedia]
-        .map((media) => (media?.url != null && media.url.length > 0)
-            ? HelperImageEntity(
-                id: media.id,
-                url: media.url,
-              )
-            : null)
-        .toList();
-    if (helperImages[0] != null)
-      helperImages[0].key = UpdatescreenHelperKeys.IMAGE_KEY;
-    helperImages.removeWhere((element) => element == null);
-
-    return HelperEntity(
-      id: createArgs.config.id,
-      name: createArgs.config.name,
-      type: HelperType.UPDATE_HELPER,
-      triggerType: createArgs.config.triggerType,
-      priority: createArgs.config.priority,
-      versionMinId: createArgs.config.versionMinId,
-      versionMaxId: createArgs.config.versionMaxId,
-      pageId: pageId,
-      helperTexts: helperTexts,
-      helperBoxes: [
-        HelperBoxEntity(
-          id: createArgs.bodyBox?.id,
-          key: UpdatescreenHelperKeys.BACKGROUND_KEY,
-          backgroundColor: createArgs.bodyBox.color,
-        )
-      ],
-      helperImages: helperImages,
-    );
-  }
-
-  HelperEntity _parseFullScreenHelper(
-    String pageId,
-    CreateFullScreenHelper createArgs,
-  ) {
-    if (createArgs.title == null || createArgs.description == null)
-      throw "TITLE_AND_DESCRIPTION_REQUIRED";
-
-    // Texts
-    var helperTexts = [
-      createArgs.title,
-      createArgs.description,
-      createArgs.positivButton,
-      createArgs.negativButton
-    ].map((element) => element?.text != null ? HelperTextEntity(
-        id: element?.id,
-        fontColor: element.fontColor,
-        fontWeight: element.fontWeight,
-        fontSize: element.fontSize,
-        value: element.text,
-        fontFamily: element.fontFamily,
-      ) : null).toList();
-    helperTexts[0].key = FullscreenHelperKeys.TITLE_KEY;
-    helperTexts[1].key = FullscreenHelperKeys.DESCRIPTION_KEY;
-    if (helperTexts[2] != null)
-      helperTexts[2].key = FullscreenHelperKeys.POSITIV_KEY;
-    if (helperTexts[3] != null)
-      helperTexts[3].key = FullscreenHelperKeys.NEGATIV_KEY;
-    helperTexts.removeWhere((element) => element == null);
-
-    // Images
-    var helperImages = [createArgs.mediaHeader]
-        .map((media) => (media?.url != null && media.url.length > 0)
-            ? HelperImageEntity(
-                id: media.id,
-                url: media.url,
-              )
-            : null)
-        .toList();
-    if (helperImages[0] != null)
-      helperImages[0].key = FullscreenHelperKeys.IMAGE_KEY;
-    helperImages.removeWhere((element) => element == null);
-
-    return HelperEntity(
-      id: createArgs.config.id,
-      name: createArgs.config.name,
-      type: HelperType.HELPER_FULL_SCREEN,
-      triggerType: createArgs.config.triggerType,
-      priority: createArgs.config.priority,
-      versionMinId: createArgs.config.versionMinId,
-      versionMaxId: createArgs.config.versionMaxId,
-      pageId: pageId,
-      helperTexts: helperTexts,
-      helperBoxes: [
-        HelperBoxEntity(
-          id: createArgs.bodyBox?.id,
-          key: FullscreenHelperKeys.BACKGROUND_KEY,
-          backgroundColor: createArgs.bodyBox.color,
-        )
-      ],
-      helperImages: helperImages,
-    );
-  }
-
   @override
   Future<HelperEntity> saveSimpleHelper(final String pageId, final CreateSimpleHelper createArgs)
     => createArgs.config.id != null
-      ? _editorHelperRepository.updateHelper(pageId, _parseSimpleHelper(pageId, createArgs))
-      : _editorHelperRepository.createHelper(pageId, _parseSimpleHelper(pageId, createArgs));
+      ? _editorHelperRepository.updateHelper(pageId, HelperEditorAdapter.parseSimpleHelper(pageId, createArgs))
+      : _editorHelperRepository.createHelper(pageId, HelperEditorAdapter.parseSimpleHelper(pageId, createArgs));
 
 
   @override
-  Future<HelperEntity> saveFullScreenHelper(String pageId, CreateFullScreenHelper createArgs)
-    => createArgs.config.id != null
-      ? _editorHelperRepository.updateHelper(pageId, _parseFullScreenHelper(pageId, createArgs))
-      : _editorHelperRepository.createHelper(pageId, _parseFullScreenHelper(pageId, createArgs));
+  Future<HelperEntity> saveFullScreenHelper(String pageId, CreateFullScreenHelper createArgs) {
+    if (createArgs.title == null || createArgs.description == null || createArgs.title.text.isEmpty)
+      throw "TITLE_AND_DESCRIPTION_REQUIRED";
+    var helperEntity = HelperEditorAdapter.parseFullscreenHelper(pageId, createArgs);
+    helperEntity.helperTexts.removeWhere((element) => element.value == null || element.value.isEmpty);
+    return createArgs.config.id != null
+      ? _editorHelperRepository.updateHelper(pageId, helperEntity)
+      : _editorHelperRepository.createHelper(pageId, helperEntity);
+  }
 
   @override
-  Future<HelperEntity> saveUpdateHelper(String pageId, CreateUpdateHelper createArgs)
-    => createArgs.config.id != null
-      ? _editorHelperRepository.updateHelper(pageId, _parseUpdateHelper(pageId, createArgs))
-      : _editorHelperRepository.createHelper(pageId, _parseUpdateHelper(pageId, createArgs));
+  Future<HelperEntity> saveUpdateHelper(String pageId, CreateUpdateHelper createArgs) {
+    var helperEntity = HelperEditorAdapter.parseUpdateHelper(pageId, createArgs);
+    helperEntity.helperTexts.removeWhere((element) => element.value == null || element.value.isEmpty);
+    return createArgs.config.id != null
+      ? _editorHelperRepository.updateHelper(pageId, helperEntity)
+      : _editorHelperRepository.createHelper(pageId, helperEntity);
+  }
 
   @override
   Future<Pageable<HelperEntity>> getPage(String pageId, int page, int pageSize)

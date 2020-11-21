@@ -260,14 +260,11 @@ void main() {
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
       var reqHelperJson = HelperEntityAdapter().toJson(myHelper);
       var resHelperJson = HelperEntityAdapter().toJson(resHelper);
-      when(httpClientMock.post('editor/pages/$pageId/helpers',
-              body: reqHelperJson))
+      when(httpClientMock.post('editor/pages/$pageId/helpers', body: reqHelperJson))
           .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
       // call the service part
-      var resultEntity =
-          await editorHelperService.saveUpdateHelper(pageId, args);
-      expect(resultEntity, isNotNull,
-          reason: "The service didn't create entity properly");
+      var resultEntity = await editorHelperService.saveUpdateHelper(pageId, args);
+      expect(resultEntity, isNotNull, reason: "The service didn't create entity properly");
     });
   });
 }

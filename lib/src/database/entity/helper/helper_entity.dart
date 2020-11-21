@@ -39,11 +39,6 @@ class HelperEntity {
       this.helperBoxes});
 
   factory HelperEntity.copy(HelperEntity from) {
-    List<HelperBoxEntity> _helperBoxes =
-        from.helperBoxes != null ? List() : null;
-    if (_helperBoxes != null) {
-      from.helperBoxes.forEach((el) => _helperBoxes.add(el.copy()));
-    }
     return HelperEntity(
       id: from.id,
       name: from.name,
@@ -57,10 +52,10 @@ class HelperEntity {
       versionMin: from.versionMin,
       versionMaxId: from.versionMaxId,
       versionMax: from.versionMax,
-      helperBorders: from.helperBorders,
-      helperImages: from.helperImages,
-      helperTexts: from.helperTexts,
-      helperBoxes: _helperBoxes,
+      helperBorders: from.helperBorders != null ? [...from.helperBorders] : null,
+      helperImages: from.helperImages != null ? [...from.helperImages] : null,
+      helperTexts: from.helperTexts != null ? [...from.helperTexts] : null,
+      helperBoxes: from.helperBoxes != null ? [...from.helperBoxes] : null,
     );
   }
 
@@ -69,10 +64,8 @@ class HelperEntity {
         'name': name,
         'type': type.toString().split('.')[1],
         'triggerType': triggerType.toString().split('.')[1],
-        'creationDate':
-            creationDate != null ? creationDate.toIso8601String() : null,
-        'lastUpdateDate':
-            lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
+        'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
+        'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
         'priority': priority,
         'pageId': pageId,
         'versionMinId': versionMinId,
@@ -140,6 +133,14 @@ class HelperBorderEntity {
         'width': width,
       };
 
+  HelperBorderEntity copy() => HelperBorderEntity(
+    id: id,
+    color: color,
+    key: key,
+    style: style,
+    width: width,
+  );
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -170,6 +171,12 @@ class HelperImageEntity {
       };
 
   HelperImageEntity({this.id, this.key, @required this.url});
+
+  HelperImageEntity copy() => HelperImageEntity(
+      id: id,
+      key: key,
+      url: url
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -207,6 +214,16 @@ class HelperTextEntity {
         'key': key,
         'value': value,
       };
+
+  HelperTextEntity copy() => HelperTextEntity(
+    id: id,
+    fontColor: fontColor,
+    fontFamily: fontFamily,
+    fontWeight: fontWeight,
+    key: key,
+    value: value,
+    fontSize: fontSize
+  );
 
   @override
   bool operator ==(Object other) =>

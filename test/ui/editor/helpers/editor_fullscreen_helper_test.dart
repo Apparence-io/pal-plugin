@@ -111,8 +111,10 @@ void main() {
     testWidgets('should change background color', (WidgetTester tester) async {
       await _beforeEach(tester);
 
-      expect(presenter.fullscreenHelperViewModel.backgroundColor.value,
-          Colors.blueAccent);
+      expect(
+        presenter.fullscreenHelperViewModel.bodyBox.backgroundColor.value,
+        Colors.blueAccent,
+      );
 
       var colorPickerButton = find.byKey(
           ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
@@ -131,8 +133,10 @@ void main() {
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
 
-      expect(presenter.fullscreenHelperViewModel.backgroundColor.value,
-          Color(0xFFFFFFFF));
+      expect(
+        presenter.fullscreenHelperViewModel.bodyBox.backgroundColor.value,
+        Color(0xFFFFFFFF),
+      );
     });
 
     testWidgets('should edit media', (WidgetTester tester) async {
@@ -144,10 +148,12 @@ void main() {
           findsOneWidget);
     });
 
-    testWidgets('should edit fullscreen positiv button', (WidgetTester tester) async {
+    testWidgets('should edit fullscreen positiv button',
+        (WidgetTester tester) async {
       await _beforeEach(tester);
 
-      var titleField = find.byKey(ValueKey('pal_EditorFullScreenHelper_ThanksButtonField'));
+      var titleField =
+          find.byKey(ValueKey('pal_EditorFullScreenHelper_ThanksButtonField'));
       await tester.tap(titleField.first);
       await tester.pump();
       await tester.enterText(titleField, 'Ok !');

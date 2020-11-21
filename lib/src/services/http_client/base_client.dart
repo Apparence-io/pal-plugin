@@ -54,8 +54,14 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       final Encoding encoding}) async {
     headers = _initHeader(headers);
 
-    return this._checkResponse(await super.post('${this._baseUrl}/$url',
-        headers: headers, body: body, encoding: encoding));
+    return this._checkResponse(
+      await super.post(
+        '${this._baseUrl}/$url',
+        headers: headers,
+        body: body,
+        encoding: encoding,
+      ),
+    );
   }
 
   @override
@@ -79,8 +85,8 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   @override
   Future<Response> patch(final url,
       {Map<String, String> headers,
-        final body,
-        final Encoding encoding}) async {
+      final body,
+      final Encoding encoding}) async {
     headers = _initHeader(headers);
 
     return this._checkResponse(await super.patch('${this._baseUrl}/$url',
@@ -110,8 +116,8 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       String filename,
       String fileFieldName,
       String httpMethod = "POST"}) async {
-    var request =
-        new http.MultipartRequest(httpMethod, Uri.parse('${this._baseUrl}/$url'));
+    var request = new http.MultipartRequest(
+        httpMethod, Uri.parse('${this._baseUrl}/$url'));
     if (fields != null) {
       request.fields.addAll(fields);
     }

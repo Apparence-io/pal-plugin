@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 void main() {
   group('Simple Toaster overlay helper', () {
@@ -11,12 +11,14 @@ void main() {
     var component = SimpleHelperLayout(
       toaster: SimpleHelperPage(
         key: ValueKey("toast"),
-        descriptionLabel: CustomLabel(
+        helperBoxViewModel: HelperBoxViewModel(
+          backgroundColor: Colors.black,
+        ),
+        descriptionLabel: HelperTextViewModel(
             fontColor: Colors.white,
             fontSize: 14.0,
             text:
                 "You can just disable notification by going in your profile and click on notifications tab > disable notifications"),
-        backgroundColor: Colors.black,
       ),
       onDismissed: (res) => print("dismissed..."),
     );

@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 class PackageVersionReaderMock extends Mock implements PackageVersionReader {}
 
@@ -16,41 +16,44 @@ void main() {
     when(packageVersionReaderService.version).thenReturn('0.0.1');
 
     UserUpdateHelperPage userUpdateHelperWidget = UserUpdateHelperPage(
+      onPositivButtonTap: () {},
       packageVersionReader: packageVersionReaderService,
-      backgroundColor: Colors.blue,
-      thanksButtonLabel: CustomLabel(
+      helperBoxViewModel: HelperBoxViewModel(backgroundColor: Colors.blue),
+      thanksButtonLabel: HelperTextViewModel(
         text: 'Free Ademo',
         fontColor: Colors.white,
         fontSize: 9.0,
       ),
-      titleLabel: CustomLabel(
+      titleLabel: HelperTextViewModel(
         text: 'N.O.S au secours',
         fontColor: Colors.red,
         fontSize: 27.0,
       ),
       changelogLabels: [
-        CustomLabel(
+        HelperTextViewModel(
           text: 'My feature 1',
           fontColor: Colors.white,
           fontSize: 14.0,
         ),
-        CustomLabel(
+        HelperTextViewModel(
           text: 'My feature 2',
           fontColor: Colors.black,
           fontSize: 22.0,
         ),
-        CustomLabel(
+        HelperTextViewModel(
           text: 'My feature 3',
           fontColor: Colors.red,
           fontSize: 14.0,
         ),
-        CustomLabel(
+        HelperTextViewModel(
           text: 'My feature 4',
           fontColor: Colors.white,
           fontSize: 19.0,
         ),
       ],
-      mediaUrl: 'https://picsum.photos/id/237/200/300',
+      helperImageViewModel: HelperImageViewModel(
+        url: 'https://picsum.photos/id/237/200/300',
+      ),
     );
 
     beforeEach(WidgetTester tester) async {
@@ -100,7 +103,6 @@ void main() {
 
       expect(find.byKey(ValueKey('pal_UserUpdateHelperWidget_ThanksButton')),
           findsOneWidget);
-
     });
 
     testWidgets('should display correct title', (WidgetTester tester) async {
@@ -124,7 +126,7 @@ void main() {
     });
 
     testWidgets('should display release notes', (WidgetTester tester) async {
-      await beforeEach(tester);  
+      await beforeEach(tester);
       expect(
         find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0')),
         findsOneWidget,

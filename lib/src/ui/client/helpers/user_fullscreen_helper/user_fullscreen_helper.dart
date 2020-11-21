@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 import 'user_fullscreen_helper_presenter.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
@@ -23,24 +23,24 @@ abstract class UserFullScreenHelperView {
 
 class UserFullScreenHelperPage extends StatelessWidget
     implements UserFullScreenHelperView {
-  final Color backgroundColor;
-  final CustomLabel titleLabel;
-  final CustomLabel positivLabel;
-  final CustomLabel negativLabel;
-  final String mediaUrl;
+  final HelperBoxViewModel helperBoxViewModel;
+  final HelperTextViewModel titleLabel;
+  final HelperTextViewModel positivLabel;
+  final HelperTextViewModel negativLabel;
+  final HelperImageViewModel headerImageViewModel;
   final Function onPositivButtonTap;
   final Function onNegativButtonTap;
 
   UserFullScreenHelperPage({
     Key key,
-    @required this.backgroundColor,
+    @required this.helperBoxViewModel,
     @required this.titleLabel,
     @required this.onPositivButtonTap,
     @required this.onNegativButtonTap,
-    this.mediaUrl,
+    this.headerImageViewModel,
     this.positivLabel,
     this.negativLabel,
-  })  : assert(backgroundColor != null),
+  })  : assert(helperBoxViewModel != null),
         assert(titleLabel != null),
         assert(onPositivButtonTap != null),
         assert(onNegativButtonTap != null);
@@ -124,7 +124,7 @@ class UserFullScreenHelperPage extends StatelessWidget
       curve: Curves.fastOutSlowIn,
       opacity: model.helperOpacity,
       child: Scaffold(
-        backgroundColor: backgroundColor,
+        backgroundColor: helperBoxViewModel?.backgroundColor,
         key: _scaffoldKey,
         body: SafeArea(
           child: Container(
@@ -135,7 +135,7 @@ class UserFullScreenHelperPage extends StatelessWidget
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (mediaUrl != null && mediaUrl.length > 0)
+                  if (headerImageViewModel?.url != null && headerImageViewModel.url.length > 0)
                     Flexible(
                       key: ValueKey('pal_UserFullScreenHelperPage_Media'),
                       flex: 3,
@@ -173,7 +173,7 @@ class UserFullScreenHelperPage extends StatelessWidget
       widget: ClipRRect(
         borderRadius: BorderRadius.circular(15.0),
         child: CachedNetworkImage(
-          imageUrl: mediaUrl,
+          imageUrl: headerImageViewModel?.url,
           fit: BoxFit.cover,
           placeholder: (context, url) =>
               Center(child: CircularProgressIndicator()),

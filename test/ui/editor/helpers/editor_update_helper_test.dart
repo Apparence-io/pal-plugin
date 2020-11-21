@@ -56,8 +56,10 @@ void main() {
     testWidgets('should change background color', (WidgetTester tester) async {
       await beforeEach(tester);
 
-      expect(presenter.updateHelperViewModel.backgroundColor.value,
-          Colors.blueAccent);
+      expect(
+        presenter.updateHelperViewModel.bodyBox.backgroundColor.value,
+        Colors.blueAccent,
+      );
 
       var colorPickerButton = find.byKey(
           ValueKey('pal_EditorUpdateHelperWidget_BackgroundColorPicker'));
@@ -76,8 +78,10 @@ void main() {
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
 
-      expect(presenter.updateHelperViewModel.backgroundColor.value,
-          Color(0xFFFFFFFF));
+      expect(
+        presenter.updateHelperViewModel.bodyBox.backgroundColor.value,
+        Color(0xFFFFFFFF),
+      );
     });
 
     testWidgets('should change title', (WidgetTester tester) async {
@@ -142,11 +146,9 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('A note'), findsOneWidget);
 
-      ValueKey changelogKey =
-          ValueKey('pal_EditorUpdateHelperWidget_ReleaseNoteField_1');
       expect(
           presenter.updateHelperViewModel
-              .changelogsFields[changelogKey.toString()].text.value,
+              .changelogsFields['1'].text.value,
           'A note');
     });
 

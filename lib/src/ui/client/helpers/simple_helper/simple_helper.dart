@@ -6,19 +6,19 @@ import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
-import '../../helper_client_models.dart';
+import '../../../shared/helper_shared_viewmodels.dart';
 
 abstract class SimpleHelperView {}
 
 class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
-  final CustomLabel descriptionLabel;
-  final Color backgroundColor;
+  final HelperTextViewModel descriptionLabel;
+  final HelperBoxViewModel helperBoxViewModel;
 
-  SimpleHelperPage(
-      {Key key,
-      @required this.descriptionLabel,
-      @required this.backgroundColor})
-      : assert(backgroundColor != null),
+  SimpleHelperPage({
+    Key key,
+    @required this.descriptionLabel,
+    @required this.helperBoxViewModel,
+  })  : assert(helperBoxViewModel != null),
         assert(descriptionLabel != null);
 
   final _mvvmPageBuilder =
@@ -52,7 +52,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: this.backgroundColor,
+                            color: this.helperBoxViewModel?.backgroundColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8.0)),
                             boxShadow: [

@@ -14,6 +14,7 @@ import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.da
 import 'package:pal/src/ui/editor/widgets/nested_navigator.dart';
 import 'package:pal/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 class CreateHelperPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
@@ -189,11 +190,14 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
       pageId,
-      helperName: model.helperNameController?.value?.text,
+      isOnEditMode: false,
+      templateViewModel: HelperViewModel(
+        helperType: model.selectedHelperType,
+        helperTheme: model.selectedHelperTheme,
+        triggerType: getHelperTriggerType(model.selectedTriggerType),
+        name: model.helperNameController?.value?.text,
+      ),
       helperMinVersion: model.minVersionController?.value?.text,
-      triggerType: getHelperTriggerType(model.selectedTriggerType),
-      helperTheme: model.selectedHelperTheme,
-      helperType: model.selectedHelperType,
     );
     var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
     showOverlayed(

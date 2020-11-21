@@ -5,12 +5,17 @@
 </p>
 <p align="center">
     <img src="https://img.shields.io/badge/status-beta-brightgreen"/>
+    <img src="https://app.bitrise.io/app/83910b8783f1bf6a/status.svg?token=AZYUldjPs6PnJjBYlBfXCg&branch=master"/>
+    <a href="https://codecov.io/gl/apparence:pal/pal-flutter">
+      <img src="https://codecov.io/gl/apparence:pal/pal-flutter/branch/\x6d6173746572/graph/badge.svg?token=VSU0MWER5H"/>
+    </a>
 </p>
 
 # Pal - The Flutter onboarding editor (beta)
 
 Pal is the onboarding editor dedicated to Flutter apps.
 
+**What does it mean ?** <br/>
 No code editor for all your app screens directly in your app
 * Go to a screen where you want to add helper
 * Select your helper type

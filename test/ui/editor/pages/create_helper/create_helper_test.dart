@@ -51,7 +51,6 @@ void main() {
 
     testWidgets('should next button be active', (WidgetTester tester) async {
       await _before(tester);
-
       expect(
           tester
               .widget<RaisedButton>(

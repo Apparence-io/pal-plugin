@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:pal/src/database/entity/app_icon_entity.dart';
 import 'package:pal/src/database/repository/project_repository.dart';
 
 abstract class ProjectEditorService {
@@ -8,7 +9,10 @@ abstract class ProjectEditorService {
   ) =>
       ProjectEditorHttpService(projectRepository);
 
-  Future sendAppIcon(Uint8List icon) => throw "not implemented yet";
+  Future<AppIconEntity> sendAppIcon(Uint8List icon, String imageType) => throw "not implemented yet";
+  Future<AppIconEntity> updateAppIcon(String appIconId, Uint8List icon, String imageType) => throw "not implemented yet";
+  Future<AppIconEntity> getAppIcon() => throw "not implemented yet";
+
 }
 
 class ProjectEditorHttpService implements ProjectEditorService {
@@ -17,14 +21,16 @@ class ProjectEditorHttpService implements ProjectEditorService {
   ProjectEditorHttpService(this.projectRepository);
 
   @override
-  Future sendAppIcon(Uint8List icon) async {
-    // TODO: I created a "create" & "update" method,
-    // but seems to be better to just use "send" method,
-    // and then Back will create OR update if already exist :)
-    await Future.delayed(Duration(milliseconds: 3500));
-    return Future.value(true);
+  Future<AppIconEntity> sendAppIcon(Uint8List icon, String imageType) async {
+    return this.projectRepository.createAppIcon( icon, imageType);
+  }
 
-    // FIXME: MOCKED THING
-    // return this.projectRepository.createAppIcon(projectId, imageData, imageType, imageDate);
+  Future<AppIconEntity> updateAppIcon(String appIconId, Uint8List icon, String imageType) async {
+    return this.projectRepository.updateAppIcon(appIconId, icon, imageType);
+  }
+
+  @override
+  Future<AppIconEntity> getAppIcon() {
+    return this.projectRepository.getAppIcon();
   }
 }

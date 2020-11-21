@@ -13,7 +13,7 @@ class HelperEditorAdapter {
   
   static HelperEntity parseFullscreenHelper(String pageId, CreateFullScreenHelper args)
     => _parseConfig(args.config, HelperType.HELPER_FULL_SCREEN, pageId)
-      ..helperImages = args.mediaHeader != null && args.mediaHeader.url.isNotEmpty ?
+      ..helperImages = args.mediaHeader?.url != null && args.mediaHeader.url.isNotEmpty ?
         [_parseHelperImage(FullscreenHelperKeys.IMAGE_KEY, args.mediaHeader)]:[]
       ..helperTexts = [
         _parseHelperText(FullscreenHelperKeys.TITLE_KEY, args.title),
@@ -35,7 +35,7 @@ class HelperEditorAdapter {
         ),
       ]
       ..helperBoxes =  [_parseHelperBox(UpdatescreenHelperKeys.BACKGROUND_KEY, args.bodyBox)]
-      ..helperImages = args.headerMedia != null && args.headerMedia.url.isNotEmpty ?
+      ..helperImages = args.headerMedia?.url != null && args.headerMedia.url.isNotEmpty ?
         [_parseHelperImage(UpdatescreenHelperKeys.IMAGE_KEY, args.headerMedia)]:[];
 
   //-------------------------------------------------------------

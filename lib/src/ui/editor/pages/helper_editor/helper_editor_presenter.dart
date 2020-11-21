@@ -187,6 +187,11 @@ class HelperEditorPresenter
       }
       viewModel.isHelperCreated = true;
     } catch (e) {
+      print("--------------------------");
+      print("Error while saving helper");
+      print("--------------------------");
+      debugPrint(e);
+      print("--------------------");
       viewModel.isHelperCreated = false;
     }
   }

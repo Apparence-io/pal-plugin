@@ -14,18 +14,16 @@ import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 class HttpClientMock extends Mock implements HttpClient {}
 
 void main() {
+
   group('EditorHelperService', () {
+
     HttpClientMock httpClientMock = HttpClientMock();
-    EditorHelperService editorHelperService = EditorHelperService.build(
-        EditorHelperRepository(httpClient: httpClientMock));
 
-    setUp(() {
-      reset(httpClientMock);
-    });
+    EditorHelperService editorHelperService = EditorHelperService.build(EditorHelperRepository(httpClient: httpClientMock));
 
-    test(
-        '[SimpleHelper] create an helper should call editor helper API and return entity',
-        () async {
+    setUp(() => reset(httpClientMock));
+
+    test('[SimpleHelper] save an helper should call editor helper API for save or update', () async {
       var pageId = 'DJKLSQLKDJLQ132154a';
       // the args of our service creation method
       var args = CreateSimpleHelper(
@@ -76,20 +74,22 @@ void main() {
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
       var resHelperJson = HelperEntityAdapter().toJson(resHelper);
       var reqHelperJson = HelperEntityAdapter().toJson(myHelper);
-      when(httpClientMock.post('editor/pages/$pageId/helpers',
-              body: reqHelperJson))
+      when(httpClientMock.post('editor/pages/$pageId/helpers', body: reqHelperJson))
           .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
-      // call the service part
-      var resultEntity =
-          await editorHelperService.createSimpleHelper(pageId, args);
-      expect(resultEntity, isNotNull,
-          reason: "The service didn't create entity properly");
+      // call first save
+      var resultEntity = await editorHelperService.saveSimpleHelper(pageId, args);
+      expect(resultEntity, isNotNull, reason: "The service didn't create entity properly");
       expect(resultEntity.id, equals("820938203"));
+      // now expect update
+      when(httpClientMock.put('editor/pages/$pageId/helpers/${resultEntity?.id}', body: resHelperJson))
+        .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
+      args.config.id = "820938203";
+      await editorHelperService.saveSimpleHelper(pageId, args);
+      verify(httpClientMock.put('editor/pages/$pageId/helpers/${args.config.id}', body: resHelperJson))
+        .called(1);
     });
 
-    test(
-        '[FullscreenHelper] create an helper should call editor helper API and return entity',
-        () async {
+    test('[FullscreenHelper] create an helper should call editor helper API and return entity', () async {
       var pageId = 'DJKLSQLKDJLQ132154a';
       // the args of our service creation method
       var args = CreateFullScreenHelper(
@@ -163,19 +163,14 @@ void main() {
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
       var reqHelperJson = HelperEntityAdapter().toJson(myHelper);
       var resHelperJson = HelperEntityAdapter().toJson(resHelper);
-      when(httpClientMock.post('editor/pages/$pageId/helpers',
-              body: reqHelperJson))
+      when(httpClientMock.post('editor/pages/$pageId/helpers', body: reqHelperJson))
           .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
       // call the service part
-      var resultEntity =
-          await editorHelperService.createFullScreenHelper(pageId, args);
-      expect(resultEntity, isNotNull,
-          reason: "The service didn't create entity properly");
+      var resultEntity = await editorHelperService.saveFullScreenHelper(pageId, args);
+      expect(resultEntity, isNotNull, reason: "The service didn't create entity properly");
     });
 
-    test(
-        '[UpdateHelper] create an updateHelper should call editor helper API and return entity',
-        () async {
+    test('[UpdateHelper] create an updateHelper should call editor helper API and return entity', () async {
       var pageId = 'DJKLSQLKDJLQ132154a';
       // the args of our service creation method
       var args = CreateUpdateHelper(
@@ -270,7 +265,7 @@ void main() {
           .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
       // call the service part
       var resultEntity =
-          await editorHelperService.createUpdateHelper(pageId, args);
+          await editorHelperService.saveUpdateHelper(pageId, args);
       expect(resultEntity, isNotNull,
           reason: "The service didn't create entity properly");
     });

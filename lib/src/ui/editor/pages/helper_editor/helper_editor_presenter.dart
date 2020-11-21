@@ -168,19 +168,19 @@ class HelperEditorPresenter
       switch (config?.helperType) {
         case HelperType.HELPER_FULL_SCREEN:
           var model = viewModel.helperViewModel as FullscreenHelperViewModel;
-          await helperService.createFullScreenHelper(config.pageId,
+          await helperService.saveFullScreenHelper(config.pageId,
               EditorEntityFactory.buildFullscreenArgs(config, model));
           break;
         case HelperType.SIMPLE_HELPER:
           var model = viewModel.helperViewModel as SimpleHelperViewModel;
-          await helperService.createSimpleHelper(config.pageId,
+          await helperService.saveSimpleHelper(config.pageId,
               EditorEntityFactory.buildSimpleArgs(config, model));
           break;
         // case HelperType.ANCHORED_OVERLAYED_HELPER:
         //   break;
         case HelperType.UPDATE_HELPER:
           var model = viewModel.helperViewModel as UpdateHelperViewModel;
-          await helperService.createUpdateHelper(config.pageId,
+          await helperService.saveUpdateHelper(config.pageId,
               EditorEntityFactory.buildUpdateArgs(config, model));
           break;
         default:
@@ -198,19 +198,19 @@ class HelperEditorPresenter
       switch (config?.helperType) {
         case HelperType.HELPER_FULL_SCREEN:
           var model = viewModel.helperViewModel as FullscreenHelperViewModel;
-          await helperService.updateFullScreenHelper(config.pageId,
+          await helperService.saveFullScreenHelper(config.pageId,
               EditorEntityFactory.buildFullscreenArgs(config, model));
           break;
         case HelperType.SIMPLE_HELPER:
           var model = viewModel.helperViewModel as SimpleHelperViewModel;
-          await helperService.updateSimpleHelper(config.pageId,
+          await helperService.saveSimpleHelper(config.pageId,
               EditorEntityFactory.buildSimpleArgs(config, model));
           break;
         // case HelperType.ANCHORED_OVERLAYED_HELPER:
         //   break;
         case HelperType.UPDATE_HELPER:
           var model = viewModel.helperViewModel as UpdateHelperViewModel;
-          await helperService.updateUpdateHelper(config.pageId,
+          await helperService.saveUpdateHelper(config.pageId,
               EditorEntityFactory.buildUpdateArgs(config, model));
           break;
         default:

@@ -6,45 +6,26 @@ import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 abstract class EditorHelperService {
+  
   factory EditorHelperService.build(EditorHelperRepository helperRepository) =>
       _EditorHelperHttpService(helperRepository);
 
-  Future<Pageable<HelperEntity>> getPage(
-    final String route,
-    final int page,
-    final int pageSize,
-  );
+  Future<Pageable<HelperEntity>> getPage(final String route, final int page, final int pageSize);
 
-  Future<HelperEntity> createSimpleHelper(
-    final String pageId,
-    final CreateSimpleHelper createArgs,
-  );
-  Future<HelperEntity> createFullScreenHelper(
-    final String pageId,
-    final CreateFullScreenHelper createArgs,
-  );
-  Future<HelperEntity> createUpdateHelper(
-    final String pageId,
-    final CreateUpdateHelper createArgs,
-  );
+  /// saves a simple helper to our api
+  /// providing [args.config.id] will makes an update
+  Future<HelperEntity> saveSimpleHelper(final String pageId, final CreateSimpleHelper args);
 
-  Future<HelperEntity> updateSimpleHelper(
-    final String pageId,
-    final CreateSimpleHelper createArgs,
-  );
-  Future<HelperEntity> updateFullScreenHelper(
-    final String pageId,
-    final CreateFullScreenHelper createArgs,
-  );
-  Future<HelperEntity> updateUpdateHelper(
-    final String pageId,
-    final CreateUpdateHelper createArgs,
-  );
+  /// saves a fullscreen helper to our api
+  /// providing [args.config.id] will makes an update
+  Future<HelperEntity> saveFullScreenHelper(final String pageId, final CreateFullScreenHelper createArgs);
 
-  Future<void> updateHelperPriority(
-    final String pageId,
-    final Map<String, int> priority,
-  );
+  /// saves an update helper to our api
+  /// providing [args.config.id] will makes an update
+  Future<HelperEntity> saveUpdateHelper(final String pageId, final CreateUpdateHelper createArgs);
+
+
+  Future<void> updateHelperPriority(final String pageId, final Map<String, int> priority);
 
   Future<void> deleteHelper(String pageId, String helperId);
 }
@@ -55,10 +36,7 @@ class _EditorHelperHttpService implements EditorHelperService {
   _EditorHelperHttpService(this._editorHelperRepository);
 
   // TODO: Move all _parse funcs into a factory ?
-  HelperEntity _parseSimpleHelper(
-    String pageId,
-    CreateSimpleHelper createArgs,
-  ) {
+  HelperEntity _parseSimpleHelper(String pageId, CreateSimpleHelper createArgs) {
     return HelperEntity(
       id: createArgs.config.id,
       name: createArgs.config.name,
@@ -174,18 +152,14 @@ class _EditorHelperHttpService implements EditorHelperService {
       createArgs.description,
       createArgs.positivButton,
       createArgs.negativButton
-    ]
-        .map((element) => element?.text != null
-            ? HelperTextEntity(
-                id: element?.id,
-                fontColor: element.fontColor,
-                fontWeight: element.fontWeight,
-                fontSize: element.fontSize,
-                value: element.text,
-                fontFamily: element.fontFamily,
-              )
-            : null)
-        .toList();
+    ].map((element) => element?.text != null ? HelperTextEntity(
+        id: element?.id,
+        fontColor: element.fontColor,
+        fontWeight: element.fontWeight,
+        fontSize: element.fontSize,
+        value: element.text,
+        fontFamily: element.fontFamily,
+      ) : null).toList();
     helperTexts[0].key = FullscreenHelperKeys.TITLE_KEY;
     helperTexts[1].key = FullscreenHelperKeys.DESCRIPTION_KEY;
     if (helperTexts[2] != null)
@@ -228,81 +202,34 @@ class _EditorHelperHttpService implements EditorHelperService {
     );
   }
 
-  Future<HelperEntity> createSimpleHelper(
-      final String pageId, final CreateSimpleHelper createArgs) {
-    return _editorHelperRepository.createHelper(
-      pageId,
-      _parseSimpleHelper(pageId, createArgs),
-    );
-  }
+  @override
+  Future<HelperEntity> saveSimpleHelper(final String pageId, final CreateSimpleHelper createArgs)
+    => createArgs.config.id != null
+      ? _editorHelperRepository.updateHelper(pageId, _parseSimpleHelper(pageId, createArgs))
+      : _editorHelperRepository.createHelper(pageId, _parseSimpleHelper(pageId, createArgs));
+
 
   @override
-  Future<HelperEntity> createFullScreenHelper(
-      String pageId, CreateFullScreenHelper createArgs) {
-    return _editorHelperRepository.createHelper(
-      pageId,
-      _parseFullScreenHelper(
-        pageId,
-        createArgs,
-      ),
-    );
-  }
+  Future<HelperEntity> saveFullScreenHelper(String pageId, CreateFullScreenHelper createArgs)
+    => createArgs.config.id != null
+      ? _editorHelperRepository.updateHelper(pageId, _parseFullScreenHelper(pageId, createArgs))
+      : _editorHelperRepository.createHelper(pageId, _parseFullScreenHelper(pageId, createArgs));
 
   @override
-  Future<HelperEntity> createUpdateHelper(
-      String pageId, CreateUpdateHelper createArgs) {
-    return _editorHelperRepository.createHelper(
-      pageId,
-      _parseUpdateHelper(pageId, createArgs),
-    );
-  }
+  Future<HelperEntity> saveUpdateHelper(String pageId, CreateUpdateHelper createArgs)
+    => createArgs.config.id != null
+      ? _editorHelperRepository.updateHelper(pageId, _parseUpdateHelper(pageId, createArgs))
+      : _editorHelperRepository.createHelper(pageId, _parseUpdateHelper(pageId, createArgs));
 
   @override
-  Future<HelperEntity> updateFullScreenHelper(
-    String pageId,
-    CreateFullScreenHelper createArgs,
-  ) {
-    return _editorHelperRepository.updateHelper(
-      pageId,
-      _parseFullScreenHelper(pageId, createArgs),
-    );
-  }
+  Future<Pageable<HelperEntity>> getPage(String pageId, int page, int pageSize)
+    => this._editorHelperRepository.getPage(pageId, page, pageSize);
 
   @override
-  Future<HelperEntity> updateSimpleHelper(
-    String pageId,
-    CreateSimpleHelper createArgs,
-  ) {
-    return _editorHelperRepository.updateHelper(
-      pageId,
-      _parseSimpleHelper(pageId, createArgs),
-    );
-  }
+  Future<void> updateHelperPriority(String pageId, Map<String, int> priority)
+    => this._editorHelperRepository.updateHelperPriority(pageId, priority);
 
   @override
-  Future<HelperEntity> updateUpdateHelper(
-    String pageId,
-    CreateUpdateHelper createArgs,
-  ) {
-    return _editorHelperRepository.updateHelper(
-      pageId,
-      _parseUpdateHelper(pageId, createArgs),
-    );
-  }
-
-  @override
-  Future<Pageable<HelperEntity>> getPage(
-      String pageId, int page, int pageSize) {
-    return this._editorHelperRepository.getPage(pageId, page, pageSize);
-  }
-
-  @override
-  Future<void> updateHelperPriority(String pageId, Map<String, int> priority) {
-    return this._editorHelperRepository.updateHelperPriority(pageId, priority);
-  }
-
-  @override
-  Future<void> deleteHelper(String pageId, String helperId) {
-    return this._editorHelperRepository.deleteHelper(pageId, helperId);
-  }
+  Future<void> deleteHelper(String pageId, String helperId)
+    => this._editorHelperRepository.deleteHelper(pageId, helperId);
 }

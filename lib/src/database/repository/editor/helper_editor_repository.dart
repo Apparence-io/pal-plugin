@@ -35,8 +35,7 @@ class EditorHelperRepository extends BaseHttpRepository {
     final payload = jsonEncode(updatedHelper);
     final Response response = await this.httpClient.put(
           'editor/pages/$pageId/helpers/${updatedHelper?.id}',
-          body: payload,
-        );
+          body: payload);
     if (response == null || response.body == null)
       throw new UnknownHttpError('NO_RESULT');
     return this._adapter.parse(response.body);

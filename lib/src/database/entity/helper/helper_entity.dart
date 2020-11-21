@@ -42,7 +42,7 @@ class HelperEntity {
     List<HelperBoxEntity> _helperBoxes =
         from.helperBoxes != null ? List() : null;
     if (_helperBoxes != null) {
-      from.helperBoxes.forEach((el) => _helperBoxes.add(HelperBoxEntity()));
+      from.helperBoxes.forEach((el) => _helperBoxes.add(el.copy()));
     }
     return HelperEntity(
       id: from.id,
@@ -247,6 +247,12 @@ class HelperBoxEntity {
         'backgroundColor': backgroundColor,
         'key': key,
       };
+
+  HelperBoxEntity copy() => HelperBoxEntity(
+    id: this.id,
+    backgroundColor: this.backgroundColor,
+    key: this.key
+  );
 
   @override
   bool operator ==(Object other) =>

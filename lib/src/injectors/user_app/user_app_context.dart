@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pal/src/database/repository/helper_repository.dart';
+import 'package:pal/src/database/repository/client/helper_repository.dart';
 import 'package:pal/src/database/repository/in_app_user_repository.dart';
 import 'package:pal/src/database/repository/page_repository.dart';
 import 'package:pal/src/database/repository/version_repository.dart';
@@ -30,7 +30,7 @@ class UserAppContext {
 
   PageRepository get pageRepository => throw "not implemented";
 
-  HelperRepository get helperRepository => throw "not implemented";
+  ClientHelperRepository get helperRepository => throw "not implemented";
 
   VersionRepository get versionRepository => throw "not implemented";
 
@@ -44,7 +44,7 @@ class HttpUserAppContext implements UserAppContext {
 
   final PageRepository _pageRepository;
 
-  final HelperRepository _helperRepository;
+  final ClientHelperRepository _helperRepository;
 
   final InAppUserRepository _inAppUserRepository;
 
@@ -61,13 +61,13 @@ class HttpUserAppContext implements UserAppContext {
     @required HttpClient httpClient,
   }) : assert(httpClient != null),
       this._pageRepository = PageRepository(httpClient: httpClient),
-      this._helperRepository = HelperRepository(httpClient: httpClient),
+      this._helperRepository = ClientHelperRepository(httpClient: httpClient),
       this._versionRepository = VersionHttpRepository(httpClient: httpClient),
       this._inAppUserRepository = InAppUserRepository(httpClient: httpClient);
 
   PageRepository get pageRepository => this._pageRepository;
 
-  HelperRepository get helperRepository => this._helperRepository;
+  ClientHelperRepository get helperRepository => this._helperRepository;
 
   VersionRepository get versionRepository => this._versionRepository;
 

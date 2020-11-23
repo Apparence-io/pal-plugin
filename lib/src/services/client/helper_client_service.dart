@@ -1,5 +1,5 @@
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
-import 'package:pal/src/database/repository/helper_repository.dart';
+import 'package:pal/src/database/repository/client/helper_repository.dart';
 import 'package:pal/src/database/repository/page_repository.dart';
 import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/services/package_version.dart';
@@ -20,7 +20,7 @@ class HelperClientService {
 
 class _HelperClientHttpService implements HelperClientService {
 
-  final HelperRepository _helperRepository;
+  final ClientHelperRepository _helperRepository;
 
   final PageRepository _pageRepository;
 

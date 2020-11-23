@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 
+part 'helper_entity.g.dart';
+
+@HiveType(typeId: 3)
 class HelperEntity {
   String id;
   DateTime creationDate;
@@ -10,14 +14,32 @@ class HelperEntity {
   String pageId;
   int priority;
   HelperType type;
+
+  @HiveField(7)
   HelperTriggerType triggerType;
+
+  @HiveField(8)
   int versionMinId;
+
+  @HiveField(9)
   String versionMin;
+
+  @HiveField(10)
   int versionMaxId;
+
+  @HiveField(11)
   String versionMax;
+
+  @HiveField(12)
   List<HelperBorderEntity> helperBorders;
+
+  @HiveField(13)
   List<HelperImageEntity> helperImages;
+
+  @HiveField(14)
   List<HelperTextEntity> helperTexts;
+
+  @HiveField(15)
   List<HelperBoxEntity> helperBoxes;
 
   HelperEntity(
@@ -52,10 +74,10 @@ class HelperEntity {
       versionMin: from.versionMin,
       versionMaxId: from.versionMaxId,
       versionMax: from.versionMax,
-      helperBorders: from.helperBorders != null ? [...from.helperBorders] : null,
-      helperImages: from.helperImages != null ? [...from.helperImages] : null,
-      helperTexts: from.helperTexts != null ? [...from.helperTexts] : null,
-      helperBoxes: from.helperBoxes != null ? [...from.helperBoxes] : null,
+      helperBorders: from.helperBorders,
+      helperImages: from.helperImages,
+      helperTexts: from.helperTexts,
+      helperBoxes: _helperBoxes,
     );
   }
 
@@ -118,9 +140,22 @@ class HelperEntity {
       helperTexts.hashCode;
 }
 
+@HiveType(typeId: 4)
 class HelperBorderEntity {
+
+  @HiveField(0)
   int id;
-  String color, key, style;
+
+  @HiveField(1)
+  String color;
+
+  @HiveField(2)
+  String key;
+
+  @HiveField(3)
+  String style;
+
+  @HiveField(4)
   double width;
 
   HelperBorderEntity({this.id, this.color, this.key, this.style, this.width});
@@ -160,9 +195,17 @@ class HelperBorderEntity {
       width.hashCode;
 }
 
+@HiveType(typeId: 5)
 class HelperImageEntity {
+
+  @HiveField(0)
   int id;
-  String key, url;
+
+  @HiveField(1)
+  String key;
+
+  @HiveField(2)
+  String url;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -190,9 +233,28 @@ class HelperImageEntity {
   int get hashCode => id.hashCode ^ key.hashCode ^ url.hashCode;
 }
 
+@HiveType(typeId: 6)
 class HelperTextEntity {
+
+  @HiveField(0)
   int id;
-  String fontColor, fontFamily, fontWeight, key, value;
+
+  @HiveField(1)
+  String fontColor;
+
+  @HiveField(2)
+  String fontFamily;
+
+  @HiveField(3)
+  String fontWeight;
+
+  @HiveField(4)
+  String key;
+
+  @HiveField(5)
+  String value;
+
+  @HiveField(6)
   int fontSize;
 
   HelperTextEntity({
@@ -248,9 +310,15 @@ class HelperTextEntity {
       fontSize.hashCode;
 }
 
+@HiveType(typeId: 7)
 class HelperBoxEntity {
+  @HiveField(0)
   int id;
+
+  @HiveField(1)
   String backgroundColor;
+
+  @HiveField(2)
   String key;
 
   HelperBoxEntity({

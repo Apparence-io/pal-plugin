@@ -61,7 +61,19 @@ void main() {
         (WidgetTester tester) async {
       bool hasThrow = false;
       try {
-        UserFullScreenHelperPage helperWidget = UserFullScreenHelperPage();
+        var label = CustomLabel(
+          text: 'test',
+          fontColor: Colors.white,
+          fontSize: 23.0,
+        );
+        UserFullScreenHelperPage helperWidget = UserFullScreenHelperPage(
+          titleLabel: label,
+          positivLabel: label,
+          negativLabel: label,
+          onPositivButtonTap: () => null,
+          onNegativButtonTap: () => null,
+          backgroundColor: null
+        );
         var app = new MediaQuery(
             data: MediaQueryData(), child: MaterialApp(home: helperWidget));
         await tester.pumpWidget(app);

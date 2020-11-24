@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
+import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
@@ -67,7 +69,7 @@ void main() {
     testWidgets('call helperService to get what needs to be shown on each route', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
-      when(helperClientServiceMock.getPageHelpers(any, any)).thenAnswer((_) => Future.value([]));
+      when(helperClientServiceMock.getPageNextHelper(any, any)).thenAnswer((_) => Future.value());
 
       var orchestrator = HelperOrchestrator.create(
         helperClientService: helperClientServiceMock,
@@ -83,17 +85,25 @@ void main() {
       // navigatorKey.currentState.pushNamed("/test1");
       // expect(find.text("New1"), findsOneWidget);
       await orchestrator.onChangePage("/test1");
-      verify(helperClientServiceMock.getPageHelpers("/test1", "db6b01e1-b649-4a17-949a-9ab320601001"), ).called(1);
+      verify(helperClientServiceMock.getPageNextHelper("/test1", "db6b01e1-b649-4a17-949a-9ab320601001")).called(1);
       await tester.pumpAndSettle(Duration(seconds: 1));
     });
 
     testWidgets('changing page will dismiss current helper', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
-      when(helperClientServiceMock.getPageHelpers("/test", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([
-        HelperEntity(id: "1", name: "test1")
-      ]));
-      when(helperClientServiceMock.getPageHelpers("/route2", "db6b01e1-b649-4a17-949a-9ab320601001")).thenAnswer((_) => Future.value([]));
+
+      HelperEntity(id: "1", name: "test1");
+      var helperGroup = HelperGroupEntity(
+        id: "g1",
+        priority: 1,
+        page: PageEntity(id: 'p1', route: '/test'),
+        helpers: [HelperEntity(id: "1")]
+      );
+      when(helperClientServiceMock.getPageNextHelper("/test", "db6b01e1-b649-4a17-949a-9ab320601001"))
+        .thenAnswer((_) => Future.value(helperGroup));
+      when(helperClientServiceMock.getPageNextHelper("/route2", "db6b01e1-b649-4a17-949a-9ab320601001"))
+        .thenAnswer((_) => Future.value(null));
       var orchestrator = HelperOrchestrator.create(
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
@@ -110,12 +120,18 @@ void main() {
 
     testWidgets('only one overlay at a time', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
-      when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
+      var helperGroup = HelperGroupEntity(
+        id: "g1",
+        priority: 1,
+        page: PageEntity(id: 'p1', route: 'route1'),
+        helpers: [HelperEntity(id: "1")]
+      );
+
+      when(inAppUserClientService.getOrCreate())
+        .thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
       when(helperClientServiceMock
-        .getPageHelpers("test", "db6b01e1-b649-4a17-949a-9ab320601001"))
-        .thenAnswer((_) => Future.value([
-          HelperEntity(id: "1", name: "test1")
-        ]));
+        .getPageNextHelper("test", "db6b01e1-b649-4a17-949a-9ab320601001"))
+        .thenAnswer((_) => Future.value(helperGroup));
       var orchestrator = HelperOrchestrator.create(
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -5,58 +7,142 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/schema_entity.dart';
 import 'package:pal/src/database/entity/page_entity.dart';
+import 'package:pal/src/database/entity/page_user_visit_entity.dart';
 import 'package:pal/src/database/hive_client.dart';
 import 'package:pal/src/database/repository/client/helper_repository.dart';
+import 'package:pal/src/database/repository/client/page_user_visit_repository.dart';
 import 'package:pal/src/database/repository/client/schema_repository.dart';
-import 'package:pal/src/database/repository/in_app_user_repository.dart';
-import 'package:pal/src/database/repository/page_repository.dart';
-import 'package:pal/src/database/repository/version_repository.dart';
-import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/services/client/helper_client_service.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
-class ClientHelperRepositoryMock extends Mock implements ClientHelperRepository {}
+class HttpClientMock extends Mock implements HttpClient {}
 
 void main() {
-  group('HelperClientService', () {
+  HiveClient hiveClient = HiveClient()..init();
 
-    HiveClient hiveClient = HiveClient()..init();
+  HelperClientService helperClientService;
+  HttpClient httpClientMock = HttpClientMock();
+  ClientSchemaLocalRepository clientSchemaRepository = ClientSchemaLocalRepository(hiveBoxOpener: hiveClient.openSchemaBox);
+  ClientHelperRepository clientHelperRepository = ClientHelperRepository(httpClient: httpClientMock);
+  HelperGroupUserVisitRepository remoteVisitRepository = HelperGroupUserVisitHttpRepository(httpClient: httpClientMock);
+  HelperGroupUserVisitRepository localVisitRepository = HelperGroupUserVisitLocalRepository(hiveBoxOpener: hiveClient.openVisitsBox);
+  const inAppUserId = "830298302d";
 
-    HelperClientService helperClientService;
-    ClientSchemaLocalRepository clientSchemaRepository = ClientSchemaLocalRepository(hiveBoxOpener: hiveClient.openSchemaBox);
-    ClientHelperRepository clientHelperRepository = ClientHelperRepositoryMock();
+  group('[HelperClientService] getPageNextHelper', () {
 
     setUp(() async{
       helperClientService = HelperClientService.build(
         clientSchemaRepository: clientSchemaRepository,
-        helperRemoteRepository: clientHelperRepository
+        helperRemoteRepository: clientHelperRepository,
+        localVisitRepository: localVisitRepository,
+        remoteVisitRepository: remoteVisitRepository
       );
       var schema = SchemaEntity(
         projectId: "testprojectid",
         groups: [
-          HelperGroupEntity(priority: 1, page: PageEntity(route: 'route1'), helpers: [HelperEntity(id: "1")]),
-          HelperGroupEntity(priority: 2, page: PageEntity(route: 'route1'), helpers: [HelperEntity(id: "1")]),
-          HelperGroupEntity(priority: 1, page: PageEntity(route: 'route2'), helpers: [HelperEntity(id: "1")]),
-          HelperGroupEntity(priority: 2, page: PageEntity(route: 'route2'), helpers: [HelperEntity(id: "1")]),
-          HelperGroupEntity(priority: 3, page: PageEntity(route: 'route2'), helpers: [HelperEntity(id: "1")]),
+          HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]),
+          HelperGroupEntity(id: "g2", priority: 2, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "2")]),
+          HelperGroupEntity(id: "g3", priority: 1, page: PageEntity(id: 'p2', route: 'route2'), helpers: [HelperEntity(id: "3")]),
+          HelperGroupEntity(id: "g4", priority: 2, page: PageEntity(id: 'p2', route: 'route2'), helpers: [HelperEntity(id: "4")]),
+          HelperGroupEntity(id: "g5", priority: 3, page: PageEntity(id: 'p2', route: 'route2'), helpers: [HelperEntity(id: "5")]),
         ],
         schemaVersion: 1
       );
       await clientSchemaRepository.save(schema);
+      localVisitRepository.save([
+        HelperGroupUserVisitEntity(pageId: 'p1', helperGroupId: 'g2')
+      ]);
     });
 
     tearDown(() async {
       await clientSchemaRepository.clear();
+      await localVisitRepository.clear();
     });
 
-    test('getPageNextHelper(route, userId) returns the current page next helper group user has not seen', () async {
-      var nextHelperGroup = await helperClientService.getPageNextHelper('route1', '830298302d');
-      expect(nextHelperGroup.priority, equals(2));
+    test('current page = route1, user already see helper id = g2, returns helper group id g1', () async {
+      var nextHelperGroup = await helperClientService.getPageNextHelper('route1', inAppUserId);
+      expect(nextHelperGroup.priority, equals(1));
+      expect(nextHelperGroup.id, equals("g1"));
       expect(nextHelperGroup.page.route, equals('route1'));
     });
 
-    test('getPageNextHelper(route, userId) on a non existing route should return null', () async {
-      var nextHelperGroup = await helperClientService.getPageNextHelper('notExistingRoute', '830298302d');
+    test('current page = route2, user has not see any, returns helper group id g5', () async {
+      var nextHelperGroup = await helperClientService.getPageNextHelper('route2', inAppUserId);
+      expect(nextHelperGroup.priority, equals(3));
+      expect(nextHelperGroup.id, equals("g5"));
+      expect(nextHelperGroup.page.route, equals('route2'));
+    });
+
+    test('route not exists, return null', () async {
+      var nextHelperGroup = await helperClientService.getPageNextHelper('notExistingRoute', inAppUserId);
       expect(nextHelperGroup, isNull);
+    });
+
+  });
+
+  group('[HelperClientService] onHelperTrigger', () {
+
+    setUp(() async{
+      helperClientService = HelperClientService.build(
+        clientSchemaRepository: clientSchemaRepository,
+        helperRemoteRepository: clientHelperRepository,
+        localVisitRepository: localVisitRepository,
+        remoteVisitRepository: remoteVisitRepository
+      );
+      var schema = SchemaEntity(
+        projectId: "testprojectid",
+        groups: [
+          HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]),
+          HelperGroupEntity(id: "g2", priority: 2, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "2")]),
+          HelperGroupEntity(id: "g3", priority: 1, page: PageEntity(id: 'p2', route: 'route2'), helpers: [HelperEntity(id: "3")]),
+          HelperGroupEntity(id: "g4", priority: 2, page: PageEntity(id: 'p2', route: 'route2'), helpers: [HelperEntity(id: "4")]),
+          HelperGroupEntity(id: "g5", priority: 3, page: PageEntity(id: 'p2', route: 'route2'), helpers: [HelperEntity(id: "5")]),
+        ],
+        schemaVersion: 1
+      );
+      await clientSchemaRepository.save(schema);
+      localVisitRepository.save([
+        HelperGroupUserVisitEntity(pageId: 'p1', helperGroupId: 'g2')
+      ]);
+    });
+
+    tearDown(() async {
+      await clientSchemaRepository.clear();
+      await localVisitRepository.clear();
+    });
+
+    test('save visit on remote server, save visit locally', () async {
+      var pageId = 'p1';
+      var helperId = 'g1';
+      when(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+        body: jsonEncode({ 'positiveFeedback': true }),
+        headers: {"inAppUserId": inAppUserId})
+      ).thenAnswer((_) => Future.value());
+
+      await helperClientService.onHelperTrigger(pageId, helperId, inAppUserId, true);
+      verify(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+        body: jsonEncode({ 'positiveFeedback': true }),
+        headers: {"inAppUserId": inAppUserId})
+      ).called(1);
+      var visits = await localVisitRepository.get(inAppUserId, null);
+      expect(visits.length, equals(2));
+    });
+
+    test('save visit on remote server fails, save visit locally should not be called', () async{
+      var pageId = 'p1';
+      var helperId = 'g1';
+      when(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+        body: jsonEncode({ 'positiveFeedback': true }),
+        headers: {"inAppUserId": inAppUserId})
+      ).thenThrow((_) => throw "ERROR");
+
+      await helperClientService.onHelperTrigger(pageId, helperId, inAppUserId, true);
+      verify(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+        body: jsonEncode({ 'positiveFeedback': true }),
+        headers: {"inAppUserId": inAppUserId})
+      ).called(1);
+      var visits = await localVisitRepository.get(inAppUserId, null);
+      expect(visits.length, equals(1));
     });
 
   });

@@ -18,6 +18,8 @@ abstract class HelperGroupUserVisitRepository {
 
   Future<void> save(List<HelperGroupUserVisitEntity> visits);
 
+  Future<void> add(HelperGroupUserVisitEntity visit);
+
   Future<void> clear();
 }
 
@@ -46,6 +48,12 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
   Future<void> clear() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> add(HelperGroupUserVisitEntity visit) {
+    // TODO: implement add
+    throw UnimplementedError();
+  }
 }
 
 /// [HelperGroupUserVisitLocalRepository]
@@ -65,5 +73,9 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
 
   @override
   Future<void> clear() => _hiveBoxOpener.then((res) => res.clear());
+
+  @override
+  Future<void> add(HelperGroupUserVisitEntity visit)
+    => _hiveBoxOpener.then((res) => res.add(visit));
 
 }

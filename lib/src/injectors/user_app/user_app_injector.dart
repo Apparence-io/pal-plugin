@@ -29,7 +29,9 @@ class UserInjector extends InheritedWidget {
         this._pageService = PageClientService.build(appContext.pageRepository),
         this._helperService = HelperClientService.build(
           clientSchemaRepository: appContext.localClientSchemaRepository,
-          helperRemoteRepository: appContext.helperRepository
+          helperRemoteRepository: appContext.helperRepository,
+          localVisitRepository: appContext.pageUserVisitLocalRepository,
+          remoteVisitRepository: appContext.pageUserVisitRemoteRepository
         ),
         this._packageVersionReader = PackageVersionReader(),
         this._clientInAppUserService = InAppUserClientService.build(appContext.inAppUserRepository),

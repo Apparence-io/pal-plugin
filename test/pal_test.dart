@@ -19,7 +19,7 @@ void main() {
       Pal app = Pal(
         appToken: "testtoken",
         editorModeEnabled: editorModeEnabled,
-        child: new MaterialApp(
+        childApp: new MaterialApp(
           home: _myHomeTest,
           navigatorKey: _navigatorKey,
           navigatorObservers: [PalNavigatorObserver.instance()],

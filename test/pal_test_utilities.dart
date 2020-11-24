@@ -25,7 +25,7 @@ Future initAppWithPal(
   Pal app = Pal(
     appToken: "testtoken",
     editorModeEnabled: editorModeEnabled,
-    child: new MaterialApp(
+    childApp: new MaterialApp(
       onGenerateRoute: routeFactory ??
           (_) => MaterialPageRoute(builder: (ctx) {
                 context = ctx;

@@ -12,10 +12,13 @@ import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_lay
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 
+import 'helpers_synchronizer.dart';
+
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
 /// On each page visited we check if we have to show a new helper to user
 /// There is a variety of Helper types.
 class HelperOrchestrator {
+
   static HelperOrchestrator _instance;
 
   final PalRouteObserver routeObserver;
@@ -26,36 +29,43 @@ class HelperOrchestrator {
 
   final GlobalKey<NavigatorState> navigatorKey;
 
+  final HelpersSynchronizer helpersSynchronizer;
+
   OverlayEntry overlay;
 
-  factory HelperOrchestrator.getInstance(
-      {GlobalKey<NavigatorState> navigatorKey,
-      PalRouteObserver routeObserver,
-      HelperClientService helperClientService,
-      InAppUserClientService inAppUserClientService}) {
+  bool hasSync;
+
+
+  factory HelperOrchestrator.getInstance({
+    GlobalKey<NavigatorState> navigatorKey,
+    PalRouteObserver routeObserver,
+    HelperClientService helperClientService,
+    InAppUserClientService inAppUserClientService,
+    HelpersSynchronizer helpersSynchronizer
+  }) {
     if (_instance == null) {
-      _instance = HelperOrchestrator._(routeObserver, helperClientService,
-          inAppUserClientService, navigatorKey);
+      _instance = HelperOrchestrator._(routeObserver, helperClientService, inAppUserClientService, navigatorKey, helpersSynchronizer);
     }
     return _instance;
   }
 
   @visibleForTesting
-  factory HelperOrchestrator.create(
-      {GlobalKey<NavigatorState> navigatorKey,
-      PalRouteObserver routeObserver,
-      HelperClientService helperClientService,
-      InAppUserClientService inAppUserClientService}) {
-    _instance = HelperOrchestrator._(routeObserver, helperClientService,
-        inAppUserClientService, navigatorKey);
+  factory HelperOrchestrator.create({
+    GlobalKey<NavigatorState> navigatorKey,
+    PalRouteObserver routeObserver,
+    HelperClientService helperClientService,
+    InAppUserClientService inAppUserClientService,
+    HelpersSynchronizer helpersSynchronizer
+  }) {
+    _instance = HelperOrchestrator._(routeObserver, helperClientService, inAppUserClientService, navigatorKey, helpersSynchronizer);
     return _instance;
   }
 
-  HelperOrchestrator._(this.routeObserver, this.helperClientService,
-      this.inAppUserClientService, this.navigatorKey)
+  HelperOrchestrator._(this.routeObserver, this.helperClientService, this.inAppUserClientService, this.navigatorKey, this.helpersSynchronizer)
       : assert(routeObserver != null),
         assert(helperClientService != null),
         assert(inAppUserClientService != null) {
+    this.hasSync = false;
     this.routeObserver.routeSettings.listen((RouteSettings newRoute) async {
       if (newRoute == null || newRoute.name == null) {
         return;
@@ -71,6 +81,10 @@ class HelperOrchestrator {
     }
     try {
       final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
+      if(!hasSync) {
+        await this.helpersSynchronizer.sync(inAppUser.id);
+        this.hasSync = true;
+      }
       final helperGroupToShow = await helperClientService.getPageNextHelper(route, inAppUser.id);
       if (helperGroupToShow != null && helperGroupToShow.helpers.isNotEmpty) {
         // for now we show only one helper from the group / next version will allow to show a group

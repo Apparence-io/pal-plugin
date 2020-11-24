@@ -5,6 +5,7 @@ import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/page_client_service.dart';
 import 'package:pal/src/in_app_user_manager.dart';
 import 'package:pal/src/services/package_version.dart';
+import 'package:pal/src/ui/client/helpers_synchronizer.dart';
 
 import '../../pal_navigator_observer.dart';
 
@@ -20,6 +21,8 @@ class UserInjector extends InheritedWidget {
 
   final PalRouteObserver routeObserver;
 
+  final HelpersSynchronizer _helperSynchronizeService;
+
   UserInjector({
     Key key,
     @required UserAppContext appContext,
@@ -32,6 +35,13 @@ class UserInjector extends InheritedWidget {
           helperRemoteRepository: appContext.helperRepository,
           localVisitRepository: appContext.pageUserVisitLocalRepository,
           remoteVisitRepository: appContext.pageUserVisitRemoteRepository
+        ),
+        this._helperSynchronizeService = new HelpersSynchronizer(
+          schemaLocalRepository: appContext.localClientSchemaRepository,
+          schemaRemoteRepository: appContext.remoteClientSchemaRepository,
+          pageUserVisitLocalRepository: appContext.pageUserVisitLocalRepository,
+          pageUserVisitRemoteRepository: appContext.pageUserVisitRemoteRepository,
+          packageVersionReader: PackageVersionReader(),
         ),
         this._packageVersionReader = PackageVersionReader(),
         this._clientInAppUserService = InAppUserClientService.build(appContext.inAppUserRepository),
@@ -52,4 +62,6 @@ class UserInjector extends InheritedWidget {
   PackageVersionReader get packageVersionReader => this._packageVersionReader;
 
   InAppUserClientService get inAppUserClientService => this._clientInAppUserService;
+
+  HelpersSynchronizer get helpersSynchronizerService => this._helperSynchronizeService;
 }

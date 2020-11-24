@@ -70,16 +70,14 @@ class HelperOrchestrator {
       popHelper();
     }
     try {
-      final InAppUserEntity inAppUser =
-          await this.inAppUserClientService.getOrCreate();
-      final List<HelperEntity> helpersToShow =
-          await this.helperClientService.getPageHelpers(route, inAppUser.id);
-      if (helpersToShow != null && helpersToShow.length > 0) {
-        showHelper(helpersToShow[0], inAppUser.id);
+      final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
+      final helperGroupToShow = await helperClientService.getPageNextHelper(route, inAppUser.id);
+      if (helperGroupToShow != null && helperGroupToShow.helpers.isNotEmpty) {
+        // for now we show only one helper from the group / next version will allow to show a group
+        showHelper(helperGroupToShow.helpers[0], inAppUser.id);
       }
     } catch (e) {
-      // Nothing to do
-      // TODO log error to our server
+      // TODO log error to our server or crashlitycs...
       print("on change page error $e");
     }
   }
@@ -100,7 +98,7 @@ class HelperOrchestrator {
         builder: (context) => PalTheme(
               theme: PalThemeData.light(),
               child: HelperFactory.build(helper, onTrigger: (res) async {
-                await helperClientService.triggerHelper(
+                await helperClientService.onHelperTrigger(
                     helper.pageId, helper.id, inAppUserId, res);
                 this.popHelper();
               }),

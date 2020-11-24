@@ -41,7 +41,6 @@ void main() {
       schemaLocalRepository: schemaLocalRepository,
       schemaRemoteRepository: schemaRemoteRepository,
       packageVersionReader: packageVersionReader,
-      inAppUserId: userId
     );
 
     setUp(() async {
@@ -72,9 +71,11 @@ void main() {
       const appVersion = "1.0.0";
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);
+      when(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion'))
+        .thenAnswer((_) => Future.value(Response('[]', 200)));
 
       expect(await schemaLocalRepository.get(appVersion: appVersion), isNull);
-      await synchronizer.sync();
+      await synchronizer.sync(userId);
       verify(schemaRemoteRepository.get(appVersion: appVersion)).called(1);
       var localSchema = await schemaLocalRepository.get(appVersion: appVersion);
       expect(localSchema, isNotNull);
@@ -88,12 +89,14 @@ void main() {
       when(packageVersionReader.version).thenReturn(appVersion);
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(schemaRemoteRepository.get(schemaVersion: 1, appVersion: appVersion)).thenAnswer((_) => Future.value(lastRemoteSchema));
+      when(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion'))
+        .thenAnswer((_) => Future.value(Response('[]', 200)));
       //first sync on null version
-      await synchronizer.sync();
+      await synchronizer.sync(userId);
       var localSchema = await schemaLocalRepository.get();
       expect(localSchema, equals(currentSchema));
       //second sync should send version 1 and get a new version
-      await synchronizer.sync();
+      await synchronizer.sync(userId);
       localSchema = await schemaLocalRepository.get();
       expect(localSchema.schemaVersion, equals(lastRemoteSchema.schemaVersion));
       expect(localSchema, equals(lastRemoteSchema));
@@ -115,7 +118,7 @@ void main() {
         .thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
       expect(await pageUserVisitLocalRepository.get(userId, appVersion), isEmpty);
 
-      await synchronizer.sync();
+      await synchronizer.sync(userId);
       verify(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion')).called(1);
       var savedVisits = await pageUserVisitLocalRepository.get(userId, appVersion);
       expect(savedVisits, isNotEmpty);
@@ -131,8 +134,8 @@ void main() {
       when(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion'))
         .thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
 
-      await synchronizer.sync();
-      await synchronizer.sync();
+      await synchronizer.sync(userId);
+      await synchronizer.sync(userId);
       // visits api is not called again because we gonne store them locally
       verify(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion')).called(1);
     });

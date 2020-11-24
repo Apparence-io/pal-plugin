@@ -10,6 +10,7 @@ import 'package:pal/src/ui/editor/pal_editmode_wrapper.dart';
 
 import 'injectors/editor_app/editor_app_injector.dart';
 import 'pal_navigator_observer.dart';
+import 'ui/client/helpers_synchronizer.dart';
 
 // our production server address
 const String PAL_SERVER_URL = const String.fromEnvironment("SERVER_URL", defaultValue: "http://217.182.88.6:9040");
@@ -18,7 +19,7 @@ const String PAL_SERVER_URL = const String.fromEnvironment("SERVER_URL", default
 class Pal extends StatelessWidget {
 
   /// application child to display Pal over it.
-  final MaterialApp child;
+  final MaterialApp childApp;
 
   /// reference to the Navigator state of the child app
   final GlobalKey<NavigatorState> navigatorKey;
@@ -37,14 +38,14 @@ class Pal extends StatelessWidget {
 
   Pal({
     Key key,
-    @required this.child,
+    @required this.childApp,
     @required this.appToken,
     this.editorModeEnabled = true,
     this.textDirection = TextDirection.ltr,
-  }) : assert(child != null, 'Pal must embbed a client application'),
-     assert(child.navigatorKey != null, 'Pal navigatorKey must not be null'),
-     navigatorKey = child.navigatorKey,
-     navigatorObserver = child.navigatorObservers.firstWhere((element) => element is PalNavigatorObserver),
+  }) : assert(childApp != null, 'Pal must embbed a client application'),
+     assert(childApp.navigatorKey != null, 'Pal navigatorKey must not be null'),
+     navigatorKey = childApp.navigatorKey,
+     navigatorObserver = childApp.navigatorObservers.firstWhere((element) => element is PalNavigatorObserver),
      super(key: key) {
      assert(navigatorObserver != null, 'A navigator Observer of type PalObserver must be added to your MaterialApp');
      _init();
@@ -52,12 +53,12 @@ class Pal extends StatelessWidget {
 
   Pal.fromRouterApp({
     Key key,
-    @required this.child,
+    @required this.childApp,
     @required this.appToken,
     this.editorModeEnabled = true,
     this.navigatorKey,
     this.textDirection = TextDirection.ltr,
-  }) : assert(child != null, 'Pal must embbed a client application'),
+  }) : assert(childApp != null, 'Pal must embbed a client application'),
       assert(navigatorKey != null, 'Pal navigatorKey must not be null'),
       navigatorObserver = PalNavigatorObserver.instance(),
       super(key: key) {
@@ -90,7 +91,7 @@ class Pal extends StatelessWidget {
     return EditorInjector(
       routeObserver: navigatorObserver,
       child: PalEditModeWrapper(
-        userApp: child,
+        userApp: childApp,
         hostedAppNavigatorKey: navigatorKey,
       ),
       boundaryChildKey: navigatorKey,
@@ -109,7 +110,7 @@ class Pal extends StatelessWidget {
               routeObserver: navigatorObserver,
               navigatorKey: navigatorKey
             );
-            return child;
+            return childApp;
           }
         ),
         appContext: UserAppContext.instance,

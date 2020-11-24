@@ -15,18 +15,15 @@ class HelpersSynchronizer {
 
   final PackageVersionReader packageVersionReader;
 
-  final String inAppUserId;
-
   HelpersSynchronizer({
     @required this.pageUserVisitRemoteRepository,
     @required this.pageUserVisitLocalRepository,
     @required this.schemaRemoteRepository,
     @required this.schemaLocalRepository,
     @required this.packageVersionReader,
-    @required this.inAppUserId
-  }) : assert(inAppUserId != null);
+  });
 
-  Future<void> sync() async {
+  Future<void> sync(String inAppUserId) async {
     String currentVersion = packageVersionReader.version;
     var currentSchema = await schemaLocalRepository.get(appVersion: currentVersion);
     var lastSchemaVersion = await schemaRemoteRepository.get(

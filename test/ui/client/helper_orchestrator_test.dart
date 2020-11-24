@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -10,6 +12,7 @@ import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:pal/src/services/client/page_client_service.dart';
 import 'package:pal/src/ui/client/helper_orchestrator.dart';
+import 'package:pal/src/ui/client/helpers_synchronizer.dart';
 
 import '../../pal_test_utilities.dart';
 
@@ -19,6 +22,8 @@ class HelperClientServiceMock extends Mock implements HelperClientService {}
 class PageClientServiceMock extends Mock implements PageClientService {}
 
 class InAppUserClientServiceMock extends Mock implements InAppUserClientService {}
+
+class HelperSynchronizerMock extends Mock implements HelpersSynchronizer {}
 
 
 class SamplePage extends StatelessWidget {
@@ -40,6 +45,7 @@ void main() {
     var helperClientServiceMock = HelperClientServiceMock();
 
     InAppUserClientService inAppUserClientService = InAppUserClientServiceMock();
+    HelpersSynchronizer helperSynchronizer = HelperSynchronizerMock();
 
     final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -59,6 +65,8 @@ void main() {
     setUp(() {
       reset(inAppUserClientService);
       reset(helperClientServiceMock);
+      reset(helperSynchronizer);
+      when(helperSynchronizer.sync(any)).thenAnswer((_) => Future.value());
     });
 
     testWidgets('should create properly and accessible from children', (WidgetTester tester) async {
@@ -75,7 +83,8 @@ void main() {
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,
-        navigatorKey: navigatorKey
+        navigatorKey: navigatorKey,
+        helpersSynchronizer: helperSynchronizer,
       );
       await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
       await tester.pumpAndSettle(Duration(seconds: 1));
@@ -86,10 +95,11 @@ void main() {
       // expect(find.text("New1"), findsOneWidget);
       await orchestrator.onChangePage("/test1");
       verify(helperClientServiceMock.getPageNextHelper("/test1", "db6b01e1-b649-4a17-949a-9ab320601001")).called(1);
+      verify(helperSynchronizer.sync("db6b01e1-b649-4a17-949a-9ab320601001")).called(1);
       await tester.pumpAndSettle(Duration(seconds: 1));
     });
 
-    testWidgets('changing page will dismiss current helper', (WidgetTester tester) async {
+    testWidgets('changing page will dismiss current helper, sync helpers schema is not call again', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
 
@@ -108,7 +118,8 @@ void main() {
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,
-        navigatorKey: navigatorKey
+        navigatorKey: navigatorKey,
+        helpersSynchronizer: helperSynchronizer,
       );
       await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
 
@@ -116,6 +127,7 @@ void main() {
       expect(orchestrator.overlay, isNotNull);
       await orchestrator.onChangePage("/route2");
       expect(orchestrator.overlay, isNull);
+      verify(helperSynchronizer.sync("db6b01e1-b649-4a17-949a-9ab320601001")).called(1);
     });
 
     testWidgets('only one overlay at a time', (WidgetTester tester) async {
@@ -136,7 +148,8 @@ void main() {
         helperClientService: helperClientServiceMock,
         inAppUserClientService: inAppUserClientService,
         routeObserver: routeObserver,
-        navigatorKey: navigatorKey
+        navigatorKey: navigatorKey,
+        helpersSynchronizer: helperSynchronizer,
       );
       await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
       expect(orchestrator.overlay, isNot(isList));

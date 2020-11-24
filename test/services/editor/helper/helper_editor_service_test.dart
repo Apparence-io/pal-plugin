@@ -26,6 +26,7 @@ void main() {
     test('[SimpleHelper] save an helper should call editor helper API for save or update', () async {
       var pageId = 'DJKLSQLKDJLQ132154a';
       // the args of our service creation method
+      // FIXME remove pageId and helperType ??
       var args = CreateSimpleHelper(
         boxConfig: HelperBoxConfig(color: '#FFF'),
         titleText: HelperTextConfig(
@@ -53,7 +54,7 @@ void main() {
           priority: 1,
           versionMinId: 25, //FIXME
           versionMaxId: 25, //FIXME
-          pageId: pageId,
+          pageId: args.config.pageId,
           helperTexts: [
             HelperTextEntity(
               fontColor: "#CCC",

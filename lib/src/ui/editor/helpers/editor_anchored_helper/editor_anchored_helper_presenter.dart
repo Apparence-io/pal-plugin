@@ -18,7 +18,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       EditorAnchoredFullscreenHelperView viewInterface, this.finderService)
       : super(
             AnchoredFullscreenHelperViewModel(
-                helper: HelperViewModel(
+              helper: HelperViewModel(
               name: 'test',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
               helperType: HelperType.ANCHORED_OVERLAYED_HELPER,

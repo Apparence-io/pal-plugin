@@ -70,12 +70,6 @@ class HelperOrchestrator {
       popHelper();
     }
     try {
-      // DEBUG: REMOVE THIS
-      // _showUpdateHelper();
-      //  _showSimpleHelper();
-      // _showFullScreenHelper();
-      // DEBUG: END REMOVE
-
       final InAppUserEntity inAppUser =
           await this.inAppUserClientService.getOrCreate();
       final List<HelperEntity> helpersToShow =
@@ -112,7 +106,6 @@ class HelperOrchestrator {
               }),
             ));
     var overlay = navigatorKey.currentState.overlay;
-
     // If there is already an helper, remove it and show the next one (useful when we change page fastly)
     if (this.overlay != null) {
       this.overlay.remove();
@@ -121,108 +114,4 @@ class HelperOrchestrator {
     this.overlay = entry;
   }
 
-  // DEBUG: REMOVE THIS
-  _showSpecificHelper(Widget helperToShow) {
-    OverlayEntry entry = OverlayEntry(
-        opaque: false,
-        builder: (context) => PalTheme(
-              theme: PalThemeData.light(),
-              child: Builder(
-                builder: (context) => helperToShow,
-              ),
-            ));
-    var overlay = navigatorKey.currentState.overlay;
-    overlay.insert(entry);
-    this.overlay = entry;
-  }
-
-  _showFullScreenHelper() {
-    _showSpecificHelper(
-      UserFullScreenHelperPage(
-        backgroundColor: Colors.blueAccent,
-        titleLabel: CustomLabel(
-          text: 'A simple test',
-          fontSize: 60.0,
-          fontColor: Colors.white,
-        ),
-        positivLabel: CustomLabel(
-          text: 'Positiv !',
-          fontColor: Colors.green,
-          fontSize: 22.0,
-        ),
-        negativLabel: CustomLabel(
-          text: 'Negativ !',
-          fontColor: Colors.red,
-          fontSize: 22.0,
-        ),
-        mediaUrl: 'https://picsum.photos/200/300',
-        onPositivButtonTap: () async {
-          this.popHelper();
-        },
-        onNegativButtonTap: () async {
-          this.popHelper();
-        },
-      ),
-    );
-  }
-
-  _showUpdateHelper() {
-    _showSpecificHelper(
-      UserUpdateHelperPage(
-        onPositivButtonTap: () async {
-          this.popHelper();
-        },
-        backgroundColor: Color(0xff60b2d5),
-        thanksButtonLabel: CustomLabel(
-          text: 'Thank you !',
-          fontColor: Colors.white,
-          fontSize: 18.0,
-        ),
-        titleLabel: CustomLabel(
-          text: 'New application update',
-          fontColor: Colors.white,
-          fontSize: 27.0,
-        ),
-        changelogLabels: [
-          CustomLabel(
-            text: 'My second app awesome feature',
-            fontColor: Colors.white,
-            fontSize: 14.0,
-          ),
-          CustomLabel(
-            text: 'Another feature very useful',
-            fontColor: Colors.white,
-            fontSize: 14.0,
-          ),
-          CustomLabel(
-            text: 'Any other feature',
-            fontColor: Colors.white,
-            fontSize: 14.0,
-          ),
-          CustomLabel(
-            text: 'My last app awesome feature I wanna be sure you aware of',
-            fontColor: Colors.white,
-            fontSize: 14.0,
-          ),
-        ],
-      ),
-    );
-  }
-
-  _showSimpleHelper() {
-    _showSpecificHelper(SimpleHelperLayout(
-      toaster: SimpleHelperPage(
-        descriptionLabel: CustomLabel(
-            fontColor: Colors.white,
-            fontSize: 14.0,
-            text:
-                "You can just disable notification by going in your profile and click on notifications tab > disable notifications"),
-        backgroundColor: Colors.black,
-      ),
-      onDismissed: (res) {
-        popHelper();
-      },
-    ));
-  }
-  // DEBUG: REMOVE THIS END
 }

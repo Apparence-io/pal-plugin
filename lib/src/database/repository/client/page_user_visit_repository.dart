@@ -1,0 +1,69 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart';
+import 'package:pal/src/database/adapter/generic_adapter.dart';
+import 'package:pal/src/database/adapter/helper_group_visit_entity_adapter.dart' as Adapter;
+import 'package:pal/src/database/entity/helper/schema_entity.dart';
+import 'package:pal/src/database/entity/page_user_visit_entity.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
+
+import '../base_repository.dart';
+
+
+abstract class HelperGroupUserVisitRepository {
+
+  Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion);
+
+  Future<void> save(List<HelperGroupUserVisitEntity> visits);
+
+  Future<void> clear();
+}
+
+/// [HelperGroupUserVisitHttpRepository]
+class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements HelperGroupUserVisitRepository {
+
+  Adapter.HelperGroupUserVisitEntityAdapter _adapter = Adapter.HelperGroupUserVisitEntityAdapter();
+
+  HelperGroupUserVisitHttpRepository({@required HttpClient httpClient})
+    : super(httpClient: httpClient);
+
+
+  Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion) async {
+    final Response response = await this
+      .httpClient
+      .get('client/user/$userId/visits?minAppVersion=$minAppVersion');
+    return _adapter.parseArray(response.body);
+  }
+
+  @override
+  Future<void> save(List<HelperGroupUserVisitEntity> visits) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> clear() {
+    throw UnimplementedError();
+  }
+}
+
+/// [HelperGroupUserVisitLocalRepository]
+class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitRepository{
+
+  Future<Box<HelperGroupUserVisitEntity>> _hiveBoxOpener;
+
+  HelperGroupUserVisitLocalRepository({@required Future<Box<HelperGroupUserVisitEntity>> hiveBoxOpener})
+    : _hiveBoxOpener = hiveBoxOpener;
+
+  Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion)
+    => _hiveBoxOpener.then((res) => res.values.toList());
+
+  @override
+  Future<void> save(List<HelperGroupUserVisitEntity> visits)
+    => _hiveBoxOpener.then((res) => res.addAll(visits));
+
+  @override
+  Future<void> clear() => _hiveBoxOpener.then((res) => res.clear());
+
+}

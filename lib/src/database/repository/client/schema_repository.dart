@@ -3,6 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/schema_entity.dart';
+import 'package:pal/src/database/repository/base_repository.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 
 abstract class ClientSchemaRepository {
 
@@ -11,12 +13,15 @@ abstract class ClientSchemaRepository {
   /// if [schemaVersion] is provided and repository contains a lower or equal version returns nothing
   /// if [language] is null, returns the default language
   /// if [appVersion] must be provided, current application version in user pubspec.yml
-  Future<SchemaEntity> get({int schemaVersion, String language, @required String appVersion});
+  Future<SchemaEntity> get({int schemaVersion, String language, String appVersion});
 
 }
 
 
-class ClientSchemaRemoteRepository implements ClientSchemaRepository {
+class ClientSchemaRemoteRepository extends BaseHttpRepository implements ClientSchemaRepository {
+
+  ClientSchemaRemoteRepository({@required HttpClient httpClient})
+    : super(httpClient: httpClient);
 
   @override
   Future<SchemaEntity> get({int schemaVersion, String language, @required String appVersion}) {
@@ -28,33 +33,27 @@ class ClientSchemaRemoteRepository implements ClientSchemaRepository {
 
 class ClientSchemaLocalRepository implements ClientSchemaRepository {
 
-  Box<SchemaEntity> _hiveBox;
+  final Future<Box<SchemaEntity>> _hiveBoxOpener;
 
-  ClientSchemaLocalRepository() {
-    _init();
-  }
-
-  _init() async {
-    Hive.init('localstorage'); //TODO move this
-    Hive.registerAdapter(SchemaEntityAdapter());
-    Hive.registerAdapter(HelperGroupEntityAdapter());
-    Hive.registerAdapter(HelperEntityAdapter());
-    _hiveBox = await Hive.openBox<SchemaEntity>('schema');
-  }
+  ClientSchemaLocalRepository({Future<Box<SchemaEntity>> hiveBoxOpener})
+    : this._hiveBoxOpener = hiveBoxOpener;
 
   @override
-  Future<SchemaEntity> get({int schemaVersion, String language, @required String appVersion}) async {
+  Future<SchemaEntity> get({int schemaVersion, String language, String appVersion}) async {
+    var _hiveBox = await _hiveBoxOpener;
     if(_hiveBox.isEmpty)
       return null;
     return _hiveBox.values.first;
   }
 
   Future<void> save(SchemaEntity schema) async {
+    var _hiveBox = await _hiveBoxOpener;
     await _hiveBox.clear();
     await _hiveBox.add(schema);
   }
 
   Future<void> clear() async {
+    var _hiveBox = await _hiveBoxOpener;
     await _hiveBox.clear();
   }
 

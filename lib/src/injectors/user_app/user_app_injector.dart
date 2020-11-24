@@ -25,13 +25,15 @@ class UserInjector extends InheritedWidget {
     @required UserAppContext appContext,
     @required this.routeObserver,
     @required Widget child,
-  })  : assert(child != null && appContext != null),
+  }) : assert(child != null && appContext != null),
         this._pageService = PageClientService.build(appContext.pageRepository),
-        this._helperService = HelperClientService.build(appContext),
+        this._helperService = HelperClientService.build(
+          clientSchemaRepository: appContext.localClientSchemaRepository,
+          helperRemoteRepository: appContext.helperRepository
+        ),
         this._packageVersionReader = PackageVersionReader(),
-        this._clientInAppUserService = InAppUserClientService.build(
-            appContext.inAppUserRepository),
-        super(key: key, child: child){
+        this._clientInAppUserService = InAppUserClientService.build(appContext.inAppUserRepository),
+        super(key: key, child: child) {
     setInAppUserManagerService(this.inAppUserClientService);
   }
 

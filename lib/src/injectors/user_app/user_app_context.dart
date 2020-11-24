@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/database/hive_client.dart';
 import 'package:pal/src/database/repository/client/helper_repository.dart';
+import 'package:pal/src/database/repository/client/page_user_visit_repository.dart';
+import 'package:pal/src/database/repository/client/schema_repository.dart';
 import 'package:pal/src/database/repository/in_app_user_repository.dart';
 import 'package:pal/src/database/repository/page_repository.dart';
 import 'package:pal/src/database/repository/version_repository.dart';
@@ -36,6 +39,14 @@ class UserAppContext {
 
   InAppUserRepository get inAppUserRepository => throw "not implemented";
 
+  ClientSchemaRepository get localClientSchemaRepository => throw "not implemented";
+
+  ClientSchemaRepository get remoteClientSchemaRepository => throw "not implemented";
+
+  HelperGroupUserVisitRepository get pageUserVisitRemoteRepository => throw "not implemented";
+
+  HelperGroupUserVisitRepository get pageUserVisitLocalRepository => throw "not implemented";
+
 }
 
 /// [UserAppContext] inherited class to provide some context to all childs
@@ -50,26 +61,50 @@ class HttpUserAppContext implements UserAppContext {
 
   final VersionRepository _versionRepository;
 
-  factory HttpUserAppContext.create(
-      {@required url, @required String token,}) {
-    return HttpUserAppContext._private(
-      httpClient: url == null || token == null ? null : HttpClient.create(url, token),
+  final HelperGroupUserVisitRepository _pageUserVisitRemoteRepository, _pageUserVisitLocalRepository;
+
+  final ClientSchemaRepository _clientSchemaLocalRepository, _clientSchemaRemoteRepository;
+
+  factory HttpUserAppContext.create({@required url, @required String token})
+    => HttpUserAppContext._private(
+      hiveClient: HiveClient()..init(),
+      httpClient: url == null || token == null ? null : HttpClient.create(url, token)
     );
-  }
 
   HttpUserAppContext._private({
+    @required HiveClient hiveClient,
     @required HttpClient httpClient,
   }) : assert(httpClient != null),
+      this._pageUserVisitRemoteRepository = HelperGroupUserVisitHttpRepository(httpClient: httpClient),
+      this._pageUserVisitLocalRepository = HelperGroupUserVisitLocalRepository(hiveBoxOpener: hiveClient.openVisitsBox),
+      this._clientSchemaLocalRepository = ClientSchemaLocalRepository(hiveBoxOpener: hiveClient.openSchemaBox),
+      this._clientSchemaRemoteRepository = ClientSchemaRemoteRepository(httpClient: httpClient),
       this._pageRepository = PageRepository(httpClient: httpClient),
       this._helperRepository = ClientHelperRepository(httpClient: httpClient),
       this._versionRepository = VersionHttpRepository(httpClient: httpClient),
       this._inAppUserRepository = InAppUserRepository(httpClient: httpClient);
 
-  PageRepository get pageRepository => this._pageRepository;
+  @override
+  PageRepository get pageRepository => _pageRepository;
 
-  ClientHelperRepository get helperRepository => this._helperRepository;
+  @override
+  ClientHelperRepository get helperRepository => _helperRepository;
 
-  VersionRepository get versionRepository => this._versionRepository;
+  @override
+  VersionRepository get versionRepository => _versionRepository;
 
-  InAppUserRepository get inAppUserRepository => this._inAppUserRepository;
+  @override
+  InAppUserRepository get inAppUserRepository => _inAppUserRepository;
+
+  @override
+  ClientSchemaRepository get localClientSchemaRepository => _clientSchemaLocalRepository;
+
+  @override
+  ClientSchemaRepository get remoteClientSchemaRepository => _clientSchemaRemoteRepository;
+
+  @override
+  HelperGroupUserVisitRepository get pageUserVisitRemoteRepository => _pageUserVisitRemoteRepository;
+
+  @override
+  HelperGroupUserVisitRepository get pageUserVisitLocalRepository => _pageUserVisitLocalRepository;
 }

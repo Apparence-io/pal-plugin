@@ -7,12 +7,26 @@ part 'helper_entity.g.dart';
 
 @HiveType(typeId: 3)
 class HelperEntity {
+
+  @HiveField(0)
   String id;
+
+  @HiveField(1)
   DateTime creationDate;
+
+  @HiveField(2)
   DateTime lastUpdateDate;
+
+  @HiveField(3)
   String name;
+
+  @HiveField(4)
   String pageId;
+
+  @HiveField(5)
   int priority;
+
+  @HiveField(6)
   HelperType type;
 
   @HiveField(7)

@@ -14,6 +14,8 @@ import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 import 'helpers_synchronizer.dart';
 
+import 'helpers_synchronizer.dart';
+
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
 /// On each page visited we check if we have to show a new helper to user
 /// There is a variety of Helper types.

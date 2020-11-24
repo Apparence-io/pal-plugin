@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
@@ -40,7 +39,6 @@ class HelperEditorPresenter
     viewModel.enableSave = false;
     viewModel.isLoading = false;
     viewModel.isEditingWidget = false;
-    viewModel.isEditableWidgetValid = false;
     viewModel.loadingOpacity = 0;
     viewModel.isHelperCreated = false;
     viewModel.isHelperCreating = false;
@@ -48,16 +46,11 @@ class HelperEditorPresenter
 
     // Create a template helper model
     // this template will be copied to edited widget
-    viewModel.templateViewModel = HelperViewModel(
-      name: basicArguments?.helperName,
-      priority: basicArguments?.priority ?? 0,
-      triggerType:
-          basicArguments?.triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
-      versionMinId: basicArguments?.versionMinId ?? 1,
-      versionMaxId: basicArguments?.versionMaxId ?? 2,
-    );
+    viewModel.templateViewModel = basicArguments?.templateViewModel;
     viewModel.helperViewModel = EditorViewModelFactory.transform(
-        viewModel.templateViewModel, basicArguments?.helperType);
+      viewModel.templateViewModel,
+    );
+
     chooseHelperType();
 
     KeyboardVisibilityNotification().addNewListener(
@@ -66,6 +59,9 @@ class HelperEditorPresenter
         this.refreshView();
       },
     );
+
+    // If user edit an helper, it was always valid the first time
+    viewModel.isEditableWidgetValid = basicArguments?.isOnEditMode;
   }
 
   checkIfEditableWidgetFormValid(bool isFormValid) {
@@ -74,7 +70,7 @@ class HelperEditorPresenter
   }
 
   chooseHelperType() {
-    switch (basicArguments?.helperType) {
+    switch (viewModel?.helperViewModel?.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         viewInterface.addFullscreenHelperEditor(
             viewModel.helperViewModel, checkIfEditableWidgetFormValid);
@@ -98,9 +94,7 @@ class HelperEditorPresenter
     refreshView();
   }
 
-  onEditorClose() {
-    this.viewInterface.removeOverlay();
-  }
+  onEditorClose() => this.viewInterface.removeOverlay();
 
   onEditorValidate() async {
     RouteSettings route = await routeObserver.routeSettings.first;
@@ -113,14 +107,15 @@ class HelperEditorPresenter
         .versionEditorService
         .getOrCreateVersionId(basicArguments?.helperMinVersion);
 
-    var helperBasicConfig = CreateHelperConfig(
+    final helperBasicConfig = CreateHelperConfig(
+      id: basicArguments?.templateViewModel?.id,
       pageId: pageId,
-      name: basicArguments.helperName,
-      triggerType: basicArguments.triggerType,
-      helperType: basicArguments.helperType,
-      priority: basicArguments.priority,
+      name: basicArguments?.templateViewModel?.name,
+      triggerType: basicArguments?.templateViewModel?.triggerType,
+      helperType: basicArguments?.templateViewModel?.helperType,
+      priority: basicArguments?.templateViewModel?.priority,
       versionMinId: versionMinId,
-      versionMaxId: basicArguments.versionMaxId,
+      versionMaxId: basicArguments?.templateViewModel?.versionMaxId,
     );
 
     await this.save(helperBasicConfig);
@@ -139,33 +134,9 @@ class HelperEditorPresenter
     // Wait for animation complete
     await Future.delayed(Duration(milliseconds: 400));
 
-    try {
-      switch (config?.helperType) {
-        case HelperType.HELPER_FULL_SCREEN:
-          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
-          await helperService.createFullScreenHelper(config.pageId,
-              EditorEntityFactory.buildFullscreenArgs(config, model));
-          break;
-        case HelperType.SIMPLE_HELPER:
-          var model = viewModel.helperViewModel as SimpleHelperViewModel;
-          await helperService.createSimpleHelper(config.pageId,
-              EditorEntityFactory.buildSimpleArgs(config, model));
-          break;
-        // case HelperType.ANCHORED_OVERLAYED_HELPER:
-        //   break;
-        case HelperType.UPDATE_HELPER:
-          var model = viewModel.helperViewModel as UpdateHelperViewModel;
-          await helperService.createUpdateHelper(config.pageId,
-              EditorEntityFactory.buildUpdateArgs(config, model));
-          break;
-        default:
-          throw "NOT_IMPLEMENTED_TYPE";
-          break;
-      }
-      viewModel.isHelperCreated = true;
-    } catch (e) {
-      viewModel.isHelperCreated = false;
-    }
+    // Update or create
+    await _saveHelper(config);
+
     this.viewInterface.triggerHaptic();
     viewModel.isHelperCreating = false;
     this.refreshView();
@@ -189,5 +160,41 @@ class HelperEditorPresenter
   //----------------------------------------------------------------------
   // PRIVATES
   //----------------------------------------------------------------------
+
+  Future _saveHelper(CreateHelperConfig config) async {
+    try {
+      switch (config?.helperType) {
+        case HelperType.HELPER_FULL_SCREEN:
+          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
+          await helperService.saveFullScreenHelper(config.pageId,
+              EditorEntityFactory.buildFullscreenArgs(config, model));
+          break;
+        case HelperType.SIMPLE_HELPER:
+          var model = viewModel.helperViewModel as SimpleHelperViewModel;
+          await helperService.saveSimpleHelper(config.pageId,
+              EditorEntityFactory.buildSimpleArgs(config, model));
+          break;
+        // case HelperType.ANCHORED_OVERLAYED_HELPER:
+        //   break;
+        case HelperType.UPDATE_HELPER:
+          var model = viewModel.helperViewModel as UpdateHelperViewModel;
+          await helperService.saveUpdateHelper(config.pageId,
+              EditorEntityFactory.buildUpdateArgs(config, model));
+          break;
+        default:
+          throw "NOT_IMPLEMENTED_TYPE";
+          break;
+      }
+      viewModel.isHelperCreated = true;
+    } catch (e) {
+      print("--------------------------");
+      print("Error while saving helper");
+      print("--------------------------");
+      debugPrint(e);
+      print("--------------------");
+      viewModel.isHelperCreated = false;
+    }
+  }
+
 
 }

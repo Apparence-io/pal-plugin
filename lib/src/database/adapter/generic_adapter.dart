@@ -7,6 +7,7 @@ import 'package:pal/src/database/entity/pageable.dart';
 /// parse a string to an entity
 /// convert an object to a JSON string format
 abstract class GenericEntityAdapter<T> {
+
   String toJson(T model) => json.encode(model);
 
   T parse(String value) {

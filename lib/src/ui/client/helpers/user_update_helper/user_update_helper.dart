@@ -6,13 +6,13 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helper_client_models.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper_presenter.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/widgets/animated_progress_bar.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/widgets/release_note_cell.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 abstract class UserUpdateHelperView {
   void playAnimation(
@@ -26,24 +26,24 @@ abstract class UserUpdateHelperView {
 
 class UserUpdateHelperPage extends StatelessWidget
     implements UserUpdateHelperView {
-  final Color backgroundColor;
-  final CustomLabel titleLabel;
-  final List<CustomLabel> changelogLabels;
-  final CustomLabel thanksButtonLabel;
+  final HelperBoxViewModel helperBoxViewModel;
+  final HelperTextViewModel titleLabel;
+  final List<HelperTextViewModel> changelogLabels;
+  final HelperTextViewModel thanksButtonLabel;
   final PackageVersionReader packageVersionReader;
-  final String mediaUrl;
+  final HelperImageViewModel helperImageViewModel;
   final Function onPositivButtonTap;
 
   UserUpdateHelperPage({
     Key key,
-    @required this.backgroundColor,
+    @required this.helperBoxViewModel,
     @required this.titleLabel,
     @required this.changelogLabels,
     @required this.onPositivButtonTap,
-    this.mediaUrl,
+    this.helperImageViewModel,
     this.thanksButtonLabel,
     this.packageVersionReader,
-  })  : assert(backgroundColor != null),
+  })  : assert(helperBoxViewModel != null),
         assert(titleLabel != null),
         assert(changelogLabels != null);
 
@@ -142,14 +142,14 @@ class UserUpdateHelperPage extends StatelessWidget
       opacity: model.helperOpacity,
       child: Scaffold(
         key: ValueKey('pal_UserUpdateHelperWidget_Scaffold'),
-        backgroundColor: backgroundColor,
+        backgroundColor: helperBoxViewModel?.backgroundColor,
         body: SafeArea(
           child: Container(
             width: double.infinity,
             child: Container(
               child: Column(
                 children: [
-                  if (mediaUrl != null && mediaUrl.length > 0)
+                  if (helperImageViewModel?.url != null && helperImageViewModel.url.length > 0)
                     Flexible(
                       key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
                       flex: 4,
@@ -187,7 +187,7 @@ class UserUpdateHelperPage extends StatelessWidget
             borderRadius: BorderRadius.circular(15.0),
             child: CachedNetworkImage(
               key: ValueKey('pal_UserUpdateHelperWidget_Image'),
-              imageUrl: mediaUrl,
+              imageUrl: helperImageViewModel?.url,
               fit: BoxFit.contain,
               placeholder: (context, url) =>
                   Center(child: CircularProgressIndicator()),
@@ -328,7 +328,7 @@ class UserUpdateHelperPage extends StatelessWidget
   ) {
     List<Widget> labels = [];
     int index = 0;
-    for (CustomLabel label in changelogLabels) {
+    for (HelperTextViewModel label in changelogLabels) {
       var stepTime = 1.0 / changelogLabels.length;
       var animationStart = stepTime * index;
       var animationEnd = stepTime + animationStart;

@@ -8,6 +8,7 @@ import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_loader.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_details/helper_details_model.dart';
 
 class HelpersListModalPresenter
     extends Presenter<HelpersListModalModel, HelpersListModalView> {
@@ -65,7 +66,8 @@ class HelpersListModalPresenter
 
   onClickAdd() async {
     showEditorBubble(false);
-    final shouldOpenEditor = await this.viewInterface.openHelperCreationPage(this.viewModel.pageId);
+    final shouldOpenEditor =
+        await this.viewInterface.openHelperCreationPage(this.viewModel.pageId);
     if (shouldOpenEditor != null) {
       // Editor is opened, hide bubble
       showEditorBubble(false);
@@ -76,6 +78,29 @@ class HelpersListModalPresenter
 
   onClickSettings() async {
     await this.viewInterface.openAppSettingsPage();
+  }
+
+  onClickHelper(HelperEntity anHelper) async {
+    showEditorBubble(false);
+    final helperDetailsPopState = await this.viewInterface.openHelperDetailPage(
+          anHelper,
+          this.viewModel.pageId,
+        );
+
+    if (helperDetailsPopState != null) {
+      switch (helperDetailsPopState) {
+        case HelperDetailsPopState.deleted:
+          showEditorBubble(true);
+          this.removeHelper(anHelper);
+          break;
+        case HelperDetailsPopState.editorOpened:
+          showEditorBubble(false);
+          this.viewInterface.popModalDialog();
+          break;
+        default:
+          showEditorBubble(true);
+      }
+    }
   }
 
   showEditorBubble(bool visible) {

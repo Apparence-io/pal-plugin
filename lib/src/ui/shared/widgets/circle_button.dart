@@ -44,7 +44,7 @@ class CircleIconButton extends StatelessWidget {
       ),
       child: ClipOval(
         child: Opacity(
-          opacity: (onTapCallback != null) ? 1 : 0.35,
+          opacity: (onTapCallback != null) ? 1 : 0.30,
           child: Material(
             color: backgroundColor,
             child: InkWell(

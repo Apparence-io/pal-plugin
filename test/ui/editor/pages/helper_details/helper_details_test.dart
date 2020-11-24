@@ -26,7 +26,7 @@ main() {
       WidgetTester tester,
     ) async {
       HelperDetailsComponent component = HelperDetailsComponent(
-        arguments: HelperDetailsComponentArguments(helper, 'page-id'),
+        arguments: HelperDetailsComponentArguments(null, helper, 'page-id'),
         testHelperService: service,
       );
 
@@ -83,6 +83,12 @@ main() {
       await tester.pumpAndSettle();
 
       verify(service.deleteHelper('page-id', helper.id)).called(1);
+    });
+
+    testWidgets('should edit an helper', (tester) async {
+      await _initPage(tester);
+
+      expect(find.byIcon(Icons.edit), findsOneWidget);
     });
 
     testWidgets('should cancel dialog', (tester) async {

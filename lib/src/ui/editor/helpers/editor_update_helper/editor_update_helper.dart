@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/theme.dart';
@@ -23,8 +24,8 @@ abstract class EditorUpdateHelperView {
     EditorUpdateHelperModel model,
   );
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
-
   void callOnFormChanged(EditorUpdateHelperModel model);
+  TextStyle googleCustomFont(String fontFamily);
 }
 
 class EditorUpdateHelperPage extends StatelessWidget
@@ -80,7 +81,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                 presenter.callonFormChanged();
               },
               child: EditableBackground(
-                backgroundColor: viewModel.backgroundColor?.value,
+                backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
                 circleIconKey:
                     'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
                 onColorChange: () =>
@@ -89,7 +90,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                   padding: const EdgeInsets.all(2.0),
                   child: Container(
                     width: double.infinity,
-                    color: viewModel.backgroundColor?.value,
+                    color: viewModel.bodyBox?.backgroundColor?.value,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -164,13 +165,16 @@ class EditorUpdateHelperPage extends StatelessWidget
       autovalidate: AutovalidateMode.disabled,
       maximumCharacterLength: 60,
       minimumCharacterLength: 1,
+      fontFamilyKey: viewModel?.titleField?.fontFamily?.value,
       outsideTapStream: model.editableTextFieldController.stream,
+      initialValue: viewModel?.titleField?.text?.value,
       textStyle: TextStyle(
         color: viewModel.titleField?.fontColor?.value,
         fontSize: viewModel.titleField?.fontSize?.value?.toDouble(),
         fontWeight: FontWeightMapper.toFontWeight(
-            viewModel.titleField?.fontWeight?.value),
-      ),
+          viewModel.titleField?.fontWeight?.value,
+        ),
+      ).merge(googleCustomFont(viewModel.titleField?.fontFamily?.value)),
     );
   }
 
@@ -227,6 +231,8 @@ class EditorUpdateHelperPage extends StatelessWidget
         onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
         hintText: viewModel.thanksButton?.hintText,
         maximumCharacterLength: 25,
+        fontFamilyKey: viewModel?.thanksButton?.fontFamily?.value,
+        initialValue: viewModel?.thanksButton?.text?.value,
         backgroundBoxDecoration: BoxDecoration(
           color: PalTheme.of(context).colors.dark,
           borderRadius: BorderRadius.circular(10.0),
@@ -238,7 +244,7 @@ class EditorUpdateHelperPage extends StatelessWidget
                 viewModel.thanksButton?.fontWeight?.value,
               ) ??
               FontWeight.w400,
-        ),
+        ).merge(googleCustomFont(viewModel.thanksButton?.fontFamily?.value)),
       ),
     );
   }
@@ -252,7 +258,7 @@ class EditorUpdateHelperPage extends StatelessWidget
     showDialog(
       context: context,
       child: ColorPickerDialog(
-        placeholderColor: this.viewModel?.backgroundColor?.value,
+        placeholderColor: this.viewModel?.bodyBox?.backgroundColor?.value,
         onColorSelected: presenter.updateBackgroundColor,
       ),
     );
@@ -290,5 +296,12 @@ class EditorUpdateHelperPage extends StatelessWidget
     if (onFormChanged != null) {
       onFormChanged(model.formKey?.currentState?.validate());
     }
+  }
+
+  @override
+  TextStyle googleCustomFont(String fontFamily) {
+    return (fontFamily != null && fontFamily.length > 0)
+        ? GoogleFonts.getFont(fontFamily)
+        : null;
   }
 }

@@ -17,6 +17,7 @@ import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal_presente
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/widgets/helper_tile_widget.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_details/helper_details_model.dart';
 
 abstract class HelpersListModalView {
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
@@ -29,10 +30,9 @@ abstract class HelpersListModalView {
     final String pageId,
   );
   Future<void> openAppSettingsPage();
-  void openHelperDetailPage(
+  Future<HelperDetailsPopState> openHelperDetailPage(
     final HelperEntity helperEntity,
     final String pageId,
-    final HelpersListModalPresenter presenter,
   );
   void reorganizeHelper(
     final int oldIndex,
@@ -41,6 +41,7 @@ abstract class HelpersListModalView {
     final List<HelperEntity> helpers,
   );
   void onCloseButton();
+  void popModalDialog();
 }
 
 class HelpersListModal extends StatefulWidget {
@@ -130,7 +131,7 @@ class _HelpersListModalState extends State<HelpersListModal>
                 bottom: 5.0,
                 top: 2.0,
               ),
-              child: !model.isLoading && (model?.helpers != null && model.helpers.isNotEmpty)
+              child: !model.isLoading && model.helpers != null && model.helpers.isNotEmpty
                   ? Text(
                       '💡 You can re-order helpers by long tap on them.',
                       key: ValueKey('pal_HelpersListModal_ReorderTip'),
@@ -225,8 +226,12 @@ class _HelpersListModalState extends State<HelpersListModal>
           versionMax: anHelper?.versionMax,
           isDisabled: false,
           type: getHelperTypeDescription(anHelper?.type),
-          onTapCallback: () =>
-              this.openHelperDetailPage(anHelper, model.pageId, presenter),
+          onTapCallback: () {
+            HapticFeedback.selectionClick();
+            presenter.onClickHelper(anHelper);
+          },
+          // onTapCallback: () =>
+          //     this.openHelperDetailPage(anHelper, model.pageId, presenter),
         ),
       );
       helpers.add(cell);
@@ -365,26 +370,22 @@ class _HelpersListModalState extends State<HelpersListModal>
   }
 
   @override
-  Future openHelperDetailPage(
+  Future<HelperDetailsPopState> openHelperDetailPage(
     final HelperEntity helperEntity,
     final String pageId,
-    final HelpersListModalPresenter presenter,
   ) async {
-    HapticFeedback.selectionClick();
-
     // Display the helper detail view
-    final deletedHelperEntity = await Navigator.pushNamed(
+    final helperDetailsPopState = await Navigator.pushNamed(
       context,
       '/editor/helper',
       arguments: HelperDetailsComponentArguments(
+        widget.hostedAppNavigatorKey,
         helperEntity,
         pageId,
       ),
-    );
+    ) as HelperDetailsPopState;
 
-    if (deletedHelperEntity != null) {
-      presenter.removeHelper(deletedHelperEntity as HelperEntity);
-    }
+    return helperDetailsPopState;
   }
 
   @override
@@ -446,5 +447,10 @@ class _HelpersListModalState extends State<HelpersListModal>
   void onCloseButton() {
     HapticFeedback.selectionClick();
     Navigator.pop(context);
+  }
+
+  @override
+  void popModalDialog() {
+    Navigator.pop(widget.bottomModalContext);
   }
 }

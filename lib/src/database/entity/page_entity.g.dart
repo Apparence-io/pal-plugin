@@ -1,41 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'helper_group_entity.dart';
+part of 'page_entity.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
+class PageEntityAdapter extends TypeAdapter<PageEntity> {
   @override
-  final int typeId = 2;
+  final int typeId = 8;
 
   @override
-  HelperGroupEntity read(BinaryReader reader) {
+  PageEntity read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return HelperGroupEntity(
+    return PageEntity(
       id: fields[0] as String,
-      priority: fields[1] as int,
-      helpers: (fields[2] as List)?.cast<HelperEntity>(),
-      page: fields[3] as PageEntity,
+      creationDate: fields[1] as DateTime,
+      lastUpdateDate: fields[2] as DateTime,
+      route: fields[3] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, HelperGroupEntity obj) {
+  void write(BinaryWriter writer, PageEntity obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.priority)
+      ..write(obj.creationDate)
       ..writeByte(2)
-      ..write(obj.helpers)
+      ..write(obj.lastUpdateDate)
       ..writeByte(3)
-      ..write(obj.page);
+      ..write(obj.route);
   }
 
   @override
@@ -44,7 +44,7 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HelperGroupEntityAdapter &&
+      other is PageEntityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

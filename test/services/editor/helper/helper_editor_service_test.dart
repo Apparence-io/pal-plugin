@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pal/src/database/adapter/helper_entity_adapter.dart';
+import 'package:pal/src/database/adapter/helper_entity_adapter.dart' as EntityAdapter;
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
@@ -72,8 +72,8 @@ void main() {
           ]);
       // what http will result
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
-      var resHelperJson = HelperEntityAdapter().toJson(resHelper);
-      var reqHelperJson = HelperEntityAdapter().toJson(myHelper);
+      var resHelperJson = EntityAdapter.HelperEntityAdapter().toJson(resHelper);
+      var reqHelperJson = EntityAdapter.HelperEntityAdapter().toJson(myHelper);
       when(httpClientMock.post('editor/pages/$pageId/helpers', body: reqHelperJson))
           .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
       // call first save
@@ -161,8 +161,8 @@ void main() {
       );
       // what http will result
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
-      var reqHelperJson = HelperEntityAdapter().toJson(myHelper);
-      var resHelperJson = HelperEntityAdapter().toJson(resHelper);
+      var reqHelperJson = EntityAdapter.HelperEntityAdapter().toJson(myHelper);
+      var resHelperJson = EntityAdapter.HelperEntityAdapter().toJson(resHelper);
       when(httpClientMock.post('editor/pages/$pageId/helpers', body: reqHelperJson))
           .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
       // call the service part
@@ -258,8 +258,8 @@ void main() {
           ]);
       // what http will result
       HelperEntity resHelper = HelperEntity.copy(myHelper)..id = "820938203";
-      var reqHelperJson = HelperEntityAdapter().toJson(myHelper);
-      var resHelperJson = HelperEntityAdapter().toJson(resHelper);
+      var reqHelperJson = EntityAdapter.HelperEntityAdapter().toJson(myHelper);
+      var resHelperJson = EntityAdapter.HelperEntityAdapter().toJson(resHelper);
       when(httpClientMock.post('editor/pages/$pageId/helpers', body: reqHelperJson))
           .thenAnswer((_) => Future.value(Response(resHelperJson, 200)));
       // call the service part

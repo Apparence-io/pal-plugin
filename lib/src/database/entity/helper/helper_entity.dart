@@ -74,10 +74,10 @@ class HelperEntity {
       versionMin: from.versionMin,
       versionMaxId: from.versionMaxId,
       versionMax: from.versionMax,
-      helperBorders: from.helperBorders,
-      helperImages: from.helperImages,
-      helperTexts: from.helperTexts,
-      helperBoxes: _helperBoxes,
+      helperBorders: from.helperBorders != null ? [...from.helperBorders] : null,
+      helperImages: from.helperImages != null ? [...from.helperImages] : null,
+      helperTexts: from.helperTexts != null ? [...from.helperTexts] : null,
+      helperBoxes: from.helperBoxes != null ? [...from.helperBoxes] : null,
     );
   }
 

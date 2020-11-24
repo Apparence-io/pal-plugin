@@ -4,18 +4,15 @@ class AnimatedProgressBar extends AnimatedWidget {
   final AnimationController animationController;
   final Animation<Color> valueColor;
   final Color backgroundColor;
-  Animation<double> progressValueAnim;
+  final Animation<double> progressValueAnim;
 
   AnimatedProgressBar({
     Key key,
     @required this.animationController,
     this.valueColor,
     this.backgroundColor = Colors.grey,
-  }) : super(key: key, listenable: animationController) {
-    this.progressValueAnim = Tween<double>(begin: 0, end: 1).animate(
-      animationController,
-    );
-  }
+  }) : this.progressValueAnim = Tween<double>(begin: 0, end: 1).animate(animationController),
+     super(key: key, listenable: animationController);
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:pal/src/database/entity/page_user_visit_entity.dart';
-import 'package:pal/src/database/entity/version_entity.dart';
 
 import 'generic_adapter.dart';
 

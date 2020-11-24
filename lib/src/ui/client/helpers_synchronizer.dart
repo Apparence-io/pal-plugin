@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pal/src/database/repository/client/helper_repository.dart';
 import 'package:pal/src/database/repository/client/page_user_visit_repository.dart';
 import 'package:pal/src/database/repository/client/schema_repository.dart';
-import 'package:pal/src/services/editor/versions/version_editor_service.dart';
 import 'package:pal/src/services/package_version.dart';
 
 class HelpersSynchronizer {

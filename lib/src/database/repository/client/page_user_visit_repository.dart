@@ -1,11 +1,8 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
-import 'package:pal/src/database/adapter/generic_adapter.dart';
 import 'package:pal/src/database/adapter/helper_group_visit_entity_adapter.dart' as Adapter;
-import 'package:pal/src/database/entity/helper/schema_entity.dart';
 import 'package:pal/src/database/entity/page_user_visit_entity.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 

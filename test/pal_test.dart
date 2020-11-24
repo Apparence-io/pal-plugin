@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/pal.dart';
-import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 
@@ -32,11 +30,11 @@ void main() {
       Pal app = _createApp(true);
       await tester.pumpWidget(app);
       var palFinder = find.byType(Pal).first;
-      var EditorInjectorFinder = find.byType(EditorInjector);
+      var editorInjectorFinder = find.byType(EditorInjector);
       var userAppInjectFinder = find.byType(UserInjector);
 
       expect(palFinder, findsOneWidget);
-      expect(EditorInjectorFinder, findsOneWidget);
+      expect(editorInjectorFinder, findsOneWidget);
       expect(userAppInjectFinder, findsNothing);
       // the bubble button should be available to turn on editor
       expect(find.byType(BubbleOverlayButton), findsOneWidget);

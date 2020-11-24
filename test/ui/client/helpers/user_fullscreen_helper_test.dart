@@ -7,7 +7,7 @@ import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 void main() {
-  UserFullScreenHelperPresenter presenter;
+  UserFullScreenHelperPresenter presenter; // ignore: unused_local_variable
 
   group('[Client] Fullscreen helper', () {
     UserFullScreenHelperPage userFullScreenHelperPage =

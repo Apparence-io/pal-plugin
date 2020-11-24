@@ -141,11 +141,6 @@ class AnchoredFullscreenPainter extends CustomPainter {
       ..color = Colors.lightGreenAccent.withOpacity(.6)
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
-    Paint redPainter = Paint()
-      ..color = Colors.redAccent
-      ..style = PaintingStyle.fill
-      ..isAntiAlias = true;
-
     canvas.saveLayer(Offset.zero & size, Paint());
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPainter);
     // canvas.drawCircle(currentPos, radius, clearPainter);

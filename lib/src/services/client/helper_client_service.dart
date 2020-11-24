@@ -31,7 +31,7 @@ class _HelperClientService implements HelperClientService {
 
   final ClientHelperRepository _helperRemoteRepository;
 
-  final HelperGroupUserVisitRepository _localVisitRepository, _remoteVisitRepository;
+  final HelperGroupUserVisitRepository _localVisitRepository, _remoteVisitRepository; // ignore: unused_field
 
   _HelperClientService({
     @required HelperGroupUserVisitRepository localVisitRepository,

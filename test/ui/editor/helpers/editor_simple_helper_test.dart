@@ -13,6 +13,7 @@ void main() {
   group('[Editor] Simple helper', () {
     final _navigatorKey = GlobalKey<NavigatorState>();
 
+    // ignore: unused_local_variable
     EditorSimpleHelperPresenter presenter;
 
     Scaffold _myHomeTest = Scaffold(

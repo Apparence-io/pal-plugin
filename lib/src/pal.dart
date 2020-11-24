@@ -10,7 +10,6 @@ import 'package:pal/src/ui/editor/pal_editmode_wrapper.dart';
 
 import 'injectors/editor_app/editor_app_injector.dart';
 import 'pal_navigator_observer.dart';
-import 'ui/client/helpers_synchronizer.dart';
 
 // our production server address
 const String PAL_SERVER_URL = const String.fromEnvironment("SERVER_URL", defaultValue: "http://217.182.88.6:9040");

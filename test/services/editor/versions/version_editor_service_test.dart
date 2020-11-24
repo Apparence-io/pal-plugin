@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
-import 'package:pal/src/database/entity/pageable.dart';
 import 'package:pal/src/database/entity/version_entity.dart';
 import 'package:pal/src/database/repository/version_repository.dart';
 import 'package:pal/src/services/package_version.dart';

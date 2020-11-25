@@ -24,7 +24,6 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
       creationDate: fields[1] as DateTime,
       lastUpdateDate: fields[2] as DateTime,
       priority: fields[5] as int,
-      pageId: fields[4] as String,
       versionMinId: fields[8] as int,
       versionMin: fields[9] as String,
       versionMaxId: fields[10] as int,
@@ -48,8 +47,6 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
       ..write(obj.lastUpdateDate)
       ..writeByte(3)
       ..write(obj.name)
-      ..writeByte(4)
-      ..write(obj.pageId)
       ..writeByte(5)
       ..write(obj.priority)
       ..writeByte(6)

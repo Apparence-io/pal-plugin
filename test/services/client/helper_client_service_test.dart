@@ -17,7 +17,9 @@ import 'package:pal/src/services/http_client/base_client.dart';
 class HttpClientMock extends Mock implements HttpClient {}
 
 void main() {
-  HiveClient hiveClient = HiveClient()..init();
+
+  HiveClient hiveClient = HiveClient(shouldInit: false)
+    ..initLocal();
 
   HelperClientService helperClientService;
   HttpClient httpClientMock = HttpClientMock();

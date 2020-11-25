@@ -54,7 +54,6 @@ void main() {
           priority: 1,
           versionMinId: 25, //FIXME
           versionMaxId: 25, //FIXME
-          pageId: args.config.pageId,
           helperTexts: [
             HelperTextEntity(
               fontColor: "#CCC",
@@ -128,7 +127,6 @@ void main() {
         priority: 1,
         versionMinId: 25, //FIXME
         versionMaxId: 25, //FIXME
-        pageId: pageId,
         helperTexts: [
           HelperTextEntity(
             value: args.title.text,
@@ -218,7 +216,6 @@ void main() {
           priority: 1,
           versionMinId: 25, //FIXME
           versionMaxId: 25, //FIXME
-          pageId: pageId,
           helperTexts: [
             HelperTextEntity(
               value: args.title.text,

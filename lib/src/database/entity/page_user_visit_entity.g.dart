@@ -6,7 +6,8 @@ part of 'page_user_visit_entity.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class PageUserVisitEntityAdapter extends TypeAdapter<HelperGroupUserVisitEntity> {
+class HelperGroupUserVisitEntityAdapter
+    extends TypeAdapter<HelperGroupUserVisitEntity> {
   @override
   final int typeId = 9;
 
@@ -38,7 +39,7 @@ class PageUserVisitEntityAdapter extends TypeAdapter<HelperGroupUserVisitEntity>
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PageUserVisitEntityAdapter &&
+      other is HelperGroupUserVisitEntityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

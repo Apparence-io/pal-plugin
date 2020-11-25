@@ -83,7 +83,7 @@ class HelperOrchestrator {
       final helperGroupToShow = await helperClientService.getPageNextHelper(route, inAppUser.id);
       if (helperGroupToShow != null && helperGroupToShow.helpers.isNotEmpty) {
         // for now we show only one helper from the group / next version will allow to show a group
-        showHelper(helperGroupToShow.helpers[0], inAppUser.id);
+        showHelper(helperGroupToShow.helpers[0], inAppUser.id, helperGroupToShow.page.id);
       }
     } catch (e) {
       // TODO log error to our server or crashlitycs...
@@ -101,14 +101,13 @@ class HelperOrchestrator {
   }
 
   @visibleForTesting
-  showHelper(final HelperEntity helper, final String inAppUserId) {
+  showHelper(final HelperEntity helper, final String inAppUserId, final String pageId) {
     OverlayEntry entry = OverlayEntry(
         opaque: false,
         builder: (context) => PalTheme(
               theme: PalThemeData.light(),
               child: HelperFactory.build(helper, onTrigger: (res) async {
-                await helperClientService.onHelperTrigger(
-                    helper.pageId, helper.id, inAppUserId, res);
+                await helperClientService.onHelperTrigger(pageId, helper.id, inAppUserId, res);
                 this.popHelper();
               }),
             ));

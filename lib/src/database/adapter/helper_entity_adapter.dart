@@ -16,7 +16,6 @@ class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
       creationDate: map['creationDate'] != null ? DateTime.parse(map['creationDate']).toLocal() : null,
       lastUpdateDate: map['lastUpdateDate'] != null ? DateTime.parse(map['lastUpdateDate']).toLocal() : null,
       priority: map['priority'],
-      pageId: map['pageId'],
       versionMinId: map['versionMinId'],
       versionMin: map['versionMin'],
       versionMaxId: map['versionMaxId'],

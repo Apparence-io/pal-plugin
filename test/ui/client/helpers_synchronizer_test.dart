@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
@@ -16,12 +17,13 @@ class ClientSchemaRemoteRepositoryMock extends Mock implements ClientSchemaRemot
 
 class PackageVersionReaderMock extends Mock implements PackageVersionReader {}
 
-class HttpClientMock extends Mock implements HttpClient {} 
+class HttpClientMock extends Mock implements HttpClient {}
 
 void main() {
   group('HelpersSynchronizer', () {
 
-    HiveClient hiveClient = HiveClient()..init();
+    HiveClient hiveClient = HiveClient(shouldInit: false)
+      ..initLocal();
 
     HttpClient mockHttpClient = HttpClientMock();
     HelperGroupUserVisitRepository pageUserVisitLocalRepository = HelperGroupUserVisitLocalRepository(hiveBoxOpener: hiveClient.openVisitsBox);
@@ -68,8 +70,10 @@ void main() {
       const appVersion = "1.0.0";
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion'))
-        .thenAnswer((_) => Future.value(Response('[]', 200)));
+      when(mockHttpClient.get('client/visited-user-groups', headers: {
+        'appVersion': appVersion,
+        'inAppUserId': userId
+      })).thenAnswer((_) => Future.value(Response('[]', 200)));
 
       expect(await schemaLocalRepository.get(appVersion: appVersion), isNull);
       await synchronizer.sync(userId);
@@ -86,8 +90,10 @@ void main() {
       when(packageVersionReader.version).thenReturn(appVersion);
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(schemaRemoteRepository.get(schemaVersion: 1, appVersion: appVersion)).thenAnswer((_) => Future.value(lastRemoteSchema));
-      when(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion'))
-        .thenAnswer((_) => Future.value(Response('[]', 200)));
+      when(mockHttpClient.get('client/visited-user-groups', headers: {
+        'appVersion': appVersion,
+        'inAppUserId': userId
+      })).thenAnswer((_) => Future.value(Response('[]', 200)));
       //first sync on null version
       await synchronizer.sync(userId);
       var localSchema = await schemaLocalRepository.get();
@@ -111,12 +117,17 @@ void main() {
         ]''';
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion'))
-        .thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
+      when(mockHttpClient.get('client/visited-user-groups', headers: {
+        'appVersion': appVersion,
+        'inAppUserId': userId
+      })).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
       expect(await pageUserVisitLocalRepository.get(userId, appVersion), isEmpty);
 
       await synchronizer.sync(userId);
-      verify(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion')).called(1);
+      verify(mockHttpClient.get('client/visited-user-groups', headers: {
+        'appVersion': appVersion,
+        'inAppUserId': userId
+      })).called(1);
       var savedVisits = await pageUserVisitLocalRepository.get(userId, appVersion);
       expect(savedVisits, isNotEmpty);
       expect(savedVisits.length, equals(5));
@@ -128,13 +139,18 @@ void main() {
       var visitedUserGroupsJson = '''[]''';
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion'))
-        .thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
+      when(mockHttpClient.get('client/visited-user-groups', headers: {
+        'appVersion': appVersion,
+        'inAppUserId': userId
+      })).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
 
       await synchronizer.sync(userId);
       await synchronizer.sync(userId);
       // visits api is not called again because we gonne store them locally
-      verify(mockHttpClient.get('client/user/$userId/visits?minAppVersion=$appVersion')).called(1);
+      verify(mockHttpClient.get('client/visited-user-groups', headers: {
+          'appVersion': appVersion,
+          'inAppUserId': userId
+        })).called(1);
     });
 
   });

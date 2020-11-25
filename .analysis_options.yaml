@@ -11,3 +11,7 @@ analyzer:
     rules:
       - avoid_function_literals_in_foreach_calls
       - avoid_renaming_method_parameters
+      - camel_case_types
+      - cancel_subscriptions
+      - empty_statements
+      - package_names

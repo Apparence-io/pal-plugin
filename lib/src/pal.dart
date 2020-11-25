@@ -106,6 +106,7 @@ class Pal extends StatelessWidget {
             HelperOrchestrator.getInstance(
               helperClientService: UserInjector.of(context).helperService,
               inAppUserClientService: UserInjector.of(context).inAppUserClientService,
+              helpersSynchronizer: UserInjector.of(context).helpersSynchronizerService,
               routeObserver: navigatorObserver,
               navigatorKey: navigatorKey
             );

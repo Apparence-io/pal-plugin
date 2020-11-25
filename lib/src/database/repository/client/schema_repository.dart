@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:hive/hive.dart';
+import 'package:http/http.dart';
+import 'package:pal/src/database/adapter/generic_adapter.dart';
 import 'package:pal/src/database/entity/helper/schema_entity.dart';
 import 'package:pal/src/database/repository/base_repository.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
+import 'package:pal/src/database/adapter/schema_entity_adapter.dart' as Adapter;
+
+import '../../hive_client.dart';
 
 abstract class ClientSchemaRepository {
 
@@ -18,40 +22,47 @@ abstract class ClientSchemaRepository {
 
 class ClientSchemaRemoteRepository extends BaseHttpRepository implements ClientSchemaRepository {
 
+  GenericEntityAdapter<SchemaEntity> _adapter = Adapter.SchemaEntityAdapter();
+
   ClientSchemaRemoteRepository({@required HttpClient httpClient})
     : super(httpClient: httpClient);
 
   @override
-  Future<SchemaEntity> get({int schemaVersion, String language, @required String appVersion}) {
-    // TODO: implement get
-    throw UnimplementedError();
+  Future<SchemaEntity> get({int schemaVersion, String language, @required String appVersion}) async {
+    final Response response = await this
+      .httpClient
+      .get('client/schema', headers: {
+      'appVersion': appVersion,
+      'schemaVersion': schemaVersion != null ? schemaVersion : ''
+    });
+    return this._adapter.parse(response.body);
   }
 
 }
 
 class ClientSchemaLocalRepository implements ClientSchemaRepository {
 
-  final Future<Box<SchemaEntity>> _hiveBoxOpener;
+  final LocalDbOpener<SchemaEntity> _hiveBoxOpener;
 
-  ClientSchemaLocalRepository({Future<Box<SchemaEntity>> hiveBoxOpener})
+  ClientSchemaLocalRepository({ LocalDbOpener<SchemaEntity> hiveBoxOpener})
     : this._hiveBoxOpener = hiveBoxOpener;
 
   @override
   Future<SchemaEntity> get({int schemaVersion, String language, String appVersion}) async {
-    var _hiveBox = await _hiveBoxOpener;
+    var _hiveBox = await _hiveBoxOpener();
     if(_hiveBox.isEmpty)
       return null;
     return _hiveBox.values.first;
   }
 
   Future<void> save(SchemaEntity schema) async {
-    var _hiveBox = await _hiveBoxOpener;
+    var _hiveBox = await _hiveBoxOpener();
     await _hiveBox.clear();
     await _hiveBox.add(schema);
   }
 
   Future<void> clear() async {
-    var _hiveBox = await _hiveBoxOpener;
+    var _hiveBox = await _hiveBoxOpener();
     await _hiveBox.clear();
   }
 

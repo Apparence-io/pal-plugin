@@ -20,9 +20,6 @@ class HelperEntity {
   @HiveField(3)
   String name;
 
-  @HiveField(4)
-  String pageId;
-
   @HiveField(5)
   int priority;
 
@@ -64,7 +61,6 @@ class HelperEntity {
       this.creationDate,
       this.lastUpdateDate,
       this.priority,
-      this.pageId,
       this.versionMinId,
       this.versionMin,
       this.versionMaxId,
@@ -83,7 +79,6 @@ class HelperEntity {
       creationDate: from.creationDate,
       lastUpdateDate: from.lastUpdateDate,
       priority: from.priority,
-      pageId: from.pageId,
       versionMinId: from.versionMinId,
       versionMin: from.versionMin,
       versionMaxId: from.versionMaxId,
@@ -103,7 +98,6 @@ class HelperEntity {
         'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
         'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
         'priority': priority,
-        'pageId': pageId,
         'versionMinId': versionMinId,
         'versionMin': versionMin,
         'versionMaxId': versionMaxId,
@@ -122,7 +116,6 @@ class HelperEntity {
           creationDate == other.creationDate &&
           lastUpdateDate == other.lastUpdateDate &&
           name == other.name &&
-          pageId == other.pageId &&
           priority == other.priority &&
           type == other.type &&
           triggerType == other.triggerType &&
@@ -141,7 +134,6 @@ class HelperEntity {
       creationDate.hashCode ^
       lastUpdateDate.hashCode ^
       name.hashCode ^
-      pageId.hashCode ^
       priority.hashCode ^
       type.hashCode ^
       triggerType.hashCode ^

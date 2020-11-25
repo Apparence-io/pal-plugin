@@ -67,7 +67,7 @@ class HttpUserAppContext implements UserAppContext {
 
   factory HttpUserAppContext.create({@required url, @required String token})
     => HttpUserAppContext._private(
-      hiveClient: HiveClient()..init(),
+      hiveClient: HiveClient(),
       httpClient: url == null || token == null ? null : HttpClient.create(url, token)
     );
 

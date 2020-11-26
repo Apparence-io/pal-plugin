@@ -83,9 +83,4 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
   Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId})
     => _hiveBoxOpener().then((res) => res.add(visit));
 
-  @override
-  Future<void> save(HelperGroupUserVisitEntity visits, bool feedback, String inAppUserId) {
-    throw UnimplementedError();
-  }
-
 }

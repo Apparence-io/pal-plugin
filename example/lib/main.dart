@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Pal(
-      editorModeEnabled: false,
+      editorModeEnabled: true,
       appToken: APPLICATION_TOKEN, // don't forget to give us a token (create it from the web dashboard configuration tab)
       // --- your app is here --
       childApp: MaterialApp(

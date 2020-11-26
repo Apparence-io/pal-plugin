@@ -30,7 +30,6 @@ class HelpersSynchronizer {
       appVersion: currentVersion
     );
     debugPrint(" current schema version ${currentSchema?.schemaVersion}");
-    debugPrint(" remote schema version ${lastSchemaVersion?.schemaVersion}");
     if(currentSchema == null) {
       var visits = await pageUserVisitRemoteRepository.get(inAppUserId, currentVersion);
       debugPrint("Save user visits");
@@ -38,6 +37,7 @@ class HelpersSynchronizer {
       await pageUserVisitLocalRepository.saveAll(visits);
     }
     if(lastSchemaVersion != null) {
+      debugPrint(" remote schema version ${lastSchemaVersion?.schemaVersion}");
       debugPrint("${lastSchemaVersion?.groups?.length ?? 0} groups saved");
       await schemaLocalRepository.save(lastSchemaVersion);
     }

@@ -105,12 +105,8 @@ class UserFullScreenHelperPage extends StatelessWidget
           );
         }
       },
-      presenterBuilder: (context) => UserFullScreenHelperPresenter(
-        this,
-      ),
-      builder: (context, presenter, model) {
-        return this._buildPage(context, presenter, model);
-      },
+      presenterBuilder: (context) => UserFullScreenHelperPresenter(this),
+      builder: (context, presenter, model) => _buildPage(context, presenter, model),
     );
   }
 
@@ -122,7 +118,7 @@ class UserFullScreenHelperPage extends StatelessWidget
     return AnimatedOpacity(
       duration: Duration(milliseconds: 500),
       curve: Curves.fastOutSlowIn,
-      opacity: model.helperOpacity,
+      opacity: model?.helperOpacity,
       child: Scaffold(
         backgroundColor: helperBoxViewModel?.backgroundColor,
         key: _scaffoldKey,

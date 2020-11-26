@@ -3,27 +3,26 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'user_fullscreen_helper.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
 
-class UserFullScreenHelperPresenter
-    extends Presenter<UserFullScreenHelperModel, UserFullScreenHelperView> {
+class UserFullScreenHelperPresenter extends Presenter<UserFullScreenHelperModel, UserFullScreenHelperView> {
+
   UserFullScreenHelperPresenter(
     UserFullScreenHelperView viewInterface,
-  ) : super(UserFullScreenHelperModel(), viewInterface);
-
-  @override
-  void onInit() {
+  ) : super(UserFullScreenHelperModel(), viewInterface) {
     this.viewModel.helperOpacity = 0;
     this.viewModel.feedbackAnimation = false;
     this.viewModel.mediaAnimation = false;
     this.viewModel.titleAnimation = false;
     this.viewModel.isReversedAnimations = false;
+  }
 
+  @override
+  void onInit() {
     startAnimations();
   }
 
 
   startAnimations() async {
     this.viewModel.isReversedAnimations = false;
-
     // Fullscreen background opacity animation
     await Future.delayed(Duration(milliseconds: 1000), () {
       this.viewModel.helperOpacity = 1;

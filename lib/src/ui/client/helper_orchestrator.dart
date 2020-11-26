@@ -66,7 +66,7 @@ class HelperOrchestrator {
       if (newRoute == null || newRoute.name == null) {
         return;
       }
-      onChangePage(newRoute.name);
+      await onChangePage(newRoute.name);
     });
   }
 

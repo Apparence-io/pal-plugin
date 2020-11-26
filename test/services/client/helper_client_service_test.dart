@@ -50,7 +50,7 @@ void main() {
         schemaVersion: 1
       );
       await clientSchemaRepository.save(schema);
-      localVisitRepository.save([
+      localVisitRepository.saveAll([
         HelperGroupUserVisitEntity(pageId: 'p1', helperGroupId: 'g2')
       ]);
     });
@@ -102,7 +102,7 @@ void main() {
         schemaVersion: 1
       );
       await clientSchemaRepository.save(schema);
-      localVisitRepository.save([
+      localVisitRepository.saveAll([
         HelperGroupUserVisitEntity(pageId: 'p1', helperGroupId: 'g2')
       ]);
     });
@@ -114,14 +114,15 @@ void main() {
 
     test('save visit on remote server, save visit locally', () async {
       var pageId = 'p1';
-      var helperId = 'g1';
-      when(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+      var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
+      var helperGroupId = helperGroup.id;
+      when(httpClientMock.put('client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).thenAnswer((_) => Future.value());
 
-      await helperClientService.onHelperTrigger(pageId, helperId, inAppUserId, true);
-      verify(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+      await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, true);
+      verify(httpClientMock.put('client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).called(1);
@@ -131,14 +132,15 @@ void main() {
 
     test('save visit on remote server fails, save visit locally should not be called', () async{
       var pageId = 'p1';
-      var helperId = 'g1';
-      when(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+      var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
+      var helperGroupId = helperGroup.id;
+      when(httpClientMock.put('client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).thenThrow((_) => throw "ERROR");
 
-      await helperClientService.onHelperTrigger(pageId, helperId, inAppUserId, true);
-      verify(httpClientMock.post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
+      await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, true);
+      verify(httpClientMock.put('client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).called(1);

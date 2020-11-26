@@ -19,26 +19,26 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
     return HelperEntity(
       id: fields[0] as String,
       name: fields[3] as String,
-      type: fields[6] as HelperType,
-      triggerType: fields[7] as HelperTriggerType,
+      type: fields[5] as HelperType,
+      triggerType: fields[6] as HelperTriggerType,
       creationDate: fields[1] as DateTime,
       lastUpdateDate: fields[2] as DateTime,
-      priority: fields[5] as int,
-      versionMinId: fields[8] as int,
-      versionMin: fields[9] as String,
-      versionMaxId: fields[10] as int,
-      versionMax: fields[11] as String,
-      helperBorders: (fields[12] as List)?.cast<HelperBorderEntity>(),
-      helperImages: (fields[13] as List)?.cast<HelperImageEntity>(),
-      helperTexts: (fields[14] as List)?.cast<HelperTextEntity>(),
-      helperBoxes: (fields[15] as List)?.cast<HelperBoxEntity>(),
+      priority: fields[4] as int,
+      versionMinId: fields[7] as int,
+      versionMin: fields[8] as String,
+      versionMaxId: fields[9] as int,
+      versionMax: fields[10] as String,
+      helperBorders: (fields[11] as List)?.cast<HelperBorderEntity>(),
+      helperImages: (fields[12] as List)?.cast<HelperImageEntity>(),
+      helperTexts: (fields[13] as List)?.cast<HelperTextEntity>(),
+      helperBoxes: (fields[14] as List)?.cast<HelperBoxEntity>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, HelperEntity obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(15)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,27 +47,27 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
       ..write(obj.lastUpdateDate)
       ..writeByte(3)
       ..write(obj.name)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.priority)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.type)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.triggerType)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.versionMinId)
-      ..writeByte(9)
+      ..writeByte(8)
       ..write(obj.versionMin)
-      ..writeByte(10)
+      ..writeByte(9)
       ..write(obj.versionMaxId)
-      ..writeByte(11)
+      ..writeByte(10)
       ..write(obj.versionMax)
-      ..writeByte(12)
+      ..writeByte(11)
       ..write(obj.helperBorders)
-      ..writeByte(13)
+      ..writeByte(12)
       ..write(obj.helperImages)
-      ..writeByte(14)
+      ..writeByte(13)
       ..write(obj.helperTexts)
-      ..writeByte(15)
+      ..writeByte(14)
       ..write(obj.helperBoxes);
   }
 

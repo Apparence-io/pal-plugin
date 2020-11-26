@@ -22,7 +22,7 @@ class HelperClientService {
 
   Future<HelperGroupEntity> getPageNextHelper(final String route, final String inAppUserId) => throw "not implemented";
 
-  Future onHelperTrigger(final String pageId, final String helperId, final String inAppUserId, final bool positiveFeedback) => throw "not implemented";
+  Future onHelperTrigger(final String pageId, final HelperGroupEntity helperGroup, final String inAppUserId, final bool positiveFeedback) => throw "not implemented";
 }
 
 class _HelperClientService implements HelperClientService {
@@ -59,10 +59,11 @@ class _HelperClientService implements HelperClientService {
   }
 
   @override
-  Future onHelperTrigger(String pageId, String helperId, String inAppUserId, bool positiveFeedback) async {
+  Future onHelperTrigger(String pageId, HelperGroupEntity helperGroup, String inAppUserId, bool positiveFeedback) async {
     try {
-      await _helperRemoteRepository.clientTriggerHelper(pageId, helperId, inAppUserId, positiveFeedback);
-      await _localVisitRepository.add(HelperGroupUserVisitEntity(pageId: pageId, helperGroupId: helperId));
+      var visit = HelperGroupUserVisitEntity(pageId: pageId, helperGroupId: helperGroup.id);
+      await _remoteVisitRepository.add(visit, feedback: positiveFeedback, inAppUserId: inAppUserId);
+      await _localVisitRepository.add(visit); // we only store locally that he already visited
     } catch(err) {
       print("error occured while sending visits");
     }

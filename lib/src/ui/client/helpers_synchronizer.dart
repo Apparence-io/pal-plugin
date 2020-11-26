@@ -35,7 +35,7 @@ class HelpersSynchronizer {
       var visits = await pageUserVisitRemoteRepository.get(inAppUserId, currentVersion);
       debugPrint("Save user visits");
       debugPrint(" ${visits.length} visits found");
-      await pageUserVisitLocalRepository.save(visits);
+      await pageUserVisitLocalRepository.saveAll(visits);
     }
     if(lastSchemaVersion != null) {
       debugPrint("${lastSchemaVersion?.groups?.length ?? 0} groups saved");

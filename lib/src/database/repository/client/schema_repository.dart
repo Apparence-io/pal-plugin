@@ -33,9 +33,12 @@ class ClientSchemaRemoteRepository extends BaseHttpRepository implements ClientS
       .httpClient
       .get('client/schema', headers: {
       'appVersion': appVersion,
-      'schemaVersion': schemaVersion != null ? schemaVersion : ''
+      'schemaVersion': schemaVersion != null ? schemaVersion.toString() : ''
     });
-    return this._adapter.parse(response.body);
+    if(response.body.isNotEmpty) {
+      return this._adapter.parse(response.body);
+    }
+    return null;
   }
 
 }

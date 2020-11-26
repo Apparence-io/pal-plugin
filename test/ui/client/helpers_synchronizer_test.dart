@@ -145,6 +145,7 @@ void main() {
       })).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
 
       await synchronizer.sync(userId);
+      when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(null));
       await synchronizer.sync(userId);
       // visits api is not called again because we gonne store them locally
       verify(mockHttpClient.get('client/visited-user-groups', headers: {

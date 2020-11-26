@@ -36,16 +36,4 @@ class ClientHelperRepository extends BaseHttpRepository {
     return this._adapter.parseArray(response.body);
   }
 
-  Future clientTriggerHelper(final String pageId, final String helperId,
-      final String inAppUserId, final bool positiveFeedback) async {
-    this
-        .httpClient
-        .post('client/pages/$pageId/helpers/$helperId/triggered-helpers',
-            body: jsonEncode({
-              'positiveFeedback': positiveFeedback,
-            }),
-            headers: {"inAppUserId": inAppUserId}).then((value) {
-      return;
-    });
-  }
 }

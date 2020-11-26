@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
@@ -14,9 +16,9 @@ abstract class HelperGroupUserVisitRepository {
 
   Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion);
 
-  Future<void> save(List<HelperGroupUserVisitEntity> visits);
+  Future<void> saveAll(List<HelperGroupUserVisitEntity> visits);
 
-  Future<void> add(HelperGroupUserVisitEntity visit);
+  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId});
 
   Future<void> clear();
 }
@@ -41,7 +43,7 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
   }
 
   @override
-  Future<void> save(List<HelperGroupUserVisitEntity> visits) {
+  Future<void> saveAll(List<HelperGroupUserVisitEntity> visits) async {
     throw UnimplementedError();
   }
 
@@ -51,9 +53,11 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
   }
 
   @override
-  Future<void> add(HelperGroupUserVisitEntity visit) {
-    // TODO: implement add
-    throw UnimplementedError();
+  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId}) async  {
+    var url = 'client/group/${visit.helperGroupId}/triggered';
+    var body = jsonEncode({'positiveFeedback': feedback});
+    await httpClient
+      .put(url, body: body, headers: {"inAppUserId": inAppUserId});
   }
 }
 
@@ -69,14 +73,19 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
     => _hiveBoxOpener().then((res) => res.values.toList());
 
   @override
-  Future<void> save(List<HelperGroupUserVisitEntity> visits)
+  Future<void> saveAll(List<HelperGroupUserVisitEntity> visits)
     => _hiveBoxOpener().then((res) => res.addAll(visits));
 
   @override
   Future<void> clear() => _hiveBoxOpener().then((res) => res.clear());
 
   @override
-  Future<void> add(HelperGroupUserVisitEntity visit)
+  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId})
     => _hiveBoxOpener().then((res) => res.add(visit));
+
+  @override
+  Future<void> save(HelperGroupUserVisitEntity visits, bool feedback, String inAppUserId) {
+    throw UnimplementedError();
+  }
 
 }

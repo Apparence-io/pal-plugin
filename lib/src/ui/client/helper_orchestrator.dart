@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/client/helper_client_service.dart';
@@ -82,8 +83,7 @@ class HelperOrchestrator {
       }
       final helperGroupToShow = await helperClientService.getPageNextHelper(route, inAppUser.id);
       if (helperGroupToShow != null && helperGroupToShow.helpers.isNotEmpty) {
-        // for now we show only one helper from the group / next version will allow to show a group
-        showHelper(helperGroupToShow.helpers[0], inAppUser.id, helperGroupToShow.page.id);
+        showHelper(helperGroupToShow, inAppUser.id, helperGroupToShow.page.id);
       }
     } catch (e) {
       // TODO log error to our server or crashlitycs...
@@ -101,13 +101,14 @@ class HelperOrchestrator {
   }
 
   @visibleForTesting
-  showHelper(final HelperEntity helper, final String inAppUserId, final String pageId) {
+  // for now we show only one helper from the group / next version will allow to show a group
+  showHelper(final HelperGroupEntity helperGroup, final String inAppUserId, final String pageId) {
     OverlayEntry entry = OverlayEntry(
         opaque: false,
         builder: (context) => PalTheme(
               theme: PalThemeData.light(),
-              child: HelperFactory.build(helper, onTrigger: (res) async {
-                await helperClientService.onHelperTrigger(pageId, helper.id, inAppUserId, res);
+              child: HelperFactory.build(helperGroup.helpers[0], onTrigger: (res) async {
+                await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, res);
                 this.popHelper();
               }),
             ));

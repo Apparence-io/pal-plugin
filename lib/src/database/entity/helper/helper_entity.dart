@@ -20,37 +20,37 @@ class HelperEntity {
   @HiveField(3)
   String name;
 
-  @HiveField(5)
+  @HiveField(4)
   int priority;
 
-  @HiveField(6)
+  @HiveField(5)
   HelperType type;
 
-  @HiveField(7)
+  @HiveField(6)
   HelperTriggerType triggerType;
 
-  @HiveField(8)
+  @HiveField(7)
   int versionMinId;
 
-  @HiveField(9)
+  @HiveField(8)
   String versionMin;
 
-  @HiveField(10)
+  @HiveField(9)
   int versionMaxId;
 
-  @HiveField(11)
+  @HiveField(10)
   String versionMax;
 
-  @HiveField(12)
+  @HiveField(11)
   List<HelperBorderEntity> helperBorders;
 
-  @HiveField(13)
+  @HiveField(12)
   List<HelperImageEntity> helperImages;
 
-  @HiveField(14)
+  @HiveField(13)
   List<HelperTextEntity> helperTexts;
 
-  @HiveField(15)
+  @HiveField(14)
   List<HelperBoxEntity> helperBoxes;
 
   HelperEntity(

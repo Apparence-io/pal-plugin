@@ -1,7 +1,20 @@
+import 'package:hive/hive.dart';
+
+part 'helper_type.g.dart';
+
+@HiveType(typeId : 10)
 enum HelperType {
+
+  @HiveField(0)
   HELPER_FULL_SCREEN,
+
+  @HiveField(1)
   SIMPLE_HELPER,
+
+  @HiveField(2)
   ANCHORED_OVERLAYED_HELPER,
+
+  @HiveField(3)
   UPDATE_HELPER,
 }
 

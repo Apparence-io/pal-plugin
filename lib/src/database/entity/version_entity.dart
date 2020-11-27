@@ -1,3 +1,4 @@
+/// User Application version
 class VersionEntity {
   int id;
   String name;

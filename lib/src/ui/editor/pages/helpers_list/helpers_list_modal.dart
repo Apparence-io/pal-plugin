@@ -72,7 +72,7 @@ class _HelpersListModalState extends State<HelpersListModal>
     implements HelpersListModalView {
   final ScrollController _listController = ScrollController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey(); // ignore: unused_field
   final _mvvmPageBuilder =
       MVVMPageBuilder<HelpersListModalPresenter, HelpersListModalModel>();
 

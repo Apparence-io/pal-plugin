@@ -1,9 +1,7 @@
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/database/entity/pageable.dart';
 import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
-import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 import 'helper_editor_model_adapter.dart';
 

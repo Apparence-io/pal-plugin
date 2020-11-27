@@ -1,4 +1,10 @@
+import 'package:hive/hive.dart';
+
+part 'helper_trigger_type.g.dart';
+
+@HiveType(typeId: 11)
 enum HelperTriggerType {
+  @HiveField(0)
   ON_SCREEN_VISIT,
 }
 

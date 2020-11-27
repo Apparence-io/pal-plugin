@@ -1,6 +1,6 @@
 name: pal
 description: The no code Flutter onboarding editor
-version: 0.0.1+4
+version: 0.0.2
 homepage: http://pal-plugin.tech
 repository: https://github.com/Apparence-io/pal-plugin
 issue_tracker: https://github.com/Apparence-io/pal-plugin/issues
@@ -21,15 +21,19 @@ dependencies:
   rxdart: ^0.24.1
   flutter_colorpicker: ^0.3.4
   dotted_border: ^1.0.6
-  path_provider: ^1.6.22
+  path_provider: ^1.6.24
   keyboard_visibility: ^0.5.6
   application_icon: ^1.0.0
   cached_network_image: ^2.3.3
+  hive: ^1.4.4+1
+  hive_flutter: ^0.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
+  hive_generator: ^0.8.2
+  build_runner: ^1.10.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

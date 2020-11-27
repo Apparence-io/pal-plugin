@@ -36,7 +36,7 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
     else if (response.statusCode >= 400 && response.statusCode < 500) {
       final String errorCode = ErrorAdapter().parse(response.body);
 
-      throw UnreachableHttpError('Http 4XX error, network or bad gateway',
+      throw UnreachableHttpError('Http ${response.statusCode} error, network or bad gateway : ${response.request.url}',
           code: errorCode);
     } else if (response.statusCode >= 500 && response.statusCode < 600) {
       print("... ==> 500 error ");

@@ -24,7 +24,6 @@ class HelperEntityMatcher extends Matcher {
         expected.creationDate == actual.creationDate &&
           expected.lastUpdateDate == actual.lastUpdateDate &&
           expected.name == actual.name &&
-          expected.pageId == actual.pageId &&
           expected.priority == actual.priority &&
           expected.type == actual.type &&
           expected.triggerType == actual.triggerType &&

@@ -1,6 +1,6 @@
 <p align="center">
 	<a href="https://apparence.io/">
-		<img src="https://github.com/Apparence-io/pal-plugin/blob/master/example/assets/images/icon.jpg?raw=true" width="200px" alt="pal logo" style="border-radius:50%">
+		<img src="https://back.apparence.io/media/110/pal-logo.jpeg" width="200px" alt="pal logo"/>
 	</a>
 </p>
 <p align="center">
@@ -15,7 +15,8 @@
 
 Pal is the onboarding editor dedicated to Flutter apps.
 
-**What does it mean ?** <br/>
+**What does it mean ?**
+
 No code editor for all your app screens directly in your app
 * Go to a screen where you want to add helper
 * Select your helper type
@@ -23,9 +24,19 @@ No code editor for all your app screens directly in your app
 
 [Wanna know more? Click here](http://pal-plugin.tech)
 
+## how it works in few words
+
+**client mode**
+
+* fetch your onboarding on client on application start
+* trigger an onboarding each time we detect anything that you setuped for
+* don't show an helper again if user has already seen it
+* each helpers have a min app version / max app version so you don't show invalid message and you can show many things for each updates only
+* ...
+
 ## Getting started
 
-> First join our beta list [here](http://pal-plugin.tech), we will send you a link that will allow you to create a project and get a TOKEN required by our plugin.
+[Create an administration account here](http://demo.pal-plugin.tech)
 
 [Full documentation is available here](http://doc.pal-plugin.tech)
 

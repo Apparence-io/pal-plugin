@@ -1,23 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 
+part 'helper_entity.g.dart';
+
+@HiveType(typeId: 3)
 class HelperEntity {
+
+  @HiveField(0)
   String id;
+
+  @HiveField(1)
   DateTime creationDate;
+
+  @HiveField(2)
   DateTime lastUpdateDate;
+
+  @HiveField(3)
   String name;
-  String pageId;
+
+  @HiveField(4)
   int priority;
+
+  @HiveField(5)
   HelperType type;
+
+  @HiveField(6)
   HelperTriggerType triggerType;
+
+  @HiveField(7)
   int versionMinId;
+
+  @HiveField(8)
   String versionMin;
+
+  @HiveField(9)
   int versionMaxId;
+
+  @HiveField(10)
   String versionMax;
+
+  @HiveField(11)
   List<HelperBorderEntity> helperBorders;
+
+  @HiveField(12)
   List<HelperImageEntity> helperImages;
+
+  @HiveField(13)
   List<HelperTextEntity> helperTexts;
+
+  @HiveField(14)
   List<HelperBoxEntity> helperBoxes;
 
   HelperEntity(
@@ -28,7 +61,6 @@ class HelperEntity {
       this.creationDate,
       this.lastUpdateDate,
       this.priority,
-      this.pageId,
       this.versionMinId,
       this.versionMin,
       this.versionMaxId,
@@ -47,7 +79,6 @@ class HelperEntity {
       creationDate: from.creationDate,
       lastUpdateDate: from.lastUpdateDate,
       priority: from.priority,
-      pageId: from.pageId,
       versionMinId: from.versionMinId,
       versionMin: from.versionMin,
       versionMaxId: from.versionMaxId,
@@ -67,7 +98,6 @@ class HelperEntity {
         'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
         'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
         'priority': priority,
-        'pageId': pageId,
         'versionMinId': versionMinId,
         'versionMin': versionMin,
         'versionMaxId': versionMaxId,
@@ -86,7 +116,6 @@ class HelperEntity {
           creationDate == other.creationDate &&
           lastUpdateDate == other.lastUpdateDate &&
           name == other.name &&
-          pageId == other.pageId &&
           priority == other.priority &&
           type == other.type &&
           triggerType == other.triggerType &&
@@ -105,7 +134,6 @@ class HelperEntity {
       creationDate.hashCode ^
       lastUpdateDate.hashCode ^
       name.hashCode ^
-      pageId.hashCode ^
       priority.hashCode ^
       type.hashCode ^
       triggerType.hashCode ^
@@ -118,9 +146,22 @@ class HelperEntity {
       helperTexts.hashCode;
 }
 
+@HiveType(typeId: 4)
 class HelperBorderEntity {
+
+  @HiveField(0)
   int id;
-  String color, key, style;
+
+  @HiveField(1)
+  String color;
+
+  @HiveField(2)
+  String key;
+
+  @HiveField(3)
+  String style;
+
+  @HiveField(4)
   double width;
 
   HelperBorderEntity({this.id, this.color, this.key, this.style, this.width});
@@ -160,9 +201,17 @@ class HelperBorderEntity {
       width.hashCode;
 }
 
+@HiveType(typeId: 5)
 class HelperImageEntity {
+
+  @HiveField(0)
   int id;
-  String key, url;
+
+  @HiveField(1)
+  String key;
+
+  @HiveField(2)
+  String url;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -190,9 +239,28 @@ class HelperImageEntity {
   int get hashCode => id.hashCode ^ key.hashCode ^ url.hashCode;
 }
 
+@HiveType(typeId: 6)
 class HelperTextEntity {
+
+  @HiveField(0)
   int id;
-  String fontColor, fontFamily, fontWeight, key, value;
+
+  @HiveField(1)
+  String fontColor;
+
+  @HiveField(2)
+  String fontFamily;
+
+  @HiveField(3)
+  String fontWeight;
+
+  @HiveField(4)
+  String key;
+
+  @HiveField(5)
+  String value;
+
+  @HiveField(6)
   int fontSize;
 
   HelperTextEntity({
@@ -248,9 +316,15 @@ class HelperTextEntity {
       fontSize.hashCode;
 }
 
+@HiveType(typeId: 7)
 class HelperBoxEntity {
+  @HiveField(0)
   int id;
+
+  @HiveField(1)
   String backgroundColor;
+
+  @HiveField(2)
   String key;
 
   HelperBoxEntity({

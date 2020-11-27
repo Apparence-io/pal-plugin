@@ -103,11 +103,8 @@ class EditorEntityFactory {
       );
 
   static CreateUpdateHelper buildUpdateArgs(
-    CreateHelperConfig config,
-    UpdateHelperViewModel model,
-  ) {
+      CreateHelperConfig config, UpdateHelperViewModel model) {
     List<HelperTextConfig> lines = [];
-
     for (var note in model.changelogsFields.entries) {
       lines.add(
         HelperTextConfig(
@@ -120,7 +117,6 @@ class EditorEntityFactory {
         ),
       );
     }
-
     return CreateUpdateHelper(
       config: config,
       title: HelperTextConfig(

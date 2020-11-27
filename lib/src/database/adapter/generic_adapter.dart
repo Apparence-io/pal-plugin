@@ -15,7 +15,7 @@ abstract class GenericEntityAdapter<T> {
     try {
       return parseMap(map);
     } catch (e) {
-      print('ERROR WHILE parse JSON $e');
+      print('${T}Adapter ERROR WHILE parse JSON $e  ');
       throw Exception('ERROR WHILE parse JSON $e');
     }
   }

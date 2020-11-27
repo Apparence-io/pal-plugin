@@ -4,18 +4,21 @@ import 'package:pal/src/database/repository/version_repository.dart';
 import 'package:pal/src/services/package_version.dart';
 
 abstract class VersionEditorService {
-  factory VersionEditorService.build(
-          {@required VersionRepository versionRepository,
-          @required PackageVersionReader packageVersionReader}) =>
-      VersionEditorHttpService(versionRepository, packageVersionReader);
+
+  factory VersionEditorService.build({
+    @required VersionRepository versionRepository,
+    @required PackageVersionReader packageVersionReader
+  }) => VersionEditorHttpService(versionRepository, packageVersionReader);
 
   Future<VersionEntity> getCurrentVersion() => throw "not implemented yet";
+
   Future<List<VersionEntity>> getAll() => throw "not implemented yet";
+
   Future<VersionEntity> getVersion(String name) => throw "not implemented yet";
-  Future<VersionEntity> createVersion(VersionEntity version) =>
-      throw "not implemented yet";
-  Future<int> getOrCreateVersionId(String versionName) =>
-      throw "not implemented yet";
+
+  Future<VersionEntity> createVersion(VersionEntity version) => throw "not implemented yet";
+
+  Future<int> getOrCreateVersionId(String versionName) => throw "not implemented yet";
 }
 
 class VersionEditorHttpService implements VersionEditorService {
@@ -53,7 +56,6 @@ class VersionEditorHttpService implements VersionEditorService {
     if (versionName == null || versionName.length <= 0) {
       throw 'invalid version name';
     }
-
     int versionMinId;
     VersionEntity resVersion = await this.getVersion(versionName);
     if (resVersion?.id != null) {
@@ -68,7 +70,6 @@ class VersionEditorHttpService implements VersionEditorService {
         throw 'page id is null';
       }
     }
-
     return versionMinId;
   }
 }

@@ -20,13 +20,13 @@ Future initAppWithPal(
     bool editorModeEnabled = true,
     EditorAppContext editorAppContext,
     UserAppContext userAppContext}) async {
-  BuildContext context;
+  BuildContext context; // ignore: unused_local_variable
   if (editorAppContext != null) EditorAppContext.create(editorAppContext);
   if (userAppContext != null) UserAppContext.create(userAppContext);
   Pal app = Pal(
     appToken: "testtoken",
     editorModeEnabled: editorModeEnabled,
-    child: new MaterialApp(
+    childApp: new MaterialApp(
       onGenerateRoute: routeFactory ??
           (_) => MaterialPageRoute(builder: (ctx) {
                 context = ctx;

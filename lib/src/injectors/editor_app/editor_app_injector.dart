@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pal/src/database/repository/project_gallery_repository.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/editor/finder/finder_service.dart';

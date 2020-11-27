@@ -10,7 +10,7 @@ class CreateHelperConfig {
   String pageId;
   String name;
   HelperTriggerType triggerType;
-  HelperType helperType;
+  HelperType helperType; //remove
   int priority;
   int versionMinId;
   int versionMaxId;

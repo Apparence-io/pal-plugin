@@ -108,12 +108,12 @@ class PalThemeData {
     final ThemeData base = ThemeData.light();
 
     const Color dark = Color(0xFF000767);
-    const Color blue = Color(0xFF3681bd);
-    const Color lightBlue = Color(0xFF53bbdc);
-    const Color cyan = Color(0xFFa1e3f1);
+    const Color blue = Color(0xFF3681bd); // ignore: unused_local_variable
+    const Color lightBlue = Color(0xFF53bbdc);// ignore: unused_local_variable
+    const Color cyan = Color(0xFFa1e3f1);// ignore: unused_local_variable
     const Color aqua = Color(0xFF90E0EF);
-    const Color red = Color(0xFFe7636a);
-    const Color black = Color(0xFF292931);
+    const Color red = Color(0xFFe7636a);// ignore: unused_local_variable
+    const Color black = Color(0xFF292931);// ignore: unused_local_variable
 
     return base.copyWith(
       accentColor: dark,

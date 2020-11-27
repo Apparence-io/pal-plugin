@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       editorModeEnabled: true,
       appToken: APPLICATION_TOKEN, // don't forget to give us a token (create it from the web dashboard configuration tab)
       // --- your app is here --
-      child: MaterialApp(
+      childApp: MaterialApp(
         key: ValueKey('hostedApp'),
         initialRoute: '/',
         navigatorKey: _navigatorKey,

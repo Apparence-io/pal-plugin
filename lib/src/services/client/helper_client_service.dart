@@ -1,49 +1,72 @@
-import 'package:pal/src/database/entity/helper/helper_entity.dart';
-import 'package:pal/src/database/repository/helper_repository.dart';
-import 'package:pal/src/database/repository/page_repository.dart';
-import 'package:pal/src/injectors/user_app/user_app_context.dart';
-import 'package:pal/src/services/package_version.dart';
+import 'package:flutter/material.dart';
+import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
+import 'package:pal/src/database/entity/helper/schema_entity.dart';
+import 'package:pal/src/database/entity/page_user_visit_entity.dart';
+import 'package:pal/src/database/repository/client/helper_repository.dart';
+import 'package:pal/src/database/repository/client/page_user_visit_repository.dart';
+import 'package:pal/src/database/repository/client/schema_repository.dart';
 
 class HelperClientService {
 
-  factory HelperClientService.build(UserAppContext appContext) =>
-    _HelperClientHttpService(
-      appContext.helperRepository,
-      appContext.pageRepository,
-      PackageVersionReader()
-    );
+  factory HelperClientService.build({
+    HelperGroupUserVisitRepository localVisitRepository,
+    HelperGroupUserVisitRepository remoteVisitRepository,
+    ClientSchemaRepository clientSchemaRepository,
+    ClientHelperRepository helperRemoteRepository
+  }) => _HelperClientService(
+    clientSchemaRepository: clientSchemaRepository,
+    helperRemoteRepository: helperRemoteRepository,
+    localVisitRepository: localVisitRepository,
+    remoteVisitRepository: remoteVisitRepository
+  );
 
-  Future<List<HelperEntity>> getPageHelpers(final String route, final String inAppUserId) => throw "not implemented";
+  Future<HelperGroupEntity> getPageNextHelper(final String route, final String inAppUserId) => throw "not implemented";
 
-  Future triggerHelper(final String pageId, final String helperId, final String inAppUserId, final bool positiveFeedback) => throw "not implemented";
+  Future onHelperTrigger(final String pageId, final HelperGroupEntity helperGroup, final String inAppUserId, final bool positiveFeedback) => throw "not implemented";
 }
 
-class _HelperClientHttpService implements HelperClientService {
+class _HelperClientService implements HelperClientService {
 
-  final HelperRepository _helperRepository;
+  final ClientSchemaRepository _clientSchemaRepository;
 
-  final PageRepository _pageRepository;
+  final ClientHelperRepository _helperRemoteRepository;
 
-  final PackageVersionReader _packageVersionReader;
+  final HelperGroupUserVisitRepository _localVisitRepository, _remoteVisitRepository; // ignore: unused_field
 
-  _HelperClientHttpService(this._helperRepository, this._pageRepository, this._packageVersionReader);
+  _HelperClientService({
+    @required HelperGroupUserVisitRepository localVisitRepository,
+    @required HelperGroupUserVisitRepository remoteVisitRepository,
+    @required ClientSchemaRepository clientSchemaRepository,
+    @required ClientHelperRepository helperRemoteRepository
+  }) : this._clientSchemaRepository = clientSchemaRepository,
+       this._localVisitRepository = localVisitRepository,
+       this._remoteVisitRepository = remoteVisitRepository,
+       this._helperRemoteRepository = helperRemoteRepository;
 
   @override
-  Future<List<HelperEntity>> getPageHelpers(final String route, final String inAppUserId) async {
-    var page = await _pageRepository.getClientPage(route);
-    if(page == null || page.entities.length == 0) {
-      return Future.value([]);
+  Future<HelperGroupEntity> getPageNextHelper(String route, String inAppUserId) async {
+    SchemaEntity currentSchema = await _clientSchemaRepository.get();
+    List<HelperGroupUserVisitEntity> userVisits = await _localVisitRepository.get(inAppUserId, null);
+    List<HelperGroupEntity> group = currentSchema.groups
+      .where((element) => element.page.route == route)
+      .where((element) => userVisits.where((visit) => visit.helperGroupId == element.id).isEmpty)
+      .toList();
+    if(group.isNotEmpty) {
+      group.sort((a,b) => a.priority < b.priority ? -1 : 1);
+      return group.last;
     }
-    await _packageVersionReader.init();
-    return _helperRepository.getClientHelpers(
-      page.entities.first.id,
-      _packageVersionReader.version,
-      inAppUserId
-    );
+    return null;
   }
 
   @override
-  Future triggerHelper(final String pageId, final String helperId, final String inAppUserId, final bool positiveFeedback) {
-    return this._helperRepository.clientTriggerHelper(pageId, helperId, inAppUserId, positiveFeedback);
+  Future onHelperTrigger(String pageId, HelperGroupEntity helperGroup, String inAppUserId, bool positiveFeedback) async {
+    try {
+      var visit = HelperGroupUserVisitEntity(pageId: pageId, helperGroupId: helperGroup.id);
+      await _remoteVisitRepository.add(visit, feedback: positiveFeedback, inAppUserId: inAppUserId);
+      await _localVisitRepository.add(visit); // we only store locally that he already visited
+    } catch(err) {
+      print("error occured while sending visits");
+    }
   }
+
 }

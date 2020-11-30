@@ -1,3 +1,6 @@
+## [0.0.2] - 2020/27/11
+- sync helpers on application start if needed
+
 ## [0.0.1+4] - 2020/23/11
 - you can now edit all your helpers
 

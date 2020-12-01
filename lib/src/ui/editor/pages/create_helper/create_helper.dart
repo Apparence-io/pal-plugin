@@ -5,6 +5,7 @@ import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step.dart';
@@ -191,18 +192,21 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       hostedAppNavigatorKey,
       pageId,
       isOnEditMode: false,
-      templateViewModel: HelperViewModel(
-        helperType: model.selectedHelperType,
-        helperTheme: model.selectedHelperTheme,
-        triggerType: getHelperTriggerType(model.selectedTriggerType),
-        name: model.helperNameController?.value?.text,
-      ),
+      templateViewModel: model.asHelperViewModel(),
       helperMinVersion: model.minVersionController?.value?.text,
     );
     var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
+    // showOverlayed(
+    //   hostedAppNavigatorKey,
+    //   HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
+    // );
+
     showOverlayed(
       hostedAppNavigatorKey,
-      HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
+      (context) => EditorFullScreenHelperPage.create(
+        parameters: args,
+        helperViewModel: model.asHelperViewModel()
+      )
     );
     // Go back
     Navigator.of(_scaffoldKey.currentContext).pop(true);

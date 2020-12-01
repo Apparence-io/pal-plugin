@@ -37,7 +37,7 @@ class HelperEditorPageArguments {
 
   final bool isOnEditMode;
 
-  final HelperViewModel templateViewModel; //TODO remove
+  final HelperViewModel templateViewModel;  // TODO remove
 
   HelperEditorPageArguments(
     this.hostedAppNavigatorKey,
@@ -273,10 +273,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
   // /////////////////////////////////////////:
 
   addFullscreenHelperEditor(FullscreenHelperViewModel model, Function isValid) {
-    _helperToEdit = EditorFullScreenHelperPage(
-      viewModel: model,
-      onFormChanged: isValid,
-    );
+    // _helperToEdit = EditorFullScreenHelperPage(
+    //   baseViewModel: model,
+    //   onFormChanged: isValid,
+    // );
   }
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid) {

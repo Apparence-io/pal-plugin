@@ -23,7 +23,6 @@ Route<dynamic> route(RouteSettings settings) {
       );
     case '/editor/new':
       CreateHelperPageArguments args = settings.arguments;
-
       return MaterialPageRoute(
         builder: (context) => CreateHelperPage(
           pageId: args.pageId,
@@ -32,7 +31,6 @@ Route<dynamic> route(RouteSettings settings) {
       );
     case '/editor/helper':
       HelperDetailsComponentArguments arguments = settings.arguments;
-
       return MaterialPageRoute(
         builder: (context) => HelperDetailsComponent(
           arguments: arguments,
@@ -67,8 +65,7 @@ Route<dynamic> route(RouteSettings settings) {
 }
 
 //shows a page as overlay for our editor
-showOverlayed(
-    GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
+showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
   OverlayEntry helperOverlay = OverlayEntry(
     opaque: false,
     builder: builder,

@@ -15,10 +15,12 @@ import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 class FullscreenHelperViewModel extends HelperViewModel {
 
+  // form
   double helperOpacity;
-
+  ValueNotifier<bool> canValidate;
   StreamController<bool> editableTextFieldController;
 
+  // helper properties
   LanguageNotifier language;
   BoxNotifier bodyBox;
   MediaNotifier media;

@@ -14,6 +14,7 @@ import 'package:pal/src/services/editor/versions/version_editor_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
+import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
@@ -25,12 +26,18 @@ import 'helper_editor_presenter.dart';
 import 'helper_editor_viewmodel.dart';
 
 class HelperEditorPageArguments {
+
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+
   final String pageId;
+
   final String helperMinVersion;
+
   final String helperMaxVersion;
+
   final bool isOnEditMode;
-  final HelperViewModel templateViewModel;
+
+  final HelperViewModel templateViewModel; //TODO remove
 
   HelperEditorPageArguments(
     this.hostedAppNavigatorKey,

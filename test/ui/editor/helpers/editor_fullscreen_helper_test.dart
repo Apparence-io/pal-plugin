@@ -11,7 +11,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart'
 import '../../../pal_test_utilities.dart';
 
 void main() {
-  group('[Editor] Fullscreen helper', () {
+  group('[Editor] Fullscreen helper - creation mode', () {
     final _navigatorKey = GlobalKey<NavigatorState>();
 
     EditorFullScreenHelperPresenter presenter;
@@ -66,10 +66,9 @@ void main() {
         HelperType.HELPER_FULL_SCREEN,
         HelperTheme.BLACK,
       );
-      var presenterFinder =
-          find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
-      var page = presenterFinder.evaluate().first.widget as PresenterInherited<
-          EditorFullScreenHelperPresenter, EditorFullScreenHelperModel>;
+      var presenterFinder = find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
+      var page = presenterFinder.evaluate().first.widget
+        as PresenterInherited<EditorFullScreenHelperPresenter, EditorFullScreenHelperModel>;
       presenter = page.presenter;
       await tester.pumpAndSettle(Duration(milliseconds: 1000));
     }
@@ -84,6 +83,17 @@ void main() {
 
       expect(find.byType(TextField), findsNWidgets(3));
       expect(find.text('Edit me!'), findsOneWidget);
+    });
+
+    testWidgets('should edit fullscreen description text', (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      expect(find.text('Edit me!'), findsOneWidget);
+      var titleField = find.byKey(ValueKey('palFullscreenHelperDescriptionField'));
+      await tester.tap(titleField.first);
+      await tester.pump();
+      await tester.enterText(titleField, 'Bonjour!');
+      expect(find.text('Bonjour!'), findsOneWidget);
     });
 
     testWidgets('should edit fullscreen title', (WidgetTester tester) async {

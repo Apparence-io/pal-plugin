@@ -6,10 +6,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
 enum ToolbarType { text, border }
+
+typedef OnFieldChanged(String id, String value);
+
+typedef OnTextStyleChanged(String id, TextStyle style, FontKeys fontkeys);
 
 class EditableTextField extends StatefulWidget {
   // Keys
@@ -24,8 +30,8 @@ class EditableTextField extends StatefulWidget {
   final BoxDecoration backgroundBoxDecoration;
   final EdgeInsetsGeometry backgroundPadding;
   final EdgeInsetsGeometry textFormFieldPadding;
-  final Function(String, String) onChanged;
-  final Function(String, TextStyle, FontKeys) onTextStyleChanged;
+  final OnFieldChanged onChanged;
+  final OnTextStyleChanged onTextStyleChanged;
   final TextInputType keyboardType;
   final TextStyle textStyle;
   final int maxLines;
@@ -74,8 +80,8 @@ class EditableTextField extends StatefulWidget {
     final EdgeInsetsGeometry backgroundPadding,
     final EdgeInsetsGeometry textFormFieldPadding,
     final String Function(String) validator,
-    final Function(String, String) onChanged,
-    final Function(String, TextStyle, FontKeys) onTextStyleChanged,
+    final OnFieldChanged onChanged,
+    final OnTextStyleChanged onTextStyleChanged,
     final TextInputType keyboardType,
     final TextStyle textStyle,
     final int maxLines = 1,
@@ -112,6 +118,24 @@ class EditableTextField extends StatefulWidget {
       initialValue: initialValue,
     );
   }
+
+  // factory EditableTextField.fromTextFormFieldNotifier({
+  //   final Stream<bool> outsideTapStream,
+  //   final TextFormFieldNotifier textFormFieldNotifier,
+  //   final TextStyle mergeWithFonts
+  // }) => EditableTextField.text(
+  //   outsideTapStream: outsideTapStream,
+  //   fontFamilyKey: textFormFieldNotifier.fontFamily?.value,
+  //   initialValue: textFormFieldNotifier.text?.value,
+  //   textStyle: TextStyle(
+  //     color: textFormFieldNotifier.fontColor.value,
+  //     decoration: TextDecoration.none,
+  //     fontSize: textFormFieldNotifier.fontSize?.value?.toDouble(),
+  //     fontWeight: FontWeightMapper.toFontWeight(
+  //       textFormFieldNotifier.fontWeight?.value,
+  //     ),
+  //   ).merge(mergeWithFonts)
+  // );
 
   factory EditableTextField.border({
     Key key,

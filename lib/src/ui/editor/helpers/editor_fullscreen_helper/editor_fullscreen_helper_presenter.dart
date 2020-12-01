@@ -5,89 +5,50 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 
-class EditorFullScreenHelperPresenter
-    extends Presenter<EditorFullScreenHelperModel, EditorFullScreenHelperView> {
-  final FullscreenHelperViewModel fullscreenHelperViewModel;
+class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewModel, EditorFullScreenHelperView> {
 
   EditorFullScreenHelperPresenter(
     EditorFullScreenHelperView viewInterface,
-    this.fullscreenHelperViewModel,
-  ) : super(EditorFullScreenHelperModel(), viewInterface);
+    FullscreenHelperViewModel viewModel,
+  ) : super(viewModel, viewInterface);
 
   @override
   void onInit() {
     super.onInit();
-
-    this.viewModel.editableTextFieldController =
-        StreamController<bool>.broadcast();
-
-    this.viewModel.titleKey = GlobalKey();
-    this.viewModel.formKey = GlobalKey<FormState>();
-
     this.viewModel.helperOpacity = 1;
+    this.viewModel.editableTextFieldController = StreamController<bool>.broadcast();
   }
 
   // Title
-  onTitleChanged(String id, String newValue) {
-    fullscreenHelperViewModel.titleField?.text?.value = newValue;
-  }
+  onTitleChanged(String id, String newValue)
+    => _onTextChanged(viewModel.titleField, newValue);
 
-  onTitleTextStyleChanged(
-      String id, TextStyle newTextStyle, FontKeys fontKeys) {
-    fullscreenHelperViewModel.titleField?.fontColor?.value =
-        newTextStyle?.color;
-    fullscreenHelperViewModel.titleField?.fontSize?.value =
-        newTextStyle?.fontSize?.toInt();
+  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
+    => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
 
-    if (fontKeys != null) {
-      fullscreenHelperViewModel.titleField?.fontWeight?.value =
-          fontKeys.fontWeightNameKey;
-      fullscreenHelperViewModel.titleField?.fontFamily?.value =
-          fontKeys.fontFamilyNameKey;
-    }
-  }
+  // Description field
+  onDescriptionChanged(String id, String newValue)
+    => _onTextChanged(viewModel.descriptionField, newValue);
 
+  onDescriptionTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+    => _onStyleChanged(viewModel.descriptionField, newTextStyle, fontKeys);
+  
   // Positiv button
-  onPositivTextChanged(String id, String newValue) {
-    fullscreenHelperViewModel.positivButtonField?.text?.value = newValue;
-  }
+  onPositivTextChanged(String id, String newValue)
+    => _onTextChanged(viewModel.positivButtonField, newValue);
 
-  onPositivTextStyleChanged(
-      String id, TextStyle newTextStyle, FontKeys fontKeys) {
-    fullscreenHelperViewModel.positivButtonField?.fontColor?.value =
-        newTextStyle?.color;
-    fullscreenHelperViewModel.positivButtonField?.fontSize?.value =
-        newTextStyle?.fontSize?.toInt();
-
-    if (fontKeys != null) {
-      fullscreenHelperViewModel.positivButtonField?.fontWeight?.value =
-          fontKeys.fontWeightNameKey;
-      fullscreenHelperViewModel.positivButtonField?.fontFamily?.value =
-          fontKeys.fontFamilyNameKey;
-    }
-  }
+  onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
+    => _onStyleChanged(viewModel.positivButtonField, newTextStyle, fontKeys);
 
   // Negativ button
-  onNegativTextChanged(String id, String newValue) {
-    fullscreenHelperViewModel.negativButtonField?.text?.value = newValue;
-  }
+  onNegativTextChanged(String id, String newValue) 
+    => _onTextChanged(viewModel.negativButtonField, newValue);
 
-  onNegativTextStyleChanged(
-      String id, TextStyle newTextStyle, FontKeys fontKeys) {
-    fullscreenHelperViewModel.negativButtonField?.fontColor?.value =
-        newTextStyle?.color;
-    fullscreenHelperViewModel.negativButtonField?.fontSize?.value =
-        newTextStyle?.fontSize?.toInt();
-
-    if (fontKeys != null) {
-      fullscreenHelperViewModel.negativButtonField?.fontWeight?.value =
-          fontKeys.fontWeightNameKey;
-      fullscreenHelperViewModel.negativButtonField?.fontFamily?.value =
-          fontKeys.fontFamilyNameKey;
-    }
-  }
+  onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
+    => _onStyleChanged(viewModel.negativButtonField, newTextStyle, fontKeys);
+  
 
   @override
   Future onDestroy() async {
@@ -95,9 +56,8 @@ class EditorFullScreenHelperPresenter
     super.onDestroy();
   }
 
-  TextStyle googleCustomFont(String fontFamily) {
-    return this.viewInterface.googleCustomFont(fontFamily);
-  }
+  //TODO move  to view
+  TextStyle googleCustomFont(String fontFamily) => this.viewInterface.googleCustomFont(fontFamily);
 
   onOutsideTap() {
     this.viewModel.editableTextFieldController.add(true);
@@ -113,25 +73,36 @@ class EditorFullScreenHelperPresenter
     return null;
   }
 
-  changeBackgroundColor(
-    FullscreenHelperViewModel viewModel,
-    EditorFullScreenHelperPresenter presenter,
-  ) {
-    this.viewInterface.showColorPickerDialog(viewModel, presenter);
-  }
+  changeBackgroundColor() => this.viewInterface.showColorPickerDialog(viewModel, this);
 
   editMedia() async {
     final selectedMedia = await this
         .viewInterface
-        .pushToMediaGallery(this.fullscreenHelperViewModel.media?.uuid);
+        .pushToMediaGallery(this.viewModel.media?.uuid);
 
-    this.fullscreenHelperViewModel.media?.url?.value = selectedMedia?.url;
-    this.fullscreenHelperViewModel.media?.uuid = selectedMedia?.id;
+    this.viewModel.media?.url?.value = selectedMedia?.url;
+    this.viewModel.media?.uuid = selectedMedia?.id;
     this.refreshView();
   }
 
   updateBackgroundColor(Color aColor) {
-    fullscreenHelperViewModel.bodyBox.backgroundColor.value = aColor;
+    viewModel.bodyBox.backgroundColor.value = aColor;
     this.refreshView();
+  }
+  
+  
+  // ----------------------------------
+  // PRIVATES 
+  // ----------------------------------
+  
+  _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) => textNotifier.text.value = newValue;
+
+  _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
+    textNotifier?.fontColor?.value = newTextStyle?.color;
+    textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
+    if (fontKeys != null) {
+      textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
+      textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
+    }
   }
 }

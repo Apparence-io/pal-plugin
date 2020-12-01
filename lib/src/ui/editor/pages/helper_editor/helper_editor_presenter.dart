@@ -7,20 +7,27 @@ import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/editor/page/page_editor_service.dart';
 import 'package:pal/src/services/editor/versions/version_editor_service.dart';
+import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 import 'helper_editor.dart';
 import 'helper_editor_viewmodel.dart';
 
-class HelperEditorPresenter
-    extends Presenter<HelperEditorViewModel, HelperEditorView> {
+class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEditorView> {
+
   final EditorHelperService helperService;
+
   final PageEditorService pageService;
+
   final VersionEditorService versionEditorService;
+
   final PalNavigatorObserver palNavigatorObserver;
+
   final PalRouteObserver routeObserver;
+
   final ElementFinder elementFinder;
+
   final HelperEditorPageArguments basicArguments;
 
   HelperEditorPresenter(

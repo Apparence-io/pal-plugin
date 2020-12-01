@@ -68,7 +68,7 @@ void main() {
       );
       var presenterFinder = find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
       var page = presenterFinder.evaluate().first.widget
-        as PresenterInherited<EditorFullScreenHelperPresenter, EditorFullScreenHelperModel>;
+        as PresenterInherited<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
       presenter = page.presenter;
       await tester.pumpAndSettle(Duration(milliseconds: 1000));
     }
@@ -122,7 +122,7 @@ void main() {
       await _beforeEach(tester);
 
       expect(
-        presenter.fullscreenHelperViewModel.bodyBox.backgroundColor.value,
+        presenter.viewModel.bodyBox.backgroundColor.value,
         Colors.blueAccent,
       );
 
@@ -144,7 +144,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        presenter.fullscreenHelperViewModel.bodyBox.backgroundColor.value,
+        presenter.viewModel.bodyBox.backgroundColor.value,
         Color(0xFFFFFFFF),
       );
     });

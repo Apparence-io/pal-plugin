@@ -75,7 +75,7 @@ typedef OnFormChanged(bool isValid);
 /// use [EditorHelperService] to create a fullscreen helper
 class EditorFullScreenHelperPage  extends StatelessWidget {
 
-  final FullscreenHelperViewModel viewModel;
+  final FullscreenHelperViewModel viewModel; //TODO remove me
 
   final OnFormChanged onFormChanged;
 
@@ -125,7 +125,7 @@ class EditorFullScreenHelperPage  extends StatelessWidget {
               }
             },
             child: EditableBackground(
-              backgroundColor: viewModel.bodyBox.backgroundColor?.value,
+              backgroundColor: model.bodyBox.backgroundColor?.value,
               circleIconKey: 'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
               onColorChange: () => presenter.changeBackgroundColor(),
               widget: Center(

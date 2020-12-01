@@ -201,19 +201,15 @@ class _EditableTextFieldState extends State<EditableTextField> {
   @override
   void initState() {
     super.initState();
-
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);
-
     _fontFamilyKey = widget.fontFamilyKey ?? 'Montserrat';
-
     // Listen on stream when outside tap is detected
     _outsideSub = widget.outsideTapStream?.listen((event) {
       if (event) {
         this._onClose();
       }
     });
-
     _textStyle = widget.textStyle;
   }
 
@@ -284,7 +280,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,
                       hintText: widget.hintText,
-                      hintStyle: _textStyle.merge(
+                      hintStyle: _textStyle?.merge(
                         TextStyle(
                           color: _textStyle?.color?.withAlpha(80),
                         ),
@@ -324,7 +320,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
         break;
       default:
     }
-
     return toolbar;
   }
 
@@ -407,9 +402,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   _onChangeBorder() {}
+
   _onClose() {
     _focusNode.unfocus();
-
     setState(() {
       _isToolbarVisible = false;
     });

@@ -16,6 +16,7 @@ import 'package:pal/src/ui/editor/helpers/editor_anchored_helper/editor_anchored
 import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
+import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
@@ -280,10 +281,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   addSimpleHelperEditor(SimpleHelperViewModel model, Function isValid) {
-    _helperToEdit = EditorSimpleHelperPage(
-      viewModel: model,
-      onFormChanged: isValid,
-    );
+    // _helperToEdit = EditorSimpleHelperPage(
+    //   viewModel: model,
+    //   onFormChanged: isValid,
+    // );
   }
 
   addUpdateHelperEditor(UpdateHelperViewModel model, Function isValid) {

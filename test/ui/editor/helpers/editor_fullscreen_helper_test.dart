@@ -122,167 +122,23 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
     });
 
+    testWidgets('background color = Colors.blueAccent, change color to FFF => should change background color in model', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      expect(presenter.viewModel.bodyBox.backgroundColor.value, Colors.blueAccent,);
+      var colorPickerButton = find.byKey(ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
+      await tester.tap(colorPickerButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(ColorPickerDialog), findsOneWidget);
+
+      var hecColorField = find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
+      await tester.enterText(hecColorField, '#FFFFFF');
+      await tester.pumpAndSettle();
+
+      var validateColorButton = find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
+      await tester.tap(validateColorButton);
+      await tester.pumpAndSettle();
+      expect(presenter.viewModel.bodyBox.backgroundColor.value, Color(0xFFFFFFFF),);
+    });
+
   });
-
-
-
-  // group('[Editor] Fullscreen helper - creation mode (before refactoring)', () {
-  //   final _navigatorKey = GlobalKey<NavigatorState>();
-  //
-  //   EditorFullScreenHelperPresenter presenter;
-  //
-  //   Scaffold _myHomeTest = Scaffold(
-  //     body: Column(
-  //       children: [
-  //         Text(
-  //           "text1",
-  //           key: ValueKey("text1"),
-  //         ),
-  //         Text("text2", key: ValueKey("text2")),
-  //         Padding(
-  //           padding: EdgeInsets.only(top: 32),
-  //           child: FlatButton(
-  //             key: ValueKey("MFlatButton"),
-  //             child: Text("tapme"),
-  //             onPressed: () => print("impressed!"),
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  //
-  //   Route<dynamic> route(RouteSettings settings) {
-  //     switch (settings.name) {
-  //       case '/':
-  //         return MaterialPageRoute(builder: (context) => _myHomeTest);
-  //       case '/editor/media-gallery':
-  //         return MaterialPageRoute(
-  //             builder: (context) => Scaffold(
-  //                   key: ValueKey('mediaGallery'),
-  //                 ));
-  //       default:
-  //         throw 'unexpected Route';
-  //     }
-  //   }
-  //
-  //   // init pal + go to editor
-  //   Future _beforeEach(WidgetTester tester) async {
-  //     await initAppWithPal(
-  //       tester,
-  //       _myHomeTest,
-  //       _navigatorKey,
-  //       editorModeEnabled: true,
-  //       routeFactory: route,
-  //     );
-  //     await pumpHelperWidget(
-  //       tester,
-  //       _navigatorKey,
-  //       HelperTriggerType.ON_SCREEN_VISIT,
-  //       HelperType.HELPER_FULL_SCREEN,
-  //       HelperTheme.BLACK,
-  //     );
-  //     var presenterFinder = find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
-  //     var page = presenterFinder.evaluate().first.widget
-  //       as PresenterInherited<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
-  //     presenter = page.presenter;
-  //     await tester.pumpAndSettle(Duration(milliseconds: 1000));
-  //   }
-  //
-  //   testWidgets('should add fullscreen helper', (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //     expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
-  //   });
-  //
-  //   testWidgets('should textfield present', (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //
-  //     expect(find.byType(TextField), findsNWidgets(3));
-  //     expect(find.text('Edit me!'), findsOneWidget);
-  //   });
-  //
-  //   testWidgets('should edit fullscreen description text', (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //
-  //     expect(find.text('Edit me!'), findsOneWidget);
-  //     var titleField = find.byKey(ValueKey('palFullscreenHelperDescriptionField'));
-  //     await tester.tap(titleField.first);
-  //     await tester.pump();
-  //     await tester.enterText(titleField, 'Bonjour!');
-  //     expect(find.text('Bonjour!'), findsOneWidget);
-  //   });
-  //
-  //   testWidgets('should edit fullscreen title', (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //
-  //     expect(find.text('Edit me!'), findsOneWidget);
-  //     var titleField = find.byKey(ValueKey('palFullscreenHelperTitleField'));
-  //     await tester.tap(titleField.first);
-  //     await tester.pump();
-  //     await tester.enterText(titleField, 'Bonjour!');
-  //     expect(find.text('Bonjour!'), findsOneWidget);
-  //   });
-  //
-  //   testWidgets('should save helper', (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //
-  //     expect(find.text('Edit me!'), findsOneWidget);
-  //     var titleField = find.byKey(ValueKey('palFullscreenHelperTitleField'));
-  //     await tester.tap(titleField.first);
-  //     await tester.pump();
-  //     await tester.enterText(titleField, 'Bonjour!');
-  //     expect(find.text('Bonjour!'), findsOneWidget);
-  //   });
-  //
-  //   testWidgets('should change background color', (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //
-  //     expect(
-  //       presenter.viewModel.bodyBox.backgroundColor.value,
-  //       Colors.blueAccent,
-  //     );
-  //
-  //     var colorPickerButton = find.byKey(
-  //         ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
-  //     await tester.tap(colorPickerButton);
-  //     await tester.pumpAndSettle();
-  //
-  //     expect(find.byType(ColorPickerDialog), findsOneWidget);
-  //
-  //     var hecColorField =
-  //         find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
-  //     await tester.enterText(hecColorField, '#FFFFFF');
-  //     await tester.pumpAndSettle();
-  //
-  //     var validateColorButton =
-  //         find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
-  //     await tester.tap(validateColorButton);
-  //     await tester.pumpAndSettle();
-  //
-  //     expect(
-  //       presenter.viewModel.bodyBox.backgroundColor.value,
-  //       Color(0xFFFFFFFF),
-  //     );
-  //   });
-  //
-  //   testWidgets('should edit media', (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //
-  //     expect(
-  //         find.byKey(ValueKey(
-  //             'pal_EditorFullScreenHelperPage_EditableMedia_EditButton')),
-  //         findsOneWidget);
-  //   });
-  //
-  //   testWidgets('should edit fullscreen positiv button',
-  //       (WidgetTester tester) async {
-  //     await _beforeEach(tester);
-  //
-  //     var titleField =
-  //         find.byKey(ValueKey('pal_EditorFullScreenHelper_ThanksButtonField'));
-  //     await tester.tap(titleField.first);
-  //     await tester.pump();
-  //     await tester.enterText(titleField, 'Ok !');
-  //     expect(find.text('Ok !'), findsOneWidget);
-  //   });
-  // });
 }

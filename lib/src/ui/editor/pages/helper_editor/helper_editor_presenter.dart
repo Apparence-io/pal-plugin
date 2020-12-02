@@ -171,16 +171,16 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
   Future _saveHelper(CreateHelperConfig config) async {
     try {
       switch (config?.helperType) {
-        case HelperType.HELPER_FULL_SCREEN:
-          var model = viewModel.helperViewModel as FullscreenHelperViewModel;
-          await helperService.saveFullScreenHelper(config.pageId,
-              EditorEntityFactory.buildFullscreenArgs(config, model));
-          break;
-        case HelperType.SIMPLE_HELPER:
-          var model = viewModel.helperViewModel as SimpleHelperViewModel;
-          await helperService.saveSimpleHelper(config.pageId,
-              EditorEntityFactory.buildSimpleArgs(config, model));
-          break;
+        // case HelperType.HELPER_FULL_SCREEN:
+        //   var model = viewModel.helperViewModel as FullscreenHelperViewModel;
+        //   await helperService.saveFullScreenHelper(config.pageId,
+        //       EditorEntityFactory.buildFullscreenArgs(config, model));
+        //   break;
+        // case HelperType.SIMPLE_HELPER:
+        //   var model = viewModel.helperViewModel as SimpleHelperViewModel;
+        //   await helperService.saveSimpleHelper(config.pageId,
+        //       EditorEntityFactory.buildSimpleArgs(config, model));
+        //   break;
         // case HelperType.ANCHORED_OVERLAYED_HELPER:
         //   break;
         case HelperType.UPDATE_HELPER:

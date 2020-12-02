@@ -2,15 +2,98 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_theme.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
-class EditorSimpleHelperModel extends MVVMModel {
-  GlobalKey<FormState> formKey;
-  GlobalKey containerKey;
-  StreamController<bool> editableTextFieldController;
-  
-  EditorSimpleHelperModel({
-    this.formKey,
-    this.containerKey,
-    this.editableTextFieldController,
-  });
+class SimpleHelperViewModel extends HelperViewModel {
+
+  // form validation boolean
+  ValueNotifier<bool> canValidate;
+
+  LanguageNotifier language;
+  BoxNotifier bodyBox;
+  TextFormFieldNotifier detailsField;
+
+  SimpleHelperViewModel({
+    String id,
+    @required String name,
+    @required HelperTriggerType triggerType,
+    @required int priority,
+    @required int versionMinId,
+    HelperTheme helperTheme,
+    int versionMaxId,
+    int languageId,
+    HelperBoxViewModel helperBoxViewModel,
+    HelperTextViewModel detailsField,
+  }) : super(
+    id: id,
+    name: name,
+    triggerType: triggerType,
+    priority: priority,
+    versionMinId: versionMinId,
+    versionMaxId: versionMaxId,
+    helperType: HelperType.SIMPLE_HELPER,
+    helperTheme: helperTheme,
+  ) {
+    this.language = LanguageNotifier(
+      id: languageId ?? 1,
+    );
+    this.bodyBox = BoxNotifier(
+      id: helperBoxViewModel?.id,
+      backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.black87,
+    );
+    this.detailsField = TextFormFieldNotifier(
+      id: detailsField?.id,
+      fontColor: detailsField?.fontColor ?? Colors.white,
+      fontSize: detailsField?.fontSize?.toInt() ?? 14,
+      fontFamily: detailsField?.fontFamily,
+      fontWeight: FontWeightMapper.toFontKey(detailsField?.fontWeight),
+      text: detailsField?.text ?? '',
+    );
+  }
+
+  factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model) {
+    final simpleHelper = SimpleHelperViewModel(
+      name: model.name,
+      triggerType: model.triggerType,
+      priority: model.priority,
+      versionMinId: model.versionMinId,
+      versionMaxId: model.versionMaxId,
+      helperTheme: model.helperTheme,
+    );
+
+    if (model is SimpleHelperViewModel) {
+      simpleHelper.bodyBox = model?.bodyBox;
+      simpleHelper.language = model?.language;
+      simpleHelper.detailsField = model?.detailsField;
+    }
+    return simpleHelper;
+  }
+
+  factory SimpleHelperViewModel.fromHelperEntity(HelperEntity helperEntity) {
+    return SimpleHelperViewModel(
+      id: helperEntity?.id,
+      name: helperEntity?.name,
+      triggerType: helperEntity?.triggerType,
+      priority: helperEntity?.priority,
+      versionMinId: helperEntity?.versionMinId,
+      versionMaxId: helperEntity?.versionMaxId,
+      helperTheme: null,
+      helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
+        SimpleHelperKeys.BACKGROUND_KEY,
+        helperEntity?.helperBoxes,
+      ),
+      detailsField: HelperSharedFactory.parseTextLabel(
+        SimpleHelperKeys.CONTENT_KEY,
+        helperEntity?.helperTexts,
+      ),
+    );
+  }
 }

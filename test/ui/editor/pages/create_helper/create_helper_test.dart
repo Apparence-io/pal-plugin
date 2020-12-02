@@ -39,11 +39,9 @@ void main() {
       await _before(tester);
       expect(find.text('Create new helper'), findsOneWidget);
       expect(find.byKey(ValueKey('palCreateHelperScrollList')), findsOneWidget);
-      expect(
-          find.byKey(ValueKey('pal_CreateHelper_TextField_Name')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_CreateHelper_TextField_Name')), findsOneWidget);
       expect(find.byKey(ValueKey('palCreateHelperNextButton')), findsOneWidget);
-      expect(
-          find.byKey(ValueKey('pal_CreateHelper_Dropdown_Type')), findsOneWidget);
+      expect(find.byKey(ValueKey('pal_CreateHelper_Dropdown_Type')), findsOneWidget);
       expect(find.text('Next'), findsOneWidget);
       expect(find.byType(NestedNavigator), findsOneWidget);
       expect(find.byType(ProgressBarWidget), findsOneWidget);
@@ -51,38 +49,19 @@ void main() {
 
     testWidgets('should next button be active', (WidgetTester tester) async {
       await _before(tester);
-      expect(
-          tester
-              .widget<RaisedButton>(
-                  find.byKey(ValueKey('palCreateHelperNextButton')))
-              .enabled,
-          isFalse);
-
+      expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
       var helperName = find.byKey(ValueKey('pal_CreateHelper_TextField_Name'));
       await tester.enterText(helperName, 'My awesome helper');
       await tester.pump();
-
-      expect(
-          tester
-              .widget<RaisedButton>(
-                  find.byKey(ValueKey('palCreateHelperNextButton')))
-              .enabled,
-          isTrue);
+      expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isTrue);
     });
 
     testWidgets('should next button be disabled', (WidgetTester tester) async {
       await _before(tester);
-
       var helperName = find.byKey(ValueKey('pal_CreateHelper_TextField_Name'));
       await tester.enterText(helperName, '');
       await tester.pump();
-
-      expect(
-          tester
-              .widget<RaisedButton>(
-                  find.byKey(ValueKey('palCreateHelperNextButton')))
-              .enabled,
-          isFalse);
+      expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
     });
   });
 }

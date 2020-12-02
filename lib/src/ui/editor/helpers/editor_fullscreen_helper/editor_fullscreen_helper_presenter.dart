@@ -15,6 +15,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_ove
 class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewModel, EditorFullScreenHelperView> {
 
   final EditorHelperService editorHelperService;
+
   final HelperEditorPageArguments parameters;
   
   EditorFullScreenHelperPresenter(
@@ -64,7 +65,7 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   }
 
   onCancel() {
-    //TODO
+    viewInterface.closeEditor();
   }
 
   // Title

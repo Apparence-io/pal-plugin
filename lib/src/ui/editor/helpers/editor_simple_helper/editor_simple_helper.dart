@@ -38,9 +38,13 @@ abstract class EditorSimpleHelperView {
 class EditorSimpleHelperPage extends StatelessWidget  {
 
   final SimpleHelperViewModel baseviewModel;
+
   final HelperEditorPageArguments arguments;
+
   final EditorHelperService helperService;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   EditorSimpleHelperPage._({
@@ -82,7 +86,7 @@ class EditorSimpleHelperPage extends StatelessWidget  {
         context: context,
         presenterBuilder: (context) => EditorSimpleHelperPresenter(
             new _EditorSimpleHelperPage(context, _scaffoldKey),
-            SimpleHelperViewModel.fromHelperViewModel(baseviewModel),
+            baseviewModel,
             helperService ?? EditorInjector.of(context).helperService,
             arguments
         ),
@@ -202,9 +206,9 @@ class _EditorSimpleHelperPage with EditorSendingOverlayMixin implements EditorSi
   final BuildContext context;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  _EditorSimpleHelperPage(this.context, this.scaffoldKey) {
-    this.overlayContext = this.context;
-  }
+  _EditorSimpleHelperPage(this.context, this.scaffoldKey);
+
+  BuildContext get overlayContext => context;
 
   @override
   void showColorPickerDialog(

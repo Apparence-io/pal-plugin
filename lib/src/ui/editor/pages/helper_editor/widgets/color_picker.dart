@@ -5,9 +5,11 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/ui/editor/widgets/bordered_text_field.dart';
 
+typedef OnColorSelected = void Function(Color);
+
 class ColorPickerDialog extends StatefulWidget {
   final Color placeholderColor;
-  final Function(Color) onColorSelected;
+  final OnColorSelected onColorSelected;
 
   const ColorPickerDialog({
     Key key,

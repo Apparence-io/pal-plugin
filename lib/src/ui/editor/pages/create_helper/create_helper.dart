@@ -6,6 +6,7 @@ import 'package:pal/src/router.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
+import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step.dart';
@@ -203,7 +204,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
 
     showOverlayed(
       hostedAppNavigatorKey,
-      (context) => EditorFullScreenHelperPage.create(
+      (context) => EditorUpdateHelperPage.create(
         parameters: args,
         helperViewModel: model.asHelperViewModel()
       )

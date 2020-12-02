@@ -183,11 +183,11 @@ class HelperEditorPresenter extends Presenter<HelperEditorViewModel, HelperEdito
         //   break;
         // case HelperType.ANCHORED_OVERLAYED_HELPER:
         //   break;
-        case HelperType.UPDATE_HELPER:
-          var model = viewModel.helperViewModel as UpdateHelperViewModel;
-          await helperService.saveUpdateHelper(config.pageId,
-              EditorEntityFactory.buildUpdateArgs(config, model));
-          break;
+        // case HelperType.UPDATE_HELPER:
+        //   var model = viewModel.helperViewModel as UpdateHelperViewModel;
+        //   await helperService.saveUpdateHelper(config.pageId,
+        //       EditorEntityFactory.buildUpdateArgs(config, model));
+        //   break;
         default:
           throw "NOT_IMPLEMENTED_TYPE";
           break;

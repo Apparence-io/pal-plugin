@@ -18,6 +18,7 @@ import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullsc
 import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
+import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_banner.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
@@ -288,10 +289,10 @@ class HelperEditorPageBuilder implements HelperEditorView {
   }
 
   addUpdateHelperEditor(UpdateHelperViewModel model, Function isValid) {
-    _helperToEdit = EditorUpdateHelperPage(
-      viewModel: model,
-      onFormChanged: isValid,
-    );
+    // _helperToEdit = EditorUpdateHelperPage(
+    //   viewModel: model,
+    //   onFormChanged: isValid,
+    // );
   }
 
   addAnchoredFullscreenEditor(HelperEditorPresenter presenter) {

@@ -10,6 +10,7 @@ import 'package:pal/src/router.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
+import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -74,6 +75,13 @@ Future pumpHelperWidget(
           helperViewModel: args.templateViewModel,
           helperService: editorHelperService,
         );
+      break;
+    case HelperType.UPDATE_HELPER:
+      builder = (context) => EditorUpdateHelperPage.create(
+        parameters: args,
+        helperViewModel: args.templateViewModel,
+        helperService: editorHelperService,
+      );
       break;
     case HelperType.HELPER_FULL_SCREEN:
       builder = (context) => EditorFullScreenHelperPage.create(

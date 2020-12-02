@@ -197,13 +197,14 @@ class EditorSimpleHelperPage extends StatelessWidget  {
 }
 
 
-class _EditorSimpleHelperPage implements EditorSimpleHelperView {
+class _EditorSimpleHelperPage with EditorSendingOverlayMixin implements EditorSimpleHelperView  {
 
   final BuildContext context;
   final GlobalKey<ScaffoldState> scaffoldKey;
-  EditorSendingOverlay sendingOverlay;
 
-  _EditorSimpleHelperPage(this.context, this.scaffoldKey);
+  _EditorSimpleHelperPage(this.context, this.scaffoldKey) {
+    this.overlayContext = this.context;
+  }
 
   @override
   void showColorPickerDialog(
@@ -225,18 +226,4 @@ class _EditorSimpleHelperPage implements EditorSimpleHelperView {
     Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
   }
 
-  @override
-  void closeLoadingScreen() => sendingOverlay.dismiss();
-
-  @override
-  Future showLoadingScreen(ValueNotifier<SendingStatus> status) async {
-    sendingOverlay = EditorSendingOverlay(
-      loadingOpacity: 1,
-      loadingMessage: "Saving... please wait",
-      successMessage: "Helper saved",
-      errorMessage: "Error occured, please try again later",
-      status: status
-    );
-    await sendingOverlay.show(context);
-  }
 }

@@ -42,6 +42,7 @@ void main() {
     );
 
     Future _beforeEach(WidgetTester tester) async {
+      reset(helperEditorServiceMock);
       await initAppWithPal(tester, _myHomeTest, _navigatorKey);
       await pumpHelperWidget(
         tester, _navigatorKey,
@@ -116,6 +117,24 @@ void main() {
       verify(helperEditorServiceMock.saveSimpleHelper(any, any)).called(1);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
+    });
+
+    testWidgets('save call helperService.saveSimpleHelper with error => an error is shown then fades', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      when(helperEditorServiceMock.saveSimpleHelper(any, any)).thenThrow(new ArgumentError());
+      var editableTextsFinder = find.byType(TextField);
+      await _enterTextInEditable(tester, editableTextsFinder.at(0), 'my helper tips lorem');
+      await tester.pumpAndSettle();
+      var validateFinder = find.byKey(ValueKey('editModeValidate'));
+      var validateButton = validateFinder.evaluate().first.widget as EditorButton;
+      expect(validateButton.isEnabled, isTrue);
+
+      validateButton.onPressed();
+      await tester.pump(Duration(seconds: 1));
+      expect(find.text('Error occured, please try again later'), findsOneWidget);
+      await tester.pump(Duration(seconds: 2));
+      await tester.pump(Duration(milliseconds: 100));
+      expect(find.text('Error occured, please try again later'), findsNothing);
     });
 
 

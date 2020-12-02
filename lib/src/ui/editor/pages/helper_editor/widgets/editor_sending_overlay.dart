@@ -8,6 +8,32 @@ enum SendingStatus {
   SENT
 }
 
+/// use this to add a standard sending progress overlay function to all helper editors
+/// class _EditorSimpleHelperPage with EditorSendingOverlayMixin implements EditorSimpleHelperView
+///   _EditorSimpleHelperPage(this.context, this.scaffoldKey) {
+///     this.overlayContext = this.context;
+///   }
+/// ...
+/// }
+mixin EditorSendingOverlayMixin {
+  EditorSendingOverlay sendingOverlay;
+  BuildContext overlayContext;
+
+  void closeLoadingScreen() => sendingOverlay.dismiss();
+
+  Future showLoadingScreen(ValueNotifier<SendingStatus> status) async {
+    sendingOverlay = EditorSendingOverlay(
+      loadingOpacity: 1,
+      loadingMessage: "Saving... please wait",
+      successMessage: "Helper saved",
+      errorMessage: "Error occured, please try again later",
+      status: status
+    );
+    await sendingOverlay.show(overlayContext);
+  }
+}
+
+
 class EditorSendingOverlay {
 
   double loadingOpacity;

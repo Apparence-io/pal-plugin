@@ -38,6 +38,10 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   @override
   Future onDestroy() async {
     super.onDestroy();
+    editableTextFieldController.close();
+    // fixme =>  mvvm_builder add afterDestroy method
+    // viewModel.canValidate.dispose();
+    // viewModel.canValidate = null;
   }
 
   Future onValidate() async {
@@ -105,7 +109,9 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
     textNotifier.text.value = newValue;
-    viewModel.canValidate.value = isValid();
+    if(viewModel.canValidate != null)  {
+      viewModel.canValidate.value = isValid();
+    }
   }
 
   _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {

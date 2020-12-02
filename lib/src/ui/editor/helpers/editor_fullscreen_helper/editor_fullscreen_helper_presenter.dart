@@ -101,6 +101,8 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   Future onDestroy() async {
     this.viewModel.editableTextFieldController.close();
     super.onDestroy();
+    // this.viewModel.canValidate.dispose();
+    // this.viewModel.canValidate = null;
   }
 
   //TODO move  to view

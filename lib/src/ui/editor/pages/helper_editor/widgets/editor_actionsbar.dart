@@ -53,11 +53,11 @@ class EditorActionsBar extends StatelessWidget {
                 valueListenable: canValidate,
                 builder: (context, isActive, child)
                   => EditorButton.validate(
-                    PalTheme.of(context),
-                    onValidate,
-                    key: ValueKey("editModeValidate"),
-                    isEnabled: isActive,
-                  ),
+                      PalTheme.of(context),
+                      onValidate,
+                      key: ValueKey("editModeValidate"),
+                      isEnabled: isActive,
+                    ),
                 ),
             ),
           ],

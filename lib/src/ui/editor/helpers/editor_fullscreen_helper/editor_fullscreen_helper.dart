@@ -39,13 +39,15 @@ abstract class EditorFullScreenHelperView {
   void closeLoadingScreen();
 }
 
-class EditorFullScreenHelper implements EditorFullScreenHelperView {
+class EditorFullScreenHelper with EditorSendingOverlayMixin implements EditorFullScreenHelperView {
 
   BuildContext context;
 
   EditorSendingOverlay sendingOverlay;
 
-  EditorFullScreenHelper(this.context);
+  EditorFullScreenHelper(this.context){
+    overlayContext = context;
+  }
 
   @override
   void showColorPickerDialog(
@@ -83,21 +85,6 @@ class EditorFullScreenHelper implements EditorFullScreenHelperView {
   }
 
   @override
-  Future showLoadingScreen(ValueNotifier<SendingStatus> status) async {
-    sendingOverlay = EditorSendingOverlay(
-      loadingOpacity: 1,
-      loadingMessage: "Saving... please wait",
-      successMessage: "Helper saved",
-      errorMessage: "Error occured, please try again later",
-      status: status
-    );
-    await sendingOverlay.show(context);
-  }
-
-  @override
-  void closeLoadingScreen() => sendingOverlay.dismiss();
-
-  @override
   closeEditor() async {
     Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY,);
     // this.showBubble(true);
@@ -110,7 +97,7 @@ typedef OnFormChanged(bool isValid);
 /// [EditorFullScreenHelperPage]
 /// can be created from entity or nothing
 /// use [EditorHelperService] to create a fullscreen helper
-class EditorFullScreenHelperPage  extends StatelessWidget {
+class EditorFullScreenHelperPage extends StatelessWidget {
 
   final PresenterBuilder<EditorFullScreenHelperPresenter> presenterBuilder;
 

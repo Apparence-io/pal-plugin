@@ -6,6 +6,7 @@ import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
@@ -144,6 +145,26 @@ void main() {
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
       expect(find.text('Error occured, please try again later'), findsNothing);
+    });
+
+    test('HelperViewModel => transform to SimpleHelperViewModel ', () {
+      HelperViewModel helperViewModel = HelperViewModel(
+        id: "testid",
+        name: "test",
+        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+        helperType: HelperType.SIMPLE_HELPER,
+        helperTheme: HelperTheme.BLACK,
+        priority: 1,
+        minVersionCode: "0.0.0",
+        maxVersionCode: "1.0.1",
+      );
+      var simpleHelper = SimpleHelperViewModel.fromHelperViewModel(helperViewModel);
+      expect(simpleHelper.id, helperViewModel.id);
+      expect(simpleHelper.name, helperViewModel.name);
+      expect(simpleHelper.minVersionCode, helperViewModel.minVersionCode);
+      expect(simpleHelper.maxVersionCode, helperViewModel.maxVersionCode);
+      expect(simpleHelper.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(simpleHelper.helperTheme, HelperTheme.BLACK);
     });
 
 

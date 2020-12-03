@@ -34,8 +34,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
-    @required int versionMinId,
     @required HelperTheme helperTheme,
+    String minVersionCode,
+    String maxVersionCode,
     int versionMaxId,
     int languageId,
     // For edit mode only
@@ -50,8 +51,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
     name: name,
     triggerType: triggerType,
     priority: priority,
-    versionMinId: versionMinId,
-    versionMaxId: versionMaxId,
+    minVersionCode: minVersionCode,
+    maxVersionCode: maxVersionCode,
     helperTheme: helperTheme,
     helperType: HelperType.HELPER_FULL_SCREEN,
   ) {
@@ -105,11 +106,12 @@ class FullscreenHelperViewModel extends HelperViewModel {
 
   factory FullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model) {
     final fullscreenHelper = FullscreenHelperViewModel(
+      id: model.id,
       name: model.name,
       triggerType: model.triggerType,
       priority: model.priority,
-      versionMinId: model.versionMinId,
-      versionMaxId: model.versionMaxId,
+      maxVersionCode: model.maxVersionCode,
+      minVersionCode: model.minVersionCode,
       helperTheme: model.helperTheme,
     );
 
@@ -132,8 +134,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
-      versionMinId: helperEntity?.versionMinId,
-      versionMaxId: helperEntity?.versionMaxId,
+      minVersionCode: helperEntity?.versionMin,
+      maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
       boxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/pal_notifications.dart';
 import 'helper_editor_viewmodel.dart';
 
 class HelperEditorPageArguments {
@@ -23,12 +24,3 @@ class HelperEditorPageArguments {
 }
 
 
-// @override
-// showBubble(bool isVisible) {
-//   ShowBubbleNotification(isVisible).dispatch(_scaffoldKey.currentContext);
-// }
-//
-// @override
-// showHelpersList() {
-//   ShowHelpersListNotification().dispatch(_scaffoldKey.currentContext);
-// }

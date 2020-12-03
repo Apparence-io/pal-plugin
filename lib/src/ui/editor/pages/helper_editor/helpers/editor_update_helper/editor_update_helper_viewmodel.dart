@@ -32,8 +32,9 @@ class UpdateHelperViewModel extends HelperViewModel {
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
-    @required int versionMinId,
     @required HelperTheme helperTheme,
+    String minVersionCode,
+    String maxVersionCode,
     int versionMaxId,
     int languageId,
     HelperBoxViewModel helperBoxViewModel,
@@ -46,8 +47,8 @@ class UpdateHelperViewModel extends HelperViewModel {
     name: name,
     triggerType: triggerType,
     priority: priority,
-    versionMinId: versionMinId,
-    versionMaxId: versionMaxId,
+    minVersionCode: minVersionCode,
+    maxVersionCode: maxVersionCode,
     helperType: HelperType.UPDATE_HELPER,
     helperTheme: helperTheme,
   ) {
@@ -86,11 +87,12 @@ class UpdateHelperViewModel extends HelperViewModel {
 
   factory UpdateHelperViewModel.fromHelperViewModel(HelperViewModel model) {
     final updateHelper = UpdateHelperViewModel(
+      id: model.id,
       name: model.name,
       triggerType: model.triggerType,
       priority: model.priority,
-      versionMinId: model.versionMinId,
-      versionMaxId: model.versionMaxId,
+      minVersionCode: model.minVersionCode,
+      maxVersionCode: model.maxVersionCode,
       helperTheme: model.helperTheme,
     );
 
@@ -133,8 +135,8 @@ class UpdateHelperViewModel extends HelperViewModel {
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
-      versionMinId: helperEntity?.versionMinId,
-      versionMaxId: helperEntity?.versionMaxId,
+      minVersionCode: helperEntity?.versionMin,
+      maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
       helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,

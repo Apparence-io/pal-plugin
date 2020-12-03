@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 ///-------------------------------
 /// Base helper config
@@ -25,6 +26,18 @@ class CreateHelperConfig {
     this.minVersion,
     this.maxVersion,
   });
+
+  factory CreateHelperConfig.from(String route, HelperViewModel viewModel)
+    => CreateHelperConfig(
+      id: viewModel?.id,
+      route: route,
+      name: viewModel.name,
+      triggerType: viewModel?.triggerType,
+      helperType: viewModel?.helperType,
+      priority: viewModel?.priority,
+      minVersion: viewModel?.minVersionCode,
+      maxVersion: viewModel?.maxVersionCode,
+    );
 }
 
 ///-------------------------------

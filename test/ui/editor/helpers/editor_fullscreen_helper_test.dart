@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -13,6 +15,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 import '../../../pal_test_utilities.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +24,16 @@ import 'package:mockito/mockito.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
+class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
+
 void main() {
+
+  _enterTextInEditable(WidgetTester tester, Finder finder, String text) async{
+    await tester.tap(finder);
+    await tester.pump();
+    await tester.enterText(finder, text);
+  }
+
 
   group('[Editor] Fullscreen helper - creation mode', () {
 
@@ -32,6 +44,7 @@ void main() {
     Future _beforeEach(WidgetTester tester) async {
       reset(helperEditorServiceMock);
       EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.create(
+        palEditModeStateService: PalEditModeStateServiceMock(),
         parameters: HelperEditorPageArguments(
           null,
           "pageId_IEPZE",
@@ -60,13 +73,7 @@ void main() {
         as PresenterInherited<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
       presenter = page.presenter;
     }
-
-    _enterTextInEditable(WidgetTester tester, Finder finder, String text) async{
-      await tester.tap(finder);
-      await tester.pump();
-      await tester.enterText(finder, text);
-    }
-
+    
     // --------------------------------------------
     // Tests
     // --------------------------------------------
@@ -140,5 +147,109 @@ void main() {
       expect(presenter.viewModel.bodyBox.backgroundColor.value, Color(0xFFFFFFFF),);
     });
 
+    test('HelperViewModel => transform to FullscreenHelperViewModel ', () {
+      HelperViewModel helperViewModel = HelperViewModel(
+        id: "testid",
+        name: "test",
+        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+        helperType: HelperType.HELPER_FULL_SCREEN,
+        helperTheme: HelperTheme.BLACK,
+        priority: 1,
+        minVersionCode: "0.0.0",
+        maxVersionCode: "1.0.1",
+      );
+      var helper = FullscreenHelperViewModel.fromHelperViewModel(helperViewModel);
+      expect(helper.id, helperViewModel.id);
+      expect(helper.name, helperViewModel.name);
+      expect(helper.minVersionCode, helperViewModel.minVersionCode);
+      expect(helper.maxVersionCode, helperViewModel.maxVersionCode);
+      expect(helper.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(helper.helperTheme, HelperTheme.BLACK);
+    });
+
+  });
+
+  group('[Editor] Fullscreen helper - update mode', () {
+
+    EditorFullScreenHelperPresenter presenter;
+
+    HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
+
+    HelperEntity validFullscreenHelperEntity()
+      => HelperEntity(
+        id: "JDLSKJDSD",
+        name: "fullscreen test",
+        type: HelperType.HELPER_FULL_SCREEN,
+        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+        priority: 1,
+        versionMinId: 25,
+        versionMaxId: 25,
+        helperTexts: [
+          HelperTextEntity(
+            value: "title text",
+            fontColor: "#CCCCCC",
+            fontWeight: "w100",
+            fontSize: 21,
+            fontFamily: "Montserrat",
+            key: FullscreenHelperKeys.TITLE_KEY,
+          ),
+          HelperTextEntity(
+            value: "description text",
+            fontColor: "#FFFFFF",
+            fontWeight: "w100",
+            fontSize: 18,
+            fontFamily: "Montserrat",
+            key: FullscreenHelperKeys.DESCRIPTION_KEY,
+          ),
+        ],
+        helperImages: [
+          HelperImageEntity(
+            url: null,
+            key: FullscreenHelperKeys.IMAGE_KEY,
+          )
+        ],
+        helperBoxes: [
+          HelperBoxEntity(
+            key: FullscreenHelperKeys.BACKGROUND_KEY,
+            backgroundColor: "#000000",
+          )
+        ],
+      );
+
+    Future _beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
+      reset(helperEditorServiceMock);
+      EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.edit(
+        palEditModeStateService: PalEditModeStateServiceMock(),
+        helperEntity: helperEntity,
+        parameters: HelperEditorPageArguments(
+          null,
+          "pageId_IEPZE",
+          helperMinVersion: "1.0.1",
+          helperMaxVersion: null
+        ) ,
+        helperService: helperEditorServiceMock,
+      );
+      await tester.pumpWidget(
+        PalTheme(
+          theme: PalThemeData.light(),
+          child: MaterialApp(
+            home: Overlayed(child: editor)
+          ),
+        )
+      );
+      await tester.pumpAndSettle(Duration(milliseconds: 1000));
+      var presenterFinder = find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
+      var page = presenterFinder.evaluate().first.widget
+      as PresenterInherited<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
+      presenter = page.presenter;
+    }
+    
+    testWidgets('valid fullscreen helper entity => fill all text in editor', (WidgetTester tester) async {
+      var entity = validFullscreenHelperEntity();
+      await _beforeEach(tester, entity);
+      entity.helperTexts.forEach((element) => expect(find.text(element.value), findsOneWidget));
+    });
+    
+    
   });
 }

@@ -7,6 +7,7 @@ import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
@@ -169,6 +170,26 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Thanks my friend!'), findsOneWidget);
       expect(presenter.viewModel.thanksButton.text.value, 'Thanks my friend!');
+    });
+
+    test('HelperViewModel => transform to FullscreenHelperViewModel ', () {
+      HelperViewModel helperViewModel = HelperViewModel(
+        id: "testid",
+        name: "test",
+        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+        helperType: HelperType.UPDATE_HELPER,
+        helperTheme: HelperTheme.BLACK,
+        priority: 1,
+        minVersionCode: "0.0.0",
+        maxVersionCode: "1.0.1",
+      );
+      var helper = UpdateHelperViewModel.fromHelperViewModel(helperViewModel);
+      expect(helper.id, helperViewModel.id);
+      expect(helper.name, helperViewModel.name);
+      expect(helper.minVersionCode, helperViewModel.minVersionCode);
+      expect(helper.maxVersionCode, helperViewModel.maxVersionCode);
+      expect(helper.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(helper.helperTheme, HelperTheme.BLACK);
     });
 
   });

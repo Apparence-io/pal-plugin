@@ -26,7 +26,8 @@ class SimpleHelperViewModel extends HelperViewModel {
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
-    @required int versionMinId,
+    String minVersionCode,
+    String maxVersionCode,
     HelperTheme helperTheme,
     int versionMaxId,
     int languageId,
@@ -37,8 +38,8 @@ class SimpleHelperViewModel extends HelperViewModel {
     name: name,
     triggerType: triggerType,
     priority: priority,
-    versionMinId: versionMinId,
-    versionMaxId: versionMaxId,
+    minVersionCode: minVersionCode,
+    maxVersionCode: maxVersionCode,
     helperType: HelperType.SIMPLE_HELPER,
     helperTheme: helperTheme,
   ) {
@@ -61,11 +62,12 @@ class SimpleHelperViewModel extends HelperViewModel {
 
   factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model) {
     final simpleHelper = SimpleHelperViewModel(
+      id: model?.id,
       name: model.name,
       triggerType: model.triggerType,
       priority: model.priority,
-      versionMinId: model.versionMinId,
-      versionMaxId: model.versionMaxId,
+      minVersionCode: model.minVersionCode,
+      maxVersionCode: model.maxVersionCode,
       helperTheme: model.helperTheme,
     );
 
@@ -83,8 +85,8 @@ class SimpleHelperViewModel extends HelperViewModel {
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
-      versionMinId: helperEntity?.versionMinId,
-      versionMaxId: helperEntity?.versionMaxId,
+      minVersionCode: helperEntity?.versionMin,
+      maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
       helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,

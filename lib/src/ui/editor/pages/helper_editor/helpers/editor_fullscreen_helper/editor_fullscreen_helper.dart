@@ -6,6 +6,7 @@ import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
@@ -44,9 +45,11 @@ class EditorFullScreenHelper with EditorSendingOverlayMixin implements EditorFul
 
   BuildContext context;
 
+  final PalEditModeStateService palEditModeStateService;
+
   EditorSendingOverlay sendingOverlay;
 
-  EditorFullScreenHelper(this.context){
+  EditorFullScreenHelper(this.context, this.palEditModeStateService){
     overlayContext = context;
   }
 
@@ -88,8 +91,8 @@ class EditorFullScreenHelper with EditorSendingOverlayMixin implements EditorFul
   @override
   closeEditor() async {
     Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY,);
-    // this.showBubble(true);
-    // this.showHelpersList();
+    palEditModeStateService.showBubble(context, true);
+    palEditModeStateService.showHelpersList(context);
   }
 }
 
@@ -113,11 +116,14 @@ class EditorFullScreenHelperPage extends StatelessWidget {
     Key key,
     HelperEditorPageArguments parameters,
     EditorHelperService helperService,
+    PalEditModeStateService palEditModeStateService,
     @required HelperViewModel helperViewModel
   }) => EditorFullScreenHelperPage._(
     key: key,
     presenterBuilder: (context) => EditorFullScreenHelperPresenter(
-      new EditorFullScreenHelper(context),
+      new EditorFullScreenHelper(
+        context,
+        palEditModeStateService ?? EditorInjector.of(context).palEditModeStateService),
       FullscreenHelperViewModel.fromHelperViewModel(helperViewModel),
       helperService ?? EditorInjector.of(context).helperService,
       parameters
@@ -128,12 +134,15 @@ class EditorFullScreenHelperPage extends StatelessWidget {
     Key key,
     HelperEditorPageArguments parameters,
     EditorHelperService helperService,
+    PalEditModeStateService palEditModeStateService,
     @required HelperEntity helperEntity //FIXME should be an id and not entire entity
   }) => EditorFullScreenHelperPage._(
     key: key,
     presenterBuilder: (context)
     => EditorFullScreenHelperPresenter(
-      new EditorFullScreenHelper(context),
+      new EditorFullScreenHelper(
+        context,
+        palEditModeStateService ?? EditorInjector.of(context).palEditModeStateService),
       FullscreenHelperViewModel.fromHelperEntity(helperEntity),
       helperService ?? EditorInjector.of(context).helperService,
       parameters

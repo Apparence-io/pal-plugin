@@ -57,16 +57,7 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   Future<void> onValidate() async {
     ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
-    final config = CreateHelperConfig(
-      id: viewModel?.id,
-      route: parameters.pageId,
-      name: viewModel.name,
-      triggerType: viewModel?.triggerType,
-      helperType: viewModel?.helperType,
-      priority: viewModel?.priority,
-      minVersion: null, //TODO get
-      maxVersion: null, //TODO get
-    );
+    final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));

@@ -49,6 +49,8 @@ class CreateHelperModel extends MVVMModel {
     helperTheme: selectedHelperTheme,
     triggerType: getHelperTriggerType(selectedTriggerType),
     name: helperNameController?.value?.text,
+    minVersionCode: appVersion,
+    maxVersionCode: null
   );
 
 

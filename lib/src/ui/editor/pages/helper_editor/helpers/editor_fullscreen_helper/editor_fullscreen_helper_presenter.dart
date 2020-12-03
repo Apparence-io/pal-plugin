@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
@@ -23,7 +24,7 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     EditorFullScreenHelperView viewInterface,
     FullscreenHelperViewModel viewModel,
     this.editorHelperService,
-    this.parameters
+    this.parameters,
   ) : super(viewModel, viewInterface) {
     this.viewModel.helperOpacity = 1;
     this.viewModel.canValidate = new ValueNotifier(false);
@@ -37,16 +38,7 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
 
   Future onValidate() async {
     ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
-    final config = CreateHelperConfig(
-      id: viewModel?.id,
-      route: parameters.pageId,
-      name: viewModel.name,
-      triggerType: viewModel?.triggerType,
-      helperType: viewModel?.helperType,
-      priority: viewModel?.priority,
-      minVersion: null, //TODO get
-      maxVersion: null, //TODO get
-    );
+    final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
@@ -54,6 +46,7 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
         .saveFullScreenHelper(EditorEntityFactory.buildFullscreenArgs(config, viewModel));
       status.value = SendingStatus.SENT;
     } catch(error) {
+      print("error occured $error");
       status.value = SendingStatus.ERROR;
     } finally {
       await Future.delayed(Duration(seconds: 2));

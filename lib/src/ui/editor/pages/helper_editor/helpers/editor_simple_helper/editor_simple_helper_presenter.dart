@@ -47,16 +47,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   Future onValidate() async {
     ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
-    final config = CreateHelperConfig(
-      id: viewModel?.id,
-      route: parameters.pageId,
-      name: viewModel.name,
-      triggerType: viewModel?.triggerType,
-      helperType: viewModel?.helperType,
-      priority: viewModel?.priority,
-      minVersion: null, //TODO get
-      maxVersion: null, //TODO get
-    );
+    final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
@@ -64,6 +55,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
         EditorEntityFactory.buildSimpleArgs(config, viewModel));
       status.value = SendingStatus.SENT;
     } catch(error) {
+      print("error: $error");
       status.value = SendingStatus.ERROR;
     } finally {
       await Future.delayed(Duration(seconds: 2));

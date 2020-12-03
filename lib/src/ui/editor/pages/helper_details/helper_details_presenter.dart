@@ -4,9 +4,10 @@ import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'helper_details_model.dart';
 import 'helper_details_view.dart';
 
-class HelperDetailsPresenter
-    extends Presenter<HelperDetailsModel, HelperDetailsInterface> {
+class HelperDetailsPresenter extends Presenter<HelperDetailsModel, HelperDetailsInterface> {
+
   final EditorHelperService editorHelperService;
+
   final HelperDetailsComponentArguments arguments;
 
   HelperDetailsPresenter(
@@ -28,10 +29,8 @@ class HelperDetailsPresenter
     this.viewModel.isDeleting = true;
     this.viewModel.isDeleteSuccess = false;
     this.refreshView();
-
     try {
-      await this
-          .editorHelperService
+      await this.editorHelperService
           .deleteHelper(arguments?.pageId, arguments?.helper?.id);
       this.viewModel.isDeleteSuccess = true;
       this.viewInterface.showMessage('Helper successfully deleted 😎', true);
@@ -39,12 +38,16 @@ class HelperDetailsPresenter
       this.viewInterface.popBackToList();
     } catch (err) {
       this.viewModel.isDeleteSuccess = false;
-      this
-          .viewInterface
-          .showMessage('Error when removing helper. Please try again.', false);
+      this.viewInterface.showMessage('Error when removing helper. Please try again.', false);
     }
-
     this.viewModel.isDeleting = false;
     this.refreshView();
+  }
+
+  void callEditHelper() {
+    if(viewModel.isDeleting) {
+      return;
+    }
+    this.viewInterface.launchHelperEditor(arguments.pageRouteName);
   }
 }

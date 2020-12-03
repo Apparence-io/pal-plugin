@@ -28,16 +28,15 @@ class HelpersListModalPresenter
     this.load();
   }
 
-  void load() {
+  Future load() async {
     this.viewModel.isLoading = true;
     this.viewModel.noMore = false;
     this.viewModel.loadingMore = false;
-
     this.loader.load().then((HelpersListModalModel res) {
       this.viewModel.helpers = res.helpers;
       this.viewModel.pageId = res.pageId;
       this.viewModel.isLoading = false;
-
+      this.viewModel.pageRouteName = res.pageRouteName;
       this.refreshView();
     });
   }
@@ -85,6 +84,7 @@ class HelpersListModalPresenter
     final helperDetailsPopState = await this.viewInterface.openHelperDetailPage(
           anHelper,
           this.viewModel.pageId,
+          this.viewModel.pageRouteName
         );
 
     if (helperDetailsPopState != null) {

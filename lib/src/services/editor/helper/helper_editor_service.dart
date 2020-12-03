@@ -142,7 +142,7 @@ class _EditorHelperHttpService implements EditorHelperService {
 
   Future<int> _getOrCreateVersionId(String versionCode) async {
     if (versionCode == null || versionCode.isEmpty) {
-      throw VersionCreationException(message: "EMPTY_VERSION_PROVIDED");
+      return 0;
     }
     VersionEntity resVersion = await this._versionRepository.getVersion(name: versionCode);
     if (resVersion == null || resVersion.id == null) {

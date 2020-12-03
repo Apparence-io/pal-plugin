@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
@@ -44,8 +45,8 @@ class HelperViewModel extends MVVMModel {
   final String name;
   final HelperTriggerType triggerType;
   final int priority;
-  final int versionMinId;
-  final int versionMaxId;
+  final String minVersionCode;
+  final String maxVersionCode;
   final HelperTheme helperTheme;
   final HelperType helperType;
 
@@ -54,10 +55,11 @@ class HelperViewModel extends MVVMModel {
     @required this.name,
     @required this.triggerType,
     this.priority,
-    this.versionMinId,
+    this.minVersionCode,
     @required this.helperType,
     this.helperTheme,
-    this.versionMaxId,
+    this.maxVersionCode,
   });
+
 }
 

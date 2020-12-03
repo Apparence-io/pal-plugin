@@ -27,7 +27,6 @@ class EditorRouter {
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
       currentPageRoute,
-      isOnEditMode: false,
       helperMinVersion: model.minVersionController?.value?.text,
     );
     WidgetBuilder builder;
@@ -56,12 +55,11 @@ class EditorRouter {
     showOverlayed(hostedAppNavigatorKey, builder);
   }
 
-  Future editHelper(final HelperEntity helperEntity) async {
+  Future editHelper(final String currentPageRoute, final HelperEntity helperEntity) async {
     var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
-      null,
-      isOnEditMode: true,
+      currentPageRoute,
     );
     WidgetBuilder builder;
     switch(helperEntity.type) {

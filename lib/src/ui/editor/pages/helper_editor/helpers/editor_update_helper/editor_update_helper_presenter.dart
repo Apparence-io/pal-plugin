@@ -1,16 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
-import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper.dart';
-import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+
+import 'editor_update_helper.dart';
+import 'editor_update_helper_viewmodel.dart';
 
 class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, EditorUpdateHelperView> {
 
@@ -34,7 +35,7 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   void onInit() {
     this.viewModel.isKeyboardVisible = false;
     // Check if a pre-filled template already exist
-    // if (updateHelperViewModel.changelogsFields.length > 0) {
+    // if (viewModel.changelogsFields.length > 0) {
     //   this.initFromTemplate();
     // } else {
     //   this.addChangelogNote();
@@ -48,112 +49,40 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   Future addChangelogNote() async {
     await viewInterface.scrollToBottomChangelogList();
-    String textFieldId = viewModel.changelogsFields.length.toString();
-    viewModel.changelogsFields.putIfAbsent(
-      textFieldId, () => TextFormFieldNotifier(
-          text: '',
-          fontSize: 18,
-          fontColor: Colors.white
-      ),
-    );
+    viewModel.addChangelog();
     this.refreshView();
-    // wait for UI to be updated
-    // Future.delayed(Duration(milliseconds: 500), () {
-    //   if (textFieldCount > 0) callonFormChanged();
-    // });
   }
 
-  void onCancel() {
+  void onCancel() => viewInterface.closeEditor();
 
+  Future<void> onValidate() async {
+    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
+    final config = CreateHelperConfig(
+      id: viewModel?.id,
+      route: parameters.pageId,
+      name: viewModel.name,
+      triggerType: viewModel?.triggerType,
+      helperType: viewModel?.helperType,
+      priority: viewModel?.priority,
+      minVersion: null, //TODO get
+      maxVersion: null, //TODO get
+    );
+    try {
+      await viewInterface.showLoadingScreen(status);
+      await Future.delayed(Duration(seconds: 1));
+      await editorHelperService
+        .saveUpdateHelper(EditorEntityFactory.buildUpdateArgs(config, viewModel));
+      status.value = SendingStatus.SENT;
+    } catch(error) {
+      status.value = SendingStatus.ERROR;
+    } finally {
+      await Future.delayed(Duration(seconds: 2));
+      viewInterface.closeLoadingScreen();
+      await Future.delayed(Duration(milliseconds: 100));
+      status.dispose();
+      viewInterface.closeEditor();
+    }
   }
-
-  Future<void> onValidate() {
-
-  }
-
-  // initFromTemplate() {
-  //   List<EditableTextField> editableTextFields = [];
-  //   int index = 0;
-  //   for (final changelog in viewModel.changelogsFields.entries) {
-  //     final String textFieldId = changelog.key;
-  //
-  //     final textField = createTextField(
-  //       textFieldId,
-  //       index++,
-  //     );
-  //     editableTextFields.add(textField);
-  //   }
-  //
-  //   this.viewModel.changelogsTextfieldWidgets = editableTextFields;
-  //
-  //   this.refreshView();
-  //   // wait for UI to be updated
-  //   Future.delayed(Duration(milliseconds: 500), () {
-  //     callonFormChanged();
-  //   });
-  // }
-
-  // EditableTextField createTextField(
-  //   String textFieldId,
-  //   int changelogsCount,
-  // ) {
-  //   String hintText;
-  //   if (changelogsCount <= 0) {
-  //     hintText = 'Enter your first update line here...';
-  //   } else {
-  //     hintText = 'Enter update line here...';
-  //   }
-  //
-  //   // Create static keys
-  //   final textFieldCount = changelogsCount;
-  //   final ValueKey textFormFieldKey = ValueKey(
-  //     'pal_EditorUpdateHelperWidget_ReleaseNoteField_$textFieldCount',
-  //   );
-  //   final ValueKey textFormToolbarKey = ValueKey(
-  //     'pal_EditorUpdateHelperWidget_ReleaseNoteToolbar_$textFieldCount',
-  //   );
-  //
-  //   return EditableTextField.text(
-  //     id: textFieldId,
-  //     textFormFieldKey: textFormFieldKey,
-  //     helperToolbarKey: textFormToolbarKey,
-  //     outsideTapStream: this.viewModel.editableTextFieldController.stream,
-  //     hintText: hintText,
-  //     initialValue:
-  //         this.updateHelperViewModel.changelogsFields[textFieldId]?.text?.value,
-  //     minimumCharacterLength: 1,
-  //     maximumCharacterLength: 120,
-  //     fontFamilyKey: this
-  //         .updateHelperViewModel
-  //         .changelogsFields[textFieldId]
-  //         ?.fontFamily
-  //         ?.value,
-  //     autovalidate: AutovalidateMode.always,
-  //     textStyle: TextStyle(
-  //       color: this
-  //           .updateHelperViewModel
-  //           .changelogsFields[textFieldId]
-  //           ?.fontColor
-  //           ?.value,
-  //       fontSize: this
-  //           .updateHelperViewModel
-  //           .changelogsFields[textFieldId]
-  //           ?.fontSize
-  //           ?.value
-  //           ?.toDouble(),
-  //     ).merge(this.viewInterface.googleCustomFont(
-  //           this
-  //               .updateHelperViewModel
-  //               .changelogsFields[textFieldId]
-  //               ?.fontFamily
-  //               ?.value,
-  //         )),
-  //     onChanged: (String id, String newValue) {
-  //       this.updateHelperViewModel.changelogsFields[id]?.text?.value = newValue;
-  //     },
-  //     onTextStyleChanged: this.onChangelogTextStyleFieldChanged,
-  //   );
-  // }
 
   onTitleFieldChanged(String id, String newValue)
     => _onTextChanged(viewModel.titleField, newValue);

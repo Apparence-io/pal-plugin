@@ -6,13 +6,13 @@ import 'helper_editor_models.dart';
 
 class HelperEditorAdapter {
   
-  static HelperEntity parseSimpleHelper(String pageId, CreateSimpleHelper args)
-    => _parseConfig(args.config, HelperType.SIMPLE_HELPER)
+  static HelperEntity parseSimpleHelper(CreateSimpleHelper args, int minVersionId, int maxVersionId)
+    => _parseConfig(args.config, HelperType.SIMPLE_HELPER, minVersionId, maxVersionId)
         ..helperTexts = [_parseHelperText(SimpleHelperKeys.CONTENT_KEY, args.titleText)]
         ..helperBoxes =  [_parseHelperBox(SimpleHelperKeys.BACKGROUND_KEY, args.boxConfig)];
   
-  static HelperEntity parseFullscreenHelper(String pageId, CreateFullScreenHelper args)
-    => _parseConfig(args.config, HelperType.HELPER_FULL_SCREEN)
+  static HelperEntity parseFullscreenHelper(CreateFullScreenHelper args, int minVersionId, int maxVersionId)
+    => _parseConfig(args.config, HelperType.HELPER_FULL_SCREEN, minVersionId, maxVersionId)
       ..helperImages = args.mediaHeader?.url != null && args.mediaHeader.url.isNotEmpty ?
         [_parseHelperImage(FullscreenHelperKeys.IMAGE_KEY, args.mediaHeader)]:[]
       ..helperTexts = [
@@ -23,9 +23,8 @@ class HelperEditorAdapter {
       ]
       ..helperBoxes =  [_parseHelperBox(FullscreenHelperKeys.BACKGROUND_KEY, args.bodyBox)];
 
-  
-  static HelperEntity parseUpdateHelper(String pageId, CreateUpdateHelper args)
-    => _parseConfig(args.config, HelperType.UPDATE_HELPER)
+  static HelperEntity parseUpdateHelper(CreateUpdateHelper args, int minVersionId, int maxVersionId)
+    => _parseConfig(args.config, HelperType.UPDATE_HELPER,  minVersionId, maxVersionId)
       ..helperTexts = [
         _parseHelperText(UpdatescreenHelperKeys.TITLE_KEY, args.title),
         _parseHelperText(UpdatescreenHelperKeys.POSITIV_KEY, args.positivButton),
@@ -61,15 +60,15 @@ class HelperEditorAdapter {
       );
   } 
   
-  static HelperEntity _parseConfig(CreateHelperConfig config, HelperType type)
+  static HelperEntity _parseConfig(CreateHelperConfig config, HelperType type, int minVersionId, int maxVersionId)
     => HelperEntity(
       id: config.id,
       name: config.name,
       type: type,
       triggerType: config.triggerType,
       priority: config.priority,
-      versionMinId: config.versionMinId,
-      versionMaxId: config.versionMaxId,
+      versionMinId: minVersionId,
+      versionMaxId: maxVersionId,
     );
 
   static HelperImageEntity _parseHelperImage(String key, HelperMediaConfig mediaConfig) 

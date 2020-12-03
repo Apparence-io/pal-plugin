@@ -7,23 +7,23 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 ///-------------------------------
 class CreateHelperConfig {
   String id;
-  String pageId;
+  String route;
   String name;
   HelperTriggerType triggerType;
   HelperType helperType; //remove
   int priority;
-  int versionMinId;
-  int versionMaxId;
+  String minVersion;
+  String maxVersion;
 
   CreateHelperConfig({
     this.id,
-    @required this.pageId,
+    @required this.route,
     @required this.name,
     @required this.triggerType,
     @required this.helperType,
     this.priority,
-    this.versionMinId,
-    this.versionMaxId,
+    this.minVersion,
+    this.maxVersion,
   });
 }
 

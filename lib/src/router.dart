@@ -7,8 +7,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_w
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
-GlobalKey<NavigatorState> palNavigatorGlobalKey =
-    new GlobalKey<NavigatorState>();
+GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
 
 void globalPop() {
   Navigator.pop(palNavigatorGlobalKey.currentContext);

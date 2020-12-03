@@ -6,11 +6,11 @@ import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
-import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
-import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -99,14 +99,14 @@ void main() {
       expect(validateButton.isEnabled, isTrue);
       validateButton.onPressed();
       await tester.pump(Duration(seconds: 1));
-      verify(helperEditorServiceMock.saveFullScreenHelper('pageId_IEPZE', any)).called(1);
+      verify(helperEditorServiceMock.saveFullScreenHelper(any)).called(1);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
     });
 
     testWidgets('save call helperService.saveFullscreen with error => shows error overlay', (WidgetTester tester) async {
       await _beforeEach(tester);
-      when(helperEditorServiceMock.saveFullScreenHelper(any, any)).thenThrow(ArgumentError());
+      when(helperEditorServiceMock.saveFullScreenHelper(any)).thenThrow(ArgumentError());
       var editableTextsFinder = find.byType(TextField);
       var validateFinder = find.byKey(ValueKey('editModeValidate'));
 

@@ -6,8 +6,6 @@ import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
-import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
-import 'package:pal/src/ui/editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
@@ -20,6 +18,9 @@ import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/editor/widgets/editable_media.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
+
+import 'editor_fullscreen_helper_presenter.dart';
+import 'editor_fullscreen_helper_viewmodel.dart';
 
 abstract class EditorFullScreenHelperView {
 

@@ -6,8 +6,6 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
-import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -17,6 +15,9 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_ove
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
+
+import 'editor_simple_helper_presenter.dart';
+import 'editor_simple_helper_viewmodel.dart';
 
 
 typedef UpdateBackgroundColor = void Function(Color aColor);
@@ -226,8 +227,6 @@ class _EditorSimpleHelperPage with EditorSendingOverlayMixin implements EditorSi
   }
 
   @override
-  Future closeEditor() async {
-    Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
-  }
+  Future closeEditor() async => Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
 
 }

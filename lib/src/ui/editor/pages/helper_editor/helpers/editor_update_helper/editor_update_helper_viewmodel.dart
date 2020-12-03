@@ -12,23 +12,6 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
-// @deprecated
-// class EditorUpdateHelperModel extends MVVMModel {
-//   GlobalKey<FormState> formKey;
-//   List<Widget> changelogsTextfieldWidgets;
-//   StreamController<bool> editableTextFieldController;
-//   bool isKeyboardVisible;
-//   ScrollController scrollController;
-//
-//   EditorUpdateHelperModel({
-//     this.formKey,
-//     this.changelogsTextfieldWidgets,
-//     this.editableTextFieldController,
-//     this.isKeyboardVisible,
-//     this.scrollController,
-//   });
-// }
-
 
 class UpdateHelperViewModel extends HelperViewModel {
 
@@ -172,5 +155,18 @@ class UpdateHelperViewModel extends HelperViewModel {
       changelogsLabels: changelogsMap,
       // TODO: Add changelog edit
     );
+  }
+
+  String addChangelog() {
+    String textFieldId = changelogsFields.length.toString();
+    this.changelogsFields.putIfAbsent(
+      textFieldId,
+      () => TextFormFieldNotifier(
+          text: '',
+          fontSize: 18,
+          fontColor: Colors.white
+      ),
+    );
+    return textFieldId;
   }
 }

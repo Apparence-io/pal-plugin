@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
-import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
-import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+
+import 'editor_simple_helper.dart';
+import 'editor_simple_helper_viewmodel.dart';
 
 class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, EditorSimpleHelperView>{
 
@@ -48,19 +49,18 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
     final config = CreateHelperConfig(
       id: viewModel?.id,
-      pageId: parameters.pageId,
+      route: parameters.pageId,
       name: viewModel.name,
       triggerType: viewModel?.triggerType,
       helperType: viewModel?.helperType,
       priority: viewModel?.priority,
-      versionMinId: null, //TODO get
-      versionMaxId: null, //TODO get
+      minVersion: null, //TODO get
+      maxVersion: null, //TODO get
     );
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
       await editorHelperService.saveSimpleHelper(
-        parameters.pageId,
         EditorEntityFactory.buildSimpleArgs(config, viewModel));
       status.value = SendingStatus.SENT;
     } catch(error) {

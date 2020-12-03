@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/client/helpers/anchored_helper_widget.dart';
 
+import '../../helper_editor.dart';
+import '../../helper_editor_viewmodel.dart';
 import 'editor_anchored_helper_presenter.dart';
 import 'editor_anchored_helper_viewmodel.dart';
 
@@ -13,7 +16,18 @@ abstract class EditorAnchoredFullscreenHelperView {
 
 class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAnchoredFullscreenHelperView {
 
-  EditorAnchoredFullscreenHelper();
+  EditorAnchoredFullscreenHelper._({
+    Key key,
+  }) : super(key: key);
+
+  factory EditorAnchoredFullscreenHelper.create({
+    Key key,
+    HelperEditorPageArguments parameters,
+    EditorHelperService helperService,
+    @required HelperViewModel helperViewModel
+  }) => EditorAnchoredFullscreenHelper._(
+    key: key,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +53,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
   }
 
   _createSelectableElements(EditorAnchoredFullscreenPresenter presenter, AnchoredFullscreenHelperViewModel model) {
-    return presenter.viewModel.userPageElements
+    return model.userPageElements
       .map((key, model) => new MapEntry(
             key,
             _WidgetElementModelTransformer().apply(key, model, presenter.onTapElement))

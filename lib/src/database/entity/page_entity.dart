@@ -23,4 +23,11 @@ class PageEntity {
     this.lastUpdateDate,
     this.route,
   });
+
+  Map<String, dynamic> toJson() => {
+    'id': id ?? "",
+    'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
+    'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
+    'route': route
+  };
 }

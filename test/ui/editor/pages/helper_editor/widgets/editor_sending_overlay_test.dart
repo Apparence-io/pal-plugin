@@ -74,7 +74,7 @@ void main() {
       );
       sendingOverlay.show(appContext);
       await tester.pump();
-      expect(find.text("success"), findsOneWidget);
+      expect(find.text("error"), findsOneWidget);
     });
 
     testWidgets('show loading overlay => then success => then dismiss', (WidgetTester tester) async {

@@ -8,13 +8,12 @@ import 'package:pal/src/database/repository/base_repository.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 
 abstract class VersionRepository {
-  Future<Pageable<VersionEntity>> getVersions(
-          {String name, int pageSize = 10}) =>
-      throw "not implemented yet";
-  Future<VersionEntity> getVersion({String name = ''}) =>
-      throw "not implemented yet";
-  Future<VersionEntity> createVersion(final VersionEntity createVersion) =>
-      throw "not implemented yet";
+
+  Future<Pageable<VersionEntity>> getVersions({String name, int pageSize = 10}) => throw "not implemented yet";
+
+  Future<VersionEntity> getVersion({String name = ''}) => throw "not implemented yet";
+
+  Future<VersionEntity> createVersion(final VersionEntity createVersion) => throw "not implemented yet";
 }
 
 class VersionHttpRepository extends BaseHttpRepository

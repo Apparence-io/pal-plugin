@@ -6,9 +6,9 @@ import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
-import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper.dart';
-import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
-import 'package:pal/src/ui/editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import '../../../pal_test_utilities.dart';
@@ -75,6 +75,15 @@ void main() {
       expect(find.text('Edit me!'), findsOneWidget);
     });
 
+    testWidgets('close editor  => page is removed', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      expect(find.byType(EditorSimpleHelperPage), findsOneWidget);
+      var cancelFinder = find.byKey(ValueKey('editModeCancel'));
+      await tester.tap(cancelFinder);
+      await tester.pumpAndSettle();
+      expect(find.byType(EditorSimpleHelperPage), findsNothing);
+    });
+
     testWidgets('text is empty => cancel, validate buttons exists, validate button is disabled', (WidgetTester tester) async {
       await _beforeEach(tester);
       var editableTextsFinder = find.byType(TextField);
@@ -114,14 +123,14 @@ void main() {
 
       validateButton.onPressed();
       await tester.pump(Duration(seconds: 1));
-      verify(helperEditorServiceMock.saveSimpleHelper(any, any)).called(1);
+      verify(helperEditorServiceMock.saveSimpleHelper(any)).called(1);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
     });
 
     testWidgets('save call helperService.saveSimpleHelper with error => an error is shown then fades', (WidgetTester tester) async {
       await _beforeEach(tester);
-      when(helperEditorServiceMock.saveSimpleHelper(any, any)).thenThrow(new ArgumentError());
+      when(helperEditorServiceMock.saveSimpleHelper(any)).thenThrow(new ArgumentError());
       var editableTextsFinder = find.byType(TextField);
       await _enterTextInEditable(tester, editableTextsFinder.at(0), 'my helper tips lorem');
       await tester.pumpAndSettle();

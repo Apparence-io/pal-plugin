@@ -8,8 +8,6 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
-import 'package:pal/src/ui/editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
@@ -22,6 +20,10 @@ import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/editor/widgets/editable_media.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
+import 'package:pal/src/ui/shared/widgets/overlayed.dart';
+
+import 'editor_update_helper_presenter.dart';
+import 'editor_update_helper_viewmodel.dart';
 
 abstract class EditorUpdateHelperView {
 
@@ -30,6 +32,12 @@ abstract class EditorUpdateHelperView {
   Future<void> scrollToBottomChangelogList();
 
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
+
+  Future showLoadingScreen(ValueNotifier<SendingStatus> status);
+
+  Future closeEditor();
+
+  void closeLoadingScreen();
 
 }
 
@@ -128,46 +136,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
                     color: viewModel.bodyBox?.backgroundColor?.value,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: SingleChildScrollView(
-                              reverse: false,
-                              controller: scrollController,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10.0,
-                                  right: 10.0,
-                                  top: 25.0,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    EditableMedia(
-                                      editKey: 'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
-                                      mediaSize: 123.0,
-                                      onEdit: presenter.editMedia,
-                                      url: viewModel.media?.url?.value,
-                                    ),
-                                    SizedBox(height: 40),
-                                    _buildTitleField(context, presenter, viewModel),
-                                    SizedBox(height: 25.0),
-                                    _buildChangelogFields(context, presenter, viewModel),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 15.0,
-                            left: 10.0,
-                            right: 10.0,
-                          ),
-                          child: _buildThanksButton(context, presenter, viewModel),
-                        ),
-                      ],
+                      children: _buildEditableContent(presenter, viewModel, context),
                     ),
                   ),
                 ),
@@ -179,7 +148,52 @@ class EditorUpdateHelperPage extends StatelessWidget {
     );
   }
 
-  _buildTitleField(
+  List<Widget> _buildEditableContent(
+    final EditorUpdateHelperPresenter presenter,
+    final UpdateHelperViewModel viewModel,
+    final BuildContext context)
+    => [
+      Expanded(
+        child: Center(
+          child: SingleChildScrollView(
+            reverse: false,
+            controller: scrollController,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 10.0,
+                right: 10.0,
+                top: 25.0,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  EditableMedia(
+                    editKey: 'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
+                    mediaSize: 123.0,
+                    onEdit: presenter.editMedia,
+                    url: viewModel.media?.url?.value,
+                  ),
+                  SizedBox(height: 40),
+                  _buildTitleField(context, presenter, viewModel),
+                  SizedBox(height: 25.0),
+                  _buildChangelogFields(context, presenter, viewModel),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(
+          bottom: 15.0,
+          left: 10.0,
+          right: 10.0,
+        ),
+        child: _buildThanksButton(context, presenter, viewModel),
+      ),
+    ];
+
+  Widget _buildTitleField(
     final BuildContext context,
     final EditorUpdateHelperPresenter presenter,
     final UpdateHelperViewModel viewModel,
@@ -211,7 +225,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     );
   }
 
-  _buildChangelogFields(
+  Widget _buildChangelogFields(
     final BuildContext context,
     final EditorUpdateHelperPresenter presenter,
     final UpdateHelperViewModel viewmodel,
@@ -254,7 +268,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     );
   }
 
-  _buildThanksButton(
+  Widget _buildThanksButton(
     final BuildContext context,
     final EditorUpdateHelperPresenter presenter,
     final UpdateHelperViewModel viewModel,
@@ -373,4 +387,7 @@ class _EditorUpdateHelperPage with EditorSendingOverlayMixin implements EditorUp
       );
     }
   }
+
+  @override
+  Future closeEditor() async => Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
 }

@@ -89,6 +89,7 @@ class Pal extends StatelessWidget {
   Widget buildEditorApp() {
     return EditorInjector(
       routeObserver: navigatorObserver,
+      hostedAppNavigatorKey: navigatorKey,
       child: PalEditModeWrapper(
         userApp: childApp,
         hostedAppNavigatorKey: navigatorKey,

@@ -396,7 +396,6 @@ class _HelpersListModalState extends State<HelpersListModal>
         pageRouteName
       ),
     ) as HelperDetailsPopState;
-
     return helperDetailsPopState;
   }
 

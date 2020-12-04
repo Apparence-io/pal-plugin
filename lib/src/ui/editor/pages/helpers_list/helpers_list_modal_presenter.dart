@@ -86,20 +86,21 @@ class HelpersListModalPresenter
           this.viewModel.pageId,
           this.viewModel.pageRouteName
         );
-
-    if (helperDetailsPopState != null) {
-      switch (helperDetailsPopState) {
-        case HelperDetailsPopState.deleted:
-          showEditorBubble(true);
-          this.removeHelper(anHelper);
-          break;
-        case HelperDetailsPopState.editorOpened:
-          showEditorBubble(false);
-          this.viewInterface.popModalDialog();
-          break;
-        default:
-          showEditorBubble(true);
-      }
+    if(helperDetailsPopState == null) {
+      showEditorBubble(true);
+      return;
+    }
+    switch (helperDetailsPopState) {
+      case HelperDetailsPopState.deleted:
+        showEditorBubble(true);
+        this.removeHelper(anHelper);
+        break;
+      case HelperDetailsPopState.editorOpened:
+        showEditorBubble(false);
+        this.viewInterface.popModalDialog();
+        break;
+      default:
+        showEditorBubble(true);
     }
   }
 

@@ -26,7 +26,7 @@ class HelperTileWidget extends StatelessWidget {
     const borderRadius = 8.0;
 
     return Container(
-      height: 56.0,
+      height: 62.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius),
         color: Colors.white,
@@ -96,7 +96,7 @@ class HelperTileWidget extends StatelessWidget {
           name,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize: 18.0,
           ),
         ),
         SizedBox(
@@ -112,7 +112,7 @@ class HelperTileWidget extends StatelessWidget {
               ),
             ),
             Text(
-              '- ',
+              ' - ',
               style: TextStyle(
                 fontSize: 10.0,
                 fontWeight: FontWeight.w300,

@@ -155,6 +155,7 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
       textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
       textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
     }
+    _updateValidState();
   }
 
   bool isValid() => viewModel.positivButtonField.text.value.isNotEmpty

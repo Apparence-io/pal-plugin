@@ -88,11 +88,17 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     return null;
   }
 
-  onChangeColorRequest() => viewInterface.showColorPickerDialog(viewModel, this.updateBackgroundColor);
+  onChangeColorRequest()
+    => viewInterface.showColorPickerDialog(
+      viewModel,
+      this.updateBackgroundColor,
+      this.viewInterface.closeColorPickerDialog
+    );
 
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
     this.refreshView();
+    this.viewInterface.closeColorPickerDialog();
   }
 
   // ----------------------------------
@@ -102,9 +108,11 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
     textNotifier.text.value = newValue;
     if(viewModel.canValidate != null)  {
-      viewModel.canValidate.value = isValid();
+      _updateValidState();
     }
   }
+
+  _updateValidState() => viewModel.canValidate.value = isValid();
 
   _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
     textNotifier?.fontColor?.value = newTextStyle?.color;
@@ -113,6 +121,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
       textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
       textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
     }
+    _updateValidState();
   }
 
   bool isValid() => viewModel.detailsField.text.value.isNotEmpty;

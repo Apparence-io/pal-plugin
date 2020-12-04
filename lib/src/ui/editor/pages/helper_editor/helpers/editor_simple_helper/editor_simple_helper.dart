@@ -17,18 +17,21 @@ import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
+import '../../../../../../router.dart';
 import 'editor_simple_helper_presenter.dart';
 import 'editor_simple_helper_viewmodel.dart';
 
 
-typedef UpdateBackgroundColor = void Function(Color aColor);
 
 abstract class EditorSimpleHelperView {
 
   void showColorPickerDialog(
     SimpleHelperViewModel viewModel,
-    UpdateBackgroundColor updateBackgroundColor
+    OnColorSelected updateBackgroundColor,
+    OnCancelPicker onCancelPicker
   );
+
+  void closeColorPickerDialog();
 
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
 
@@ -228,16 +231,20 @@ class _EditorSimpleHelperPage with EditorSendingOverlayMixin, EditorNavigationMi
   @override
   void showColorPickerDialog(
     final SimpleHelperViewModel viewModel,
-    final UpdateBackgroundColor updateBackgroundColor,
+    final OnColorSelected updateBackgroundColor,
+    final OnCancelPicker onCancelPicker
     ) {
     HapticFeedback.selectionClick();
-    showDialog(
-      context: scaffoldKey.currentContext,
-      child: ColorPickerDialog(
-        placeholderColor: viewModel.bodyBox?.backgroundColor?.value,
+    showOverlayedInContext(
+        (context) => ColorPickerDialog(
+        placeholderColor: viewModel.bodyBox.backgroundColor?.value,
         onColorSelected: updateBackgroundColor,
+        onCancel: onCancelPicker
       ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY
     );
   }
+
+  void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
 }

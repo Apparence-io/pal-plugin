@@ -142,8 +142,10 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
     textNotifier.text.value = newValue;
-    viewModel.canValidate.value = isValid();
+    _updateValidState();
   }
+
+  _updateValidState() => viewModel.canValidate.value = isValid();
 
   _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
     textNotifier?.fontColor?.value = newTextStyle?.color;
@@ -152,6 +154,7 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
       textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
       textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
     }
+    _updateValidState();
   }
 
   bool isValid() => viewModel.titleField.text.value.isNotEmpty

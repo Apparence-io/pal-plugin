@@ -78,6 +78,10 @@ showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder bui
 }
 
 showOverlayedInContext(WidgetBuilder builder, {OverlayKeys key}) {
+  if(Overlayed.of(palNavigatorGlobalKey.currentState.context).entries
+    .containsKey(key ?? OverlayKeys.EDITOR_OVERLAY_KEY)) {
+    return;
+  }
   OverlayEntry helperOverlay = OverlayEntry(
     opaque: false,
     builder: builder,

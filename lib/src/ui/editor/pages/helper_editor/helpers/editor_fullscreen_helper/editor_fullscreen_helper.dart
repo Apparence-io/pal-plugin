@@ -20,6 +20,7 @@ import 'package:pal/src/ui/editor/widgets/editable_media.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
+import '../../../../../../router.dart';
 import 'editor_fullscreen_helper_presenter.dart';
 import 'editor_fullscreen_helper_viewmodel.dart';
 
@@ -32,6 +33,8 @@ abstract class EditorFullScreenHelperView {
 
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
 
+  void closeColorPickerDialog();
+
   TextStyle googleCustomFont(String fontFamily);
 
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
@@ -41,7 +44,7 @@ abstract class EditorFullScreenHelperView {
   void closeLoadingScreen();
 }
 
-class EditorFullScreenHelper with EditorSendingOverlayMixin implements EditorFullScreenHelperView {
+class EditorFullScreenHelper with EditorSendingOverlayMixin, EditorNavigationMixin implements EditorFullScreenHelperView {
 
   BuildContext context;
 
@@ -49,7 +52,7 @@ class EditorFullScreenHelper with EditorSendingOverlayMixin implements EditorFul
 
   EditorSendingOverlay sendingOverlay;
 
-  EditorFullScreenHelper(this.context, this.palEditModeStateService){
+  EditorFullScreenHelper(this.context, this.palEditModeStateService) {
     overlayContext = context;
   }
 
@@ -59,25 +62,26 @@ class EditorFullScreenHelper with EditorSendingOverlayMixin implements EditorFul
     EditorFullScreenHelperPresenter presenter,
   ) {
     HapticFeedback.selectionClick();
-    showDialog(
-      context: this.context,
-      child: ColorPickerDialog(
+    showOverlayedInContext(
+      (context) => ColorPickerDialog(
         placeholderColor: viewModel.bodyBox.backgroundColor?.value,
         onColorSelected: presenter.updateBackgroundColor,
+        onCancel: presenter.cancelUpdateBackgroundColor
       ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY
     );
   }
 
+  void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
+
   @override
   Future<GraphicEntity> pushToMediaGallery(final String mediaId) async {
-    final media = await Navigator.pushNamed(
-      this.context,
+    final media = await Navigator.of(context).pushNamed(
       '/editor/media-gallery',
       arguments: MediaGalleryPageArguments(
         mediaId,
       ),
     ) as GraphicEntity;
-
     return media;
   }
 
@@ -88,12 +92,6 @@ class EditorFullScreenHelper with EditorSendingOverlayMixin implements EditorFul
         : null;
   }
 
-  @override
-  closeEditor() async {
-    Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY,);
-    palEditModeStateService.showBubble(context, true);
-    palEditModeStateService.showHelpersList(context);
-  }
 }
 
 typedef OnFormChanged(bool isValid);

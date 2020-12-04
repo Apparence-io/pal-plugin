@@ -39,33 +39,37 @@ void main() {
 
     EditorFullScreenHelperPresenter presenter;
 
+    final _navigatorKey = GlobalKey<NavigatorState>();
+
     HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
+
+    Scaffold _overlayedApplicationPage = Scaffold(
+      body: Column(
+        children: [
+          Text("text1", key: ValueKey("text1"),),
+          Text("text2", key: ValueKey("text2")),
+          Padding(
+            padding: EdgeInsets.only(top: 32),
+            child: FlatButton(
+              key: ValueKey("MFlatButton"),
+              child: Text("tapme"),
+              onPressed: () => print("impressed!"),
+            ),
+          )
+        ],
+      ),
+    );
 
     Future _beforeEach(WidgetTester tester) async {
       reset(helperEditorServiceMock);
-      EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.create(
-        palEditModeStateService: PalEditModeStateServiceMock(),
-        parameters: HelperEditorPageArguments(
-          null,
-          "pageId_IEPZE",
-          helperMinVersion: "1.0.1",
-          helperMaxVersion: null
-        ) ,
-        helperService: helperEditorServiceMock,
-        helperViewModel: HelperViewModel(
-          name: "my helper",
-          helperType: HelperType.HELPER_FULL_SCREEN,
-          helperTheme: HelperTheme.BLACK,
-          triggerType: HelperTriggerType.ON_SCREEN_VISIT
-        )
-      );
-      await tester.pumpWidget(
-        PalTheme(
-          theme: PalThemeData.light(),
-          child: MaterialApp(
-            home: Overlayed(child: editor)
-          ),
-        )
+      await initAppWithPal(tester, _overlayedApplicationPage, _navigatorKey);
+      await pumpHelperWidget(
+        tester, _navigatorKey,
+        HelperTriggerType.ON_SCREEN_VISIT,
+        HelperType.HELPER_FULL_SCREEN,
+        HelperTheme.BLACK,
+        editorHelperService: helperEditorServiceMock,
+        palEditModeStateService: new PalEditModeStateServiceMock()
       );
       await tester.pumpAndSettle(Duration(milliseconds: 1000));
       var presenterFinder = find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
@@ -73,7 +77,7 @@ void main() {
         as PresenterInherited<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
       presenter = page.presenter;
     }
-    
+
     // --------------------------------------------
     // Tests
     // --------------------------------------------

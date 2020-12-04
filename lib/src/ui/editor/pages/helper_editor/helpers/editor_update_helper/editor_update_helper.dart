@@ -7,6 +7,7 @@ import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
@@ -47,6 +48,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
   final UpdateHelperViewModel baseviewModel;
   final HelperEditorPageArguments arguments;
   final EditorHelperService helperService;
+  final PalEditModeStateService palEditModeStateService;
 
   // inner page widgets
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -56,6 +58,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
   EditorUpdateHelperPage._({
     Key key,
     this.helperService,
+    this.palEditModeStateService,
     @required this.baseviewModel,
     @required this.arguments,
   }) : super(key: key);
@@ -64,10 +67,12 @@ class EditorUpdateHelperPage extends StatelessWidget {
     Key key,
     HelperEditorPageArguments parameters,
     EditorHelperService helperService,
+    PalEditModeStateService palEditModeStateService,
     @required HelperViewModel helperViewModel
   }) => EditorUpdateHelperPage._(
     key: key,
     helperService: helperService,
+    palEditModeStateService: palEditModeStateService,
     baseviewModel: UpdateHelperViewModel.fromHelperViewModel(helperViewModel),
     arguments: parameters,
   );
@@ -75,11 +80,13 @@ class EditorUpdateHelperPage extends StatelessWidget {
   factory EditorUpdateHelperPage.edit({
     Key key,
     HelperEditorPageArguments parameters,
+    PalEditModeStateService palEditModeStateService,
     EditorHelperService helperService,
     @required HelperEntity helperEntity //FIXME should be an id and not entire entity
   }) => EditorUpdateHelperPage._(
     key: key,
     helperService: helperService,
+    palEditModeStateService: palEditModeStateService,
     baseviewModel: UpdateHelperViewModel.fromHelperEntity(helperEntity),
     arguments: parameters,
   );
@@ -92,7 +99,10 @@ class EditorUpdateHelperPage extends StatelessWidget {
       context: context,
       presenterBuilder: (context) {
         var presenter = EditorUpdateHelperPresenter(
-          _EditorUpdateHelperPage(context, _scaffoldKey, scrollController),
+          _EditorUpdateHelperPage(
+            context, _scaffoldKey, scrollController,
+            palEditModeStateService ?? EditorInjector.of(context).palEditModeStateService
+          ),
           baseviewModel,
           helperService ?? EditorInjector.of(context).helperService,
           arguments
@@ -344,13 +354,14 @@ class EditorUpdateHelperPage extends StatelessWidget {
   }
 }
 
-class _EditorUpdateHelperPage with EditorSendingOverlayMixin implements EditorUpdateHelperView {
+class _EditorUpdateHelperPage with EditorSendingOverlayMixin, EditorNavigationMixin implements EditorUpdateHelperView {
 
   final BuildContext context;
   final GlobalKey<ScaffoldState> scaffoldKey;
   final ScrollController scrollController;
+  final PalEditModeStateService palEditModeStateService;
 
-  _EditorUpdateHelperPage(this.context, this.scaffoldKey, this.scrollController);
+  _EditorUpdateHelperPage(this.context, this.scaffoldKey, this.scrollController, this.palEditModeStateService);
 
   BuildContext get overlayContext => context;
 
@@ -388,6 +399,4 @@ class _EditorUpdateHelperPage with EditorSendingOverlayMixin implements EditorUp
     }
   }
 
-  @override
-  Future closeEditor() async => Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
 }

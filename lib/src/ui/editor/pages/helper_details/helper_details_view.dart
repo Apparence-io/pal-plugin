@@ -56,9 +56,7 @@ class HelperDetailsComponentArguments {
   );
 }
 
-class HelperDetailsComponent extends StatelessWidget
-    with SnackbarMixin
-    implements HelperDetailsInterface {
+class HelperDetailsComponent extends StatelessWidget with SnackbarMixin implements HelperDetailsInterface {
 
   final EditorHelperService testHelperService;
 

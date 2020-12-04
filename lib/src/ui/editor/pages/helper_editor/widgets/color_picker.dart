@@ -7,14 +7,20 @@ import 'package:pal/src/ui/editor/widgets/bordered_text_field.dart';
 
 typedef OnColorSelected = void Function(Color);
 
+typedef OnCancel = void Function();
+
+
 class ColorPickerDialog extends StatefulWidget {
+
   final Color placeholderColor;
   final OnColorSelected onColorSelected;
+  final OnCancel onCancel;
 
   const ColorPickerDialog({
     Key key,
     this.placeholderColor,
     this.onColorSelected,
+    this.onCancel
   }) : super(key: key);
 
   @override
@@ -89,7 +95,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
             child: Text('Cancel'),
             onPressed: () {
               HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
+              widget.onCancel();
             },
           ),
           FlatButton(
@@ -106,8 +112,6 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
                       HapticFeedback.selectionClick();
                       widget.onColorSelected(_selectedColor);
                     }
-
-                    Navigator.of(context).pop();
                   }
                 : null,
           ),

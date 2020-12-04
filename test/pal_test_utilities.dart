@@ -9,6 +9,7 @@ import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
@@ -56,6 +57,7 @@ Future pumpHelperWidget(
   HelperType type,
   HelperTheme theme,
   { EditorHelperService editorHelperService,
+    PalEditModeStateService palEditModeStateService,
     HelperEntity helperEntity }
 ) async {
   // push helper editor page
@@ -78,6 +80,7 @@ Future pumpHelperWidget(
         builder = (context) => EditorSimpleHelperPage.edit(
           parameters: args,
           helperEntity: helperEntity,
+          palEditModeStateService: palEditModeStateService,
           helperService: editorHelperService,
         );
         break;
@@ -85,6 +88,7 @@ Future pumpHelperWidget(
         builder = (context) => EditorUpdateHelperPage.edit(
           parameters: args,
           helperEntity: helperEntity,
+          palEditModeStateService: palEditModeStateService,
           helperService: editorHelperService,
         );
         break;
@@ -92,6 +96,7 @@ Future pumpHelperWidget(
         builder = (context) => EditorFullScreenHelperPage.edit(
           parameters: args,
           helperEntity: helperEntity,
+          palEditModeStateService: palEditModeStateService,
           helperService: editorHelperService,
         );
         break;
@@ -105,6 +110,7 @@ Future pumpHelperWidget(
           parameters: args,
           helperViewModel: templateViewModel,
           helperService: editorHelperService,
+          palEditModeStateService: palEditModeStateService,
         );
         break;
       case HelperType.UPDATE_HELPER:
@@ -112,6 +118,7 @@ Future pumpHelperWidget(
           parameters: args,
           helperViewModel: templateViewModel,
           helperService: editorHelperService,
+          palEditModeStateService: palEditModeStateService,
         );
         break;
       case HelperType.HELPER_FULL_SCREEN:
@@ -119,6 +126,7 @@ Future pumpHelperWidget(
           parameters: args,
           helperViewModel: templateViewModel,
           helperService: editorHelperService,
+          palEditModeStateService: palEditModeStateService,
         );
         break;
       case HelperType.ANCHORED_OVERLAYED_HELPER:
@@ -142,8 +150,7 @@ Future<void> longPressDrag(
   Finder startElement,
   Finder endElement,
 ) async {
-  final TestGesture drag =
-      await tester.startGesture(tester.getCenter(startElement));
+  final TestGesture drag = await tester.startGesture(tester.getCenter(startElement));
   await tester.pump(kLongPressTimeout + kPressTimeout);
   await drag.moveTo(tester.getBottomLeft(endElement) * 2);
   await drag.up();

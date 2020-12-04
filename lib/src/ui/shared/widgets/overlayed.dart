@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 enum OverlayKeys {
-  EDITOR_OVERLAY_KEY
+  EDITOR_OVERLAY_KEY,
+  PAGE_OVERLAY_KEY,
 }
 
 /// This helps manage [OverlayEntry] into the stack

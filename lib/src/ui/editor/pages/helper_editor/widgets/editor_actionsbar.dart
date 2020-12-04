@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 
+import '../../../../../router.dart';
 import '../../../../../theme.dart';
 import 'editor_button.dart';
 
 typedef OnCancel();
 
 typedef OnValidate = Future<void> Function();
+
 
 class EditorActionsBar extends StatelessWidget {
 
@@ -52,19 +55,17 @@ class EditorActionsBar extends StatelessWidget {
               child: ValueListenableBuilder<bool>(
                 valueListenable: canValidate,
                 builder: (context, isActive, child)
-                  => EditorButton.validate(
-                      PalTheme.of(context),
-                      onValidate,
-                      key: ValueKey("editModeValidate"),
-                      isEnabled: isActive,
-                    ),
+                => EditorButton.validate(
+                  PalTheme.of(context),
+                  onValidate,
+                  key: ValueKey("editModeValidate"),
+                  isEnabled: isActive,
                 ),
+              ),
             ),
           ],
         ),
       ),
     );
   }
-
-
 }

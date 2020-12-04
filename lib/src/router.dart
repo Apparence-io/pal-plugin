@@ -15,6 +15,7 @@ void globalPop() {
 }
 
 Route<dynamic> route(RouteSettings settings) {
+  print("root router... ${settings.name}");
   switch (settings.name) {
     case '/settings':
       return MaterialPageRoute(
@@ -75,3 +76,19 @@ showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder bui
       );
   hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
 }
+
+showOverlayedInContext(WidgetBuilder builder, {OverlayKeys key}) {
+  OverlayEntry helperOverlay = OverlayEntry(
+    opaque: false,
+    builder: builder,
+  );
+  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.putIfAbsent(
+    key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
+    () => helperOverlay,
+  );
+  palNavigatorGlobalKey.currentState.overlay.insert(helperOverlay);
+}
+
+closeOverlayed(OverlayKeys key)
+  => Overlayed.of(palNavigatorGlobalKey.currentState.context).entries[key]
+    .remove();

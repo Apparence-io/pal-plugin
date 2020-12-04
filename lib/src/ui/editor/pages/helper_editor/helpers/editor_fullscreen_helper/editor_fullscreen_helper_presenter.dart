@@ -117,6 +117,15 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
 
   changeBackgroundColor() => this.viewInterface.showColorPickerDialog(viewModel, this);
 
+  updateBackgroundColor(Color aColor) {
+    viewModel.bodyBox.backgroundColor.value = aColor;
+    this.viewInterface.closeColorPickerDialog();
+    _updateValidState();
+    this.refreshView();
+  }
+
+  cancelUpdateBackgroundColor() => this.viewInterface.closeColorPickerDialog();
+
   editMedia() async {
     final selectedMedia = await this
         .viewInterface
@@ -124,11 +133,6 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
 
     this.viewModel.media?.url?.value = selectedMedia?.url;
     this.viewModel.media?.uuid = selectedMedia?.id;
-    this.refreshView();
-  }
-
-  updateBackgroundColor(Color aColor) {
-    viewModel.bodyBox.backgroundColor.value = aColor;
     this.refreshView();
   }
   
@@ -139,8 +143,10 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   
   _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
     textNotifier.text.value = newValue;
-    viewModel.canValidate.value = isValid();
+    _updateValidState();
   }
+
+  _updateValidState() => viewModel.canValidate.value = isValid();
 
   _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
     textNotifier?.fontColor?.value = newTextStyle?.color;

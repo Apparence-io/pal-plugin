@@ -5,6 +5,7 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
@@ -44,6 +45,8 @@ class EditorSimpleHelperPage extends StatelessWidget  {
 
   final EditorHelperService helperService;
 
+  final PalEditModeStateService palEditModeStateService;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -53,16 +56,19 @@ class EditorSimpleHelperPage extends StatelessWidget  {
     this.helperService,
     @required this.baseviewModel,
     @required this.arguments,
+    this.palEditModeStateService
   }) : super(key: key);
 
   factory EditorSimpleHelperPage.create({
     Key key,
     HelperEditorPageArguments parameters,
     EditorHelperService helperService,
+    PalEditModeStateService palEditModeStateService,
     @required HelperViewModel helperViewModel
   }) => EditorSimpleHelperPage._(
     key: key,
     helperService: helperService,
+    palEditModeStateService: palEditModeStateService,
     baseviewModel: SimpleHelperViewModel.fromHelperViewModel(helperViewModel),
     arguments: parameters,
   );
@@ -71,10 +77,12 @@ class EditorSimpleHelperPage extends StatelessWidget  {
     Key key,
     HelperEditorPageArguments parameters,
     EditorHelperService helperService,
+    PalEditModeStateService palEditModeStateService,
     @required HelperEntity helperEntity //FIXME should be an id and not entire entity
   }) => EditorSimpleHelperPage._(
     key: key,
     helperService: helperService,
+    palEditModeStateService: palEditModeStateService,
     baseviewModel: SimpleHelperViewModel.fromHelperEntity(helperEntity),
     arguments: parameters,
   );
@@ -86,7 +94,10 @@ class EditorSimpleHelperPage extends StatelessWidget  {
         key: ValueKey('palEditorSimpleHelperWidgetBuilder'),
         context: context,
         presenterBuilder: (context) => EditorSimpleHelperPresenter(
-            new _EditorSimpleHelperPage(context, _scaffoldKey),
+            new _EditorSimpleHelperPage(
+              context, _scaffoldKey,
+              palEditModeStateService ?? EditorInjector.of(context).palEditModeStateService
+            ),
             baseviewModel,
             helperService ?? EditorInjector.of(context).helperService,
             arguments
@@ -202,12 +213,15 @@ class EditorSimpleHelperPage extends StatelessWidget  {
 }
 
 
-class _EditorSimpleHelperPage with EditorSendingOverlayMixin implements EditorSimpleHelperView  {
+class _EditorSimpleHelperPage with EditorSendingOverlayMixin, EditorNavigationMixin implements EditorSimpleHelperView  {
 
   final BuildContext context;
+
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  _EditorSimpleHelperPage(this.context, this.scaffoldKey);
+  final PalEditModeStateService palEditModeStateService;
+
+  _EditorSimpleHelperPage(this.context, this.scaffoldKey, this.palEditModeStateService);
 
   BuildContext get overlayContext => context;
 
@@ -225,8 +239,5 @@ class _EditorSimpleHelperPage with EditorSendingOverlayMixin implements EditorSi
       ),
     );
   }
-
-  @override
-  Future closeEditor() async => Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
 
 }

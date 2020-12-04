@@ -7,6 +7,7 @@ import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
@@ -17,6 +18,8 @@ import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import '../../../pal_test_utilities.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
+
+class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
 
 void main() {
 
@@ -61,7 +64,8 @@ void main() {
         HelperTriggerType.ON_SCREEN_VISIT,
         HelperType.UPDATE_HELPER,
         HelperTheme.BLACK,
-        editorHelperService: helperEditorServiceMock
+        editorHelperService: helperEditorServiceMock,
+        palEditModeStateService: new PalEditModeStateServiceMock()
       );
       var presenterFinder = find.byKey(ValueKey("pal_EditorUpdateHelperWidget_Builder"));
       var page = presenterFinder.evaluate().first.widget

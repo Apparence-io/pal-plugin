@@ -4,12 +4,14 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pal/src/router.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
+import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 enum ToolbarType { text, border }
 
@@ -344,61 +346,57 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   _onChangeTextFont() {
-    showDialog(
-      context: context,
-      child: FontEditorDialogPage(
-        actualTextStyle: _textStyle,
-        fontFamilyKey: _fontFamilyKey,
-        onFontModified: (
-          TextStyle newTextStyle,
-          FontKeys fontKeys,
-        ) {
-          setState(() {
-            _textStyle = _textStyle.merge(
-              newTextStyle,
-            );
-            _isToolbarVisible = true;
-          });
+    var widgetBuilder = (context) => FontEditorDialogPage(
+      onCancelPicker: () => Navigator.of(context).pop(),
+      onValidatePicker: () => Navigator.of(context).pop(),
+      actualTextStyle: _textStyle,
+      fontFamilyKey: _fontFamilyKey,
+      onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) {
+        setState(() {
+          _textStyle = _textStyle.merge(
+            newTextStyle,
+          );
+          _isToolbarVisible = true;
+        });
 
-          if (fontKeys?.fontFamilyNameKey != null &&
-              fontKeys.fontFamilyNameKey.length > 0) {
-            _fontFamilyKey = fontKeys.fontFamilyNameKey;
-          }
-
-          if (widget.onTextStyleChanged != null) {
-            widget.onTextStyleChanged(
-              widget.id ?? widget.textFormFieldKey.toString(),
-              _textStyle,
-              fontKeys,
-            );
-          }
-        },
-      ),
+        if (fontKeys?.fontFamilyNameKey != null &&
+          fontKeys.fontFamilyNameKey.length > 0) {
+          _fontFamilyKey = fontKeys.fontFamilyNameKey;
+        }
+        if (widget.onTextStyleChanged != null) {
+          widget.onTextStyleChanged(
+            widget.id ?? widget.textFormFieldKey.toString(),
+            _textStyle,
+            fontKeys,
+          );
+        }
+      },
     );
+    showDialog(context: context, builder: widgetBuilder);
   }
 
   _onChangeTextColor() {
-    showDialog(
-      context: context,
-      child: ColorPickerDialog(
-        placeholderColor: _textStyle?.color,
-        onColorSelected: (Color newColor) {
-          setState(() {
-            _textStyle = _textStyle.merge(TextStyle(
-              color: newColor,
-            ));
-            _isToolbarVisible = true;
-          });
-          if (widget.onTextStyleChanged != null) {
-            widget.onTextStyleChanged(
-              widget.id ?? widget.textFormFieldKey.toString(),
-              _textStyle,
-              null,
-            );
-          }
-        },
-      ),
+    var widgetBuilder = (context) => ColorPickerDialog(
+      placeholderColor: _textStyle?.color,
+      onCancel: () => Navigator.of(context).pop(),
+      onColorSelected: (Color newColor) {
+        setState(() {
+          _textStyle = _textStyle.merge(TextStyle(
+            color: newColor,
+          ));
+          _isToolbarVisible = true;
+        });
+        if (widget.onTextStyleChanged != null) {
+          widget.onTextStyleChanged(
+            widget.id ?? widget.textFormFieldKey.toString(),
+            _textStyle,
+            null,
+          );
+        }
+        Navigator.of(context).pop();
+      },
     );
+    showDialog(context: context, builder: widgetBuilder);
   }
 
   _onChangeBorder() {}

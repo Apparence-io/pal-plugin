@@ -14,6 +14,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_help
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import '../../../pal_test_utilities.dart';
 
@@ -65,7 +66,7 @@ void main() {
         HelperType.UPDATE_HELPER,
         HelperTheme.BLACK,
         editorHelperService: helperEditorServiceMock,
-        palEditModeStateService: new PalEditModeStateServiceMock()
+        palEditModeStateService: PalEditModeStateServiceMock()
       );
       var presenterFinder = find.byKey(ValueKey("pal_EditorUpdateHelperWidget_Builder"));
       var page = presenterFinder.evaluate().first.widget
@@ -82,13 +83,15 @@ void main() {
       expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
     });
 
-    testWidgets('close editor  => page is removed', (WidgetTester tester) async {
+    testWidgets('close editor, pal bubble is hidden  => page is removed, pal bubble is visible', (WidgetTester tester) async {
       await beforeEach(tester);
-      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
+
       var cancelFinder = find.byKey(ValueKey('editModeCancel'));
       await tester.tap(cancelFinder);
       await tester.pumpAndSettle();
-      expect(find.byType(EditorUpdateHelperPage), findsNothing);
+      expect(find.byType(BubbleOverlayButton), findsOneWidget);
+      // var bubbleWidget = find.byType(BubbleOverlayButton).evaluate().first.widget as BubbleOverlayButton;
+      // expect(bubbleWidget.visibility.value, isTrue);
     });
 
     testWidgets('title not empty, 0 changelog  => save button is disabled', (WidgetTester tester) async {

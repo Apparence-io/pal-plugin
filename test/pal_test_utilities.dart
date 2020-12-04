@@ -23,7 +23,9 @@ const Duration kLongPressTimeout = Duration(milliseconds: 500);
 const Duration kPressTimeout = Duration(milliseconds: 100);
 
 Future initAppWithPal(
-    WidgetTester tester, Widget userApp, GlobalKey<NavigatorState> navigatorKey,
+    WidgetTester tester,
+    Widget userApp,
+    GlobalKey<NavigatorState> navigatorKey,
     {RouteFactory routeFactory,
     bool editorModeEnabled = true,
     EditorAppContext editorAppContext,

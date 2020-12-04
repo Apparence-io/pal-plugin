@@ -34,12 +34,11 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   @override
   void onInit() {
     this.viewModel.isKeyboardVisible = false;
-    // Check if a pre-filled template already exist
-    // if (viewModel.changelogsFields.length > 0) {
-    //   this.initFromTemplate();
-    // } else {
-    //   this.addChangelogNote();
-    // }
+  }
+
+  @override
+  void afterViewInit() {
+    this.viewInterface.hidePalBubble();
   }
 
   onKeyboardVisibilityChange(bool visible) {
@@ -96,7 +95,8 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   changeBackgroundColor() {
     this.viewInterface.showColorPickerDialog(
       viewModel?.bodyBox?.backgroundColor?.value,
-      updateBackgroundColor
+      updateBackgroundColor,
+      () => viewInterface.closeColorPickerDialog()
     );
   }
 

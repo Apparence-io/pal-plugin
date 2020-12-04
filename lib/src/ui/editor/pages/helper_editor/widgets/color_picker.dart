@@ -7,14 +7,16 @@ import 'package:pal/src/ui/editor/widgets/bordered_text_field.dart';
 
 typedef OnColorSelected = void Function(Color);
 
-typedef OnCancel = void Function();
+typedef OnCancelPicker = void Function();
 
 
 class ColorPickerDialog extends StatefulWidget {
 
   final Color placeholderColor;
+
   final OnColorSelected onColorSelected;
-  final OnCancel onCancel;
+
+  final OnCancelPicker onCancel;
 
   const ColorPickerDialog({
     Key key,

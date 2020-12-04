@@ -65,13 +65,13 @@ Route<dynamic> route(RouteSettings settings) {
 }
 
 //shows a page as overlay for our editor
-showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
+showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder, {OverlayKeys key}) {
   OverlayEntry helperOverlay = OverlayEntry(
     opaque: false,
     builder: builder,
   );
   Overlayed.of(hostedAppNavigatorKey.currentContext).entries.putIfAbsent(
-        OverlayKeys.EDITOR_OVERLAY_KEY,
+        key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
         () => helperOverlay,
       );
   hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
@@ -89,6 +89,8 @@ showOverlayedInContext(WidgetBuilder builder, {OverlayKeys key}) {
   palNavigatorGlobalKey.currentState.overlay.insert(helperOverlay);
 }
 
-closeOverlayed(OverlayKeys key)
-  => Overlayed.of(palNavigatorGlobalKey.currentState.context).entries[key]
+closeOverlayed(OverlayKeys key) {
+  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries[key]
     .remove();
+  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.remove(key);
+}

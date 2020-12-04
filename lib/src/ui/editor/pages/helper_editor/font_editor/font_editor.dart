@@ -8,6 +8,10 @@ import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_size_pick
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 
+typedef OnCancelPicker = void Function();
+
+typedef OnValidatePicker = void Function();
+
 abstract class FontEditorDialogView {
   Future<String> openFontFamilyPicker(
     BuildContext context,
@@ -20,20 +24,31 @@ abstract class FontEditorDialogView {
   TextStyle defaultTextFieldPreviewColor();
 }
 
-class FontEditorDialogPage extends StatelessWidget
-    implements FontEditorDialogView {
+
+
+class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogView {
+
+  final OnCancelPicker onCancelPicker;
+
+  final OnValidatePicker onValidatePicker;
+
   final TextStyle actualTextStyle;
+
   final String fontFamilyKey;
+
   final Function(TextStyle, FontKeys) onFontModified;
+
   FontEditorDialogPage({
     Key key,
-    @required this.actualTextStyle,
+    @required TextStyle actualTextStyle,
     this.fontFamilyKey,
+    this.onCancelPicker,
     this.onFontModified,
-  });
+    this.onValidatePicker,
+  }) : this.actualTextStyle = actualTextStyle.copyWith(),
+       super(key: key);
 
-  final _mvvmPageBuilder =
-      MVVMPageBuilder<FontEditorDialogPresenter, FontEditorDialogModel>();
+  final _mvvmPageBuilder = MVVMPageBuilder<FontEditorDialogPresenter, FontEditorDialogModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +75,13 @@ class FontEditorDialogPage extends StatelessWidget
     final FontEditorDialogPresenter presenter,
     final FontEditorDialogModel model,
   ) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: AlertDialog(
-        key: ValueKey('pal_FontEditorDialog'),
-        content: SingleChildScrollView(
-          child: Container(
-            width: double.maxFinite,
-            child: Column(
+    return AlertDialog(
+      key: ValueKey('pal_FontEditorDialog'),
+      actions: _buildActions(model),
+      content: SingleChildScrollView(
+        child: Container(
+          width: double.maxFinite,
+          child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
@@ -80,9 +94,7 @@ class FontEditorDialogPage extends StatelessWidget
                 ),
                 FontSizePicker(
                   style: model.modifiedTextStyle,
-                  onFontSizeSelected: (double value) {
-                    presenter.changeFontSize(value);
-                  },
+                  onFontSizeSelected: presenter.changeFontSize,
                 ),
                 Divider(),
                 ConstrainedBox(
@@ -118,40 +130,39 @@ class FontEditorDialogPage extends StatelessWidget
             ),
           ),
         ),
-        actions: <Widget>[
-          FlatButton(
-            key: ValueKey('pal_FontEditorDialog_CancelButton'),
-            child: Text('Cancel'),
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
-            },
-          ),
-          FlatButton(
-            key: ValueKey('pal_FontEditorDialog_ValidateButton'),
-            child: Text(
-              'Validate',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              HapticFeedback.selectionClick();
-              Navigator.of(context).pop();
-
-              if (onFontModified != null) {
-                onFontModified(
-                  model.modifiedTextStyle.merge(
-                    TextStyle(color: actualTextStyle.color),
-                  ),
-                  model.fontKeys,
-                );
-              }
-            },
-          ),
-        ],
-      ),
     );
+  }
+
+  _buildActions(final FontEditorDialogModel model) {
+    return [
+      FlatButton(
+        key: ValueKey('pal_FontEditorDialog_CancelButton'),
+        child: Text('Cancel'),
+        onPressed: () {
+          HapticFeedback.selectionClick();
+          this.onCancelPicker();
+        },
+      ),
+      FlatButton(
+        key: ValueKey('pal_FontEditorDialog_ValidateButton'),
+        child: Text(
+          'Validate',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: () {
+          HapticFeedback.selectionClick();
+          if (onFontModified != null) {
+            onFontModified(
+              model.modifiedTextStyle.merge(TextStyle(color: actualTextStyle.color)),
+              model.fontKeys,
+            );
+          }
+          onValidatePicker();
+        },
+      ),
+    ];
   }
 
   @override
@@ -185,7 +196,5 @@ class FontEditorDialogPage extends StatelessWidget
   }
 
   @override
-  TextStyle defaultTextFieldPreviewColor() {
-    return TextStyle(color: Color(0xFF03045E));
-  }
+  TextStyle defaultTextFieldPreviewColor() => TextStyle(color: Color(0xFF03045E));
 }

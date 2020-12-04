@@ -39,8 +39,8 @@ class FontEditorDialogPresenter
 
   void changeFontSize(double fontSize) async {
     this.viewModel.modifiedTextStyle = this.viewModel.modifiedTextStyle.merge(
-          TextStyle(fontSize: fontSize),
-        );
+        TextStyle(fontSize: fontSize),
+    );
     this.refreshView();
   }
 

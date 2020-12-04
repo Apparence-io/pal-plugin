@@ -23,12 +23,17 @@ import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
+import '../../../../../../router.dart';
 import 'editor_update_helper_presenter.dart';
 import 'editor_update_helper_viewmodel.dart';
 
 abstract class EditorUpdateHelperView {
 
-  void showColorPickerDialog(Color color, OnColorSelected onColorSelected);
+  void showColorPickerDialog(Color color, OnColorSelected onColorSelected, OnCancelPicker onCancel);
+
+  void closeColorPickerDialog();
+
+  void hidePalBubble();
 
   Future<void> scrollToBottomChangelogList();
 
@@ -365,17 +370,21 @@ class _EditorUpdateHelperPage with EditorSendingOverlayMixin, EditorNavigationMi
 
   BuildContext get overlayContext => context;
 
-  @override  //viewModel?.bodyBox?.backgroundColor?.value
-  void showColorPickerDialog(Color color, OnColorSelected onColorSelected) {
+  @override
+  void showColorPickerDialog(Color color, OnColorSelected onColorSelected, OnCancelPicker onCancel) {
     HapticFeedback.selectionClick();
-    showDialog(
-      context: context,
-      child: ColorPickerDialog(
+    showOverlayedInContext(
+      (context) => ColorPickerDialog(
         placeholderColor: color,
         onColorSelected: onColorSelected,
+        onCancel: onCancel
       ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY
     );
   }
+
+  @override
+  void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
   @override
   Future<GraphicEntity> pushToMediaGallery(final String mediaId) async {
@@ -398,5 +407,8 @@ class _EditorUpdateHelperPage with EditorSendingOverlayMixin, EditorNavigationMi
       );
     }
   }
+
+  @override
+  void hidePalBubble() => this.palEditModeStateService.showBubble(context, false);
 
 }

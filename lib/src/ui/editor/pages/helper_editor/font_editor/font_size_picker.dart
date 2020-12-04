@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class FontSizePicker extends StatefulWidget {
+
   final TextStyle style;
   final Function(double) onFontSizeSelected;
 
@@ -17,13 +18,13 @@ class FontSizePicker extends StatefulWidget {
 }
 
 class _FontSizePickerState extends State<FontSizePicker> {
+
   double _currentSliderValue;
   bool _isHapticPlayed = false;
 
   @override
   void initState() {
     super.initState();
-
     _currentSliderValue = widget.style.fontSize ?? 20.0;
   }
 
@@ -31,6 +32,10 @@ class _FontSizePickerState extends State<FontSizePicker> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Text(
+          '${_currentSliderValue.round().toString()}pt',
+          key: ValueKey('pal_FontSizePicker_CurrentValue'),
+        ),
         Slider(
           key: ValueKey('pal_FontSizePicker_Slider'),
           value: _currentSliderValue,
@@ -38,6 +43,7 @@ class _FontSizePickerState extends State<FontSizePicker> {
           max: 80,
           label: _currentSliderValue.round().toString(),
           onChanged: (double value) {
+            print("value : $value");
             num section = (value % 10).round();
             if (section == 0 && !_isHapticPlayed) {
               HapticFeedback.selectionClick();
@@ -45,17 +51,11 @@ class _FontSizePickerState extends State<FontSizePicker> {
             } else {
               _isHapticPlayed = false;
             }
-
             setState(() {
               _currentSliderValue = value;
             });
-
             widget.onFontSizeSelected(value);
           },
-        ),
-        Text(
-          '${_currentSliderValue.round().toString()}pt',
-          key: ValueKey('pal_FontSizePicker_CurrentValue'),
         ),
       ],
     );

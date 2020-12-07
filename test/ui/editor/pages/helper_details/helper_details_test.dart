@@ -26,7 +26,7 @@ main() {
       WidgetTester tester,
     ) async {
       HelperDetailsComponent component = HelperDetailsComponent(
-        arguments: HelperDetailsComponentArguments(null, helper, 'page-id'),
+        arguments: HelperDetailsComponentArguments(null, helper, 'page-id', '/pageRoute'),
         testHelperService: service,
       );
 

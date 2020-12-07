@@ -7,8 +7,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_w
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
-GlobalKey<NavigatorState> palNavigatorGlobalKey =
-    new GlobalKey<NavigatorState>();
+GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
 
 void globalPop() {
   Navigator.pop(palNavigatorGlobalKey.currentContext);
@@ -16,6 +15,7 @@ void globalPop() {
 }
 
 Route<dynamic> route(RouteSettings settings) {
+  print("root router... ${settings.name}");
   switch (settings.name) {
     case '/settings':
       return MaterialPageRoute(
@@ -23,7 +23,6 @@ Route<dynamic> route(RouteSettings settings) {
       );
     case '/editor/new':
       CreateHelperPageArguments args = settings.arguments;
-
       return MaterialPageRoute(
         builder: (context) => CreateHelperPage(
           pageId: args.pageId,
@@ -32,7 +31,6 @@ Route<dynamic> route(RouteSettings settings) {
       );
     case '/editor/helper':
       HelperDetailsComponentArguments arguments = settings.arguments;
-
       return MaterialPageRoute(
         builder: (context) => HelperDetailsComponent(
           arguments: arguments,
@@ -67,15 +65,36 @@ Route<dynamic> route(RouteSettings settings) {
 }
 
 //shows a page as overlay for our editor
-showOverlayed(
-    GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder) {
+showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder, {OverlayKeys key}) {
   OverlayEntry helperOverlay = OverlayEntry(
     opaque: false,
     builder: builder,
   );
   Overlayed.of(hostedAppNavigatorKey.currentContext).entries.putIfAbsent(
-        OverlayKeys.EDITOR_OVERLAY_KEY,
+        key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
         () => helperOverlay,
       );
   hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
+}
+
+showOverlayedInContext(WidgetBuilder builder, {OverlayKeys key}) {
+  if(Overlayed.of(palNavigatorGlobalKey.currentState.context).entries
+    .containsKey(key ?? OverlayKeys.EDITOR_OVERLAY_KEY)) {
+    return;
+  }
+  OverlayEntry helperOverlay = OverlayEntry(
+    opaque: false,
+    builder: builder,
+  );
+  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.putIfAbsent(
+    key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
+    () => helperOverlay,
+  );
+  palNavigatorGlobalKey.currentState.overlay.insert(helperOverlay);
+}
+
+closeOverlayed(OverlayKeys key) {
+  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries[key]
+    .remove();
+  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.remove(key);
 }

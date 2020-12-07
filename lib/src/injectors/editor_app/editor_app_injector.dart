@@ -33,16 +33,19 @@ class EditorInjector extends InheritedWidget {
 
   final PalRouteObserver routeObserver;
 
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+
   EditorInjector({
     Key key,
     @required EditorAppContext appContext,
     @required this.routeObserver,
     @required Widget child,
     @required GlobalKey boundaryChildKey,
+    this.hostedAppNavigatorKey,
   })  : assert(child != null && appContext != null),
         this._pageEditorService = PageEditorService.build(boundaryChildKey, appContext.pageRepository),
         this._projectEditorService = ProjectEditorService.build(appContext.projectRepository),
-        this._helperService = EditorHelperService.build(appContext.helperRepository),
+        this._helperService = EditorHelperService.build(appContext),
         this._finderService = FinderService(observer: routeObserver),
         this._projectGalleryEditorService = ProjectGalleryEditorService.build(
             projectGalleryRepository: appContext.projectGalleryRepository),

@@ -7,8 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/editor_router.dart';
 import 'package:pal/src/ui/editor/widgets/snackbar_mixin.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
@@ -19,40 +21,49 @@ import 'helper_details_model.dart';
 import 'helper_details_presenter.dart';
 
 abstract class HelperDetailsInterface {
+
   Future showDeleteDialog(
     HelperDetailsPresenter presenter,
   );
+
   Future onDialogCancel(
     BuildContext context,
   );
+
   Future onDialogApprove(
     BuildContext context,
     HelperDetailsPresenter presenter,
   );
+
   void showMessage(String message, bool success);
+
   void popBackToList();
-  void launchHelperEditor();
+
+  void launchHelperEditor(String routename);
 }
 
 class HelperDetailsComponentArguments {
+
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
   final HelperEntity helper;
-  final String pageId;
+  final String pageId, pageRouteName;
 
   HelperDetailsComponentArguments(
     this.hostedAppNavigatorKey,
     this.helper,
     this.pageId,
+    this.pageRouteName
   );
 }
 
-class HelperDetailsComponent extends StatelessWidget
-    with SnackbarMixin
-    implements HelperDetailsInterface {
+class HelperDetailsComponent extends StatelessWidget with SnackbarMixin implements HelperDetailsInterface {
+
   final EditorHelperService testHelperService;
+
   final HelperDetailsComponentArguments arguments;
-  final _mvvmPageBuilder =
-      MVVMPageBuilder<HelperDetailsPresenter, HelperDetailsModel>();
+
+  final _mvvmPageBuilder = MVVMPageBuilder<HelperDetailsPresenter, HelperDetailsModel>();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   HelperDetailsComponent({
@@ -100,7 +111,7 @@ class HelperDetailsComponent extends StatelessWidget
         CupertinoButton(
           key: ValueKey('editHelper'),
           disabledColor: PalTheme.of(context).colors.dark.withOpacity(0.7),
-          onPressed: (!model.isDeleting) ? this.launchHelperEditor : null,
+          onPressed: presenter.callEditHelper,
           child: Icon(
             Icons.edit,
             color: PalTheme.of(context).colors.dark,
@@ -290,22 +301,8 @@ class HelperDetailsComponent extends StatelessWidget
   }
 
   @override
-  void launchHelperEditor() {
-    // Open editor overlay
-    HelperEditorPageArguments args = HelperEditorPageArguments(
-      arguments?.hostedAppNavigatorKey,
-      arguments?.pageId,
-      isOnEditMode: true,
-      helperMinVersion: arguments?.helper?.versionMin,
-      helperMaxVersion: arguments?.helper?.versionMax,
-      templateViewModel: EditorViewModelFactory.build(arguments?.helper),
-    );
-    var elementFinder =
-        ElementFinder(arguments?.hostedAppNavigatorKey?.currentContext);
-    showOverlayed(
-      arguments?.hostedAppNavigatorKey,
-      HelperEditorPageBuilder(args, elementFinder: elementFinder).build,
-    );
+  void launchHelperEditor(String routename) {
+    new EditorRouter(arguments.hostedAppNavigatorKey).editHelper(routename, arguments.helper);
     // Go back
     Navigator.of(_scaffoldKey.currentContext)
         .pop(HelperDetailsPopState.editorOpened);

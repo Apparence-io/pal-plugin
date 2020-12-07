@@ -72,8 +72,8 @@ class HelperEntity {
 
   factory HelperEntity.copy(HelperEntity from) {
     return HelperEntity(
-      id: from.id,
-      name: from.name,
+      id: '${from.id}',
+      name: '${from.name}',
       type: from.type,
       triggerType: from.triggerType,
       creationDate: from.creationDate,

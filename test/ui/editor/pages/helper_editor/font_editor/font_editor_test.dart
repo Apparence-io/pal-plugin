@@ -24,18 +24,6 @@ void main() {
       expect(find.byType(FontSizePicker), findsOneWidget);
     });
 
-    testWidgets('should change font size', (WidgetTester tester) async {
-      await _beforeEach(tester);
-
-      expect(find.text('20pt'), findsOneWidget);
-
-      var fontSizeSlider = find.byKey(ValueKey('pal_FontSizePicker_Slider'));
-      await tester.drag(fontSizeSlider, const Offset(15.0, 0.0));
-      await tester.pumpAndSettle();
-
-      expect(find.text('45pt'), findsOneWidget);
-    });
-
     testWidgets('should display font infos', (WidgetTester tester) async {
       await _beforeEach(tester);
 
@@ -54,7 +42,7 @@ void main() {
       expect(find.text('Font family picker'), findsOneWidget);
     });
 
-    testWidgets('should open font family picker', (WidgetTester tester) async {
+    testWidgets('should open font weight picker', (WidgetTester tester) async {
       await _beforeEach(tester);
 
       var fontFamilyButton =

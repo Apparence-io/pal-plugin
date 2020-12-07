@@ -20,27 +20,37 @@ import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_details/helper_details_model.dart';
 
 abstract class HelpersListModalView {
+
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
+
   void processElement(Element element, {int n = 0});
+
   Future<void> capturePng(
     final HelpersListModalPresenter presenter,
     final HelpersListModalModel model,
   );
+
   Future<bool> openHelperCreationPage(
     final String pageId,
   );
+
   Future<void> openAppSettingsPage();
+
   Future<HelperDetailsPopState> openHelperDetailPage(
     final HelperEntity helperEntity,
     final String pageId,
+    final String pageRouteName,
   );
+
   void reorganizeHelper(
     final int oldIndex,
     final int newIndex,
     final HelpersListModalPresenter presenter,
     final List<HelperEntity> helpers,
   );
+
   void onCloseButton();
+
   void popModalDialog();
 }
 
@@ -373,6 +383,7 @@ class _HelpersListModalState extends State<HelpersListModal>
   Future<HelperDetailsPopState> openHelperDetailPage(
     final HelperEntity helperEntity,
     final String pageId,
+    final String pageRouteName,
   ) async {
     // Display the helper detail view
     final helperDetailsPopState = await Navigator.pushNamed(
@@ -382,9 +393,9 @@ class _HelpersListModalState extends State<HelpersListModal>
         widget.hostedAppNavigatorKey,
         helperEntity,
         pageId,
+        pageRouteName
       ),
     ) as HelperDetailsPopState;
-
     return helperDetailsPopState;
   }
 

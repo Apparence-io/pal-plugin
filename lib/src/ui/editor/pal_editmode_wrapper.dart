@@ -50,7 +50,7 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
       child: Overlayed(
         child: Builder(
           builder: (context) => MaterialApp(
-            key: palNavigatorGlobalKey,
+            navigatorKey: palNavigatorGlobalKey,
             debugShowCheckedModeBanner: false,
             onGenerateRoute: (RouteSettings settings) => route(settings),
             theme: PalTheme.of(context).buildTheme(),
@@ -95,7 +95,8 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   }
 
   _onShowBubbleStateChanged() {
-    if (mounted) setState(() {});
+    if (mounted)
+      setState(() {});
   }
 
   _showHelpersListModal(BuildContext context) {

@@ -1,30 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 ///-------------------------------
 /// Base helper config
 ///-------------------------------
 class CreateHelperConfig {
   String id;
-  String pageId;
+  String route;
   String name;
   HelperTriggerType triggerType;
   HelperType helperType; //remove
   int priority;
-  int versionMinId;
-  int versionMaxId;
+  String minVersion;
+  String maxVersion;
 
   CreateHelperConfig({
     this.id,
-    @required this.pageId,
+    @required this.route,
     @required this.name,
     @required this.triggerType,
     @required this.helperType,
     this.priority,
-    this.versionMinId,
-    this.versionMaxId,
+    this.minVersion,
+    this.maxVersion,
   });
+
+  factory CreateHelperConfig.from(String route, HelperViewModel viewModel)
+    => CreateHelperConfig(
+      id: viewModel?.id,
+      route: route,
+      name: viewModel.name,
+      triggerType: viewModel?.triggerType,
+      helperType: viewModel?.helperType,
+      priority: viewModel?.priority,
+      minVersion: viewModel?.minVersionCode,
+      maxVersion: viewModel?.maxVersionCode,
+    );
 }
 
 ///-------------------------------

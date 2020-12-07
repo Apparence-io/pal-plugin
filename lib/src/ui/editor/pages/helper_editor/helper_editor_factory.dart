@@ -4,10 +4,14 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 
+import 'helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
+import 'helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
+import 'helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
+
 class EditorViewModelFactory {
-  static HelperViewModel transform(
-    HelperViewModel model,
-  ) {
+
+  @deprecated
+  static HelperViewModel transform(HelperViewModel model) {
     switch (model?.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         return FullscreenHelperViewModel.fromHelperViewModel(model);
@@ -37,6 +41,7 @@ class EditorViewModelFactory {
 }
 
 class EditorEntityFactory {
+
   static CreateFullScreenHelper buildFullscreenArgs(
     CreateHelperConfig config,
     FullscreenHelperViewModel model,

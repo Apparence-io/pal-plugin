@@ -9,7 +9,7 @@ class HelpersListModalModel extends MVVMModel {
   List<HelperEntity> backupHelpers;
   bool isLoading;
   bool loadingMore;
-  String pageId;
+  String pageId, pageRouteName;
   bool noMore;
 
   HelpersListModalModel({

@@ -1,6 +1,6 @@
 <p align="center">
 	<a href="https://apparence.io/">
-		<img src="https://back.apparence.io/media/110/pal-logo.jpeg" width="200px" alt="pal logo"/>
+		<img src="https://back.apparence.io/media/110/pal-logo.jpeg" width="200px" alt="pal logo">
 	</a>
 </p>
 <p align="center">

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/database/entity/pageable.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
@@ -23,10 +24,12 @@ class HelpersListModalLoader {
   Future<HelpersListModalModel> load() async {
     var resViewModel = HelpersListModalModel();
 
-    String pageId = await getPageId();
-    if (pageId != null && pageId.length > 0) {
-      resViewModel.pageId = pageId;
-      resViewModel.helpers = await this.loadMore(pageId);
+    RouteSettings route = await _routeObserver.routeSettings.first;
+    PageEntity page = await getPage(route);
+    if (page != null && page.id.isNotEmpty) {
+      resViewModel.pageId = page.id;
+      resViewModel.pageRouteName = page.route;
+      resViewModel.helpers = await this.loadMore(page?.id);
     }
     return resViewModel;
   }
@@ -47,19 +50,11 @@ class HelpersListModalLoader {
           );
   }
 
-  Future<String> getPageId() async {
-    RouteSettings route = await _routeObserver.routeSettings.first;
+  Future<PageEntity> getPage(RouteSettings route) async {
     if (route == null || route.name == null || route.name.length <= 0) {
       return Future.value();
     }
-    return this._pageService.getPage(route.name).then(
-      (resPage) {
-        String routeId;
-        if (resPage != null && resPage.id != null && resPage.id.length > 0) {
-          routeId = resPage.id;
-        }
-        return routeId;
-      },
-    );
+    return this._pageService.getPage(route.name).then((resPage) => resPage);
   }
+
 }

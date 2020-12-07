@@ -104,7 +104,7 @@ class HelperSharedFactory {
       if (helperText.key.startsWith(key)) {
         customLabels.add(
           HelperTextViewModel(
-            id: helperText?.id,
+            id: helperText?.id ?? helperTexts.indexOf(helperText),
             text: helperText?.value,
             fontColor: HexColor.fromHex(helperText?.fontColor),
             fontSize: helperText?.fontSize?.toDouble(),

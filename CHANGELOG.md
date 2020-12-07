@@ -1,3 +1,6 @@
+## [0.0.3] - 2020/07/12
+- refactoring helper editor
+
 ## [0.0.2] - 2020/27/11
 - sync helpers on application start if needed
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
@@ -11,17 +12,22 @@ abstract class BaseHttpClient {}
 /// intercept request and add user token if present
 /// if token is expired calls refresh token endpoint and save new token
 class HttpClient extends http.BaseClient implements BaseHttpClient {
-  final http.Client _client = new http.Client();
+  
+  final http.Client _client;
+  
   final String _baseUrl;
+  
   final String _token;
 
   factory HttpClient.create(final String url, final String token) =>
-      HttpClient._private(url, token);
+      HttpClient.internal(url, token);
 
-  HttpClient._private(final String url, final String token)
+  @visibleForTesting
+  HttpClient.internal(final String url, final String token, {http.Client httpClient})
       : assert(url != null && url != ""),
         assert(token != null && token != ""),
         this._baseUrl = url,
+        this._client = httpClient ?? new http.Client(),
         this._token = token;
 
   @override
@@ -31,12 +37,14 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   }
 
   Future<Response> _checkResponse(final Response response) async {
-    if (response.statusCode >= 200 && response.statusCode < 300)
+    if (response.statusCode >= 200 && response.statusCode < 300) {
       return response;
-    else if (response.statusCode >= 400 && response.statusCode < 500) {
-      final String errorCode = ErrorAdapter().parse(response.body);
-
-      throw UnreachableHttpError('Http ${response.statusCode} error, network or bad gateway : ${response.request.url}',
+    } else if (response.statusCode >= 400 && response.statusCode < 500) {
+      String errorCode;
+      try {
+        errorCode = ErrorAdapter().parse(response.body);
+      } catch(_) {}
+      throw UnreachableHttpError('Http ${response.statusCode} error, network or bad gateway : ${response?.request?.url}',
           code: errorCode);
     } else if (response.statusCode >= 500 && response.statusCode < 600) {
       print("... ==> 500 error ");

@@ -6,7 +6,7 @@ void main() {
   runApp(MyApp());
 }
 
-const String APPLICATION_TOKEN = "";
+const String APPLICATION_TOKEN = "FILL_TOKEN_HERE";
 
 class MyApp extends StatelessWidget {
 

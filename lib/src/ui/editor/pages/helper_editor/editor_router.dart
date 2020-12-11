@@ -10,6 +10,7 @@ import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import '../../../../router.dart';
 import 'font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'font_editor/pickers/font_weight_picker/font_weight_picker.dart';
+import 'helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'helpers/editor_update_helper/editor_update_helper.dart';
@@ -50,6 +51,12 @@ class EditorRouter {
         break;
       case HelperType.HELPER_FULL_SCREEN:
         builder = (context) => EditorFullScreenHelperPage.create(
+          parameters: args,
+          helperViewModel: model.asHelperViewModel(),
+        );
+        break;
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        builder = (context) => EditorAnchoredFullscreenHelper.create(
           parameters: args,
           helperViewModel: model.asHelperViewModel(),
         );

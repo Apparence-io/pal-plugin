@@ -11,14 +11,15 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
 
   static PalNavigatorObserver _instance;
 
-  Subject<RouteSettings> _routeSettingsSubject = BehaviorSubject();
+  Subject<RouteSettings> _routeSettingsSubject = ReplaySubject();
   
-  Subject<PageRoute> _routeSubject = BehaviorSubject();
+  Subject<PageRoute> _routeSubject = ReplaySubject();
 
   PalNavigatorObserver._();
 
   factory PalNavigatorObserver.instance() {
     if(_instance == null) {
+      print("create PalNavigatorObserver");
       _instance = PalNavigatorObserver._();
     }
     return _instance;

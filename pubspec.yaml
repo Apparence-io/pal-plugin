@@ -42,18 +42,9 @@ flutter:
 
   # To add assets to your package, add an assets section, like this:
   assets:
-    - packages/pal/assets/images/logo.png
-
-    - packages/pal/assets/images/create_helper.png
-
-    - packages/pal/assets/images/create_helper/types/helper_type_fullscreen.png
-    - packages/pal/assets/images/create_helper/types/helper_type_simple.png
-    - packages/pal/assets/images/create_helper/types/helper_type_update.png
-
-    - packages/pal/assets/images/create_helper/themes/black/helper_theme_black_fullscreen.png
-    - packages/pal/assets/images/create_helper/themes/black/helper_theme_black_simple.png
-    - packages/pal/assets/images/create_helper/themes/black/helper_theme_black_update.png
-
+    - assets/images/
+    - assets/images/create_helper/types/
+    - assets/images/create_helper/themes/black/
 
 #
 # For details regarding assets in packages, see

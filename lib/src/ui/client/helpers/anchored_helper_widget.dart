@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
@@ -119,6 +121,49 @@ class _AnchoredHelperState extends State<AnchoredHelper> {
   }
 }
 
+class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
+
+  final Offset currentPos;
+  final double padding;
+  final Size anchorSize;
+
+  Animation<double> _stroke1Animation, _stroke2Animation;
+
+  Animation<double> get _progress => this.listenable;
+
+
+  AnimatedAnchoredFullscreenCircle({
+    @required this.currentPos,
+    @required this.padding,
+    @required this.anchorSize,
+    @required Listenable listenable
+  }) : super(listenable: listenable) {
+    _stroke1Animation = new CurvedAnimation(
+      parent: listenable,
+      curve: Curves.ease
+    );
+    _stroke2Animation = CurvedAnimation(
+      parent: listenable,
+      curve: Interval(0, .8, curve: Curves.ease),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: CustomPaint(
+        painter: AnchoredFullscreenPainter(
+          currentPos: currentPos,
+          anchorSize: anchorSize,
+          padding: padding,
+          circle1Width: _stroke1Animation.value * 88,
+          circle2Width: _stroke2Animation.value * 140,
+        )
+      )
+    );
+  }
+}
+
 
 class AnchoredFullscreenPainter extends CustomPainter {
 
@@ -130,7 +175,13 @@ class AnchoredFullscreenPainter extends CustomPainter {
 
   final double area = 24.0 * 24.0;
 
-  AnchoredFullscreenPainter({this.currentPos, this.anchorSize, this.padding = 0});
+  double circle1Width, circle2Width;
+
+  AnchoredFullscreenPainter({
+    this.currentPos, this.anchorSize, this.padding = 0,
+    this.circle1Width = 64,
+    this.circle2Width = 100,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -141,30 +192,36 @@ class AnchoredFullscreenPainter extends CustomPainter {
       ..color = Colors.lightGreenAccent.withOpacity(.6)
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
+    Paint circle1Painter = Paint()
+      ..blendMode = BlendMode.color
+      ..color = Colors.white.withOpacity(.2)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = circle1Width
+      ..isAntiAlias = true;
+    Paint circle2Painter = Paint()
+      ..blendMode = BlendMode.color
+      ..color = Colors.white.withOpacity(.2)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = circle2Width
+      ..isAntiAlias = true;
+
     canvas.saveLayer(Offset.zero & size, Paint());
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPainter);
     // canvas.drawCircle(currentPos, radius, clearPainter);
     // canvas.drawRect(currentPos & anchorSize, clearPainter);
-    if(padding > 0) {
-      canvas.drawRect(Rect.fromLTWH(
-        currentPos.dx - padding /2,
-        currentPos.dy - padding /2,
-        anchorSize.width + padding,
-        anchorSize.height + padding), clearPainter);
-    } else {
-      canvas.drawRect(Rect.fromLTWH(
-        currentPos.dx,
-        currentPos.dy,
-        anchorSize.width,
-        anchorSize.height), clearPainter);
-    }
-
+    var radius = sqrt(pow(anchorSize.width, 2) + pow(anchorSize.height, 2)) / 2;
+    var center = currentPos.translate(anchorSize.width / 2, anchorSize.height / 2);
+    canvas.drawCircle(center, radius + padding, circle1Painter);
+    canvas.drawCircle(center, radius + padding, circle2Painter);
+    canvas.drawCircle(center, radius + padding, clearPainter);
     canvas.restore();
   }
 
   @override
   bool shouldRepaint(AnchoredFullscreenPainter oldDelegate) {
-    return oldDelegate.currentPos != currentPos;
+    return oldDelegate.currentPos != currentPos
+      || oldDelegate.circle1Width != circle1Width
+      || oldDelegate.circle2Width != circle2Width;
   }
 
   @override

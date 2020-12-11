@@ -12,6 +12,7 @@ import 'editor_anchored_helper_viewmodel.dart';
 const EDITOR_PARENT_NODE_KEY = "EditorPage";
 
 class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
+
   final FinderService finderService;
 
   EditorAnchoredFullscreenPresenter(EditorAnchoredFullscreenHelperView viewInterface, this.finderService)
@@ -29,9 +30,20 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     viewModel.description = "Lorem ipsum lorem ipsum lorem ipsum";
   }
 
+
+  @override
+  void onInit() {
+
+  }
+
   @override
   void afterViewInit() {
     scanElements();
+  }
+
+  Future resetSelection() async {
+    await scanElements();
+    viewModel.anchorValidated = false;
   }
 
   // this methods scan elements on the user page we want to add an helper
@@ -45,6 +57,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   }
 
   Future onTapElement(String key) async {
+    if(viewModel.anchorValidated)
+      return;
     var previouslySelected = viewModel.selectedAnchor;
     if (previouslySelected != null) {
       previouslySelected.value.selected = false;
@@ -52,6 +66,11 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     viewModel.userPageElements[key].selected = true;
     var element = await finderService.searchChildElement(key);
     viewModel.writeArea = await finderService.getLargestAvailableSpace(element);
+    refreshView();
+  }
+
+  Future validateSelection() async {
+    viewModel.anchorValidated = true;
     refreshView();
   }
 }

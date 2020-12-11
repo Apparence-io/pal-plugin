@@ -6,6 +6,7 @@ import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
 import '../../screen_tester_utilities.dart';
 import '../../../pal_test_utilities.dart';
 
@@ -42,9 +43,11 @@ void main() {
         HelperType.ANCHORED_OVERLAYED_HELPER,
         HelperTheme.BLACK,
       );
+      await tester.pumpAndSettle(Duration(milliseconds: 1000));
       var presenterFinder = find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage"));
       expect(presenterFinder, findsOneWidget);
-      presenter = (presenterFinder.evaluate().first.widget as MVVMPage).presenter;
+      presenter = (presenterFinder.evaluate().first.widget
+        as PresenterInherited<EditorAnchoredFullscreenPresenter, AnchoredFullscreenHelperViewModel>).presenter;
       await tester.pumpAndSettle(Duration(seconds: 1));
     }
 
@@ -62,7 +65,7 @@ void main() {
       expect(find.byKey(ValueKey("elementContainer")), findsWidgets);
     });
 
-    testWidgets("tap on container's element select it as anchor", (WidgetTester tester) async {
+    testWidgets("step 1 => tap on container's element select it as anchor", (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
@@ -80,7 +83,7 @@ void main() {
       expect(presenter.viewModel.selectedAnchorKey, contains("text2"));
     });
 
-    testWidgets("if anchored selected => shows editable title + text content", (WidgetTester tester) async {
+    testWidgets("anchored selected => shows confirm selection button, helper text are not visible yet", (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
@@ -89,10 +92,49 @@ void main() {
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
       element1.onTap();
       await tester.pumpAndSettle(Duration(milliseconds: 100));
+      expect(find.byKey(ValueKey("validateSelectionBtn")), findsOneWidget);
+      expect(find.text("My helper title"), findsNothing);
+      expect(find.text("Lorem ipsum lorem ipsum lorem ipsum"), findsNothing);
+      expect(find.text("Ok, thanks!"), findsNothing, reason: "A positiv feedback button is available");
+      expect(find.text("This is not helping"), findsNothing, reason: "A negativ feedback button is available");
+    });
+
+    testWidgets("anchored selected and validated => confirm selection button is hidden, helper text are now visible", (WidgetTester tester) async {
+      // init pal + go to editor
+      await tester.setIphone11Max();
+      await beforeEach(tester);
+      // tap on first element
+      var elementsFinder = find.byKey(ValueKey("elementContainer"));
+      var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
+      element1.onTap();
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
+      // validate this anchor
+      await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
+
+      expect(find.byKey(ValueKey("validateSelectionBtn")), findsNothing);
       expect(find.text("My helper title"), findsOneWidget);
       expect(find.text("Lorem ipsum lorem ipsum lorem ipsum"), findsOneWidget);
-      expect(find.text("Ok, thanks !"), findsOneWidget, reason: "A positiv feedback button is available");
+      expect(find.text("Ok, thanks!"), findsOneWidget, reason: "A positiv feedback button is available");
       expect(find.text("This is not helping"), findsOneWidget, reason: "A negativ feedback button is available");
     });
+
+    testWidgets("anchored selected and validated => cannot change anchor selection anymore", (WidgetTester tester) async {
+      // init pal + go to editor
+      await tester.setIphone11Max();
+      await beforeEach(tester);
+      // tap on first element
+      var elementsFinder = find.byKey(ValueKey("elementContainer"));
+      var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
+      var element2 = elementsFinder.evaluate().elementAt(2).widget as InkWell;
+      element1.onTap();
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
+      // validate this anchor
+      await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
+      element2.onTap();
+      expect(presenter.viewModel.selectedAnchorKey, contains("text1"));
+    });
+
   });
 }

@@ -31,10 +31,10 @@ class FinderService {
     var currentRoute = await observer.route.first;
     if(WidgetsBinding.instance.hasScheduledFrame) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        completer.complete(ElementFinder(currentRoute.subtreeContext).scan());
+        completer.complete(ElementFinder(currentRoute.subtreeContext).scan(debugMode: debugMode));
       });
     } else {
-      completer.complete(ElementFinder(currentRoute.subtreeContext).scan());
+      completer.complete(ElementFinder(currentRoute.subtreeContext).scan(debugMode: debugMode));
     }
     return completer.future;
   }

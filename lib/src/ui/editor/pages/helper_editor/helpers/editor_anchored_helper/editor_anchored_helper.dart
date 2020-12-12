@@ -1,12 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/anchored_helper_widget.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 import '../../helper_editor.dart';
+import '../../helper_editor_notifiers.dart';
 import '../../helper_editor_viewmodel.dart';
 import 'editor_anchored_helper_presenter.dart';
 import 'editor_anchored_helper_viewmodel.dart';
@@ -17,6 +24,8 @@ abstract class EditorAnchoredFullscreenHelperView {
 
 
 class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAnchoredFullscreenHelperView {
+
+  final StreamController<bool> editableTextFieldController =  StreamController<bool>.broadcast();
 
   EditorAnchoredFullscreenHelper._({
     Key key,
@@ -56,7 +65,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
                   _buildEditableTexts(presenter, model),
                   ..._createSelectableElements(presenter, model),
                   _buildRefreshButton(presenter),
-                  _buildConfirmSelectionButton(context.buildContext, presenter, model)
+                  _buildConfirmSelectionButton(context.buildContext, presenter, model),
+                  _buildBackgroundSelectButton(context.buildContext, model.anchorValidated)
                 ],
               ),
             )
@@ -64,6 +74,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
   }
 
   _createSelectableElements(EditorAnchoredFullscreenPresenter presenter, AnchoredFullscreenHelperViewModel model) {
+    if(model.anchorValidated)
+      return [];
     return model.userPageSelectableElements
       .map((key, model) => new MapEntry(
             key,
@@ -82,9 +94,27 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
           listenable: animationController,
           currentPos: element?.value?.offset,
           anchorSize: element?.value?.rect?.size,
+          bgColor: model.backgroundBox.backgroundColor.value,
           padding: 4
         ),
       )
+    );
+  }
+
+  _buildBackgroundSelectButton(BuildContext context, bool show) {
+    if(!show)
+      return Container();
+    return Positioned(
+      top: 20.0,
+      left: 20.0,
+      child: SafeArea(
+        child: CircleIconButton(
+          key: ValueKey("bgSelectionBtn"),
+          icon: Icon(Icons.invert_colors),
+          backgroundColor: PalTheme.of(context).colors.light,
+          // onTapCallback: onColorChange,
+        ),
+      ),
     );
   }
 
@@ -128,31 +158,39 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              model.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24
-              ),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+            child: EditableTextField.fromNotifier(
+              editableTextFieldController.stream,
+              model.titleField,
+              presenter.onTitleChanged,
+              presenter.onTitleTextStyleChanged,
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              model.description,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18
-              ),
+            child: EditableTextField.fromNotifier(
+              editableTextFieldController.stream,
+              model.descriptionField,
+              presenter.onDescriptionChanged,
+              presenter.onDescriptionTextStyleChanged,
             ),
           ),
           SizedBox(height: 16),
           Wrap(
             alignment: WrapAlignment.spaceBetween,
             children: [
-              _buildNegativFeedback(),
-              _buildPositivFeedback(),
+              EditableTextField.editableButton(
+                editableTextFieldController.stream,
+                model.negativBtnField,
+                presenter.onNegativTextChanged,
+                presenter.onNegativTextStyleChanged,
+              ),
+              EditableTextField.editableButton(
+                editableTextFieldController.stream,
+                model.positivBtnField,
+                presenter.onPositivTextChanged,
+                presenter.onPositivTextStyleChanged,
+              ),
             ],
           )
         ],
@@ -160,39 +198,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
     );
   }
 
-  Widget _buildNegativFeedback() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: InkWell(
-        key: ValueKey("negativeFeedback"),
-        child: Text(
-          "This is not helping",
-          style: TextStyle(
-            fontSize: 14,
-            // color: widget.textColor, fontSize: 10
-          ),
-          textAlign: TextAlign.center,
-        ),
-        // onTap: this.widget.onTrigger,
-      ),
-    );
-  }
 
-  Widget _buildPositivFeedback() {
-    return InkWell(
-      key: ValueKey("positiveFeedback"),
-      child: Text(
-        "Ok, thanks!",
-        style: TextStyle(
-          // color: widget.textColor,
-          fontSize: 18,
-        ),
-        textAlign: TextAlign.center,
-      ),
-      // onTap: this.widget.onTrigger,
-    );
-  }
-  
 }
 
 

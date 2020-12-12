@@ -4,6 +4,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
@@ -18,6 +19,13 @@ enum ToolbarType { text, border }
 typedef OnFieldChanged(String id, String value);
 
 typedef OnTextStyleChanged(String id, TextStyle style, FontKeys fontkeys);
+
+// TODO move to TextStyle extension
+TextStyle _googleCustomFont(String fontFamily) {
+  return (fontFamily != null && fontFamily.length > 0)
+    ? GoogleFonts.getFont(fontFamily)
+    : null;
+}
 
 class EditableTextField extends StatefulWidget {
   // Keys
@@ -121,23 +129,63 @@ class EditableTextField extends StatefulWidget {
     );
   }
 
-  // factory EditableTextField.fromTextFormFieldNotifier({
-  //   final Stream<bool> outsideTapStream,
-  //   final TextFormFieldNotifier textFormFieldNotifier,
-  //   final TextStyle mergeWithFonts
-  // }) => EditableTextField.text(
-  //   outsideTapStream: outsideTapStream,
-  //   fontFamilyKey: textFormFieldNotifier.fontFamily?.value,
-  //   initialValue: textFormFieldNotifier.text?.value,
-  //   textStyle: TextStyle(
-  //     color: textFormFieldNotifier.fontColor.value,
-  //     decoration: TextDecoration.none,
-  //     fontSize: textFormFieldNotifier.fontSize?.value?.toDouble(),
-  //     fontWeight: FontWeightMapper.toFontWeight(
-  //       textFormFieldNotifier.fontWeight?.value,
-  //     ),
-  //   ).merge(mergeWithFonts)
-  // );
+  factory EditableTextField.fromNotifier(
+    Stream<bool> outsideTapStream,
+    TextFormFieldNotifier textNotifier,
+    OnFieldChanged onFieldValueChange,
+    OnTextStyleChanged onTextStyleChanged,
+    { Key helperToolbarKey,
+      Key textFormFieldKey,
+      TextStyle baseStyle,
+      int minimumCharacterLength = 1,
+      int maximumCharacterLength = 255,
+      int maxLines = 5,
+      BoxDecoration backgroundDecoration})
+  => EditableTextField.text(
+    backgroundBoxDecoration: backgroundDecoration,
+    outsideTapStream: outsideTapStream,
+    helperToolbarKey: helperToolbarKey,
+    textFormFieldKey: textFormFieldKey,
+    onChanged: onFieldValueChange,
+    onTextStyleChanged: onTextStyleChanged,
+    maximumCharacterLength: maximumCharacterLength,
+    minimumCharacterLength: minimumCharacterLength,
+    maxLines: maxLines,
+    fontFamilyKey: textNotifier?.fontFamily?.value,
+    initialValue: textNotifier?.text?.value,
+    textStyle: TextStyle(
+      color: textNotifier?.fontColor?.value,
+      decoration: TextDecoration.none,
+      fontSize: textNotifier?.fontSize?.value?.toDouble(),
+      fontWeight: FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
+    ).merge(baseStyle ?? _googleCustomFont(textNotifier?.fontFamily?.value)),
+  );
+
+  factory  EditableTextField.editableButton(
+    Stream<bool> outsideTapStream,
+    TextFormFieldNotifier textNotifier,
+    OnFieldChanged onFieldValueChange,
+    OnTextStyleChanged onTextStyleChanged,
+    { int minimumCharacterLength = 1,
+      int maximumCharacterLength = 255,
+      int maxLines = 1})
+  =>  EditableTextField.fromNotifier(
+    outsideTapStream,
+    textNotifier,
+    onFieldValueChange,
+    onTextStyleChanged,
+    minimumCharacterLength: minimumCharacterLength,
+    maximumCharacterLength: maximumCharacterLength,
+    maxLines: maxLines,
+    backgroundDecoration: BoxDecoration(
+      border: Border.all(
+        color: Colors.white,
+        width: 2
+      ),
+      // color: Colors.redAccent.withOpacity(0.8),
+      borderRadius: BorderRadius.circular(10.0),
+    )
+  );
 
   factory EditableTextField.border({
     Key key,

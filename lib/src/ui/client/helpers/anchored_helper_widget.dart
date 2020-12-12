@@ -126,27 +126,27 @@ class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
   final Offset currentPos;
   final double padding;
   final Size anchorSize;
+  final Color bgColor;
 
-  Animation<double> _stroke1Animation, _stroke2Animation;
+  final Animation<double> _stroke1Animation, _stroke2Animation;
 
   Animation<double> get _progress => this.listenable;
-
 
   AnimatedAnchoredFullscreenCircle({
     @required this.currentPos,
     @required this.padding,
+    @required this.bgColor,
     @required this.anchorSize,
     @required Listenable listenable
-  }) : super(listenable: listenable) {
-    _stroke1Animation = new CurvedAnimation(
-      parent: listenable,
-      curve: Curves.ease
-    );
-    _stroke2Animation = CurvedAnimation(
-      parent: listenable,
-      curve: Interval(0, .8, curve: Curves.ease),
-    );
-  }
+  }) : _stroke1Animation = new CurvedAnimation(
+        parent: listenable,
+        curve: Curves.ease
+      ),
+      _stroke2Animation = CurvedAnimation(
+        parent: listenable,
+        curve: Interval(0, .8, curve: Curves.ease),
+      ),
+      super(listenable: listenable);
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +156,7 @@ class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
           currentPos: currentPos,
           anchorSize: anchorSize,
           padding: padding,
+          bgColor: bgColor,
           circle1Width: _stroke1Animation.value * 88,
           circle2Width: _stroke2Animation.value * 140,
         )
@@ -175,10 +176,15 @@ class AnchoredFullscreenPainter extends CustomPainter {
 
   final double area = 24.0 * 24.0;
 
+  final Color bgColor;
+
   double circle1Width, circle2Width;
 
   AnchoredFullscreenPainter({
-    this.currentPos, this.anchorSize, this.padding = 0,
+    this.currentPos,
+    this.anchorSize,
+    this.padding = 0,
+    this.bgColor,
     this.circle1Width = 64,
     this.circle2Width = 100,
   });
@@ -189,18 +195,16 @@ class AnchoredFullscreenPainter extends CustomPainter {
       ..blendMode = BlendMode.clear
       ..isAntiAlias = true;
     Paint bgPainter = Paint()
-      ..color = Colors.lightGreenAccent.withOpacity(.6)
+      ..color = bgColor
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
     Paint circle1Painter = Paint()
-      ..blendMode = BlendMode.color
-      ..color = Colors.white.withOpacity(.2)
+      ..color = Colors.white.withOpacity(.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = circle1Width
       ..isAntiAlias = true;
     Paint circle2Painter = Paint()
-      ..blendMode = BlendMode.color
-      ..color = Colors.white.withOpacity(.2)
+      ..color = Colors.white.withOpacity(.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = circle2Width
       ..isAntiAlias = true;

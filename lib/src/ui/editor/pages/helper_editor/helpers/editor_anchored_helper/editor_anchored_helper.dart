@@ -1,30 +1,38 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/anchored_helper_widget.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
+import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
+import '../../../../../../router.dart';
 import '../../helper_editor.dart';
-import '../../helper_editor_notifiers.dart';
 import '../../helper_editor_viewmodel.dart';
 import 'editor_anchored_helper_presenter.dart';
 import 'editor_anchored_helper_viewmodel.dart';
 
 abstract class EditorAnchoredFullscreenHelperView {
 
+  void showColorPickerDialog(Color defaultColor, OnColorSelected onColorSelected, OnCancelPicker onCancel);
+
+  void closeColorPickerDialog();
 }
 
 
-class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAnchoredFullscreenHelperView {
+class EditorAnchoredFullscreenHelper extends StatelessWidget {
 
+  // ignore: close_sinks
   final StreamController<bool> editableTextFieldController =  StreamController<bool>.broadcast();
 
   EditorAnchoredFullscreenHelper._({
@@ -47,27 +55,43 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
           context: context,
           key: ValueKey("EditorAnchoredFullscreenHelperPage"),
           presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
-            this,
+            _EditorAnchoredFullscreenHelperView(context, EditorInjector.of(context).palEditModeStateService),
             EditorInjector.of(context).finderService
           ),
-          singleAnimControllerBuilder: (tickerProvider) => AnimationController(
-                vsync: tickerProvider,
-                duration: Duration(seconds: 1)
-              )
-              ..repeat(reverse: true),
-          animListener: (context, presenter, model) {},
+          multipleAnimControllerBuilder: (tickerProvider) => [
+            // AnchoredWidget repeating animation
+            AnimationController(
+              vsync: tickerProvider,
+              duration: Duration(seconds: 1)
+            )
+            ..repeat(reverse: true),
+            // AnchoredWidget opacity animation
+            AnimationController(
+              vsync: tickerProvider,
+              duration: Duration(milliseconds: 500)
+            )
+          ],
+          animListener: (context, presenter, model) {
+            if(model.selectedAnchorKey != null) {
+              context.animationsControllers[1].forward(from: 0);
+            }
+          },
           builder: (context, presenter, model) =>
             Material(
               color: Colors.black.withOpacity(0.3),
-              child: Stack(
-                children: [
-                  _createAnchoredWidget(model, context.animationController),
-                  _buildEditableTexts(presenter, model),
-                  ..._createSelectableElements(presenter, model),
-                  _buildRefreshButton(presenter),
-                  _buildConfirmSelectionButton(context.buildContext, presenter, model),
-                  _buildBackgroundSelectButton(context.buildContext, model.anchorValidated)
-                ],
+              child: EditorActionsBar(
+                canValidate: model.canValidate,
+                visible: model.anchorValidated,
+                child: Stack(
+                  children: [
+                    _createAnchoredWidget(model, context.animationsControllers[0], context.animationsControllers[1]),
+                    _buildEditableTexts(presenter, model),
+                    ..._createSelectableElements(presenter, model),
+                    _buildRefreshButton(presenter),
+                    _buildConfirmSelectionButton(context.buildContext, presenter, model),
+                    _buildBackgroundSelectButton(context.buildContext, model.anchorValidated, presenter)
+                  ],
+                ),
               ),
             )
     );
@@ -77,31 +101,31 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
     if(model.anchorValidated)
       return [];
     return model.userPageSelectableElements
-      .map((key, model) => new MapEntry(
-            key,
-            _WidgetElementModelTransformer().apply(key, model, presenter.onTapElement))
-      )
+      .map((key, model) => new MapEntry(key, _WidgetElementModelTransformer().apply(key, model, presenter.onTapElement)))
       .values
       .toList();
   }
   
-  _createAnchoredWidget(AnchoredFullscreenHelperViewModel model, AnimationController animationController) {
+  _createAnchoredWidget(AnchoredFullscreenHelperViewModel model, AnimationController animationController, AnimationController fadeinAnimController) {
     final element =  model.selectedAnchor;
     return Positioned.fill(
-      child: Visibility(
-        visible: model.selectedAnchor != null,
-        child: AnimatedAnchoredFullscreenCircle(
-          listenable: animationController,
-          currentPos: element?.value?.offset,
-          anchorSize: element?.value?.rect?.size,
-          bgColor: model.backgroundBox.backgroundColor.value,
-          padding: 4
+      child: FadeTransition(
+        opacity: fadeinAnimController,
+        child: Visibility(
+          visible: model.selectedAnchor != null,
+          child: AnimatedAnchoredFullscreenCircle(
+            listenable: animationController,
+            currentPos: element?.value?.offset,
+            anchorSize: element?.value?.rect?.size,
+            bgColor: model.backgroundBox.backgroundColor.value,
+            padding: 4
+          ),
         ),
       )
     );
   }
 
-  _buildBackgroundSelectButton(BuildContext context, bool show) {
+  _buildBackgroundSelectButton(BuildContext context, bool show, EditorAnchoredFullscreenPresenter presenter) {
     if(!show)
       return Container();
     return Positioned(
@@ -109,10 +133,10 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
       left: 20.0,
       child: SafeArea(
         child: CircleIconButton(
-          key: ValueKey("bgSelectionBtn"),
+          key: ValueKey("bgColorPicker"),
           icon: Icon(Icons.invert_colors),
           backgroundColor: PalTheme.of(context).colors.light,
-          // onTapCallback: onColorChange,
+          onTapCallback: presenter.onCallChangeBackground,
         ),
       ),
     );
@@ -176,20 +200,24 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
             ),
           ),
           SizedBox(height: 16),
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
+          Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              EditableTextField.editableButton(
-                editableTextFieldController.stream,
-                model.negativBtnField,
-                presenter.onNegativTextChanged,
-                presenter.onNegativTextStyleChanged,
+              Flexible(
+                child: EditableTextField.editableButton(
+                  editableTextFieldController.stream,
+                  model.negativBtnField,
+                  presenter.onNegativTextChanged,
+                  presenter.onNegativTextStyleChanged,
+                ),
               ),
-              EditableTextField.editableButton(
-                editableTextFieldController.stream,
-                model.positivBtnField,
-                presenter.onPositivTextChanged,
-                presenter.onPositivTextStyleChanged,
+              Flexible(
+                child: EditableTextField.editableButton(
+                  editableTextFieldController.stream,
+                  model.positivBtnField,
+                  presenter.onPositivTextChanged,
+                  presenter.onPositivTextStyleChanged,
+                ),
               ),
             ],
           )
@@ -198,6 +226,38 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget implements EditorAn
     );
   }
 
+}
+
+
+class _EditorAnchoredFullscreenHelperView with EditorSendingOverlayMixin, EditorNavigationMixin implements EditorAnchoredFullscreenHelperView {
+
+  BuildContext context;
+
+  final PalEditModeStateService palEditModeStateService;
+
+  EditorSendingOverlay sendingOverlay;
+
+  _EditorAnchoredFullscreenHelperView(this.context, this.palEditModeStateService) {
+    overlayContext = context;
+  }
+
+  @override
+  void showColorPickerDialog(
+    Color defaultColor,
+    OnColorSelected onColorSelected,
+    OnCancelPicker onCancel) {
+    HapticFeedback.selectionClick();
+    showOverlayedInContext(
+        (context) => ColorPickerDialog(
+        placeholderColor: defaultColor,
+        onColorSelected: onColorSelected,
+        onCancel: onCancel
+      ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY
+    );
+  }
+
+  void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
 }
 

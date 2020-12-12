@@ -4,21 +4,31 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/client/helpers/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.dart';
 import '../../screen_tester_utilities.dart';
 import '../../../pal_test_utilities.dart';
 
 void main() {
 
-  _enterTextInEditable(WidgetTester tester, Finder finder, String text) async{
+  _enterTextInEditable(WidgetTester tester, Finder finder, String text) async {
     await tester.tap(finder);
     await tester.pump();
     await tester.enterText(finder, text);
   }
 
+  _getAnchorFullscreenPainter()
+    => find.byType(AnimatedAnchoredFullscreenCircle).evaluate().first.widget as AnimatedAnchoredFullscreenCircle;
+
+  _getActionBar()
+    => find.byType(EditorActionsBar).evaluate().first.widget as EditorActionsBar;
+
   group('[Editor] Anchored helper', () {
+
     final _navigatorKey = GlobalKey<NavigatorState>();
 
     EditorAnchoredFullscreenPresenter presenter;
@@ -109,10 +119,13 @@ void main() {
     });
 
     testWidgets("anchored selected and validated => confirm selection button is hidden, "
-      "helper text are now visible, background is 100%, selectable element's borders are hidden", (WidgetTester tester) async {
+      "helper text are now visible, background is 100%, selectable element's borders are hidden,"
+      "EditorActionsBar is visible ", (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      // action bar is not visible
+      expect(_getActionBar().visible, isFalse);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -124,6 +137,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
 
       expect(find.byKey(ValueKey("elementContainer")), findsNothing);
+      expect(_getActionBar().visible, isTrue);
       expect(find.byKey(ValueKey("validateSelectionBtn")), findsNothing);
       expect(presenter.viewModel.backgroundBox.backgroundColor.value.opacity, 1);
       expect(find.text("My helper title"), findsOneWidget);
@@ -192,7 +206,7 @@ void main() {
       //TODO
     });
 
-    testWidgets("step 2 change background color => color has changed", (WidgetTester tester) async {
+    testWidgets("step 2 change background color to white => color has changed in model to white", (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
@@ -205,9 +219,26 @@ void main() {
       // validate this anchor
       await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
       await tester.pump(Duration(milliseconds: 100));
-      var editableTextsFinder = find.byType(TextField);
+      expect(presenter.viewModel.backgroundBox.backgroundColor.value, isNot(Color(0xFFFFFFFF)));
+      // open color picker
+      var colorPickerButton = find.byKey(ValueKey('bgColorPicker'));
+      await tester.tap(colorPickerButton);
+      await tester.pump();
+      expect(find.byType(ColorPickerDialog), findsOneWidget);
+      // set a new color (fff)
+      var hecColorField = find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
+      await tester.enterText(hecColorField, '#FFFFFF');
+      await tester.pump();
+      // call validate - color is white
+      var validateColorButton = find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
+      await tester.tap(validateColorButton);
+      await tester.pump();
 
+      expect(_getAnchorFullscreenPainter().bgColor, Color(0xFFFFFFFF));
+      expect(presenter.viewModel.backgroundBox.backgroundColor.value, Color(0xFFFFFFFF));
     });
+
+
 
   });
 }

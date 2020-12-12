@@ -225,7 +225,8 @@ class AnchoredFullscreenPainter extends CustomPainter {
   bool shouldRepaint(AnchoredFullscreenPainter oldDelegate) {
     return oldDelegate.currentPos != currentPos
       || oldDelegate.circle1Width != circle1Width
-      || oldDelegate.circle2Width != circle2Width;
+      || oldDelegate.circle2Width != circle2Width
+      || oldDelegate.bgColor != bgColor;
   }
 
   @override

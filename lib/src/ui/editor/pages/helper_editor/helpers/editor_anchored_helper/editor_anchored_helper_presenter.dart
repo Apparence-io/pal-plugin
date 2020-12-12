@@ -68,12 +68,25 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     var element = await finderService.searchChildElement(key);
     viewModel.writeArea = await finderService.getLargestAvailableSpace(element);
     refreshView();
+    refreshAnimations();
   }
 
   Future validateSelection() async {
     viewModel.anchorValidated = true;
     viewModel.backgroundBox.backgroundColor.value = Colors.blueGrey.shade900;
     refreshView();
+  }
+
+  onCallChangeBackground() {
+    viewInterface.showColorPickerDialog(
+      viewModel.backgroundBox.backgroundColor.value,
+      (color) {
+        viewModel.backgroundBox.backgroundColor.value = color;
+        viewInterface.closeColorPickerDialog();
+        refreshView();
+      },
+      () => viewInterface.closeColorPickerDialog()
+    );
   }
 
   // Title

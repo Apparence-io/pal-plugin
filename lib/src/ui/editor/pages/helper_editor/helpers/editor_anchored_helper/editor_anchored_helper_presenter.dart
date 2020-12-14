@@ -143,6 +143,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
       status.dispose();
     }
   }
+
+  onCancel() {
+    viewInterface.closeEditor();
+  }
   
   // ----------------------------------
   // PRIVATES

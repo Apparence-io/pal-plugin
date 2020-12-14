@@ -17,6 +17,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_he
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
+import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import '../../screen_tester_utilities.dart';
 import 'package:pal/src/extensions/color_extension.dart';
 import '../../../pal_test_utilities.dart';
@@ -328,6 +330,25 @@ void main() {
       var capturedCall = verify(helperEditorServiceMock.saveAnchoredWidget(captureAny)).captured;
       expect(jsonEncode(capturedCall.first), equals(jsonEncode(args)));
       await tester.pumpAndSettle(Duration(seconds: 1));
+    });
+
+    testWidgets('step 2 tap cancel button editor => page is removed, page helpers list is visible', (WidgetTester tester) async {
+      await beforeEach(tester);
+      // tap on first element
+      var elementsFinder = find.byKey(ValueKey("elementContainer"));
+      var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
+      element1.onTap();
+      await tester.pump();
+      await tester.pump();
+      // validate this anchor
+      await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
+      await tester.pump(Duration(milliseconds: 100));
+      // tap cancel
+      var cancelFinder = find.byKey(ValueKey('editModeCancel'));
+      await tester.tap(cancelFinder);
+      await tester.pumpAndSettle();
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsNothing);
+      expect(find.byType(HelpersListModal), findsOneWidget);
     });
 
 

@@ -97,6 +97,23 @@ class CreateUpdateHelper {
 }
 
 ///-------------------------------
+/// AnchoredHelper helper model
+///-------------------------------
+class CreateAnchoredHelper {
+  CreateHelperConfig config;
+  HelperTextConfig title, description, positivButton, negativButton;
+  HelperBoxConfig bodyBox;
+
+  CreateAnchoredHelper({
+    this.config,
+    this.title,
+    this.description,
+    this.positivButton, this.negativButton,
+    this.bodyBox
+  });
+}
+
+///-------------------------------
 /// Text model for all types
 /// use this in helpers with multiple text
 ///-------------------------------
@@ -129,11 +146,13 @@ class HelperMediaConfig {
 
 class HelperBoxConfig {
   int id;
+  String key;
   String color;
   // TODO: Missing params ?
 
   HelperBoxConfig({
     this.id,
+    this.key,
     this.color,
   });
 }

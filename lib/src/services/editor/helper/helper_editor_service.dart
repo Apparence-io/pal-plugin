@@ -37,6 +37,10 @@ abstract class EditorHelperService {
   /// providing [args.config.id] will makes an update
   Future<HelperEntity> saveUpdateHelper(final CreateUpdateHelper createArgs);
 
+  /// saves an anchored helper to our api
+  /// providing [args.config.id] will makes an update
+  Future<HelperEntity> saveAnchoredWidget(final CreateAnchoredHelper createArgs);
+
   /// Change helperPriority
   /// Priority depends on Helper type
   /// => the lower it is, the most chance we gonna show it
@@ -108,6 +112,25 @@ class _EditorHelperHttpService implements EditorHelperService {
   }
 
   @override
+  Future<HelperEntity> saveAnchoredWidget(CreateAnchoredHelper createArgs) async {
+    if(createArgs.bodyBox.key.isEmpty) {
+      throw "ANCHOR_KEY_MISSING";
+    }
+    var pageId = await _getOrCreatePageId(createArgs.config.route);
+    var minVersionId = await _getOrCreateVersionId(createArgs.config.minVersion);
+    int maxVersionId;
+    if(createArgs.config.minVersion == createArgs.config.maxVersion) {
+      maxVersionId = minVersionId;
+    } else if (createArgs.config.maxVersion != null) {
+      maxVersionId = await _getOrCreateVersionId(createArgs.config.maxVersion);
+    }
+    var helperEntity = HelperEditorAdapter.parseAnchoredHelper(createArgs, minVersionId, maxVersionId);
+    return createArgs.config.id != null
+      ? _editorHelperRepository.updateHelper(pageId, helperEntity)
+      : _editorHelperRepository.createHelper(pageId, helperEntity);
+  }
+
+  @override
   Future<Pageable<HelperEntity>> getPage(String pageId, int page, int pageSize)
     => this._editorHelperRepository.getPage(pageId, page, pageSize);
 
@@ -156,6 +179,8 @@ class _EditorHelperHttpService implements EditorHelperService {
       throw PageCreationException();
     }
   }
+
+
 
 }
 

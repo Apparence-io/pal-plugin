@@ -234,7 +234,7 @@ packages:
       name: mvvm_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.3+3"
+    version: "2.1.4"
   octo_image:
     dependency: transitive
     description:

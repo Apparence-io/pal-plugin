@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/services/editor/finder/finder_service.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 
+import '../../helper_editor_factory.dart';
 import '../../helper_editor_notifiers.dart';
 import 'editor_anchored_helper.dart';
 import 'editor_anchored_helper_viewmodel.dart';
@@ -17,15 +19,17 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
 
   final FinderService finderService;
 
-  EditorAnchoredFullscreenPresenter(EditorAnchoredFullscreenHelperView viewInterface, this.finderService)
-    : super(
-        AnchoredFullscreenHelperViewModel(
-          helper: HelperViewModel(
-          name: 'test',
-          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-          helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
-        )
-      ), viewInterface) {
+  final EditorHelperService helperEditorService;
+
+  final HelperEditorPageArguments parameters;
+
+  EditorAnchoredFullscreenPresenter(
+    AnchoredFullscreenHelperViewModel viewModel,
+    EditorAnchoredFullscreenHelperView viewInterface, 
+    this.finderService,
+    this.helperEditorService,
+    this.parameters
+    ): super(viewModel, viewInterface) {
     assert(finderService != null, 'A finder service must be provided');
     viewModel.userPageElements = Map();
     viewModel.titleField.text.value = "My helper title";
@@ -117,7 +121,29 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.negativBtnField, newTextStyle, fontKeys);
 
-
+  // save and cancel   
+  Future onValidate() async {
+    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
+    final config = CreateHelperConfig.from(parameters.pageId, viewModel);
+    try {
+      await viewInterface.showLoadingScreen(status);
+      await Future.delayed(Duration(seconds: 1));
+      await helperEditorService
+        .saveAnchoredWidget(EditorEntityFactory.buildAnchoredScreenArgs(config, viewModel));
+      status.value = SendingStatus.SENT;
+    } catch(error) {
+      print("error occured $error");
+      status.value = SendingStatus.ERROR;
+    } finally {
+      await Future.delayed(Duration(seconds: 2));
+      viewInterface.closeLoadingScreen();
+      await Future.delayed(Duration(milliseconds: 100));
+      viewInterface.closeEditor();
+      await Future.delayed(Duration(seconds: 1));
+      status.dispose();
+    }
+  }
+  
   // ----------------------------------
   // PRIVATES
   // ----------------------------------

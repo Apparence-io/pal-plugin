@@ -18,8 +18,6 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 import '../../../pal_test_utilities.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}

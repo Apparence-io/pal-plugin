@@ -58,9 +58,11 @@ Future pumpHelperWidget(
   HelperTriggerType triggerType,
   HelperType type,
   HelperTheme theme,
-  { EditorHelperService editorHelperService,
+  { 
+    EditorHelperService editorHelperService,
     PalEditModeStateService palEditModeStateService,
-    HelperEntity helperEntity }
+    HelperEntity helperEntity, 
+  }
 ) async {
   // push helper editor page
   HelperEditorPageArguments args = HelperEditorPageArguments(
@@ -72,6 +74,9 @@ Future pumpHelperWidget(
     triggerType: triggerType,
     helperType: type,
     helperTheme: theme,
+    priority: 1,
+    maxVersionCode: "1.0.0",
+    minVersionCode: "1.0.0",
   );
   // CREATE AN EDITOR FACTORY
   var _elementFinder = ElementFinder(navigatorKey.currentContext);

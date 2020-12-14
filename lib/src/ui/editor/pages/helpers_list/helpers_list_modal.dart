@@ -255,7 +255,8 @@ class _HelpersListModalState extends State<HelpersListModal>
     final HelpersListModalPresenter presenter,
   ) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset(
@@ -263,8 +264,10 @@ class _HelpersListModalState extends State<HelpersListModal>
           height: 36.0,
         ),
         SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Expanded(
+          flex: 3,
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               'PAL editor',
@@ -275,15 +278,16 @@ class _HelpersListModalState extends State<HelpersListModal>
             ),
             SizedBox(height: 3.0),
             Text(
-              'List of available helpers on this page',
+              'Helpers on this page',
               style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w300),
             )
           ],
-        ),
+        )),
         Flexible(
+          flex: 1,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             children: [
               _buildCircleButton(
                 'pal_HelpersListModal_Settings',

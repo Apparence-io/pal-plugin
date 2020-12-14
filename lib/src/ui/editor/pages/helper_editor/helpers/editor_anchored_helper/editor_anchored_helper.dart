@@ -27,16 +27,31 @@ abstract class EditorAnchoredFullscreenHelperView {
   void showColorPickerDialog(Color defaultColor, OnColorSelected onColorSelected, OnCancelPicker onCancel);
 
   void closeColorPickerDialog();
+
+  Future showLoadingScreen(ValueNotifier<SendingStatus> status);
+
+  void closeLoadingScreen();
+
+  Future closeEditor();
 }
 
 
 class EditorAnchoredFullscreenHelper extends StatelessWidget {
+
+  final EditorHelperService helperEditorService;
+
+  final HelperEditorPageArguments parameters;
+
+  final HelperViewModel helperViewModel;
 
   // ignore: close_sinks
   final StreamController<bool> editableTextFieldController =  StreamController<bool>.broadcast();
 
   EditorAnchoredFullscreenHelper._({
     Key key,
+    this.helperEditorService,
+    this.parameters,
+    this.helperViewModel
   }) : super(key: key);
 
   factory EditorAnchoredFullscreenHelper.create({
@@ -46,6 +61,9 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
     @required HelperViewModel helperViewModel
   }) => EditorAnchoredFullscreenHelper._(
     key: key,
+    helperEditorService: helperService,
+    parameters: parameters,
+    helperViewModel: helperViewModel,
   );
 
   @override
@@ -55,8 +73,11 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
           context: context,
           key: ValueKey("EditorAnchoredFullscreenHelperPage"),
           presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
+            AnchoredFullscreenHelperViewModel.fromModel(helperViewModel),
             _EditorAnchoredFullscreenHelperView(context, EditorInjector.of(context).palEditModeStateService),
-            EditorInjector.of(context).finderService
+            EditorInjector.of(context).finderService,
+            helperEditorService ?? EditorInjector.of(context).helperService,
+            parameters
           ),
           multipleAnimControllerBuilder: (tickerProvider) => [
             // AnchoredWidget repeating animation
@@ -80,6 +101,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
             Material(
               color: Colors.black.withOpacity(0.3),
               child: EditorActionsBar(
+                onValidate: presenter.onValidate,
                 canValidate: model.canValidate,
                 visible: model.anchorValidated,
                 child: Stack(

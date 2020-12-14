@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/helper/helper_theme.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
+import '../../helper_editor.dart';
 import '../../helper_editor_notifiers.dart';
 
-class AnchoredFullscreenHelperViewModel extends MVVMModel {
-
-  final HelperViewModel helper;
+class AnchoredFullscreenHelperViewModel extends HelperViewModel {
 
   /// Elements on user page
   Map<String, WidgetElementModel> userPageElements;
@@ -33,7 +35,13 @@ class AnchoredFullscreenHelperViewModel extends MVVMModel {
   bool anchorValidated;
 
   AnchoredFullscreenHelperViewModel({
-    @required this.helper,
+    String id,
+    String name,
+    HelperTriggerType triggerType,
+    int priority,
+    String minVersionCode,
+    String maxVersionCode,
+    HelperTheme helperTheme,
     this.anchorValidated = false
   }) : titleField = TextFormFieldNotifier(
         fontColor: Colors.white,
@@ -57,6 +65,16 @@ class AnchoredFullscreenHelperViewModel extends MVVMModel {
       ),
       backgroundBox = BoxNotifier(
         backgroundColor: Colors.lightGreenAccent.withOpacity(.6)
+      ),
+      super(
+        id: id,
+        helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
+        name: name,
+        priority: priority,
+        minVersionCode: minVersionCode,
+        maxVersionCode: maxVersionCode,
+        helperTheme: helperTheme,
+        triggerType: triggerType
       );
 
   /// the current selected element to show anchor
@@ -70,6 +88,19 @@ class AnchoredFullscreenHelperViewModel extends MVVMModel {
   /// [userPageElements] without selected anchor
   Map<String, WidgetElementModel> get userPageSelectableElements => Map.from(userPageElements)
     ..removeWhere((key, value) => key == selectedAnchorKey);
+
+  factory AnchoredFullscreenHelperViewModel.fromModel(HelperViewModel model) {
+    return AnchoredFullscreenHelperViewModel(
+      id: model.id,
+      name: model.name,
+      priority: model.priority,
+      minVersionCode: model.minVersionCode,
+      maxVersionCode: model.maxVersionCode,
+      helperTheme: model.helperTheme,
+      triggerType: model.triggerType,
+    );
+  }
+
 }
 
 class WidgetElementModel {

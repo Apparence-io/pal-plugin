@@ -4,6 +4,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 
+import 'helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
 import 'helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
 import 'helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
@@ -151,4 +152,47 @@ class EditorEntityFactory {
       ),
     );
   }
+
+  static CreateAnchoredHelper buildAnchoredScreenArgs(
+    CreateHelperConfig config, 
+    AnchoredFullscreenHelperViewModel model
+    ) => CreateAnchoredHelper(
+      config: config,
+      title: HelperTextConfig(
+        id: model.titleField?.id,
+        text: model.titleField?.text?.value,
+        fontColor: model.titleField?.fontColor?.value?.toHex(),
+        fontWeight: model.titleField?.fontWeight?.value,
+        fontSize: model.titleField?.fontSize?.value,
+        fontFamily: model.titleField?.fontFamily?.value,
+      ),
+      description: HelperTextConfig(
+        id: model.descriptionField?.id,
+        text: model.descriptionField?.text?.value,
+        fontColor: model.descriptionField?.fontColor?.value?.toHex(),
+        fontWeight: model.descriptionField?.fontWeight?.value,
+        fontSize: model.descriptionField?.fontSize?.value,
+        fontFamily: model.descriptionField?.fontFamily?.value,
+      ),
+      positivButton: HelperTextConfig(
+        id: model.positivBtnField?.id,
+        text: model.positivBtnField?.text?.value,
+        fontColor: model.positivBtnField?.fontColor?.value?.toHex(),
+        fontWeight: model.positivBtnField?.fontWeight?.value,
+        fontSize: model.positivBtnField?.fontSize?.value,
+        fontFamily: model.positivBtnField?.fontFamily?.value,
+      ),
+      negativButton: HelperTextConfig(
+        id: model.negativBtnField?.id,
+        text: model.negativBtnField?.text?.value,
+        fontColor: model.negativBtnField?.fontColor?.value?.toHex(),
+        fontWeight: model.negativBtnField?.fontWeight?.value,
+        fontSize: model.negativBtnField?.fontSize?.value,
+        fontFamily: model.negativBtnField?.fontFamily?.value,
+      ),
+      bodyBox: HelperBoxConfig(
+        key: model.selectedAnchorKey,
+        color: model.backgroundBox?.backgroundColor?.value?.toHex(),
+      )
+  );
 }

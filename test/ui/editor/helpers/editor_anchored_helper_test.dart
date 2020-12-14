@@ -1,17 +1,29 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/client/helpers/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import '../../screen_tester_utilities.dart';
+import 'package:pal/src/extensions/color_extension.dart';
 import '../../../pal_test_utilities.dart';
+
+class HelperEditorServiceMock extends Mock implements EditorHelperService {}
+
+class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
 
 void main() {
 
@@ -32,6 +44,8 @@ void main() {
     final _navigatorKey = GlobalKey<NavigatorState>();
 
     EditorAnchoredFullscreenPresenter presenter;
+
+    HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
 
     Scaffold _myHomeTest = Scaffold(
       body: Column(
@@ -59,6 +73,8 @@ void main() {
         HelperTriggerType.ON_SCREEN_VISIT,
         HelperType.ANCHORED_OVERLAYED_HELPER,
         HelperTheme.BLACK,
+        editorHelperService: helperEditorServiceMock,
+        palEditModeStateService: new PalEditModeStateServiceMock()
       );
       await tester.pump(Duration(milliseconds: 100));
       var presenterFinder = find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage"));
@@ -236,6 +252,82 @@ void main() {
 
       expect(_getAnchorFullscreenPainter().bgColor, Color(0xFFFFFFFF));
       expect(presenter.viewModel.backgroundBox.backgroundColor.value, Color(0xFFFFFFFF));
+    });
+
+    testWidgets("step 2 click on save => call helper service saveAnchoredHelper", (WidgetTester tester) async {
+      // init pal + go to editor
+      await tester.setIphone11Max();
+      await beforeEach(tester);
+      // tap on first element
+      var elementsFinder = find.byKey(ValueKey("elementContainer"));
+      var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
+      element1.onTap();
+      await tester.pump();
+      await tester.pump();
+      // validate this anchor
+      await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
+      await tester.pump(Duration(milliseconds: 100));
+      // enter texts
+      var editableTextsFinder = find.byType(TextField);
+      await _enterTextInEditable(tester, editableTextsFinder.at(0), 'Today tip');
+      await _enterTextInEditable(tester, editableTextsFinder.at(1), 'test description');
+      await _enterTextInEditable(tester, editableTextsFinder.at(2), 'Not');
+      await _enterTextInEditable(tester, editableTextsFinder.at(3), 'Ok');
+      await tester.pump();
+      // save anchor
+      var validateFinder = find.byKey(ValueKey('editModeValidate'));
+      var validateButton = validateFinder.evaluate().first.widget as EditorButton;
+      expect(validateButton.isEnabled, isTrue);
+      await tester.pump(Duration(seconds: 1));
+      validateButton.onPressed();
+      var args = CreateAnchoredHelper(
+        config: CreateHelperConfig(
+          name: 'helper name',
+          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+          priority: 1,
+          minVersion: "1.0.0",
+          maxVersion: "1.0.0",
+          route: "widget.pageId",
+          helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
+        ),
+        title: HelperTextConfig(
+          text: "Today tip",
+          fontColor: Colors.white.toHex(),
+          fontWeight: "Normal",
+          fontSize: 31,
+          fontFamily: "cortana",
+        ),
+        description: HelperTextConfig(
+          text: "test description",
+          fontColor: Colors.white.toHex(),
+          fontWeight: "Normal",
+          fontSize: 20,
+          fontFamily: "cortana",
+        ),
+        positivButton: HelperTextConfig(
+          text: "Ok",
+          fontColor: Colors.white.toHex(),
+          fontWeight: "Normal",
+          fontSize: 20,
+          fontFamily: "cortana",
+        ),
+        negativButton: HelperTextConfig(
+          text: "Not",
+          fontColor: Colors.white.toHex(),
+          fontWeight: "Normal",
+          fontSize: 15,
+          fontFamily: "cortana",
+        ),
+        bodyBox: HelperBoxConfig(
+          key: "[<'text1'>]",
+          color: Colors.blueGrey.shade900.toHex(),
+        )
+      );
+      await tester.pump(Duration(seconds: 2));
+      await tester.pump(Duration(milliseconds: 100));
+      var capturedCall = verify(helperEditorServiceMock.saveAnchoredWidget(captureAny)).captured;
+      expect(jsonEncode(capturedCall.first), equals(jsonEncode(args)));
+      await tester.pumpAndSettle(Duration(seconds: 1));
     });
 
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
@@ -38,6 +40,17 @@ class CreateHelperConfig {
       minVersion: viewModel?.minVersionCode,
       maxVersion: viewModel?.maxVersionCode,
     );
+
+  toJson() => {
+    "id": id,
+    "route": route,
+    "name": name,
+    "triggerType": triggerType.toString(),
+    "helperType": helperType.toString(),
+    "priority": priority,
+    "minVersion": minVersion,
+    "maxVersion": maxVersion,
+  }; 
 }
 
 ///-------------------------------
@@ -111,6 +124,15 @@ class CreateAnchoredHelper {
     this.positivButton, this.negativButton,
     this.bodyBox
   });
+
+  toJson() => {
+    "config": jsonEncode(config),
+    "title": jsonEncode(title),
+    "description": jsonEncode(description),
+    "positivButton": jsonEncode(positivButton),
+    "negativButton": jsonEncode(negativButton),
+    "bodyBox": jsonEncode(bodyBox),
+  };
 }
 
 ///-------------------------------
@@ -132,6 +154,15 @@ class HelperTextConfig {
       @required this.fontWeight,
       @required this.fontFamily,
       @required this.fontSize});
+
+  toJson() => {
+    "id": id,
+    "text": text,
+    "fontColor": fontColor,
+    "fontWeight": fontWeight,
+    "fontSize": fontSize
+  };
+
 }
 
 class HelperMediaConfig {
@@ -155,6 +186,12 @@ class HelperBoxConfig {
     this.key,
     this.color,
   });
+
+  toJson() => {
+    "id":id,
+    "key":key,
+    "color":color
+  };
 }
 
 // TODO: Create config for media

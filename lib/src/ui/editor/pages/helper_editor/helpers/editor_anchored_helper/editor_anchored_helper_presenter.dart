@@ -46,6 +46,11 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     if(viewModel.backgroundBox.key != null) {
       await this.onTapElement(viewModel.backgroundBox.key);
       await validateSelection();
+    } else {
+      viewInterface.showTutorial(
+        "First step", 
+        "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it."
+      );
     }
   }
 

@@ -18,6 +18,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_he
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
@@ -88,14 +89,30 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
     }
 
+    Future closeFirstStepTutorial(WidgetTester tester) async {
+      await tester.pump(Duration(seconds: 2));
+      var btn = find.byKey(ValueKey("tutorialBtnDiss")).evaluate().first.widget as OutlineButton;
+      btn.onPressed();
+      await tester.pump();
+    }
+
     testWidgets('can add an anchored fullscreen helper', (WidgetTester tester) async {
       await beforeEach(tester);
       // expect to find only our helper type editor
       expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
     });
 
+    testWidgets('a step 1 tutorial message is show, tap close => tutorial is dimissed', (WidgetTester tester) async {
+      await beforeEach(tester);
+      // expect to find only our helper type editor
+      expect(find.byType(EditorTutorialOverlay), findsOneWidget);
+      await closeFirstStepTutorial(tester);
+      expect(find.byType(EditorTutorialOverlay), findsNothing);
+    });
+
     testWidgets('shows one container with borders for each element of user app page', (WidgetTester tester) async {
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       var refreshFinder = find.byKey(ValueKey("refreshButton"));
       expect(refreshFinder, findsOneWidget);
       // await tester.tap(refreshFinder);
@@ -106,6 +123,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -125,6 +143,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -144,6 +163,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // action bar is not visible
       expect(_getActionBar().visible, isFalse);
       // tap on first element
@@ -170,6 +190,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -188,6 +209,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -213,6 +235,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -230,6 +253,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -262,6 +286,7 @@ void main() {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -336,6 +361,7 @@ void main() {
 
     testWidgets('step 2 tap cancel button editor => page is removed, page helpers list is visible', (WidgetTester tester) async {
       await beforeEach(tester);
+      await closeFirstStepTutorial(tester);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -500,7 +526,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
     }
 
-    testWidgets('anchor key is found => anchored helper is created directly on step 2', (WidgetTester tester) async {
+    testWidgets('anchor key is found => anchored helper is created directly on step 2, no tutorial message', (WidgetTester tester) async {
       await beforeEach(tester, helperEntity);
       await tester.pump();
       await tester.pump();
@@ -508,6 +534,7 @@ void main() {
       expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
       // action bar is visible only on step 2
       expect(_getActionBar().visible, isTrue);
+      expect(find.byType(EditorTutorialOverlay), findsNothing);
     });
 
     testWidgets('anchor key is not found => editor stays on step 1 with an error', (WidgetTester tester) async {
@@ -518,6 +545,12 @@ void main() {
       expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
       // action bar is visible only on step 2
       expect(_getActionBar().visible, isFalse);
+    });
+
+    testWidgets('anchor key is found => all texts are correctly set, background color is correct', (WidgetTester tester) async {
+      await beforeEach(tester, helperEntityKeyNotFound);
+      await tester.pump();
+      
     });
 
   });

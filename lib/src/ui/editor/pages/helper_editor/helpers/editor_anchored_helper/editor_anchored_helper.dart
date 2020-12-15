@@ -13,6 +13,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart'
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -39,6 +40,8 @@ abstract class EditorAnchoredFullscreenHelperView {
   Future closeEditor();
 
   void showErrorMessage(String message);
+
+  void showTutorial(String title, String content);
 }
 
 /// ------------------------------------------------------------
@@ -200,13 +203,13 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
 
   _buildRefreshButton(EditorAnchoredFullscreenPresenter presenter) {
     return Positioned(
-          top: 32, right: 32,
+          top: 32, right: 16,
           child: FlatButton.icon(
             key: ValueKey("refreshButton"),
             onPressed: presenter.resetSelection,
             color: Colors.black,
             icon: Icon(Icons.refresh, color: Colors.white,),
-            label: Text("refresh", style: TextStyle(color: Colors.white),)
+            label: Text("reset", style: TextStyle(color: Colors.white),)
           ),
         );
   }
@@ -300,7 +303,26 @@ class _EditorAnchoredFullscreenHelperView with EditorSendingOverlayMixin, Editor
 
   @override
   void showErrorMessage(String message) {
-    
+    showOverlayedInContext(
+        (context) => EditorTutorialOverlay(
+          onPressDismiss: () => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
+          title: "Error",
+          content: "$message",
+        ),
+        key: OverlayKeys.PAGE_OVERLAY_KEY
+    );
+  }
+
+  @override
+  void showTutorial(String title, String content) {
+    showOverlayedInContext(
+        (context) => EditorTutorialOverlay(
+          onPressDismiss: () => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
+          title: title,
+          content: content,
+        ),
+        key: OverlayKeys.PAGE_OVERLAY_KEY
+    );
   }
 
 }

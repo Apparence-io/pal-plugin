@@ -41,8 +41,12 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   void onInit() {}
 
   @override
-  void afterViewInit() {
-    scanElements();
+  void afterViewInit() async {
+    await scanElements();
+    if(viewModel.backgroundBox.key != null) {
+      await this.onTapElement(viewModel.backgroundBox.key);
+      await validateSelection();
+    }
   }
 
   Future resetSelection() async {
@@ -68,6 +72,12 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     if (previouslySelected != null) {
       previouslySelected.value.selected = false;
     }
+    if(!viewModel.userPageElements.containsKey(key)) {
+      debugPrint("key cannot be found : ${viewModel.userPageElements.keys.length} keys found");
+      viewModel.userPageElements.keys.forEach((element) => debugPrint("=> $element"));
+      viewInterface.showErrorMessage("Key cannot be found on page. Did you remove this element?");
+      return;
+    }
     viewModel.userPageElements[key].selected = true;
     var element = await finderService.searchChildElement(key);
     viewModel.writeArea = await finderService.getLargestAvailableSpace(element);
@@ -76,6 +86,9 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   }
 
   Future validateSelection() async {
+    if(viewModel.selectedAnchorKey == null) {
+      return;
+    }
     viewModel.anchorValidated = true;
     viewModel.backgroundBox.backgroundColor.value = Colors.blueGrey.shade900;
     refreshView();

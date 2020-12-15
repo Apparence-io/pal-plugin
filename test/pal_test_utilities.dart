@@ -107,6 +107,14 @@ Future pumpHelperWidget(
           helperService: editorHelperService,
         );
         break;
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        builder = (context) => EditorAnchoredFullscreenHelper.edit(
+          parameters: args,
+          helperEntity: helperEntity,
+          palEditModeStateService: palEditModeStateService,
+          helperService: editorHelperService,
+        );
+        break;  
       default:
         throw 'HELPER TYPE NOT HANDLED';
     }

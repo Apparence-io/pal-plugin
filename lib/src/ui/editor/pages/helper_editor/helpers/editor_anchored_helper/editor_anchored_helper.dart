@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
@@ -22,6 +23,9 @@ import '../../helper_editor_viewmodel.dart';
 import 'editor_anchored_helper_presenter.dart';
 import 'editor_anchored_helper_viewmodel.dart';
 
+/// ------------------------------------------------------------
+/// Interface for presenter view contract
+/// ------------------------------------------------------------
 abstract class EditorAnchoredFullscreenHelperView {
 
   void showColorPickerDialog(Color defaultColor, OnColorSelected onColorSelected, OnCancelPicker onCancel);
@@ -33,25 +37,22 @@ abstract class EditorAnchoredFullscreenHelperView {
   void closeLoadingScreen();
 
   Future closeEditor();
+
+  void showErrorMessage(String message);
 }
 
-
+/// ------------------------------------------------------------
+/// [EditorAnchoredFullscreenHelper] editor page
+/// ------------------------------------------------------------
 class EditorAnchoredFullscreenHelper extends StatelessWidget {
-
-  final EditorHelperService helperEditorService;
-
-  final HelperEditorPageArguments parameters;
-
-  final HelperViewModel helperViewModel;
-
   // ignore: close_sinks
   final StreamController<bool> editableTextFieldController =  StreamController<bool>.broadcast();
 
+  final PresenterBuilder<EditorAnchoredFullscreenPresenter> presenterBuilder;
+
   EditorAnchoredFullscreenHelper._({
     Key key,
-    this.helperEditorService,
-    this.parameters,
-    this.helperViewModel
+    @required this.presenterBuilder,
   }) : super(key: key);
 
   factory EditorAnchoredFullscreenHelper.create({
@@ -61,10 +62,31 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
     @required HelperViewModel helperViewModel
   }) => EditorAnchoredFullscreenHelper._(
     key: key,
-    helperEditorService: helperService,
-    parameters: parameters,
-    helperViewModel: helperViewModel,
+    presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
+      AnchoredFullscreenHelperViewModel.fromModel(helperViewModel),
+      _EditorAnchoredFullscreenHelperView(context, EditorInjector.of(context).palEditModeStateService),
+      EditorInjector.of(context).finderService,
+      helperService ?? EditorInjector.of(context).helperService,
+      parameters
+    ),
   );
+
+  factory EditorAnchoredFullscreenHelper.edit({
+    Key key,
+    HelperEditorPageArguments parameters,
+    EditorHelperService helperService,
+    PalEditModeStateService palEditModeStateService,
+    @required HelperEntity helperEntity //FIXME should be an id and not entire entity
+  }) => EditorAnchoredFullscreenHelper._(
+      key: key,
+      presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
+        AnchoredFullscreenHelperViewModel.fromEntity(helperEntity),
+        _EditorAnchoredFullscreenHelperView(context, EditorInjector.of(context).palEditModeStateService),
+        EditorInjector.of(context).finderService,
+        helperService ?? EditorInjector.of(context).helperService,
+        parameters
+      )
+    );
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +94,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         .build(
           context: context,
           key: ValueKey("EditorAnchoredFullscreenHelperPage"),
-          presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
-            AnchoredFullscreenHelperViewModel.fromModel(helperViewModel),
-            _EditorAnchoredFullscreenHelperView(context, EditorInjector.of(context).palEditModeStateService),
-            EditorInjector.of(context).finderService,
-            helperEditorService ?? EditorInjector.of(context).helperService,
-            parameters
-          ),
+          presenterBuilder: presenterBuilder,
           multipleAnimControllerBuilder: (tickerProvider) => [
             // AnchoredWidget repeating animation
             AnimationController(
@@ -282,8 +298,12 @@ class _EditorAnchoredFullscreenHelperView with EditorSendingOverlayMixin, Editor
 
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
-}
+  @override
+  void showErrorMessage(String message) {
+    
+  }
 
+}
 
 typedef OnTapElement = void Function(String key);
 

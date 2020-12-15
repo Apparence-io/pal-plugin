@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
@@ -19,6 +20,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import '../../screen_tester_utilities.dart';
 import 'package:pal/src/extensions/color_extension.dart';
 import '../../../pal_test_utilities.dart';
@@ -41,7 +43,7 @@ void main() {
   _getActionBar()
     => find.byType(EditorActionsBar).evaluate().first.widget as EditorActionsBar;
 
-  group('[Editor] Anchored helper', () {
+  group('[Editor] save Anchored helper', () {
 
     final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -351,7 +353,172 @@ void main() {
       expect(find.byType(HelpersListModal), findsOneWidget);
     });
 
+  });
 
+  group('[Editor] update Anchored helper', () {
+
+    final _navigatorKey = GlobalKey<NavigatorState>();
+
+    EditorAnchoredFullscreenPresenter presenter;
+
+    HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
+
+    Scaffold _myHomeTest = Scaffold(
+      body: Column(
+        children: [
+          Text("text1", key: ValueKey("text1")),
+          Text("text2", key: ValueKey("text2")),
+          Padding(
+            padding: EdgeInsets.only(top: 32),
+            child: FlatButton(
+              key: ValueKey("MFlatButton"),
+              child: Text("tapme"),
+              onPressed: () => print("impressed!"),
+            ),
+          )
+        ],
+      ),
+    );
+
+    var helperEntity = HelperEntity(
+      name: "my helper name",
+      type: HelperType.ANCHORED_OVERLAYED_HELPER,
+      triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+      priority: 1,
+      versionMinId: 25,
+      versionMaxId: 25,
+      helperTexts: [
+        HelperTextEntity(
+          value: "args.title.text",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.TITLE_KEY,
+        ),
+        HelperTextEntity(
+          value: "args.title.descr",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.DESCRIPTION_KEY,
+        ),
+        HelperTextEntity(
+          value: "ok",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.POSITIV_KEY,
+        ),
+        HelperTextEntity(
+          value: "not_ok",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.NEGATIV_KEY,
+        ),
+      ],
+      helperBoxes: [
+        HelperBoxEntity(
+          key: "[<'text1'>]",
+          backgroundColor: Colors.black.toHex(),
+        )
+      ]
+    );
+
+    var helperEntityKeyNotFound = HelperEntity(
+      name: "my helper name",
+      type: HelperType.ANCHORED_OVERLAYED_HELPER,
+      triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+      priority: 1,
+      versionMinId: 25,
+      versionMaxId: 25,
+      helperTexts: [
+        HelperTextEntity(
+          value: "args.title.text",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.TITLE_KEY,
+        ),
+        HelperTextEntity(
+          value: "args.title.descr",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.DESCRIPTION_KEY,
+        ),
+        HelperTextEntity(
+          value: "ok",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.POSITIV_KEY,
+        ),
+        HelperTextEntity(
+          value: "not_ok",
+          fontColor: "FFFFFF",
+          fontWeight: "Normal",
+          fontSize: 21,
+          fontFamily: "Montserrat",
+          key: AnchoredscreenHelperKeys.NEGATIV_KEY,
+        ),
+      ],
+      helperBoxes: [
+        HelperBoxEntity(
+          key: "[<'notfoundkey'>]",
+          backgroundColor: Colors.black.toHex(),
+        )
+      ]
+    );
+
+
+    // init pal + go to editor
+    Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
+      await initAppWithPal(tester, _myHomeTest, _navigatorKey);
+      await pumpHelperWidget(
+        tester,
+        _navigatorKey,
+        HelperTriggerType.ON_SCREEN_VISIT,
+        HelperType.ANCHORED_OVERLAYED_HELPER,
+        HelperTheme.BLACK,
+        editorHelperService: helperEditorServiceMock,
+        palEditModeStateService: new PalEditModeStateServiceMock(),
+        helperEntity: helperEntity
+      );
+      await tester.pump(Duration(milliseconds: 100));
+      var presenterFinder = find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage"));
+      expect(presenterFinder, findsOneWidget);
+      presenter = (presenterFinder.evaluate().first.widget
+        as PresenterInherited<EditorAnchoredFullscreenPresenter, AnchoredFullscreenHelperViewModel>).presenter;
+      await tester.pump(Duration(milliseconds: 100));
+    }
+
+    testWidgets('anchor key is found => anchored helper is created directly on step 2', (WidgetTester tester) async {
+      await beforeEach(tester, helperEntity);
+      await tester.pump();
+      await tester.pump();
+      // expect to find only our helper type editor
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
+      // action bar is visible only on step 2
+      expect(_getActionBar().visible, isTrue);
+    });
+
+    testWidgets('anchor key is not found => editor stays on step 1 with an error', (WidgetTester tester) async {
+      await beforeEach(tester, helperEntityKeyNotFound);
+      await tester.pump();
+      await tester.pump();
+      // expect to find only our helper type editor
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
+      // action bar is visible only on step 2
+      expect(_getActionBar().visible, isFalse);
+    });
 
   });
 }

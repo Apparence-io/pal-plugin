@@ -70,13 +70,14 @@ class LanguageNotifier {
 
 class BoxNotifier {
   int id;
+  String key;
   ValueNotifier<Color> backgroundColor;
 
   BoxNotifier({
-    int id,
-    Color backgroundColor
+    this.id,
+    this.key,
+    Color backgroundColor,
   }) {
-    this.id = id;
     this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
   }
 }

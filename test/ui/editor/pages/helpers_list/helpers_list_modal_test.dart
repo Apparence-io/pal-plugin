@@ -97,18 +97,10 @@ main() {
     testWidgets('should display properly', (tester) async {
       await before(tester);
       await tester.pumpAndSettle();
-
-      expect(
-          find.byKey(ValueKey('pal_HelpersListModal_Close')), findsOneWidget);
-      expect(
-          find.byKey(ValueKey('palHelpersListModalContent')), findsOneWidget);
-
+      expect(find.byKey(ValueKey('pal_HelpersListModal_Close')), findsOneWidget);
+      expect(find.byKey(ValueKey('palHelpersListModalContent')), findsOneWidget);
       expect(find.text('PAL editor'), findsOneWidget);
-      expect(
-          find.text('List of available helpers on this page'), findsOneWidget);
-      expect(find.text('💡 You can re-order helpers by long tap on them.'),
-          findsOneWidget);
-
+      expect(find.text('💡 You can re-order helpers by long tap on them.'),findsOneWidget);
       expect(find.byKey(ValueKey('pal_HelpersListModal_New')), findsOneWidget);
       expect(find.byIcon(Icons.add), findsOneWidget);
     });

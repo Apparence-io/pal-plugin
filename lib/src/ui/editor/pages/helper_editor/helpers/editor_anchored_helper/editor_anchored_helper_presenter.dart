@@ -31,9 +31,11 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     this.parameters
     ): super(viewModel, viewInterface) {
     assert(finderService != null, 'A finder service must be provided');
+    if(viewModel.id == null) {
+      viewModel.titleField.text.value = "My helper title";
+      viewModel.descriptionField.text.value = "Lorem ipsum lorem ipsum lorem ipsum";
+    } 
     viewModel.userPageElements = Map();
-    viewModel.titleField.text.value = "My helper title";
-    viewModel.descriptionField.text.value = "Lorem ipsum lorem ipsum lorem ipsum";
     viewModel.canValidate = new ValueNotifier(false);
   }
 
@@ -94,8 +96,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     if(viewModel.selectedAnchorKey == null) {
       return;
     }
+    if(viewModel.id == null) {
+      viewModel.backgroundBox.backgroundColor.value = Colors.blueGrey.shade900;
+    }
     viewModel.anchorValidated = true;
-    viewModel.backgroundBox.backgroundColor.value = Colors.blueGrey.shade900;
     refreshView();
   }
 

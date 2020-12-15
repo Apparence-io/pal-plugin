@@ -12,6 +12,7 @@ import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/client/helpers/anchored_helper_widget.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
@@ -407,6 +408,7 @@ void main() {
     );
 
     var helperEntity = HelperEntity(
+      id:"myhelperid",
       name: "my helper name",
       type: HelperType.ANCHORED_OVERLAYED_HELPER,
       triggerType: HelperTriggerType.ON_SCREEN_VISIT,
@@ -416,7 +418,7 @@ void main() {
       helperTexts: [
         HelperTextEntity(
           value: "args.title.text",
-          fontColor: "FFFFFF",
+          fontColor: "ffffffff",
           fontWeight: "Normal",
           fontSize: 21,
           fontFamily: "Montserrat",
@@ -424,7 +426,7 @@ void main() {
         ),
         HelperTextEntity(
           value: "args.title.descr",
-          fontColor: "FFFFFF",
+          fontColor: "ffffffff",
           fontWeight: "Normal",
           fontSize: 21,
           fontFamily: "Montserrat",
@@ -432,7 +434,7 @@ void main() {
         ),
         HelperTextEntity(
           value: "ok",
-          fontColor: "FFFFFF",
+          fontColor: "ffffffff",
           fontWeight: "Normal",
           fontSize: 21,
           fontFamily: "Montserrat",
@@ -440,7 +442,7 @@ void main() {
         ),
         HelperTextEntity(
           value: "not_ok",
-          fontColor: "FFFFFF",
+          fontColor: "ffffffff",
           fontWeight: "Normal",
           fontSize: 21,
           fontFamily: "Montserrat",
@@ -456,6 +458,7 @@ void main() {
     );
 
     var helperEntityKeyNotFound = HelperEntity(
+      id: "myhelperid",
       name: "my helper name",
       type: HelperType.ANCHORED_OVERLAYED_HELPER,
       triggerType: HelperTriggerType.ON_SCREEN_VISIT,
@@ -481,7 +484,7 @@ void main() {
         ),
         HelperTextEntity(
           value: "ok",
-          fontColor: "FFFFFF",
+          fontColor: "ffffffff",
           fontWeight: "Normal",
           fontSize: 21,
           fontFamily: "Montserrat",
@@ -489,7 +492,7 @@ void main() {
         ),
         HelperTextEntity(
           value: "not_ok",
-          fontColor: "FFFFFF",
+          fontColor: "ffffffff",
           fontWeight: "Normal",
           fontSize: 21,
           fontFamily: "Montserrat",
@@ -548,9 +551,19 @@ void main() {
     });
 
     testWidgets('anchor key is found => all texts are correctly set, background color is correct', (WidgetTester tester) async {
-      await beforeEach(tester, helperEntityKeyNotFound);
+      await beforeEach(tester, helperEntity);
       await tester.pump();
-      
+      await tester.pump();
+      helperEntity.helperTexts.forEach((element) {
+        var textWidget = find.text(element.value).evaluate().first.widget as EditableText;
+        expect(textWidget, isNotNull);
+        expect(textWidget.style.color.toHex(), element.fontColor);
+        expect(textWidget.style.fontWeight, FontWeightMapper.toFontWeight(element.fontWeight));
+        expect(textWidget.style.fontFamily, contains(element.fontFamily));
+        expect(textWidget.style.fontSize, element.fontSize);
+      });
+      expect(presenter.viewModel.backgroundBox.backgroundColor.value, equals(Colors.black));
+      expect(presenter.viewModel.anchorValidated, isTrue);
     });
 
   });

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helper_factory.dart';
-import 'package:pal/src/ui/shared/helper_shared_factory.dart';
-import 'package:pal/src/extensions/color_extension.dart';
 
 import 'helpers_synchronizer.dart';
 

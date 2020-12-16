@@ -99,6 +99,14 @@ class EditorRouter {
           ),
         );
         break;
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        builder = (context) => InnerEditorRouter(
+          child: EditorAnchoredFullscreenHelper.edit(
+            parameters: args,
+            helperEntity: helperEntity,
+          ),
+        );
+        break;
       default:
         throw 'HELPER TYPE NOT HANDLED';
     }

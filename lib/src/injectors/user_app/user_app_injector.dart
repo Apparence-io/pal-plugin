@@ -4,6 +4,7 @@ import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.d
 import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/page_client_service.dart';
 import 'package:pal/src/in_app_user_manager.dart';
+import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/ui/client/helpers_synchronizer.dart';
 
@@ -22,6 +23,8 @@ class UserInjector extends InheritedWidget {
   final PalRouteObserver routeObserver;
 
   final HelpersSynchronizer _helperSynchronizeService;
+
+  final FinderService _finderService;
 
   UserInjector({
     Key key,
@@ -45,6 +48,7 @@ class UserInjector extends InheritedWidget {
         ),
         this._packageVersionReader = PackageVersionReader(),
         this._clientInAppUserService = InAppUserClientService.build(appContext.inAppUserRepository),
+        this._finderService = FinderService(observer: routeObserver),
         super(key: key, child: child) {
     setInAppUserManagerService(this.inAppUserClientService);
   }
@@ -64,4 +68,6 @@ class UserInjector extends InheritedWidget {
   InAppUserClientService get inAppUserClientService => this._clientInAppUserService;
 
   HelpersSynchronizer get helpersSynchronizerService => this._helperSynchronizeService;
+
+  FinderService get finderService => this._finderService;
 }

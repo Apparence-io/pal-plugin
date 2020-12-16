@@ -114,7 +114,7 @@ class Pal extends StatelessWidget {
               routeObserver: navigatorObserver,
               navigatorKey: navigatorKey
             );
-            return childApp;
+            return Overlayed(child: childApp);
           }
         ),
         appContext: UserAppContext.instance,

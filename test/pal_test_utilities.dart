@@ -38,10 +38,10 @@ Future initAppWithPal(
     editorModeEnabled: editorModeEnabled,
     childApp: new MaterialApp(
       onGenerateRoute: routeFactory ??
-          (_) => MaterialPageRoute(builder: (ctx) {
-                context = ctx;
-                return userApp;
-              }),
+        (_) => MaterialPageRoute(builder: (ctx) {
+          context = ctx;
+          return userApp;
+        }),
       navigatorKey: navigatorKey,
       navigatorObservers: [PalNavigatorObserver.instance()],
     ),

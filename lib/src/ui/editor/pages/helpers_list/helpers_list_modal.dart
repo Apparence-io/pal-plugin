@@ -23,13 +23,6 @@ abstract class HelpersListModalView {
 
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
 
-  void processElement(Element element, {int n = 0});
-
-  Future<void> capturePng(
-    final HelpersListModalPresenter presenter,
-    final HelpersListModalModel model,
-  );
-
   Future<bool> openHelperCreationPage(
     final String pageId,
   );
@@ -320,46 +313,46 @@ class _HelpersListModalState extends State<HelpersListModal>
     }
   }
 
-  @override
-  processElement(Element element, {int n = 0}) {
-    if (element.widget.key != null) {
-      var parentObject =
-          widget.repaintBoundaryKey.currentContext.findRenderObject();
-      if (element.widget is Scaffold) {
-        print("SCAFFOLD");
-      }
-      var translation =
-          element.renderObject.getTransformTo(parentObject).getTranslation();
-      print("$n - key " +
-          element.widget.key.toString() +
-          " " +
-          element.size.toString());
-      print("translation ${translation.t} ${translation.r} ${translation.s}");
-      print(
-          "::bounds ${element.renderObject.paintBounds.shift(Offset(translation.x, translation.y))}");
-      print("::bounds ${parentObject.paintBounds}");
-    }
-    element.visitChildElements((visitor) => processElement(visitor, n: n + 1));
-  }
+  // @override
+  // processElement(Element element, {int n = 0}) {
+  //   if (element.widget.key != null) {
+  //     var parentObject =
+  //         widget.repaintBoundaryKey.currentContext.findRenderObject();
+  //     if (element.widget is Scaffold) {
+  //       print("SCAFFOLD");
+  //     }
+  //     var translation =
+  //         element.renderObject.getTransformTo(parentObject).getTranslation();
+  //     print("$n - key " +
+  //         element.widget.key.toString() +
+  //         " " +
+  //         element.size.toString());
+  //     print("translation ${translation.t} ${translation.r} ${translation.s}");
+  //     print(
+  //         "::bounds ${element.renderObject.paintBounds.shift(Offset(translation.x, translation.y))}");
+  //     print("::bounds ${parentObject.paintBounds}");
+  //   }
+  //   element.visitChildElements((visitor) => processElement(visitor, n: n + 1));
+  // }
 
-  @override
-  Future<void> capturePng(
-    final HelpersListModalPresenter presenter,
-    final HelpersListModalModel model,
-  ) async {
-    try {
-      RenderRepaintBoundary boundary =
-          widget.repaintBoundaryKey.currentContext.findRenderObject();
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+  // @override
+  // Future<void> capturePng(
+  //   final HelpersListModalPresenter presenter,
+  //   final HelpersListModalModel model,
+  // ) async {
+  //   try {
+  //     RenderRepaintBoundary boundary =
+  //         widget.repaintBoundaryKey.currentContext.findRenderObject();
+  //     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+  //     ByteData byteData =
+  //         await image.toByteData(format: ui.ImageByteFormat.png);
 
-      presenter.setImage(byteData);
-    } catch (e) {
-      print('error while catching screenshot');
-      print(e);
-    }
-  }
+  //     presenter.setImage(byteData);
+  //   } catch (e) {
+  //     print('error while catching screenshot');
+  //     print(e);
+  //   }
+  // }
 
   @override
   Future<bool> openHelperCreationPage(

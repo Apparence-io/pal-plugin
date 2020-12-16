@@ -7,10 +7,11 @@ import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 import 'helpers/simple_helper/widget/simple_helper_layout.dart';
+import 'helpers/user_anchored_helper/anchored_helper_widget.dart';
 
 class HelperFactory {
   static Widget build(final HelperEntity helper,
-      {final Function(bool positiveFeedBack) onTrigger}) {
+      {final Function(bool positiveFeedBack) onTrigger, final Function onError}) {
     switch (helper.type) {
       case HelperType.HELPER_FULL_SCREEN:
         return _createHelperFullScreen(helper, onTrigger);
@@ -19,7 +20,7 @@ class HelperFactory {
       case HelperType.UPDATE_HELPER:
         return _createUpdateHelper(helper, onTrigger);
       case HelperType.ANCHORED_OVERLAYED_HELPER:
-        break;
+        return _createAnchoredHelper(helper, onTrigger, onError);
     }
     return null;
   }
@@ -132,8 +133,7 @@ class HelperFactory {
     );
   }
 
-  static Widget _createUpdateHelper(
-      final HelperEntity helper, final Function onTrigger) {
+  static Widget _createUpdateHelper(final HelperEntity helper, final Function onTrigger) {
     return UserUpdateHelperPage(
       onPositivButtonTap: () {
         onTrigger(true);
@@ -158,6 +158,15 @@ class HelperFactory {
         UpdatescreenHelperKeys.IMAGE_KEY,
         helper.helperImages,
       ),
+    );
+  }
+
+  static Widget _createAnchoredHelper(final HelperEntity helper, final Function onTrigger, final Function onError) {
+    return AnchoredHelper.fromEntity(
+      helperEntity: helper,
+      onPositivButtonTap: () => onTrigger(true),
+      onNegativButtonTap: () => onTrigger(false),
+      onError: onError,
     );
   }
 }

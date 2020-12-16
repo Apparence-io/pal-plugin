@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
-import '../../../pal_navigator_observer.dart';
+import '../../pal_navigator_observer.dart';
+
 
 class FinderService {
 

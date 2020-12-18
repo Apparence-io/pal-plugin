@@ -258,49 +258,46 @@ class _HelpersListModalState extends State<HelpersListModal>
         ),
         SizedBox(width: 12),
         Expanded(
-          flex: 3,
           child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'PAL editor',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 3.0),
-            Text(
-              'Helpers on this page',
-              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w300),
-            )
-          ],
-        )),
-        Flexible(
-          flex: 1,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildCircleButton(
-                'pal_HelpersListModal_Settings',
-                Icon(
-                  Icons.settings,
-                  size: 20,
+              Text(
+                'PAL editor',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
                 ),
-                presenter.onClickSettings,
               ),
-              SizedBox(width: 14.0),
-              _buildCircleButton(
-                'pal_HelpersListModal_New',
-                Icon(
-                  Icons.add,
-                  size: 25,
-                ),
-                presenter.onClickAdd,
-              ),
+              SizedBox(height: 3.0),
+              Text(
+                'Helpers on this page',
+                style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w300),
+              )
             ],
-          ),
+          )
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildCircleButton(
+              'pal_HelpersListModal_Settings',
+              Icon(
+                Icons.settings,
+                size: 20,
+              ),
+              presenter.onClickSettings,
+            ),
+            SizedBox(width: 14.0),
+            _buildCircleButton(
+              'pal_HelpersListModal_New',
+              Icon(
+                Icons.add,
+                size: 25,
+              ),
+              presenter.onClickAdd,
+            ),
+          ],
         ),
       ],
     );

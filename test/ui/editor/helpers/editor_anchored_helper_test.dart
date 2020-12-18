@@ -153,7 +153,7 @@ void main() {
       await tester.pump();
       expect(find.byKey(ValueKey("validateSelectionBtn")), findsOneWidget);
       expect(find.text("My helper title"), findsNothing);
-      expect(find.text("Lorem ipsum lorem ipsum lorem ipsum"), findsNothing);
+      expect(find.text("Describe your element here"), findsNothing);
       expect(find.text("Ok, thanks!"), findsNothing, reason: "A positiv feedback button is available");
       expect(find.text("This is not helping"), findsNothing, reason: "A negativ feedback button is available");
     });
@@ -182,7 +182,7 @@ void main() {
       expect(find.byKey(ValueKey("validateSelectionBtn")), findsNothing);
       expect(presenter.viewModel.backgroundBox.backgroundColor.value.opacity, 1);
       expect(find.text("My helper title"), findsOneWidget);
-      expect(find.text("Lorem ipsum lorem ipsum lorem ipsum"), findsOneWidget);
+      expect(find.text("Describe your element here"), findsOneWidget);
       expect(find.text("Ok, thanks!"), findsOneWidget, reason: "A positiv feedback button is available");
       expect(find.text("This is not helping"), findsOneWidget, reason: "A negativ feedback button is available");
     });

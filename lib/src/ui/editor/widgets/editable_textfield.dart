@@ -18,6 +18,8 @@ enum ToolbarType { text, border }
 
 typedef OnFieldChanged(String id, String value);
 
+typedef OnFocusChange = void Function(bool hasFocus);
+
 typedef OnTextStyleChanged(String id, TextStyle style, FontKeys fontkeys);
 
 // TODO move to TextStyle extension
@@ -53,6 +55,8 @@ class EditableTextField extends StatefulWidget {
   final ToolbarType toolbarType;
   final String initialValue;
   final String fontFamilyKey;
+  final FocusNode focusNode;
+  final OnFocusChange onFocusChange;
 
   EditableTextField({
     Key key,
@@ -75,6 +79,8 @@ class EditableTextField extends StatefulWidget {
     this.hintText = 'Edit me!',
     this.keyboardType,
     this.initialValue,
+    this.focusNode,
+    this.onFocusChange,
     this.toolbarType = ToolbarType.text,
     @required this.textStyle,
   }) : super();
@@ -102,6 +108,8 @@ class EditableTextField extends StatefulWidget {
     final Stream<bool> outsideTapStream,
     final String initialValue,
     final String fontFamilyKey,
+    final FocusNode focusNode,
+    final OnFocusChange onFocusChange
   }) {
     return EditableTextField(
       key: key,
@@ -125,7 +133,9 @@ class EditableTextField extends StatefulWidget {
       keyboardType: keyboardType,
       textStyle: textStyle,
       toolbarType: ToolbarType.text,
+      focusNode: focusNode,
       initialValue: initialValue,
+      onFocusChange: onFocusChange,
     );
   }
 
@@ -140,6 +150,7 @@ class EditableTextField extends StatefulWidget {
       int minimumCharacterLength = 1,
       int maximumCharacterLength = 255,
       int maxLines = 5,
+      OnFocusChange onFocusChange,
       BoxDecoration backgroundDecoration})
   => EditableTextField.text(
     backgroundBoxDecoration: backgroundDecoration,
@@ -153,6 +164,8 @@ class EditableTextField extends StatefulWidget {
     maxLines: maxLines,
     fontFamilyKey: textNotifier?.fontFamily?.value,
     initialValue: textNotifier?.text?.value,
+    focusNode: textNotifier.focusNode,
+    onFocusChange: onFocusChange,
     textStyle: TextStyle(
       color: textNotifier?.fontColor?.value,
       decoration: TextDecoration.none,
@@ -168,6 +181,8 @@ class EditableTextField extends StatefulWidget {
     OnTextStyleChanged onTextStyleChanged,
     { int minimumCharacterLength = 1,
       int maximumCharacterLength = 255,
+      FocusNode focusNode,
+      OnFocusChange onFocusChange,
       int maxLines = 1})
   =>  EditableTextField.fromNotifier(
     outsideTapStream,
@@ -243,7 +258,7 @@ class EditableTextField extends StatefulWidget {
 
 class _EditableTextFieldState extends State<EditableTextField> {
   bool _isToolbarVisible = false;
-  FocusNode _focusNode = FocusNode();
+  FocusNode _focusNode;
   StreamSubscription _outsideSub;
   TextStyle _textStyle;
   String _fontFamilyKey;
@@ -251,13 +266,14 @@ class _EditableTextFieldState extends State<EditableTextField> {
   @override
   void initState() {
     super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);
     _fontFamilyKey = widget.fontFamilyKey ?? 'Montserrat';
     // Listen on stream when outside tap is detected
     _outsideSub = widget.outsideTapStream?.listen((event) {
       if (event) {
-        this._onClose();
+        _onClose();
       }
     });
     _textStyle = widget.textStyle;
@@ -336,6 +352,8 @@ class _EditableTextFieldState extends State<EditableTextField> {
                         ),
                       ),
                     ),
+                    textInputAction: TextInputAction.done,
+                    onEditingComplete: () => _focusNode.unfocus(),
                     textAlign: TextAlign.center,
                     style: _textStyle,
                   ),
@@ -382,6 +400,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   _onFocusChange() {
+    if(widget.onFocusChange != null) {
+      widget.onFocusChange(_focusNode.hasFocus);
+    }
     if (!_focusNode.hasFocus) {
       setState(() {
         _isToolbarVisible = false;
@@ -389,9 +410,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
     }
   }
 
-  _onFieldSubmitted(String newValue) {
-    this._onClose();
-  }
+  _onFieldSubmitted(String newValue) => _onClose();
 
   _onChangeTextFont() {
     var widgetBuilder = (context) => FontEditorDialogPage(

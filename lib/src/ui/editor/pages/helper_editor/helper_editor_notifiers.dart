@@ -14,6 +14,7 @@ class TextFormFieldNotifier {
   ValueNotifier<Color> backgroundColor;
   ValueNotifier<Color> borderColor;
   ValueNotifier<int> fontSize;
+  FocusNode focusNode;
 
   TextFormFieldNotifier({
     int id,
@@ -35,6 +36,7 @@ class TextFormFieldNotifier {
     this.borderColor = ValueNotifier(borderColor);
     this.fontSize = ValueNotifier(fontSize ?? 14);
     this.hintText = hintText ?? text;
+    this.focusNode = FocusNode();
   }
 }
 

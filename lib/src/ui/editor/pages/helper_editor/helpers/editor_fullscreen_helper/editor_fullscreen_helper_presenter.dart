@@ -34,7 +34,13 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   @override
   void onInit() {
     super.onInit();
+    viewModel.fields.forEach(
+      (field) => field.toolbarVisibility.addListener(
+        () => _onTextToolbarVisibilityChange(field)
+      )
+    );
   }
+
 
   Future onValidate() async {
     ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
@@ -98,6 +104,12 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     // this.viewModel.canValidate = null;
   }
 
+  @override
+  void afterViewDestroyed() {
+    // this.viewModel.canValidate.dispose();
+    // this.viewModel.canValidate = null;
+  }
+
   //TODO move  to view
   TextStyle googleCustomFont(String fontFamily) => this.viewInterface.googleCustomFont(fontFamily);
 
@@ -144,6 +156,13 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
     textNotifier.text.value = newValue;
     _updateValidState();
+  }
+
+  _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
+    if(textNotifier.toolbarVisibility.value) {
+      viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
+        .forEach((element) => element.toolbarVisibility.value = false);
+    }
   }
 
   _updateValidState() => viewModel.canValidate.value = isValid();

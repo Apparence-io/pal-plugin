@@ -1,0 +1,9 @@
+{
+    "editor.formatOnSave": false,
+    "[dart]": {
+        "editor.formatOnSave": false,
+        "editor.wordWrapColumn": 999,
+        "editor.formatOnType": false,
+        "editor.wrappingIndent": "none",
+    }
+}

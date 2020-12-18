@@ -23,13 +23,6 @@ abstract class HelpersListModalView {
 
   void lookupHostedAppStruct(GlobalKey<NavigatorState> hostedAppNavigatorKey);
 
-  void processElement(Element element, {int n = 0});
-
-  Future<void> capturePng(
-    final HelpersListModalPresenter presenter,
-    final HelpersListModalModel model,
-  );
-
   Future<bool> openHelperCreationPage(
     final String pageId,
   );
@@ -255,7 +248,8 @@ class _HelpersListModalState extends State<HelpersListModal>
     final HelpersListModalPresenter presenter,
   ) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset(
@@ -263,47 +257,47 @@ class _HelpersListModalState extends State<HelpersListModal>
           height: 36.0,
         ),
         SizedBox(width: 12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'PAL editor',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 3.0),
-            Text(
-              'List of available helpers on this page',
-              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w300),
-            )
-          ],
-        ),
-        Flexible(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildCircleButton(
-                'pal_HelpersListModal_Settings',
-                Icon(
-                  Icons.settings,
-                  size: 20,
+              Text(
+                'PAL editor',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
                 ),
-                presenter.onClickSettings,
               ),
-              SizedBox(width: 14.0),
-              _buildCircleButton(
-                'pal_HelpersListModal_New',
-                Icon(
-                  Icons.add,
-                  size: 25,
-                ),
-                presenter.onClickAdd,
-              ),
+              SizedBox(height: 3.0),
+              Text(
+                'Helpers on this page',
+                style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.w300),
+              )
             ],
-          ),
+          )
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildCircleButton(
+              'pal_HelpersListModal_Settings',
+              Icon(
+                Icons.settings,
+                size: 20,
+              ),
+              presenter.onClickSettings,
+            ),
+            SizedBox(width: 14.0),
+            _buildCircleButton(
+              'pal_HelpersListModal_New',
+              Icon(
+                Icons.add,
+                size: 25,
+              ),
+              presenter.onClickAdd,
+            ),
+          ],
         ),
       ],
     );
@@ -316,46 +310,46 @@ class _HelpersListModalState extends State<HelpersListModal>
     }
   }
 
-  @override
-  processElement(Element element, {int n = 0}) {
-    if (element.widget.key != null) {
-      var parentObject =
-          widget.repaintBoundaryKey.currentContext.findRenderObject();
-      if (element.widget is Scaffold) {
-        print("SCAFFOLD");
-      }
-      var translation =
-          element.renderObject.getTransformTo(parentObject).getTranslation();
-      print("$n - key " +
-          element.widget.key.toString() +
-          " " +
-          element.size.toString());
-      print("translation ${translation.t} ${translation.r} ${translation.s}");
-      print(
-          "::bounds ${element.renderObject.paintBounds.shift(Offset(translation.x, translation.y))}");
-      print("::bounds ${parentObject.paintBounds}");
-    }
-    element.visitChildElements((visitor) => processElement(visitor, n: n + 1));
-  }
+  // @override
+  // processElement(Element element, {int n = 0}) {
+  //   if (element.widget.key != null) {
+  //     var parentObject =
+  //         widget.repaintBoundaryKey.currentContext.findRenderObject();
+  //     if (element.widget is Scaffold) {
+  //       print("SCAFFOLD");
+  //     }
+  //     var translation =
+  //         element.renderObject.getTransformTo(parentObject).getTranslation();
+  //     print("$n - key " +
+  //         element.widget.key.toString() +
+  //         " " +
+  //         element.size.toString());
+  //     print("translation ${translation.t} ${translation.r} ${translation.s}");
+  //     print(
+  //         "::bounds ${element.renderObject.paintBounds.shift(Offset(translation.x, translation.y))}");
+  //     print("::bounds ${parentObject.paintBounds}");
+  //   }
+  //   element.visitChildElements((visitor) => processElement(visitor, n: n + 1));
+  // }
 
-  @override
-  Future<void> capturePng(
-    final HelpersListModalPresenter presenter,
-    final HelpersListModalModel model,
-  ) async {
-    try {
-      RenderRepaintBoundary boundary =
-          widget.repaintBoundaryKey.currentContext.findRenderObject();
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+  // @override
+  // Future<void> capturePng(
+  //   final HelpersListModalPresenter presenter,
+  //   final HelpersListModalModel model,
+  // ) async {
+  //   try {
+  //     RenderRepaintBoundary boundary =
+  //         widget.repaintBoundaryKey.currentContext.findRenderObject();
+  //     ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+  //     ByteData byteData =
+  //         await image.toByteData(format: ui.ImageByteFormat.png);
 
-      presenter.setImage(byteData);
-    } catch (e) {
-      print('error while catching screenshot');
-      print(e);
-    }
-  }
+  //     presenter.setImage(byteData);
+  //   } catch (e) {
+  //     print('error while catching screenshot');
+  //     print(e);
+  //   }
+  // }
 
   @override
   Future<bool> openHelperCreationPage(

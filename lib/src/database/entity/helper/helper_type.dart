@@ -39,6 +39,9 @@ String getHelperTypeDescription(final HelperType helperType) {
     case HelperType.SIMPLE_HELPER:
       description = 'Overlayed bottom';
       break;
+    case HelperType.ANCHORED_OVERLAYED_HELPER:
+      description = 'Anchored';
+      break;  
     default:
   }
   return description;

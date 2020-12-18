@@ -33,7 +33,7 @@ mixin EditorNavigationMixin {
 
   Future closeEditor() async {
     Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
-    palEditModeStateService.showBubble(context, false);
+    palEditModeStateService.showBubble(context, true);
     palEditModeStateService.showHelpersList(context);
   }
 }

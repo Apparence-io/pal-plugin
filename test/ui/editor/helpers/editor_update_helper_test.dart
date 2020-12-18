@@ -15,6 +15,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_help
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
+import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
+import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import '../../../pal_test_utilities.dart';
 
@@ -177,6 +179,27 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Thanks my friend!'), findsOneWidget);
       expect(presenter.viewModel.thanksButton.text.value, 'Thanks my friend!');
+    });
+
+    testWidgets('tap on on field, tap on a second field => only one toolbar is shown', (WidgetTester tester) async {
+      await beforeEach(tester);
+      var textFinder = find.byType(EditableTextField);
+      var text1 = textFinder.evaluate().first.widget as EditableTextField;
+      var text2 = textFinder.evaluate().elementAt(1).widget as EditableTextField;
+      expect(find.byType(EditHelperToolbar), findsNothing);
+      // add new changelog line
+      var addChangelogButtonFinder = find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'));
+      await tester.tap(addChangelogButtonFinder);
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
+      expect(textFinder, findsNWidgets(3));
+
+      await tester.tap(find.byType(EditableTextField).first);
+      await tester.pump(Duration(seconds: 1));
+      expect(find.byType(EditHelperToolbar), findsOneWidget);
+
+      text2.toolbarVisibility.value = true;
+      await tester.pump(Duration(seconds: 1));
+      expect(find.byType(EditHelperToolbar), findsOneWidget);
     });
 
     test('HelperViewModel => transform to FullscreenHelperViewModel ', () {

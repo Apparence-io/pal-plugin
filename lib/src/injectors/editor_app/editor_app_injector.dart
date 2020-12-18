@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
-import 'package:pal/src/services/editor/finder/finder_service.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/editor/page/page_editor_service.dart';
 import 'package:pal/src/services/editor/project/app_icon_grabber_delegate.dart';
 import 'package:pal/src/services/editor/project/project_editor_service.dart';
 import 'package:pal/src/services/editor/project_gallery/project_gallery_editor_service.dart';
 import 'package:pal/src/services/editor/versions/version_editor_service.dart';
+import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 

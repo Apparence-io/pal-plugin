@@ -34,6 +34,11 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   @override
   void onInit() {
     this.viewModel.isKeyboardVisible = false;
+    viewModel.fields.forEach(
+      (field) => field.toolbarVisibility.addListener(
+        () => _onTextToolbarVisibilityChange(field)
+      )
+    );
   }
 
   @override
@@ -102,6 +107,7 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
+    viewInterface.closeColorPickerDialog();
     this.refreshView();
   }
 
@@ -143,6 +149,13 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
     textNotifier.text.value = newValue;
     _updateValidState();
+  }
+
+  _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
+    if(textNotifier.toolbarVisibility.value) {
+      viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
+        .forEach((element) => element.toolbarVisibility.value = false);
+    }
   }
 
   _updateValidState() => viewModel.canValidate.value = isValid();

@@ -56,7 +56,7 @@ flutter:
   # ONLY USEFUL FOR TEST
   # /!\ DO NOT ADD THIS ASSET ON YOUR APP
   assets:
-    - packages/pal/assets/images/logo.png
+#    - packages/pal/assets/images/logo.png
     - assets/images/posters/gump.png
     - assets/images/posters/joker.jpg
     - assets/images/posters/truman.png

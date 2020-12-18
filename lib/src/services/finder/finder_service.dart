@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
-import '../../../pal_navigator_observer.dart';
+import '../../pal_navigator_observer.dart';
+
 
 class FinderService {
 
@@ -31,10 +32,10 @@ class FinderService {
     var currentRoute = await observer.route.first;
     if(WidgetsBinding.instance.hasScheduledFrame) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        completer.complete(ElementFinder(currentRoute.subtreeContext).scan());
+        completer.complete(ElementFinder(currentRoute.subtreeContext).scan(debugMode: debugMode));
       });
     } else {
-      completer.complete(ElementFinder(currentRoute.subtreeContext).scan());
+      completer.complete(ElementFinder(currentRoute.subtreeContext).scan(debugMode: debugMode));
     }
     return completer.future;
   }

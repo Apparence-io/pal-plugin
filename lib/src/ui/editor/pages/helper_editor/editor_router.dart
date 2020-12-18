@@ -10,6 +10,7 @@ import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import '../../../../router.dart';
 import 'font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'font_editor/pickers/font_weight_picker/font_weight_picker.dart';
+import 'helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'helpers/editor_update_helper/editor_update_helper.dart';
@@ -37,21 +38,35 @@ class EditorRouter {
     WidgetBuilder builder;
     switch(model.selectedHelperType) {
       case HelperType.SIMPLE_HELPER:
-        builder = (context) => EditorSimpleHelperPage.create(
-          parameters: args,
-          helperViewModel: model.asHelperViewModel(),
+        builder = (context) => InnerEditorRouter(
+            child: EditorSimpleHelperPage.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
         );
         break;
       case HelperType.UPDATE_HELPER:
-        builder = (context) => EditorUpdateHelperPage.create(
-          parameters: args,
-          helperViewModel: model.asHelperViewModel(),
+        builder = (context) => InnerEditorRouter(
+            child: EditorUpdateHelperPage.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
         );
         break;
       case HelperType.HELPER_FULL_SCREEN:
-        builder = (context) => EditorFullScreenHelperPage.create(
-          parameters: args,
-          helperViewModel: model.asHelperViewModel(),
+        builder = (context) => InnerEditorRouter(
+            child: EditorFullScreenHelperPage.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
+        );
+        break;
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        builder = (context) => InnerEditorRouter(
+            child: EditorAnchoredFullscreenHelper.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
         );
         break;
       default:
@@ -87,6 +102,14 @@ class EditorRouter {
       case HelperType.HELPER_FULL_SCREEN:
         builder = (context) => InnerEditorRouter(
           child: EditorFullScreenHelperPage.edit(
+            parameters: args,
+            helperEntity: helperEntity,
+          ),
+        );
+        break;
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        builder = (context) => InnerEditorRouter(
+          child: EditorAnchoredFullscreenHelper.edit(
             parameters: args,
             helperEntity: helperEntity,
           ),
@@ -177,7 +200,7 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath> wit
           default:
             return MaterialPageRoute(
               builder: (context) => child,
-              maintainState: true
+              maintainState: true,
             );
         }
       },

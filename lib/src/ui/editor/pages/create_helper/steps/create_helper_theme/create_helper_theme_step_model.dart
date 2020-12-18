@@ -21,7 +21,7 @@ class CreateHelperThemeStepModel {
   static final Map<HelperType, List<PreviewThemeCard>> cards = {
     HelperType.HELPER_FULL_SCREEN: [
       PreviewThemeCard(
-        'packages/pal/assets/images/create_helper/themes/black/helper_theme_black_fullscreen.png',
+        'assets/images/create_helper/themes/black/helper_theme_black_fullscreen.png',
         'Blacked fullscreen',
         'A classy pre-configured black fullscreen theme for your helpers.',
         HelperTheme.BLACK,
@@ -29,7 +29,7 @@ class CreateHelperThemeStepModel {
     ],
     HelperType.SIMPLE_HELPER: [
       PreviewThemeCard(
-        'packages/pal/assets/images/create_helper/themes/black/helper_theme_black_simple.png',
+        'assets/images/create_helper/themes/black/helper_theme_black_simple.png',
         'Basic black box',
         'This will show a customizable box on the screen containing your helper text',
         HelperTheme.BLACK,
@@ -37,11 +37,19 @@ class CreateHelperThemeStepModel {
     ],
     HelperType.UPDATE_HELPER: [
       PreviewThemeCard(
-        'packages/pal/assets/images/create_helper/themes/black/helper_theme_black_update.png',
+        'assets/images/create_helper/themes/black/helper_theme_black_update.png',
         'Blacked update overlay',
         'A shiny black update overlay. Try to explain your update to your user with maximum 3 points to be sure they read it !',
         HelperTheme.BLACK,
       ),
     ],
+    HelperType.ANCHORED_OVERLAYED_HELPER: [
+      PreviewThemeCard(
+        'assets/images/create_helper/themes/black/helper_theme_black_anchored.png',
+        'Material style',
+        'Explain any element of your page using a material style round anchor. ',
+        HelperTheme.BLACK,
+      ),
+    ]
   };
 }

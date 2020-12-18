@@ -14,6 +14,8 @@ class TextFormFieldNotifier {
   ValueNotifier<Color> backgroundColor;
   ValueNotifier<Color> borderColor;
   ValueNotifier<int> fontSize;
+  FocusNode focusNode;
+  ValueNotifier<bool> toolbarVisibility;
 
   TextFormFieldNotifier({
     int id,
@@ -29,12 +31,14 @@ class TextFormFieldNotifier {
     this.id = id;
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);
+    this.toolbarVisibility = ValueNotifier(false);
     this.fontFamily = ValueNotifier(fontFamily ?? 'Montserrat');
     this.fontWeight = ValueNotifier(fontWeight ?? FontWeightMapper.toFontKey(FontWeight.normal));
     this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
     this.borderColor = ValueNotifier(borderColor);
     this.fontSize = ValueNotifier(fontSize ?? 14);
     this.hintText = hintText ?? text;
+    this.focusNode = FocusNode();
   }
 }
 
@@ -70,13 +74,14 @@ class LanguageNotifier {
 
 class BoxNotifier {
   int id;
+  String key;
   ValueNotifier<Color> backgroundColor;
 
   BoxNotifier({
-    int id,
-    Color backgroundColor
+    this.id,
+    this.key,
+    Color backgroundColor,
   }) {
-    this.id = id;
     this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
   }
 }

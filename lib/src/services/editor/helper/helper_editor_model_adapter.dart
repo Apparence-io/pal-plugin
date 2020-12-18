@@ -37,13 +37,24 @@ class HelperEditorAdapter {
       ..helperImages = args.headerMedia?.url != null && args.headerMedia.url.isNotEmpty ?
         [_parseHelperImage(UpdatescreenHelperKeys.IMAGE_KEY, args.headerMedia)]:[];
 
+
+  static HelperEntity parseAnchoredHelper(CreateAnchoredHelper args, int minVersionId, int maxVersionId)
+    => _parseConfig(args.config, HelperType.ANCHORED_OVERLAYED_HELPER, minVersionId, maxVersionId)
+      ..helperTexts = [
+        _parseHelperText(AnchoredscreenHelperKeys.TITLE_KEY, args.title),
+        _parseHelperText(AnchoredscreenHelperKeys.DESCRIPTION_KEY, args.description),
+        _parseHelperText(AnchoredscreenHelperKeys.POSITIV_KEY, args.positivButton),
+        _parseHelperText(AnchoredscreenHelperKeys.NEGATIV_KEY, args.negativButton),
+      ]
+      ..helperBoxes =  [_parseHelperBox(args.bodyBox.key, args.bodyBox)];
+
   //-------------------------------------------------------------
   //-------------------------------------------------------------
   
   static HelperBoxEntity _parseHelperBox(String key, HelperBoxConfig boxConfig) {
     return HelperBoxEntity(
         id: boxConfig?.id,
-        key: SimpleHelperKeys.BACKGROUND_KEY,
+        key: key,
         backgroundColor: boxConfig?.color,
       );
   }

@@ -28,6 +28,13 @@ class UpdatescreenHelperKeys {
   static const BACKGROUND_KEY = "BACKGROUND_KEY"; // mandatory
 }
 
+class AnchoredscreenHelperKeys {
+  static const TITLE_KEY = "TITLE_KEY"; // mandatory
+  static const DESCRIPTION_KEY = "DESCRIPTION_KEY"; // mandatory
+  static const POSITIV_KEY = "POSITIV_KEY"; // not mandatory
+  static const NEGATIV_KEY = "NEGATIV_KEY"; // not mandatory
+}
+
 class HelperSharedFactory {
   static HelperTextViewModel parseTextLabel(
     final String key,

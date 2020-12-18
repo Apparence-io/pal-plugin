@@ -190,20 +190,21 @@ class HomePage extends StatelessWidget implements HomeView {
         BottomNavigationBarItem(
           icon: Icon(
             Icons.home,
+            key: ValueKey("homeIcon"),
             color: Colors.blueGrey,
           ),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.business),
+          icon: Icon(Icons.business, key: ValueKey("BusinessIcon"),),
           label: 'Business',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.school),
+          icon: Icon(Icons.school, key: ValueKey("SchoolIcon"),),
           label: 'School',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle_rounded),
+          icon: Icon(Icons.account_circle_rounded, key: ValueKey("ProfileIcon")),
           label: 'Profile',
         ),
       ],

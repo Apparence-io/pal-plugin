@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
@@ -30,7 +29,6 @@ class HelperOrchestrator {
   OverlayEntry overlay;
 
   bool hasSync;
-
 
   factory HelperOrchestrator.getInstance({
     GlobalKey<NavigatorState> navigatorKey,
@@ -104,14 +102,18 @@ class HelperOrchestrator {
   // for now we show only one helper from the group / next version will allow to show a group
   showHelper(final HelperGroupEntity helperGroup, final String inAppUserId, final String pageId) {
     OverlayEntry entry = OverlayEntry(
-        opaque: false,
-        builder: (context) => PalTheme(
-              theme: PalThemeData.light(),
-              child: HelperFactory.build(helperGroup.helpers[0], onTrigger: (res) async {
-                await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, res);
-                this.popHelper();
-              }),
-            ));
+      opaque: false,
+      builder: (context) => PalTheme(
+        theme: PalThemeData.light(),
+        child: HelperFactory.build(
+          helperGroup.helpers[0], 
+          onTrigger: (res) async {
+            await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, res);
+            this.popHelper();
+          },
+          onError: this.popHelper
+        ),
+    ));
     var overlay = navigatorKey.currentState.overlay;
     // If there is already an helper, remove it and show the next one (useful when we change page fastly)
     if (this.overlay != null) {

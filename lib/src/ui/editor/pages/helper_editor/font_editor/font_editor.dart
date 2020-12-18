@@ -12,18 +12,22 @@ typedef OnCancelPicker = void Function();
 
 typedef OnValidatePicker = void Function();
 
+typedef OnFontModified = Future Function(TextStyle, FontKeys);
+
 abstract class FontEditorDialogView {
+
   Future<String> openFontFamilyPicker(
     BuildContext context,
     FontKeys fontKeys,
   );
+
   Future<MapEntry<String, FontWeight>> openFontWeightPicker(
     BuildContext context,
     FontKeys fontKeys,
   );
+
   TextStyle defaultTextFieldPreviewColor();
 }
-
 
 
 class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogView {
@@ -36,7 +40,7 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
 
   final String fontFamilyKey;
 
-  final Function(TextStyle, FontKeys) onFontModified;
+  final OnFontModified onFontModified;
 
   FontEditorDialogPage({
     Key key,
@@ -151,15 +155,15 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
             fontWeight: FontWeight.bold,
           ),
         ),
-        onPressed: () {
+        onPressed: () async {
           HapticFeedback.selectionClick();
+          onValidatePicker();
           if (onFontModified != null) {
-            onFontModified(
+            await onFontModified(
               model.modifiedTextStyle.merge(TextStyle(color: actualTextStyle.color)),
               model.fontKeys,
             );
           }
-          onValidatePicker();
         },
       ),
     ];

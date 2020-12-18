@@ -38,10 +38,10 @@ Future initAppWithPal(
     editorModeEnabled: editorModeEnabled,
     childApp: new MaterialApp(
       onGenerateRoute: routeFactory ??
-          (_) => MaterialPageRoute(builder: (ctx) {
-                context = ctx;
-                return userApp;
-              }),
+        (_) => MaterialPageRoute(builder: (ctx) {
+          context = ctx;
+          return userApp;
+        }),
       navigatorKey: navigatorKey,
       navigatorObservers: [PalNavigatorObserver.instance()],
     ),
@@ -58,9 +58,11 @@ Future pumpHelperWidget(
   HelperTriggerType triggerType,
   HelperType type,
   HelperTheme theme,
-  { EditorHelperService editorHelperService,
+  { 
+    EditorHelperService editorHelperService,
     PalEditModeStateService palEditModeStateService,
-    HelperEntity helperEntity }
+    HelperEntity helperEntity, 
+  }
 ) async {
   // push helper editor page
   HelperEditorPageArguments args = HelperEditorPageArguments(
@@ -72,6 +74,9 @@ Future pumpHelperWidget(
     triggerType: triggerType,
     helperType: type,
     helperTheme: theme,
+    priority: 1,
+    maxVersionCode: "1.0.0",
+    minVersionCode: "1.0.0",
   );
   // CREATE AN EDITOR FACTORY
   var _elementFinder = ElementFinder(navigatorKey.currentContext);
@@ -102,6 +107,14 @@ Future pumpHelperWidget(
           helperService: editorHelperService,
         );
         break;
+      case HelperType.ANCHORED_OVERLAYED_HELPER:
+        builder = (context) => EditorAnchoredFullscreenHelper.edit(
+          parameters: args,
+          helperEntity: helperEntity,
+          palEditModeStateService: palEditModeStateService,
+          helperService: editorHelperService,
+        );
+        break;  
       default:
         throw 'HELPER TYPE NOT HANDLED';
     }

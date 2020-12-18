@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
-import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
-import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
-import 'package:pal/src/ui/shared/helper_shared_factory.dart';
-import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
+
+import 'helper_editor_notifiers.dart';
 
 class HelperEditorViewModel extends MVVMModel {
   bool enableSave;

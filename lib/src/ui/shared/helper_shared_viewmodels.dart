@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 class HelperTextViewModel {
   int id;
+  String key;
   String text;
   Color fontColor;
   double fontSize;
@@ -11,6 +12,7 @@ class HelperTextViewModel {
   HelperTextViewModel({
     this.id,
     this.text,
+    this.key,
     @required this.fontColor,
     @required this.fontSize,
     this.fontFamily,

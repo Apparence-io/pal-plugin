@@ -15,11 +15,11 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
+import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 import '../../../pal_test_utilities.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
@@ -149,6 +149,25 @@ void main() {
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
       expect(presenter.viewModel.bodyBox.backgroundColor.value, Color(0xFFFFFFFF),);
+    });
+
+    testWidgets('tap on on field, tap on a second field => only one toolbar is shown', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      var textFinder = find.byType(EditableTextField);
+      var text1 = textFinder.evaluate().first.widget as EditableTextField;
+      var text2 = textFinder.evaluate().elementAt(1).widget as EditableTextField;
+      expect(find.byType(EditHelperToolbar), findsNothing);
+      expect(textFinder, findsNWidgets(4));
+
+      await tester.tap(find.byType(EditableTextField).first);
+      await tester.pump(Duration(seconds: 1));
+      expect(find.byType(EditHelperToolbar), findsOneWidget);
+
+      text2.toolbarVisibility.value = true;
+      await tester.pump(Duration(seconds: 1));
+      expect(find.byType(EditHelperToolbar), findsOneWidget);
+      
+      await tester.pump(Duration(seconds: 1));
     });
 
     test('HelperViewModel => transform to FullscreenHelperViewModel ', () {

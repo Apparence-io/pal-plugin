@@ -41,6 +41,7 @@ class EditHelperToolbar extends StatelessWidget {
     Function onChangeTextFont,
     Function onChangeTextColor,
     Function onClose,
+    List<ToolbarAction> extraActions,
     num bottomPadding = 8.0,
   }) {
     return EditHelperToolbar(
@@ -48,6 +49,7 @@ class EditHelperToolbar extends StatelessWidget {
       onChangeTextColor: onChangeTextColor,
       onCloseTap: onClose,
       bottomPadding: bottomPadding,
+      extraActions: extraActions,
     );
   }
 

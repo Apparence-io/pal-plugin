@@ -14,6 +14,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart'
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
+import 'dialog_editable_textfield.dart';
+
 enum ToolbarType { text, border }
 
 typedef OnFieldChanged(String id, String value);
@@ -21,6 +23,7 @@ typedef OnFieldChanged(String id, String value);
 typedef OnFocusChange = void Function(bool hasFocus);
 
 typedef OnTextStyleChanged(String id, TextStyle style, FontKeys fontkeys);
+
 
 // TODO move to TextStyle extension
 TextStyle _googleCustomFont(String fontFamily) {
@@ -262,11 +265,13 @@ class _EditableTextFieldState extends State<EditableTextField> {
   StreamSubscription _outsideSub;
   TextStyle _textStyle;
   String _fontFamilyKey;
+  TextEditingController textEditingController;
 
   @override
   void initState() {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
+    textEditingController = TextEditingController.fromValue(TextEditingValue(text: widget.initialValue ?? ""));
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);
     _fontFamilyKey = widget.fontFamilyKey ?? 'Montserrat';
@@ -306,6 +311,8 @@ class _EditableTextFieldState extends State<EditableTextField> {
                 child: Padding(
                   padding: widget.textFormFieldPadding ?? EdgeInsets.zero,
                   child: TextFormField(
+                    controller: textEditingController,
+                    enableInteractiveSelection: false,
                     key: widget.textFormFieldKey,
                     autovalidateMode: widget.autovalidate,
                     focusNode: _focusNode,
@@ -335,7 +342,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
                       }
                       return error;
                     },
-                    initialValue: widget.initialValue,
                     keyboardType: widget.keyboardType,
                     maxLines: widget.maxLines ?? 1,
                     minLines: 1,
@@ -375,6 +381,11 @@ class _EditableTextFieldState extends State<EditableTextField> {
           onChangeTextColor: _onChangeTextColor,
           onChangeTextFont: _onChangeTextFont,
           onClose: _onClose,
+          extraActions: [
+            ToolbarAction(
+              ValueKey("editTextAction_${widget.id ?? widget.textFormFieldKey.toString()}"),
+              _changeValue, Icons.edit)
+          ],
         );
         break;
       case ToolbarType.border:
@@ -393,9 +404,21 @@ class _EditableTextFieldState extends State<EditableTextField> {
 
   // Textfield stuff
   _onTextFieldTapped() {
-    _focusNode.requestFocus();
+    // _focusNode.requestFocus();
+    FocusScope.of(context).requestFocus(new FocusNode());
     setState(() {
       _isToolbarVisible = true;
+    });
+  }
+
+  _changeValue() {
+    showDialog(
+      context: _focusNode.context,
+      builder: (context) => EditableTextDialog(textEditingController.text)
+    ).then((value) {
+      setState(() {
+        textEditingController.text = value;
+      });
     });
   }
 

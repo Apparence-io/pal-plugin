@@ -33,7 +33,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     assert(finderService != null, 'A finder service must be provided');
     if(viewModel.id == null) {
       viewModel.titleField.text.value = "My helper title";
-      viewModel.descriptionField.text.value = "Lorem ipsum lorem ipsum lorem ipsum";
+      viewModel.descriptionField.text.value = "Describe your element here";
     } 
     viewModel.userPageElements = Map();
     viewModel.canValidate = new ValueNotifier(false);

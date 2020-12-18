@@ -211,57 +211,6 @@ class EditableTextField extends StatefulWidget {
     )
   );
 
-  // factory EditableTextField.border({
-  //   Key key,
-  //   final String id,
-  //   final Key textFormFieldKey,
-  //   final Key backgroundContainerKey,
-  //   final Key helperToolbarKey,
-  //   final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
-  //   final BoxDecoration backgroundBoxDecoration,
-  //   final EdgeInsetsGeometry backgroundPadding,
-  //   final EdgeInsetsGeometry textFormFieldPadding,
-  //   final String Function(String) validator,
-  //   final Function(String, String) onChanged,
-  //   final Function(String, TextStyle, FontKeys) onTextStyleChanged,
-  //   final TextInputType keyboardType,
-  //   final TextStyle textStyle,
-  //   final int maxLines = 1,
-  //   final int maximumCharacterLength,
-  //   final int minimumCharacterLength,
-  //   final String hintText = 'Edit me!',
-  //   final List<TextInputFormatter> inputFormatters,
-  //   final Stream<bool> outsideTapStream,
-  //   final String initialValue,
-  //   final String fontFamilyKey,
-  // }) {
-  //   return EditableTextField(
-  //     key: key,
-  //     id: id,
-  //     textFormFieldKey: textFormFieldKey,
-  //     toolbarVisibility: textNotifier?.toolbarVisibility,
-  //     backgroundContainerKey: backgroundContainerKey,
-  //     helperToolbarKey: helperToolbarKey,
-  //     outsideTapStream: outsideTapStream,
-  //     maximumCharacterLength: maximumCharacterLength,
-  //     minimumCharacterLength: minimumCharacterLength,
-  //     onChanged: onChanged,
-  //     onTextStyleChanged: onTextStyleChanged,
-  //     autovalidate: autovalidate,
-  //     backgroundPadding: backgroundPadding,
-  //     textFormFieldPadding: textFormFieldPadding,
-  //     backgroundBoxDecoration: backgroundBoxDecoration,
-  //     maxLines: maxLines,
-  //     inputFormatters: inputFormatters,
-  //     hintText: hintText,
-  //     keyboardType: keyboardType,
-  //     textStyle: textStyle,
-  //     toolbarType: ToolbarType.border,
-  //     initialValue: initialValue,
-  //     fontFamilyKey: fontFamilyKey,
-  //   );
-  // }
-
   @override
   _EditableTextFieldState createState() => _EditableTextFieldState();
 }

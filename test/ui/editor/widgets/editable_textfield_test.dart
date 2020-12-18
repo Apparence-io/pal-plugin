@@ -29,6 +29,7 @@ void main() {
             child: EditableTextField.text(
               onChanged: onFieldChanged,
               onTextStyleChanged: onTextStyleChanged,
+              toolbarVisibility: ValueNotifier(false),
               maxLines: 5,
             ),
           ))
@@ -49,6 +50,7 @@ void main() {
             child: EditableTextField.text(
               onChanged: onFieldChanged,
               onTextStyleChanged: onTextStyleChanged,
+              toolbarVisibility: ValueNotifier(false),
               maxLines: 5,
             ),
           ))
@@ -70,6 +72,7 @@ void main() {
             child: EditableTextField.text(
               onChanged: onFieldChanged,
               onTextStyleChanged: onTextStyleChanged,
+              toolbarVisibility: ValueNotifier(false),
               maxLines: 5,
               maximumCharacterLength: 10,
               minimumCharacterLength: 2,

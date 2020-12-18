@@ -153,6 +153,13 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
     );
   }
 
+  List<TextFormFieldNotifier> get fields => [
+    titleField,
+    descriptionField,
+    positivBtnField,
+    negativBtnField
+  ];
+
 }
 
 class WidgetElementModel {

@@ -166,6 +166,8 @@ void main() {
       text2.toolbarVisibility.value = true;
       await tester.pump(Duration(seconds: 1));
       expect(find.byType(EditHelperToolbar), findsOneWidget);
+      
+      await tester.pump(Duration(seconds: 1));
     });
 
     test('HelperViewModel => transform to FullscreenHelperViewModel ', () {

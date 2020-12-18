@@ -98,6 +98,11 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+## 🎥&nbsp; Videos
+
+- [Pal introduction](https://www.youtube.com/watch?v=RIeeTG928Rc)
+- [How to setup Pal](https://www.youtube.com/watch?v=THJr3ZfFHv8)
+
 ## ✨&nbsp; Parameters
 
 | Param | Type  | Description | Required | Default |

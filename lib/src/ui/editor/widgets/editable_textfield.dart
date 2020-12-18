@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pal/src/router.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
-import 'package:pal/src/ui/shared/widgets/overlayed.dart';
+
 
 import 'dialog_editable_textfield.dart';
 
@@ -60,6 +59,7 @@ class EditableTextField extends StatefulWidget {
   final String fontFamilyKey;
   final FocusNode focusNode;
   final OnFocusChange onFocusChange;
+  final ValueNotifier<bool> toolbarVisibility;
 
   EditableTextField({
     Key key,
@@ -85,6 +85,7 @@ class EditableTextField extends StatefulWidget {
     this.focusNode,
     this.onFocusChange,
     this.toolbarType = ToolbarType.text,
+    this.toolbarVisibility,
     @required this.textStyle,
   }) : super();
 
@@ -92,6 +93,7 @@ class EditableTextField extends StatefulWidget {
     Key key,
     final String id,
     final Key textFormFieldKey,
+    final ValueNotifier<bool> toolbarVisibility,
     final Key backgroundContainerKey,
     final Key helperToolbarKey,
     final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
@@ -139,6 +141,7 @@ class EditableTextField extends StatefulWidget {
       focusNode: focusNode,
       initialValue: initialValue,
       onFocusChange: onFocusChange,
+      toolbarVisibility: toolbarVisibility
     );
   }
 
@@ -149,6 +152,7 @@ class EditableTextField extends StatefulWidget {
     OnTextStyleChanged onTextStyleChanged,
     { Key helperToolbarKey,
       Key textFormFieldKey,
+      String id,
       TextStyle baseStyle,
       int minimumCharacterLength = 1,
       int maximumCharacterLength = 255,
@@ -156,6 +160,7 @@ class EditableTextField extends StatefulWidget {
       OnFocusChange onFocusChange,
       BoxDecoration backgroundDecoration})
   => EditableTextField.text(
+    id: id,
     backgroundBoxDecoration: backgroundDecoration,
     outsideTapStream: outsideTapStream,
     helperToolbarKey: helperToolbarKey,
@@ -165,6 +170,7 @@ class EditableTextField extends StatefulWidget {
     maximumCharacterLength: maximumCharacterLength,
     minimumCharacterLength: minimumCharacterLength,
     maxLines: maxLines,
+    toolbarVisibility: textNotifier?.toolbarVisibility,
     fontFamilyKey: textNotifier?.fontFamily?.value,
     initialValue: textNotifier?.text?.value,
     focusNode: textNotifier.focusNode,
@@ -205,62 +211,64 @@ class EditableTextField extends StatefulWidget {
     )
   );
 
-  factory EditableTextField.border({
-    Key key,
-    final String id,
-    final Key textFormFieldKey,
-    final Key backgroundContainerKey,
-    final Key helperToolbarKey,
-    final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
-    final BoxDecoration backgroundBoxDecoration,
-    final EdgeInsetsGeometry backgroundPadding,
-    final EdgeInsetsGeometry textFormFieldPadding,
-    final String Function(String) validator,
-    final Function(String, String) onChanged,
-    final Function(String, TextStyle, FontKeys) onTextStyleChanged,
-    final TextInputType keyboardType,
-    final TextStyle textStyle,
-    final int maxLines = 1,
-    final int maximumCharacterLength,
-    final int minimumCharacterLength,
-    final String hintText = 'Edit me!',
-    final List<TextInputFormatter> inputFormatters,
-    final Stream<bool> outsideTapStream,
-    final String initialValue,
-    final String fontFamilyKey,
-  }) {
-    return EditableTextField(
-      key: key,
-      id: id,
-      textFormFieldKey: textFormFieldKey,
-      backgroundContainerKey: backgroundContainerKey,
-      helperToolbarKey: helperToolbarKey,
-      outsideTapStream: outsideTapStream,
-      maximumCharacterLength: maximumCharacterLength,
-      minimumCharacterLength: minimumCharacterLength,
-      onChanged: onChanged,
-      onTextStyleChanged: onTextStyleChanged,
-      autovalidate: autovalidate,
-      backgroundPadding: backgroundPadding,
-      textFormFieldPadding: textFormFieldPadding,
-      backgroundBoxDecoration: backgroundBoxDecoration,
-      maxLines: maxLines,
-      inputFormatters: inputFormatters,
-      hintText: hintText,
-      keyboardType: keyboardType,
-      textStyle: textStyle,
-      toolbarType: ToolbarType.border,
-      initialValue: initialValue,
-      fontFamilyKey: fontFamilyKey,
-    );
-  }
+  // factory EditableTextField.border({
+  //   Key key,
+  //   final String id,
+  //   final Key textFormFieldKey,
+  //   final Key backgroundContainerKey,
+  //   final Key helperToolbarKey,
+  //   final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
+  //   final BoxDecoration backgroundBoxDecoration,
+  //   final EdgeInsetsGeometry backgroundPadding,
+  //   final EdgeInsetsGeometry textFormFieldPadding,
+  //   final String Function(String) validator,
+  //   final Function(String, String) onChanged,
+  //   final Function(String, TextStyle, FontKeys) onTextStyleChanged,
+  //   final TextInputType keyboardType,
+  //   final TextStyle textStyle,
+  //   final int maxLines = 1,
+  //   final int maximumCharacterLength,
+  //   final int minimumCharacterLength,
+  //   final String hintText = 'Edit me!',
+  //   final List<TextInputFormatter> inputFormatters,
+  //   final Stream<bool> outsideTapStream,
+  //   final String initialValue,
+  //   final String fontFamilyKey,
+  // }) {
+  //   return EditableTextField(
+  //     key: key,
+  //     id: id,
+  //     textFormFieldKey: textFormFieldKey,
+  //     toolbarVisibility: textNotifier?.toolbarVisibility,
+  //     backgroundContainerKey: backgroundContainerKey,
+  //     helperToolbarKey: helperToolbarKey,
+  //     outsideTapStream: outsideTapStream,
+  //     maximumCharacterLength: maximumCharacterLength,
+  //     minimumCharacterLength: minimumCharacterLength,
+  //     onChanged: onChanged,
+  //     onTextStyleChanged: onTextStyleChanged,
+  //     autovalidate: autovalidate,
+  //     backgroundPadding: backgroundPadding,
+  //     textFormFieldPadding: textFormFieldPadding,
+  //     backgroundBoxDecoration: backgroundBoxDecoration,
+  //     maxLines: maxLines,
+  //     inputFormatters: inputFormatters,
+  //     hintText: hintText,
+  //     keyboardType: keyboardType,
+  //     textStyle: textStyle,
+  //     toolbarType: ToolbarType.border,
+  //     initialValue: initialValue,
+  //     fontFamilyKey: fontFamilyKey,
+  //   );
+  // }
 
   @override
   _EditableTextFieldState createState() => _EditableTextFieldState();
 }
 
 class _EditableTextFieldState extends State<EditableTextField> {
-  bool _isToolbarVisible = false;
+
+  // bool _isToolbarVisible = false;
   FocusNode _focusNode;
   StreamSubscription _outsideSub;
   TextStyle _textStyle;
@@ -297,7 +305,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
       padding: const EdgeInsets.all(1.0),
       child: Column(
         children: [
-          if (_isToolbarVisible) _buildToolbar(widget.toolbarType),
+          _buildToolbar(widget.toolbarType),
           Padding(
             // FIXME: This is used to show element even if keyboard is shown
             // should be better to find a way to not use it :/
@@ -317,13 +325,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
                     autovalidateMode: widget.autovalidate,
                     focusNode: _focusNode,
                     onTap: _onTextFieldTapped,
-                    onChanged: (String newValue) {
-                      if (widget.onChanged != null) {
-                        widget.onChanged(
-                            widget.id ?? widget.textFormFieldKey.toString(),
-                            newValue);
-                      }
-                    },
+                    onChanged: _onChanged,
                     validator: (String value) {
                       String error;
                       if (widget.minimumCharacterLength != null) {
@@ -372,6 +374,26 @@ class _EditableTextFieldState extends State<EditableTextField> {
     );
   }
 
+  void _changeValue() {
+    showDialog(
+      context: _focusNode.context,
+      builder: (context) => EditableTextDialog(textEditingController.text)
+    ).then((value) {
+      _onChanged(value);
+      setState(() {
+        textEditingController.text = value;
+      });
+    });
+  }
+
+  void _onChanged(String newValue) {
+    if (widget.onChanged != null) {
+      widget.onChanged(
+          widget.id ?? widget.textFormFieldKey.toString(),
+          newValue);
+    }
+  }
+
   _buildToolbar(ToolbarType toolbarType) {
     Widget toolbar;
     switch (toolbarType) {
@@ -399,27 +421,17 @@ class _EditableTextFieldState extends State<EditableTextField> {
         break;
       default:
     }
-    return toolbar;
+    return ValueListenableBuilder(
+      valueListenable: widget.toolbarVisibility,
+      builder: (context, visible, child) => visible ? child : Container(),
+      child: toolbar
+    );
   }
 
   // Textfield stuff
   _onTextFieldTapped() {
-    // _focusNode.requestFocus();
     FocusScope.of(context).requestFocus(new FocusNode());
-    setState(() {
-      _isToolbarVisible = true;
-    });
-  }
-
-  _changeValue() {
-    showDialog(
-      context: _focusNode.context,
-      builder: (context) => EditableTextDialog(textEditingController.text)
-    ).then((value) {
-      setState(() {
-        textEditingController.text = value;
-      });
-    });
+    widget.toolbarVisibility.value = true;
   }
 
   _onFocusChange() {
@@ -427,26 +439,24 @@ class _EditableTextFieldState extends State<EditableTextField> {
       widget.onFocusChange(_focusNode.hasFocus);
     }
     if (!_focusNode.hasFocus) {
-      setState(() {
-        _isToolbarVisible = false;
-      });
+      widget.toolbarVisibility.value = false;
     }
   }
 
   _onFieldSubmitted(String newValue) => _onClose();
 
-  _onChangeTextFont() {
+  Future _onChangeTextFont() async {
     var widgetBuilder = (context) => FontEditorDialogPage(
       onCancelPicker: () => Navigator.of(context).pop(),
       onValidatePicker: () => Navigator.of(context).pop(),
       actualTextStyle: _textStyle,
       fontFamilyKey: _fontFamilyKey,
-      onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) {
+      onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) async {
         setState(() {
           _textStyle = _textStyle.merge(
             newTextStyle,
           );
-          _isToolbarVisible = true;
+          widget.toolbarVisibility.value = true;
         });
 
         if (fontKeys?.fontFamilyNameKey != null &&
@@ -462,7 +472,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
         }
       },
     );
-    showDialog(context: context, builder: widgetBuilder);
+    await showDialog(context: context, builder: widgetBuilder);
   }
 
   _onChangeTextColor() {
@@ -474,7 +484,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
           _textStyle = _textStyle.merge(TextStyle(
             color: newColor,
           ));
-          _isToolbarVisible = true;
+          widget.toolbarVisibility.value = true;
         });
         if (widget.onTextStyleChanged != null) {
           widget.onTextStyleChanged(
@@ -493,8 +503,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
 
   _onClose() {
     _focusNode.unfocus();
-    setState(() {
-      _isToolbarVisible = false;
-    });
+    widget.toolbarVisibility.value = false;
   }
 }

@@ -15,6 +15,7 @@ class TextFormFieldNotifier {
   ValueNotifier<Color> borderColor;
   ValueNotifier<int> fontSize;
   FocusNode focusNode;
+  ValueNotifier<bool> toolbarVisibility;
 
   TextFormFieldNotifier({
     int id,
@@ -30,6 +31,7 @@ class TextFormFieldNotifier {
     this.id = id;
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);
+    this.toolbarVisibility = ValueNotifier(false);
     this.fontFamily = ValueNotifier(fontFamily ?? 'Montserrat');
     this.fontWeight = ValueNotifier(fontWeight ?? FontWeightMapper.toFontKey(FontWeight.normal));
     this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);

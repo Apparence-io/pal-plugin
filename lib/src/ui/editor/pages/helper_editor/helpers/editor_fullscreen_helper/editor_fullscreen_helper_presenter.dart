@@ -29,10 +29,12 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     this.viewModel.helperOpacity = 1;
     this.viewModel.canValidate = new ValueNotifier(false);
     this.viewModel.editableTextFieldController = StreamController<bool>.broadcast();
+    print("on construct");
   }
 
   @override
   void onInit() {
+    print("on init");
     super.onInit();
   }
 

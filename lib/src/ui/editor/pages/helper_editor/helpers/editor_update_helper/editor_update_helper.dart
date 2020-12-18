@@ -189,7 +189,12 @@ class EditorUpdateHelperPage extends StatelessWidget {
                     url: viewModel.media?.url?.value,
                   ),
                   SizedBox(height: 40),
-                  _buildTitleField(context, presenter, viewModel),
+                  EditableTextField.fromNotifier(
+                    presenter.editableTextFieldController.stream, 
+                    viewModel.titleField, 
+                    presenter.onTitleFieldChanged, 
+                    presenter.onTitleTextStyleChanged
+                  ),
                   SizedBox(height: 25.0),
                   _buildChangelogFields(context, presenter, viewModel),
                 ],
@@ -208,38 +213,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
       ),
     ];
 
-  Widget _buildTitleField(
-    final BuildContext context,
-    final EditorUpdateHelperPresenter presenter,
-    final UpdateHelperViewModel viewModel,
-  ) {
-    return EditableTextField.text(
-      helperToolbarKey: ValueKey(
-        'pal_EditorUpdateHelperWidget_TitleToolbar',
-      ),
-      textFormFieldKey: ValueKey(
-        'pal_EditorUpdateHelperWidget_TitleField',
-      ),
-      hintText: viewModel.titleField?.hintText,
-      onChanged: presenter.onTitleFieldChanged,
-      onTextStyleChanged: presenter.onTitleTextStyleChanged,
-      validator: presenter.validateTitleTextField,
-      autovalidate: AutovalidateMode.disabled,
-      maximumCharacterLength: 60,
-      minimumCharacterLength: 1,
-      fontFamilyKey: viewModel?.titleField?.fontFamily?.value,
-      outsideTapStream: presenter.editableTextFieldController.stream,
-      initialValue: viewModel?.titleField?.text?.value,
-      textStyle: TextStyle(
-        color: viewModel.titleField?.fontColor?.value,
-        fontSize: viewModel.titleField?.fontSize?.value?.toDouble(),
-        fontWeight: FontWeightMapper.toFontWeight(
-          viewModel.titleField?.fontWeight?.value,
-        ),
-      ).merge(googleCustomFont(viewModel.titleField?.fontFamily?.value)),
-    );
-  }
-
   Widget _buildChangelogFields(
     final BuildContext context,
     final EditorUpdateHelperPresenter presenter,
@@ -247,13 +220,15 @@ class EditorUpdateHelperPage extends StatelessWidget {
   ) {
     List<Widget> changelogsTextfieldWidgets = List();
     viewmodel.changelogsFields.forEach((key, field) {
-      changelogsTextfieldWidgets.add(editableField(
-        presenter.editableTextFieldController.stream,
-        field,
-        presenter.onChangelogTextChanged,
-        presenter.onChangelogTextStyleFieldChanged,
-        id: key
-      ));
+      changelogsTextfieldWidgets.add(
+        EditableTextField.fromNotifier(
+          presenter.editableTextFieldController.stream,
+          field,
+          presenter.onChangelogTextChanged,
+          presenter.onChangelogTextStyleFieldChanged,
+          id: key,
+        )
+      );
     });
     return Column(
       children: [
@@ -298,6 +273,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
         onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
         hintText: viewModel.thanksButton?.hintText,
         maximumCharacterLength: 25,
+        toolbarVisibility: viewModel?.thanksButton?.toolbarVisibility,
         fontFamilyKey: viewModel?.thanksButton?.fontFamily?.value,
         initialValue: viewModel?.thanksButton?.text?.value,
         backgroundBoxDecoration: BoxDecoration(
@@ -312,8 +288,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
       ),
     );
   }
-
-
 
   EditableTextField editableField(
     Stream<bool> outsideTapStream,

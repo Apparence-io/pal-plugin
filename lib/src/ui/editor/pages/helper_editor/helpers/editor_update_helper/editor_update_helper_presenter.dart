@@ -102,6 +102,7 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
+    viewInterface.closeColorPickerDialog();
     this.refreshView();
   }
 

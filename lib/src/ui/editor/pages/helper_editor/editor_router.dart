@@ -38,27 +38,35 @@ class EditorRouter {
     WidgetBuilder builder;
     switch(model.selectedHelperType) {
       case HelperType.SIMPLE_HELPER:
-        builder = (context) => EditorSimpleHelperPage.create(
-          parameters: args,
-          helperViewModel: model.asHelperViewModel(),
+        builder = (context) => InnerEditorRouter(
+            child: EditorSimpleHelperPage.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
         );
         break;
       case HelperType.UPDATE_HELPER:
-        builder = (context) => EditorUpdateHelperPage.create(
-          parameters: args,
-          helperViewModel: model.asHelperViewModel(),
+        builder = (context) => InnerEditorRouter(
+            child: EditorUpdateHelperPage.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
         );
         break;
       case HelperType.HELPER_FULL_SCREEN:
-        builder = (context) => EditorFullScreenHelperPage.create(
-          parameters: args,
-          helperViewModel: model.asHelperViewModel(),
+        builder = (context) => InnerEditorRouter(
+            child: EditorFullScreenHelperPage.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
         );
         break;
       case HelperType.ANCHORED_OVERLAYED_HELPER:
-        builder = (context) => EditorAnchoredFullscreenHelper.create(
-          parameters: args,
-          helperViewModel: model.asHelperViewModel(),
+        builder = (context) => InnerEditorRouter(
+            child: EditorAnchoredFullscreenHelper.create(
+            parameters: args,
+            helperViewModel: model.asHelperViewModel(),
+          ),
         );
         break;
       default:
@@ -192,7 +200,7 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath> wit
           default:
             return MaterialPageRoute(
               builder: (context) => child,
-              maintainState: true
+              maintainState: true,
             );
         }
       },

@@ -200,7 +200,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               editKey: 'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
                             ),
                             SizedBox(height: 24),
-                            editableField(
+                            EditableTextField.fromNotifier(
                               model.editableTextFieldController.stream,
                               model?.titleField,
                               presenter.onTitleChanged,
@@ -210,7 +210,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               textFormFieldKey: ValueKey('palFullscreenHelperTitleField'),
                             ),
                             SizedBox(height: 24),
-                            editableField(
+                            EditableTextField.fromNotifier(
                               model.editableTextFieldController.stream,
                               model?.descriptionField,
                               presenter.onDescriptionChanged,
@@ -221,7 +221,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 40.0),
-                              child: editableButton(
+                              child: EditableTextField.editableButton(
                                 model.editableTextFieldController.stream,
                                 model.positivButtonField,
                                 presenter.onPositivTextChanged,
@@ -230,7 +230,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 12.0),
-                              child: editableButton(
+                              child: EditableTextField.editableButton(
                                 model.editableTextFieldController.stream,
                                 model.negativButtonField,
                                 presenter.onNegativTextChanged,
@@ -250,67 +250,5 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       ),
     );
   }
-
-  EditableTextField editableField(
-      Stream<bool> outsideTapStream,
-      TextFormFieldNotifier textNotifier,
-      OnFieldChanged onFieldValueChange,
-      OnTextStyleChanged onTextStyleChanged,
-      { Key helperToolbarKey,
-        Key textFormFieldKey,
-        TextStyle baseStyle,
-        int minimumCharacterLength = 1,
-        int maximumCharacterLength = 255,
-        int maxLines = 5,
-        BoxDecoration backgroundDecoration})
-  => EditableTextField.text(
-      backgroundBoxDecoration: backgroundDecoration,
-      outsideTapStream: outsideTapStream,
-      helperToolbarKey: helperToolbarKey,
-      textFormFieldKey: textFormFieldKey,
-      onChanged: onFieldValueChange,
-      onTextStyleChanged: onTextStyleChanged,
-      maximumCharacterLength: maximumCharacterLength,
-      minimumCharacterLength: minimumCharacterLength,
-      maxLines: maxLines,
-      fontFamilyKey: textNotifier?.fontFamily?.value,
-      initialValue: textNotifier?.text?.value,
-      textStyle: TextStyle(
-          color: textNotifier?.fontColor?.value,
-          decoration: TextDecoration.none,
-          fontSize: textNotifier?.fontSize?.value?.toDouble(),
-          fontWeight: FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
-        )
-        .merge(baseStyle),
-    );
-
-
-  Widget editableButton(
-    Stream<bool> outsideTapStream,
-    TextFormFieldNotifier textNotifier,
-    OnFieldChanged onFieldValueChange,
-    OnTextStyleChanged onTextStyleChanged,
-    { int minimumCharacterLength = 1,
-      int maximumCharacterLength = 255,
-      int maxLines = 1})
-  =>  InkWell(
-        child: editableField(
-          outsideTapStream,
-          textNotifier,
-          onFieldValueChange,
-          onTextStyleChanged,
-          minimumCharacterLength: minimumCharacterLength,
-          maximumCharacterLength: maximumCharacterLength,
-          maxLines: maxLines,
-          backgroundDecoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.white,
-              width: 2
-            ),
-            // color: Colors.redAccent.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(10.0),
-        )
-      ),
-  );
 
 }

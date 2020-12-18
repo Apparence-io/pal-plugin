@@ -114,7 +114,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       minVersionCode: model.minVersionCode,
       helperTheme: model.helperTheme,
     );
-
+    print("on FullscreenHelperViewModel construct");
     if (model is FullscreenHelperViewModel) {
       fullscreenHelper.bodyBox = model?.bodyBox;
       fullscreenHelper.language = model?.language;

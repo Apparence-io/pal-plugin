@@ -21,6 +21,8 @@
 
 Pal is the onboarding editor dedicated to Flutter apps 📱.
 
+**[Pal introduction in video](https://www.youtube.com/watch?v=RIeeTG928Rc)**
+
 **What does it mean ?**
 
 No code editor for all your app screens directly in your app:
@@ -29,7 +31,9 @@ No code editor for all your app screens directly in your app:
 * 🎨 Select and customize your theme.
 
 ## 👀&nbsp; Preview
-<img src="./assets/images/presentation.gif" width="250" alt="camerawesome_example1" />
+<p align="left">
+  <img src="https://i.postimg.cc/jSR94N7Q/presentation.gif" width="250" alt="camerawesome_example1" />
+</p>
 
 ## 🧐&nbsp; How it works ?
 
@@ -58,7 +62,7 @@ That's it !
 
 * Get your **token** & **save** it for later.
 
-<img src="./assets/images/dashboard/token.png" alt="token" />
+<img src="https://i.postimg.cc/YC2nWH5d/token.png" alt="token" />
 
 
 * Add **Pal** dependency
@@ -98,7 +102,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-## 🎥&nbsp; Videos
+## 🎥&nbsp; Youtube Videos
 
 - [Pal introduction](https://www.youtube.com/watch?v=RIeeTG928Rc)
 - [How to setup Pal](https://www.youtube.com/watch?v=THJr3ZfFHv8)
@@ -118,7 +122,7 @@ class MyApp extends StatelessWidget {
 
 ### 😎&nbsp; Client mode
 
-<img src="./assets/images/client/helpers_client.gif" width="150" alt="helpers_client" />
+<img src="https://i.postimg.cc/6qNz5JVL/helpers-client.gif" width="150" alt="helpers_client" />
 
 *Some of helpers displayed in the client app*
 
@@ -126,30 +130,38 @@ class MyApp extends StatelessWidget {
 
 #### 💡&nbsp; Helpers creation
 
-<img src="./assets/images/editor/helpers/fullscreen.gif" width="150" alt="helper_full_screen" />
-
-*FullScreen helper*
-
-<img src="./assets/images/editor/helpers/box.gif" width="150" alt="helper_box" />
+<div style="float:left; padding-right:8px">
+<img src="https://i.postimg.cc/gkjLXtMv/box.gif" width="150" alt="helper_box" />
 
 *Simple box helper*
+</div>
 
-<img src="./assets/images/editor/helpers/update.gif" width="150" alt="helper_update" />
+<div style="float:left; padding-right:8px">
+<img src="https://i.postimg.cc/NjhGsdZG/update.gif" width="150" alt="helper_update" />
 
 *Update helper*
+</div>
 
-<img src="./assets/images/editor/helpers/anchored.gif" width="150" alt="helper_anchored" />
+<div style="float:left; padding-right:8px">
+<img src="https://i.postimg.cc/TwHGZ0r6/anchored.gif" width="150" alt="helper_anchored" />
 
 *Anchored helper*
+</div>
+
+<div>
+<img src="https://i.postimg.cc/mgh34gfW/fullscreen.gif" width="150" alt="helper_full_screen" />
+
+*FullScreen helper*
+</div>
 
 ### 🎨&nbsp; Edit mode
 
-<img src="./assets/images/editor/edit.gif" width="150" alt="helper_edit" />
+<img src="https://i.postimg.cc/rpfLrjZr/edit.gif" width="150" alt="helper_edit" />
 
 *Edit an helper*
 
-## 📣&nbsp; Sponsor
-<img src="https://en.apparence.io/assets/images/logo.svg" width="30" />
+## 📣&nbsp; Author
+<img src="https://en.apparence.io/assets/images/logo.svg" width="64" />
 <br />
 
 [Initiated and sponsored by Apparence.io.](https://apparence.io)

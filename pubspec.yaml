@@ -16,15 +16,15 @@ dependencies:
   mvvm_builder: ^2.1.5
   http: ^0.12.2
   http_parser: ^3.1.4
-  google_fonts: ^1.1.0
-  package_info: ^0.4.3
-  rxdart: ^0.24.1
+  google_fonts: ^1.1.1
+  package_info: ^0.4.3+2    
+  rxdart: ^0.25.0
   flutter_colorpicker: ^0.3.4
-  dotted_border: ^1.0.6
+  dotted_border: ^1.0.7
   path_provider: ^1.6.24
   keyboard_visibility: ^0.5.6
   application_icon: ^1.0.0
-  cached_network_image: ^2.3.3
+  cached_network_image: ^2.4.1
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
 
@@ -33,7 +33,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^4.1.1
   hive_generator: ^0.8.2
-  build_runner: ^1.10.6
+  build_runner: ^1.10.11
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

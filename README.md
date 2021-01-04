@@ -160,6 +160,25 @@ class MyApp extends StatelessWidget {
 
 *Edit an helper*
 
+## 🙋‍♂️🙋‍♀️&nbsp; Questions
+
+> *Why I'm getting an error PageCreationException: EMPTY_ROUTE_PROVIDED when creating a new helper?*
+
+When you push a new route, you **always** need to give it an **unique** name if you use ```.push(....)```.
+
+We recommend you to use ```.pushNamed(...)``` method (by using it, Pal know automatically the route name without specified it). But if you prefer using ```.push(...)``` instead, you have to create ```RouteSettings``` like this:
+
+```dart
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    settings: RouteSettings(
+      name: 'page1', // <- Type here an unique route name
+    )),
+    builder: (context) => YourNewPage(),
+);
+```
+
 ## 📣&nbsp; Author
 <img src="https://en.apparence.io/assets/images/logo.svg" width="64" />
 <br />

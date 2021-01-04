@@ -148,7 +148,19 @@ class _EditorHelperHttpService implements EditorHelperService {
 
   Future<String> _getOrCreatePageId(String routeName) async {
     if (routeName == null || routeName.isEmpty) {
-      throw PageCreationException(message: "EMPTY_ROUTE_PROVIDED");
+      final errorMessage = """EMPTY_ROUTE_PROVIDED, maybe you forgot to add an unique name to your route like this:
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              settings: RouteSettings(
+                name: 'page1', // <------- Type here an unique route name
+              )),
+              builder: (context) => YourNewPage(),
+          );
+      """;
+      throw PageCreationException(
+        message: errorMessage
+      );
     }
     PageEntity resPage = await this._pageRepository.getPage(routeName);
     if (resPage == null || resPage.id == null || resPage.id.isEmpty) {

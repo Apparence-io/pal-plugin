@@ -18,6 +18,7 @@ import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import '../../../pal_test_utilities.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
@@ -25,13 +26,6 @@ class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
 
 void main() {
-
-  _enterTextInEditable(WidgetTester tester, Finder finder, String text) async{
-    await tester.tap(finder);
-    await tester.pump();
-    await tester.enterText(finder, text);
-  }
-  
   group('[Editor] create - Update helper', () {
 
     final _navigatorKey = GlobalKey<NavigatorState>();
@@ -85,10 +79,34 @@ void main() {
       expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
     });
 
+    testWidgets('on text press  => button is disabled', (WidgetTester tester) async {
+      await beforeEach(tester);
+      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
+      var textMode = find.byKey(ValueKey('editableActionBarTextButton'));
+      await tester.tap(textMode);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('on settings press  => button is disabled', (WidgetTester tester) async {
+      await beforeEach(tester);
+      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
+      var textMode = find.byKey(ValueKey('editableActionBarSettingsButton'));
+      await tester.tap(textMode);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('on preview press  => button is disabled', (WidgetTester tester) async {
+      await beforeEach(tester);
+      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
+      var textMode = find.byKey(ValueKey('editableActionBarPreviewButton'));
+      await tester.tap(textMode);
+      await tester.pumpAndSettle();
+    });
+
     testWidgets('close editor, pal bubble is hidden  => page is removed, pal bubble is visible', (WidgetTester tester) async {
       await beforeEach(tester);
 
-      var cancelFinder = find.byKey(ValueKey('editModeCancel'));
+      var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
       await tester.tap(cancelFinder);
       await tester.pumpAndSettle();
       expect(find.byType(BubbleOverlayButton), findsOneWidget);
@@ -98,12 +116,12 @@ void main() {
 
     testWidgets('title not empty, 0 changelog  => save button is disabled', (WidgetTester tester) async {
       await beforeEach(tester);
-      var cancelFinder = find.byKey(ValueKey('editModeCancel'));
-      var validateFinder = find.byKey(ValueKey('editModeValidate'));
+      var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
+      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
       expect(cancelFinder, findsOneWidget);
       expect(validateFinder, findsOneWidget);
-      var validateButton = validateFinder.evaluate().first.widget as EditorButton;
-      expect(validateButton.isEnabled, isFalse);
+      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
+      expect(validateButton.onTapCallback, isNull);
     });
 
     testWidgets('title not empty, 1 changelog with text  => save button is enabled', (WidgetTester tester) async {
@@ -111,12 +129,12 @@ void main() {
       var addChangelogButtonFinder = find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'));
       await tester.tap(addChangelogButtonFinder);
       var editableFinder = find.byType(TextField);
-      await _enterTextInEditable(tester, editableFinder.first, 'Lorem ipsum');
-      await _enterTextInEditable(tester, editableFinder.at(1), 'Lorem ipsum changelog');
+      await enterTextInEditable(tester, editableFinder.first, 'Lorem ipsum');
+      await enterTextInEditable(tester, editableFinder.at(1), 'Lorem ipsum changelog');
 
-      var validateFinder = find.byKey(ValueKey('editModeValidate'));
-      var validateButton = validateFinder.evaluate().first.widget as EditorButton;
-      expect(validateButton.isEnabled, isTrue);
+      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
+      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
+      expect(validateButton.onTapCallback, isNotNull);
       expect(presenter.viewModel.titleField.text.value, 'Lorem ipsum');
       expect(presenter.viewModel.changelogsFields['0'].text.value, 'Lorem ipsum changelog');
     });
@@ -140,12 +158,12 @@ void main() {
       await tester.tap(addChangelogButtonFinder);
       await tester.pumpAndSettle(Duration(milliseconds: 500));
       var editableFinder = find.byType(TextField);
-      await _enterTextInEditable(tester, editableFinder.first, 'Lorem ipsum');
-      await _enterTextInEditable(tester, editableFinder.at(1), 'Lorem ipsum changelog');
+      await enterTextInEditable(tester, editableFinder.first, 'Lorem ipsum');
+      await enterTextInEditable(tester, editableFinder.at(1), 'Lorem ipsum changelog');
 
-      var validateFinder = find.byKey(ValueKey('editModeValidate'));
-      var validateButton = validateFinder.evaluate().first.widget as EditorButton;
-      validateButton.onPressed();
+      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
+      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
+      validateButton.onTapCallback();
       await tester.pump(Duration(seconds: 1));
       verify(helperEditorServiceMock.saveUpdateHelper(any)).called(1);
       await tester.pump(Duration(seconds: 2));

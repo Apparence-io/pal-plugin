@@ -85,68 +85,70 @@ class EditorActionsBar extends StatelessWidget {
     return BottomAppBar(
       color: PalTheme.of(context).colors.dark,
       shape: null,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  EditorActionItem(
-                    key: ValueKey('editableActionBarCancelButton'),
-                    icon: Icon(
-                      Icons.close,
-                      color: kIconColor,
-                      size: kIconSize,
+      child: Container(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    EditorActionItem(
+                      key: ValueKey('editableActionBarCancelButton'),
+                      icon: Icon(
+                        Icons.close,
+                        color: kIconColor,
+                        size: kIconSize,
+                      ),
+                      text: 'CANCEL',
+                      onTap: this.onCancel,
                     ),
-                    text: 'CANCEL',
-                    onTap: this.onCancel,
-                  ),
-                  EditorActionItem(
-                    key: ValueKey('editableActionBarTextButton'),
-                    icon: Icon(
-                      Icons.format_size,
-                      color: kIconColor,
-                      size: kIconSize,
+                    EditorActionItem(
+                      key: ValueKey('editableActionBarTextButton'),
+                      icon: Icon(
+                        Icons.format_size,
+                        color: kIconColor,
+                        size: kIconSize,
+                      ),
+                      text: 'TEXT',
+                      onTap: this.onText,
                     ),
-                    text: 'TEXT',
-                    onTap: this.onText,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Divider(indent: kFloatingRadius + 5),
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  EditorActionItem(
-                    key: ValueKey('editableActionBarSettingsButton'),
-                    icon: Icon(
-                      Icons.settings,
-                      color: kIconColor,
-                      size: kIconSize,
+              Divider(indent: kFloatingRadius + 5),
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    EditorActionItem(
+                      key: ValueKey('editableActionBarSettingsButton'),
+                      icon: Icon(
+                        Icons.settings,
+                        color: kIconColor,
+                        size: kIconSize,
+                      ),
+                      text: 'SETTINGS',
+                      onTap: this.onSettings,
                     ),
-                    text: 'SETTINGS',
-                    onTap: this.onSettings,
-                  ),
-                  EditorActionItem(
-                    key: ValueKey('editableActionBarPreviewButton'),
-                    icon: Icon(
-                      Icons.play_arrow,
-                      color: kIconColor,
-                      size: kIconSize,
+                    EditorActionItem(
+                      key: ValueKey('editableActionBarPreviewButton'),
+                      icon: Icon(
+                        Icons.play_arrow,
+                        color: kIconColor,
+                        size: kIconSize,
+                      ),
+                      text: 'PREVIEW',
+                      onTap: this.onPreview,
                     ),
-                    text: 'PREVIEW',
-                    onTap: this.onPreview,
-                  ),
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

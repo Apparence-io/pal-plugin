@@ -170,3 +170,15 @@ Future<void> longPressDrag(
   await drag.moveTo(tester.getBottomLeft(endElement) * 2);
   await drag.up();
 }
+
+
+// ***************** TEXT FIELD UTILITIES ***************** \\
+
+Future enterTextInEditable(WidgetTester tester, Finder finder, String text) async {
+  final TextField textField = finder.evaluate().first.widget;
+
+  await tester.tap(finder);
+  await tester.pump();
+  await tester.enterText(finder, text);
+  textField.onSubmitted(text);
+}

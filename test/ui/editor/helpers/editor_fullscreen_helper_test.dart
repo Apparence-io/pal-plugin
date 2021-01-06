@@ -18,6 +18,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 import '../../../pal_test_utilities.dart';
 import 'package:mockito/mockito.dart';
@@ -27,13 +28,6 @@ class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
 
 void main() {
-
-  _enterTextInEditable(WidgetTester tester, Finder finder, String text) async{
-    await tester.tap(finder);
-    await tester.pump();
-    await tester.enterText(finder, text);
-  }
-
 
   group('[Editor] Fullscreen helper - creation mode', () {
 
@@ -89,26 +83,50 @@ void main() {
       expect(presenter.editorHelperService, isNotNull);
     });
 
+    testWidgets('on text press  => button is disabled', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
+      var textMode = find.byKey(ValueKey('editableActionBarTextButton'));
+      await tester.tap(textMode);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('on settings press  => button is disabled', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
+      var textMode = find.byKey(ValueKey('editableActionBarSettingsButton'));
+      await tester.tap(textMode);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('on preview press  => button is disabled', (WidgetTester tester) async {
+      await _beforeEach(tester);
+      expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
+      var textMode = find.byKey(ValueKey('editableActionBarPreviewButton'));
+      await tester.tap(textMode);
+      await tester.pumpAndSettle();
+    });
+
     testWidgets('title = "test title", description = "test description" '
       '=> save call helperService.saveFullscreen', (WidgetTester tester) async {
       await _beforeEach(tester);
       var editableTextsFinder = find.byType(TextField);
-      var cancelFinder = find.byKey(ValueKey('editModeCancel'));
-      var validateFinder = find.byKey(ValueKey('editModeValidate'));
-      var validateButton = validateFinder.evaluate().first.widget as EditorButton;
+      var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
+      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
+      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
 
-      expect(validateButton.isEnabled, isFalse);
-      await _enterTextInEditable(tester, editableTextsFinder.at(0), 'test title');
-      await _enterTextInEditable(tester, editableTextsFinder.at(1), 'test description');
+      expect(validateButton.onTapCallback, isNull);
+      await enterTextInEditable(tester, editableTextsFinder.at(0), 'test title');
+      await enterTextInEditable(tester, editableTextsFinder.at(1), 'test description');
 
-      validateButton = validateFinder.evaluate().first.widget as EditorButton;
+      validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       await tester.pumpAndSettle();
       expect(presenter.viewModel.titleField.text.value, equals('test title'));
       expect(presenter.viewModel.descriptionField.text.value, equals('test description'));
       expect(presenter.viewModel.positivButtonField.text.value, equals('Ok, thanks !'));
       expect(presenter.viewModel.negativButtonField.text.value, equals('This is not helping'));
-      expect(validateButton.isEnabled, isTrue);
-      validateButton.onPressed();
+      expect(validateButton.onTapCallback, isNotNull);
+      validateButton.onTapCallback();
       await tester.pump(Duration(seconds: 1));
       verify(helperEditorServiceMock.saveFullScreenHelper(any)).called(1);
       await tester.pump(Duration(seconds: 2));
@@ -119,14 +137,14 @@ void main() {
       await _beforeEach(tester);
       when(helperEditorServiceMock.saveFullScreenHelper(any)).thenThrow(ArgumentError());
       var editableTextsFinder = find.byType(TextField);
-      var validateFinder = find.byKey(ValueKey('editModeValidate'));
+      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
 
-      await _enterTextInEditable(tester, editableTextsFinder.at(0), 'test title');
-      await _enterTextInEditable(tester, editableTextsFinder.at(1), 'test description');
+      await enterTextInEditable(tester, editableTextsFinder.at(0), 'test title');
+      await enterTextInEditable(tester, editableTextsFinder.at(1), 'test description');
       await tester.pumpAndSettle();
-      var validateButton = validateFinder.evaluate().first.widget as EditorButton;
-      expect(validateButton.isEnabled, isTrue);
-      validateButton.onPressed();
+      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
+      expect(validateButton.onTapCallback, isNotNull);
+      validateButton.onTapCallback();
       await tester.pump(Duration(seconds: 1));
       expect(find.text('Error occured, please try again later'), findsOneWidget);
       await tester.pump(Duration(seconds: 2));

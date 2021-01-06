@@ -97,6 +97,10 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   onChangelogTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.changelogsFields[id], newTextStyle, fontKeys);
 
+  onTitleFieldSubmitted(String value) => this.refreshView();
+  onThanksFieldSubmitted(String value) => this.refreshView();
+  onChangelogFieldSubmitted(String value) => this.refreshView();
+
   changeBackgroundColor() {
     this.viewInterface.showColorPickerDialog(
       viewModel?.bodyBox?.backgroundColor?.value,

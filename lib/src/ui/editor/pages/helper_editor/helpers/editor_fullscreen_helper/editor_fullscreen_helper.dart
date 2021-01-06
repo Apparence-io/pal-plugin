@@ -7,12 +7,10 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
@@ -25,7 +23,6 @@ import 'editor_fullscreen_helper_presenter.dart';
 import 'editor_fullscreen_helper_viewmodel.dart';
 
 abstract class EditorFullScreenHelperView {
-
   void showColorPickerDialog(
     FullscreenHelperViewModel viewModel,
     EditorFullScreenHelperPresenter presenter,
@@ -44,8 +41,9 @@ abstract class EditorFullScreenHelperView {
   void closeLoadingScreen();
 }
 
-class EditorFullScreenHelper with EditorSendingOverlayMixin, EditorNavigationMixin implements EditorFullScreenHelperView {
-
+class EditorFullScreenHelper
+    with EditorSendingOverlayMixin, EditorNavigationMixin
+    implements EditorFullScreenHelperView {
   BuildContext context;
 
   final PalEditModeStateService palEditModeStateService;
@@ -63,13 +61,11 @@ class EditorFullScreenHelper with EditorSendingOverlayMixin, EditorNavigationMix
   ) {
     HapticFeedback.selectionClick();
     showOverlayedInContext(
-      (context) => ColorPickerDialog(
-        placeholderColor: viewModel.bodyBox.backgroundColor?.value,
-        onColorSelected: presenter.updateBackgroundColor,
-        onCancel: presenter.cancelUpdateBackgroundColor
-      ),
-      key: OverlayKeys.PAGE_OVERLAY_KEY
-    );
+        (context) => ColorPickerDialog(
+            placeholderColor: viewModel.bodyBox.backgroundColor?.value,
+            onColorSelected: presenter.updateBackgroundColor,
+            onCancel: presenter.cancelUpdateBackgroundColor),
+        key: OverlayKeys.PAGE_OVERLAY_KEY);
   }
 
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
@@ -91,7 +87,6 @@ class EditorFullScreenHelper with EditorSendingOverlayMixin, EditorNavigationMix
         ? GoogleFonts.getFont(fontFamily)
         : null;
   }
-
 }
 
 typedef OnFormChanged(bool isValid);
@@ -100,7 +95,6 @@ typedef OnFormChanged(bool isValid);
 /// can be created from entity or nothing
 /// use [EditorHelperService] to create a fullscreen helper
 class EditorFullScreenHelperPage extends StatelessWidget {
-
   final PresenterBuilder<EditorFullScreenHelperPresenter> presenterBuilder;
 
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -110,51 +104,55 @@ class EditorFullScreenHelperPage extends StatelessWidget {
     @required this.presenterBuilder,
   }) : super(key: key);
 
-  factory EditorFullScreenHelperPage.create({
-    Key key,
-    HelperEditorPageArguments parameters,
-    EditorHelperService helperService,
-    PalEditModeStateService palEditModeStateService,
-    @required HelperViewModel helperViewModel
-  }) => EditorFullScreenHelperPage._(
-    key: key,
-    presenterBuilder: (context) => EditorFullScreenHelperPresenter(
-      new EditorFullScreenHelper(
-        context,
-        palEditModeStateService ?? EditorInjector.of(context).palEditModeStateService),
-      FullscreenHelperViewModel.fromHelperViewModel(helperViewModel),
-      helperService ?? EditorInjector.of(context).helperService,
-      parameters
-    ),
-  );
+  factory EditorFullScreenHelperPage.create(
+          {Key key,
+          HelperEditorPageArguments parameters,
+          EditorHelperService helperService,
+          PalEditModeStateService palEditModeStateService,
+          @required HelperViewModel helperViewModel}) =>
+      EditorFullScreenHelperPage._(
+        key: key,
+        presenterBuilder: (context) => EditorFullScreenHelperPresenter(
+            new EditorFullScreenHelper(
+                context,
+                palEditModeStateService ??
+                    EditorInjector.of(context).palEditModeStateService),
+            FullscreenHelperViewModel.fromHelperViewModel(helperViewModel),
+            helperService ?? EditorInjector.of(context).helperService,
+            parameters),
+      );
 
-  factory EditorFullScreenHelperPage.edit({
-    Key key,
-    HelperEditorPageArguments parameters,
-    EditorHelperService helperService,
-    PalEditModeStateService palEditModeStateService,
-    @required HelperEntity helperEntity //FIXME should be an id and not entire entity
-  }) => EditorFullScreenHelperPage._(
-    key: key,
-    presenterBuilder: (context)
-    => EditorFullScreenHelperPresenter(
-      new EditorFullScreenHelper(
-        context,
-        palEditModeStateService ?? EditorInjector.of(context).palEditModeStateService),
-      FullscreenHelperViewModel.fromHelperEntity(helperEntity),
-      helperService ?? EditorInjector.of(context).helperService,
-      parameters
-    ),
-  );
+  factory EditorFullScreenHelperPage.edit(
+          {Key key,
+          HelperEditorPageArguments parameters,
+          EditorHelperService helperService,
+          PalEditModeStateService palEditModeStateService,
+          @required
+              HelperEntity
+                  helperEntity //FIXME should be an id and not entire entity
+          }) =>
+      EditorFullScreenHelperPage._(
+        key: key,
+        presenterBuilder: (context) => EditorFullScreenHelperPresenter(
+            new EditorFullScreenHelper(
+                context,
+                palEditModeStateService ??
+                    EditorInjector.of(context).palEditModeStateService),
+            FullscreenHelperViewModel.fromHelperEntity(helperEntity),
+            helperService ?? EditorInjector.of(context).helperService,
+            parameters),
+      );
 
   @override
   Widget build(BuildContext context) {
-    return MVVMPageBuilder<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>()
-      .build(
-        key: ValueKey('palEditorFullscreenHelperWidgetBuilder'),
-        context: context,
-        presenterBuilder: presenterBuilder,
-        builder: (context, presenter, model) => _buildPage(context.buildContext, presenter, model),
+    return MVVMPageBuilder<EditorFullScreenHelperPresenter,
+            FullscreenHelperViewModel>()
+        .build(
+      key: ValueKey('palEditorFullscreenHelperWidgetBuilder'),
+      context: context,
+      presenterBuilder: presenterBuilder,
+      builder: (context, presenter, model) =>
+          _buildPage(context.buildContext, presenter, model),
     );
   }
 
@@ -167,9 +165,10 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomPadding: true,
       body: EditorActionsBar(
-        canValidate: model.canValidate,
         onCancel: presenter.onCancel,
-        onValidate: presenter.onValidate,
+        onValidate: (model.canValidate?.value == true)
+            ? presenter.onValidate
+            : null,
         child: GestureDetector(
           key: ValueKey('palEditorFullscreenHelperWidget'),
           onTap: presenter.onOutsideTap,
@@ -182,14 +181,15 @@ class EditorFullScreenHelperPage extends StatelessWidget {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: EditableBackground(
                 backgroundColor: model.bodyBox.backgroundColor?.value,
-                circleIconKey: 'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
+                circleIconKey:
+                    'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
                 onColorChange: () => presenter.changeBackgroundColor(),
                 widget: Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: SafeArea(
                       child: SingleChildScrollView(
-                        padding: EdgeInsets.only(top: 25.0, bottom: 32.0),
+                        padding: EdgeInsets.only(top: 25.0, bottom: 50.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -197,45 +197,54 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               mediaSize: 240.0,
                               onEdit: presenter.editMedia,
                               url: model.media?.url?.value,
-                              editKey: 'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
+                              editKey:
+                                  'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
                             ),
                             SizedBox(height: 24),
                             EditableTextField.fromNotifier(
                               model.editableTextFieldController.stream,
                               model?.titleField,
                               presenter.onTitleChanged,
+                              presenter.onTitleSubmit,
                               presenter.onTitleTextStyleChanged,
-                              baseStyle: presenter.googleCustomFont(model?.titleField?.fontFamily?.value),
-                              helperToolbarKey:  ValueKey('palEditorFullscreenHelperWidgetToolbar'),
-                              textFormFieldKey: ValueKey('palFullscreenHelperTitleField'),
+                              baseStyle: presenter.googleCustomFont(
+                                  model?.titleField?.fontFamily?.value),
+                              helperToolbarKey: ValueKey(
+                                  'palEditorFullscreenHelperWidgetToolbar'),
+                              textFormFieldKey:
+                                  ValueKey('palFullscreenHelperTitleField'),
                             ),
                             SizedBox(height: 24),
                             EditableTextField.fromNotifier(
                               model.editableTextFieldController.stream,
                               model?.descriptionField,
                               presenter.onDescriptionChanged,
+                              presenter.onDescriptionSubmit,
                               presenter.onDescriptionTextStyleChanged,
-                              baseStyle: presenter.googleCustomFont(model?.titleField?.fontFamily?.value),
-                              helperToolbarKey:  ValueKey('palEditorFullscreenHelperWidgetToolbar'),
-                              textFormFieldKey: ValueKey('palFullscreenHelperDescriptionField'),
+                              baseStyle: presenter.googleCustomFont(
+                                  model?.titleField?.fontFamily?.value),
+                              helperToolbarKey: ValueKey(
+                                  'palEditorFullscreenHelperWidgetToolbar'),
+                              textFormFieldKey: ValueKey(
+                                  'palFullscreenHelperDescriptionField'),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 40.0),
                               child: EditableTextField.editableButton(
-                                model.editableTextFieldController.stream,
-                                model.positivButtonField,
-                                presenter.onPositivTextChanged,
-                                presenter.onPositivTextStyleChanged
-                              ),
+                                  model.editableTextFieldController.stream,
+                                  model.positivButtonField,
+                                  presenter.onPositivTextChanged,
+                                  presenter.onPositivTextSubmit,
+                                  presenter.onPositivTextStyleChanged),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 12.0),
                               child: EditableTextField.editableButton(
-                                model.editableTextFieldController.stream,
-                                model.negativButtonField,
-                                presenter.onNegativTextChanged,
-                                presenter.onNegativTextStyleChanged
-                              ),
+                                  model.editableTextFieldController.stream,
+                                  model.negativButtonField,
+                                  presenter.onNegativTextChanged,
+                                  presenter.onNegativTextSubmit,
+                                  presenter.onNegativTextStyleChanged),
                             ),
                           ],
                         ),
@@ -250,5 +259,4 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       ),
     );
   }
-
 }

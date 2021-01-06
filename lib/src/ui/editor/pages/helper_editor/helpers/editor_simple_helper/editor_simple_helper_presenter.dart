@@ -77,6 +77,8 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   onDetailsTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.detailsField, newTextStyle, fontKeys);
+  
+  onDetailsFieldSubmitted(String value) => this.refreshView();
 
   String validateDetailsTextField(String currentValue) {
     if (currentValue.length <= 0) {

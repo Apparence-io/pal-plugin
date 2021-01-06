@@ -125,12 +125,18 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   onTitleChanged(String id, String newValue)
     => _onTextChanged(viewModel.titleField, newValue);
 
+  onTitleSubmit(String text)
+    => _onFieldSubmit(text);
+
   onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
    => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
 
   // Description field
   onDescriptionChanged(String id, String newValue)
     => _onTextChanged(viewModel.descriptionField, newValue);
+
+  onDescriptionSubmit(String text)
+    => _onFieldSubmit(text);
 
   onDescriptionTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.descriptionField, newTextStyle, fontKeys);
@@ -139,12 +145,18 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   onPositivTextChanged(String id, String newValue)
     => _onTextChanged(viewModel.positivBtnField, newValue);
 
+  onPositivSubmit(String text)
+    => _onFieldSubmit(text);
+
   onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.positivBtnField, newTextStyle, fontKeys);
 
   // Negativ button
   onNegativTextChanged(String id, String newValue)
     => _onTextChanged(viewModel.negativBtnField, newValue);
+
+  onNegativSubmit(String text)
+    => _onFieldSubmit(text);
 
   onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.negativBtnField, newTextStyle, fontKeys);
@@ -206,5 +218,9 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
 
   bool isValid() => viewModel.titleField.text.value.isNotEmpty
     && viewModel.descriptionField.text.value.isNotEmpty;
+
+  _onFieldSubmit(String text) {
+    this.refreshView();
+  }
 
 }

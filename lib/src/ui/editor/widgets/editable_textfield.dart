@@ -12,23 +12,23 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.da
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 
-
 import 'dialog_editable_textfield.dart';
 
 enum ToolbarType { text, border }
 
 typedef OnFieldChanged(String id, String value);
 
+typedef OnFieldSubmitted(String value);
+
 typedef OnFocusChange = void Function(bool hasFocus);
 
 typedef OnTextStyleChanged(String id, TextStyle style, FontKeys fontkeys);
 
-
 // TODO move to TextStyle extension
 TextStyle _googleCustomFont(String fontFamily) {
   return (fontFamily != null && fontFamily.length > 0)
-    ? GoogleFonts.getFont(fontFamily)
-    : null;
+      ? GoogleFonts.getFont(fontFamily)
+      : null;
 }
 
 class EditableTextField extends StatefulWidget {
@@ -46,6 +46,7 @@ class EditableTextField extends StatefulWidget {
   final EdgeInsetsGeometry textFormFieldPadding;
   final OnFieldChanged onChanged;
   final OnTextStyleChanged onTextStyleChanged;
+  final OnFieldSubmitted onFieldSubmitted;
   final TextInputType keyboardType;
   final TextStyle textStyle;
   final int maxLines;
@@ -73,6 +74,7 @@ class EditableTextField extends StatefulWidget {
     this.onChanged,
     this.onTextStyleChanged,
     this.autovalidate = AutovalidateMode.onUserInteraction,
+    this.onFieldSubmitted,
     this.backgroundPadding,
     this.textFormFieldPadding,
     this.backgroundBoxDecoration,
@@ -89,134 +91,131 @@ class EditableTextField extends StatefulWidget {
     @required this.textStyle,
   }) : super();
 
-  factory EditableTextField.text({
-    Key key,
-    final String id,
-    final Key textFormFieldKey,
-    final ValueNotifier<bool> toolbarVisibility,
-    final Key backgroundContainerKey,
-    final Key helperToolbarKey,
-    final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
-    final BoxDecoration backgroundBoxDecoration,
-    final EdgeInsetsGeometry backgroundPadding,
-    final EdgeInsetsGeometry textFormFieldPadding,
-    final String Function(String) validator,
-    final OnFieldChanged onChanged,
-    final OnTextStyleChanged onTextStyleChanged,
-    final TextInputType keyboardType,
-    final TextStyle textStyle,
-    final int maxLines = 1,
-    final int maximumCharacterLength,
-    final int minimumCharacterLength,
-    final String hintText = 'Edit me!',
-    final List<TextInputFormatter> inputFormatters,
-    final Stream<bool> outsideTapStream,
-    final String initialValue,
-    final String fontFamilyKey,
-    final FocusNode focusNode,
-    final OnFocusChange onFocusChange
-  }) {
+  factory EditableTextField.text(
+      {Key key,
+      final String id,
+      final Key textFormFieldKey,
+      final ValueNotifier<bool> toolbarVisibility,
+      final Key backgroundContainerKey,
+      final Key helperToolbarKey,
+      final AutovalidateMode autovalidate = AutovalidateMode.onUserInteraction,
+      final BoxDecoration backgroundBoxDecoration,
+      final EdgeInsetsGeometry backgroundPadding,
+      final EdgeInsetsGeometry textFormFieldPadding,
+      final String Function(String) validator,
+      final OnFieldChanged onChanged,
+      final OnTextStyleChanged onTextStyleChanged,
+      final OnFieldSubmitted onFieldSubmitted,
+      final TextInputType keyboardType,
+      final TextStyle textStyle,
+      final int maxLines = 1,
+      final int maximumCharacterLength,
+      final int minimumCharacterLength,
+      final String hintText = 'Edit me!',
+      final List<TextInputFormatter> inputFormatters,
+      final Stream<bool> outsideTapStream,
+      final String initialValue,
+      final String fontFamilyKey,
+      final FocusNode focusNode,
+      final OnFocusChange onFocusChange}) {
     return EditableTextField(
-      key: key,
-      id: id,
-      textFormFieldKey: textFormFieldKey,
-      backgroundContainerKey: backgroundContainerKey,
-      helperToolbarKey: helperToolbarKey,
-      outsideTapStream: outsideTapStream,
-      maximumCharacterLength: maximumCharacterLength,
-      minimumCharacterLength: minimumCharacterLength,
-      onTextStyleChanged: onTextStyleChanged,
-      onChanged: onChanged,
-      fontFamilyKey: fontFamilyKey,
-      autovalidate: autovalidate,
-      backgroundPadding: backgroundPadding,
-      textFormFieldPadding: textFormFieldPadding,
-      backgroundBoxDecoration: backgroundBoxDecoration,
-      maxLines: maxLines,
-      inputFormatters: inputFormatters,
-      hintText: hintText,
-      keyboardType: keyboardType,
-      textStyle: textStyle,
-      toolbarType: ToolbarType.text,
-      focusNode: focusNode,
-      initialValue: initialValue,
-      onFocusChange: onFocusChange,
-      toolbarVisibility: toolbarVisibility
-    );
+        key: key,
+        id: id,
+        textFormFieldKey: textFormFieldKey,
+        backgroundContainerKey: backgroundContainerKey,
+        helperToolbarKey: helperToolbarKey,
+        outsideTapStream: outsideTapStream,
+        maximumCharacterLength: maximumCharacterLength,
+        minimumCharacterLength: minimumCharacterLength,
+        onTextStyleChanged: onTextStyleChanged,
+        onChanged: onChanged,
+        fontFamilyKey: fontFamilyKey,
+        autovalidate: autovalidate,
+        onFieldSubmitted: onFieldSubmitted,
+        backgroundPadding: backgroundPadding,
+        textFormFieldPadding: textFormFieldPadding,
+        backgroundBoxDecoration: backgroundBoxDecoration,
+        maxLines: maxLines,
+        inputFormatters: inputFormatters,
+        hintText: hintText,
+        keyboardType: keyboardType,
+        textStyle: textStyle,
+        toolbarType: ToolbarType.text,
+        focusNode: focusNode,
+        initialValue: initialValue,
+        onFocusChange: onFocusChange,
+        toolbarVisibility: toolbarVisibility);
   }
 
   factory EditableTextField.fromNotifier(
-    Stream<bool> outsideTapStream,
-    TextFormFieldNotifier textNotifier,
-    OnFieldChanged onFieldValueChange,
-    OnTextStyleChanged onTextStyleChanged,
-    { Key helperToolbarKey,
-      Key textFormFieldKey,
-      String id,
-      TextStyle baseStyle,
-      int minimumCharacterLength = 1,
-      int maximumCharacterLength = 255,
-      int maxLines = 5,
-      OnFocusChange onFocusChange,
-      BoxDecoration backgroundDecoration})
-  => EditableTextField.text(
-    id: id,
-    backgroundBoxDecoration: backgroundDecoration,
-    outsideTapStream: outsideTapStream,
-    helperToolbarKey: helperToolbarKey,
-    textFormFieldKey: textFormFieldKey,
-    onChanged: onFieldValueChange,
-    onTextStyleChanged: onTextStyleChanged,
-    maximumCharacterLength: maximumCharacterLength,
-    minimumCharacterLength: minimumCharacterLength,
-    maxLines: maxLines,
-    toolbarVisibility: textNotifier?.toolbarVisibility,
-    fontFamilyKey: textNotifier?.fontFamily?.value,
-    initialValue: textNotifier?.text?.value,
-    focusNode: textNotifier.focusNode,
-    onFocusChange: onFocusChange,
-    textStyle: TextStyle(
-      color: textNotifier?.fontColor?.value,
-      decoration: TextDecoration.none,
-      fontSize: textNotifier?.fontSize?.value?.toDouble(),
-      fontWeight: FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
-    ).merge(baseStyle ?? _googleCustomFont(textNotifier?.fontFamily?.value)),
-  );
+          Stream<bool> outsideTapStream,
+          TextFormFieldNotifier textNotifier,
+          OnFieldChanged onFieldValueChange,
+          OnFieldSubmitted onFieldSubmitted,
+          OnTextStyleChanged onTextStyleChanged,
+          {Key helperToolbarKey,
+          Key textFormFieldKey,
+          String id,
+          TextStyle baseStyle,
+          int minimumCharacterLength = 1,
+          int maximumCharacterLength = 255,
+          int maxLines = 5,
+          OnFocusChange onFocusChange,
+          BoxDecoration backgroundDecoration}) =>
+      EditableTextField.text(
+        id: id,
+        backgroundBoxDecoration: backgroundDecoration,
+        outsideTapStream: outsideTapStream,
+        helperToolbarKey: helperToolbarKey,
+        textFormFieldKey: textFormFieldKey,
+        onChanged: onFieldValueChange,
+        onTextStyleChanged: onTextStyleChanged,
+        onFieldSubmitted: onFieldSubmitted,
+        maximumCharacterLength: maximumCharacterLength,
+        minimumCharacterLength: minimumCharacterLength,
+        maxLines: maxLines,
+        toolbarVisibility: textNotifier?.toolbarVisibility,
+        fontFamilyKey: textNotifier?.fontFamily?.value,
+        initialValue: textNotifier?.text?.value,
+        focusNode: textNotifier.focusNode,
+        onFocusChange: onFocusChange,
+        textStyle: TextStyle(
+          color: textNotifier?.fontColor?.value,
+          decoration: TextDecoration.none,
+          fontSize: textNotifier?.fontSize?.value?.toDouble(),
+          fontWeight:
+              FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
+        ).merge(
+            baseStyle ?? _googleCustomFont(textNotifier?.fontFamily?.value)),
+      );
 
-  factory  EditableTextField.editableButton(
-    Stream<bool> outsideTapStream,
-    TextFormFieldNotifier textNotifier,
-    OnFieldChanged onFieldValueChange,
-    OnTextStyleChanged onTextStyleChanged,
-    { int minimumCharacterLength = 1,
-      int maximumCharacterLength = 255,
-      FocusNode focusNode,
-      OnFocusChange onFocusChange,
-      int maxLines = 1})
-  =>  EditableTextField.fromNotifier(
-    outsideTapStream,
-    textNotifier,
-    onFieldValueChange,
-    onTextStyleChanged,
-    minimumCharacterLength: minimumCharacterLength,
-    maximumCharacterLength: maximumCharacterLength,
-    maxLines: maxLines,
-    backgroundDecoration: BoxDecoration(
-      border: Border.all(
-        color: Colors.white,
-        width: 2
-      ),
-      // color: Colors.redAccent.withOpacity(0.8),
-      borderRadius: BorderRadius.circular(10.0),
-    )
-  );
+  factory EditableTextField.editableButton(
+          Stream<bool> outsideTapStream,
+          TextFormFieldNotifier textNotifier,
+          OnFieldChanged onFieldValueChange,
+          OnFieldSubmitted onFieldSubmitted,
+          OnTextStyleChanged onTextStyleChanged,
+          {int minimumCharacterLength = 1,
+          int maximumCharacterLength = 255,
+          FocusNode focusNode,
+          OnFocusChange onFocusChange,
+          int maxLines = 1}) =>
+      EditableTextField.fromNotifier(outsideTapStream, textNotifier,
+          onFieldValueChange, onFieldSubmitted, onTextStyleChanged,
+          minimumCharacterLength: minimumCharacterLength,
+          maximumCharacterLength: maximumCharacterLength,
+          maxLines: maxLines,
+          backgroundDecoration: BoxDecoration(
+            border: Border.all(color: Colors.white, width: 2),
+            // color: Colors.redAccent.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(10.0),
+          ));
 
   @override
   _EditableTextFieldState createState() => _EditableTextFieldState();
 }
 
 class _EditableTextFieldState extends State<EditableTextField> {
-
   // bool _isToolbarVisible = false;
   FocusNode _focusNode;
   StreamSubscription _outsideSub;
@@ -228,7 +227,8 @@ class _EditableTextFieldState extends State<EditableTextField> {
   void initState() {
     super.initState();
     _focusNode = widget.focusNode ?? FocusNode();
-    textEditingController = TextEditingController.fromValue(TextEditingValue(text: widget.initialValue ?? ""));
+    textEditingController = TextEditingController.fromValue(
+        TextEditingValue(text: widget.initialValue ?? ""));
     // Install listener when focus change
     _focusNode.addListener(_onFocusChange);
     _fontFamilyKey = widget.fontFamilyKey ?? 'Montserrat';
@@ -325,9 +325,11 @@ class _EditableTextFieldState extends State<EditableTextField> {
 
   void _changeValue() {
     showDialog(
-      context: _focusNode.context,
-      builder: (context) => EditableTextDialog(textEditingController.text)
-    ).then((value) {
+        context: _focusNode.context,
+        builder: (context) =>
+            EditableTextDialog(textEditingController.text)).then((value) {
+      widget.onFieldSubmitted?.call(value);
+      // TODO: This is onFieldSubmitted here
       _onChanged(value);
       setState(() {
         textEditingController.text = value;
@@ -338,8 +340,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
   void _onChanged(String newValue) {
     if (widget.onChanged != null) {
       widget.onChanged(
-          widget.id ?? widget.textFormFieldKey.toString(),
-          newValue);
+          widget.id ?? widget.textFormFieldKey.toString(), newValue);
     }
   }
 
@@ -354,8 +355,10 @@ class _EditableTextFieldState extends State<EditableTextField> {
           onClose: _onClose,
           extraActions: [
             ToolbarAction(
-              ValueKey("editTextAction_${widget.id ?? widget.textFormFieldKey.toString()}"),
-              _changeValue, Icons.edit)
+                ValueKey(
+                    "editTextAction_${widget.id ?? widget.textFormFieldKey.toString()}"),
+                _changeValue,
+                Icons.edit)
           ],
         );
         break;
@@ -371,10 +374,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
       default:
     }
     return ValueListenableBuilder(
-      valueListenable: widget.toolbarVisibility,
-      builder: (context, visible, child) => visible ? child : Container(),
-      child: toolbar
-    );
+        valueListenable: widget.toolbarVisibility,
+        builder: (context, visible, child) => visible ? child : Container(),
+        child: toolbar);
   }
 
   // Textfield stuff
@@ -384,7 +386,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   _onFocusChange() {
-    if(widget.onFocusChange != null) {
+    if (widget.onFocusChange != null) {
       widget.onFocusChange(_focusNode.hasFocus);
     }
     if (!_focusNode.hasFocus) {
@@ -392,59 +394,62 @@ class _EditableTextFieldState extends State<EditableTextField> {
     }
   }
 
-  _onFieldSubmitted(String newValue) => _onClose();
+  _onFieldSubmitted(String newValue) {
+    widget.onFieldSubmitted(newValue);
+    _onClose();
+  }
 
   Future _onChangeTextFont() async {
     var widgetBuilder = (context) => FontEditorDialogPage(
-      onCancelPicker: () => Navigator.of(context).pop(),
-      onValidatePicker: () => Navigator.of(context).pop(),
-      actualTextStyle: _textStyle,
-      fontFamilyKey: _fontFamilyKey,
-      onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) async {
-        setState(() {
-          _textStyle = _textStyle.merge(
-            newTextStyle,
-          );
-          widget.toolbarVisibility.value = true;
-        });
+          onCancelPicker: () => Navigator.of(context).pop(),
+          onValidatePicker: () => Navigator.of(context).pop(),
+          actualTextStyle: _textStyle,
+          fontFamilyKey: _fontFamilyKey,
+          onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) async {
+            setState(() {
+              _textStyle = _textStyle.merge(
+                newTextStyle,
+              );
+              widget.toolbarVisibility.value = true;
+            });
 
-        if (fontKeys?.fontFamilyNameKey != null &&
-          fontKeys.fontFamilyNameKey.length > 0) {
-          _fontFamilyKey = fontKeys.fontFamilyNameKey;
-        }
-        if (widget.onTextStyleChanged != null) {
-          widget.onTextStyleChanged(
-            widget.id ?? widget.textFormFieldKey.toString(),
-            _textStyle,
-            fontKeys,
-          );
-        }
-      },
-    );
+            if (fontKeys?.fontFamilyNameKey != null &&
+                fontKeys.fontFamilyNameKey.length > 0) {
+              _fontFamilyKey = fontKeys.fontFamilyNameKey;
+            }
+            if (widget.onTextStyleChanged != null) {
+              widget.onTextStyleChanged(
+                widget.id ?? widget.textFormFieldKey.toString(),
+                _textStyle,
+                fontKeys,
+              );
+            }
+          },
+        );
     await showDialog(context: context, builder: widgetBuilder);
   }
 
   _onChangeTextColor() {
     var widgetBuilder = (context) => ColorPickerDialog(
-      placeholderColor: _textStyle?.color,
-      onCancel: () => Navigator.of(context).pop(),
-      onColorSelected: (Color newColor) {
-        setState(() {
-          _textStyle = _textStyle.merge(TextStyle(
-            color: newColor,
-          ));
-          widget.toolbarVisibility.value = true;
-        });
-        if (widget.onTextStyleChanged != null) {
-          widget.onTextStyleChanged(
-            widget.id ?? widget.textFormFieldKey.toString(),
-            _textStyle,
-            null,
-          );
-        }
-        Navigator.of(context).pop();
-      },
-    );
+          placeholderColor: _textStyle?.color,
+          onCancel: () => Navigator.of(context).pop(),
+          onColorSelected: (Color newColor) {
+            setState(() {
+              _textStyle = _textStyle.merge(TextStyle(
+                color: newColor,
+              ));
+              widget.toolbarVisibility.value = true;
+            });
+            if (widget.onTextStyleChanged != null) {
+              widget.onTextStyleChanged(
+                widget.id ?? widget.textFormFieldKey.toString(),
+                _textStyle,
+                null,
+              );
+            }
+            Navigator.of(context).pop();
+          },
+        );
     showDialog(context: context, builder: widgetBuilder);
   }
 

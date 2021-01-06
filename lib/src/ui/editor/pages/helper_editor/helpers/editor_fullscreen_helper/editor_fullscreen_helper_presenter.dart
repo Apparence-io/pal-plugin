@@ -70,6 +70,9 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   // Title
   onTitleChanged(String id, String newValue)
     => _onTextChanged(viewModel.titleField, newValue);
+  
+  onTitleSubmit(String text)
+    => _onFieldSubmit(text);
 
   onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
     => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
@@ -78,12 +81,18 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   onDescriptionChanged(String id, String newValue)
     => _onTextChanged(viewModel.descriptionField, newValue);
 
+  onDescriptionSubmit(String text)
+    => _onFieldSubmit(text);
+
   onDescriptionTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.descriptionField, newTextStyle, fontKeys);
   
   // Positiv button
   onPositivTextChanged(String id, String newValue)
     => _onTextChanged(viewModel.positivButtonField, newValue);
+  
+  onPositivTextSubmit(String text)
+    => _onFieldSubmit(text);
 
   onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
     => _onStyleChanged(viewModel.positivButtonField, newTextStyle, fontKeys);
@@ -91,9 +100,13 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   // Negativ button
   onNegativTextChanged(String id, String newValue) 
     => _onTextChanged(viewModel.negativButtonField, newValue);
+  
+  onNegativTextSubmit(String text)
+    => _onFieldSubmit(text);
 
   onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
     => _onStyleChanged(viewModel.negativButtonField, newTextStyle, fontKeys);
+
   
 
   @override
@@ -181,4 +194,8 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
         && viewModel.negativButtonField.text.value.isNotEmpty
         && viewModel.titleField.text.value.isNotEmpty
         && viewModel.descriptionField.text.value.isNotEmpty;
+
+  _onFieldSubmit(String text) {
+    this.refreshView();
+  }
 }

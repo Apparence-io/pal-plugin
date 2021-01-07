@@ -13,6 +13,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_help
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/widgets/editor_action_item.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
@@ -95,12 +96,56 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('on preview press  => button is disabled', (WidgetTester tester) async {
+    Future _fillFields(WidgetTester tester, String firstField,String secondField,String thirdField) async {
+      // INIT TEXTFIELDS
+      var editableTextsFinder = find.byType(TextField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(0), firstField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(1), thirdField);
+      await tester.pump();
+
+      // add new changelog line
+      var addChangelogButtonFinder = find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'));
+      await tester.tap(addChangelogButtonFinder);
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
+      var editableFinder = find.byType(TextField);
+      await enterTextInEditable(tester, editableFinder.at(1), secondField);
+      await tester.pump();
+      // INIT TEXTFIELDS
+    }
+
+    testWidgets('on preview press  => show update client preview & cancel',
+        (WidgetTester tester) async {
       await beforeEach(tester);
-      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
-      var textMode = find.byKey(ValueKey('editableActionBarPreviewButton'));
-      await tester.tap(textMode);
+
+      final String firstField = 'test title edited';
+      final String secondField = 'test button edited';
+      final String thirdField = 'test changelog edited';
+      await _fillFields(tester, firstField, secondField,thirdField);
+
+      final previewButtonFinder =
+          find.byKey(ValueKey('editableActionBarPreviewButton'));
+      final previewButton =
+          previewButtonFinder.evaluate().first.widget as EditorActionItem;
+      previewButton.onTap();
+
+      expect(find.byType(EditorUpdateHelperPage), findsNothing);
+      await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 5000));
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 700));
+      expect(find.byType(EditorPreviewPage), findsOneWidget);
+
+      expect(find.text(firstField),findsOneWidget);
+      expect(find.text(secondField),findsOneWidget);
+      expect(find.text(thirdField),findsOneWidget);
+
+      final positivButton = find.byKey(ValueKey('palFullscreenHelperPositivField'));
+      await tester.tap(positivButton);
       await tester.pumpAndSettle();
+      expect(find.byType(EditorPreviewPage), findsNothing);
+      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
     });
 
     testWidgets('close editor, pal bubble is hidden  => page is removed, pal bubble is visible', (WidgetTester tester) async {
@@ -158,8 +203,7 @@ void main() {
       var addChangelogButtonFinder = find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'));
       await tester.tap(addChangelogButtonFinder);
       await tester.pumpAndSettle(Duration(milliseconds: 500));
-      var editableFinder = find.byType(TextField);
-      await enterTextInEditable(tester, editableFinder.first, 'Lorem ipsum');
+      
       await enterTextInEditable(tester, editableFinder.at(1), 'Lorem ipsum changelog');
 
       var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
@@ -182,7 +226,8 @@ void main() {
 
       var hecColorField = find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
       await tester.enterText(hecColorField, '#FFFFFF');
-      await tester.pumpAndSettle();
+      await testervar editableFinder = find.byType(TextField);
+      await enterTextInEditable(tester, editableFinder.first, 'Lorem ipsum');.pumpAndSettle();
 
       var validateColorButton = find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
       await tester.tap(validateColorButton);

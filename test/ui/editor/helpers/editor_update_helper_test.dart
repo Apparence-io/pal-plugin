@@ -141,7 +141,7 @@ void main() {
       expect(find.text(secondField),findsOneWidget);
       expect(find.text(thirdField),findsOneWidget);
 
-      final positivButton = find.byKey(ValueKey('palFullscreenHelperPositivField'));
+      final positivButton = find.byKey(ValueKey('pal_EditorUpdateHelperWidget_ThanksButtonField'));
       await tester.tap(positivButton);
       await tester.pumpAndSettle();
       expect(find.byType(EditorPreviewPage), findsNothing);

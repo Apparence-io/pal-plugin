@@ -180,7 +180,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
                                                 .viewInsets
                                                 .bottom +
                                             20.0
-                                        : 155.0,
+                                        : 50.0 + MediaQuery.of(context).padding.bottom,
                               ),
                               textFormFieldPadding: const EdgeInsets.symmetric(
                                 vertical: 16.0,

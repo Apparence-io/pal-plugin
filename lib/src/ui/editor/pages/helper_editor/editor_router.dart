@@ -177,6 +177,7 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath> wit
     return Navigator(
       key: innerEditorNavKey,
       onGenerateRoute: (RouteSettings settings) {
+        // TODO: Remove unused font family et font weight
         switch (settings.name) {
           case '/editor/new/font-family':
             FontFamilyPickerArguments args = settings.arguments;
@@ -196,6 +197,13 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath> wit
               builder: (context) =>
                 MediaGalleryPage(
                   mediaId: args.mediaId,
+                ));
+          case '/editor/preview':
+            return MaterialPageRoute(
+              builder: (context) =>
+                Scaffold(
+                  appBar: AppBar(),
+                  backgroundColor: Colors.transparent,
                 ));
           default:
             return MaterialPageRoute(

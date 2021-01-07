@@ -121,10 +121,10 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                   color: Colors.black.withOpacity(0.3),
                   child: EditorActionsBar(
                     onCancel: presenter.onCancel,
-                            onValidate: (model.canValidate?.value == true)
-                                ? presenter.onValidate
-                                : null,
-                            visible: model.anchorValidated,
+                    onValidate: (model.canValidate?.value == true)
+                        ? presenter.onValidate
+                        : null,
+                    visible: model.anchorValidated,
                     child: Stack(
                         children: [
                           

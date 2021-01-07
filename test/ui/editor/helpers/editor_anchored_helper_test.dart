@@ -111,6 +111,21 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
     }
 
+    Future _passSecondStep(WidgetTester tester, String firstField,String secondFiled,String thirdField,String fourrhField,) async {
+      // INIT TEXTFIELDS
+      var editableTextsFinder = find.byType(TextField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(0), firstField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(1), secondField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(2), thirdField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(3), fourthField);
+      await tester.pump();
+      // INIT TEXTFIELDS
+    }
+
     testWidgets('can add an anchored fullscreen helper',
         (WidgetTester tester) async {
       await beforeEach(tester);
@@ -143,17 +158,70 @@ void main() {
       expect(settingsButton.onTap, isNull);
     });
 
-    testWidgets('on preview press  => button is disabled',
+    testWidgets('on preview press  => show anchored client preview & cancel with positiv button',
         (WidgetTester tester) async {
       await beforeEach(tester);
       await _passFirstStep(tester);
+
+      final String firstField = 'test title edited';
+      final String secondField = 'test description edited';
+      final String thirdField = 'negativ edit';
+      final String fourthField = 'positiv edit';
+      await _passSecondStep(tester, firstField, secondField, thirdField, fourthField);
+
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
-      expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
+      previewButton.onTap();
 
-      expect(previewButton.onTap, isNull);
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsNothing);
+      await tester.pump(Duration(seconds: 2));
+      expect(find.byType(EditorPreviewPage), findsOneWidget);
+
+      expect(find.text(firstField),findsOneWidget);
+      expect(find.text(secondField),findsOneWidget);
+      expect(find.text(thirdField),findsOneWidget);
+      expect(find.text(fourthField),findsOneWidget);
+
+      final positivButton = find.byKey(ValueKey('positiveFeedback'));
+      await tester.tap(positivButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(EditorPreviewPage), findsNothing);
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
+    });
+
+    testWidgets('on preview press  => show anchored client preview & cancel with negativ button',
+        (WidgetTester tester) async {
+      await beforeEach(tester);
+      await _passFirstStep(tester);
+
+      final String firstField = 'test title edited';
+      final String secondField = 'test description edited';
+      final String thirdField = 'negativ edit';
+      final String fourthField = 'positiv edit';
+      await _passSecondStep(tester, firstField, secondField, thirdField, fourthField);
+
+      final previewButtonFinder =
+          find.byKey(ValueKey('editableActionBarPreviewButton'));
+      final previewButton =
+          previewButtonFinder.evaluate().first.widget as EditorActionItem;
+      previewButton.onTap();
+
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsNothing);
+      await tester.pump(Duration(seconds: 2));
+      expect(find.byType(EditorPreviewPage), findsOneWidget);
+
+      expect(find.text(firstField),findsOneWidget);
+      expect(find.text(secondField),findsOneWidget);
+      expect(find.text(thirdField),findsOneWidget);
+      expect(find.text(fourthField),findsOneWidget);
+
+      final negativButton = find.byKey(ValueKey('negativeFeedback'));
+      await tester.tap(negativButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(EditorPreviewPage), findsNothing);
+      expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
     });
 
     testWidgets(

@@ -51,7 +51,6 @@ class _EditorActionsBarState extends State<EditorActionsBar>
 
   @override
   void initState() {
-    
     this.controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -60,10 +59,6 @@ class _EditorActionsBarState extends State<EditorActionsBar>
       upperBound: 1,
     );
     super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((duration) {
-      
-    });
   }
 
   @override

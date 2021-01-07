@@ -169,6 +169,9 @@ class EditorFullScreenHelperPage extends StatelessWidget {
         onValidate: (model.canValidate?.value == true)
             ? presenter.onValidate
             : null,
+        onPreview: () {
+                        Navigator.pushNamed(context, '/editor/preview');
+                      },
         child: GestureDetector(
           key: ValueKey('palEditorFullscreenHelperWidget'),
           onTap: presenter.onOutsideTap,

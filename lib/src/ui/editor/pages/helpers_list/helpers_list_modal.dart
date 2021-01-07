@@ -18,6 +18,7 @@ import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal_viewmode
 import 'package:pal/src/ui/editor/pages/helpers_list/widgets/helper_tile_widget.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_details/helper_details_model.dart';
+import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 abstract class HelpersListModalView {
 

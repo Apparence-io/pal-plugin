@@ -137,6 +137,7 @@ void main() {
       expect(validateButton.onTapCallback, isNotNull);
       expect(presenter.viewModel.titleField.text.value, 'Lorem ipsum');
       expect(presenter.viewModel.changelogsFields['0'].text.value, 'Lorem ipsum changelog');
+      await tester.pump(Duration(milliseconds: 100));
     });
 
     testWidgets('click on + button => add one changelog line', (WidgetTester tester) async {

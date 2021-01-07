@@ -188,6 +188,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: SafeArea(
+                      bottom: false,
                       child: SingleChildScrollView(
                         padding: EdgeInsets.only(top: 25.0, bottom: 50.0),
                         child: Column(

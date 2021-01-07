@@ -52,12 +52,7 @@ class EditableMedia extends StatelessWidget {
                 key: ValueKey(editKey),
                 icon: Icon(Icons.edit),
                 backgroundColor: PalTheme.of(context).colors.light,
-                onTapCallback: () {
-                  if (onEdit != null) {
-                    HapticFeedback.selectionClick();
-                    onEdit();
-                  }
-                },
+                onTapCallback: onEdit,
               ),
             ),
           ],

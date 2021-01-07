@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
@@ -99,13 +98,7 @@ class EditHelperToolbar extends StatelessWidget {
                         key: ValueKey('pal_EditHelperToolbar_TextColor'),
                         radius: _toolbarHeight / 2,
                         backgroundColor: Colors.transparent,
-                        onTapCallback: () {
-                          HapticFeedback.selectionClick();
-
-                          if (onChangeTextColor != null) {
-                            onChangeTextColor();
-                          }
-                        },
+                        onTapCallback: onChangeTextColor,
                         icon: Icon(
                           Icons.format_color_text,
                           color: Colors.white,
@@ -116,13 +109,7 @@ class EditHelperToolbar extends StatelessWidget {
                         key: ValueKey('pal_EditHelperToolbar_TextFont'),
                         radius: _toolbarHeight / 2,
                         backgroundColor: Colors.transparent,
-                        onTapCallback: () {
-                          HapticFeedback.selectionClick();
-
-                          if (onChangeTextFont != null) {
-                            onChangeTextFont();
-                          }
-                        },
+                        onTapCallback: onChangeTextFont,
                         icon: Icon(
                           Icons.font_download,
                           color: Colors.white,
@@ -144,13 +131,7 @@ class EditHelperToolbar extends StatelessWidget {
                 key: ValueKey('pal_EditHelperToolbar_Close'),
                 radius: _toolbarHeight / 2,
                 backgroundColor: Colors.transparent,
-                onTapCallback: () {
-                  HapticFeedback.selectionClick();
-
-                  if (onCloseTap != null) {
-                    onCloseTap();
-                  }
-                },
+                onTapCallback: onCloseTap,
                 icon: Icon(
                   Icons.close,
                   color: Colors.white,
@@ -172,13 +153,7 @@ class EditHelperToolbar extends StatelessWidget {
           key: action.key,
           radius: _toolbarHeight / 2,
           backgroundColor: Colors.transparent,
-          onTapCallback: () {
-            HapticFeedback.selectionClick();
-
-            if (action.onTap != null) {
-              action.onTap();
-            }
-          },
+          onTapCallback: action.onTap,
           icon: Icon(
             action.icon,
             color: Colors.white,

@@ -362,7 +362,7 @@ void main() {
       var validateColorButton =
           find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
       await tester.tap(validateColorButton);
-      await tester.pump();
+      await tester.pump(Duration(milliseconds: 100));
 
       expect(_getAnchorFullscreenPainter().bgColor, Color(0xFFFFFFFF));
       expect(presenter.viewModel.backgroundBox.backgroundColor.value,

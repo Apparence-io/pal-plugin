@@ -140,26 +140,23 @@ class EditorUpdateHelperPage extends StatelessWidget {
             : null,
         child: GestureDetector(
           onTap: presenter.onOutsideTap,
-          child: SafeArea(
-            bottom: false,
-            child: Form(
-              key: formKey,
-              autovalidateMode: AutovalidateMode.always,
-              child: EditableBackground(
-                backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
-                circleIconKey:
-                    'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
-                onColorChange: presenter.changeBackgroundColor,
-                widget: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: Container(
-                    width: double.infinity,
-                    color: viewModel.bodyBox?.backgroundColor?.value,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:
-                          _buildEditableContent(presenter, viewModel, context),
-                    ),
+          child: Form(
+            key: formKey,
+            autovalidateMode: AutovalidateMode.always,
+            child: EditableBackground(
+              backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
+              circleIconKey:
+                  'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
+              onColorChange: presenter.changeBackgroundColor,
+              widget: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Container(
+                  width: double.infinity,
+                  color: viewModel.bodyBox?.backgroundColor?.value,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children:
+                        _buildEditableContent(presenter, viewModel, context),
                   ),
                 ),
               ),
@@ -176,36 +173,39 @@ class EditorUpdateHelperPage extends StatelessWidget {
           final BuildContext context) =>
       [
         Expanded(
-          child: Center(
-            child: SingleChildScrollView(
-              reverse: false,
-              controller: scrollController,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 10.0,
-                  right: 10.0,
-                  top: 25.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    EditableMedia(
-                      editKey:
-                          'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
-                      mediaSize: 123.0,
-                      onEdit: presenter.editMedia,
-                      url: viewModel.media?.url?.value,
-                    ),
-                    SizedBox(height: 40),
-                    EditableTextField.fromNotifier(
-                        presenter.editableTextFieldController.stream,
-                        viewModel.titleField,
-                        presenter.onTitleFieldChanged,
-                        presenter.onTitleFieldSubmitted,
-                        presenter.onTitleTextStyleChanged),
-                    SizedBox(height: 25.0),
-                    _buildChangelogFields(context, presenter, viewModel),
-                  ],
+          child: SafeArea(
+            bottom: false,
+            child: Center(
+              child: SingleChildScrollView(
+                reverse: false,
+                controller: scrollController,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                    top: 25.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      EditableMedia(
+                        editKey:
+                            'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
+                        mediaSize: 123.0,
+                        onEdit: presenter.editMedia,
+                        url: viewModel.media?.url?.value,
+                      ),
+                      SizedBox(height: 40),
+                      EditableTextField.fromNotifier(
+                          presenter.editableTextFieldController.stream,
+                          viewModel.titleField,
+                          presenter.onTitleFieldChanged,
+                          presenter.onTitleFieldSubmitted,
+                          presenter.onTitleTextStyleChanged),
+                      SizedBox(height: 25.0),
+                      _buildChangelogFields(context, presenter, viewModel),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -255,10 +255,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
               size: 35.0,
             ),
             displayShadow: false,
-            onTapCallback: () {
-              HapticFeedback.selectionClick();
-              presenter.addChangelogNote();
-            },
+            onTapCallback: presenter.addChangelogNote,
           ),
         ),
       ],

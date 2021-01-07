@@ -58,12 +58,7 @@ class AnimatedAppIcon extends AnimatedWidget {
                 ),
                 backgroundColor: PalTheme.of(context).colors.dark,
                 onTapCallback: !isSendingAppIcon
-                    ? () {
-                        if (onTap != null) {
-                          HapticFeedback.selectionClick();
-                          onTap();
-                        }
-                      }
+                    ? onTap
                     : null,
               ),
             )

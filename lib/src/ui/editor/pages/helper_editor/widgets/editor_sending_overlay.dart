@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum SendingStatus {
   SENDING,
@@ -106,8 +107,10 @@ class EditorSendingOverlay {
       case SendingStatus.SENDING:
         return _buildLoadingScreen();
       case SendingStatus.ERROR:
+        HapticFeedback.lightImpact();
         return _buildCreationStatusScreen(false);
       case SendingStatus.SENT:
+        HapticFeedback.mediumImpact();
         return _buildCreationStatusScreen(true);
     }
   }

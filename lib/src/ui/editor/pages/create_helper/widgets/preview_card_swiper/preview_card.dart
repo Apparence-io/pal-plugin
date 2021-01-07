@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 class PreviewCard {
   final String previewImage;
@@ -35,100 +36,71 @@ class PreviewCardWidget extends StatefulWidget {
 
 class _PreviewCardWidgetState extends State<PreviewCardWidget>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  double _scale;
-  Duration _duration = Duration(milliseconds: 100);
-
-  @override
-  void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: _duration,
-      lowerBound: 0.0,
-      upperBound: 0.1,
-    )..addListener(() {
-        setState(() {});
-      });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _animationController?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    _scale = 1 - _animationController.value;
-
-    return GestureDetector(
+    return BouncingWidget(
       key: ValueKey('pal_PreviewCard_${widget.index}'),
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: _onTapCancel,
-      child: Transform.scale(
-        scale: _scale,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            side: (widget.cardData.isSelected)
-                ? BorderSide(
-                    color: PalTheme.of(context).colors.color1,
-                    width: 6.0,
-                  )
-                : BorderSide.none,
-          ),
-          elevation: 15,
-          child: Stack(
-            children: [
-              if (widget.cardData.isSelected) _buildCheckbox(),
-              Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 35.0,
+      onTap: () => widget.onTap?.call(widget.index),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.0),
+          side: (widget.cardData.isSelected)
+              ? BorderSide(
+                  color: PalTheme.of(context).colors.color1,
+                  width: 6.0,
+                )
+              : BorderSide.none,
+        ),
+        elevation: 15,
+        child: Stack(
+          children: [
+            if (widget.cardData.isSelected) _buildCheckbox(),
+            Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20.0,
+                      horizontal: 35.0,
+                    ),
+                    child: Image.asset(widget.cardData.previewImage, package: 'pal'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                    bottom: 30.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.cardData.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      child: Image.asset(widget.cardData.previewImage, package: 'pal'),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                      bottom: 30.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.cardData.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      SizedBox(height: 6.0),
+                      Text(
+                        widget.cardData.description,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11.0,
+                          fontWeight: FontWeight.w300,
                         ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          widget.cardData.description,
-                          maxLines: 4,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11.0,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -156,21 +128,5 @@ class _PreviewCardWidgetState extends State<PreviewCardWidget>
         ),
       ),
     );
-  }
-
-  _onTapDown(TapDownDetails details) {
-    _animationController.forward();
-    HapticFeedback.selectionClick();
-  }
-
-  _onTapUp(TapUpDetails details) {
-    Future.delayed(_duration, () {
-      _animationController.reverse();
-    });
-    widget.onTap(widget.index);
-  }
-
-  _onTapCancel() {
-    _animationController.reverse();
   }
 }

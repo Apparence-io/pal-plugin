@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pal/src/theme.dart';
@@ -8,10 +10,13 @@ typedef OnCancel();
 typedef OnPreview();
 typedef OnSettings();
 typedef OnText();
-
 typedef OnValidate = Future<void> Function();
 
-class EditorActionsBar extends StatelessWidget {
+// ************ ANIMATION BOUNDS
+const double UPPERBOUND = 100;
+const double LOWERBOUND = 0;
+
+class EditorActionsBar extends StatefulWidget {
   final Widget child;
   final OnCancel onCancel;
   final OnText onText;
@@ -20,8 +25,6 @@ class EditorActionsBar extends StatelessWidget {
   final OnValidate onValidate;
   final GlobalKey scaffoldKey;
   final bool visible;
-
-  final kFloatingRadius = 45.0;
 
   EditorActionsBar({
     this.child,
@@ -36,19 +39,93 @@ class EditorActionsBar extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _EditorActionsBarState createState() => _EditorActionsBarState();
+}
+
+class _EditorActionsBarState extends State<EditorActionsBar>
+    with SingleTickerProviderStateMixin {
+  final kFloatingRadius = 45.0;
+  // ANIMATION CONTROLLER
+  AnimationController controller;
+  // ANIMATION TARGET : Controller will animate to *animationTarget*, on next cycle
+  double animationTarget;
+
+  @override
+  void initState() {
+    this.animationTarget = UPPERBOUND;
+    this.controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+      value: 0,
+      lowerBound: 0,
+      upperBound: 1,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() { 
+    this.controller.dispose();
+    super.dispose();
+  }
+
+  double _currentControllerValue() => this.controller.value * UPPERBOUND;
+
+  @override
   Widget build(BuildContext context) {
+    final kDeg90TRad = 1.5708;
+
     return Scaffold(
-      key: scaffoldKey,
+      key: widget.scaffoldKey,
       backgroundColor: Colors.transparent,
-      body: child,
+      body: Stack(
+        children: [
+          SafeArea(child: widget.child),
+          if (widget.visible)
+            AnimatedBuilder(
+              animation: this.controller,
+              builder: (context, child) => Positioned(
+                bottom: 110 - _currentControllerValue(),
+                right: 20,
+                child: Transform.rotate(
+                  angle: kDeg90TRad * -(cos(this.controller.value * pi / 2)),
+                  child: CircleIconButton.animatedIcon(
+                    key: ValueKey('EditorActionBarDrawerButton'),
+                    backgroundColor: PalTheme.of(context).colors.color2,
+                    animatedIcon: AnimatedIcon(
+                      icon: AnimatedIcons.arrow_menu,
+                      progress: controller,
+                      color: Colors.white,
+                      semanticLabel: 'Show menu',
+                    ),
+                    onTapCallback: () {
+                      this.controller.animateTo(
+                          this.animationTarget / UPPERBOUND,
+                          curve: Curves.easeOut);
+                      this.setState(() {
+                        this.animationTarget =
+                            this.animationTarget == LOWERBOUND
+                                ? UPPERBOUND
+                                : LOWERBOUND;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      extendBody: true,
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton:
-          visible ? this._buildSaveFloatingButton(context) : null,
-      bottomNavigationBar: visible ? this._buildTabItems(context) : null,
+      floatingActionButton: widget.visible && this.animationTarget == UPPERBOUND
+          ? this._buildSaveFloatingButton(context)
+          : null,
+      bottomNavigationBar: widget.visible ? this._buildTabItems(context) : null,
     );
   }
 
+// **************************************************** FLOATING BUTTON ****************************************************
   Widget _buildSaveFloatingButton(BuildContext context) {
     return CircleIconButton(
       key: ValueKey('editableActionBarValidateButton'),
@@ -69,23 +146,23 @@ class EditorActionsBar extends StatelessWidget {
         color: Colors.white,
         size: kFloatingRadius,
       ),
-      onTapCallback: this.onValidate != null
-          ? () {
-              HapticFeedback.mediumImpact();
-              this.onValidate?.call();
-            }
-          : null,
+      onTapCallback: widget.onValidate,
     );
   }
+// **************************************************** /FLOATING BUTTON\ ****************************************************
 
+// **************************************************** BOTTOM BAR ITEMS ****************************************************
   Widget _buildTabItems(BuildContext context) {
     final kIconColor = Colors.white;
     final kIconSize = 32.0;
 
-    return BottomAppBar(
-      color: PalTheme.of(context).colors.dark,
-      shape: null,
-      child: Container(
+    return AnimatedBuilder(
+      animation: this.controller,
+      builder: (context, child) => Transform.translate(
+          offset: Offset(0, _currentControllerValue()), child: child),
+      child: BottomAppBar(
+        color: PalTheme.of(context).colors.dark,
+        shape: null,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8),
           child: Row(
@@ -99,12 +176,12 @@ class EditorActionsBar extends StatelessWidget {
                     EditorActionItem(
                       key: ValueKey('editableActionBarCancelButton'),
                       icon: Icon(
-                        Icons.close,
+                        Icons.exit_to_app,
                         color: kIconColor,
                         size: kIconSize,
                       ),
-                      text: 'CANCEL',
-                      onTap: this.onCancel,
+                      text: 'QUIT',
+                      onTap: widget.onCancel,
                     ),
                     EditorActionItem(
                       key: ValueKey('editableActionBarTextButton'),
@@ -114,7 +191,7 @@ class EditorActionsBar extends StatelessWidget {
                         size: kIconSize,
                       ),
                       text: 'TEXT',
-                      onTap: this.onText,
+                      onTap: widget.onText,
                     ),
                   ],
                 ),
@@ -132,7 +209,7 @@ class EditorActionsBar extends StatelessWidget {
                         size: kIconSize,
                       ),
                       text: 'SETTINGS',
-                      onTap: this.onSettings,
+                      onTap: widget.onSettings,
                     ),
                     EditorActionItem(
                       key: ValueKey('editableActionBarPreviewButton'),
@@ -142,7 +219,7 @@ class EditorActionsBar extends StatelessWidget {
                         size: kIconSize,
                       ),
                       text: 'PREVIEW',
-                      onTap: this.onPreview,
+                      onTap: widget.onPreview,
                     ),
                   ],
                 ),
@@ -154,3 +231,4 @@ class EditorActionsBar extends StatelessWidget {
     );
   }
 }
+// **************************************************** /BOTTOM BAR ITEMS\ ****************************************************

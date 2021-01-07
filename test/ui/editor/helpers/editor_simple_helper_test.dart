@@ -11,6 +11,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/widgets/editor_action_item.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
@@ -113,6 +114,83 @@ void main() {
       expect(validateFinder, findsOneWidget);
       var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNull);
+    });
+
+    Future _fillFields(WidgetTester tester, String firstField) async {
+      // INIT TEXTFIELDS
+      var editableTextsFinder = find.byType(TextField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(0), firstField);
+      await tester.pump();
+      // INIT TEXTFIELDS
+    }
+
+    testWidgets('on preview press  => show simple client preview & cancel with positiv button',
+        (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      final String firstField = 'test title edited';
+      await _fillFields(tester, firstField);
+
+      final previewButtonFinder =
+          find.byKey(ValueKey('editableActionBarPreviewButton'));
+      final previewButton =
+          previewButtonFinder.evaluate().first.widget as EditorActionItem;
+      previewButton.onTap();
+
+      expect(find.byType(EditorSimpleHelperPage), findsNothing);
+      await tester.pump(Duration(milliseconds: 1300));
+      await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 500));
+      expect(find.byType(EditorPreviewPage), findsOneWidget);
+
+      expect(find.text(firstField),findsOneWidget);
+
+      var toastFinder = find.byType(Dismissible);
+      expect(toastFinder, findsOneWidget);
+      var center = tester.getCenter(toastFinder);
+      var gesture = await tester.startGesture(center);
+      await gesture.moveBy(Offset(-300, 0));
+      // await tester.drag(toastFinder, Offset(300, 0));
+      await tester.pump();
+      // expect(dismissed, isTrue); //Not working as moveBy seems have no effect
+
+      expect(find.byType(EditorPreviewPage), findsNothing);
+      expect(find.byType(EditorSimpleHelperPage), findsOneWidget);
+    });
+
+    testWidgets('on preview press  => show simple client preview & cancel with negativ button',
+        (WidgetTester tester) async {
+      await _beforeEach(tester);
+
+      final String firstField = 'test title edited';
+      await _fillFields(tester, firstField);
+
+      final previewButtonFinder =
+          find.byKey(ValueKey('editableActionBarPreviewButton'));
+      final previewButton =
+          previewButtonFinder.evaluate().first.widget as EditorActionItem;
+      previewButton.onTap();
+
+      expect(find.byType(EditorSimpleHelperPage), findsNothing);
+      await tester.pump(Duration(milliseconds: 1300));
+      await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 500));
+      expect(find.byType(EditorPreviewPage), findsOneWidget);
+
+      expect(find.text(firstField),findsOneWidget);
+      
+      var toastFinder = find.byType(Dismissible);
+      expect(toastFinder, findsOneWidget);
+      var center = tester.getCenter(toastFinder);
+      var gesture = await tester.startGesture(center);
+      await gesture.moveBy(Offset(300, 0));
+      // await tester.drag(toastFinder, Offset(300, 0));
+      await tester.pump();
+      // expect(dismissed, isTrue); //Not working as moveBy seems have no effect
+
+      expect(find.byType(EditorPreviewPage), findsNothing);
+      expect(find.byType(EditorSimpleHelperPage), findsOneWidget);
     });
 
     testWidgets('text is clicked, toolbar is visible => click outside of it close the toolbar', (WidgetTester tester) async {

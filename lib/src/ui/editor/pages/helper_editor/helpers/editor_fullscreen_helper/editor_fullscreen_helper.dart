@@ -166,12 +166,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       resizeToAvoidBottomPadding: true,
       body: EditorActionsBar(
         onCancel: presenter.onCancel,
-        onValidate: (model.canValidate?.value == true)
-            ? presenter.onValidate
-            : null,
+        onValidate:
+            (model.canValidate?.value == true) ? presenter.onValidate : null,
         onPreview: () {
-                        Navigator.pushNamed(context, '/editor/preview');
-                      },
+          Navigator.pushNamed(context, '/editor/preview');
+        },
         child: GestureDetector(
           key: ValueKey('palEditorFullscreenHelperWidget'),
           onTap: presenter.onOutsideTap,
@@ -239,7 +238,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   model.positivButtonField,
                                   presenter.onPositivTextChanged,
                                   presenter.onPositivTextSubmit,
-                                  presenter.onPositivTextStyleChanged),
+                                  presenter.onPositivTextStyleChanged,
+                                  helperToolbarKey: ValueKey(
+                                      'palEditorFullscreenHelperWidgetToolbar'),
+                                  textFormFieldKey: ValueKey(
+                                      'palFullscreenHelperPositivField')),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 12.0),
@@ -248,7 +251,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   model.negativButtonField,
                                   presenter.onNegativTextChanged,
                                   presenter.onNegativTextSubmit,
-                                  presenter.onNegativTextStyleChanged),
+                                  presenter.onNegativTextStyleChanged,
+                                  helperToolbarKey: ValueKey(
+                                      'palEditorFullscreenHelperWidgetToolbar'),
+                                  textFormFieldKey: ValueKey(
+                                      'palFullscreenHelperNegativField')),
                             ),
                           ],
                         ),

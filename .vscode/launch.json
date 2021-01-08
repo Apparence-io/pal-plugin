@@ -14,14 +14,14 @@
         "SERVER_URL=http://217.182.88.6:8050"
       ]
     },
-    {
-      "name": "Dart: Run all Tests",
-      "type": "dart",
-      "request": "launch",
-      "program": "./test/",
-      "presentation": {
-        "clear": true,
-      }
-    },
+    // {
+    //   "name": "Dart: Run all Tests",
+    //   "type": "dart",
+    //   "request": "launch",
+    //   "program": "./test/",
+    //   "presentation": {
+    //     "clear": true,
+    //   }
+    // },
   ]
 }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 import 'helpers/simple_helper/widget/simple_helper_layout.dart';
 import 'helpers/user_anchored_helper/anchored_helper_widget.dart';
@@ -163,10 +165,40 @@ class HelperFactory {
 
   static Widget _createAnchoredHelper(final HelperEntity helper, final Function onTrigger, final Function onError) {
     return AnchoredHelper.fromEntity(
-      helperEntity: helper,
+      titleLabel:  HelperSharedFactory.parseTextLabel(
+        AnchoredscreenHelperKeys.TITLE_KEY,
+        helper.helperTexts,
+      ),
+      descriptionLabel:  HelperSharedFactory.parseTextLabel(
+        AnchoredscreenHelperKeys.DESCRIPTION_KEY,
+        helper.helperTexts,
+      ),
+      // TODO: Create ID for box
+      helperBoxViewModel: HelperBoxViewModel(
+        backgroundColor: HexColor.fromHex(helper.helperBoxes.first.backgroundColor),
+        id: helper.helperBoxes.first.id,
+      ),
+      // TODO: Create on back correct way to save id
+      anchorKey: helper.helperBoxes.first.key,
+      positivButtonLabel:  HelperSharedFactory.parseTextLabel(
+        AnchoredscreenHelperKeys.POSITIV_KEY,
+        helper.helperTexts,
+      ),
+      negativButtonLabel:  HelperSharedFactory.parseTextLabel(
+        AnchoredscreenHelperKeys.NEGATIV_KEY,
+        helper.helperTexts,
+      ),
+      // final Color bgColor;
+      // final String anchorKey;
       onPositivButtonTap: () => onTrigger(true),
       onNegativButtonTap: () => onTrigger(false),
       onError: onError,
     );
+    // return AnchoredHelper.fromEntity(
+    //   helperEntity: helper,
+    //   onPositivButtonTap: () => onTrigger(true),
+    //   onNegativButtonTap: () => onTrigger(false),
+    //   onError: onError,
+    // );
   }
 }

@@ -284,6 +284,7 @@ class UserUpdateHelperPage extends StatelessWidget
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: Text(
                       thanksButtonLabel?.text ?? 'Thank you !',
+                      key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Label'),
                       style: TextStyle(
                         fontSize: thanksButtonLabel?.fontSize ?? 18.0,
                         color: thanksButtonLabel?.fontColor ?? Colors.white,

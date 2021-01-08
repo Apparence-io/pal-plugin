@@ -63,7 +63,7 @@ class _EditorActionsBarState extends State<EditorActionsBar>
 
   @override
   void didChangeDependencies() {
-    this.kUpperbound = 70 + MediaQuery.of(context).padding.bottom;
+    this.kUpperbound = this.kUpperbound ?? 70 + MediaQuery.of(context).padding.bottom;
     this.animationTarget = this.kUpperbound;
     super.didChangeDependencies();
   }

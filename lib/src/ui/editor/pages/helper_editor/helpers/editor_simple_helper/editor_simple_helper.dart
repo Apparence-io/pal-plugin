@@ -7,6 +7,9 @@ import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
+import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
@@ -14,6 +17,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart'
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
@@ -32,6 +36,8 @@ abstract class EditorSimpleHelperView {
   Future closeEditor();
 
   void closeLoadingScreen();
+
+  Future showPreviewOfHelper(SimpleHelperViewModel model);
 }
 
 class EditorSimpleHelperPage extends StatelessWidget {
@@ -122,6 +128,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
+        onPreview: presenter.onPreview,
         child: GestureDetector(
           key: ValueKey('palEditorSimpleHelperWidget'),
           onTap: presenter.onOutsideTap,
@@ -148,9 +155,9 @@ class EditorSimpleHelperPage extends StatelessWidget {
                                   'palEditorSimpleHelperWidgetToolbar'),
                               textFormFieldKey:
                                   ValueKey('palSimpleHelperDetailField'),
-                                  
                               onChanged: presenter.onDetailsFieldChanged,
-                              onFieldSubmitted: presenter.onDetailsFieldSubmitted,
+                              onFieldSubmitted:
+                                  presenter.onDetailsFieldSubmitted,
                               onTextStyleChanged:
                                   presenter.onDetailsTextStyleChanged,
                               maxLines: 3,
@@ -174,13 +181,14 @@ class EditorSimpleHelperPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(6.0),
                               ),
                               backgroundPadding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).viewInsets.bottom > 0
-                                        ? MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom +
-                                            20.0
-                                        : 50.0 + MediaQuery.of(context).padding.bottom,
+                                bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom >
+                                        0
+                                    ? MediaQuery.of(context).viewInsets.bottom +
+                                        20.0
+                                    : 50.0 +
+                                        MediaQuery.of(context).padding.bottom,
                               ),
                               textFormFieldPadding: const EdgeInsets.symmetric(
                                 vertical: 16.0,
@@ -262,6 +270,28 @@ class _EditorSimpleHelperPage
             onColorSelected: updateBackgroundColor,
             onCancel: onCancelPicker),
         key: OverlayKeys.PAGE_OVERLAY_KEY);
+  }
+
+  @override
+  Future showPreviewOfHelper(SimpleHelperViewModel model) async {
+    SimpleHelperPage page = SimpleHelperPage(
+      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
+      descriptionLabel:
+          HelperSharedFactory.parseTextNotifier(model.detailsField),
+    );
+    SimpleHelperLayout layout = SimpleHelperLayout(
+      toaster: page,
+      onDismissed: (res) => Navigator.of(context).pop(),
+    );
+
+    EditorPreviewArguments arguments = EditorPreviewArguments(
+      previewHelper: layout,
+    );
+    await Navigator.pushNamed(
+      context,
+      '/editor/preview',
+      arguments: arguments,
+    );
   }
 
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);

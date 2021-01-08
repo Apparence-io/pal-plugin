@@ -23,6 +23,9 @@ abstract class UserFullScreenHelperView {
 
 class UserFullScreenHelperPage extends StatelessWidget
     implements UserFullScreenHelperView {
+
+      // TODO: Create description field !!!!
+
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
   final HelperTextViewModel positivLabel;
@@ -141,7 +144,6 @@ class UserFullScreenHelperPage extends StatelessWidget
                       ),
                     ),
                   Flexible(
-                    key: ValueKey('pal_UserFullScreenHelperPage_Title'),
                     flex: 4,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 40.0),
@@ -189,6 +191,7 @@ class UserFullScreenHelperPage extends StatelessWidget
       widget: SingleChildScrollView(
         child: Text(
           titleLabel?.text ?? 'Title',
+          key: ValueKey('pal_UserFullScreenHelperPage_Title'),
           textAlign: TextAlign.center,
           style: TextStyle(
             color: titleLabel?.fontColor ?? Colors.white,
@@ -224,6 +227,8 @@ class UserFullScreenHelperPage extends StatelessWidget
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
                   positivLabel?.text ?? 'Ok, thanks !',
+                  key: ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
                   style: TextStyle(
                     color: positivLabel?.fontColor ?? Colors.white,
                     fontSize: positivLabel?.fontSize ?? 23.0,
@@ -240,8 +245,7 @@ class UserFullScreenHelperPage extends StatelessWidget
           SizedBox(
             width: double.infinity,
             child: RaisedButton(
-              key: ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_NegativButton'),
+              key: ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
               onPressed: () {
                 HapticFeedback.selectionClick();
                 presenter.onNegativButtonCallback();
@@ -254,6 +258,8 @@ class UserFullScreenHelperPage extends StatelessWidget
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
                   negativLabel?.text ?? 'This is not helping',
+                  key: ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_NegativLabel'),
                   style: TextStyle(
                     color: negativLabel?.fontColor ?? Colors.white,
                     fontSize: negativLabel?.fontSize ?? 13.0,

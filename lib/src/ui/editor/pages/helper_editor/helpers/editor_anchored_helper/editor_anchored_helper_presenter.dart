@@ -18,6 +18,7 @@ const EDITOR_PARENT_NODE_KEY = "EditorPage";
 class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
 
   final FinderService finderService;
+  final bool isTestingMode;
 
   final EditorHelperService helperEditorService;
 
@@ -27,6 +28,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     AnchoredFullscreenHelperViewModel viewModel,
     EditorAnchoredFullscreenHelperView viewInterface, 
     this.finderService,
+    this.isTestingMode,
     this.helperEditorService,
     this.parameters
     ): super(viewModel, viewInterface) {
@@ -221,6 +223,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
 
   _onFieldSubmit(String text) {
     this.refreshView();
+  }
+
+  onPreview() {
+    this.viewInterface.showPreviewOfHelper(this.viewModel,this.finderService, this.isTestingMode);
   }
 
 }

@@ -198,4 +198,8 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   _onFieldSubmit(String text) {
     this.refreshView();
   }
+
+  onPreview() {
+    this.viewInterface.showPreviewOfHelper(this.viewModel);
+  }
 }

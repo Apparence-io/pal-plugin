@@ -7,8 +7,11 @@ import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
@@ -20,6 +23,7 @@ import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/editor/widgets/editable_media.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
@@ -44,6 +48,8 @@ abstract class EditorUpdateHelperView {
   Future closeEditor();
 
   void closeLoadingScreen();
+
+  Future showPreviewOfHelper(UpdateHelperViewModel model);
 }
 
 class EditorUpdateHelperPage extends StatelessWidget {
@@ -57,11 +63,13 @@ class EditorUpdateHelperPage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final ScrollController scrollController = ScrollController();
+  final PackageVersionReader packageVersionReader;
 
   EditorUpdateHelperPage._({
     Key key,
     this.helperService,
     this.palEditModeStateService,
+    this.packageVersionReader,
     @required this.baseviewModel,
     @required this.arguments,
   }) : super(key: key);
@@ -71,6 +79,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
           HelperEditorPageArguments parameters,
           EditorHelperService helperService,
           PalEditModeStateService palEditModeStateService,
+          PackageVersionReader packageVersionReader,
           @required HelperViewModel helperViewModel}) =>
       EditorUpdateHelperPage._(
         key: key,
@@ -79,6 +88,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
         baseviewModel:
             UpdateHelperViewModel.fromHelperViewModel(helperViewModel),
         arguments: parameters,
+        packageVersionReader: packageVersionReader,
       );
 
   factory EditorUpdateHelperPage.edit(
@@ -86,6 +96,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
           HelperEditorPageArguments parameters,
           PalEditModeStateService palEditModeStateService,
           EditorHelperService helperService,
+          PackageVersionReader packageVersionReader,
           @required
               HelperEntity
                   helperEntity //FIXME should be an id and not entire entity
@@ -96,6 +107,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
         palEditModeStateService: palEditModeStateService,
         baseviewModel: UpdateHelperViewModel.fromHelperEntity(helperEntity),
         arguments: parameters,
+        packageVersionReader: packageVersionReader,
       );
 
   @override
@@ -111,7 +123,9 @@ class EditorUpdateHelperPage extends StatelessWidget {
                 _scaffoldKey,
                 scrollController,
                 palEditModeStateService ??
-                    EditorInjector.of(context).palEditModeStateService),
+                    EditorInjector.of(context).palEditModeStateService,
+                packageVersionReader ??
+                    EditorInjector.of(context).packageVersionReader),
             baseviewModel,
             helperService ?? EditorInjector.of(context).helperService,
             arguments);
@@ -138,6 +152,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
+        onPreview: presenter.onPreview,
         child: GestureDetector(
           onTap: presenter.onOutsideTap,
           child: Form(
@@ -350,9 +365,15 @@ class _EditorUpdateHelperPage
   final GlobalKey<ScaffoldState> scaffoldKey;
   final ScrollController scrollController;
   final PalEditModeStateService palEditModeStateService;
+  final PackageVersionReader packageVersionReader;
 
-  _EditorUpdateHelperPage(this.context, this.scaffoldKey, this.scrollController,
-      this.palEditModeStateService);
+  _EditorUpdateHelperPage(
+    this.context,
+    this.scaffoldKey,
+    this.scrollController,
+    this.palEditModeStateService,
+    this.packageVersionReader,
+  );
 
   BuildContext get overlayContext => context;
 
@@ -391,6 +412,29 @@ class _EditorUpdateHelperPage
         duration: const Duration(milliseconds: 500),
       );
     }
+  }
+
+  @override
+  Future showPreviewOfHelper(UpdateHelperViewModel model) async {
+    UserUpdateHelperPage page = UserUpdateHelperPage(
+      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
+      thanksButtonLabel: HelperSharedFactory.parseTextNotifier(model.thanksButton),
+      changelogLabels: model.changelogsFields.entries
+          .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
+          .toList(),
+      onPositivButtonTap: () => Navigator.pop(context),
+      packageVersionReader: this.packageVersionReader,
+    );
+
+    EditorPreviewArguments arguments = EditorPreviewArguments(
+      previewHelper: page,
+    );
+    await Navigator.pushNamed(
+      context,
+      '/editor/preview',
+      arguments: arguments,
+    );
   }
 
   @override

@@ -7,6 +7,8 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
@@ -16,6 +18,8 @@ import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/editor/widgets/editable_media.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -39,6 +43,8 @@ abstract class EditorFullScreenHelperView {
   Future closeEditor();
 
   void closeLoadingScreen();
+
+  Future showPreviewOfHelper(FullscreenHelperViewModel model);
 }
 
 class EditorFullScreenHelper
@@ -86,6 +92,27 @@ class EditorFullScreenHelper
     return (fontFamily != null && fontFamily.length > 0)
         ? GoogleFonts.getFont(fontFamily)
         : null;
+  }
+
+  @override
+  Future showPreviewOfHelper(FullscreenHelperViewModel model) async {
+    UserFullScreenHelperPage page = UserFullScreenHelperPage(
+      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
+      headerImageViewModel: HelperSharedFactory.parseMediaNotifier(model.media),
+      negativLabel: HelperSharedFactory.parseTextNotifier(model.negativButtonField),
+      positivLabel: HelperSharedFactory.parseTextNotifier(model.positivButtonField),
+      onNegativButtonTap: () => Navigator.pop(context),
+      onPositivButtonTap: () => Navigator.pop(context),
+    );
+    
+    EditorPreviewArguments arguments = EditorPreviewArguments(
+        previewHelper: page,);
+    await Navigator.pushNamed(
+      context,
+      '/editor/preview',
+      arguments: arguments,
+    );
   }
 }
 
@@ -166,9 +193,9 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       resizeToAvoidBottomPadding: true,
       body: EditorActionsBar(
         onCancel: presenter.onCancel,
-        onValidate: (model.canValidate?.value == true)
-            ? presenter.onValidate
-            : null,
+        onValidate:
+            (model.canValidate?.value == true) ? presenter.onValidate : null,
+        onPreview: presenter.onPreview,
         child: GestureDetector(
           key: ValueKey('palEditorFullscreenHelperWidget'),
           onTap: presenter.onOutsideTap,
@@ -236,7 +263,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   model.positivButtonField,
                                   presenter.onPositivTextChanged,
                                   presenter.onPositivTextSubmit,
-                                  presenter.onPositivTextStyleChanged),
+                                  presenter.onPositivTextStyleChanged,
+                                  helperToolbarKey: ValueKey(
+                                      'palEditorFullscreenHelperWidgetToolbar'),
+                                  textFormFieldKey: ValueKey(
+                                      'palFullscreenHelperPositivField')),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 12.0),
@@ -245,7 +276,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   model.negativButtonField,
                                   presenter.onNegativTextChanged,
                                   presenter.onNegativTextSubmit,
-                                  presenter.onNegativTextStyleChanged),
+                                  presenter.onNegativTextStyleChanged,
+                                  helperToolbarKey: ValueKey(
+                                      'palEditorFullscreenHelperWidgetToolbar'),
+                                  textFormFieldKey: ValueKey(
+                                      'palFullscreenHelperNegativField')),
                             ),
                           ],
                         ),

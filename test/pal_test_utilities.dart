@@ -9,6 +9,8 @@ import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/finder/finder_service.dart';
+import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
@@ -17,6 +19,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_help
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+
+import 'services/editor/versions/version_editor_service_test.dart';
 
 const Duration kLongPressTimeout = Duration(milliseconds: 500);
 
@@ -62,6 +66,8 @@ Future pumpHelperWidget(
     EditorHelperService editorHelperService,
     PalEditModeStateService palEditModeStateService,
     HelperEntity helperEntity, 
+    PackageVersionReader packageVersionReader,
+    FinderService finderService,
   }
 ) async {
   // push helper editor page
@@ -97,6 +103,7 @@ Future pumpHelperWidget(
           helperEntity: helperEntity,
           palEditModeStateService: palEditModeStateService,
           helperService: editorHelperService,
+          packageVersionReader: packageVersionReader,
         );
         break;
       case HelperType.HELPER_FULL_SCREEN:
@@ -113,6 +120,8 @@ Future pumpHelperWidget(
           helperEntity: helperEntity,
           palEditModeStateService: palEditModeStateService,
           helperService: editorHelperService,
+          finderService: finderService,
+          isTestingMode: true,
         );
         break;  
       default:
@@ -149,6 +158,8 @@ Future pumpHelperWidget(
           parameters: args,
           helperViewModel: templateViewModel,
           helperService: editorHelperService,
+          finderService: finderService,
+          isTestingMode: true,
         );
         break;
       default:

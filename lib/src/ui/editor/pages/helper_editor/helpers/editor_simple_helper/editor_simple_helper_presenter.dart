@@ -128,4 +128,8 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   bool isValid() => viewModel.detailsField.text.value.isNotEmpty;
 
+  onPreview() {
+    this.viewInterface.showPreviewOfHelper(this.viewModel);
+  }
+
 }

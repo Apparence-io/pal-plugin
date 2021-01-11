@@ -6,15 +6,19 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_model.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
@@ -42,6 +46,9 @@ abstract class EditorAnchoredFullscreenHelperView {
   void showErrorMessage(String message);
 
   void showTutorial(String title, String content);
+
+  Future showPreviewOfHelper(AnchoredFullscreenHelperViewModel model,
+      FinderService finderService, bool isTestingMode);
 }
 
 /// ------------------------------------------------------------
@@ -53,26 +60,34 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       StreamController<bool>.broadcast();
 
   final PresenterBuilder<EditorAnchoredFullscreenPresenter> presenterBuilder;
+  final FinderService finderService;
+  final bool isTestingMode;
 
   EditorAnchoredFullscreenHelper._({
     Key key,
     @required this.presenterBuilder,
+    this.finderService,
+    this.isTestingMode = false,
   }) : super(key: key);
 
   factory EditorAnchoredFullscreenHelper.create(
           {Key key,
           HelperEditorPageArguments parameters,
           EditorHelperService helperService,
+          FinderService finderService,
+          bool isTestingMode,
           @required HelperViewModel helperViewModel}) =>
       EditorAnchoredFullscreenHelper._(
         key: key,
         presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
-            AnchoredFullscreenHelperViewModel.fromModel(helperViewModel),
-            _EditorAnchoredFullscreenHelperView(
-                context, EditorInjector.of(context).palEditModeStateService),
-            EditorInjector.of(context).finderService,
-            helperService ?? EditorInjector.of(context).helperService,
-            parameters),
+          AnchoredFullscreenHelperViewModel.fromModel(helperViewModel),
+          _EditorAnchoredFullscreenHelperView(
+              context, EditorInjector.of(context).palEditModeStateService),
+          finderService ?? EditorInjector.of(context).finderService,
+          isTestingMode,
+          helperService ?? EditorInjector.of(context).helperService,
+          parameters,
+        ),
       );
 
   factory EditorAnchoredFullscreenHelper.edit(
@@ -80,6 +95,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
           HelperEditorPageArguments parameters,
           EditorHelperService helperService,
           PalEditModeStateService palEditModeStateService,
+          FinderService finderService,
+          bool isTestingMode,
           @required
               HelperEntity
                   helperEntity //FIXME should be an id and not entire entity
@@ -87,70 +104,61 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       EditorAnchoredFullscreenHelper._(
           key: key,
           presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
-              AnchoredFullscreenHelperViewModel.fromEntity(helperEntity),
-              _EditorAnchoredFullscreenHelperView(
-                  context, EditorInjector.of(context).palEditModeStateService),
-              EditorInjector.of(context).finderService,
-              helperService ?? EditorInjector.of(context).helperService,
-              parameters));
+                AnchoredFullscreenHelperViewModel.fromEntity(helperEntity),
+                _EditorAnchoredFullscreenHelperView(context,
+                    EditorInjector.of(context).palEditModeStateService),
+                finderService ?? EditorInjector.of(context).finderService,
+                isTestingMode,
+                helperService ?? EditorInjector.of(context).helperService,
+                parameters,
+              ));
 
   @override
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorAnchoredFullscreenPresenter,
             AnchoredFullscreenHelperViewModel>()
         .build(
-            context: context,
-            key: ValueKey("EditorAnchoredFullscreenHelperPage"),
-            presenterBuilder: presenterBuilder,
-            multipleAnimControllerBuilder: (tickerProvider) => [
-                  // AnchoredWidget repeating animation
-                  AnimationController(
-                      vsync: tickerProvider, duration: Duration(seconds: 1))
-                    ..repeat(reverse: true),
-                  // AnchoredWidget opacity animation
-                  AnimationController(
-                      vsync: tickerProvider,
-                      duration: Duration(milliseconds: 500))
-                ],
-            animListener: (context, presenter, model) {
-              if (model.selectedAnchorKey != null) {
-                context.animationsControllers[1].forward(from: 0);
-              }
-            },
-            builder: (context, presenter, model) => Material(
-                  color: Colors.black.withOpacity(0.3),
-                  child: EditorActionsBar(
-                    onCancel: presenter.onCancel,
-                            onValidate: (model.canValidate?.value == true)
-                                ? presenter.onValidate
-                                : null,
-                            visible: model.anchorValidated,
-                    child: Stack(
-                        children: [
-                          
-                          _createAnchoredWidget(
-                              model,
-                              context.animationsControllers[0],
-                              context.animationsControllers[1]),
-                          _buildEditableTexts(presenter, model),
-                          ..._createSelectableElements(presenter, model),
-                          _buildRefreshButton(presenter),
-                          
-                          _buildConfirmSelectionButton(
-                              context.buildContext, presenter, model),
-                          _buildBackgroundSelectButton(context.buildContext,
-                              model.anchorValidated, presenter),
-                          // EditorActionsBar(
-                          //   onCancel: presenter.onCancel,
-                          //   onValidate: (model.canValidate?.value == true)
-                          //       ? presenter.onValidate
-                          //       : null,
-                          //   visible: model.anchorValidated,
-                          // ),
-                        ],
-                      ),
-                  )
-                ));
+      context: context,
+      key: ValueKey("EditorAnchoredFullscreenHelperPage"),
+      presenterBuilder: presenterBuilder,
+      multipleAnimControllerBuilder: (tickerProvider) => [
+        // AnchoredWidget repeating animation
+        AnimationController(
+            vsync: tickerProvider, duration: Duration(seconds: 1))
+          ..repeat(reverse: true),
+        // AnchoredWidget opacity animation
+        AnimationController(
+            vsync: tickerProvider, duration: Duration(milliseconds: 500))
+      ],
+      animListener: (context, presenter, model) {
+        if (model.selectedAnchorKey != null) {
+          context.animationsControllers[1].forward(from: 0);
+        }
+      },
+      builder: (context, presenter, model) => Material(
+          color: Colors.black.withOpacity(0.3),
+          child: EditorActionsBar(
+            onCancel: presenter.onCancel,
+            onValidate: (model.canValidate?.value == true)
+                ? presenter.onValidate
+                : null,
+            visible: model.anchorValidated,
+            onPreview: presenter.onPreview,
+            child: Stack(
+              children: [
+                _createAnchoredWidget(model, context.animationsControllers[0],
+                    context.animationsControllers[1]),
+                _buildEditableTexts(presenter, model),
+                ..._createSelectableElements(presenter, model),
+                _buildRefreshButton(presenter),
+                _buildConfirmSelectionButton(
+                    context.buildContext, presenter, model),
+                _buildBackgroundSelectButton(
+                    context.buildContext, model.anchorValidated, presenter),
+              ],
+            ),
+          )),
+    );
   }
 
   _createSelectableElements(EditorAnchoredFullscreenPresenter presenter,
@@ -242,55 +250,58 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         !model.anchorValidated) return Container();
     return Positioned.fromRect(
       rect: model.writeArea ?? Rect.largest,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-            child: EditableTextField.fromNotifier(
-              editableTextFieldController.stream,
-              model.titleField,
-              presenter.onTitleChanged,
-              presenter.onTitleSubmit,
-              presenter.onTitleTextStyleChanged,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: EditableTextField.fromNotifier(
-              editableTextFieldController.stream,
-              model.descriptionField,
-              presenter.onDescriptionChanged,
-              presenter.onDescriptionSubmit,
-              presenter.onDescriptionTextStyleChanged,
-            ),
-          ),
-          SizedBox(height: 16),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: EditableTextField.editableButton(
-                  editableTextFieldController.stream,
-                  model.negativBtnField,
-                  presenter.onNegativTextChanged,
-                  presenter.onNegativSubmit,
-                  presenter.onNegativTextStyleChanged,
-                ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 50.0, top: 5.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+              child: EditableTextField.fromNotifier(
+                editableTextFieldController.stream,
+                model.titleField,
+                presenter.onTitleChanged,
+                presenter.onTitleSubmit,
+                presenter.onTitleTextStyleChanged,
               ),
-              Flexible(
-                child: EditableTextField.editableButton(
-                  editableTextFieldController.stream,
-                  model.positivBtnField,
-                  presenter.onPositivTextChanged,
-                  presenter.onPositivSubmit,
-                  presenter.onPositivTextStyleChanged,
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: EditableTextField.fromNotifier(
+                editableTextFieldController.stream,
+                model.descriptionField,
+                presenter.onDescriptionChanged,
+                presenter.onDescriptionSubmit,
+                presenter.onDescriptionTextStyleChanged,
               ),
-            ],
-          )
-        ],
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: EditableTextField.editableButton(
+                    editableTextFieldController.stream,
+                    model.negativBtnField,
+                    presenter.onNegativTextChanged,
+                    presenter.onNegativSubmit,
+                    presenter.onNegativTextStyleChanged,
+                  ),
+                ),
+                Flexible(
+                  child: EditableTextField.editableButton(
+                    editableTextFieldController.stream,
+                    model.positivBtnField,
+                    presenter.onPositivTextChanged,
+                    presenter.onPositivSubmit,
+                    presenter.onPositivTextStyleChanged,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -346,6 +357,36 @@ class _EditorAnchoredFullscreenHelperView
               content: content,
             ),
         key: OverlayKeys.PAGE_OVERLAY_KEY);
+  }
+
+  @override
+  Future showPreviewOfHelper(AnchoredFullscreenHelperViewModel model,
+      FinderService finderService, bool isTestingMode) async {
+    AnchoredHelper page = AnchoredHelper.fromEntity(
+      finderService: finderService,
+      positivButtonLabel:
+          HelperSharedFactory.parseTextNotifier(model.positivBtnField),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
+      descriptionLabel:
+          HelperSharedFactory.parseTextNotifier(model.descriptionField),
+      negativButtonLabel:
+          HelperSharedFactory.parseTextNotifier(model.negativBtnField),
+      helperBoxViewModel:
+          HelperSharedFactory.parseBoxNotifier(model.backgroundBox),
+      anchorKey: model.selectedAnchorKey,
+      isTestingMode: isTestingMode,
+      onNegativButtonTap: () => Navigator.of(context).pop(),
+      onPositivButtonTap: () => Navigator.of(context).pop(),
+    );
+
+    EditorPreviewArguments arguments = EditorPreviewArguments(
+      previewHelper: page,
+    );
+    await Navigator.pushNamed(
+      context,
+      '/editor/preview',
+      arguments: arguments,
+    );
   }
 }
 

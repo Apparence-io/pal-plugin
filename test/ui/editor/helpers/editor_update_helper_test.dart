@@ -7,13 +7,15 @@ import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/widgets/editor_action_item.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
@@ -25,8 +27,15 @@ class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
 class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
 
+class PackageVersionReaderMock extends Mock implements PackageVersionReader {}
+
 void main() {
   group('[Editor] create - Update helper', () {
+
+    var packageVersionReaderService = PackageVersionReaderMock();
+
+    when(packageVersionReaderService.init()).thenAnswer((_) => Future.value());
+    when(packageVersionReaderService.version).thenReturn('0.0.1');
 
     final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -53,8 +62,24 @@ void main() {
 
     // init pal + go to editor
     Future beforeEach(WidgetTester tester) async {
+      var routeFactory = (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(
+              builder: (context) => _myHomeTest,
+            );
+          case '/editor/preview':
+            EditorPreviewArguments args = settings.arguments;
+            return MaterialPageRoute(
+              builder: (context) => EditorPreviewPage(
+                previewHelper: args.previewHelper,
+              ),
+            );
+        }
+      };
+
       reset(helperEditorServiceMock);
-      await initAppWithPal(tester, _myHomeTest, _navigatorKey);
+      await initAppWithPal(tester, null, _navigatorKey, routeFactory: routeFactory);
       await pumpHelperWidget(
         tester,
         _navigatorKey,
@@ -62,7 +87,8 @@ void main() {
         HelperType.UPDATE_HELPER,
         HelperTheme.BLACK,
         editorHelperService: helperEditorServiceMock,
-        palEditModeStateService: PalEditModeStateServiceMock()
+        palEditModeStateService: PalEditModeStateServiceMock(),
+        packageVersionReader: packageVersionReaderService,
       );
       var presenterFinder = find.byKey(ValueKey("pal_EditorUpdateHelperWidget_Builder"));
       var page = presenterFinder.evaluate().first.widget
@@ -95,12 +121,71 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('on preview press  => button is disabled', (WidgetTester tester) async {
+    Future _fillFields(WidgetTester tester, String firstField,String secondField,String thirdField) async {
+      // INIT TEXTFIELDS
+      var editableTextsFinder = find.byType(TextField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(0), firstField);
+      await enterTextInEditable(
+          tester, editableTextsFinder.at(1), secondField);
+      await tester.pump();
+
+      // add new changelog line
+      (tester.widget(find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'))) as CircleIconButton).onTapCallback();
+      // await tester.tap(addChangelogButtonFinder);
+      await tester.pumpAndSettle(Duration(milliseconds: 500));
+      var editableFinder = find.byType(TextField);
+      await enterTextInEditable(tester, editableFinder.at(1), thirdField);
+      await tester.pump();
+      // INIT TEXTFIELDS
+    }
+
+    testWidgets('on preview press  => show update client preview & cancel',
+        (WidgetTester tester) async {
       await beforeEach(tester);
-      expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
-      var textMode = find.byKey(ValueKey('editableActionBarPreviewButton'));
-      await tester.tap(textMode);
+
+      final String firstField = 'test title edited';
+      final String secondField = 'test button edited';
+      final String thirdField = 'test changelog edited';
+      await _fillFields(tester, firstField, secondField,thirdField);
+
+      final previewButtonFinder =
+          find.byKey(ValueKey('editableActionBarPreviewButton'));
+      final previewButton =
+          previewButtonFinder.evaluate().first.widget as EditorActionItem;
+      previewButton.onTap();
       await tester.pumpAndSettle();
+
+      await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 5000));
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 700));
+      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
+
+      Finder titleFinder = find.byKey(ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'));
+      expect(titleFinder, findsOneWidget);
+      Text titleText = tester.widget(titleFinder);
+      expect(titleText.data, equals('test title edited'));
+
+      Finder thanksFinder = find.byKey(ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Label'));
+      expect(thanksFinder, findsOneWidget);
+      Text thanksText = tester.widget(thanksFinder);
+      expect(thanksText.data, equals('test button edited'));
+
+      Finder changelogFinder = find.byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0'));
+      expect(changelogFinder, findsOneWidget);
+      RichText changeLogText = tester.widget(changelogFinder);
+      expect((changeLogText.text.children.last as TextSpan).text ,equals('test changelog edited'));
+
+      (tester.widget(find.byKey(ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised'))) as RaisedButton).onPressed();
+      await tester.pumpAndSettle();
+
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 5000));
+      await tester.pump(Duration(milliseconds: 1100));
+
+      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
 
     testWidgets('close editor, pal bubble is hidden  => page is removed, pal bubble is visible', (WidgetTester tester) async {
@@ -169,6 +254,7 @@ void main() {
       verify(helperEditorServiceMock.saveUpdateHelper(any)).called(1);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
+
     });
 
     testWidgets('base color is blue => change background color', (WidgetTester tester) async {
@@ -182,7 +268,8 @@ void main() {
 
       var hecColorField = find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
       await tester.enterText(hecColorField, '#FFFFFF');
-      await tester.pumpAndSettle();
+      var editableFinder = find.byType(TextField);
+      await enterTextInEditable(tester, editableFinder.first, 'Lorem ipsum');
 
       var validateColorButton = find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
       await tester.tap(validateColorButton);

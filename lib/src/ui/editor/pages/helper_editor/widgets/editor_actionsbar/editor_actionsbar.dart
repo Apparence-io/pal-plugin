@@ -12,10 +12,6 @@ typedef OnSettings();
 typedef OnText();
 typedef OnValidate = Future<void> Function();
 
-// ************ ANIMATION BOUNDS
-const double UPPERBOUND = 100;
-const double LOWERBOUND = 0;
-
 class EditorActionsBar extends StatefulWidget {
   final Widget child;
   final OnCancel onCancel;
@@ -49,10 +45,12 @@ class _EditorActionsBarState extends State<EditorActionsBar>
   AnimationController controller;
   // ANIMATION TARGET : Controller will animate to *animationTarget*, on next cycle
   double animationTarget;
+  // ANIMATION BOUNDS
+  double kUpperbound = 70;
+  double kLowerbound = 0;
 
   @override
   void initState() {
-    this.animationTarget = UPPERBOUND;
     this.controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 500),
@@ -64,12 +62,19 @@ class _EditorActionsBarState extends State<EditorActionsBar>
   }
 
   @override
-  void dispose() { 
+  void didChangeDependencies() {
+    this.kUpperbound = this.kUpperbound ?? 70 + MediaQuery.of(context).padding.bottom;
+    this.animationTarget = this.kUpperbound;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
     this.controller.dispose();
     super.dispose();
   }
 
-  double _currentControllerValue() => this.controller.value * UPPERBOUND;
+  double _currentControllerValue() => this.controller.value * this.kUpperbound;
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +85,12 @@ class _EditorActionsBarState extends State<EditorActionsBar>
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          SafeArea(child: widget.child),
+          widget.child,
           if (widget.visible)
             AnimatedBuilder(
               animation: this.controller,
               builder: (context, child) => Positioned(
-                bottom: 110 - _currentControllerValue(),
+                bottom: (15 + MediaQuery.of(context).padding.bottom) - _currentControllerValue(),
                 right: 20,
                 child: Transform.rotate(
                   angle: kDeg90TRad * -(cos(this.controller.value * pi / 2)),
@@ -100,13 +105,13 @@ class _EditorActionsBarState extends State<EditorActionsBar>
                     ),
                     onTapCallback: () {
                       this.controller.animateTo(
-                          this.animationTarget / UPPERBOUND,
+                          this.animationTarget / this.kUpperbound,
                           curve: Curves.easeOut);
                       this.setState(() {
                         this.animationTarget =
-                            this.animationTarget == LOWERBOUND
-                                ? UPPERBOUND
-                                : LOWERBOUND;
+                            this.animationTarget == this.kLowerbound
+                                ? this.kUpperbound
+                                : this.kLowerbound;
                       });
                     },
                   ),
@@ -118,9 +123,10 @@ class _EditorActionsBarState extends State<EditorActionsBar>
       extendBody: true,
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: widget.visible && this.animationTarget == UPPERBOUND
-          ? this._buildSaveFloatingButton(context)
-          : null,
+      floatingActionButton:
+          widget.visible && this.animationTarget == kUpperbound
+              ? this._buildSaveFloatingButton(context)
+              : null,
       bottomNavigationBar: widget.visible ? this._buildTabItems(context) : null,
     );
   }

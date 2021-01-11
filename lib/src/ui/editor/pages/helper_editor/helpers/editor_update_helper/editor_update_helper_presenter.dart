@@ -176,4 +176,8 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   bool isValid() => viewModel.titleField.text.value.isNotEmpty
     && viewModel.changelogsFields.length > 0;
+
+  onPreview() {
+    this.viewInterface.showPreviewOfHelper(this.viewModel);
+  }
 }

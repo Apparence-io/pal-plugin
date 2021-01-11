@@ -1,5 +1,6 @@
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/extensions/color_extension.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
@@ -123,4 +124,35 @@ class HelperSharedFactory {
     }
     return customLabels;
   }
+
+  // ************ HELPER PREVIEW UTILS
+
+  static HelperTextViewModel parseTextNotifier(
+    TextFormFieldNotifier notifier
+  ) {
+    return HelperTextViewModel(
+      text: notifier.text?.value,
+      fontColor: notifier.fontColor?.value,
+      fontSize: notifier.fontSize?.value?.toDouble(),
+      fontWeight: FontWeightMapper.toFontWeight(notifier.fontWeight?.value),
+      fontFamily: notifier.fontFamily.value,
+    );
+  }
+
+  static HelperBoxViewModel parseBoxNotifier(
+    BoxNotifier notifier
+  ){
+    return HelperBoxViewModel(
+      backgroundColor: notifier.backgroundColor?.value,
+    );
+  }
+
+  static HelperImageViewModel parseMediaNotifier(
+    MediaNotifier notifier
+  ){
+    return HelperImageViewModel(
+      url: notifier.url?.value,
+    );
+  }
+
 }

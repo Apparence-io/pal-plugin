@@ -7,7 +7,7 @@ void main() {
   runApp(MyApp());
 }
 
-const String APPLICATION_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0MWIxYTljNS1mODNjLTQ5OTMtYWRjOS0wOWY0Yzk0YWRmNjIiLCJ0eXBlIjoiUFJPSkVDVCIsImlhdCI6MTYwMjc2MjkyMH0.HDUIYt-gkrTGBww7lbydyhXB0Im8NeNVn36D4ZZWKYU";
+const String APPLICATION_TOKEN = "APP_TOKEN";
 
 class MyApp extends StatelessWidget {
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Pal(
-      editorModeEnabled: false,
+      editorModeEnabled: true,
       appToken: APPLICATION_TOKEN, // don't forget to give us a token (create it from the web dashboard configuration tab)
       // --- your app is here --
       childApp: MaterialApp(

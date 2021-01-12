@@ -31,8 +31,9 @@ class ClientSchemaRemoteRepository extends BaseHttpRepository implements ClientS
   Future<SchemaEntity> get({int schemaVersion, String language, @required String appVersion}) async {
     final Response response = await this
       .httpClient
-      .get('client/schema?languageCode=$language', headers: {
+      .get('client/schema', headers: {
         'appVersion': appVersion,
+        'languageCode': language,
         'schemaVersion': schemaVersion != null ? schemaVersion.toString() : ''
       });
     if(response.body.isNotEmpty) {

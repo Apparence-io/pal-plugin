@@ -1,6 +1,6 @@
 name: pal
 description: The no code Flutter onboarding editor
-version: 0.0.4+1
+version: 0.1.0
 homepage: http://pal-plugin.tech
 repository: https://github.com/Apparence-io/pal-plugin
 issue_tracker: https://github.com/Apparence-io/pal-plugin/issues
@@ -27,6 +27,7 @@ dependencies:
   cached_network_image: ^2.4.1
   hive: ^1.4.4+1
   hive_flutter: ^0.3.1
+  intl: ^0.16.1
 
 dev_dependencies:
   flutter_test:

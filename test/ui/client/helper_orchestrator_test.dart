@@ -65,7 +65,7 @@ void main() {
       reset(inAppUserClientService);
       reset(helperClientServiceMock);
       reset(helperSynchronizer);
-      when(helperSynchronizer.sync(any)).thenAnswer((_) => Future.value());
+      when(helperSynchronizer.sync(any, languageCode: anyNamed("languageCode"))).thenAnswer((_) => Future.value());
     });
 
     testWidgets('should create properly and accessible from children', (WidgetTester tester) async {
@@ -94,7 +94,7 @@ void main() {
       // expect(find.text("New1"), findsOneWidget);
       await orchestrator.onChangePage("/test1");
       verify(helperClientServiceMock.getPageNextHelper("/test1", "db6b01e1-b649-4a17-949a-9ab320601001")).called(1);
-      verify(helperSynchronizer.sync("db6b01e1-b649-4a17-949a-9ab320601001")).called(1);
+      verify(helperSynchronizer.sync("db6b01e1-b649-4a17-949a-9ab320601001", languageCode: "en")).called(1);
       await tester.pumpAndSettle(Duration(seconds: 1));
     });
 
@@ -126,7 +126,7 @@ void main() {
       expect(orchestrator.overlay, isNotNull);
       await orchestrator.onChangePage("/route2");
       expect(orchestrator.overlay, isNull);
-      verify(helperSynchronizer.sync("db6b01e1-b649-4a17-949a-9ab320601001")).called(1);
+      verify(helperSynchronizer.sync("db6b01e1-b649-4a17-949a-9ab320601001", languageCode: "en")).called(1);
     });
 
     testWidgets('only one overlay at a time', (WidgetTester tester) async {

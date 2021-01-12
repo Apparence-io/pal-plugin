@@ -21,13 +21,15 @@ class HelpersSynchronizer {
     @required this.packageVersionReader,
   });
 
-  Future<void> sync(String inAppUserId) async {
+  Future<void> sync(String inAppUserId, {String languageCode}) async {
     debugPrint("...sync database start");
     String currentVersion = packageVersionReader.version;
     var currentSchema = await schemaLocalRepository.get(appVersion: currentVersion);
     var lastSchemaVersion = await schemaRemoteRepository.get(
       schemaVersion: currentSchema?.schemaVersion,
-      appVersion: currentVersion
+      appVersion: currentVersion,
+      language: languageCode
+      // language:
     );
     debugPrint(" current schema version ${currentSchema?.schemaVersion}");
     if(currentSchema == null) {

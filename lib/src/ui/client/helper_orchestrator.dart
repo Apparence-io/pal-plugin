@@ -35,7 +35,7 @@ class HelperOrchestrator {
     PalRouteObserver routeObserver,
     HelperClientService helperClientService,
     InAppUserClientService inAppUserClientService,
-    HelpersSynchronizer helpersSynchronizer
+    HelpersSynchronizer helpersSynchronizer,
   }) {
     if (_instance == null) {
       _instance = HelperOrchestrator._(routeObserver, helperClientService, inAppUserClientService, navigatorKey, helpersSynchronizer);
@@ -49,7 +49,7 @@ class HelperOrchestrator {
     PalRouteObserver routeObserver,
     HelperClientService helperClientService,
     InAppUserClientService inAppUserClientService,
-    HelpersSynchronizer helpersSynchronizer
+    HelpersSynchronizer helpersSynchronizer,
   }) {
     _instance = HelperOrchestrator._(routeObserver, helperClientService, inAppUserClientService, navigatorKey, helpersSynchronizer);
     return _instance;
@@ -76,7 +76,8 @@ class HelperOrchestrator {
     try {
       final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
       if(!hasSync) {
-        await this.helpersSynchronizer.sync(inAppUser.id);
+        var lang = Localizations.localeOf(navigatorKey.currentContext).languageCode;
+        await this.helpersSynchronizer.sync(inAppUser.id, languageCode: lang);
         this.hasSync = true;
       }
       final helperGroupToShow = await helperClientService.getPageNextHelper(route, inAppUser.id);

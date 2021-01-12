@@ -31,9 +31,12 @@ dependencies:
   pal:
     path: ../
   mvvm_builder: ^2.1.3+2
+  intl: 0.16.1
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   flutter_launcher_icons: "^0.8.0"
 

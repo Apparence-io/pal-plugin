@@ -1,6 +1,7 @@
 ## [0.1.0] - 2021/11/01
 - [Editor] - Has now a preview mode
 - [Client] - Add user language to schema synchronization
+- [Editor] - reworked toolbar's design
 
 ## [0.0.4] - 2020/19/12
 - (NEW) anchored helper editor

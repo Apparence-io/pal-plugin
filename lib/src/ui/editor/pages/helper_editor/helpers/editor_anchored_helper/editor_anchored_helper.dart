@@ -250,57 +250,65 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         !model.anchorValidated) return Container();
     return Positioned.fromRect(
       rect: model.writeArea ?? Rect.largest,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 50.0, top: 5.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-              child: EditableTextField.fromNotifier(
-                editableTextFieldController.stream,
-                model.titleField,
-                presenter.onTitleChanged,
-                presenter.onTitleSubmit,
-                presenter.onTitleTextStyleChanged,
+      child: LayoutBuilder(
+        builder: (context, constraints) => 
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical:8.0),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight-16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                    child: EditableTextField.fromNotifier(
+                      editableTextFieldController.stream,
+                      model.titleField,
+                      presenter.onTitleChanged,
+                      presenter.onTitleSubmit,
+                      presenter.onTitleTextStyleChanged,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: EditableTextField.fromNotifier(
+                      editableTextFieldController.stream,
+                      model.descriptionField,
+                      presenter.onDescriptionChanged,
+                      presenter.onDescriptionSubmit,
+                      presenter.onDescriptionTextStyleChanged,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: EditableTextField.editableButton(
+                          editableTextFieldController.stream,
+                          model.negativBtnField,
+                          presenter.onNegativTextChanged,
+                          presenter.onNegativSubmit,
+                          presenter.onNegativTextStyleChanged,
+                        ),
+                      ),
+                      Flexible(
+                        child: EditableTextField.editableButton(
+                          editableTextFieldController.stream,
+                          model.positivBtnField,
+                          presenter.onPositivTextChanged,
+                          presenter.onPositivSubmit,
+                          presenter.onPositivTextStyleChanged,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: EditableTextField.fromNotifier(
-                editableTextFieldController.stream,
-                model.descriptionField,
-                presenter.onDescriptionChanged,
-                presenter.onDescriptionSubmit,
-                presenter.onDescriptionTextStyleChanged,
-              ),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: EditableTextField.editableButton(
-                    editableTextFieldController.stream,
-                    model.negativBtnField,
-                    presenter.onNegativTextChanged,
-                    presenter.onNegativSubmit,
-                    presenter.onNegativTextStyleChanged,
-                  ),
-                ),
-                Flexible(
-                  child: EditableTextField.editableButton(
-                    editableTextFieldController.stream,
-                    model.positivBtnField,
-                    presenter.onPositivTextChanged,
-                    presenter.onPositivSubmit,
-                    presenter.onPositivTextStyleChanged,
-                  ),
-                ),
-              ],
-            )
-          ],
+          ),
         ),
       ),
     );

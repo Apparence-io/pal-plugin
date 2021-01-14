@@ -34,21 +34,13 @@ import 'editor_update_helper_viewmodel.dart';
 abstract class EditorUpdateHelperView {
   void showColorPickerDialog(
       Color color, dynamic onColorSelected, dynamic onCancel);
-
   void closeColorPickerDialog();
-
   void hidePalBubble();
-
   Future<void> scrollToBottomChangelogList();
-
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
-
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
-
   Future closeEditor();
-
   void closeLoadingScreen();
-
   Future showPreviewOfHelper(UpdateHelperViewModel model);
 }
 
@@ -58,6 +50,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
   final HelperEditorPageArguments arguments;
   final EditorHelperService helperService;
   final PalEditModeStateService palEditModeStateService;
+  final EditedData editedData;
 
   // inner page widgets
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -70,6 +63,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     this.helperService,
     this.palEditModeStateService,
     this.packageVersionReader,
+    this.editedData,
     @required this.baseviewModel,
     @required this.arguments,
   }) : super(key: key);
@@ -148,20 +142,19 @@ class EditorUpdateHelperPage extends StatelessWidget {
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
-        // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
-        // onPreview: presenter.onPreview,
+        onTextPickerDone: presenter.onTextPickerDone,
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.always,
           child: EditableBackground(
             backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
-            circleIconKey:
-                'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
-            onColorChange: presenter.changeBackgroundColor,
+            // circleIconKey:
+            //     'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
+            // onColorChange: presenter.changeBackgroundColor,
             widget: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Container(
@@ -204,6 +197,8 @@ class EditorUpdateHelperPage extends StatelessWidget {
                       // FIXME: This is a POC, Need to wrap all editable item to
                       // gesture detector & change notifier value
                       EditableMedia(
+                        key: ValueKey(
+                            'pal_EditorUpdateHelperWidget_EditableMedia'),
                         editKey:
                             'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
                         mediaSize: 123.0,
@@ -214,6 +209,8 @@ class EditorUpdateHelperPage extends StatelessWidget {
                       ),
                       SizedBox(height: 40),
                       EditableTextField(
+                        key:
+                            ValueKey('pal_EditorUpdateHelperWidget_TitleField'),
                         textNotifier: viewModel.titleField,
                         currentEditableItemNotifier:
                             viewModel.currentEditableItemNotifier,
@@ -249,7 +246,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     final EditorUpdateHelperPresenter presenter,
     final UpdateHelperViewModel viewmodel,
   ) {
-    List<Widget> changelogsTextfieldWidgets = List();
+    List<Widget> changelogsTextfieldWidgets = [];
     // viewmodel.changelogsFields.forEach((key, field) {
     //   changelogsTextfieldWidgets.add(EditableTextField.fromNotifier(
     //     presenter.editableTextFieldController.stream,
@@ -293,6 +290,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: EditableButton(
+        key: ValueKey('pal_EditorUpdateHelperWidget_ThanksButton'),
         buttonFormFieldNotifier: viewModel.thanksButton,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
       ),

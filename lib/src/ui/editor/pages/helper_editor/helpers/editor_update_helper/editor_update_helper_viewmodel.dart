@@ -16,7 +16,6 @@ class UpdateHelperViewModel extends HelperViewModel {
   // form validation boolean
   ValueNotifier<bool> canValidate;
   bool isKeyboardVisible;
-
   LanguageNotifier language;
   
   ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;

@@ -205,9 +205,9 @@ class EditorFullScreenHelperPage extends StatelessWidget {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: EditableBackground(
                 backgroundColor: model.bodyBox.backgroundColor?.value,
-                circleIconKey:
-                    'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
-                onColorChange: () => presenter.changeBackgroundColor(),
+                // circleIconKey:
+                //     'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
+                // onColorChange: () => presenter.changeBackgroundColor(),
                 widget: Center(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),

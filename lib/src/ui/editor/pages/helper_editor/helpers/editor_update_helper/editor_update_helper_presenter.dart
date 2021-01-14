@@ -8,26 +8,25 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_update_helper.dart';
 import 'editor_update_helper_viewmodel.dart';
 
-class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, EditorUpdateHelperView> {
-
+class EditorUpdateHelperPresenter
+    extends Presenter<UpdateHelperViewModel, EditorUpdateHelperView> {
   final EditorHelperService editorHelperService;
-
   final HelperEditorPageArguments parameters;
-
   final StreamController<bool> editableTextFieldController;
 
   EditorUpdateHelperPresenter(
       EditorUpdateHelperView viewInterface,
       UpdateHelperViewModel updateHelperViewModel,
       this.editorHelperService,
-      this.parameters
-  ) : editableTextFieldController = StreamController<bool>.broadcast(),
-      super(updateHelperViewModel, viewInterface) {
+      this.parameters)
+      : editableTextFieldController = StreamController<bool>.broadcast(),
+        super(updateHelperViewModel, viewInterface) {
     viewModel.canValidate = new ValueNotifier(false);
   }
 
@@ -46,6 +45,20 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
     this.viewInterface.hidePalBubble();
   }
 
+  onTextPickerDone(EditedTextData editedTextData) {
+    print(editedTextData.key.toString());
+    switch (editedTextData.key.toString()) {
+      case '[<\'pal_EditorUpdateHelperWidget_TitleField\'>]':
+        this.viewModel.titleField.text.value = editedTextData.text;
+
+        break;
+      case '[<\'pal_EditorUpdateHelperWidget_ThanksButton\'>]':
+        this.viewModel.thanksButton.text.value = editedTextData.text;
+        break;
+      default:
+    }
+  }
+
   onKeyboardVisibilityChange(bool visible) {
     this.viewModel.isKeyboardVisible = visible;
     this.refreshView();
@@ -60,15 +73,16 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   void onCancel() => viewInterface.closeEditor();
 
   Future<void> onValidate() async {
-    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
+    ValueNotifier<SendingStatus> status =
+        new ValueNotifier(SendingStatus.SENDING);
     final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
-      await editorHelperService
-        .saveUpdateHelper(EditorEntityFactory.buildUpdateArgs(config, viewModel));
+      await editorHelperService.saveUpdateHelper(
+          EditorEntityFactory.buildUpdateArgs(config, viewModel));
       status.value = SendingStatus.SENT;
-    } catch(error) {
+    } catch (error) {
       status.value = SendingStatus.ERROR;
     } finally {
       await Future.delayed(Duration(seconds: 2));
@@ -79,23 +93,25 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
     }
   }
 
-  onTitleFieldChanged(String id, String newValue)
-    => _onTextChanged(viewModel.titleField, newValue);
+  onTitleFieldChanged(String id, String newValue) =>
+      _onTextChanged(viewModel.titleField, newValue);
 
   // onThanksFieldChanged(String id, String newValue)
   //   => _onTextChanged(viewModel.thanksButton, newValue);
 
-  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
+  onTitleTextStyleChanged(
+          String id, TextStyle newTextStyle, FontKeys fontKeys) =>
+      _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
 
   // onThanksTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
   //   => _onStyleChanged(viewModel.thanksButton, newTextStyle, fontKeys);
 
-  onChangelogTextChanged(String id, String newValue)
-    => _onTextChanged(viewModel.changelogsFields[id], newValue);
+  onChangelogTextChanged(String id, String newValue) =>
+      _onTextChanged(viewModel.changelogsFields[id], newValue);
 
-  onChangelogTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.changelogsFields[id], newTextStyle, fontKeys);
+  onChangelogTextStyleFieldChanged(
+          String id, TextStyle newTextStyle, FontKeys fontKeys) =>
+      _onStyleChanged(viewModel.changelogsFields[id], newTextStyle, fontKeys);
 
   onTitleFieldSubmitted(String value) => this.refreshView();
   onThanksFieldSubmitted(String value) => this.refreshView();
@@ -103,10 +119,9 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   changeBackgroundColor() {
     this.viewInterface.showColorPickerDialog(
-      viewModel?.bodyBox?.backgroundColor?.value,
-      updateBackgroundColor,
-      () => viewInterface.closeColorPickerDialog()
-    );
+        viewModel?.bodyBox?.backgroundColor?.value,
+        updateBackgroundColor,
+        () => viewInterface.closeColorPickerDialog());
   }
 
   updateBackgroundColor(Color aColor) {
@@ -118,9 +133,8 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   onOutsideTap() => this.editableTextFieldController.add(true);
 
   editMedia() async {
-    final selectedMedia = await this
-        .viewInterface
-        .pushToMediaGallery(viewModel.media?.uuid);
+    final selectedMedia =
+        await this.viewInterface.pushToMediaGallery(viewModel.media?.uuid);
     viewModel.media?.url?.value = selectedMedia?.url;
     viewModel.media?.uuid = selectedMedia?.id;
     this.refreshView();
@@ -164,7 +178,8 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
 
   _updateValidState() => viewModel.canValidate.value = isValid();
 
-  _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
+  _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle,
+      FontKeys fontKeys) {
     textNotifier?.fontColor?.value = newTextStyle?.color;
     textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
     if (fontKeys != null) {
@@ -174,8 +189,9 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
     _updateValidState();
   }
 
-  bool isValid() => viewModel.titleField.text.value.isNotEmpty
-    && viewModel.changelogsFields.length > 0;
+  bool isValid() =>
+      viewModel.titleField.text.value.isNotEmpty &&
+      viewModel.changelogsFields.length > 0;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);

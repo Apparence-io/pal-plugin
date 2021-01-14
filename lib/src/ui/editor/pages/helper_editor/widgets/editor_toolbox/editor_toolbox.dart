@@ -3,19 +3,16 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/text_field_picker/dialog_editable_textfield.dart';
-import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
-import '../../../../../../router.dart';
 import 'editor_toolbox_presenter.dart';
 import 'editor_toolbox_viewmodel.dart';
 
 abstract class EditorToolboxView {
-  Future<String> openTextPicker();
-  Future openFontPicker();
-  Future<Color> openColorPicker();
-  Future<String> openMediaPicker();
+  Future<EditedTextData> openTextPicker();
+  Future<EditedFontData> openFontPicker();
+  Future<EditedColorData> openColorPicker();
+  Future<EditedMediaData> openMediaPicker();
 }
 
 class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
@@ -23,6 +20,13 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   final Widget child;
   // Save button function
   final Function onValidate;
+
+  // Pickers
+  final Function(EditedTextData) onTextPickerDone;
+  final Function(EditedColorData) onTextColorPickerDone;
+  final Function(EditedFontData) onFontPickerDone;
+  final Function(EditedBorderData) onBorderPickerDone;
+  final Function(EditedMediaData) onMediaPickerDone;
 
   final ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
   final GlobalKey scaffoldKey;
@@ -33,6 +37,11 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     @required this.currentEditableItemNotifier,
     this.scaffoldKey,
     this.onValidate,
+    this.onBorderPickerDone,
+    this.onFontPickerDone,
+    this.onTextColorPickerDone,
+    this.onTextPickerDone,
+    this.onMediaPickerDone,
   });
 
   final _mvvmPageBuilder =
@@ -74,6 +83,11 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       presenterBuilder: (context) => EditorToolboxPresenter(
         this,
         currentEditableItemNotifier: currentEditableItemNotifier,
+        onBorderPickerDone: onBorderPickerDone,
+        onFontPickerDone: onFontPickerDone,
+        onTextColorPickerDone: onTextColorPickerDone,
+        onTextPickerDone: onTextPickerDone,
+        onMediaPickerDone: onMediaPickerDone,
       ),
       builder: (context, presenter, model) {
         return Scaffold(
@@ -123,7 +137,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<Color> openColorPicker() {
+  Future<EditedColorData> openColorPicker() {
     // showOverlayedInContext(
     //   (context) => ColorPickerDialog(
     //     placeholderColor: viewModel.bodyBox.backgroundColor?.value,
@@ -135,21 +149,31 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<dynamic> openFontPicker() {
+  Future<EditedFontData> openFontPicker() {
     // TODO: implement openFontPicker
     throw UnimplementedError();
   }
 
   @override
-  Future<String> openTextPicker() {
-    return showOverlayedInContext(
-      (context) => EditableTextDialog('Test'),
-      key: OverlayKeys.PAGE_OVERLAY_KEY,
+  Future<EditedTextData> openTextPicker() async {
+    String newText = await showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) => EditableTextDialog(''),
     );
+
+    return EditedTextData(
+      this.currentEditableItemNotifier?.value?.itemKey,
+      text: newText,
+    );
+
+    // return showOverlayedInContext(
+    //   (context) => EditableTextDialog('Test'),
+    //   key: OverlayKeys.PAGE_OVERLAY_KEY,
+    // );
   }
 
   @override
-  Future<String> openMediaPicker() {
+  Future<EditedMediaData> openMediaPicker() {
     // TODO: implement openMediaPicker
     throw UnimplementedError();
   }

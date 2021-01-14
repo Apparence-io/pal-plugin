@@ -20,17 +20,22 @@ class EditableButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
       fontFamily: buttonFormFieldNotifier?.fontFamily?.value,
-      fontWeight:
-          FontWeightMapper.toFontWeight(buttonFormFieldNotifier?.fontWeight?.value),
+      fontWeight: FontWeightMapper.toFontWeight(
+          buttonFormFieldNotifier?.fontWeight?.value),
       fontSize: buttonFormFieldNotifier?.fontSize?.value?.toDouble(),
-      color: buttonFormFieldNotifier?.text?.value != null ? buttonFormFieldNotifier?.fontColor?.value : buttonFormFieldNotifier?.fontColor?.value?.withAlpha(120),
+      color: buttonFormFieldNotifier?.text?.value != null
+          ? buttonFormFieldNotifier?.fontColor?.value
+          : buttonFormFieldNotifier?.fontColor?.value?.withAlpha(120),
     ).merge(
       _googleCustomFont(buttonFormFieldNotifier?.fontFamily?.value),
     );
 
     return BouncingWidget(
       onTap: () {
-        this.currentEditableItemNotifier.value = CurrentEditableItem.button;
+        this.currentEditableItemNotifier.value = CurrentEditableItem(
+          editableItemType: EditableItemType.button,
+          itemKey: this.key,
+        );
       },
       child: DottedBorder(
         dashPattern: [6, 3],
@@ -42,10 +47,10 @@ class EditableButton extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: RaisedButton(
-                onPressed: () { },
+                onPressed: () {},
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
                 color: buttonFormFieldNotifier?.backgroundColor?.value,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 13.0),

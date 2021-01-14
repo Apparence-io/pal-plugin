@@ -30,7 +30,10 @@ class EditableTextField extends StatelessWidget {
 
     return BouncingWidget(
       onTap: () {
-        this.currentEditableItemNotifier.value = CurrentEditableItem.textfield;
+        this.currentEditableItemNotifier.value = CurrentEditableItem(
+          itemKey: this.key,
+          editableItemType: EditableItemType.textfield,
+        );
       },
       child: DottedBorder(
         dashPattern: [6, 3],

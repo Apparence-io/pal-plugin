@@ -9,9 +9,20 @@ class EditorToolboxPresenter
     extends Presenter<EditorToolboxModel, EditorToolboxView> {
   final ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
 
+  final Function(EditedTextData) onTextPickerDone;
+  final Function(EditedColorData) onTextColorPickerDone;
+  final Function(EditedFontData) onFontPickerDone;
+  final Function(EditedBorderData) onBorderPickerDone;
+  final Function(EditedMediaData) onMediaPickerDone;
+
   EditorToolboxPresenter(
     EditorToolboxView viewInterface, {
     @required this.currentEditableItemNotifier,
+    this.onBorderPickerDone,
+    this.onFontPickerDone,
+    this.onTextColorPickerDone,
+    this.onTextPickerDone,
+    this.onMediaPickerDone,
   }) : super(EditorToolboxModel(), viewInterface);
 
   @override
@@ -45,8 +56,8 @@ class EditorToolboxPresenter
   }
 
   void displayEditableItemActions() {
-    switch (this.currentEditableItemNotifier.value) {
-      case CurrentEditableItem.button:
+    switch (this.currentEditableItemNotifier.value?.editableItemType) {
+      case EditableItemType.button:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.border,
           ToolBarActionButton.text,
@@ -54,12 +65,12 @@ class EditorToolboxPresenter
           ToolBarActionButton.color,
         ];
         break;
-      case CurrentEditableItem.media:
+      case EditableItemType.media:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.media,
         ];
         break;
-      case CurrentEditableItem.textfield:
+      case EditableItemType.textfield:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.text,
           ToolBarActionButton.font,
@@ -86,24 +97,24 @@ class EditorToolboxPresenter
   }
 
   void openPicker(ToolBarActionButton toolBarActionButton) async {
-    // TODO: Open correct picker in view interface
     switch (toolBarActionButton) {
       case ToolBarActionButton.color:
-        Color newColor = await this.viewInterface.openColorPicker();
+        EditedColorData colorData = await this.viewInterface.openColorPicker();
+        this.onTextColorPickerDone(colorData);
         break;
       case ToolBarActionButton.font:
-        // TODO: Create mode
-        dynamic newFont = await this.viewInterface.openFontPicker();
+        EditedFontData fontData = await this.viewInterface.openFontPicker();
+        this.onFontPickerDone(fontData);
         break;
       case ToolBarActionButton.media:
-        String newUrl = await this.viewInterface.openMediaPicker();
+        EditedMediaData mediaData = await this.viewInterface.openMediaPicker();
+        this.onMediaPickerDone(mediaData);
         break;
       case ToolBarActionButton.text:
-        String newText = await this.viewInterface.openTextPicker();
+        EditedTextData textData = await this.viewInterface.openTextPicker();
+        this.onTextPickerDone(textData);
         break;
       default:
     }
-
-    // TODO: Update child helper
   }
 }

@@ -58,8 +58,8 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
         ),
         AnimationController(
           vsync: ticker,
-          duration: Duration(milliseconds: 5000),
-          value: 1,
+          duration: Duration(milliseconds: 1500),
+          value: 0,
           lowerBound: 0,
           upperBound: 2,
         ),
@@ -71,9 +71,9 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
           model.animateActionBar = false;
         }
         if (model.animateIcons) {
-          context.animationsControllers[1].value = 1;
+          context.animationsControllers[1].value = 0;
           context.animationsControllers[1]
-              .animateTo(0, curve: Curves.easeOutBack);
+              .animateTo(1, curve: Curves.elasticOut);
           model.animateIcons = false;
         }
       },

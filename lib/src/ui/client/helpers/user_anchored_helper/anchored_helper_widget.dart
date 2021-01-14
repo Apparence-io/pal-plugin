@@ -174,46 +174,52 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                   opacity: backgroundAnimation, child: _buildAnchorWidget())),
           Positioned.fromRect(
             rect: writeArea ?? Rect.largest,
-            child: Center(
-              child: SingleChildScrollView(
-                // padding: const EdgeInsets.only(bottom: 50.0, top: 5.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _buildAnimItem(
-                          opacityAnim: titleOpacityAnimation,
-                          sizeAnim: titleSizeAnimation,
-                          child: _buildText(widget.titleLabel,
-                              ValueKey('pal_AnchoredHelperTitleLabel'))),
+            child: LayoutBuilder(
+              builder: (context, constraints) =>
+               Padding(
+                 padding: const EdgeInsets.symmetric(vertical:8.0),
+                 child: SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight-16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: _buildAnimItem(
+                              opacityAnim: titleOpacityAnimation,
+                              sizeAnim: titleSizeAnimation,
+                              child: _buildText(widget.titleLabel,
+                                  ValueKey('pal_AnchoredHelperTitleLabel'))),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: _buildAnimItem(
+                              opacityAnim: descriptionOpacityAnimation,
+                              sizeAnim: descriptionSizeAnimation,
+                              child: _buildText(widget.descriptionLabel,
+                                  ValueKey('pal_AnchoredHelperDescriptionLabel'))),
+                        ),
+                        SizedBox(height: 24),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              _buildAnimItem(
+                                  opacityAnim: btnOpacityAnimation,
+                                  sizeAnim: btnSizeAnimation,
+                                  child: _buildNegativFeedback()),
+                              SizedBox(width: 16),
+                              _buildAnimItem(
+                                  opacityAnim: btnOpacityAnimation,
+                                  sizeAnim: btnSizeAnimation,
+                                  child: _buildPositivFeedback()),
+                            ])
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: _buildAnimItem(
-                          opacityAnim: descriptionOpacityAnimation,
-                          sizeAnim: descriptionSizeAnimation,
-                          child: _buildText(widget.descriptionLabel,
-                              ValueKey('pal_AnchoredHelperDescriptionLabel'))),
-                    ),
-                    SizedBox(height: 24),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          _buildAnimItem(
-                              opacityAnim: btnOpacityAnimation,
-                              sizeAnim: btnSizeAnimation,
-                              child: _buildNegativFeedback()),
-                          SizedBox(width: 16),
-                          _buildAnimItem(
-                              opacityAnim: btnOpacityAnimation,
-                              sizeAnim: btnSizeAnimation,
-                              child: _buildPositivFeedback()),
-                        ])
-                  ],
-                ),
+                  ),
               ),
             ),
           ),

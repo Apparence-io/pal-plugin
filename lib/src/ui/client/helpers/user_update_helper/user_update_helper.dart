@@ -216,16 +216,20 @@ class UserUpdateHelperPage extends StatelessWidget
         widget: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              titleLabel?.text ?? 'New application update',
-              key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
-              style: TextStyle(
-                fontSize: titleLabel?.fontSize ?? 27.0,
-                fontWeight: titleLabel?.fontWeight ?? FontWeight.normal,
-                color: titleLabel?.fontColor ??
-                    PalTheme.of(context.buildContext).colors.light,
-              ).merge(
-                GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                titleLabel?.text ?? 'New application update',
+                key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: titleLabel?.fontSize ?? 27.0,
+                  fontWeight: titleLabel?.fontWeight ?? FontWeight.normal,
+                  color: titleLabel?.fontColor ??
+                      PalTheme.of(context.buildContext).colors.light,
+                ).merge(
+                  GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat'),
+                ),
               ),
             ),
             SizedBox(

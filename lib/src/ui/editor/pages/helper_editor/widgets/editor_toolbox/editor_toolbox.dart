@@ -17,10 +17,10 @@ import 'editor_toolbox_presenter.dart';
 import 'editor_toolbox_viewmodel.dart';
 
 abstract class EditorToolboxView {
-  Future<String> openTextPicker();
+  Future<String> openTextPicker(String currentText);
   Future<EditedFontModel> openFontPicker(String family,int size,String weight);
   Future<Color> openColorPicker(
-      EditorToolboxModel model, EditorToolboxPresenter presenter);
+      Color selectedColor);
   Future<String> openMediaPicker();
 }
 
@@ -118,6 +118,10 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
           bottomNavigationBar: model.isActionBarVisible
               ? EditorActionBar(
                   animation: context.animationsControllers[0],
+                  iconsColor: Colors.white,
+                  onCancel: (){
+                    Navigator.pop(context.buildContext);
+                  },
                 )
               : null,
         );
@@ -153,7 +157,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
 
   @override
   Future<Color> openColorPicker(
-      EditorToolboxModel model, EditorToolboxPresenter presenter) async {
+      Color selectedColor) async {
     // return showOverlayedInContext(
     //   (context) => ColorPickerDialog(
     //     placeholderColor: model.boxViewHandler.selectedColor,
@@ -166,7 +170,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     return await showDialog(
       context: _scaffoldKey.currentContext,
       builder: (context) => ColorPickerDialog(
-        placeholderColor: model.boxViewHandler.selectedColor,
+        placeholderColor: selectedColor,
       ),
     );
     
@@ -185,10 +189,10 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<String> openTextPicker() async {
+  Future<String> openTextPicker(String currentText) async {
     return await showDialog(
       context: _scaffoldKey.currentContext,
-      builder: (context) => EditableTextDialog(''),
+      builder: (context) => EditableTextDialog(currentText),
     );
 
     

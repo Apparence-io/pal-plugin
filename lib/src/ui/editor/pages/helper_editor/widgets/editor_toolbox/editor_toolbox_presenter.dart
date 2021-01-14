@@ -109,10 +109,10 @@ class EditorToolboxPresenter
     switch (toolBarActionButton) {
       // TODO: Séparer les couleurs de Font/Background/Border
       case ToolBarActionButton.color:
+        EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
         Color newColor =
-            await this.viewInterface.openColorPicker(this.viewModel, this);
+            await this.viewInterface.openColorPicker(editableFormField.fontColor.value);
         if (newColor != null) {
-          EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
           editableFormField.fontColor.value = newColor;
         }
         break;
@@ -139,9 +139,9 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.text:
-        String newText = await this.viewInterface.openTextPicker();
+        EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
+        String newText = await this.viewInterface.openTextPicker(editableFormField.text.value);
         if (newText != null) {
-          EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
           editableFormField.text.value = newText;
         }
         break;
@@ -153,10 +153,9 @@ class EditorToolboxPresenter
       ToolBarGlobalActionButton toolBarGlobalActionButton) async {
     switch (toolBarGlobalActionButton) {
       case ToolBarGlobalActionButton.backgroundColor:
-        Color newColor = await this.viewInterface.openColorPicker(this.viewModel, this);
+        Color newColor = await this.viewInterface.openColorPicker(this.viewModel.boxViewHandler.selectedColor);
         if (newColor != null) {
-          EditedColorData editedColorData = EditedColorData(null, color: newColor);
-          this.viewModel.boxViewHandler.callback(editedColorData.color);
+          this.viewModel.boxViewHandler.callback(newColor);
         }
         break;
       default:

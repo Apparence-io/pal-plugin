@@ -258,16 +258,19 @@ class EditorUpdateHelperPage extends StatelessWidget {
     final UpdateHelperViewModel viewmodel,
   ) {
     List<Widget> changelogsTextfieldWidgets = [];
-    // viewmodel.changelogsFields.forEach((key, field) {
-    //   changelogsTextfieldWidgets.add(EditableTextField.fromNotifier(
-    //     presenter.editableTextFieldController.stream,
-    //     field,
-    //     presenter.onChangelogTextChanged,
-    //     presenter.onChangelogFieldSubmitted,
-    //     presenter.onChangelogTextStyleFieldChanged,
-    //     id: key,
-    //   ));
-    // });
+    viewmodel.changelogsFields.forEach((key, field) {
+      changelogsTextfieldWidgets.add(EditableTextField(
+        textNotifier: field,
+        currentEditableItemNotifier: viewmodel.currentEditableItemNotifier,
+        key: ValueKey(key),
+        // presenter.editableTextFieldController.stream,
+        // field,
+        // presenter.onChangelogTextChanged,
+        // presenter.onChangelogFieldSubmitted,
+        // presenter.onChangelogTextStyleFieldChanged,
+        // id: key,
+      ));
+    });
     return Column(
       children: [
         Wrap(

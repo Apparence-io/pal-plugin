@@ -17,12 +17,14 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
-import 'package:pal/src/ui/editor/widgets/editable_media.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -147,32 +149,30 @@ class EditorUpdateHelperPage extends StatelessWidget {
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
-      body: EditorActionsBar(
-        onCancel: presenter.onCancel,
+      body: EditorToolboxPage(
+        // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
-        onPreview: presenter.onPreview,
-        child: GestureDetector(
-          onTap: presenter.onOutsideTap,
-          child: Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.always,
-            child: EditableBackground(
-              backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
-              circleIconKey:
-                  'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
-              onColorChange: presenter.changeBackgroundColor,
-              widget: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Container(
-                  width: double.infinity,
-                  color: viewModel.bodyBox?.backgroundColor?.value,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:
-                        _buildEditableContent(presenter, viewModel, context),
-                  ),
+        currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
+        // onPreview: presenter.onPreview,
+        child: Form(
+          key: formKey,
+          autovalidateMode: AutovalidateMode.always,
+          child: EditableBackground(
+            backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
+            circleIconKey:
+                'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
+            onColorChange: presenter.changeBackgroundColor,
+            widget: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Container(
+                width: double.infinity,
+                color: viewModel.bodyBox?.backgroundColor?.value,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children:
+                      _buildEditableContent(presenter, viewModel, context),
                 ),
               ),
             ),
@@ -203,20 +203,30 @@ class EditorUpdateHelperPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // FIXME: This is a POC, Need to wrap all editable item to
+                      // gesture detector & change notifier value
                       EditableMedia(
                         editKey:
                             'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
                         mediaSize: 123.0,
                         onEdit: presenter.editMedia,
+                        currentEditableItemNotifier:
+                            viewModel.currentEditableItemNotifier,
                         url: viewModel.media?.url?.value,
                       ),
                       SizedBox(height: 40),
-                      EditableTextField.fromNotifier(
-                          presenter.editableTextFieldController.stream,
-                          viewModel.titleField,
-                          presenter.onTitleFieldChanged,
-                          presenter.onTitleFieldSubmitted,
-                          presenter.onTitleTextStyleChanged),
+                      EditableTextField(
+                        textNotifier: viewModel.titleField,
+                        currentEditableItemNotifier:
+                            viewModel.currentEditableItemNotifier,
+                      ),
+                      // EditableTextField.fromNotifier(
+                      //   presenter.editableTextFieldController.stream,
+                      //   viewModel.titleField,
+                      //   presenter.onTitleFieldChanged,
+                      //   presenter.onTitleFieldSubmitted,
+                      //   presenter.onTitleTextStyleChanged,
+                      // ),
                       SizedBox(height: 25.0),
                       _buildChangelogFields(context, presenter, viewModel),
                     ],
@@ -242,16 +252,16 @@ class EditorUpdateHelperPage extends StatelessWidget {
     final UpdateHelperViewModel viewmodel,
   ) {
     List<Widget> changelogsTextfieldWidgets = List();
-    viewmodel.changelogsFields.forEach((key, field) {
-      changelogsTextfieldWidgets.add(EditableTextField.fromNotifier(
-        presenter.editableTextFieldController.stream,
-        field,
-        presenter.onChangelogTextChanged,
-        presenter.onChangelogFieldSubmitted,
-        presenter.onChangelogTextStyleFieldChanged,
-        id: key,
-      ));
-    });
+    // viewmodel.changelogsFields.forEach((key, field) {
+    //   changelogsTextfieldWidgets.add(EditableTextField.fromNotifier(
+    //     presenter.editableTextFieldController.stream,
+    //     field,
+    //     presenter.onChangelogTextChanged,
+    //     presenter.onChangelogFieldSubmitted,
+    //     presenter.onChangelogTextStyleFieldChanged,
+    //     id: key,
+    //   ));
+    // });
     return Column(
       children: [
         Wrap(
@@ -284,71 +294,75 @@ class EditorUpdateHelperPage extends StatelessWidget {
   ) {
     return SizedBox(
       width: double.infinity,
-      child: EditableTextField.text(
-        helperToolbarKey: ValueKey(
-          'pal_EditorUpdateHelperWidget_ThanksButtonToolbar',
-        ),
-        textFormFieldKey: ValueKey(
-          'pal_EditorUpdateHelperWidget_ThanksButtonField',
-        ),
-        outsideTapStream: presenter.editableTextFieldController.stream,
-        onChanged: presenter.onThanksFieldChanged,
-        onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
-        hintText: viewModel.thanksButton?.hintText,
-        maximumCharacterLength: 25,
-        onFieldSubmitted: presenter.onThanksFieldSubmitted,
-        toolbarVisibility: viewModel?.thanksButton?.toolbarVisibility,
-        fontFamilyKey: viewModel?.thanksButton?.fontFamily?.value,
-        initialValue: viewModel?.thanksButton?.text?.value,
-        backgroundBoxDecoration: BoxDecoration(
-          color: PalTheme.of(context).colors.dark,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        textStyle: TextStyle(
-          color: viewModel.thanksButton?.fontColor?.value ?? Colors.white,
-          fontSize: viewModel.thanksButton?.fontSize?.value?.toDouble() ?? 22.0,
-          fontWeight: FontWeightMapper.toFontWeight(
-                  viewModel.thanksButton?.fontWeight?.value) ??
-              FontWeight.w400,
-        ).merge(googleCustomFont(viewModel.thanksButton?.fontFamily?.value)),
+      child: EditableButton(
+        buttonFormFieldNotifier: viewModel.thanksButton,
+        currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
       ),
+      // child: EditableTextField.text(
+      //   helperToolbarKey: ValueKey(
+      //     'pal_EditorUpdateHelperWidget_ThanksButtonToolbar',
+      //   ),
+      //   textFormFieldKey: ValueKey(
+      //     'pal_EditorUpdateHelperWidget_ThanksButtonField',
+      //   ),
+      //   outsideTapStream: presenter.editableTextFieldController.stream,
+      //   onChanged: presenter.onThanksFieldChanged,
+      //   onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
+      //   hintText: viewModel.thanksButton?.hintText,
+      //   maximumCharacterLength: 25,
+      //   onFieldSubmitted: presenter.onThanksFieldSubmitted,
+      //   toolbarVisibility: viewModel?.thanksButton?.toolbarVisibility,
+      //   fontFamilyKey: viewModel?.thanksButton?.fontFamily?.value,
+      //   initialValue: viewModel?.thanksButton?.text?.value,
+      //   backgroundBoxDecoration: BoxDecoration(
+      //     color: PalTheme.of(context).colors.dark,
+      //     borderRadius: BorderRadius.circular(10.0),
+      //   ),
+      //   textStyle: TextStyle(
+      //     color: viewModel.thanksButton?.fontColor?.value ?? Colors.white,
+      //     fontSize: viewModel.thanksButton?.fontSize?.value?.toDouble() ?? 22.0,
+      //     fontWeight: FontWeightMapper.toFontWeight(
+      //             viewModel.thanksButton?.fontWeight?.value) ??
+      //         FontWeight.w400,
+      //   ).merge(googleCustomFont(viewModel.thanksButton?.fontFamily?.value)),
+      // ),
     );
   }
 
-  EditableTextField editableField(
-          Stream<bool> outsideTapStream,
-          TextFormFieldNotifier textNotifier,
-          OnFieldChanged onFieldValueChange,
-          OnTextStyleChanged onTextStyleChanged,
-          {String id,
-          Key helperToolbarKey,
-          Key textFormFieldKey,
-          TextStyle baseStyle,
-          int minimumCharacterLength = 1,
-          int maximumCharacterLength = 255,
-          int maxLines = 5,
-          BoxDecoration backgroundDecoration}) =>
-      EditableTextField.text(
-        id: id,
-        backgroundBoxDecoration: backgroundDecoration,
-        outsideTapStream: outsideTapStream,
-        helperToolbarKey: helperToolbarKey,
-        textFormFieldKey: textFormFieldKey,
-        onChanged: onFieldValueChange,
-        onTextStyleChanged: onTextStyleChanged,
-        maximumCharacterLength: maximumCharacterLength,
-        minimumCharacterLength: minimumCharacterLength,
-        maxLines: maxLines,
-        fontFamilyKey: textNotifier?.fontFamily?.value,
-        initialValue: textNotifier?.text?.value,
-        textStyle: TextStyle(
-          color: textNotifier?.fontColor?.value,
-          decoration: TextDecoration.none,
-          fontSize: textNotifier?.fontSize?.value?.toDouble(),
-          fontWeight:
-              FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
-        ).merge(baseStyle),
-      );
+  // EditableTextField editableField(
+  //         Stream<bool> outsideTapStream,
+  //         TextFormFieldNotifier textNotifier,
+  //         OnFieldChanged onFieldValueChange,
+  //         OnTextStyleChanged onTextStyleChanged,
+  //         {String id,
+  //         Key helperToolbarKey,
+  //         Key textFormFieldKey,
+  //         TextStyle baseStyle,
+  //         int minimumCharacterLength = 1,
+  //         int maximumCharacterLength = 255,
+  //         int maxLines = 5,
+  //         BoxDecoration backgroundDecoration}) =>
+  //     EditableTextField.text(
+  //       id: id,
+  //       backgroundBoxDecoration: backgroundDecoration,
+  //       outsideTapStream: outsideTapStream,
+  //       helperToolbarKey: helperToolbarKey,
+  //       textFormFieldKey: textFormFieldKey,
+  //       onChanged: onFieldValueChange,
+  //       onTextStyleChanged: onTextStyleChanged,
+  //       maximumCharacterLength: maximumCharacterLength,
+  //       minimumCharacterLength: minimumCharacterLength,
+  //       maxLines: maxLines,
+  //       fontFamilyKey: textNotifier?.fontFamily?.value,
+  //       initialValue: textNotifier?.text?.value,
+  //       textStyle: TextStyle(
+  //         color: textNotifier?.fontColor?.value,
+  //         decoration: TextDecoration.none,
+  //         fontSize: textNotifier?.fontSize?.value?.toDouble(),
+  //         fontWeight:
+  //             FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
+  //       ).merge(baseStyle),
+  //     );
 
   //FIXME CONsider extension
   TextStyle googleCustomFont(String fontFamily) {
@@ -419,7 +433,8 @@ class _EditorUpdateHelperPage
     UserUpdateHelperPage page = UserUpdateHelperPage(
       helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
-      thanksButtonLabel: HelperSharedFactory.parseTextNotifier(model.thanksButton),
+      // thanksButtonLabel:
+      //     HelperSharedFactory.parseTextNotifier(model.thanksButton),
       changelogLabels: model.changelogsFields.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),

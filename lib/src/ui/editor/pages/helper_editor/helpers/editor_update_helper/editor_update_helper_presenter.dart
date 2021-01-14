@@ -34,11 +34,11 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   @override
   void onInit() {
     this.viewModel.isKeyboardVisible = false;
-    viewModel.fields.forEach(
-      (field) => field.toolbarVisibility.addListener(
-        () => _onTextToolbarVisibilityChange(field)
-      )
-    );
+    // viewModel.fields.forEach(
+    //   (field) => field.toolbarVisibility.addListener(
+    //     () => _onTextToolbarVisibilityChange(field)
+    //   )
+    // );
   }
 
   @override
@@ -82,14 +82,14 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   onTitleFieldChanged(String id, String newValue)
     => _onTextChanged(viewModel.titleField, newValue);
 
-  onThanksFieldChanged(String id, String newValue)
-    => _onTextChanged(viewModel.thanksButton, newValue);
+  // onThanksFieldChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.thanksButton, newValue);
 
   onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
     => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
 
-  onThanksTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.thanksButton, newTextStyle, fontKeys);
+  // onThanksTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.thanksButton, newTextStyle, fontKeys);
 
   onChangelogTextChanged(String id, String newValue)
     => _onTextChanged(viewModel.changelogsFields[id], newValue);
@@ -156,10 +156,10 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   }
 
   _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
-    if(textNotifier.toolbarVisibility.value) {
-      viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
-        .forEach((element) => element.toolbarVisibility.value = false);
-    }
+    // if(textNotifier.toolbarVisibility.value) {
+    //   viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
+    //     .forEach((element) => element.toolbarVisibility.value = false);
+    // }
   }
 
   _updateValidState() => viewModel.canValidate.value = isValid();

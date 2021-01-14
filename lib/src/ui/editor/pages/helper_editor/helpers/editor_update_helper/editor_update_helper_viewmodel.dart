@@ -6,6 +6,7 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
@@ -17,12 +18,13 @@ class UpdateHelperViewModel extends HelperViewModel {
   bool isKeyboardVisible;
 
   LanguageNotifier language;
+  
+  ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
   BoxNotifier bodyBox;
   Map<String, TextFormFieldNotifier> changelogsFields;
   MediaNotifier media;
-  TextFormFieldNotifier thanksButton;
+  ButtonFormFieldNotifier thanksButton;
   TextFormFieldNotifier titleField;
-
 
   UpdateHelperViewModel({
     String id,
@@ -61,8 +63,8 @@ class UpdateHelperViewModel extends HelperViewModel {
       id: helperImageViewModel?.id,
       url: helperImageViewModel?.url,
     );
-    this.thanksButton = TextFormFieldNotifier(
-      // backgroundColor: Colors.black87,
+    this.thanksButton = ButtonFormFieldNotifier(
+      backgroundColor: Color(0xFF03045E),
       id: positivButtonLabel?.id,
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 22,
@@ -80,6 +82,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       fontFamily: titleLabel?.fontFamily,
       hintText: 'Enter your title here...',
     );
+    this.currentEditableItemNotifier = ValueNotifier<CurrentEditableItem>(null);
   }
 
   factory UpdateHelperViewModel.fromHelperViewModel(HelperViewModel model) {
@@ -169,7 +172,7 @@ class UpdateHelperViewModel extends HelperViewModel {
     return textFieldId;
   }
 
-  List<TextFormFieldNotifier> get fields => [
+  List<dynamic> get fields => [
     titleField,
     ...changelogsFields.values,
     thanksButton

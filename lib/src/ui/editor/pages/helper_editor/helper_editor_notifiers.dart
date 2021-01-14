@@ -11,11 +11,11 @@ class TextFormFieldNotifier {
   ValueNotifier<String> fontFamily;
   ValueNotifier<String> fontWeight;
   ValueNotifier<Color> fontColor;
-  ValueNotifier<Color> backgroundColor;
-  ValueNotifier<Color> borderColor;
+  // ValueNotifier<Color> backgroundColor;
+  // ValueNotifier<Color> borderColor;
   ValueNotifier<int> fontSize;
-  FocusNode focusNode;
-  ValueNotifier<bool> toolbarVisibility;
+  // FocusNode focusNode;
+  // ValueNotifier<bool> toolbarVisibility;
 
   TextFormFieldNotifier({
     int id,
@@ -31,14 +31,14 @@ class TextFormFieldNotifier {
     this.id = id;
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);
-    this.toolbarVisibility = ValueNotifier(false);
+    // this.toolbarVisibility = ValueNotifier(false);
     this.fontFamily = ValueNotifier(fontFamily ?? 'Montserrat');
     this.fontWeight = ValueNotifier(fontWeight ?? FontWeightMapper.toFontKey(FontWeight.normal));
-    this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
-    this.borderColor = ValueNotifier(borderColor);
+    // this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
+    // this.borderColor = ValueNotifier(borderColor);
     this.fontSize = ValueNotifier(fontSize ?? 14);
     this.hintText = hintText ?? text;
-    this.focusNode = FocusNode();
+    // this.focusNode = FocusNode();
   }
 }
 
@@ -83,6 +83,38 @@ class BoxNotifier {
     Color backgroundColor,
   }) {
     this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
+  }
+}
+
+class ButtonFormFieldNotifier {
+  int id;
+  ValueNotifier<String> text;
+  ValueNotifier<String> fontFamily;
+  ValueNotifier<String> fontWeight;
+  ValueNotifier<Color> fontColor;
+  ValueNotifier<Color> backgroundColor;
+  ValueNotifier<Color> borderColor;
+  ValueNotifier<int> fontSize;
+
+  ButtonFormFieldNotifier({
+    int id,
+    @required String text,
+    @required Color fontColor,
+    String fontFamily,
+    String fontWeight,
+    Color backgroundColor,
+    Color borderColor,
+    @required int fontSize,
+    String hintText,
+  }) {
+    this.id = id;
+    this.text = ValueNotifier(text);
+    this.fontColor = ValueNotifier(fontColor);
+    this.fontFamily = ValueNotifier(fontFamily ?? 'Montserrat');
+    this.fontWeight = ValueNotifier(fontWeight ?? FontWeightMapper.toFontKey(FontWeight.normal));
+    this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
+    this.borderColor = ValueNotifier(borderColor);
+    this.fontSize = ValueNotifier(fontSize ?? 14);
   }
 }
 

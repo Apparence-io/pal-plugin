@@ -43,11 +43,11 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
 
   @override
   void onInit() {
-    viewModel.fields.forEach(
-      (field) => field.toolbarVisibility.addListener(
-        () => _onTextToolbarVisibilityChange(field)
-      )
-    );
+    // viewModel.fields.forEach(
+    //   (field) => field.toolbarVisibility.addListener(
+    //     () => _onTextToolbarVisibilityChange(field)
+    //   )
+    // );
   }
 
   @override
@@ -200,10 +200,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   }
 
   _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
-    if(textNotifier.toolbarVisibility.value) {
-      viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
-        .forEach((element) => element.toolbarVisibility.value = false);
-    }
+    // if(textNotifier.toolbarVisibility.value) {
+    //   viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
+    //     .forEach((element) => element.toolbarVisibility.value = false);
+    // }
   }
 
   _updateValidState() => viewModel.canValidate.value = isValid();

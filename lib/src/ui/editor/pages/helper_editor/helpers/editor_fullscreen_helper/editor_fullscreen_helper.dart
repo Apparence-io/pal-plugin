@@ -12,14 +12,12 @@ import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_prev
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
-import 'package:pal/src/ui/editor/widgets/editable_media.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
-import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -191,11 +189,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomPadding: true,
-      body: EditorActionsBar(
-        onCancel: presenter.onCancel,
+      body: EditorToolboxPage(
+        // onCancel: presenter.onCancel,
         onValidate:
             (model.canValidate?.value == true) ? presenter.onValidate : null,
-        onPreview: presenter.onPreview,
+        // onPreview: presenter.onPreview,
         child: GestureDetector(
           key: ValueKey('palEditorFullscreenHelperWidget'),
           onTap: presenter.onOutsideTap,
@@ -229,58 +227,58 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
                             ),
                             SizedBox(height: 24),
-                            EditableTextField.fromNotifier(
-                              model.editableTextFieldController.stream,
-                              model?.titleField,
-                              presenter.onTitleChanged,
-                              presenter.onTitleSubmit,
-                              presenter.onTitleTextStyleChanged,
-                              baseStyle: presenter.googleCustomFont(
-                                  model?.titleField?.fontFamily?.value),
-                              helperToolbarKey: ValueKey(
-                                  'palEditorFullscreenHelperWidgetToolbar'),
-                              textFormFieldKey:
-                                  ValueKey('palFullscreenHelperTitleField'),
-                            ),
+                            // EditableTextField.fromNotifier(
+                            //   model.editableTextFieldController.stream,
+                            //   model?.titleField,
+                            //   presenter.onTitleChanged,
+                            //   presenter.onTitleSubmit,
+                            //   presenter.onTitleTextStyleChanged,
+                            //   baseStyle: presenter.googleCustomFont(
+                            //       model?.titleField?.fontFamily?.value),
+                            //   helperToolbarKey: ValueKey(
+                            //       'palEditorFullscreenHelperWidgetToolbar'),
+                            //   textFormFieldKey:
+                            //       ValueKey('palFullscreenHelperTitleField'),
+                            // ),
                             SizedBox(height: 24),
-                            EditableTextField.fromNotifier(
-                              model.editableTextFieldController.stream,
-                              model?.descriptionField,
-                              presenter.onDescriptionChanged,
-                              presenter.onDescriptionSubmit,
-                              presenter.onDescriptionTextStyleChanged,
-                              baseStyle: presenter.googleCustomFont(
-                                  model?.titleField?.fontFamily?.value),
-                              helperToolbarKey: ValueKey(
-                                  'palEditorFullscreenHelperWidgetToolbar'),
-                              textFormFieldKey: ValueKey(
-                                  'palFullscreenHelperDescriptionField'),
-                            ),
+                            // EditableTextField.fromNotifier(
+                            //   model.editableTextFieldController.stream,
+                            //   model?.descriptionField,
+                            //   presenter.onDescriptionChanged,
+                            //   presenter.onDescriptionSubmit,
+                            //   presenter.onDescriptionTextStyleChanged,
+                            //   baseStyle: presenter.googleCustomFont(
+                            //       model?.titleField?.fontFamily?.value),
+                            //   helperToolbarKey: ValueKey(
+                            //       'palEditorFullscreenHelperWidgetToolbar'),
+                            //   textFormFieldKey: ValueKey(
+                            //       'palFullscreenHelperDescriptionField'),
+                            // ),
                             Padding(
                               padding: const EdgeInsets.only(top: 40.0),
-                              child: EditableTextField.editableButton(
-                                  model.editableTextFieldController.stream,
-                                  model.positivButtonField,
-                                  presenter.onPositivTextChanged,
-                                  presenter.onPositivTextSubmit,
-                                  presenter.onPositivTextStyleChanged,
-                                  helperToolbarKey: ValueKey(
-                                      'palEditorFullscreenHelperWidgetToolbar'),
-                                  textFormFieldKey: ValueKey(
-                                      'palFullscreenHelperPositivField')),
+                              // child: EditableTextField.editableButton(
+                              //     model.editableTextFieldController.stream,
+                              //     model.positivButtonField,
+                              //     presenter.onPositivTextChanged,
+                              //     presenter.onPositivTextSubmit,
+                              //     presenter.onPositivTextStyleChanged,
+                              //     helperToolbarKey: ValueKey(
+                              //         'palEditorFullscreenHelperWidgetToolbar'),
+                              //     textFormFieldKey: ValueKey(
+                              //         'palFullscreenHelperPositivField')),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 12.0),
-                              child: EditableTextField.editableButton(
-                                  model.editableTextFieldController.stream,
-                                  model.negativButtonField,
-                                  presenter.onNegativTextChanged,
-                                  presenter.onNegativTextSubmit,
-                                  presenter.onNegativTextStyleChanged,
-                                  helperToolbarKey: ValueKey(
-                                      'palEditorFullscreenHelperWidgetToolbar'),
-                                  textFormFieldKey: ValueKey(
-                                      'palFullscreenHelperNegativField')),
+                              // child: EditableTextField.editableButton(
+                              //     model.editableTextFieldController.stream,
+                              //     model.negativButtonField,
+                              //     presenter.onNegativTextChanged,
+                              //     presenter.onNegativTextSubmit,
+                              //     presenter.onNegativTextStyleChanged,
+                              //     helperToolbarKey: ValueKey(
+                              //         'palEditorFullscreenHelperWidgetToolbar'),
+                              //     textFormFieldKey: ValueKey(
+                              //         'palFullscreenHelperNegativField')),
                             ),
                           ],
                         ),

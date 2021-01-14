@@ -9,15 +9,13 @@ import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_model.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -137,13 +135,12 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       },
       builder: (context, presenter, model) => Material(
           color: Colors.black.withOpacity(0.3),
-          child: EditorActionsBar(
-            onCancel: presenter.onCancel,
+          child: EditorToolboxPage(
+            // onCancel: presenter.onCancel,
             onValidate: (model.canValidate?.value == true)
                 ? presenter.onValidate
                 : null,
-            visible: model.anchorValidated,
-            onPreview: presenter.onPreview,
+            // onPreview: presenter.onPreview,
             child: Stack(
               children: [
                 _createAnchoredWidget(model, context.animationsControllers[0],
@@ -263,45 +260,45 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                    child: EditableTextField.fromNotifier(
-                      editableTextFieldController.stream,
-                      model.titleField,
-                      presenter.onTitleChanged,
-                      presenter.onTitleSubmit,
-                      presenter.onTitleTextStyleChanged,
-                    ),
+                    // child: EditableTextField.fromNotifier(
+                    //   editableTextFieldController.stream,
+                    //   model.titleField,
+                    //   presenter.onTitleChanged,
+                    //   presenter.onTitleSubmit,
+                    //   presenter.onTitleTextStyleChanged,
+                    // ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: EditableTextField.fromNotifier(
-                      editableTextFieldController.stream,
-                      model.descriptionField,
-                      presenter.onDescriptionChanged,
-                      presenter.onDescriptionSubmit,
-                      presenter.onDescriptionTextStyleChanged,
-                    ),
+                    // child: EditableTextField.fromNotifier(
+                    //   editableTextFieldController.stream,
+                    //   model.descriptionField,
+                    //   presenter.onDescriptionChanged,
+                    //   presenter.onDescriptionSubmit,
+                    //   presenter.onDescriptionTextStyleChanged,
+                    // ),
                   ),
                   SizedBox(height: 16),
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Flexible(
-                        child: EditableTextField.editableButton(
-                          editableTextFieldController.stream,
-                          model.negativBtnField,
-                          presenter.onNegativTextChanged,
-                          presenter.onNegativSubmit,
-                          presenter.onNegativTextStyleChanged,
-                        ),
+                        // child: EditableTextField.editableButton(
+                        //   editableTextFieldController.stream,
+                        //   model.negativBtnField,
+                        //   presenter.onNegativTextChanged,
+                        //   presenter.onNegativSubmit,
+                        //   presenter.onNegativTextStyleChanged,
+                        // ),
                       ),
                       Flexible(
-                        child: EditableTextField.editableButton(
-                          editableTextFieldController.stream,
-                          model.positivBtnField,
-                          presenter.onPositivTextChanged,
-                          presenter.onPositivSubmit,
-                          presenter.onPositivTextStyleChanged,
-                        ),
+                        // child: EditableTextField.editableButton(
+                        //   editableTextFieldController.stream,
+                        //   model.positivBtnField,
+                        //   presenter.onPositivTextChanged,
+                        //   presenter.onPositivSubmit,
+                        //   presenter.onPositivTextStyleChanged,
+                        // ),
                       ),
                     ],
                   )

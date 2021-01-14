@@ -14,9 +14,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_w
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -123,12 +122,12 @@ class EditorSimpleHelperPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
-      body: EditorActionsBar(
-        onCancel: presenter.onCancel,
+      body: EditorToolboxPage(
+        // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
-        onPreview: presenter.onPreview,
+        // onPreview: presenter.onPreview,
         child: GestureDetector(
           key: ValueKey('palEditorSimpleHelperWidget'),
           onTap: presenter.onOutsideTap,
@@ -148,66 +147,66 @@ class EditorSimpleHelperPage extends StatelessWidget {
                           Expanded(child: Container()),
                           Container(
                             width: constraints.maxWidth * 0.8,
-                            child: EditableTextField.text(
-                              outsideTapStream:
-                                  presenter.editableTextFieldController.stream,
-                              helperToolbarKey: ValueKey(
-                                  'palEditorSimpleHelperWidgetToolbar'),
-                              textFormFieldKey:
-                                  ValueKey('palSimpleHelperDetailField'),
-                              onChanged: presenter.onDetailsFieldChanged,
-                              onFieldSubmitted:
-                                  presenter.onDetailsFieldSubmitted,
-                              onTextStyleChanged:
-                                  presenter.onDetailsTextStyleChanged,
-                              maxLines: 3,
-                              maximumCharacterLength: 150,
-                              minimumCharacterLength: 1,
-                              toolbarVisibility:
-                                  viewModel?.detailsField?.toolbarVisibility,
-                              fontFamilyKey:
-                                  viewModel?.detailsField?.fontFamily?.value,
-                              initialValue:
-                                  viewModel?.detailsField?.text?.value,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  new RegExp('^(.*(\n.*){0,2})'),
-                                ),
-                              ],
-                              backgroundBoxDecoration: BoxDecoration(
-                                color: viewModel
-                                        ?.bodyBox?.backgroundColor?.value ??
-                                    PalTheme.of(context).colors.light,
-                                borderRadius: BorderRadius.circular(6.0),
-                              ),
-                              backgroundPadding: EdgeInsets.only(
-                                bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom >
-                                        0
-                                    ? MediaQuery.of(context).viewInsets.bottom +
-                                        20.0
-                                    : 50.0 +
-                                        MediaQuery.of(context).padding.bottom,
-                              ),
-                              textFormFieldPadding: const EdgeInsets.symmetric(
-                                vertical: 16.0,
-                                horizontal: 33.0,
-                              ),
-                              textStyle: TextStyle(
-                                color: viewModel.detailsField?.fontColor?.value,
-                                fontSize: viewModel
-                                    .detailsField?.fontSize?.value
-                                    ?.toDouble(),
-                                fontWeight: FontWeightMapper.toFontWeight(
-                                  viewModel.detailsField?.fontWeight?.value,
-                                ),
-                              ).merge(
-                                _googleCustomFont(
-                                  viewModel.detailsField?.fontFamily?.value,
-                                ),
-                              ),
-                            ),
+                            // child: EditableTextField.text(
+                            //   outsideTapStream:
+                            //       presenter.editableTextFieldController.stream,
+                            //   helperToolbarKey: ValueKey(
+                            //       'palEditorSimpleHelperWidgetToolbar'),
+                            //   textFormFieldKey:
+                            //       ValueKey('palSimpleHelperDetailField'),
+                            //   onChanged: presenter.onDetailsFieldChanged,
+                            //   onFieldSubmitted:
+                            //       presenter.onDetailsFieldSubmitted,
+                            //   onTextStyleChanged:
+                            //       presenter.onDetailsTextStyleChanged,
+                            //   maxLines: 3,
+                            //   maximumCharacterLength: 150,
+                            //   minimumCharacterLength: 1,
+                            //   // toolbarVisibility:
+                            //   //     viewModel?.detailsField?.toolbarVisibility,
+                            //   fontFamilyKey:
+                            //       viewModel?.detailsField?.fontFamily?.value,
+                            //   initialValue:
+                            //       viewModel?.detailsField?.text?.value,
+                            //   inputFormatters: [
+                            //     FilteringTextInputFormatter.allow(
+                            //       new RegExp('^(.*(\n.*){0,2})'),
+                            //     ),
+                            //   ],
+                            //   backgroundBoxDecoration: BoxDecoration(
+                            //     color: viewModel
+                            //             ?.bodyBox?.backgroundColor?.value ??
+                            //         PalTheme.of(context).colors.light,
+                            //     borderRadius: BorderRadius.circular(6.0),
+                            //   ),
+                            //   backgroundPadding: EdgeInsets.only(
+                            //     bottom: MediaQuery.of(context)
+                            //                 .viewInsets
+                            //                 .bottom >
+                            //             0
+                            //         ? MediaQuery.of(context).viewInsets.bottom +
+                            //             20.0
+                            //         : 50.0 +
+                            //             MediaQuery.of(context).padding.bottom,
+                            //   ),
+                            //   textFormFieldPadding: const EdgeInsets.symmetric(
+                            //     vertical: 16.0,
+                            //     horizontal: 33.0,
+                            //   ),
+                            //   textStyle: TextStyle(
+                            //     color: viewModel.detailsField?.fontColor?.value,
+                            //     fontSize: viewModel
+                            //         .detailsField?.fontSize?.value
+                            //         ?.toDouble(),
+                            //     fontWeight: FontWeightMapper.toFontWeight(
+                            //       viewModel.detailsField?.fontWeight?.value,
+                            //     ),
+                            //   ).merge(
+                            //     _googleCustomFont(
+                            //       viewModel.detailsField?.fontFamily?.value,
+                            //     ),
+                            //   ),
+                            // ),
                           ),
                         ],
                       ),

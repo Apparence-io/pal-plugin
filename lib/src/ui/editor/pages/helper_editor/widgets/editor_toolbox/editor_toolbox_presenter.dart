@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 import 'editor_toolbox.dart';
 import 'editor_toolbox_viewmodel.dart';
@@ -105,24 +107,42 @@ class EditorToolboxPresenter
 
   void openPicker(ToolBarActionButton toolBarActionButton) async {
     switch (toolBarActionButton) {
+      // TODO: Séparer les couleurs de Font/Background/Border
       case ToolBarActionButton.color:
-        EditedColorData colorData =
+        Color newColor =
             await this.viewInterface.openColorPicker(this.viewModel, this);
-        this.onTextColorPickerDone(colorData);
+        if (newColor != null) {
+          EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
+          editableFormField.fontColor.value = newColor;
+        }
         break;
       case ToolBarActionButton.font:
-        EditedFontData fontData = await this.viewInterface.openFontPicker();
-        this.onFontPickerDone(fontData);
+        EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
+        EditedFontModel newFont = await this.viewInterface.openFontPicker(editableFormField.fontFamily.value,editableFormField.fontSize.value,editableFormField.fontWeight.value);
+        if (newFont != null) {
+          String fontWeight = newFont.fontKeys.fontWeightNameKey;
+          String fontFamily = newFont.fontKeys.fontFamilyNameKey;
+          double fontSize = newFont.size;
+
+          
+          editableFormField.fontFamily.value = fontFamily;
+          editableFormField.fontSize.value = fontSize.toInt();
+          editableFormField.fontWeight.value = fontWeight;
+          this.refreshView();
+        }
         break;
       case ToolBarActionButton.media:
-        EditedMediaData mediaData = await this.viewInterface.openMediaPicker();
-        this.onMediaPickerDone(mediaData);
+        String newUrl = await this.viewInterface.openMediaPicker();
+        if (newUrl != null) {
+          MediaNotifier mediaNotifier = this.currentEditableItemNotifier?.value;
+          mediaNotifier.url.value = newUrl;
+        }
         break;
       case ToolBarActionButton.text:
         String newText = await this.viewInterface.openTextPicker();
         if (newText != null) {
-          EditableFormFieldNotifier textFormField = this.currentEditableItemNotifier?.value;
-          textFormField.text.value = newText;
+          EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
+          editableFormField.text.value = newText;
         }
         break;
       default:
@@ -133,13 +153,13 @@ class EditorToolboxPresenter
       ToolBarGlobalActionButton toolBarGlobalActionButton) async {
     switch (toolBarGlobalActionButton) {
       case ToolBarGlobalActionButton.backgroundColor:
-        this.viewInterface.openColorPicker(this.viewModel, this);
+        Color newColor = await this.viewInterface.openColorPicker(this.viewModel, this);
+        if (newColor != null) {
+          EditedColorData editedColorData = EditedColorData(null, color: newColor);
+          this.viewModel.boxViewHandler.callback(editedColorData.color);
+        }
         break;
       default:
     }
-  }
-
-  notifyBgColorChange(Color newColor) {
-    this.viewModel.boxViewHandler.callback(newColor);
   }
 }

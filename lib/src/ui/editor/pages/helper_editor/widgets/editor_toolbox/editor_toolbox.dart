@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/text_field_picker/dialog_editable_textfield.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
@@ -14,10 +18,10 @@ import 'editor_toolbox_viewmodel.dart';
 
 abstract class EditorToolboxView {
   Future<String> openTextPicker();
-  Future<EditedFontData> openFontPicker();
-  Future<EditedColorData> openColorPicker(
+  Future<EditedFontModel> openFontPicker(String family,int size,String weight);
+  Future<Color> openColorPicker(
       EditorToolboxModel model, EditorToolboxPresenter presenter);
-  Future<EditedMediaData> openMediaPicker();
+  Future<String> openMediaPicker();
 }
 
 class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
@@ -92,7 +96,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       },
       presenterBuilder: (context) => EditorToolboxPresenter(
         this,
-        boxViewHandler: this.boxViewHandler,
+        boxViewHandler: boxViewHandler,
         currentEditableItemNotifier: currentEditableItemNotifier,
         onBorderPickerDone: onBorderPickerDone,
         onFontPickerDone: onFontPickerDone,
@@ -148,7 +152,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<EditedColorData> openColorPicker(
+  Future<Color> openColorPicker(
       EditorToolboxModel model, EditorToolboxPresenter presenter) async {
     // return showOverlayedInContext(
     //   (context) => ColorPickerDialog(
@@ -159,22 +163,25 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     //   key: OverlayKeys.PAGE_OVERLAY_KEY,
     // );
 
-    Color newColor = await showDialog(
+    return await showDialog(
       context: _scaffoldKey.currentContext,
       builder: (context) => ColorPickerDialog(
         placeholderColor: model.boxViewHandler.selectedColor,
       ),
     );
-    if (newColor != null) {
-      EditedColorData editedColorData = EditedColorData(null, color: newColor);
-      presenter.notifyBgColorChange(editedColorData.color);
-    }
+    
   }
 
   @override
-  Future<EditedFontData> openFontPicker() {
-    // TODO: implement openFontPicker
-    throw UnimplementedError();
+  Future<EditedFontModel> openFontPicker(String family,int size,String weight) async {
+    TextStyle style = TextStyle(fontSize: size.toDouble(),fontWeight: FontWeightMapper.toFontWeight(weight));
+    return await showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) => FontEditorDialogPage(
+        actualTextStyle: style,
+        fontFamilyKey: family,
+      ),
+    );
   }
 
   @override
@@ -199,7 +206,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<EditedMediaData> openMediaPicker() {
+  Future<String> openMediaPicker() {
     // TODO: implement openMediaPicker
     throw UnimplementedError();
   }

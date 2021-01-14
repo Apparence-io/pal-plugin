@@ -111,7 +111,8 @@ class EditorUpdateHelperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorUpdateHelperPresenter, UpdateHelperViewModel>()
         .build(
-      key: ValueKey('pal_EditorUpdateHelperWidget_Builder'),
+      // key: ValueKey('pal_EditorUpdateHelperWidget_Builder'),
+      key: UniqueKey(),
       context: context,
       presenterBuilder: (context) {
         var presenter = EditorUpdateHelperPresenter(
@@ -216,6 +217,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
                         currentEditableItemNotifier:
                             viewModel.currentEditableItemNotifier,
                         url: viewModel.media?.url?.value,
+                        mediaNotifier: viewModel.media,
                       ),
                       SizedBox(height: 40),
                       EditableTextField(

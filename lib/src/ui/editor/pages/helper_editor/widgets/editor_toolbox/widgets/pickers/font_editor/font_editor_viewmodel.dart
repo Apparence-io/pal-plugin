@@ -20,3 +20,10 @@ class FontKeys {
     this.fontWeightNameKey,
   });
 }
+
+class EditedFontModel{
+  FontKeys fontKeys;
+  double size;
+
+  EditedFontModel(this.fontKeys,this.size);
+}

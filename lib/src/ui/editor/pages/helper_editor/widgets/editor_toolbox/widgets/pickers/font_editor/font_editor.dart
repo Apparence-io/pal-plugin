@@ -81,7 +81,7 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
   ) {
     return AlertDialog(
       key: ValueKey('pal_FontEditorDialog'),
-      actions: _buildActions(model),
+      actions: _buildActions(model,context),
       content: SingleChildScrollView(
         child: Container(
           width: double.maxFinite,
@@ -137,14 +137,14 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
     );
   }
 
-  _buildActions(final FontEditorDialogModel model) {
+  _buildActions(final FontEditorDialogModel model,BuildContext context) {
     return [
       FlatButton(
         key: ValueKey('pal_FontEditorDialog_CancelButton'),
         child: Text('Cancel'),
         onPressed: () {
           HapticFeedback.selectionClick();
-          this.onCancelPicker();
+          Navigator.pop(context);
         },
       ),
       FlatButton(
@@ -157,13 +157,14 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
         ),
         onPressed: () async {
           HapticFeedback.selectionClick();
-          onValidatePicker();
-          if (onFontModified != null) {
-            await onFontModified(
-              model.modifiedTextStyle.merge(TextStyle(color: actualTextStyle.color)),
-              model.fontKeys,
-            );
-          }
+          Navigator.pop(context,EditedFontModel(model.fontKeys,model.modifiedTextStyle.fontSize));
+          // onValidatePicker();
+          // if (onFontModified != null) {
+          //   await onFontModified(
+          //     model.modifiedTextStyle.merge(TextStyle(color: actualTextStyle.color)),
+          //     model.fontKeys,
+          //   );
+          // }
         },
       ),
     ];

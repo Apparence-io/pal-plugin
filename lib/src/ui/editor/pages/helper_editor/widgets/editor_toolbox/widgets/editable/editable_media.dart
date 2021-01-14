@@ -6,7 +6,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.da
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
-class EditableMedia extends StatelessWidget {
+class EditableMedia extends StatefulWidget {
   final MediaNotifier mediaNotifier;
   final double mediaSize;
   final String url;
@@ -25,10 +25,24 @@ class EditableMedia extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _EditableMediaState createState() => _EditableMediaState();
+}
+
+class _EditableMediaState extends State<EditableMedia> {
+  @override
+  void initState() {
+    // TODO: Refacto en un seul TextStyle listener
+    super.initState();
+    // widget.mediaNotifier.url.addListener(() {
+    //   this.setState(() {});
+    // });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BouncingWidget(
       onTap: () {
-        this.currentEditableItemNotifier.value = this.mediaNotifier;
+        this.widget.currentEditableItemNotifier.value = this.widget.mediaNotifier;
         // this.onEdit?.call();
       },
       child: DottedBorder(
@@ -36,10 +50,10 @@ class EditableMedia extends StatelessWidget {
         color: Colors.white.withAlpha(80),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: (url != null && url.length > 0)
+          child: (widget.url != null && widget.url.length > 0)
               ? CachedNetworkImage(
-                  imageUrl: url,
-                  width: mediaSize,
+                  imageUrl: widget.url,
+                  width: widget.mediaSize,
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),
                   ),
@@ -49,7 +63,7 @@ class EditableMedia extends StatelessWidget {
                 )
               : Icon(
                   Icons.image,
-                  size: mediaSize,
+                  size: widget.mediaSize,
                   color: Colors.white.withAlpha(80),
                 ),
         ),

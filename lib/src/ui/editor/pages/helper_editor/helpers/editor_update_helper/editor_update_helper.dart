@@ -142,11 +142,16 @@ class EditorUpdateHelperPage extends StatelessWidget {
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
+        boxViewHandler: BoxViewHandler(
+          callback: presenter.updateBackgroundColor,
+          selectedColor: viewModel.bodyBox?.backgroundColor?.value
+        ),
+        // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
-        onTextPickerDone: presenter.onTextPickerDone,
+        // onTextPickerDone: presenter.onTextPickerDone,
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.always,

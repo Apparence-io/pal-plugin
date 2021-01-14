@@ -3,15 +3,19 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/text_field_picker/dialog_editable_textfield.dart';
+import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
+import '../../../../../../router.dart';
 import 'editor_toolbox_presenter.dart';
 import 'editor_toolbox_viewmodel.dart';
 
 abstract class EditorToolboxView {
   Future<EditedTextData> openTextPicker();
   Future<EditedFontData> openFontPicker();
-  Future<EditedColorData> openColorPicker();
+  Future<EditedColorData> openColorPicker(
+      EditorToolboxModel model, EditorToolboxPresenter presenter);
   Future<EditedMediaData> openMediaPicker();
 }
 
@@ -20,6 +24,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   final Widget child;
   // Save button function
   final Function onValidate;
+  final BoxViewHandler boxViewHandler;
 
   // Pickers
   final Function(EditedTextData) onTextPickerDone;
@@ -42,6 +47,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     this.onTextColorPickerDone,
     this.onTextPickerDone,
     this.onMediaPickerDone,
+    @required this.boxViewHandler,
   });
 
   final _mvvmPageBuilder =
@@ -64,24 +70,28 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
         ),
         AnimationController(
           vsync: ticker,
-          duration: Duration(milliseconds: 5000),
-          value: 1,
+          duration: Duration(milliseconds: 1500),
+          value: 0,
           lowerBound: 0,
           upperBound: 2,
         ),
       ],
       animListener: (context, presenter, model) {
-        context.animationsControllers[0]
-            .animateTo(model.animationTarget, curve: Curves.easeOut);
+        if (model.animateActionBar) {
+          context.animationsControllers[0]
+              .animateTo(model.animationTarget, curve: Curves.easeOut);
+          model.animateActionBar = false;
+        }
         if (model.animateIcons) {
-          context.animationsControllers[1].value = 1;
+          context.animationsControllers[1].value = 0;
           context.animationsControllers[1]
-              .animateTo(0, curve: Curves.easeOutBack);
+              .animateTo(1, curve: Curves.elasticOut);
           model.animateIcons = false;
         }
       },
       presenterBuilder: (context) => EditorToolboxPresenter(
         this,
+        boxViewHandler: this.boxViewHandler,
         currentEditableItemNotifier: currentEditableItemNotifier,
         onBorderPickerDone: onBorderPickerDone,
         onFontPickerDone: onFontPickerDone,
@@ -130,22 +140,34 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
           drawerAnimation: context.animationsControllers[0],
           iconsAnimation: context.animationsControllers[1],
           onActionTap: presenter.openPicker,
-          onGlobalActionTap: null,
+          onGlobalActionTap: presenter.openGlobalPicker,
         ),
       ],
     );
   }
 
   @override
-  Future<EditedColorData> openColorPicker() {
-    // showOverlayedInContext(
+  Future<EditedColorData> openColorPicker(
+      EditorToolboxModel model, EditorToolboxPresenter presenter) async {
+    // return showOverlayedInContext(
     //   (context) => ColorPickerDialog(
-    //     placeholderColor: viewModel.bodyBox.backgroundColor?.value,
-    //     onColorSelected: presenter.updateBackgroundColor,
-    //     onCancel: presenter.cancelUpdateBackgroundColor,
+    //     placeholderColor: model.boxViewHandler.selectedColor,
+    //     onColorSelected: presenter.notifyBgColorChange,
+    //     onCancel: (){},
     //   ),
     //   key: OverlayKeys.PAGE_OVERLAY_KEY,
     // );
+
+    Color newColor = await showDialog(
+      context: _scaffoldKey.currentContext,
+      builder: (context) => ColorPickerDialog(
+        placeholderColor: model.boxViewHandler.selectedColor,
+      ),
+    );
+    if (newColor != null) {
+      EditedColorData editedColorData = EditedColorData(null, color: newColor);
+      presenter.notifyBgColorChange(editedColorData.color);
+    }
   }
 
   @override

@@ -13,6 +13,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
@@ -189,6 +190,10 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomPadding: true,
       body: EditorToolboxPage(
+        boxViewHandler: BoxViewHandler(
+          callback: presenter.updateBackgroundColor,
+          selectedColor: model.bodyBox?.backgroundColor?.value
+        ),
         // onCancel: presenter.onCancel,
         onValidate:
             (model.canValidate?.value == true) ? presenter.onValidate : null,
@@ -207,6 +212,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                 backgroundColor: model.bodyBox.backgroundColor?.value,
                 // circleIconKey:
                 //     'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
+                    // 'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
                 // onColorChange: () => presenter.changeBackgroundColor(),
                 widget: Center(
                   child: Padding(

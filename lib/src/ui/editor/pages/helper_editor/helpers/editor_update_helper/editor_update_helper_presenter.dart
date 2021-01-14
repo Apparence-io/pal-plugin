@@ -126,7 +126,6 @@ class EditorUpdateHelperPresenter
 
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
-    viewInterface.closeColorPickerDialog();
     this.refreshView();
   }
 

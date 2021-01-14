@@ -124,12 +124,9 @@ class EditorToolBar extends StatelessWidget {
 
       Widget globalActionToAdd = AnimatedBuilder(
         animation: this.iconsAnimation,
-        builder: (context, child) => Transform.translate(
-          offset: Offset(70 * this.iconsAnimation.value,0),
-          child: Transform.rotate(
-            angle: 1.5708 * this.iconsAnimation.value,
-            child: child
-          )
+        builder: (context, child) => Transform.scale(
+          scale: this.iconsAnimation.value,
+          child: child
         ) ,
         child: CircleIconButton(
         icon: Icon(

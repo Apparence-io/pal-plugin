@@ -44,11 +44,11 @@ class HelperFactory {
         FullscreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
-      positivLabel: HelperSharedFactory.parseTextLabel(
+      positivLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
-      negativLabel: HelperSharedFactory.parseTextLabel(
+      negativLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts,
       ),

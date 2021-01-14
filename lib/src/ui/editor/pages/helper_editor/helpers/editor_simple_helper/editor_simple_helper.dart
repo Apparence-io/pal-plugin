@@ -13,6 +13,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -120,6 +122,10 @@ class EditorSimpleHelperPage extends StatelessWidget {
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
+        boxViewHandler: BoxViewHandler(
+          callback: presenter.updateBackgroundColor,
+          selectedColor: viewModel.bodyBox?.backgroundColor?.value),
+          currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
         // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
@@ -144,6 +150,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
                           Expanded(child: Container()),
                           Container(
                             width: constraints.maxWidth * 0.8,
+                            child: EditableTextField(textNotifier: viewModel.detailsField, currentEditableItemNotifier: viewModel.currentEditableItemNotifier)
                             // child: EditableTextField.text(
                             //   outsideTapStream:
                             //       presenter.editableTextFieldController.stream,
@@ -209,19 +216,19 @@ class EditorSimpleHelperPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 20.0,
-                    left: 20.0,
-                    child: SafeArea(
-                      child: CircleIconButton(
-                        key: ValueKey(
-                            'pal_EditorSimpleHelperWidget_CircleBackground'),
-                        icon: Icon(Icons.invert_colors),
-                        backgroundColor: PalTheme.of(context).colors.light,
-                        // onTapCallback: presenter.onChangeColorRequest,
-                      ),
-                    ),
-                  ),
+                  // Positioned(
+                  //   top: 20.0,
+                  //   left: 20.0,
+                  //   child: SafeArea(
+                  //     child: CircleIconButton(
+                  //       key: ValueKey(
+                  //           'pal_EditorSimpleHelperWidget_CircleBackground'),
+                  //       icon: Icon(Icons.invert_colors),
+                  //       backgroundColor: PalTheme.of(context).colors.light,
+                  //       // onTapCallback: presenter.onChangeColorRequest,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             );

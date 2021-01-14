@@ -19,6 +19,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
   double helperOpacity;
   ValueNotifier<bool> canValidate;
   StreamController<bool> editableTextFieldController;
+  ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
 
   // helper properties
   LanguageNotifier language;
@@ -26,8 +27,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
   MediaNotifier media;
   TextFormFieldNotifier titleField;
   TextFormFieldNotifier descriptionField;
-  TextFormFieldNotifier positivButtonField;
-  TextFormFieldNotifier negativButtonField;
+  ButtonFormFieldNotifier positivButtonField;
+  ButtonFormFieldNotifier negativButtonField;
 
   FullscreenHelperViewModel({
     String id,
@@ -83,8 +84,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontWeight: FontWeightMapper.toFontKey(descriptionLabel?.fontWeight),
       fontFamily: descriptionLabel?.fontFamily,
     );
-    this.positivButtonField = TextFormFieldNotifier(
+    this.positivButtonField = ButtonFormFieldNotifier(
       positivButtonLabel?.id,
+      backgroundColor: Color(0xFF03045E),
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 23,
       text: positivButtonLabel?.text ?? 'Ok, thanks !',
@@ -93,8 +95,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
       ),
       fontFamily: positivButtonLabel?.fontFamily,
     );
-    this.negativButtonField = TextFormFieldNotifier(
+    this.negativButtonField = ButtonFormFieldNotifier(
       negativButtonLabel?.id,
+      backgroundColor: Color(0xFF03045E),
       text: negativButtonLabel?.text ?? 'This is not helping',
       fontWeight: FontWeightMapper.toFontKey(
         negativButtonLabel?.fontWeight ?? FontWeight.bold),
@@ -102,6 +105,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontSize: negativButtonLabel?.fontSize?.toInt() ?? 13,
       fontFamily: negativButtonLabel?.fontFamily,
     );
+    this.currentEditableItemNotifier = ValueNotifier<FormFieldNotifier>(null);
   }
 
   factory FullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model) {
@@ -162,7 +166,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       ),
     );
 
-  List<TextFormFieldNotifier> get fields => [
+  List<EditableFormFieldNotifier> get fields => [
     titleField,
     descriptionField,
     positivButtonField,

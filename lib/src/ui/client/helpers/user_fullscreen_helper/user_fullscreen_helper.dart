@@ -28,8 +28,8 @@ class UserFullScreenHelperPage extends StatelessWidget
 
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
-  final HelperTextViewModel positivLabel;
-  final HelperTextViewModel negativLabel;
+  final HelperButtonViewModel positivLabel;
+  final HelperButtonViewModel negativLabel;
   final HelperImageViewModel headerImageViewModel;
   final Function onPositivButtonTap;
   final Function onNegativButtonTap;

@@ -14,7 +14,9 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
@@ -98,8 +100,8 @@ class EditorFullScreenHelper
       helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
       headerImageViewModel: HelperSharedFactory.parseMediaNotifier(model.media),
-      negativLabel: HelperSharedFactory.parseTextNotifier(model.negativButtonField),
-      positivLabel: HelperSharedFactory.parseTextNotifier(model.positivButtonField),
+      negativLabel: HelperSharedFactory.parseButtonNotifier(model.negativButtonField),
+      positivLabel: HelperSharedFactory.parseButtonNotifier(model.positivButtonField),
       onNegativButtonTap: () => Navigator.pop(context),
       onPositivButtonTap: () => Navigator.pop(context),
     );
@@ -194,6 +196,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
           callback: presenter.updateBackgroundColor,
           selectedColor: model.bodyBox?.backgroundColor?.value
         ),
+        currentEditableItemNotifier: model.currentEditableItemNotifier,
         // onCancel: presenter.onCancel,
         onValidate:
             (model.canValidate?.value == true) ? presenter.onValidate : null,
@@ -230,22 +233,30 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               url: model.media?.url?.value,
                               editKey:
                                   'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
+                                  currentEditableItemNotifier: model.currentEditableItemNotifier,
+                                  mediaNotifier: model.media,
                             ),
                             SizedBox(height: 24),
-                            // EditableTextField.fromNotifier(
-                            //   model.editableTextFieldController.stream,
-                            //   model?.titleField,
-                            //   presenter.onTitleChanged,
-                            //   presenter.onTitleSubmit,
-                            //   presenter.onTitleTextStyleChanged,
-                            //   baseStyle: presenter.googleCustomFont(
-                            //       model?.titleField?.fontFamily?.value),
-                            //   helperToolbarKey: ValueKey(
-                            //       'palEditorFullscreenHelperWidgetToolbar'),
-                            //   textFormFieldKey:
-                            //       ValueKey('palFullscreenHelperTitleField'),
-                            // ),
+                            EditableTextField(
+                              textNotifier: model.titleField,
+                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                              // model.editableTextFieldController.stream,
+                              // model?.titleField,
+                              // presenter.onTitleChanged,
+                              // presenter.onTitleSubmit,
+                              // presenter.onTitleTextStyleChanged,
+                              // baseStyle: presenter.googleCustomFont(
+                              //     model?.titleField?.fontFamily?.value),
+                              // helperToolbarKey: ValueKey(
+                              //     'palEditorFullscreenHelperWidgetToolbar'),
+                              // textFormFieldKey:
+                              //     ValueKey('palFullscreenHelperTitleField'),
+                            ),
                             SizedBox(height: 24),
+                            EditableTextField(
+                              textNotifier: model.descriptionField,
+                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                            ),
                             // EditableTextField.fromNotifier(
                             //   model.editableTextFieldController.stream,
                             //   model?.descriptionField,
@@ -261,6 +272,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             // ),
                             Padding(
                               padding: const EdgeInsets.only(top: 40.0),
+                            ),
+                            EditableButton(
+                              buttonFormFieldNotifier: model.positivButtonField,
+                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                            ),
                               // child: EditableTextField.editableButton(
                               //     model.editableTextFieldController.stream,
                               //     model.positivButtonField,
@@ -271,9 +287,12 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               //         'palEditorFullscreenHelperWidgetToolbar'),
                               //     textFormFieldKey: ValueKey(
                               //         'palFullscreenHelperPositivField')),
-                            ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
+                              padding: const EdgeInsets.only(top: 12.0),),
+                            EditableButton(
+                              buttonFormFieldNotifier: model.negativButtonField,
+                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                            )
                               // child: EditableTextField.editableButton(
                               //     model.editableTextFieldController.stream,
                               //     model.negativButtonField,
@@ -284,7 +303,6 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               //         'palEditorFullscreenHelperWidgetToolbar'),
                               //     textFormFieldKey: ValueKey(
                               //         'palFullscreenHelperNegativField')),
-                            ),
                           ],
                         ),
                       ),

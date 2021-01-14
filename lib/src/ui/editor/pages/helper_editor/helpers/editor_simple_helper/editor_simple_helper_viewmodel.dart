@@ -21,6 +21,8 @@ class SimpleHelperViewModel extends HelperViewModel {
   BoxNotifier bodyBox;
   TextFormFieldNotifier detailsField;
 
+  ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
+
   SimpleHelperViewModel({
     String id,
     @required String name,
@@ -58,6 +60,7 @@ class SimpleHelperViewModel extends HelperViewModel {
       fontWeight: FontWeightMapper.toFontKey(detailsField?.fontWeight),
       text: detailsField?.text ?? '',
     );
+    this.currentEditableItemNotifier = ValueNotifier<FormFieldNotifier>(null);
   }
 
   factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model) {

@@ -72,7 +72,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   onOutsideTap() => this.editableTextFieldController.add(true);
 
-  onDetailsFieldChanged(String id, String newValue)
+  onDetailsFieldChanged(String newValue)
     => _onTextChanged(viewModel.detailsField, newValue);
 
   onDetailsTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
@@ -100,7 +100,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
     this.refreshView();
-    this.viewInterface.closeColorPickerDialog();
+    // this.viewInterface.closeColorPickerDialog();
   }
 
   // ----------------------------------

@@ -15,6 +15,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
@@ -144,6 +146,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
             onValidate: (model.canValidate?.value == true)
                 ? presenter.onValidate
                 : null,
+            currentEditableItemNotifier: model.currentEditableItemNotifier,
             // onPreview: presenter.onPreview,
             child: Stack(
               children: [
@@ -264,6 +267,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                    child: EditableTextField(textNotifier: model.titleField, currentEditableItemNotifier: model.currentEditableItemNotifier)
                     // child: EditableTextField.fromNotifier(
                     //   editableTextFieldController.stream,
                     //   model.titleField,
@@ -274,6 +278,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: EditableTextField(textNotifier: model.descriptionField, currentEditableItemNotifier: model.currentEditableItemNotifier)
                     // child: EditableTextField.fromNotifier(
                     //   editableTextFieldController.stream,
                     //   model.descriptionField,
@@ -287,6 +292,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Flexible(
+                        child: EditableButton(buttonFormFieldNotifier: model.negativBtnField, currentEditableItemNotifier: model.currentEditableItemNotifier)
                         // child: EditableTextField.editableButton(
                         //   editableTextFieldController.stream,
                         //   model.negativBtnField,
@@ -296,6 +302,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                         // ),
                       ),
                       Flexible(
+                        child: EditableButton(buttonFormFieldNotifier: model.positivBtnField, currentEditableItemNotifier: model.currentEditableItemNotifier)
                         // child: EditableTextField.editableButton(
                         //   editableTextFieldController.stream,
                         //   model.positivBtnField,

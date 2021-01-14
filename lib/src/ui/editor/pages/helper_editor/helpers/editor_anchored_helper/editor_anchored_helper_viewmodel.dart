@@ -36,6 +36,8 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
   /// buttons textNotifiers
   ButtonFormFieldNotifier positivBtnField, negativBtnField;
 
+  ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
+
   /// true if user has validated the current anchor selection
   bool anchorValidated;
 
@@ -70,6 +72,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       ),
       positivBtnField = ButtonFormFieldNotifier(
         positivButtonLabel?.id,
+        backgroundColor: Color(0xFF03045E),
         fontColor: positivButtonLabel?.fontColor ?? Colors.white,
         fontSize: positivButtonLabel?.fontSize?.toInt() ?? 20,
         text: positivButtonLabel?.text ?? 'Ok, thanks!',
@@ -77,6 +80,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       ),
       negativBtnField = ButtonFormFieldNotifier(
         negativButtonLabel?.id,
+        backgroundColor: Color(0xFF03045E),
         text: negativButtonLabel?.text ?? 'This is not helping',
         fontWeight: FontWeightMapper.toFontKey(negativButtonLabel?.fontWeight ?? FontWeight.normal),
         fontColor: negativButtonLabel?.fontColor ?? Colors.white,
@@ -86,6 +90,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       backgroundBox = backgroundBox ?? BoxNotifier(
         backgroundColor: Colors.lightGreenAccent.withOpacity(.6)
       ),
+      currentEditableItemNotifier = ValueNotifier<FormFieldNotifier>(null),
       super(
         id: id,
         helperType: HelperType.ANCHORED_OVERLAYED_HELPER,

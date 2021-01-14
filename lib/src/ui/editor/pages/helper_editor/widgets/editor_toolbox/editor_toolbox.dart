@@ -3,7 +3,11 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/text_field_picker/dialog_editable_textfield.dart';
+import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
+import '../../../../../../router.dart';
 import 'editor_toolbox_presenter.dart';
 import 'editor_toolbox_viewmodel.dart';
 
@@ -60,13 +64,12 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       animListener: (context, presenter, model) {
         context.animationsControllers[0]
             .animateTo(model.animationTarget, curve: Curves.easeOut);
-            if(model.animateIcons){
-              context.animationsControllers[1]
-            .value = 1;
-            context.animationsControllers[1]
-            .animateTo(0,curve: Curves.easeOutBack);
-            model.animateIcons = false;
-            }
+        if (model.animateIcons) {
+          context.animationsControllers[1].value = 1;
+          context.animationsControllers[1]
+              .animateTo(0, curve: Curves.easeOutBack);
+          model.animateIcons = false;
+        }
       },
       presenterBuilder: (context) => EditorToolboxPresenter(
         this,
@@ -107,19 +110,28 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
         ),
         // vertical editor toolbar
         EditorToolBar(
-            editableElementActions: model.editableElementActions,
-            globalActions: model.globalActions,
-            isBottomBarVisibleNotifier: model.isBottomVisible,
-            drawerAnimation: context.animationsControllers[0],
-            iconsAnimation: context.animationsControllers[1]),
+          editableElementActions: model.editableElementActions,
+          globalActions: model.globalActions,
+          isBottomBarVisibleNotifier: model.isBottomVisible,
+          drawerAnimation: context.animationsControllers[0],
+          iconsAnimation: context.animationsControllers[1],
+          onActionTap: presenter.openPicker,
+          onGlobalActionTap: null,
+        ),
       ],
     );
   }
 
   @override
   Future<Color> openColorPicker() {
-    // TODO: implement openColorPicker
-    throw UnimplementedError();
+    // showOverlayedInContext(
+    //   (context) => ColorPickerDialog(
+    //     placeholderColor: viewModel.bodyBox.backgroundColor?.value,
+    //     onColorSelected: presenter.updateBackgroundColor,
+    //     onCancel: presenter.cancelUpdateBackgroundColor,
+    //   ),
+    //   key: OverlayKeys.PAGE_OVERLAY_KEY,
+    // );
   }
 
   @override
@@ -130,8 +142,10 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
 
   @override
   Future<String> openTextPicker() {
-    // TODO: implement openTextPicker
-    throw UnimplementedError();
+    return showOverlayedInContext(
+      (context) => EditableTextDialog('Test'),
+      key: OverlayKeys.PAGE_OVERLAY_KEY,
+    );
   }
 
   @override

@@ -26,6 +26,9 @@ class EditorToolBar extends StatelessWidget {
 
   final ValueNotifier<bool> isBottomBarVisibleNotifier;
 
+  final Function(ToolBarActionButton) onActionTap;
+  final Function(ToolBarGlobalActionButton) onGlobalActionTap;
+
   const EditorToolBar({
     Key key,
     @required this.globalActions,
@@ -33,6 +36,8 @@ class EditorToolBar extends StatelessWidget {
     @required this.isBottomBarVisibleNotifier,
     @required this.drawerAnimation,
     @required this.iconsAnimation,
+    this.onActionTap,
+    this.onGlobalActionTap,
   }) : super(key: key);
 
   @override
@@ -117,8 +122,6 @@ class EditorToolBar extends StatelessWidget {
           iconData = Icons.more_horiz;
       }
 
-      
-
       Widget globalActionToAdd = AnimatedBuilder(
         animation: this.iconsAnimation,
         builder: (context, child) => Transform.translate(
@@ -134,7 +137,7 @@ class EditorToolBar extends StatelessWidget {
           color: Colors.white,
         ),
         backgroundColor: PalTheme.of(context).colors.dark,
-        onTapCallback: () {},
+        onTapCallback: () => this.onActionTap(elementAction),
       ),
       );
       index ++;
@@ -161,7 +164,7 @@ class EditorToolBar extends StatelessWidget {
           color: PalTheme.of(context).colors.dark,
         ),
         backgroundColor: PalTheme.of(context).colors.light,
-        onTapCallback: () {},
+        onTapCallback: () => this.onGlobalActionTap(globalAction),
       );
       actions.add(globalActionToAdd);
     }

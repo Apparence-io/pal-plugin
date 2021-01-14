@@ -4,12 +4,12 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 import '../../../../router.dart';
-import 'font_editor/pickers/font_family_picker/font_family_picker.dart';
-import 'font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 import 'helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'helpers/editor_simple_helper/editor_simple_helper.dart';

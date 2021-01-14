@@ -3,9 +3,9 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import '../../helper_editor_factory.dart';
 import '../../helper_editor_notifiers.dart';
@@ -112,15 +112,15 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   }
 
   onCallChangeBackground() {
-    viewInterface.showColorPickerDialog(
-      viewModel.backgroundBox.backgroundColor.value,
-      (color) {
-        viewModel.backgroundBox.backgroundColor.value = color;
-        viewInterface.closeColorPickerDialog();
-        refreshView();
-      },
-      () => viewInterface.closeColorPickerDialog()
-    );
+    // viewInterface.showColorPickerDialog(
+    //   viewModel.backgroundBox.backgroundColor.value,
+    //   (color) {
+    //     viewModel.backgroundBox.backgroundColor.value = color;
+    //     viewInterface.closeColorPickerDialog();
+    //     refreshView();
+    //   },
+    //   () => viewInterface.closeColorPickerDialog()
+    // );
   }
 
   // Title

@@ -6,16 +6,16 @@ import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 class EditableBackground extends StatelessWidget {
   final Color backgroundColor;
-  final Function() onColorChange;
+  // final Function() onColorChange;
   final Widget widget;
-  final String circleIconKey;
+  // final String circleIconKey;
 
   const EditableBackground({
     Key key,
     @required this.backgroundColor,
-    @required this.onColorChange,
+    // @required this.onColorChange,
     @required this.widget,
-    @required this.circleIconKey,
+    // @required this.circleIconKey,
   }) : super(key: key);
 
   @override
@@ -34,18 +34,18 @@ class EditableBackground extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               widget,
-              Positioned(
-                top: 20.0,
-                left: 20.0,
-                child: SafeArea(
-                  child: CircleIconButton(
-                    key: ValueKey(circleIconKey),
-                    icon: Icon(Icons.invert_colors),
-                    backgroundColor: PalTheme.of(context).colors.light,
-                    onTapCallback: onColorChange,
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 20.0,
+              //   left: 20.0,
+              //   child: SafeArea(
+              //     child: CircleIconButton(
+              //       key: ValueKey(circleIconKey),
+              //       icon: Icon(Icons.invert_colors),
+              //       backgroundColor: PalTheme.of(context).colors.light,
+              //       onTapCallback: onColorChange,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

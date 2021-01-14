@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
@@ -10,10 +9,8 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/widget/simple_helper_layout.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
@@ -25,8 +22,8 @@ import 'editor_simple_helper_presenter.dart';
 import 'editor_simple_helper_viewmodel.dart';
 
 abstract class EditorSimpleHelperView {
-  void showColorPickerDialog(SimpleHelperViewModel viewModel,
-      OnColorSelected updateBackgroundColor, OnCancelPicker onCancelPicker);
+  // void showColorPickerDialog(SimpleHelperViewModel viewModel,
+  //     OnColorSelected updateBackgroundColor, OnCancelPicker onCancelPicker);
 
   void closeColorPickerDialog();
 
@@ -221,7 +218,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
                             'pal_EditorSimpleHelperWidget_CircleBackground'),
                         icon: Icon(Icons.invert_colors),
                         backgroundColor: PalTheme.of(context).colors.light,
-                        onTapCallback: presenter.onChangeColorRequest,
+                        // onTapCallback: presenter.onChangeColorRequest,
                       ),
                     ),
                   ),
@@ -257,19 +254,19 @@ class _EditorSimpleHelperPage
 
   BuildContext get overlayContext => context;
 
-  @override
-  void showColorPickerDialog(
-      final SimpleHelperViewModel viewModel,
-      final OnColorSelected updateBackgroundColor,
-      final OnCancelPicker onCancelPicker) {
-    HapticFeedback.selectionClick();
-    showOverlayedInContext(
-        (context) => ColorPickerDialog(
-            placeholderColor: viewModel.bodyBox.backgroundColor?.value,
-            onColorSelected: updateBackgroundColor,
-            onCancel: onCancelPicker),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
-  }
+  // @override
+  // void showColorPickerDialog(
+  //     final SimpleHelperViewModel viewModel,
+  //     final OnColorSelected updateBackgroundColor,
+  //     final OnCancelPicker onCancelPicker) {
+  //   HapticFeedback.selectionClick();
+  //   showOverlayedInContext(
+  //       (context) => ColorPickerDialog(
+  //           placeholderColor: viewModel.bodyBox.backgroundColor?.value,
+  //           onColorSelected: updateBackgroundColor,
+  //           onCancel: onCancelPicker),
+  //       key: OverlayKeys.PAGE_OVERLAY_KEY);
+  // }
 
   @override
   Future showPreviewOfHelper(SimpleHelperViewModel model) async {

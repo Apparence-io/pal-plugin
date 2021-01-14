@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_simple_helper.dart';
 import 'editor_simple_helper_viewmodel.dart';
@@ -90,12 +90,12 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     return null;
   }
 
-  onChangeColorRequest()
-    => viewInterface.showColorPickerDialog(
-      viewModel,
-      this.updateBackgroundColor,
-      this.viewInterface.closeColorPickerDialog
-    );
+  // onChangeColorRequest()
+  //   => viewInterface.showColorPickerDialog(
+  //     viewModel,
+  //     this.updateBackgroundColor,
+  //     this.viewInterface.closeColorPickerDialog
+  //   );
 
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;

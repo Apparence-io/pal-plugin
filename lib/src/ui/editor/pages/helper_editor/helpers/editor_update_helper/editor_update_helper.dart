@@ -12,11 +12,9 @@ import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
@@ -35,7 +33,7 @@ import 'editor_update_helper_viewmodel.dart';
 
 abstract class EditorUpdateHelperView {
   void showColorPickerDialog(
-      Color color, OnColorSelected onColorSelected, OnCancelPicker onCancel);
+      Color color, dynamic onColorSelected, dynamic onCancel);
 
   void closeColorPickerDialog();
 
@@ -393,14 +391,14 @@ class _EditorUpdateHelperPage
 
   @override
   void showColorPickerDialog(
-      Color color, OnColorSelected onColorSelected, OnCancelPicker onCancel) {
-    HapticFeedback.selectionClick();
-    showOverlayedInContext(
-        (context) => ColorPickerDialog(
-            placeholderColor: color,
-            onColorSelected: onColorSelected,
-            onCancel: onCancel),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
+      Color color, dynamic onColorSelected, dynamic onCancel) {
+    // HapticFeedback.selectionClick();
+    // showOverlayedInContext(
+    //     (context) => ColorPickerDialog(
+    //         placeholderColor: color,
+    //         onColorSelected: onColorSelected,
+    //         onCancel: onCancel),
+    //     key: OverlayKeys.PAGE_OVERLAY_KEY);
   }
 
   @override

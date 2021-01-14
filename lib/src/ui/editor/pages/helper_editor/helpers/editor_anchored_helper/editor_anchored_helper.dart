@@ -11,7 +11,6 @@ import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
@@ -30,8 +29,8 @@ import 'editor_anchored_helper_viewmodel.dart';
 /// Interface for presenter view contract
 /// ------------------------------------------------------------
 abstract class EditorAnchoredFullscreenHelperView {
-  void showColorPickerDialog(Color defaultColor,
-      OnColorSelected onColorSelected, OnCancelPicker onCancel);
+  // void showColorPickerDialog(Color defaultColor,
+  //     OnColorSelected onColorSelected, OnCancelPicker onCancel);
 
   void closeColorPickerDialog();
 
@@ -326,17 +325,17 @@ class _EditorAnchoredFullscreenHelperView
     overlayContext = context;
   }
 
-  @override
-  void showColorPickerDialog(Color defaultColor,
-      OnColorSelected onColorSelected, OnCancelPicker onCancel) {
-    HapticFeedback.selectionClick();
-    showOverlayedInContext(
-        (context) => ColorPickerDialog(
-            placeholderColor: defaultColor,
-            onColorSelected: onColorSelected,
-            onCancel: onCancel),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
-  }
+  // @override
+  // void showColorPickerDialog(Color defaultColor,
+  //     OnColorSelected onColorSelected, OnCancelPicker onCancel) {
+  //   HapticFeedback.selectionClick();
+  //   showOverlayedInContext(
+  //       (context) => ColorPickerDialog(
+  //           placeholderColor: defaultColor,
+  //           onColorSelected: onColorSelected,
+  //           onCancel: onCancel),
+  //       key: OverlayKeys.PAGE_OVERLAY_KEY);
+  // }
 
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 

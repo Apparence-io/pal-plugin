@@ -11,7 +11,6 @@ import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
@@ -64,12 +63,12 @@ class EditorFullScreenHelper
     EditorFullScreenHelperPresenter presenter,
   ) {
     HapticFeedback.selectionClick();
-    showOverlayedInContext(
-        (context) => ColorPickerDialog(
-            placeholderColor: viewModel.bodyBox.backgroundColor?.value,
-            onColorSelected: presenter.updateBackgroundColor,
-            onCancel: presenter.cancelUpdateBackgroundColor),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
+    // showOverlayedInContext(
+    //     (context) => ColorPickerDialog(
+    //         placeholderColor: viewModel.bodyBox.backgroundColor?.value,
+    //         onColorSelected: presenter.updateBackgroundColor,
+    //         onCancel: presenter.cancelUpdateBackgroundColor),
+    //     key: OverlayKeys.PAGE_OVERLAY_KEY);
   }
 
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);

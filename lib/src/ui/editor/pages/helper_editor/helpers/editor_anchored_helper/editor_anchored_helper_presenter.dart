@@ -123,6 +123,11 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     // );
   }
 
+  updateBackgroundColor(Color newColor){
+    viewModel.backgroundBox.backgroundColor.value = newColor;
+    refreshView();
+  }
+
   // Title
   onTitleChanged(String id, String newValue)
     => _onTextChanged(viewModel.titleField, newValue);

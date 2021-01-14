@@ -148,6 +148,10 @@ class EditorUpdateHelperPage extends StatelessWidget {
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
+        boxViewHandler: BoxViewHandler(
+          callback: presenter.updateBackgroundColor,
+          selectedColor: viewModel.bodyBox?.backgroundColor?.value
+        ),
         // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
@@ -159,9 +163,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
           autovalidateMode: AutovalidateMode.always,
           child: EditableBackground(
             backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
-            circleIconKey:
-                'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
-            onColorChange: presenter.changeBackgroundColor,
             widget: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Container(

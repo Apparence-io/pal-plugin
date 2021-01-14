@@ -11,16 +11,21 @@ class EditorToolboxPresenter
 
   EditorToolboxPresenter(
     EditorToolboxView viewInterface, {
+    @required BoxViewHandler boxViewHandler,
     @required this.currentEditableItemNotifier,
-  }) : super(EditorToolboxModel(), viewInterface);
+  }) : super(EditorToolboxModel(boxViewHandler: boxViewHandler), viewInterface);
 
   @override
   void onInit() {
     super.onInit();
+
+    // INIT ATTRIBUTES
     this.viewModel.currentEditableItem = null;
     this.viewModel.isActionBarVisible = true;
     this.viewModel.isToolBarVisible = true;
     this.viewModel.animateIcons = false;
+    this.viewModel.animateActionBar = false;
+    // INIT ATTRIBUTES
 
     this.viewModel.editableElementActions = [];
     this.viewModel.globalActions = [
@@ -33,6 +38,7 @@ class EditorToolboxPresenter
 
     // BOTTOM ANIMATION
     this.viewModel.isBottomVisible.addListener(() {
+      this.viewModel.animateActionBar = true;
       this.refreshAnimations();
       this.refreshView();
       this.viewModel.animationTarget =
@@ -89,7 +95,7 @@ class EditorToolboxPresenter
     // TODO: Open correct picker in view interface
     switch (toolBarActionButton) {
       case ToolBarActionButton.color:
-        Color newColor = await this.viewInterface.openColorPicker();
+        Color newColor = await this.viewInterface.openColorPicker(this.viewModel,this);
         break;
       case ToolBarActionButton.font:
         // TODO: Create mode
@@ -105,5 +111,18 @@ class EditorToolboxPresenter
     }
 
     // TODO: Update child helper
+  }
+
+  void openGlobalPicker(ToolBarGlobalActionButton toolBarGlobalActionButton) async {
+    switch (toolBarGlobalActionButton) {
+      case ToolBarGlobalActionButton.backgroundColor:
+        this.viewInterface.openColorPicker(this.viewModel,this);
+        break;
+      default:
+    }
+  }
+
+  notifyBgColorChange(Color newColor) {
+    this.viewModel.boxViewHandler.callback(newColor);
   }
 }

@@ -14,6 +14,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_prev
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
@@ -135,6 +136,10 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       builder: (context, presenter, model) => Material(
           color: Colors.black.withOpacity(0.3),
           child: EditorToolboxPage(
+            boxViewHandler: BoxViewHandler(
+              callback: presenter.updateBackgroundColor,
+              selectedColor: model.backgroundBox?.backgroundColor?.value
+            ),
             // onCancel: presenter.onCancel,
             onValidate: (model.canValidate?.value == true)
                 ? presenter.onValidate

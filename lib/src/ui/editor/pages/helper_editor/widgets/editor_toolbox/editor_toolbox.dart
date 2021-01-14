@@ -14,7 +14,8 @@ import 'editor_toolbox_viewmodel.dart';
 abstract class EditorToolboxView {
   Future<String> openTextPicker();
   Future openFontPicker();
-  Future<Color> openColorPicker();
+  Future<Color> openColorPicker(
+      EditorToolboxModel model, EditorToolboxPresenter presenter);
   Future<String> openMediaPicker();
 }
 
@@ -23,6 +24,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   final Widget child;
   // Save button function
   final Function onValidate;
+  final BoxViewHandler boxViewHandler;
 
   final ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
   final GlobalKey scaffoldKey;
@@ -33,6 +35,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     @required this.currentEditableItemNotifier,
     this.scaffoldKey,
     this.onValidate,
+    @required this.boxViewHandler,
   });
 
   final _mvvmPageBuilder =
@@ -62,8 +65,11 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
         ),
       ],
       animListener: (context, presenter, model) {
-        context.animationsControllers[0]
-            .animateTo(model.animationTarget, curve: Curves.easeOut);
+        if (model.animateActionBar) {
+          context.animationsControllers[0]
+              .animateTo(model.animationTarget, curve: Curves.easeOut);
+          model.animateActionBar = false;
+        }
         if (model.animateIcons) {
           context.animationsControllers[1].value = 1;
           context.animationsControllers[1]
@@ -73,6 +79,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       },
       presenterBuilder: (context) => EditorToolboxPresenter(
         this,
+        boxViewHandler: this.boxViewHandler,
         currentEditableItemNotifier: currentEditableItemNotifier,
       ),
       builder: (context, presenter, model) {
@@ -116,22 +123,23 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
           drawerAnimation: context.animationsControllers[0],
           iconsAnimation: context.animationsControllers[1],
           onActionTap: presenter.openPicker,
-          onGlobalActionTap: null,
+          onGlobalActionTap: presenter.openGlobalPicker,
         ),
       ],
     );
   }
 
   @override
-  Future<Color> openColorPicker() {
-    // showOverlayedInContext(
-    //   (context) => ColorPickerDialog(
-    //     placeholderColor: viewModel.bodyBox.backgroundColor?.value,
-    //     onColorSelected: presenter.updateBackgroundColor,
-    //     onCancel: presenter.cancelUpdateBackgroundColor,
-    //   ),
-    //   key: OverlayKeys.PAGE_OVERLAY_KEY,
-    // );
+  Future<Color> openColorPicker(
+      EditorToolboxModel model, EditorToolboxPresenter presenter) {
+    return showOverlayedInContext(
+      (context) => ColorPickerDialog(
+        placeholderColor: model.boxViewHandler.selectedColor,
+        onColorSelected: presenter.notifyBgColorChange,
+        onCancel: null,
+      ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY,
+    );
   }
 
   @override

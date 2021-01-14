@@ -1,3 +1,6 @@
+## [0.1.0+2] - 2021/14/01
+- fix changing version wasn't sent correctly to editor
+
 ## [0.1.0] - 2021/11/01
 - [Editor] - Has now a preview mode
 - [Client] - Add user language to schema synchronization

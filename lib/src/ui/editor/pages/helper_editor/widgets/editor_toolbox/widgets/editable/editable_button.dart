@@ -2,13 +2,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 class EditableButton extends StatelessWidget {
   final ButtonFormFieldNotifier buttonFormFieldNotifier;
-  final ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
+  final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
 
   const EditableButton({
     Key key,
@@ -32,10 +31,11 @@ class EditableButton extends StatelessWidget {
 
     return BouncingWidget(
       onTap: () {
-        this.currentEditableItemNotifier.value = CurrentEditableItem(
-          editableItemType: EditableItemType.button,
-          itemKey: this.key,
-        );
+        this.currentEditableItemNotifier.value = this.buttonFormFieldNotifier;
+        //  CurrentEditableItem(
+        //   editableItemType: EditableItemType.button,
+        //   itemKey: this.key,
+        // );
       },
       child: DottedBorder(
         dashPattern: [6, 3],

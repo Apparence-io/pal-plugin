@@ -21,8 +21,8 @@ class AnchoredHelper extends StatefulWidget {
   // ATTRIBUTES MODELS
   final HelperTextViewModel titleLabel;
   final HelperTextViewModel descriptionLabel;
-  final HelperTextViewModel positivButtonLabel;
-  final HelperTextViewModel negativButtonLabel;
+  final HelperButtonViewModel positivButtonLabel;
+  final HelperButtonViewModel negativButtonLabel;
   final HelperBoxViewModel helperBoxViewModel;
 
   factory AnchoredHelper.fromEntity({
@@ -30,8 +30,8 @@ class AnchoredHelper extends StatefulWidget {
     String anchorKey,
     @required HelperTextViewModel titleLabel,
     @required HelperTextViewModel descriptionLabel,
-    @required HelperTextViewModel positivButtonLabel,
-    @required HelperTextViewModel negativButtonLabel,
+    @required HelperButtonViewModel positivButtonLabel,
+    @required HelperButtonViewModel negativButtonLabel,
     @required HelperBoxViewModel helperBoxViewModel,
     Function onPositivButtonTap,
     Function onNegativButtonTap,
@@ -249,6 +249,19 @@ class _AnchoredHelperState extends State<AnchoredHelper>
           fontFamily: text.fontFamily,
         ),
       );
+  
+  // TODO: Renvoyer un button a la place
+  Widget _buildButton(HelperButtonViewModel text, Key key) => Text(
+        text.text,
+        key: key,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: text.fontSize,
+          fontWeight: text.fontWeight,
+          color: text.fontColor,
+          fontFamily: text.fontFamily,
+        ),
+      );
 
   Widget _buildNegativFeedback() {
     return OutlineButton(
@@ -258,7 +271,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         await fadeAnimController.reverse();
         widget.onNegativButtonTap();
       },
-      child: _buildText(widget.negativButtonLabel,
+      child: _buildButton(widget.negativButtonLabel,
           ValueKey('pal_AnchoredHelperNegativFeedbackLabel')),
       // onTap: this.widget.onTrigger,
     );
@@ -272,7 +285,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         await fadeAnimController.reverse();
         widget.onPositivButtonTap();
       },
-      child: _buildText(widget.positivButtonLabel,
+      child: _buildButton(widget.positivButtonLabel,
           ValueKey('pal_AnchoredHelperPositivFeedbackLabel')),
       // onTap: this.widget.onTrigger,
     );

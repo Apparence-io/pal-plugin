@@ -28,6 +28,8 @@ class HelperButtonViewModel {
   double fontSize;
   String fontFamily;
   FontWeight fontWeight;
+  Color borderColor;
+  Color backgroundColor;
 
   HelperButtonViewModel({
     this.id,
@@ -37,6 +39,8 @@ class HelperButtonViewModel {
     @required this.fontSize,
     this.fontFamily,
     this.fontWeight,
+    this.backgroundColor,
+    this.borderColor,
   });
 }
 

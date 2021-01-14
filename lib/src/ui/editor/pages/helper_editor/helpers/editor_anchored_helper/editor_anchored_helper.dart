@@ -374,12 +374,12 @@ class _EditorAnchoredFullscreenHelperView
     AnchoredHelper page = AnchoredHelper.fromEntity(
       finderService: finderService,
       positivButtonLabel:
-          HelperSharedFactory.parseTextNotifier(model.positivBtnField),
+          HelperSharedFactory.parseButtonNotifier(model.positivBtnField),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
       descriptionLabel:
           HelperSharedFactory.parseTextNotifier(model.descriptionField),
       negativButtonLabel:
-          HelperSharedFactory.parseTextNotifier(model.negativBtnField),
+          HelperSharedFactory.parseButtonNotifier(model.negativBtnField),
       helperBoxViewModel:
           HelperSharedFactory.parseBoxNotifier(model.backgroundBox),
       anchorKey: model.selectedAnchorKey,

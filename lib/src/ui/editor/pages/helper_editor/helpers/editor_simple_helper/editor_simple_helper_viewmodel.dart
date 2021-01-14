@@ -51,7 +51,7 @@ class SimpleHelperViewModel extends HelperViewModel {
       backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.black87,
     );
     this.detailsField = TextFormFieldNotifier(
-      id: detailsField?.id,
+      detailsField?.id,
       fontColor: detailsField?.fontColor ?? Colors.white,
       fontSize: detailsField?.fontSize?.toInt() ?? 14,
       fontFamily: detailsField?.fontFamily,

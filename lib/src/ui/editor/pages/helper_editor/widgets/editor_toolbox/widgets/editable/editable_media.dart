@@ -2,21 +2,24 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 class EditableMedia extends StatelessWidget {
+  final MediaNotifier mediaNotifier;
   final double mediaSize;
   final String url;
   final Function onEdit;
   final String editKey;
-  final ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
+  final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
 
   EditableMedia({
     Key key,
     this.url,
     this.mediaSize = 200.0,
     this.onEdit,
+    this.mediaNotifier,
     @required this.currentEditableItemNotifier,
     @required this.editKey,
   }) : super(key: key);
@@ -25,11 +28,8 @@ class EditableMedia extends StatelessWidget {
   Widget build(BuildContext context) {
     return BouncingWidget(
       onTap: () {
-        this.currentEditableItemNotifier.value = CurrentEditableItem(
-          editableItemType: EditableItemType.media,
-          itemKey: this.key,
-        );
-        this.onEdit?.call();
+        this.currentEditableItemNotifier.value = this.mediaNotifier;
+        // this.onEdit?.call();
       },
       child: DottedBorder(
         dashPattern: [6, 3],

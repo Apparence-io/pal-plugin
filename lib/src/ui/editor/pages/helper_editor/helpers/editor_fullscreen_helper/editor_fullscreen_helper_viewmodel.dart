@@ -68,7 +68,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       url: helperImageViewModel?.url,
     );
     this.titleField = TextFormFieldNotifier(
-      id: titleViewModel?.id,
+      titleViewModel?.id,
       fontColor: titleViewModel?.fontColor ?? Colors.white,
       fontSize: titleViewModel?.fontSize?.toInt() ?? 60,
       fontFamily: titleViewModel?.fontFamily,
@@ -76,7 +76,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontWeight: FontWeightMapper.toFontKey(titleViewModel?.fontWeight),
     );
     this.descriptionField = TextFormFieldNotifier(
-      id: descriptionLabel?.id,
+      descriptionLabel?.id,
       fontColor: descriptionLabel?.fontColor ?? Colors.white,
       fontSize: descriptionLabel?.fontSize?.toInt() ?? 14,
       text: descriptionLabel?.text ?? 'Describe me',
@@ -84,7 +84,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontFamily: descriptionLabel?.fontFamily,
     );
     this.positivButtonField = TextFormFieldNotifier(
-      id: positivButtonLabel?.id,
+      positivButtonLabel?.id,
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 23,
       text: positivButtonLabel?.text ?? 'Ok, thanks !',
@@ -94,7 +94,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontFamily: positivButtonLabel?.fontFamily,
     );
     this.negativButtonField = TextFormFieldNotifier(
-      id: negativButtonLabel?.id,
+      negativButtonLabel?.id,
       text: negativButtonLabel?.text ?? 'This is not helping',
       fontWeight: FontWeightMapper.toFontKey(
         negativButtonLabel?.fontWeight ?? FontWeight.bold),

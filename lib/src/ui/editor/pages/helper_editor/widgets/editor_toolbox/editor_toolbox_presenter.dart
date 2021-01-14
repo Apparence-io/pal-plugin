@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 
 import 'editor_toolbox.dart';
@@ -7,7 +8,7 @@ import 'editor_toolbox_viewmodel.dart';
 
 class EditorToolboxPresenter
     extends Presenter<EditorToolboxModel, EditorToolboxView> {
-  final ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
+  final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
 
   final Function(EditedTextData) onTextPickerDone;
   final Function(EditedColorData) onTextColorPickerDone;
@@ -62,8 +63,8 @@ class EditorToolboxPresenter
   }
 
   void displayEditableItemActions() {
-    switch (this.currentEditableItemNotifier.value?.editableItemType) {
-      case EditableItemType.button:
+    switch (this.currentEditableItemNotifier.value?.runtimeType) {
+      case ButtonFormFieldNotifier:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.border,
           ToolBarActionButton.text,
@@ -71,12 +72,12 @@ class EditorToolboxPresenter
           ToolBarActionButton.color,
         ];
         break;
-      case EditableItemType.media:
+      case MediaNotifier:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.media,
         ];
         break;
-      case EditableItemType.textfield:
+      case TextFormFieldNotifier:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.text,
           ToolBarActionButton.font,
@@ -105,7 +106,8 @@ class EditorToolboxPresenter
   void openPicker(ToolBarActionButton toolBarActionButton) async {
     switch (toolBarActionButton) {
       case ToolBarActionButton.color:
-        EditedColorData colorData = await this.viewInterface.openColorPicker(this.viewModel, this);
+        EditedColorData colorData =
+            await this.viewInterface.openColorPicker(this.viewModel, this);
         this.onTextColorPickerDone(colorData);
         break;
       case ToolBarActionButton.font:
@@ -117,14 +119,18 @@ class EditorToolboxPresenter
         this.onMediaPickerDone(mediaData);
         break;
       case ToolBarActionButton.text:
-        EditedTextData textData = await this.viewInterface.openTextPicker();
-        this.onTextPickerDone(textData);
+        String newText = await this.viewInterface.openTextPicker();
+        if (newText != null) {
+          EditableFormFieldNotifier textFormField = this.currentEditableItemNotifier?.value;
+          textFormField.text.value = newText;
+        }
         break;
       default:
     }
   }
 
-  void openGlobalPicker(ToolBarGlobalActionButton toolBarGlobalActionButton) async {
+  void openGlobalPicker(
+      ToolBarGlobalActionButton toolBarGlobalActionButton) async {
     switch (toolBarGlobalActionButton) {
       case ToolBarGlobalActionButton.backgroundColor:
         this.viewInterface.openColorPicker(this.viewModel, this);

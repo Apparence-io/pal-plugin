@@ -9,6 +9,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_update_helper.dart';
@@ -20,12 +21,17 @@ class EditorUpdateHelperPresenter
   final HelperEditorPageArguments parameters;
   final StreamController<bool> editableTextFieldController;
 
+  final GlobalKey titleKey;
+  final GlobalKey thanksButtonKey;
+
   EditorUpdateHelperPresenter(
-      EditorUpdateHelperView viewInterface,
-      UpdateHelperViewModel updateHelperViewModel,
-      this.editorHelperService,
-      this.parameters)
-      : editableTextFieldController = StreamController<bool>.broadcast(),
+    EditorUpdateHelperView viewInterface,
+    UpdateHelperViewModel updateHelperViewModel,
+    this.editorHelperService,
+    this.parameters, {
+    this.titleKey,
+    this.thanksButtonKey,
+  })  : editableTextFieldController = StreamController<bool>.broadcast(),
         super(updateHelperViewModel, viewInterface) {
     viewModel.canValidate = new ValueNotifier(false);
   }
@@ -46,16 +52,11 @@ class EditorUpdateHelperPresenter
   }
 
   onTextPickerDone(EditedTextData editedTextData) {
-    print(editedTextData.key.toString());
-    switch (editedTextData.key.toString()) {
-      case '[<\'pal_EditorUpdateHelperWidget_TitleField\'>]':
-        this.viewModel.titleField.text.value = editedTextData.text;
-
-        break;
-      case '[<\'pal_EditorUpdateHelperWidget_ThanksButton\'>]':
-        this.viewModel.thanksButton.text.value = editedTextData.text;
-        break;
-      default:
+    print(editedTextData.key);
+    if(editedTextData.key == this.titleKey) {
+      this.viewModel.titleField.text.value = editedTextData.text;
+    } else if(editedTextData.key == this.thanksButtonKey) {
+      this.viewModel.thanksButton.text.value = editedTextData.text;
     }
   }
 

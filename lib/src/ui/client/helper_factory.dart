@@ -180,11 +180,11 @@ class HelperFactory {
       ),
       // TODO: Create on back correct way to save id
       anchorKey: helper.helperBoxes.first.key,
-      positivButtonLabel:  HelperSharedFactory.parseTextLabel(
+      positivButtonLabel:  HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
-      negativButtonLabel:  HelperSharedFactory.parseTextLabel(
+      negativButtonLabel:  HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts,
       ),

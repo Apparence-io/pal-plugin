@@ -56,6 +56,25 @@ class HelperSharedFactory {
     return null;
   }
 
+  static HelperButtonViewModel parseButtonLabel(
+    final String key,
+    final List<HelperTextEntity> helperTexts,
+  ) {
+    for (HelperTextEntity helperText in helperTexts) {
+      if (key == helperText?.key) {
+        return HelperButtonViewModel(
+          id: helperText?.id,
+          text: helperText?.value,
+          fontColor: HexColor.fromHex(helperText?.fontColor),
+          fontSize: helperText?.fontSize?.toDouble(),
+          fontFamily: helperText?.fontFamily,
+          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+        );
+      }
+    }
+    return null;
+  }
+
   static HelperImageViewModel parseImageUrl(
     final String key,
     final List<HelperImageEntity> helperImages,
@@ -131,6 +150,18 @@ class HelperSharedFactory {
     TextFormFieldNotifier notifier
   ) {
     return HelperTextViewModel(
+      text: notifier.text?.value,
+      fontColor: notifier.fontColor?.value,
+      fontSize: notifier.fontSize?.value?.toDouble(),
+      fontWeight: FontWeightMapper.toFontWeight(notifier.fontWeight?.value),
+      fontFamily: notifier.fontFamily.value,
+    );
+  }
+
+  static HelperButtonViewModel parseButtonNotifier(
+    ButtonFormFieldNotifier notifier
+  ) {
+    return HelperButtonViewModel(
       text: notifier.text?.value,
       fontColor: notifier.fontColor?.value,
       fontSize: notifier.fontSize?.value?.toDouble(),

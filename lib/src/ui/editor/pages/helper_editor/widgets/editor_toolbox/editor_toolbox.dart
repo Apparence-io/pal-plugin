@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
@@ -12,7 +13,7 @@ import 'editor_toolbox_presenter.dart';
 import 'editor_toolbox_viewmodel.dart';
 
 abstract class EditorToolboxView {
-  Future<EditedTextData> openTextPicker();
+  Future<String> openTextPicker();
   Future<EditedFontData> openFontPicker();
   Future<EditedColorData> openColorPicker(
       EditorToolboxModel model, EditorToolboxPresenter presenter);
@@ -33,7 +34,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   final Function(EditedBorderData) onBorderPickerDone;
   final Function(EditedMediaData) onMediaPickerDone;
 
-  final ValueNotifier<CurrentEditableItem> currentEditableItemNotifier;
+  final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
   final GlobalKey scaffoldKey;
 
   EditorToolboxPage({
@@ -177,16 +178,19 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<EditedTextData> openTextPicker() async {
-    String newText = await showDialog(
+  Future<String> openTextPicker() async {
+    return await showDialog(
       context: _scaffoldKey.currentContext,
       builder: (context) => EditableTextDialog(''),
     );
 
-    return EditedTextData(
-      this.currentEditableItemNotifier?.value?.itemKey,
-      text: newText,
-    );
+    
+    // return EditedTextData();
+
+    // return EditedTextData(
+    //   this.currentEditableItemNotifier?.value?.itemKey,
+    //   text: newText,
+    // );
 
     // return showOverlayedInContext(
     //   (context) => EditableTextDialog('Test'),

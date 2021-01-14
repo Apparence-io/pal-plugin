@@ -199,7 +199,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   // PRIVATES
   // ----------------------------------
 
-  _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
+  _onTextChanged(EditableFormFieldNotifier textNotifier, String newValue) {
     textNotifier.text.value = newValue;
     _updateValidState();
   }
@@ -213,7 +213,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
 
   _updateValidState() => viewModel.canValidate.value = isValid();
 
-  _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
+  _onStyleChanged(EditableFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
     textNotifier?.fontColor?.value = newTextStyle?.color;
     textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
     if (fontKeys != null) {

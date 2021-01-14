@@ -58,6 +58,9 @@ class EditorUpdateHelperPage extends StatelessWidget {
   final ScrollController scrollController = ScrollController();
   final PackageVersionReader packageVersionReader;
 
+  final GlobalKey _titleKey = GlobalKey();
+  final GlobalKey _thanksButtonKey = GlobalKey();
+
   EditorUpdateHelperPage._({
     Key key,
     this.helperService,
@@ -112,17 +115,20 @@ class EditorUpdateHelperPage extends StatelessWidget {
       context: context,
       presenterBuilder: (context) {
         var presenter = EditorUpdateHelperPresenter(
-            _EditorUpdateHelperPage(
-                context,
-                _scaffoldKey,
-                scrollController,
-                palEditModeStateService ??
-                    EditorInjector.of(context).palEditModeStateService,
-                packageVersionReader ??
-                    EditorInjector.of(context).packageVersionReader),
-            baseviewModel,
-            helperService ?? EditorInjector.of(context).helperService,
-            arguments);
+          _EditorUpdateHelperPage(
+              context,
+              _scaffoldKey,
+              scrollController,
+              palEditModeStateService ??
+                  EditorInjector.of(context).palEditModeStateService,
+              packageVersionReader ??
+                  EditorInjector.of(context).packageVersionReader),
+          baseviewModel,
+          helperService ?? EditorInjector.of(context).helperService,
+          arguments,
+          titleKey: _titleKey,
+          thanksButtonKey: _thanksButtonKey,
+        );
         KeyboardVisibilityNotification()
             .addNewListener(onChange: presenter.onKeyboardVisibilityChange);
         return presenter;
@@ -143,15 +149,14 @@ class EditorUpdateHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
-          callback: presenter.updateBackgroundColor,
-          selectedColor: viewModel.bodyBox?.backgroundColor?.value
-        ),
+            callback: presenter.updateBackgroundColor,
+            selectedColor: viewModel.bodyBox?.backgroundColor?.value),
         // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
-        // onTextPickerDone: presenter.onTextPickerDone,
+        onTextPickerDone: presenter.onTextPickerDone,
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.always,
@@ -214,8 +219,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
                       ),
                       SizedBox(height: 40),
                       EditableTextField(
-                        key:
-                            ValueKey('pal_EditorUpdateHelperWidget_TitleField'),
+                        key: _titleKey,
                         textNotifier: viewModel.titleField,
                         currentEditableItemNotifier:
                             viewModel.currentEditableItemNotifier,
@@ -295,7 +299,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: EditableButton(
-        key: ValueKey('pal_EditorUpdateHelperWidget_ThanksButton'),
+        key: _thanksButtonKey,
         buttonFormFieldNotifier: viewModel.thanksButton,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
       ),

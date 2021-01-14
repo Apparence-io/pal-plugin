@@ -34,7 +34,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
   TextFormFieldNotifier descriptionField;
 
   /// buttons textNotifiers
-  TextFormFieldNotifier positivBtnField, negativBtnField;
+  ButtonFormFieldNotifier positivBtnField, negativBtnField;
 
   /// true if user has validated the current anchor selection
   bool anchorValidated;
@@ -54,29 +54,29 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
     HelperTextViewModel negativButtonLabel,
     this.anchorValidated = false
   }) : titleField = TextFormFieldNotifier(
-        id: titleViewModel?.id,
+        titleViewModel?.id,
         fontColor: titleViewModel?.fontColor ?? Colors.white,
         fontSize: titleViewModel?.fontSize?.toInt() ?? 31,
         text: titleViewModel?.text ?? '',
         fontWeight: FontWeightMapper.toFontKey(titleViewModel?.fontWeight ?? FontWeight.normal),
       ),
       descriptionField = TextFormFieldNotifier(
-        id: descriptionLabel?.id,
+        descriptionLabel?.id,
         fontColor: descriptionLabel?.fontColor ?? Colors.white,
         fontSize: descriptionLabel?.fontSize?.toInt() ?? 20,
         text: descriptionLabel?.text ?? '',
         fontWeight: FontWeightMapper.toFontKey(descriptionLabel?.fontWeight ?? FontWeight.normal),
         fontFamily: descriptionLabel?.fontFamily,
       ),
-      positivBtnField = TextFormFieldNotifier(
-        id: positivButtonLabel?.id,
+      positivBtnField = ButtonFormFieldNotifier(
+        positivButtonLabel?.id,
         fontColor: positivButtonLabel?.fontColor ?? Colors.white,
         fontSize: positivButtonLabel?.fontSize?.toInt() ?? 20,
         text: positivButtonLabel?.text ?? 'Ok, thanks!',
         fontWeight: FontWeightMapper.toFontKey(positivButtonLabel?.fontWeight ?? FontWeight.normal),
       ),
-      negativBtnField = TextFormFieldNotifier(
-        id: negativButtonLabel?.id,
+      negativBtnField = ButtonFormFieldNotifier(
+        negativButtonLabel?.id,
         text: negativButtonLabel?.text ?? 'This is not helping',
         fontWeight: FontWeightMapper.toFontKey(negativButtonLabel?.fontWeight ?? FontWeight.normal),
         fontColor: negativButtonLabel?.fontColor ?? Colors.white,
@@ -153,7 +153,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
     );
   }
 
-  List<TextFormFieldNotifier> get fields => [
+  List<EditableFormFieldNotifier> get fields => [
     titleField,
     descriptionField,
     positivBtnField,

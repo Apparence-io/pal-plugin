@@ -136,7 +136,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       (context) => ColorPickerDialog(
         placeholderColor: model.boxViewHandler.selectedColor,
         onColorSelected: presenter.notifyBgColorChange,
-        onCancel: null,
+        onCancel: (){},
       ),
       key: OverlayKeys.PAGE_OVERLAY_KEY,
     );

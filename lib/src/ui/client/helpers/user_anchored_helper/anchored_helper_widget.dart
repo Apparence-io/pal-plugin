@@ -2,13 +2,10 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
-import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
-import 'anchored_helper_model.dart';
 
 class AnchoredHelper extends StatefulWidget {
   final String anchorKey;
@@ -38,18 +35,18 @@ class AnchoredHelper extends StatefulWidget {
     Function onError,
     bool isTestingMode = false,
   }) =>
-      AnchoredHelper(
-          finderService,
-          anchorKey,
-          titleLabel,
-          descriptionLabel,
-          positivButtonLabel,
-          negativButtonLabel,
-          helperBoxViewModel,
-          onPositivButtonTap,
-          onNegativButtonTap,
-          onError,
-          isTestingMode);
+    AnchoredHelper(
+      finderService,
+      anchorKey,
+      titleLabel,
+      descriptionLabel,
+      positivButtonLabel,
+      negativButtonLabel,
+      helperBoxViewModel,
+      onPositivButtonTap,
+      onNegativButtonTap,
+      onError,
+      isTestingMode);
 
   AnchoredHelper(
     this.finderService,
@@ -63,14 +60,14 @@ class AnchoredHelper extends StatefulWidget {
     this.onNegativButtonTap,
     this.onError,
     this.isTestingMode,
-  );
+    );
 
   @override
   _AnchoredHelperState createState() => _AnchoredHelperState();
 }
 
 class _AnchoredHelperState extends State<AnchoredHelper>
-    with TickerProviderStateMixin {
+  with TickerProviderStateMixin {
   Offset currentPos;
 
   Size anchorSize;
@@ -90,10 +87,10 @@ class _AnchoredHelperState extends State<AnchoredHelper>
   void initState() {
     super.initState();
     anchorAnimationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 1))
-          ..repeat(reverse: true);
+    AnimationController(vsync: this, duration: Duration(seconds: 1))
+      ..repeat(reverse: true);
     fadeAnimController = AnimationController(
-        vsync: this, duration: Duration(milliseconds: 2000));
+      vsync: this, duration: Duration(milliseconds: 2000));
     backgroundAnimation = CurvedAnimation(
       parent: fadeAnimController,
       curve: Interval(0, .4, curve: Curves.easeIn),
@@ -128,7 +125,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
   @override
   void didChangeDependencies() {
     finderService =
-        widget.finderService ?? UserInjector.of(context).finderService;
+      widget.finderService ?? UserInjector.of(context).finderService;
     super.didChangeDependencies();
   }
 
@@ -170,57 +167,58 @@ class _AnchoredHelperState extends State<AnchoredHelper>
       child: Stack(
         children: [
           Positioned.fill(
-              child: FadeTransition(
-                  opacity: backgroundAnimation, child: _buildAnchorWidget())),
+            child: FadeTransition(
+              opacity: backgroundAnimation, child: _buildAnchorWidget())),
           Positioned.fromRect(
             rect: writeArea ?? Rect.largest,
             child: LayoutBuilder(
               builder: (context, constraints) =>
-               Padding(
-                 padding: const EdgeInsets.symmetric(vertical:8.0),
-                 child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight-16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildAnimItem(
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:8.0),
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: constraints.maxHeight-16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _buildAnimItem(
                               opacityAnim: titleOpacityAnimation,
                               sizeAnim: titleSizeAnimation,
                               child: _buildText(widget.titleLabel,
-                                  ValueKey('pal_AnchoredHelperTitleLabel'))),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildAnimItem(
+                                ValueKey('pal_AnchoredHelperTitleLabel'))),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _buildAnimItem(
                               opacityAnim: descriptionOpacityAnimation,
                               sizeAnim: descriptionSizeAnimation,
                               child: _buildText(widget.descriptionLabel,
-                                  ValueKey('pal_AnchoredHelperDescriptionLabel'))),
-                        ),
-                        SizedBox(height: 24),
-                        Row(
+                                ValueKey('pal_AnchoredHelperDescriptionLabel'))),
+                          ),
+                          SizedBox(height: 24),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               _buildAnimItem(
-                                  opacityAnim: btnOpacityAnimation,
-                                  sizeAnim: btnSizeAnimation,
-                                  child: _buildNegativFeedback()),
+                                opacityAnim: btnOpacityAnimation,
+                                sizeAnim: btnSizeAnimation,
+                                child: _buildNegativFeedback()),
                               SizedBox(width: 16),
                               _buildAnimItem(
-                                  opacityAnim: btnOpacityAnimation,
-                                  sizeAnim: btnSizeAnimation,
-                                  child: _buildPositivFeedback()),
+                                opacityAnim: btnOpacityAnimation,
+                                sizeAnim: btnSizeAnimation,
+                                child: _buildPositivFeedback()),
                             ])
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-              ),
+                ),
             ),
           ),
         ],
@@ -229,25 +227,25 @@ class _AnchoredHelperState extends State<AnchoredHelper>
   }
 
   Widget _buildAnchorWidget() => currentPos != null
-      ? AnimatedAnchoredFullscreenCircle(
-          currentPos: currentPos,
-          anchorSize: anchorSize,
-          bgColor: widget.helperBoxViewModel.backgroundColor,
-          padding: 8,
-          listenable: anchorAnimationController)
-      : Container();
+    ? AnimatedAnchoredFullscreenCircle(
+    currentPos: currentPos,
+    anchorSize: anchorSize,
+    bgColor: widget.helperBoxViewModel.backgroundColor,
+    padding: 8,
+    listenable: anchorAnimationController)
+    : Container();
 
   Widget _buildText(HelperTextViewModel text, Key key) => Text(
-        text.text,
-        key: key,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: text.fontSize,
-          fontWeight: text.fontWeight,
-          color: text.fontColor,
-          fontFamily: text.fontFamily,
-        ),
-      );
+    text.text,
+    key: key,
+    textAlign: TextAlign.center,
+    style: TextStyle(
+      fontSize: text.fontSize,
+      fontWeight: text.fontWeight,
+      color: text.fontColor,
+      fontFamily: text.fontFamily,
+    ),
+  );
 
   Widget _buildNegativFeedback() {
     return OutlineButton(
@@ -258,7 +256,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         widget.onNegativButtonTap();
       },
       child: _buildText(widget.negativButtonLabel,
-          ValueKey('pal_AnchoredHelperNegativFeedbackLabel')),
+        ValueKey('pal_AnchoredHelperNegativFeedbackLabel')),
       // onTap: this.widget.onTrigger,
     );
   }
@@ -272,29 +270,29 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         widget.onPositivButtonTap();
       },
       child: _buildText(widget.positivButtonLabel,
-          ValueKey('pal_AnchoredHelperPositivFeedbackLabel')),
+        ValueKey('pal_AnchoredHelperPositivFeedbackLabel')),
       // onTap: this.widget.onTrigger,
     );
   }
 
   Widget _buildAnimItem(
-          {Animation<double> sizeAnim,
-          Animation<double> opacityAnim,
-          Widget child}) =>
-      AnimatedBuilder(
-        animation: fadeAnimController,
-        builder: (context, child) => Transform.translate(
-          offset: Offset(0, -100 + ((sizeAnim?.value ?? 0) * 100)),
-          child: Transform.scale(
-            scale: sizeAnim?.value ?? 0,
-            child: Opacity(
-              opacity: opacityAnim?.value ?? 0,
-              child: child,
-            ),
+    {Animation<double> sizeAnim,
+      Animation<double> opacityAnim,
+      Widget child}) =>
+    AnimatedBuilder(
+      animation: fadeAnimController,
+      builder: (context, child) => Transform.translate(
+        offset: Offset(0, -100 + ((sizeAnim?.value ?? 0) * 100)),
+        child: Transform.scale(
+          scale: sizeAnim?.value ?? 0,
+          child: Opacity(
+            opacity: opacityAnim?.value ?? 0,
+            child: child,
           ),
         ),
-        child: child,
-      );
+      ),
+      child: child,
+    );
 }
 
 class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
@@ -308,31 +306,31 @@ class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
   Animation<double> get _progress => this.listenable;
 
   AnimatedAnchoredFullscreenCircle(
-      {@required this.currentPos,
+    {@required this.currentPos,
       @required this.padding,
       @required this.bgColor,
       @required this.anchorSize,
       @required Listenable listenable})
-      : _stroke1Animation =
-            new CurvedAnimation(parent: listenable, curve: Curves.ease),
-        _stroke2Animation = CurvedAnimation(
-          parent: listenable,
-          curve: Interval(0, .8, curve: Curves.ease),
-        ),
-        super(listenable: listenable);
+    : _stroke1Animation =
+  new CurvedAnimation(parent: listenable, curve: Curves.ease),
+      _stroke2Animation = CurvedAnimation(
+        parent: listenable,
+        curve: Interval(0, .8, curve: Curves.ease),
+      ),
+      super(listenable: listenable);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        child: CustomPaint(
-            painter: AnchoredFullscreenPainter(
-      currentPos: currentPos,
-      anchorSize: anchorSize,
-      padding: padding,
-      bgColor: bgColor,
-      circle1Width: _stroke1Animation.value * 88,
-      circle2Width: _stroke2Animation.value * 140,
-    )));
+      child: CustomPaint(
+        painter: AnchoredFullscreenPainter(
+          currentPos: currentPos,
+          anchorSize: anchorSize,
+          padding: padding,
+          bgColor: bgColor,
+          circle1Width: _stroke1Animation.value * 88,
+          circle2Width: _stroke2Animation.value * 140,
+        )));
   }
 }
 
@@ -383,7 +381,7 @@ class AnchoredFullscreenPainter extends CustomPainter {
     // canvas.drawRect(currentPos & anchorSize, clearPainter);
     var radius = sqrt(pow(anchorSize.width, 2) + pow(anchorSize.height, 2)) / 2;
     var center =
-        currentPos.translate(anchorSize.width / 2, anchorSize.height / 2);
+    currentPos.translate(anchorSize.width / 2, anchorSize.height / 2);
     canvas.drawCircle(center, radius + padding, circle1Painter);
     canvas.drawCircle(center, radius + padding, circle2Painter);
     canvas.drawCircle(center, radius + padding, clearPainter);
@@ -393,9 +391,9 @@ class AnchoredFullscreenPainter extends CustomPainter {
   @override
   bool shouldRepaint(AnchoredFullscreenPainter oldDelegate) {
     return oldDelegate.currentPos != currentPos ||
-        oldDelegate.circle1Width != circle1Width ||
-        oldDelegate.circle2Width != circle2Width ||
-        oldDelegate.bgColor != bgColor;
+      oldDelegate.circle1Width != circle1Width ||
+      oldDelegate.circle2Width != circle2Width ||
+      oldDelegate.bgColor != bgColor;
   }
 
   @override

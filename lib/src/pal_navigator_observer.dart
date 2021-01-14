@@ -31,12 +31,10 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
   @override
   void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
     super.didPush(route, previousRoute);
-      if (route is PageRoute) {
-        _notify(route.settings);
-        _notifyRoute(route);
-      }
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    // });
+    if (route is PageRoute) {
+      _notify(route.settings);
+      _notifyRoute(route);
+    }
   }
 
   @override

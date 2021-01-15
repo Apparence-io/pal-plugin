@@ -5,6 +5,7 @@ import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import '../../helper_editor_factory.dart';
@@ -128,48 +129,51 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
 
   updateBackgroundColor(Color newColor){
     viewModel.backgroundBox.backgroundColor.value = newColor;
-    refreshView();
   }
 
+  // onTextPickerDone(EditedTextData editedTextData) {
+  //   this._updateValidState();
+  // }
+
   // Title
-  onTitleChanged(String id, String newValue)
-    => _onTextChanged(viewModel.titleField, newValue);
+  // onTitleChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.titleField, newValue);
 
-  onTitleSubmit(String text)
-    => _onFieldSubmit(text);
+  // onTitleSubmit(String text)
+  //   => _onFieldSubmit(text);
 
-  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-   => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
+  // onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //  => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
 
-  // Description field
-  onDescriptionChanged(String id, String newValue)
-    => _onTextChanged(viewModel.descriptionField, newValue);
+  // // Description field
+  // onDescriptionChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.descriptionField, newValue);
 
-  onDescriptionSubmit(String text)
-    => _onFieldSubmit(text);
+  // onDescriptionSubmit(String text)
+  //   => _onFieldSubmit(text);
 
-  onDescriptionTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.descriptionField, newTextStyle, fontKeys);
+  // onDescriptionTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.descriptionField, newTextStyle, fontKeys);
 
-  // Positiv button
-  onPositivTextChanged(String id, String newValue)
-    => _onTextChanged(viewModel.positivBtnField, newValue);
+  // // Positiv button
+  // onPositivTextChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.positivBtnField, newValue);
 
-  onPositivSubmit(String text)
-    => _onFieldSubmit(text);
+  // onPositivSubmit(String text)
+  //   => _onFieldSubmit(text);
 
-  onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.positivBtnField, newTextStyle, fontKeys);
+  // onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.positivBtnField, newTextStyle, fontKeys);
 
-  // Negativ button
-  onNegativTextChanged(String id, String newValue)
-    => _onTextChanged(viewModel.negativBtnField, newValue);
+  // // Negativ button
+  // onNegativTextChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.negativBtnField, newValue);
 
-  onNegativSubmit(String text)
-    => _onFieldSubmit(text);
+  // onNegativSubmit(String text)
+  //   => _onFieldSubmit(text);
 
-  onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.negativBtnField, newTextStyle, fontKeys);
+  // onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.negativBtnField, newTextStyle, fontKeys);
 
   // save and cancel   
   Future onValidate() async {
@@ -202,10 +206,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   // PRIVATES
   // ----------------------------------
 
-  _onTextChanged(EditableFormFieldNotifier textNotifier, String newValue) {
-    textNotifier.text.value = newValue;
-    _updateValidState();
-  }
+  // _onTextChanged(EditableFormFieldNotifier textNotifier, String newValue) {
+  //   textNotifier.text.value = newValue;
+  //   _updateValidState();
+  // }
 
   _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
     // if(textNotifier.toolbarVisibility.value) {
@@ -214,17 +218,17 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     // }
   }
 
-  _updateValidState() => viewModel.canValidate.value = isValid();
+  void updateValidState() => viewModel.canValidate.value = isValid();
 
-  _onStyleChanged(EditableFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
-    textNotifier?.fontColor?.value = newTextStyle?.color;
-    textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
-    if (fontKeys != null) {
-      textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
-      textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
-    }
-    _updateValidState();
-  }
+  // _onStyleChanged(EditableFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
+  //   textNotifier?.fontColor?.value = newTextStyle?.color;
+  //   textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
+  //   if (fontKeys != null) {
+  //     textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
+  //     textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
+  //   }
+  //   _updateValidState();
+  // }
 
   bool isValid() => viewModel.titleField.text.value.isNotEmpty
     && viewModel.descriptionField.text.value.isNotEmpty;

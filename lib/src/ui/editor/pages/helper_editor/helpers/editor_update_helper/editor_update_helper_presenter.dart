@@ -51,12 +51,13 @@ class EditorUpdateHelperPresenter
   }
 
   onTextPickerDone(EditedTextData editedTextData) {
-    print(editedTextData.key);
-    if (editedTextData.key == this.titleKey) {
-      this.viewModel.titleField.text.value = editedTextData.text;
-    } else if (editedTextData.key == this.thanksButtonKey) {
-      this.viewModel.thanksButton.text.value = editedTextData.text;
-    }
+    // print(editedTextData.key);
+    // if (editedTextData.key == this.titleKey) {
+    //   this.viewModel.titleField.text.value = editedTextData.text;
+    // } else if (editedTextData.key == this.thanksButtonKey) {
+    //   this.viewModel.thanksButton.text.value = editedTextData.text;
+    // }
+    this._updateValidState();
   }
 
   onKeyboardVisibilityChange(bool visible) {
@@ -93,29 +94,29 @@ class EditorUpdateHelperPresenter
     }
   }
 
-  onTitleFieldChanged(String id, String newValue) =>
-      _onTextChanged(viewModel.titleField, newValue);
+  // onTitleFieldChanged(String id, String newValue) =>
+  //     _onTextChanged(viewModel.titleField, newValue);
 
   // onThanksFieldChanged(String id, String newValue)
   //   => _onTextChanged(viewModel.thanksButton, newValue);
 
-  onTitleTextStyleChanged(
-          String id, TextStyle newTextStyle, FontKeys fontKeys) =>
-      _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
+  // onTitleTextStyleChanged(
+  //         String id, TextStyle newTextStyle, FontKeys fontKeys) =>
+  //     _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
 
   // onThanksTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
   //   => _onStyleChanged(viewModel.thanksButton, newTextStyle, fontKeys);
 
-  onChangelogTextChanged(String id, String newValue) =>
-      _onTextChanged(viewModel.changelogsFields[id], newValue);
+  // onChangelogTextChanged(String id, String newValue) =>
+  //     _onTextChanged(viewModel.changelogsFields[id], newValue);
 
-  onChangelogTextStyleFieldChanged(
-          String id, TextStyle newTextStyle, FontKeys fontKeys) =>
-      _onStyleChanged(viewModel.changelogsFields[id], newTextStyle, fontKeys);
+  // onChangelogTextStyleFieldChanged(
+  //         String id, TextStyle newTextStyle, FontKeys fontKeys) =>
+  //     _onStyleChanged(viewModel.changelogsFields[id], newTextStyle, fontKeys);
 
-  onTitleFieldSubmitted(String value) => this.refreshView();
-  onThanksFieldSubmitted(String value) => this.refreshView();
-  onChangelogFieldSubmitted(String value) => this.refreshView();
+  // onTitleFieldSubmitted(String value) => this.refreshView();
+  // onThanksFieldSubmitted(String value) => this.refreshView();
+  // onChangelogFieldSubmitted(String value) => this.refreshView();
 
   changeBackgroundColor() {
     this.viewInterface.showColorPickerDialog(
@@ -126,7 +127,6 @@ class EditorUpdateHelperPresenter
 
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
-    this.refreshView();
   }
 
   onOutsideTap() => this.editableTextFieldController.add(true);
@@ -175,7 +175,9 @@ class EditorUpdateHelperPresenter
     // }
   }
 
-  _updateValidState() => viewModel.canValidate.value = isValid();
+  _updateValidState() {
+    viewModel.canValidate.value = isValid();
+  }
 
   _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle,
       FontKeys fontKeys) {

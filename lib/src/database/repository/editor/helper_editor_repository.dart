@@ -39,7 +39,7 @@ class EditorHelperRepository extends BaseHttpRepository {
           body: payload);
     if (response == null || response.body == null)
       throw new UnknownHttpError('NO_RESULT');
-    return this._adapter.parse(response.body);
+    return response.body.length == 0 ? null : this._adapter.parse(response.body);
   }
 
   Future<Pageable<HelperEntity>> getPage(

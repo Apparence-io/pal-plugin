@@ -8,6 +8,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_simple_helper.dart';
@@ -43,6 +44,10 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     // fixme =>  mvvm_builder add afterDestroy method
     // viewModel.canValidate.dispose();
     // viewModel.canValidate = null;
+  }
+
+  onTextPickerDone(EditedTextData editedTextData) {
+    this._updateValidState();
   }
 
   Future onValidate() async {

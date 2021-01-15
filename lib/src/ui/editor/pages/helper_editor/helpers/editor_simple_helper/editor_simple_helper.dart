@@ -97,7 +97,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorSimpleHelperPresenter, SimpleHelperViewModel>()
         .build(
-      key: ValueKey('palEditorSimpleHelperWidgetBuilder'),
+      key: UniqueKey(),
       context: context,
       presenterBuilder: (context) => EditorSimpleHelperPresenter(
           new _EditorSimpleHelperPage(
@@ -126,11 +126,12 @@ class EditorSimpleHelperPage extends StatelessWidget {
             callback: presenter.updateBackgroundColor,
             selectedColor: viewModel.bodyBox?.backgroundColor),
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
+        onTextPickerDone: presenter.onTextPickerDone,
         // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
-        // onPreview: presenter.onPreview,
+        onPreview: presenter.onPreview,
         child: LayoutBuilder(builder: (context, constraints) {
           return Form(
             key: formKey,

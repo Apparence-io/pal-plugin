@@ -31,6 +31,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   final Widget child;
   // Save button function
   final Function onValidate;
+  final Function onPreview;
   final BoxViewHandler boxViewHandler;
 
   // Pickers
@@ -54,6 +55,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     this.onTextColorPickerDone,
     this.onTextPickerDone,
     this.onMediaPickerDone,
+    this.onPreview,
     @required this.boxViewHandler,
   });
 
@@ -109,6 +111,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       builder: (context, presenter, model) {
         return Scaffold(
           key: _scaffoldKey,
+          resizeToAvoidBottomInset: false,
           body: this._buildPage(context, presenter, model),
           extendBody: true,
           backgroundColor: Colors.transparent,
@@ -122,6 +125,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
               ? EditorActionBar(
                   animation: context.animationsControllers[0],
                   iconsColor: Colors.white,
+                  onPreview: onPreview,
                   onCancel: (){
                     Navigator.pop(context.buildContext);
                   },

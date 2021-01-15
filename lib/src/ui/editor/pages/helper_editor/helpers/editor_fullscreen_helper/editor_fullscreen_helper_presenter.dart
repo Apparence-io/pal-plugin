@@ -9,17 +9,18 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_fullscreen_helper.dart';
 import 'editor_fullscreen_helper_viewmodel.dart';
 
-class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewModel, EditorFullScreenHelperView> {
-
+class EditorFullScreenHelperPresenter
+    extends Presenter<FullscreenHelperViewModel, EditorFullScreenHelperView> {
   final EditorHelperService editorHelperService;
 
   final HelperEditorPageArguments parameters;
-  
+
   EditorFullScreenHelperPresenter(
     EditorFullScreenHelperView viewInterface,
     FullscreenHelperViewModel viewModel,
@@ -32,7 +33,8 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     super.onInit();
     this.viewModel.helperOpacity = 1;
     this.viewModel.canValidate = new ValueNotifier(false);
-    this.viewModel.editableTextFieldController = StreamController<bool>.broadcast();
+    this.viewModel.editableTextFieldController =
+        StreamController<bool>.broadcast();
     // viewModel.fields.forEach(
     //   (field) => field.toolbarVisibility.addListener(
     //     () => _onTextToolbarVisibilityChange(field)
@@ -40,17 +42,17 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     // );
   }
 
-
   Future onValidate() async {
-    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
+    ValueNotifier<SendingStatus> status =
+        new ValueNotifier(SendingStatus.SENDING);
     final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
-      await editorHelperService
-        .saveFullScreenHelper(EditorEntityFactory.buildFullscreenArgs(config, viewModel));
+      await editorHelperService.saveFullScreenHelper(
+          EditorEntityFactory.buildFullscreenArgs(config, viewModel));
       status.value = SendingStatus.SENT;
-    } catch(error) {
+    } catch (error) {
       print("error occured $error");
       status.value = SendingStatus.ERROR;
     } finally {
@@ -67,46 +69,44 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   }
 
   // Title
-  onTitleChanged(String id, String newValue)
-    => _onTextChanged(viewModel.titleField, newValue);
-  
-  onTitleSubmit(String text)
-    => _onFieldSubmit(text);
+  // onTitleChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.titleField, newValue);
 
-  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
-    => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
+  // onTitleSubmit(String text)
+  //   => _onFieldSubmit(text);
 
-  // Description field
-  onDescriptionChanged(String id, String newValue)
-    => _onTextChanged(viewModel.descriptionField, newValue);
+  // onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
 
-  onDescriptionSubmit(String text)
-    => _onFieldSubmit(text);
+  // // Description field
+  // onDescriptionChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.descriptionField, newValue);
 
-  onDescriptionTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.descriptionField, newTextStyle, fontKeys);
-  
-  // Positiv button
-  onPositivTextChanged(String id, String newValue)
-    => _onTextChanged(viewModel.positivButtonField, newValue);
-  
-  onPositivTextSubmit(String text)
-    => _onFieldSubmit(text);
+  // onDescriptionSubmit(String text)
+  //   => _onFieldSubmit(text);
 
-  onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
-    => _onStyleChanged(viewModel.positivButtonField, newTextStyle, fontKeys);
+  // onDescriptionTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.descriptionField, newTextStyle, fontKeys);
 
-  // Negativ button
-  onNegativTextChanged(String id, String newValue) 
-    => _onTextChanged(viewModel.negativButtonField, newValue);
-  
-  onNegativTextSubmit(String text)
-    => _onFieldSubmit(text);
+  // // Positiv button
+  // onPositivTextChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.positivButtonField, newValue);
 
-  onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys) 
-    => _onStyleChanged(viewModel.negativButtonField, newTextStyle, fontKeys);
+  // onPositivTextSubmit(String text)
+  //   => _onFieldSubmit(text);
 
-  
+  // onPositivTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.positivButtonField, newTextStyle, fontKeys);
+
+  // // Negativ button
+  // onNegativTextChanged(String id, String newValue)
+  //   => _onTextChanged(viewModel.negativButtonField, newValue);
+
+  // onNegativTextSubmit(String text)
+  //   => _onFieldSubmit(text);
+
+  // onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
+  //   => _onStyleChanged(viewModel.negativButtonField, newTextStyle, fontKeys);
 
   @override
   Future onDestroy() async {
@@ -123,7 +123,8 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
   }
 
   //TODO move  to view
-  TextStyle googleCustomFont(String fontFamily) => this.viewInterface.googleCustomFont(fontFamily);
+  TextStyle googleCustomFont(String fontFamily) =>
+      this.viewInterface.googleCustomFont(fontFamily);
 
   onOutsideTap() {
     this.viewModel.editableTextFieldController.add(true);
@@ -139,36 +140,39 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     return null;
   }
 
-  changeBackgroundColor() => this.viewInterface.showColorPickerDialog(viewModel, this);
+  // onTextPickerDone(EditedTextData editedTextData) {
+  //   this._updateValidState();
+  // }
+
+  changeBackgroundColor() =>
+      this.viewInterface.showColorPickerDialog(viewModel, this);
 
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
     // this.viewInterface.closeColorPickerDialog();
-    _updateValidState();
+    this.updateValidState();
     // this.refreshView();
   }
 
   cancelUpdateBackgroundColor() => this.viewInterface.closeColorPickerDialog();
 
   editMedia() async {
-    final selectedMedia = await this
-        .viewInterface
-        .pushToMediaGallery(this.viewModel.media?.uuid);
+    final selectedMedia =
+        await this.viewInterface.pushToMediaGallery(this.viewModel.media?.uuid);
 
     this.viewModel.media?.url?.value = selectedMedia?.url;
     this.viewModel.media?.uuid = selectedMedia?.id;
     this.refreshView();
   }
-  
-  
+
   // ----------------------------------
-  // PRIVATES 
+  // PRIVATES
   // ----------------------------------
-  
-  _onTextChanged(EditableFormFieldNotifier textNotifier, String newValue) {
-    textNotifier.text.value = newValue;
-    _updateValidState();
-  }
+
+  // _onTextChanged(EditableFormFieldNotifier textNotifier, String newValue) {
+  //   textNotifier.text.value = newValue;
+  //   _updateValidState();
+  // }
 
   _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
     // if(textNotifier.toolbarVisibility.value) {
@@ -177,22 +181,25 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     // }
   }
 
-  _updateValidState() => viewModel.canValidate.value = isValid();
-
-  _onStyleChanged(EditableFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
-    textNotifier?.fontColor?.value = newTextStyle?.color;
-    textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
-    if (fontKeys != null) {
-      textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
-      textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
-    }
-    _updateValidState();
+  updateValidState() {
+    viewModel.canValidate.value = isValid();
   }
 
-  bool isValid() => viewModel.positivButtonField.text.value.isNotEmpty
-        && viewModel.negativButtonField.text.value.isNotEmpty
-        && viewModel.titleField.text.value.isNotEmpty
-        && viewModel.descriptionField.text.value.isNotEmpty;
+  // _onStyleChanged(EditableFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
+  //   textNotifier?.fontColor?.value = newTextStyle?.color;
+  //   textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
+  //   if (fontKeys != null) {
+  //     textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
+  //     textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
+  //   }
+  //   _updateValidState();
+  // }
+
+  bool isValid() =>
+      viewModel.positivButtonField.text.value.isNotEmpty &&
+      viewModel.negativButtonField.text.value.isNotEmpty &&
+      viewModel.titleField.text.value.isNotEmpty &&
+      viewModel.descriptionField.text.value.isNotEmpty;
 
   _onFieldSubmit(String text) {
     this.refreshView();

@@ -5,11 +5,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 // Put all notifiers models here
 class FormFieldNotifier {
   int id;
-  ValueNotifier<bool> isSelected;
 
-  FormFieldNotifier(this.id,){
-    this.isSelected = ValueNotifier(false);
-  }
+  FormFieldNotifier(this.id);
 }
 
 class EditableFormFieldNotifier extends FormFieldNotifier {

@@ -42,7 +42,7 @@ class EditorToolboxPresenter
     this.viewModel.animateActionBar = false;
     // INIT ATTRIBUTES
 
-    this.viewModel.editableElementActions = [];
+    if(this.viewModel.editableElementActions == null) this.viewModel.editableElementActions = [];
     this.viewModel.globalActions = [
       ToolBarGlobalActionButton.backgroundColor,
     ];
@@ -55,18 +55,17 @@ class EditorToolboxPresenter
     this.viewModel.isBottomVisible.addListener(animateActionBar);
 
     this.currentEditableItemNotifier.addListener(() {
-      this.currentEditableItemNotifier.value.isSelected.value = true;
       this.displayEditableItemActions();
     });
   }
 
   void animateActionBar() {
-      this.viewModel.animateActionBar = true;
-      this.refreshAnimations();
-      this.refreshView();
-      this.viewModel.animationTarget =
-          this.viewModel.isBottomVisible.value ? 1 : 0;
-    }
+    this.viewModel.animateActionBar = true;
+    this.refreshAnimations();
+    this.refreshView();
+    this.viewModel.animationTarget =
+        this.viewModel.isBottomVisible.value ? 1 : 0;
+  }
 
   void displayEditableItemActions() {
     switch (this.currentEditableItemNotifier.value?.runtimeType) {
@@ -106,7 +105,7 @@ class EditorToolboxPresenter
   void onOutsideTap() {
     this.viewModel.editableElementActions = [];
     this.currentEditableItemNotifier.value = null;
-    this.refreshView();
+    // this.refreshView();
   }
 
   void openPicker(ToolBarActionButton toolBarActionButton) async {
@@ -120,6 +119,7 @@ class EditorToolboxPresenter
             .openColorPicker(editableFormField.fontColor.value);
         if (newColor != null) {
           editableFormField.fontColor.value = newColor;
+          this.onTextColorPickerDone(null);
         }
         break;
       case ToolBarActionButton.font:
@@ -137,7 +137,8 @@ class EditorToolboxPresenter
           editableFormField.fontFamily.value = fontFamily;
           editableFormField.fontSize.value = fontSize.toInt();
           editableFormField.fontWeight.value = fontWeight;
-          this.refreshView();
+          // this.refreshView();
+          this.onFontPickerDone(null);
         }
         break;
       case ToolBarActionButton.media:
@@ -147,7 +148,8 @@ class EditorToolboxPresenter
         if (newGraphicEntity != null) {
           mediaNotifier.url.value = newGraphicEntity?.url;
           mediaNotifier.uuid = newGraphicEntity?.id;
-          this.refreshView();
+          // this.refreshView();
+          this.onMediaPickerDone(null);
         }
         break;
       case ToolBarActionButton.text:
@@ -158,6 +160,7 @@ class EditorToolboxPresenter
             .openTextPicker(editableFormField.text.value);
         if (newText != null) {
           editableFormField.text.value = newText;
+          this.onTextPickerDone(null);
         }
         break;
       default:

@@ -33,8 +33,6 @@ class _EditableButtonState extends State<EditableButton> {
     widget.buttonFormFieldNotifier.borderColor.addListener(this.refreshView);
     widget.buttonFormFieldNotifier.backgroundColor
         .addListener(this.refreshView);
-        widget.buttonFormFieldNotifier.isSelected
-        .addListener(this.refreshView);
   }
 
   @override
@@ -46,8 +44,6 @@ class _EditableButtonState extends State<EditableButton> {
     widget.buttonFormFieldNotifier.fontWeight.removeListener(this.refreshView);
     widget.buttonFormFieldNotifier.borderColor.removeListener(this.refreshView);
     widget.buttonFormFieldNotifier.backgroundColor
-        .removeListener(this.refreshView);
-        widget.buttonFormFieldNotifier.isSelected
         .removeListener(this.refreshView);
     super.dispose();
   }
@@ -72,7 +68,6 @@ class _EditableButtonState extends State<EditableButton> {
 
     return BouncingWidget(
       onTap: () {
-        this.widget.currentEditableItemNotifier?.value?.isSelected?.value = false;
         this.widget.currentEditableItemNotifier.value =
             this.widget.buttonFormFieldNotifier;
         //  CurrentEditableItem(
@@ -82,7 +77,7 @@ class _EditableButtonState extends State<EditableButton> {
       },
       child: DottedBorder(
         dashPattern: [6, 3],
-        color: widget.buttonFormFieldNotifier.isSelected.value ? Colors.red : Colors.white.withAlpha(80),
+        color: Colors.white.withAlpha(80),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: IgnorePointer(

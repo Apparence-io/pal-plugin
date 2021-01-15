@@ -100,14 +100,17 @@ class EditorFullScreenHelper
       helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
       headerImageViewModel: HelperSharedFactory.parseMediaNotifier(model.media),
-      negativLabel: HelperSharedFactory.parseButtonNotifier(model.negativButtonField),
-      positivLabel: HelperSharedFactory.parseButtonNotifier(model.positivButtonField),
+      negativLabel:
+          HelperSharedFactory.parseButtonNotifier(model.negativButtonField),
+      positivLabel:
+          HelperSharedFactory.parseButtonNotifier(model.positivButtonField),
       onNegativButtonTap: () => Navigator.pop(context),
       onPositivButtonTap: () => Navigator.pop(context),
     );
-    
+
     EditorPreviewArguments arguments = EditorPreviewArguments(
-        previewHelper: page,);
+      previewHelper: page,
+    );
     await Navigator.pushNamed(
       context,
       '/editor/preview',
@@ -193,14 +196,22 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       resizeToAvoidBottomPadding: true,
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
-          callback: presenter.updateBackgroundColor,
-          selectedColor: model.bodyBox?.backgroundColor
-        ),
+            callback: presenter.updateBackgroundColor,
+            selectedColor: model.bodyBox?.backgroundColor),
+        onTextPickerDone: (EditedTextData data) => presenter.updateValidState(),
+        onFontPickerDone: (EditedFontData data) => presenter.updateValidState(),
+        onBorderPickerDone: (EditedBorderData data) =>
+            presenter.updateValidState(),
+        onMediaPickerDone: (EditedMediaData data) =>
+            presenter.updateValidState(),
+        onTextColorPickerDone: (EditedColorData data) =>
+            presenter.updateValidState(),
         currentEditableItemNotifier: model.currentEditableItemNotifier,
         // onCancel: presenter.onCancel,
+        
         onValidate:
             (model.canValidate?.value == true) ? presenter.onValidate : null,
-        // onPreview: presenter.onPreview,
+        onPreview: presenter.onPreview,
         child: GestureDetector(
           key: ValueKey('palEditorFullscreenHelperWidget'),
           onTap: presenter.onOutsideTap,
@@ -215,7 +226,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                 backgroundColor: model.bodyBox.backgroundColor,
                 // circleIconKey:
                 //     'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
-                    // 'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
+                // 'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
                 // onColorChange: () => presenter.changeBackgroundColor(),
                 widget: Center(
                   child: Padding(
@@ -233,13 +244,15 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                               url: model.media?.url?.value,
                               editKey:
                                   'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
-                                  currentEditableItemNotifier: model.currentEditableItemNotifier,
-                                  mediaNotifier: model.media,
+                              currentEditableItemNotifier:
+                                  model.currentEditableItemNotifier,
+                              mediaNotifier: model.media,
                             ),
                             SizedBox(height: 24),
                             EditableTextField(
                               textNotifier: model.titleField,
-                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                              currentEditableItemNotifier:
+                                  model.currentEditableItemNotifier,
                               // model.editableTextFieldController.stream,
                               // model?.titleField,
                               // presenter.onTitleChanged,
@@ -255,7 +268,8 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             SizedBox(height: 24),
                             EditableTextField(
                               textNotifier: model.descriptionField,
-                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                              currentEditableItemNotifier:
+                                  model.currentEditableItemNotifier,
                             ),
                             // EditableTextField.fromNotifier(
                             //   model.editableTextFieldController.stream,
@@ -275,34 +289,37 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             ),
                             EditableButton(
                               buttonFormFieldNotifier: model.positivButtonField,
-                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                              currentEditableItemNotifier:
+                                  model.currentEditableItemNotifier,
                             ),
-                              // child: EditableTextField.editableButton(
-                              //     model.editableTextFieldController.stream,
-                              //     model.positivButtonField,
-                              //     presenter.onPositivTextChanged,
-                              //     presenter.onPositivTextSubmit,
-                              //     presenter.onPositivTextStyleChanged,
-                              //     helperToolbarKey: ValueKey(
-                              //         'palEditorFullscreenHelperWidgetToolbar'),
-                              //     textFormFieldKey: ValueKey(
-                              //         'palFullscreenHelperPositivField')),
+                            // child: EditableTextField.editableButton(
+                            //     model.editableTextFieldController.stream,
+                            //     model.positivButtonField,
+                            //     presenter.onPositivTextChanged,
+                            //     presenter.onPositivTextSubmit,
+                            //     presenter.onPositivTextStyleChanged,
+                            //     helperToolbarKey: ValueKey(
+                            //         'palEditorFullscreenHelperWidgetToolbar'),
+                            //     textFormFieldKey: ValueKey(
+                            //         'palFullscreenHelperPositivField')),
                             Padding(
-                              padding: const EdgeInsets.only(top: 12.0),),
+                              padding: const EdgeInsets.only(top: 12.0),
+                            ),
                             EditableButton(
                               buttonFormFieldNotifier: model.negativButtonField,
-                              currentEditableItemNotifier: model.currentEditableItemNotifier,
+                              currentEditableItemNotifier:
+                                  model.currentEditableItemNotifier,
                             )
-                              // child: EditableTextField.editableButton(
-                              //     model.editableTextFieldController.stream,
-                              //     model.negativButtonField,
-                              //     presenter.onNegativTextChanged,
-                              //     presenter.onNegativTextSubmit,
-                              //     presenter.onNegativTextStyleChanged,
-                              //     helperToolbarKey: ValueKey(
-                              //         'palEditorFullscreenHelperWidgetToolbar'),
-                              //     textFormFieldKey: ValueKey(
-                              //         'palFullscreenHelperNegativField')),
+                            // child: EditableTextField.editableButton(
+                            //     model.editableTextFieldController.stream,
+                            //     model.negativButtonField,
+                            //     presenter.onNegativTextChanged,
+                            //     presenter.onNegativTextSubmit,
+                            //     presenter.onNegativTextStyleChanged,
+                            //     helperToolbarKey: ValueKey(
+                            //         'palEditorFullscreenHelperWidgetToolbar'),
+                            //     textFormFieldKey: ValueKey(
+                            //         'palFullscreenHelperNegativField')),
                           ],
                         ),
                       ),

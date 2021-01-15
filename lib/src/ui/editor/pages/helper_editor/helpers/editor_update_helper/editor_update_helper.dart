@@ -146,6 +146,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
   ) {
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
@@ -170,7 +171,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
               padding: const EdgeInsets.all(2.0),
               child: Container(
                 width: double.infinity,
-                color: viewModel.bodyBox?.backgroundColor?.value,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:

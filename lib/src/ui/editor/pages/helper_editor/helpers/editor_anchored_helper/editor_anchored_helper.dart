@@ -146,7 +146,17 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 ? presenter.onValidate
                 : null,
             currentEditableItemNotifier: model.currentEditableItemNotifier,
-            // onPreview: presenter.onPreview,
+            onTextPickerDone: (EditedTextData data) =>
+                presenter.updateValidState(),
+            onFontPickerDone: (EditedFontData data) =>
+                presenter.updateValidState(),
+            onBorderPickerDone: (EditedBorderData data) =>
+                presenter.updateValidState(),
+            onMediaPickerDone: (EditedMediaData data) =>
+                presenter.updateValidState(),
+            onTextColorPickerDone: (EditedColorData data) =>
+                presenter.updateValidState(),
+            onPreview: presenter.onPreview,
             child: Stack(
               children: [
                 _createAnchoredWidget(model, context.animationsControllers[0],

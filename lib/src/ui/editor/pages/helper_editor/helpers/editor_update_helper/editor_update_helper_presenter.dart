@@ -32,12 +32,11 @@ class EditorUpdateHelperPresenter
     this.titleKey,
     this.thanksButtonKey,
   })  : editableTextFieldController = StreamController<bool>.broadcast(),
-        super(updateHelperViewModel, viewInterface) {
-    viewModel.canValidate = new ValueNotifier(false);
-  }
+        super(updateHelperViewModel, viewInterface);
 
   @override
   void onInit() {
+    this.viewModel.canValidate = new ValueNotifier(false);
     this.viewModel.isKeyboardVisible = false;
     // viewModel.fields.forEach(
     //   (field) => field.toolbarVisibility.addListener(
@@ -53,9 +52,9 @@ class EditorUpdateHelperPresenter
 
   onTextPickerDone(EditedTextData editedTextData) {
     print(editedTextData.key);
-    if(editedTextData.key == this.titleKey) {
+    if (editedTextData.key == this.titleKey) {
       this.viewModel.titleField.text.value = editedTextData.text;
-    } else if(editedTextData.key == this.thanksButtonKey) {
+    } else if (editedTextData.key == this.thanksButtonKey) {
       this.viewModel.thanksButton.text.value = editedTextData.text;
     }
   }

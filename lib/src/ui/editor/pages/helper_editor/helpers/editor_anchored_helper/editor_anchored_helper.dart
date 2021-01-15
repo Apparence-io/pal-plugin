@@ -139,9 +139,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
           color: Colors.black.withOpacity(0.3),
           child: EditorToolboxPage(
             boxViewHandler: BoxViewHandler(
-              callback: presenter.updateBackgroundColor,
-              selectedColor: model.backgroundBox?.backgroundColor?.value
-            ),
+                callback: presenter.updateBackgroundColor,
+                selectedColor: model.backgroundBox?.backgroundColor?.value),
             // onCancel: presenter.onCancel,
             onValidate: (model.canValidate?.value == true)
                 ? presenter.onValidate
@@ -254,68 +253,58 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         !model.anchorValidated) return Container();
     return Positioned.fromRect(
       rect: model.writeArea ?? Rect.largest,
-      child: LayoutBuilder(
-        builder: (context, constraints) => 
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical:8.0),
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight-16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                    child: EditableTextField(textNotifier: model.titleField, currentEditableItemNotifier: model.currentEditableItemNotifier)
-                    // child: EditableTextField.fromNotifier(
-                    //   editableTextFieldController.stream,
-                    //   model.titleField,
-                    //   presenter.onTitleChanged,
-                    //   presenter.onTitleSubmit,
-                    //   presenter.onTitleTextStyleChanged,
-                    // ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: EditableTextField(textNotifier: model.descriptionField, currentEditableItemNotifier: model.currentEditableItemNotifier)
-                    // child: EditableTextField.fromNotifier(
-                    //   editableTextFieldController.stream,
-                    //   model.descriptionField,
-                    //   presenter.onDescriptionChanged,
-                    //   presenter.onDescriptionSubmit,
-                    //   presenter.onDescriptionTextStyleChanged,
-                    // ),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: EditableButton(buttonFormFieldNotifier: model.negativBtnField, currentEditableItemNotifier: model.currentEditableItemNotifier)
-                        // child: EditableTextField.editableButton(
-                        //   editableTextFieldController.stream,
-                        //   model.negativBtnField,
-                        //   presenter.onNegativTextChanged,
-                        //   presenter.onNegativSubmit,
-                        //   presenter.onNegativTextStyleChanged,
-                        // ),
-                      ),
-                      Flexible(
-                        child: EditableButton(buttonFormFieldNotifier: model.positivBtnField, currentEditableItemNotifier: model.currentEditableItemNotifier)
-                        // child: EditableTextField.editableButton(
-                        //   editableTextFieldController.stream,
-                        //   model.positivBtnField,
-                        //   presenter.onPositivTextChanged,
-                        //   presenter.onPositivSubmit,
-                        //   presenter.onPositivTextStyleChanged,
-                        // ),
-                      ),
-                    ],
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+                  child: EditableTextField(
+                    textNotifier: model.titleField,
+                    currentEditableItemNotifier:
+                        model.currentEditableItemNotifier,
                   )
-                ],
+                  // child: EditableTextField.fromNotifier(
+                  //   editableTextFieldController.stream,
+                  //   model.titleField,
+                  //   presenter.onTitleChanged,
+                  //   presenter.onTitleSubmit,
+                  //   presenter.onTitleTextStyleChanged,
+                  // ),
+                  ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: EditableTextField(
+                  textNotifier: model.descriptionField,
+                  currentEditableItemNotifier:
+                      model.currentEditableItemNotifier,
+                ),
               ),
-            ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: EditableButton(
+                      buttonFormFieldNotifier: model.negativBtnField,
+                      currentEditableItemNotifier:
+                          model.currentEditableItemNotifier,
+                    ),
+                  ),
+                  Flexible(
+                    child: EditableButton(
+                      buttonFormFieldNotifier: model.positivBtnField,
+                      currentEditableItemNotifier:
+                          model.currentEditableItemNotifier,
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
         ),
       ),

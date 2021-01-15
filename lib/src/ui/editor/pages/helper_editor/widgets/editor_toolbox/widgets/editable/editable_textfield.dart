@@ -20,36 +20,41 @@ class EditableTextField extends StatefulWidget {
 }
 
 class _EditableTextFieldState extends State<EditableTextField> {
+
   @override
   void initState() {
     // TODO: Refacto en un seul TextStyle listener
     super.initState();
-    widget.textNotifier.fontSize.addListener(() {
-      this.setState(() {});
-    });
-    widget.textNotifier.fontFamily.addListener(() {
-      this.setState(() {});
-    });
-    widget.textNotifier.fontWeight.addListener(() {
-      this.setState(() {});
-    });
-    widget.textNotifier.fontColor.addListener(() {
-      this.setState(() {});
-    });
-    widget.textNotifier.text.addListener(() {
-      this.setState(() {});
-    });
+    widget.textNotifier.fontSize.addListener(this.refreshView);
+    widget.textNotifier.fontFamily.addListener(this.refreshView);
+    widget.textNotifier.fontWeight.addListener(this.refreshView);
+    widget.textNotifier.fontColor.addListener(this.refreshView);
+    widget.textNotifier.text.addListener(this.refreshView);
   }
 
   @override
   void dispose() { 
-    widget.textNotifier.fontSize.dispose();
-    widget.textNotifier.fontFamily.dispose();
-    widget.textNotifier.fontWeight.dispose();
-    widget.textNotifier.fontColor.dispose();
-    widget.textNotifier.text.dispose();
+    widget.textNotifier.fontSize.removeListener(this.refreshView);
+    widget.textNotifier.fontFamily.removeListener(this.refreshView);
+    widget.textNotifier.fontWeight.removeListener(this.refreshView);
+    widget.textNotifier.fontColor.removeListener(this.refreshView);
+    widget.textNotifier.text.removeListener(this.refreshView);
     super.dispose();
   }
+
+  void refreshView() {
+    this.setState(() {});
+  }
+
+  // @override
+  // void dispose() { 
+  //   widget.textNotifier.fontSize.dispose();
+  //   widget.textNotifier.fontFamily.dispose();
+  //   widget.textNotifier.fontWeight.dispose();
+  //   widget.textNotifier.fontColor.dispose();
+  //   widget.textNotifier.text.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

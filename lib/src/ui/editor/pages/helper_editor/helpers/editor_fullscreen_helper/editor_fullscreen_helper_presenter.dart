@@ -25,15 +25,14 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     FullscreenHelperViewModel viewModel,
     this.editorHelperService,
     this.parameters,
-  ) : super(viewModel, viewInterface) {
-    this.viewModel.helperOpacity = 1;
-    this.viewModel.canValidate = new ValueNotifier(false);
-    this.viewModel.editableTextFieldController = StreamController<bool>.broadcast();
-  }
+  ) : super(viewModel, viewInterface);
 
   @override
   void onInit() {
     super.onInit();
+    this.viewModel.helperOpacity = 1;
+    this.viewModel.canValidate = new ValueNotifier(false);
+    this.viewModel.editableTextFieldController = StreamController<bool>.broadcast();
     // viewModel.fields.forEach(
     //   (field) => field.toolbarVisibility.addListener(
     //     () => _onTextToolbarVisibilityChange(field)

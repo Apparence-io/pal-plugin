@@ -24,39 +24,31 @@ class _EditableButtonState extends State<EditableButton> {
   void initState() {
     // TODO: Refacto en un seul TextStyle listener
     super.initState();
-    widget.buttonFormFieldNotifier.fontSize.addListener(() {
-      this.setState(() {});
-    });
-    widget.buttonFormFieldNotifier.fontFamily.addListener(() {
-      this.setState(() {});
-    });
-    widget.buttonFormFieldNotifier.fontColor.addListener(() {
-      this.setState(() {});
-    });
-    widget.buttonFormFieldNotifier.text.addListener(() {
-      this.setState(() {});
-    });
-    widget.buttonFormFieldNotifier.fontWeight.addListener(() {
-      this.setState(() {});
-    });
-    widget.buttonFormFieldNotifier.borderColor.addListener(() {
-      this.setState(() {});
-    });
-    widget.buttonFormFieldNotifier.backgroundColor.addListener(() {
-      this.setState(() {});
-    });
+    widget.buttonFormFieldNotifier.fontSize.addListener(this.refreshView);
+    widget.buttonFormFieldNotifier.fontFamily.addListener(this.refreshView);
+    widget.buttonFormFieldNotifier.fontColor.addListener(this.refreshView);
+    widget.buttonFormFieldNotifier.text.addListener(this.refreshView);
+    widget.buttonFormFieldNotifier.fontWeight.addListener(this.refreshView);
+    widget.buttonFormFieldNotifier.borderColor.addListener(this.refreshView);
+    widget.buttonFormFieldNotifier.backgroundColor
+        .addListener(this.refreshView);
   }
 
   @override
-  void dispose() { 
-    widget.buttonFormFieldNotifier.fontSize.dispose();
-    widget.buttonFormFieldNotifier.fontFamily.dispose();
-    widget.buttonFormFieldNotifier.fontColor.dispose();
-    widget.buttonFormFieldNotifier.text.dispose();
-    widget.buttonFormFieldNotifier.fontWeight.dispose();
-    widget.buttonFormFieldNotifier.borderColor.dispose();
-    widget.buttonFormFieldNotifier.backgroundColor.dispose();
+  void dispose() {
+    widget.buttonFormFieldNotifier.fontSize.removeListener(this.refreshView);
+    widget.buttonFormFieldNotifier.fontFamily.removeListener(this.refreshView);
+    widget.buttonFormFieldNotifier.fontColor.removeListener(this.refreshView);
+    widget.buttonFormFieldNotifier.text.removeListener(this.refreshView);
+    widget.buttonFormFieldNotifier.fontWeight.removeListener(this.refreshView);
+    widget.buttonFormFieldNotifier.borderColor.removeListener(this.refreshView);
+    widget.buttonFormFieldNotifier.backgroundColor
+        .removeListener(this.refreshView);
     super.dispose();
+  }
+
+  void refreshView() {
+    this.setState(() {});
   }
 
   @override
@@ -75,7 +67,8 @@ class _EditableButtonState extends State<EditableButton> {
 
     return BouncingWidget(
       onTap: () {
-        this.widget.currentEditableItemNotifier.value = this.widget.buttonFormFieldNotifier;
+        this.widget.currentEditableItemNotifier.value =
+            this.widget.buttonFormFieldNotifier;
         //  CurrentEditableItem(
         //   editableItemType: EditableItemType.button,
         //   itemKey: this.key,

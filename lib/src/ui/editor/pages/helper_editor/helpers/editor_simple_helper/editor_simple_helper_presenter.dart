@@ -27,19 +27,19 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     this.editorHelperService,
     this.parameters
   ) : editableTextFieldController = StreamController<bool>.broadcast(),
-      super(simpleHelperViewModel, viewInterface) {
-    viewModel.canValidate = new ValueNotifier(false);
-  }
+      super(simpleHelperViewModel, viewInterface);
 
   @override
   void onInit() {
     super.onInit();
+    viewModel.canValidate = new ValueNotifier(false);
   }
 
   @override
   Future onDestroy() async {
-    super.onDestroy();
+    
     editableTextFieldController.close();
+    super.onDestroy();
     // fixme =>  mvvm_builder add afterDestroy method
     // viewModel.canValidate.dispose();
     // viewModel.canValidate = null;

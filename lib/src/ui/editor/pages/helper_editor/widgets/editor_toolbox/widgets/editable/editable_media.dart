@@ -33,16 +33,26 @@ class _EditableMediaState extends State<EditableMedia> {
   void initState() {
     // TODO: Refacto en un seul TextStyle listener
     super.initState();
-    // widget.mediaNotifier.url.addListener(() {
-    //   this.setState(() {});
-    // });
+    widget.mediaNotifier.url.addListener(refreshView);
+  }
+
+  @override
+  void dispose() {
+    widget.mediaNotifier.url.removeListener(refreshView);
+
+    super.dispose();
+  }
+
+  void refreshView() {
+    this.setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return BouncingWidget(
       onTap: () {
-        this.widget.currentEditableItemNotifier.value = this.widget.mediaNotifier;
+        this.widget.currentEditableItemNotifier.value =
+            this.widget.mediaNotifier;
         // this.onEdit?.call();
       },
       child: DottedBorder(
@@ -50,9 +60,10 @@ class _EditableMediaState extends State<EditableMedia> {
         color: Colors.white.withAlpha(80),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: (widget.url != null && widget.url.length > 0)
+          child: (widget.mediaNotifier?.url?.value != null &&
+                  widget.mediaNotifier.url.value.length > 0)
               ? CachedNetworkImage(
-                  imageUrl: widget.url,
+                  imageUrl: widget.mediaNotifier?.url?.value,
                   width: widget.mediaSize,
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),

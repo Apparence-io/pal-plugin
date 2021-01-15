@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';
@@ -10,6 +11,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/text_field_picker/dialog_editable_textfield.dart';
+import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -21,7 +23,7 @@ abstract class EditorToolboxView {
   Future<EditedFontModel> openFontPicker(String family,int size,String weight);
   Future<Color> openColorPicker(
       Color selectedColor);
-  Future<String> openMediaPicker();
+  Future<GraphicEntity> openMediaPicker(String mediaId);
 }
 
 class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
@@ -109,6 +111,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
           key: _scaffoldKey,
           body: this._buildPage(context, presenter, model),
           extendBody: true,
+          backgroundColor: Colors.transparent,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterDocked,
           floatingActionButton:
@@ -210,8 +213,14 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<String> openMediaPicker() {
-    // TODO: implement openMediaPicker
-    throw UnimplementedError();
+  Future<GraphicEntity> openMediaPicker(String currentMediaId) async {
+     GraphicEntity graphicEntity = await Navigator.of(_scaffoldKey.currentContext).pushNamed(
+      '/editor/media-gallery',
+      arguments: MediaGalleryPageArguments(
+        currentMediaId,
+      ),
+    ) as GraphicEntity;
+
+    return graphicEntity;
   }
 }

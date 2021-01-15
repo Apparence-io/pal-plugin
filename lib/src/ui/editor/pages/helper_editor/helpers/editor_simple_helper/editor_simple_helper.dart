@@ -51,6 +51,8 @@ class EditorSimpleHelperPage extends StatelessWidget {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  final GlobalKey _textKey = GlobalKey();
+
   EditorSimpleHelperPage._(
       {Key key,
       this.helperService,
@@ -116,124 +118,136 @@ class EditorSimpleHelperPage extends StatelessWidget {
     final EditorSimpleHelperPresenter presenter,
     final SimpleHelperViewModel viewModel,
   ) {
-    print(viewModel.canValidate);
-    print(viewModel.canValidate?.value);
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
-          callback: presenter.updateBackgroundColor,
-          selectedColor: viewModel.bodyBox?.backgroundColor?.value),
-          currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
+            callback: presenter.updateBackgroundColor,
+            selectedColor: viewModel.bodyBox?.backgroundColor?.value),
+        currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
         // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
         // onPreview: presenter.onPreview,
-        child: GestureDetector(
-          key: ValueKey('palEditorSimpleHelperWidget'),
-          onTap: presenter.onOutsideTap,
-          child: LayoutBuilder(builder: (context, constraints) {
-            return Form(
-              key: formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  SingleChildScrollView(
-                    child: Container(
-                      height: constraints.maxHeight,
-                      width: constraints.maxWidth,
-                      child: Column(
-                        children: [
-                          Expanded(child: Container()),
-                          Container(
-                            width: constraints.maxWidth * 0.8,
-                            child: EditableTextField(textNotifier: viewModel.detailsField, currentEditableItemNotifier: viewModel.currentEditableItemNotifier)
-                            // child: EditableTextField.text(
-                            //   outsideTapStream:
-                            //       presenter.editableTextFieldController.stream,
-                            //   helperToolbarKey: ValueKey(
-                            //       'palEditorSimpleHelperWidgetToolbar'),
-                            //   textFormFieldKey:
-                            //       ValueKey('palSimpleHelperDetailField'),
-                            //   onChanged: presenter.onDetailsFieldChanged,
-                            //   onFieldSubmitted:
-                            //       presenter.onDetailsFieldSubmitted,
-                            //   onTextStyleChanged:
-                            //       presenter.onDetailsTextStyleChanged,
-                            //   maxLines: 3,
-                            //   maximumCharacterLength: 150,
-                            //   minimumCharacterLength: 1,
-                            //   // toolbarVisibility:
-                            //   //     viewModel?.detailsField?.toolbarVisibility,
-                            //   fontFamilyKey:
-                            //       viewModel?.detailsField?.fontFamily?.value,
-                            //   initialValue:
-                            //       viewModel?.detailsField?.text?.value,
-                            //   inputFormatters: [
-                            //     FilteringTextInputFormatter.allow(
-                            //       new RegExp('^(.*(\n.*){0,2})'),
-                            //     ),
-                            //   ],
-                            //   backgroundBoxDecoration: BoxDecoration(
-                            //     color: viewModel
-                            //             ?.bodyBox?.backgroundColor?.value ??
-                            //         PalTheme.of(context).colors.light,
-                            //     borderRadius: BorderRadius.circular(6.0),
-                            //   ),
-                            //   backgroundPadding: EdgeInsets.only(
-                            //     bottom: MediaQuery.of(context)
-                            //                 .viewInsets
-                            //                 .bottom >
-                            //             0
-                            //         ? MediaQuery.of(context).viewInsets.bottom +
-                            //             20.0
-                            //         : 50.0 +
-                            //             MediaQuery.of(context).padding.bottom,
-                            //   ),
-                            //   textFormFieldPadding: const EdgeInsets.symmetric(
-                            //     vertical: 16.0,
-                            //     horizontal: 33.0,
-                            //   ),
-                            //   textStyle: TextStyle(
-                            //     color: viewModel.detailsField?.fontColor?.value,
-                            //     fontSize: viewModel
-                            //         .detailsField?.fontSize?.value
-                            //         ?.toDouble(),
-                            //     fontWeight: FontWeightMapper.toFontWeight(
-                            //       viewModel.detailsField?.fontWeight?.value,
-                            //     ),
-                            //   ).merge(
-                            //     _googleCustomFont(
-                            //       viewModel.detailsField?.fontFamily?.value,
-                            //     ),
-                            //   ),
-                            // ),
-                          ),
-                        ],
-                      ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return Form(
+            key: formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // TODO: Blur background here
+                SingleChildScrollView(
+                  child: Container(
+                    color: Colors.black38,
+                    height: constraints.maxHeight,
+                    width: constraints.maxWidth,
+                    child: Column(
+                      children: [
+                        Expanded(child: Container()),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              bottom:
+                                  MediaQuery.of(context).padding.bottom + 55),
+                          child: Container(
+                              width: constraints.maxWidth * 0.8,
+                              decoration: BoxDecoration(
+                                color: PalTheme.of(context).colors.black,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                              ),
+                              padding: EdgeInsets.all(15),
+                              child: EditableTextField(
+                                key: _textKey,
+                                textNotifier: viewModel.detailsField,
+                                currentEditableItemNotifier:
+                                    viewModel.currentEditableItemNotifier,
+                              )
+                              // child: EditableTextField.text(
+                              //   outsideTapStream:
+                              //       presenter.editableTextFieldController.stream,
+                              //   helperToolbarKey: ValueKey(
+                              //       'palEditorSimpleHelperWidgetToolbar'),
+                              //   textFormFieldKey:
+                              //       ValueKey('palSimpleHelperDetailField'),
+                              //   onChanged: presenter.onDetailsFieldChanged,
+                              //   onFieldSubmitted:
+                              //       presenter.onDetailsFieldSubmitted,
+                              //   onTextStyleChanged:
+                              //       presenter.onDetailsTextStyleChanged,
+                              //   maxLines: 3,
+                              //   maximumCharacterLength: 150,
+                              //   minimumCharacterLength: 1,
+                              //   // toolbarVisibility:
+                              //   //     viewModel?.detailsField?.toolbarVisibility,
+                              //   fontFamilyKey:
+                              //       viewModel?.detailsField?.fontFamily?.value,
+                              //   initialValue:
+                              //       viewModel?.detailsField?.text?.value,
+                              //   inputFormatters: [
+                              //     FilteringTextInputFormatter.allow(
+                              //       new RegExp('^(.*(\n.*){0,2})'),
+                              //     ),
+                              //   ],
+                              //   backgroundBoxDecoration: BoxDecoration(
+                              //     color: viewModel
+                              //             ?.bodyBox?.backgroundColor?.value ??
+                              //         PalTheme.of(context).colors.light,
+                              //     borderRadius: BorderRadius.circular(6.0),
+                              //   ),
+                              //   backgroundPadding: EdgeInsets.only(
+                              //     bottom: MediaQuery.of(context)
+                              //                 .viewInsets
+                              //                 .bottom >
+                              //             0
+                              //         ? MediaQuery.of(context).viewInsets.bottom +
+                              //             20.0
+                              //         : 50.0 +
+                              //             MediaQuery.of(context).padding.bottom,
+                              //   ),
+                              //   textFormFieldPadding: const EdgeInsets.symmetric(
+                              //     vertical: 16.0,
+                              //     horizontal: 33.0,
+                              //   ),
+                              //   textStyle: TextStyle(
+                              //     color: viewModel.detailsField?.fontColor?.value,
+                              //     fontSize: viewModel
+                              //         .detailsField?.fontSize?.value
+                              //         ?.toDouble(),
+                              //     fontWeight: FontWeightMapper.toFontWeight(
+                              //       viewModel.detailsField?.fontWeight?.value,
+                              //     ),
+                              //   ).merge(
+                              //     _googleCustomFont(
+                              //       viewModel.detailsField?.fontFamily?.value,
+                              //     ),
+                              //   ),
+                              // ),
+                              ),
+                        ),
+                      ],
                     ),
                   ),
-                  // Positioned(
-                  //   top: 20.0,
-                  //   left: 20.0,
-                  //   child: SafeArea(
-                  //     child: CircleIconButton(
-                  //       key: ValueKey(
-                  //           'pal_EditorSimpleHelperWidget_CircleBackground'),
-                  //       icon: Icon(Icons.invert_colors),
-                  //       backgroundColor: PalTheme.of(context).colors.light,
-                  //       // onTapCallback: presenter.onChangeColorRequest,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-            );
-          }),
-        ),
+                ),
+                // Positioned(
+                //   top: 20.0,
+                //   left: 20.0,
+                //   child: SafeArea(
+                //     child: CircleIconButton(
+                //       key: ValueKey(
+                //           'pal_EditorSimpleHelperWidget_CircleBackground'),
+                //       icon: Icon(Icons.invert_colors),
+                //       backgroundColor: PalTheme.of(context).colors.light,
+                //       // onTapCallback: presenter.onChangeColorRequest,
+                //     ),
+                //   ),
+                // ),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

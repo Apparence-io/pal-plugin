@@ -228,7 +228,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             EditableMedia(
-                              mediaSize: 240.0,
+                              mediaSize: 150.0,
                               onEdit: presenter.editMedia,
                               url: model.media?.url?.value,
                               editKey:

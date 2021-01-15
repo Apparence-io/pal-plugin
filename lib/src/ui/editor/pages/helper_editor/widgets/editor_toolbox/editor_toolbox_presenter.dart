@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
@@ -132,10 +133,12 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.media:
-        String newUrl = await this.viewInterface.openMediaPicker();
-        if (newUrl != null) {
-          MediaNotifier mediaNotifier = this.currentEditableItemNotifier?.value;
-          mediaNotifier.url.value = newUrl;
+      MediaNotifier mediaNotifier = this.currentEditableItemNotifier?.value;
+        GraphicEntity newGraphicEntity = await this.viewInterface.openMediaPicker(mediaNotifier?.uuid);
+        if (newGraphicEntity != null) {
+          mediaNotifier.url.value = newGraphicEntity?.url;
+          mediaNotifier.uuid = newGraphicEntity?.id;
+          this.refreshView();
         }
         break;
       case ToolBarActionButton.text:

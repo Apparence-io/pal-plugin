@@ -71,7 +71,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
     this.titleField = TextFormFieldNotifier(
       titleViewModel?.id,
       fontColor: titleViewModel?.fontColor ?? Colors.white,
-      fontSize: titleViewModel?.fontSize?.toInt() ?? 60,
+      fontSize: titleViewModel?.fontSize?.toInt() ?? 55,
       fontFamily: titleViewModel?.fontFamily,
       text: titleViewModel?.text ?? '',
       fontWeight: FontWeightMapper.toFontKey(titleViewModel?.fontWeight),
@@ -80,7 +80,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       descriptionLabel?.id,
       fontColor: descriptionLabel?.fontColor ?? Colors.white,
       fontSize: descriptionLabel?.fontSize?.toInt() ?? 14,
-      text: descriptionLabel?.text ?? 'Describe me',
+      text: descriptionLabel?.text,
       fontWeight: FontWeightMapper.toFontKey(descriptionLabel?.fontWeight),
       fontFamily: descriptionLabel?.fontFamily,
     );

@@ -33,16 +33,12 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     this.parameters
     ): super(viewModel, viewInterface) {
     assert(finderService != null, 'A finder service must be provided');
-    if(viewModel.id == null) {
-      viewModel.titleField.text.value = "My helper title";
-      viewModel.descriptionField.text.value = "Describe your element here";
-    } 
-    viewModel.userPageElements = Map();
-    viewModel.canValidate = new ValueNotifier(false);
   }
 
   @override
   void onInit() {
+    this.viewModel.userPageElements = Map();
+    this.viewModel.canValidate = new ValueNotifier(false);
     // viewModel.fields.forEach(
     //   (field) => field.toolbarVisibility.addListener(
     //     () => _onTextToolbarVisibilityChange(field)
@@ -62,6 +58,13 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
         "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it."
       );
     }
+  }
+
+  @override
+  void onDestroy() {
+    this.viewModel.canValidate.dispose();
+
+    super.onDestroy();
   }
 
   Future resetSelection() async {

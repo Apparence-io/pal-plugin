@@ -247,6 +247,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
             bottom: 45.0,
             left: 10.0,
             right: 10.0,
+            top: 5.0,
           ),
           child: _buildThanksButton(context, presenter, viewModel),
         ),

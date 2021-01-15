@@ -16,8 +16,8 @@ import 'editor_anchored_helper_viewmodel.dart';
 // this is the key used in our editor to inject all widgets in
 const EDITOR_PARENT_NODE_KEY = "EditorPage";
 
-class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
-
+class EditorAnchoredFullscreenPresenter extends Presenter<
+    AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
   final FinderService finderService;
   final bool isTestingMode;
 
@@ -26,13 +26,13 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   final HelperEditorPageArguments parameters;
 
   EditorAnchoredFullscreenPresenter(
-    AnchoredFullscreenHelperViewModel viewModel,
-    EditorAnchoredFullscreenHelperView viewInterface, 
-    this.finderService,
-    this.isTestingMode,
-    this.helperEditorService,
-    this.parameters
-    ): super(viewModel, viewInterface) {
+      AnchoredFullscreenHelperViewModel viewModel,
+      EditorAnchoredFullscreenHelperView viewInterface,
+      this.finderService,
+      this.isTestingMode,
+      this.helperEditorService,
+      this.parameters)
+      : super(viewModel, viewInterface) {
     assert(finderService != null, 'A finder service must be provided');
   }
 
@@ -50,14 +50,12 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   @override
   void afterViewInit() async {
     await scanElements();
-    if(viewModel.backgroundBox.key != null) {
+    if (viewModel.backgroundBox.key != null) {
       await this.onTapElement(viewModel.backgroundBox.key);
       await validateSelection();
     } else {
-      viewInterface.showTutorial(
-        "First step", 
-        "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it."
-      );
+      viewInterface.showTutorial("First step",
+          "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
     }
   }
 
@@ -71,7 +69,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   Future resetSelection() async {
     await scanElements();
     viewModel.anchorValidated = false;
-    viewModel.backgroundBox.backgroundColor.value = Colors.lightGreenAccent.withOpacity(0.6);
+    viewModel.backgroundBox.backgroundColor.value =
+        Colors.lightGreenAccent.withOpacity(0.6);
   }
 
   // this methods scan elements on the user page we want to add an helper
@@ -85,16 +84,18 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   }
 
   Future onTapElement(String key) async {
-    if(viewModel.anchorValidated)
-      return;
+    if (viewModel.anchorValidated) return;
     var previouslySelected = viewModel.selectedAnchor;
     if (previouslySelected != null) {
       previouslySelected.value.selected = false;
     }
-    if(!viewModel.userPageElements.containsKey(key)) {
-      debugPrint("key cannot be found : ${viewModel.userPageElements.keys.length} keys found");
-      viewModel.userPageElements.keys.forEach((element) => debugPrint("=> $element"));
-      viewInterface.showErrorMessage("Key cannot be found on page. Did you remove this element?");
+    if (!viewModel.userPageElements.containsKey(key)) {
+      debugPrint(
+          "key cannot be found : ${viewModel.userPageElements.keys.length} keys found");
+      viewModel.userPageElements.keys
+          .forEach((element) => debugPrint("=> $element"));
+      viewInterface.showErrorMessage(
+          "Key cannot be found on page. Did you remove this element?");
       return;
     }
     viewModel.userPageElements[key].selected = true;
@@ -105,10 +106,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   }
 
   Future validateSelection() async {
-    if(viewModel.selectedAnchorKey == null) {
+    if (viewModel.selectedAnchorKey == null) {
       return;
     }
-    if(viewModel.id == null) {
+    if (viewModel.id == null) {
       viewModel.backgroundBox.backgroundColor.value = Colors.blueGrey.shade900;
     }
     viewModel.anchorValidated = true;
@@ -127,7 +128,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     // );
   }
 
-  updateBackgroundColor(Color newColor){
+  updateBackgroundColor(Color newColor) {
     viewModel.backgroundBox.backgroundColor.value = newColor;
   }
 
@@ -175,17 +176,18 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   // onNegativTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
   //   => _onStyleChanged(viewModel.negativBtnField, newTextStyle, fontKeys);
 
-  // save and cancel   
+  // save and cancel
   Future onValidate() async {
-    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
+    ValueNotifier<SendingStatus> status =
+        new ValueNotifier(SendingStatus.SENDING);
     final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
-      await helperEditorService
-        .saveAnchoredWidget(EditorEntityFactory.buildAnchoredScreenArgs(config, viewModel));
+      await helperEditorService.saveAnchoredWidget(
+          EditorEntityFactory.buildAnchoredScreenArgs(config, viewModel));
       status.value = SendingStatus.SENT;
-    } catch(error) {
+    } catch (error) {
       print("error occured $error");
       status.value = SendingStatus.ERROR;
     } finally {
@@ -201,7 +203,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   onCancel() {
     viewInterface.closeEditor();
   }
-  
+
   // ----------------------------------
   // PRIVATES
   // ----------------------------------
@@ -218,7 +220,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
     // }
   }
 
-  void updateValidState() => viewModel.canValidate.value = isValid();
+  void updateValidState() {
+    viewModel.canValidate.value = isValid();
+    this.refreshView();
+  }
 
   // _onStyleChanged(EditableFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
   //   textNotifier?.fontColor?.value = newTextStyle?.color;
@@ -230,15 +235,16 @@ class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelp
   //   _updateValidState();
   // }
 
-  bool isValid() => viewModel.titleField.text.value.isNotEmpty
-    && viewModel.descriptionField.text.value.isNotEmpty;
+  bool isValid() =>
+      viewModel.titleField.text.value.isNotEmpty &&
+      viewModel.descriptionField.text.value.isNotEmpty;
 
   _onFieldSubmit(String text) {
     this.refreshView();
   }
 
   onPreview() {
-    this.viewInterface.showPreviewOfHelper(this.viewModel,this.finderService, this.isTestingMode);
+    this.viewInterface.showPreviewOfHelper(
+        this.viewModel, this.finderService, this.isTestingMode);
   }
-
 }

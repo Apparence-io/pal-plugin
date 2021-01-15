@@ -132,6 +132,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
             ? presenter.onValidate
             : null,
         onPreview: presenter.onPreview,
+        onCloseEditor: presenter.onCancel,
         child: LayoutBuilder(builder: (context, constraints) {
           return Form(
             key: formKey,

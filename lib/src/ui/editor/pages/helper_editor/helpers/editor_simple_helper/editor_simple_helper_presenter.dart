@@ -48,6 +48,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   onTextPickerDone(EditedTextData editedTextData) {
     this._updateValidState();
+    this.refreshView();
   }
 
   Future onValidate() async {

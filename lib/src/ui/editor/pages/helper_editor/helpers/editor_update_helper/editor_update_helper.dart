@@ -159,6 +159,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
             : null,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
         onTextPickerDone: presenter.onTextPickerDone,
+        onCloseEditor: presenter.onCancel,
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.always,

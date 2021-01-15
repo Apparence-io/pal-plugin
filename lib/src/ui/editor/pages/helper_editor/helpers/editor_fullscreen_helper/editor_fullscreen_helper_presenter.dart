@@ -183,6 +183,8 @@ class EditorFullScreenHelperPresenter
 
   updateValidState() {
     viewModel.canValidate.value = isValid();
+    this.refreshView();
+
   }
 
   // _onStyleChanged(EditableFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {

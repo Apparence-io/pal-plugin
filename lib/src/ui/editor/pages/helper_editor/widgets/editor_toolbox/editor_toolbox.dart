@@ -20,9 +20,9 @@ import 'editor_toolbox_viewmodel.dart';
 
 abstract class EditorToolboxView {
   Future<String> openTextPicker(String currentText);
-  Future<EditedFontModel> openFontPicker(String family,int size,String weight);
-  Future<Color> openColorPicker(
-      Color selectedColor);
+  Future<EditedFontModel> openFontPicker(
+      String family, int size, String weight);
+  Future<Color> openColorPicker(Color selectedColor);
   Future<GraphicEntity> openMediaPicker(String mediaId);
 }
 
@@ -32,6 +32,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   // Save button function
   final Function onValidate;
   final Function onPreview;
+  final Function onCloseEditor;
   final BoxViewHandler boxViewHandler;
 
   // Pickers
@@ -56,6 +57,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     this.onTextPickerDone,
     this.onMediaPickerDone,
     this.onPreview,
+    this.onCloseEditor,
     @required this.boxViewHandler,
   });
 
@@ -126,9 +128,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
                   animation: context.animationsControllers[0],
                   iconsColor: Colors.white,
                   onPreview: onPreview,
-                  onCancel: (){
-                    Navigator.pop(context.buildContext);
-                  },
+                  onCancel: () => this.onCloseEditor?.call(),
                 )
               : null,
         );
@@ -163,8 +163,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   }
 
   @override
-  Future<Color> openColorPicker(
-      Color selectedColor) async {
+  Future<Color> openColorPicker(Color selectedColor) async {
     // return showOverlayedInContext(
     //   (context) => ColorPickerDialog(
     //     placeholderColor: model.boxViewHandler.selectedColor,
@@ -180,12 +179,14 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
         placeholderColor: selectedColor,
       ),
     );
-    
   }
 
   @override
-  Future<EditedFontModel> openFontPicker(String family,int size,String weight) async {
-    TextStyle style = TextStyle(fontSize: size.toDouble(),fontWeight: FontWeightMapper.toFontWeight(weight));
+  Future<EditedFontModel> openFontPicker(
+      String family, int size, String weight) async {
+    TextStyle style = TextStyle(
+        fontSize: size.toDouble(),
+        fontWeight: FontWeightMapper.toFontWeight(weight));
     return await showDialog(
       context: _scaffoldKey.currentContext,
       builder: (context) => FontEditorDialogPage(
@@ -202,7 +203,6 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       builder: (context) => EditableTextDialog(currentText),
     );
 
-    
     // return EditedTextData();
 
     // return EditedTextData(
@@ -218,7 +218,8 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
 
   @override
   Future<GraphicEntity> openMediaPicker(String currentMediaId) async {
-     GraphicEntity graphicEntity = await Navigator.of(_scaffoldKey.currentContext).pushNamed(
+    GraphicEntity graphicEntity =
+        await Navigator.of(_scaffoldKey.currentContext).pushNamed(
       '/editor/media-gallery',
       arguments: MediaGalleryPageArguments(
         currentMediaId,

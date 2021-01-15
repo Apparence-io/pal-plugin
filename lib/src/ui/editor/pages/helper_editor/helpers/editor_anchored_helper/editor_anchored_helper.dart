@@ -145,6 +145,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
             onValidate: (model.canValidate?.value == true)
                 ? presenter.onValidate
                 : null,
+            onCloseEditor: presenter.onCancel,
+
             currentEditableItemNotifier: model.currentEditableItemNotifier,
             onTextPickerDone: (EditedTextData data) =>
                 presenter.updateValidState(),

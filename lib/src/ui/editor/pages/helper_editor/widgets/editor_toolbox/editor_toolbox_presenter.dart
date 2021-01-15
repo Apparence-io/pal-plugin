@@ -52,18 +52,20 @@ class EditorToolboxPresenter
     this.viewModel.isBottomVisible = ValueNotifier<bool>(true);
 
     // BOTTOM ANIMATION
-    this.viewModel.isBottomVisible.addListener(() {
-      this.viewModel.animateActionBar = true;
-      this.refreshAnimations();
-      this.refreshView();
-      this.viewModel.animationTarget =
-          this.viewModel.isBottomVisible.value ? 1 : 0;
-    });
+    this.viewModel.isBottomVisible.addListener(animateActionBar);
 
     this.currentEditableItemNotifier.addListener(() {
       this.displayEditableItemActions();
     });
   }
+
+  void animateActionBar() {
+      this.viewModel.animateActionBar = true;
+      this.refreshAnimations();
+      this.refreshView();
+      this.viewModel.animationTarget =
+          this.viewModel.isBottomVisible.value ? 1 : 0;
+    }
 
   void displayEditableItemActions() {
     switch (this.currentEditableItemNotifier.value?.runtimeType) {
@@ -96,7 +98,7 @@ class EditorToolboxPresenter
 
   @override
   void afterViewDestroyed() {
-    this.viewModel.isBottomVisible.dispose();
+    this.viewModel.isBottomVisible.removeListener(animateActionBar);
     super.afterViewDestroyed();
   }
 
@@ -110,22 +112,27 @@ class EditorToolboxPresenter
     switch (toolBarActionButton) {
       // TODO: Séparer les couleurs de Font/Background/Border
       case ToolBarActionButton.color:
-        EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
-        Color newColor =
-            await this.viewInterface.openColorPicker(editableFormField.fontColor.value);
+        EditableFormFieldNotifier editableFormField =
+            this.currentEditableItemNotifier?.value;
+        Color newColor = await this
+            .viewInterface
+            .openColorPicker(editableFormField.fontColor.value);
         if (newColor != null) {
           editableFormField.fontColor.value = newColor;
         }
         break;
       case ToolBarActionButton.font:
-        EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
-        EditedFontModel newFont = await this.viewInterface.openFontPicker(editableFormField.fontFamily.value,editableFormField.fontSize.value,editableFormField.fontWeight.value);
+        EditableFormFieldNotifier editableFormField =
+            this.currentEditableItemNotifier?.value;
+        EditedFontModel newFont = await this.viewInterface.openFontPicker(
+            editableFormField.fontFamily.value,
+            editableFormField.fontSize.value,
+            editableFormField.fontWeight.value);
         if (newFont != null) {
           String fontWeight = newFont.fontKeys.fontWeightNameKey;
           String fontFamily = newFont.fontKeys.fontFamilyNameKey;
           double fontSize = newFont.size;
 
-          
           editableFormField.fontFamily.value = fontFamily;
           editableFormField.fontSize.value = fontSize.toInt();
           editableFormField.fontWeight.value = fontWeight;
@@ -133,8 +140,9 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.media:
-      MediaNotifier mediaNotifier = this.currentEditableItemNotifier?.value;
-        GraphicEntity newGraphicEntity = await this.viewInterface.openMediaPicker(mediaNotifier?.uuid);
+        MediaNotifier mediaNotifier = this.currentEditableItemNotifier?.value;
+        GraphicEntity newGraphicEntity =
+            await this.viewInterface.openMediaPicker(mediaNotifier?.uuid);
         if (newGraphicEntity != null) {
           mediaNotifier.url.value = newGraphicEntity?.url;
           mediaNotifier.uuid = newGraphicEntity?.id;
@@ -142,8 +150,11 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.text:
-        EditableFormFieldNotifier editableFormField = this.currentEditableItemNotifier?.value;
-        String newText = await this.viewInterface.openTextPicker(editableFormField.text.value);
+        EditableFormFieldNotifier editableFormField =
+            this.currentEditableItemNotifier?.value;
+        String newText = await this
+            .viewInterface
+            .openTextPicker(editableFormField.text.value);
         if (newText != null) {
           editableFormField.text.value = newText;
         }
@@ -156,7 +167,9 @@ class EditorToolboxPresenter
       ToolBarGlobalActionButton toolBarGlobalActionButton) async {
     switch (toolBarGlobalActionButton) {
       case ToolBarGlobalActionButton.backgroundColor:
-        Color newColor = await this.viewInterface.openColorPicker(this.viewModel.boxViewHandler.selectedColor);
+        Color newColor = await this
+            .viewInterface
+            .openColorPicker(this.viewModel.boxViewHandler.selectedColor.value);
         if (newColor != null) {
           this.viewModel.boxViewHandler.callback(newColor);
         }

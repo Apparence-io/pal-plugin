@@ -140,7 +140,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
           child: EditorToolboxPage(
             boxViewHandler: BoxViewHandler(
                 callback: presenter.updateBackgroundColor,
-                selectedColor: model.backgroundBox?.backgroundColor?.value),
+                selectedColor: model.backgroundBox?.backgroundColor),
             // onCancel: presenter.onCancel,
             onValidate: (model.canValidate?.value == true)
                 ? presenter.onValidate

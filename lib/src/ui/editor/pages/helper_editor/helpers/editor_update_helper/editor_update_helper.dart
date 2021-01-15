@@ -151,7 +151,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
             callback: presenter.updateBackgroundColor,
-            selectedColor: viewModel.bodyBox?.backgroundColor?.value),
+            selectedColor: viewModel.bodyBox?.backgroundColor),
         // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
@@ -162,7 +162,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
           key: formKey,
           autovalidateMode: AutovalidateMode.always,
           child: EditableBackground(
-            backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
+            backgroundColor: viewModel.bodyBox?.backgroundColor,
             // circleIconKey:
             //     'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
             // onColorChange: presenter.changeBackgroundColor,

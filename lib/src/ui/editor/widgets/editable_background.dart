@@ -1,11 +1,9 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
-class EditableBackground extends StatelessWidget {
-  final Color backgroundColor;
+class EditableBackground extends StatefulWidget {
+  final ValueNotifier<Color> backgroundColor;
   // final Function() onColorChange;
   final Widget widget;
   // final String circleIconKey;
@@ -19,10 +17,37 @@ class EditableBackground extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _EditableBackgroundState createState() => _EditableBackgroundState();
+}
+
+class _EditableBackgroundState extends State<EditableBackground> {
+  @override
+  void initState() {
+    super.initState();
+
+    widget.backgroundColor.addListener(refreshView);
+  }
+
+  void refreshView() {
+    this.setState(() {});
+  }
+
+  @override
+  void dispose() {
+    widget.backgroundColor.removeListener(refreshView);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
+    // FIXME: When converting to stateless, use this
+    return
+        // ValueListenableBuilder<Color>(
+        //   valueListenable: this.backgroundColor,
+        //   builder: (context, color,child) =>
+        Container(
+      color: widget.backgroundColor.value,
       width: double.infinity,
-      color: backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: DottedBorder(
@@ -33,7 +58,7 @@ class EditableBackground extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              widget,
+              widget.widget,
               // Positioned(
               //   top: 20.0,
               //   left: 20.0,

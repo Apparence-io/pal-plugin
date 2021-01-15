@@ -145,7 +145,7 @@ class EditorFullScreenHelperPresenter extends Presenter<FullscreenHelperViewMode
     viewModel.bodyBox.backgroundColor.value = aColor;
     // this.viewInterface.closeColorPickerDialog();
     _updateValidState();
-    this.refreshView();
+    // this.refreshView();
   }
 
   cancelUpdateBackgroundColor() => this.viewInterface.closeColorPickerDialog();

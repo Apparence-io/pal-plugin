@@ -194,7 +194,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
           callback: presenter.updateBackgroundColor,
-          selectedColor: model.bodyBox?.backgroundColor?.value
+          selectedColor: model.bodyBox?.backgroundColor
         ),
         currentEditableItemNotifier: model.currentEditableItemNotifier,
         // onCancel: presenter.onCancel,
@@ -212,7 +212,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
               key: formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: EditableBackground(
-                backgroundColor: model.bodyBox.backgroundColor?.value,
+                backgroundColor: model.bodyBox.backgroundColor,
                 // circleIconKey:
                 //     'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
                     // 'pal_EditorFullScreenHelperPage_BackgroundColorPicker',

@@ -124,7 +124,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
             callback: presenter.updateBackgroundColor,
-            selectedColor: viewModel.bodyBox?.backgroundColor?.value),
+            selectedColor: viewModel.bodyBox?.backgroundColor),
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
         // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)

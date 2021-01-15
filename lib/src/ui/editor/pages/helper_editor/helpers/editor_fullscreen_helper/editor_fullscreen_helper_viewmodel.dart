@@ -80,7 +80,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       descriptionLabel?.id,
       fontColor: descriptionLabel?.fontColor ?? Colors.white,
       fontSize: descriptionLabel?.fontSize?.toInt() ?? 14,
-      text: descriptionLabel?.text,
+      text: descriptionLabel?.text ?? '',
       fontWeight: FontWeightMapper.toFontKey(descriptionLabel?.fontWeight),
       fontFamily: descriptionLabel?.fontFamily,
     );

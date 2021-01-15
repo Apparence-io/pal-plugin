@@ -103,7 +103,7 @@ class EditorToolboxModel extends MVVMModel {
 }
 
 class BoxViewHandler{
-  final Color selectedColor;
+  final ValueNotifier<Color> selectedColor;
   final OnNewBgColor callback;
 
   BoxViewHandler({this.selectedColor, this.callback});

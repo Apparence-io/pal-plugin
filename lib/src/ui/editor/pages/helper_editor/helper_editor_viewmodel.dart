@@ -4,8 +4,6 @@ import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 
-import 'helper_editor_notifiers.dart';
-
 class HelperEditorViewModel extends MVVMModel {
   bool enableSave;
   bool isLoading;

@@ -6,10 +6,7 @@ import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_simple_helper.dart';
 import 'editor_simple_helper_viewmodel.dart';
@@ -38,15 +35,11 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   @override
   Future onDestroy() async {
-    
     editableTextFieldController.close();
     super.onDestroy();
-    // fixme =>  mvvm_builder add afterDestroy method
-    // viewModel.canValidate.dispose();
-    // viewModel.canValidate = null;
   }
 
-  onTextPickerDone(EditedTextData editedTextData) {
+  onTextPickerDone() {
     this._updateValidState();
     this.refreshView();
   }
@@ -76,16 +69,6 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     viewInterface.closeEditor();
   }
 
-  onOutsideTap() => this.editableTextFieldController.add(true);
-
-  onDetailsFieldChanged(String newValue)
-    => _onTextChanged(viewModel.detailsField, newValue);
-
-  onDetailsTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.detailsField, newTextStyle, fontKeys);
-  
-  onDetailsFieldSubmitted(String value) => this.refreshView();
-
   String validateDetailsTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';
@@ -95,14 +78,6 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     }
     return null;
   }
-
-  // onChangeColorRequest()
-  //   => viewInterface.showColorPickerDialog(
-  //     viewModel,
-  //     this.updateBackgroundColor,
-  //     this.viewInterface.closeColorPickerDialog
-  //   );
-
   updateBackgroundColor(Color aColor) {
     viewModel.bodyBox.backgroundColor.value = aColor;
     this.refreshView();
@@ -113,24 +88,8 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   // PRIVATES
   // ----------------------------------
 
-  _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
-    textNotifier.text.value = newValue;
-    if(viewModel.canValidate != null)  {
-      _updateValidState();
-    }
-  }
-
+  
   _updateValidState() => viewModel.canValidate.value = isValid();
-
-  _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
-    textNotifier?.fontColor?.value = newTextStyle?.color;
-    textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
-    if (fontKeys != null) {
-      textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
-      textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
-    }
-    _updateValidState();
-  }
 
   bool isValid() => viewModel.detailsField.text.value.isNotEmpty;
 

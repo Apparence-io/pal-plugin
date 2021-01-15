@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
@@ -16,7 +15,6 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/edi
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
-import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -24,9 +22,6 @@ import 'editor_simple_helper_presenter.dart';
 import 'editor_simple_helper_viewmodel.dart';
 
 abstract class EditorSimpleHelperView {
-  // void showColorPickerDialog(SimpleHelperViewModel viewModel,
-  //     OnColorSelected updateBackgroundColor, OnCancelPicker onCancelPicker);
-
   void closeColorPickerDialog();
 
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
@@ -127,7 +122,6 @@ class EditorSimpleHelperPage extends StatelessWidget {
             selectedColor: viewModel.bodyBox?.backgroundColor),
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
         onTextPickerDone: presenter.onTextPickerDone,
-        // onCancel: presenter.onCancel,
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
@@ -166,100 +160,18 @@ class EditorSimpleHelperPage extends StatelessWidget {
                                 textNotifier: viewModel.detailsField,
                                 currentEditableItemNotifier:
                                     viewModel.currentEditableItemNotifier,
-                              )
-                              // child: EditableTextField.text(
-                              //   outsideTapStream:
-                              //       presenter.editableTextFieldController.stream,
-                              //   helperToolbarKey: ValueKey(
-                              //       'palEditorSimpleHelperWidgetToolbar'),
-                              //   textFormFieldKey:
-                              //       ValueKey('palSimpleHelperDetailField'),
-                              //   onChanged: presenter.onDetailsFieldChanged,
-                              //   onFieldSubmitted:
-                              //       presenter.onDetailsFieldSubmitted,
-                              //   onTextStyleChanged:
-                              //       presenter.onDetailsTextStyleChanged,
-                              //   maxLines: 3,
-                              //   maximumCharacterLength: 150,
-                              //   minimumCharacterLength: 1,
-                              //   // toolbarVisibility:
-                              //   //     viewModel?.detailsField?.toolbarVisibility,
-                              //   fontFamilyKey:
-                              //       viewModel?.detailsField?.fontFamily?.value,
-                              //   initialValue:
-                              //       viewModel?.detailsField?.text?.value,
-                              //   inputFormatters: [
-                              //     FilteringTextInputFormatter.allow(
-                              //       new RegExp('^(.*(\n.*){0,2})'),
-                              //     ),
-                              //   ],
-                              //   backgroundBoxDecoration: BoxDecoration(
-                              //     color: viewModel
-                              //             ?.bodyBox?.backgroundColor?.value ??
-                              //         PalTheme.of(context).colors.light,
-                              //     borderRadius: BorderRadius.circular(6.0),
-                              //   ),
-                              //   backgroundPadding: EdgeInsets.only(
-                              //     bottom: MediaQuery.of(context)
-                              //                 .viewInsets
-                              //                 .bottom >
-                              //             0
-                              //         ? MediaQuery.of(context).viewInsets.bottom +
-                              //             20.0
-                              //         : 50.0 +
-                              //             MediaQuery.of(context).padding.bottom,
-                              //   ),
-                              //   textFormFieldPadding: const EdgeInsets.symmetric(
-                              //     vertical: 16.0,
-                              //     horizontal: 33.0,
-                              //   ),
-                              //   textStyle: TextStyle(
-                              //     color: viewModel.detailsField?.fontColor?.value,
-                              //     fontSize: viewModel
-                              //         .detailsField?.fontSize?.value
-                              //         ?.toDouble(),
-                              //     fontWeight: FontWeightMapper.toFontWeight(
-                              //       viewModel.detailsField?.fontWeight?.value,
-                              //     ),
-                              //   ).merge(
-                              //     _googleCustomFont(
-                              //       viewModel.detailsField?.fontFamily?.value,
-                              //     ),
-                              //   ),
-                              // ),
-                              ),
+                              )),
                         ),
                       ],
                     ),
                   ),
                 ),
-                // Positioned(
-                //   top: 20.0,
-                //   left: 20.0,
-                //   child: SafeArea(
-                //     child: CircleIconButton(
-                //       key: ValueKey(
-                //           'pal_EditorSimpleHelperWidget_CircleBackground'),
-                //       icon: Icon(Icons.invert_colors),
-                //       backgroundColor: PalTheme.of(context).colors.light,
-                //       // onTapCallback: presenter.onChangeColorRequest,
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           );
         }),
       ),
     );
-  }
-
-  //TODO
-  // maybe extension for this as it is used widely
-  TextStyle _googleCustomFont(String fontFamily) {
-    return (fontFamily != null && fontFamily.length > 0)
-        ? GoogleFonts.getFont(fontFamily)
-        : null;
   }
 }
 
@@ -276,20 +188,6 @@ class _EditorSimpleHelperPage
       this.context, this.scaffoldKey, this.palEditModeStateService);
 
   BuildContext get overlayContext => context;
-
-  // @override
-  // void showColorPickerDialog(
-  //     final SimpleHelperViewModel viewModel,
-  //     final OnColorSelected updateBackgroundColor,
-  //     final OnCancelPicker onCancelPicker) {
-  //   HapticFeedback.selectionClick();
-  //   showOverlayedInContext(
-  //       (context) => ColorPickerDialog(
-  //           placeholderColor: viewModel.bodyBox.backgroundColor?.value,
-  //           onColorSelected: updateBackgroundColor,
-  //           onCancel: onCancelPicker),
-  //       key: OverlayKeys.PAGE_OVERLAY_KEY);
-  // }
 
   @override
   Future showPreviewOfHelper(SimpleHelperViewModel model) async {

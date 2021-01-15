@@ -112,6 +112,8 @@ class EditorSendingOverlay {
       case SendingStatus.SENT:
         HapticFeedback.mediumImpact();
         return _buildCreationStatusScreen(true);
+      default:
+        return [];
     }
   }
 

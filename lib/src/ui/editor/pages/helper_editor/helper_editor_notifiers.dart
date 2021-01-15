@@ -10,17 +10,11 @@ class FormFieldNotifier {
 }
 
 class EditableFormFieldNotifier extends FormFieldNotifier {
-  // String hintText;
   ValueNotifier<String> text;
   ValueNotifier<String> fontFamily;
   ValueNotifier<String> fontWeight;
   ValueNotifier<Color> fontColor;
-  // ValueNotifier<Color> backgroundColor;
-  // ValueNotifier<Color> borderColor;
   ValueNotifier<int> fontSize;
-  
-  // FocusNode focusNode;
-  // ValueNotifier<bool> toolbarVisibility;
 
   EditableFormFieldNotifier(
     int id, {
@@ -28,22 +22,15 @@ class EditableFormFieldNotifier extends FormFieldNotifier {
     @required Color fontColor,
     String fontFamily,
     String fontWeight,
-    // Color backgroundColor,
-    // Color borderColor,
     @required int fontSize,
     String hintText
   }) : super(id) {
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);
-    // this.toolbarVisibility = ValueNotifier(false);
     this.fontFamily = ValueNotifier(fontFamily ?? 'Montserrat');
     this.fontWeight = ValueNotifier(
         fontWeight ?? FontWeightMapper.toFontKey(FontWeight.normal));
-    // this.backgroundColor = ValueNotifier(backgroundColor ?? Colors.blueAccent);
-    // this.borderColor = ValueNotifier(borderColor);
     this.fontSize = ValueNotifier(fontSize ?? 14);
-    // this.hintText = hintText ?? text;
-    // this.focusNode = FocusNode();
   }
 }
 
@@ -100,7 +87,6 @@ class MediaNotifier extends FormFieldNotifier {
   ValueNotifier<String> url;
 
   MediaNotifier({
-    // String key,
     String url,
     int id,
     String uuid,

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
@@ -19,7 +18,6 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
-import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -32,11 +30,6 @@ import 'editor_anchored_helper_viewmodel.dart';
 /// Interface for presenter view contract
 /// ------------------------------------------------------------
 abstract class EditorAnchoredFullscreenHelperView {
-  // void showColorPickerDialog(Color defaultColor,
-  //     OnColorSelected onColorSelected, OnCancelPicker onCancel);
-
-  void closeColorPickerDialog();
-
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
 
   void closeLoadingScreen();
@@ -136,43 +129,30 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         }
       },
       builder: (context, presenter, model) => Material(
-          color: Colors.black.withOpacity(0.3),
-          child: EditorToolboxPage(
-            boxViewHandler: BoxViewHandler(
-                callback: presenter.updateBackgroundColor,
-                selectedColor: model.backgroundBox?.backgroundColor),
-            // onCancel: presenter.onCancel,
-            onValidate: (model.canValidate?.value == true)
-                ? presenter.onValidate
-                : null,
-            onCloseEditor: presenter.onCancel,
-
-            currentEditableItemNotifier: model.currentEditableItemNotifier,
-            onTextPickerDone: (EditedTextData data) =>
-                presenter.updateValidState(),
-            onFontPickerDone: (EditedFontData data) =>
-                presenter.updateValidState(),
-            onBorderPickerDone: (EditedBorderData data) =>
-                presenter.updateValidState(),
-            onMediaPickerDone: (EditedMediaData data) =>
-                presenter.updateValidState(),
-            onTextColorPickerDone: (EditedColorData data) =>
-                presenter.updateValidState(),
-            onPreview: presenter.onPreview,
-            child: Stack(
-              children: [
-                _createAnchoredWidget(model, context.animationsControllers[0],
-                    context.animationsControllers[1]),
-                _buildEditableTexts(presenter, model),
-                ..._createSelectableElements(presenter, model),
-                _buildRefreshButton(presenter),
-                _buildConfirmSelectionButton(
-                    context.buildContext, presenter, model),
-                _buildBackgroundSelectButton(
-                    context.buildContext, model.anchorValidated, presenter),
-              ],
-            ),
-          )),
+        color: Colors.black.withOpacity(0.3),
+        child: EditorToolboxPage(
+          boxViewHandler: BoxViewHandler(
+              callback: presenter.updateBackgroundColor,
+              selectedColor: model.backgroundBox?.backgroundColor),
+          onValidate:
+              (model.canValidate?.value == true) ? presenter.onValidate : null,
+          onCloseEditor: presenter.onCancel,
+          currentEditableItemNotifier: model.currentEditableItemNotifier,
+          onTextPickerDone: presenter.updateValidState,
+          onPreview: presenter.onPreview,
+          child: Stack(
+            children: [
+              _createAnchoredWidget(model, context.animationsControllers[0],
+                  context.animationsControllers[1]),
+              _buildEditableTexts(presenter, model),
+              ..._createSelectableElements(presenter, model),
+              _buildRefreshButton(presenter),
+              _buildConfirmSelectionButton(
+                  context.buildContext, presenter, model),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -194,32 +174,16 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       AnimationController fadeinAnimController) {
     final element = model.selectedAnchor;
     return Positioned.fill(
-        child: FadeTransition(
-      opacity: fadeinAnimController,
-      child: Visibility(
-        visible: model.selectedAnchor != null,
-        child: AnimatedAnchoredFullscreenCircle(
-            listenable: animationController,
-            currentPos: element?.value?.offset,
-            anchorSize: element?.value?.rect?.size,
-            bgColor: model.backgroundBox.backgroundColor.value,
-            padding: 4),
-      ),
-    ));
-  }
-
-  _buildBackgroundSelectButton(BuildContext context, bool show,
-      EditorAnchoredFullscreenPresenter presenter) {
-    if (!show) return Container();
-    return Positioned(
-      top: 20.0,
-      left: 20.0,
-      child: SafeArea(
-        child: CircleIconButton(
-          key: ValueKey("bgColorPicker"),
-          icon: Icon(Icons.invert_colors),
-          backgroundColor: PalTheme.of(context).colors.light,
-          onTapCallback: presenter.onCallChangeBackground,
+      child: FadeTransition(
+        opacity: fadeinAnimController,
+        child: Visibility(
+          visible: model.selectedAnchor != null,
+          child: AnimatedAnchoredFullscreenCircle(
+              listenable: animationController,
+              currentPos: element?.value?.offset,
+              anchorSize: element?.value?.rect?.size,
+              bgColor: model.backgroundBox.backgroundColor.value,
+              padding: 4),
         ),
       ),
     );
@@ -244,17 +208,18 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       top: 32,
       right: 16,
       child: FlatButton.icon(
-          key: ValueKey("refreshButton"),
-          onPressed: presenter.resetSelection,
-          color: Colors.black,
-          icon: Icon(
-            Icons.refresh,
-            color: Colors.white,
-          ),
-          label: Text(
-            "reset",
-            style: TextStyle(color: Colors.white),
-          )),
+        key: ValueKey("refreshButton"),
+        onPressed: presenter.resetSelection,
+        color: Colors.black,
+        icon: Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
+        label: Text(
+          "reset",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 
@@ -273,21 +238,14 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
-                  child: EditableTextField(
-                    textNotifier: model.titleField,
-                    currentEditableItemNotifier:
-                        model.currentEditableItemNotifier,
-                  )
-                  // child: EditableTextField.fromNotifier(
-                  //   editableTextFieldController.stream,
-                  //   model.titleField,
-                  //   presenter.onTitleChanged,
-                  //   presenter.onTitleSubmit,
-                  //   presenter.onTitleTextStyleChanged,
-                  // ),
-                  ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+                child: EditableTextField(
+                  textNotifier: model.titleField,
+                  currentEditableItemNotifier:
+                      model.currentEditableItemNotifier,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: EditableTextField(
@@ -338,42 +296,30 @@ class _EditorAnchoredFullscreenHelperView
     overlayContext = context;
   }
 
-  // @override
-  // void showColorPickerDialog(Color defaultColor,
-  //     OnColorSelected onColorSelected, OnCancelPicker onCancel) {
-  //   HapticFeedback.selectionClick();
-  //   showOverlayedInContext(
-  //       (context) => ColorPickerDialog(
-  //           placeholderColor: defaultColor,
-  //           onColorSelected: onColorSelected,
-  //           onCancel: onCancel),
-  //       key: OverlayKeys.PAGE_OVERLAY_KEY);
-  // }
-
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
   @override
   void showErrorMessage(String message) {
     showOverlayedInContext(
-        (context) => EditorTutorialOverlay(
-              onPressDismiss: () =>
-                  closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
-              title: "Error",
-              content: "$message",
-            ),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
+      (context) => EditorTutorialOverlay(
+        onPressDismiss: () => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
+        title: "Error",
+        content: "$message",
+      ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY,
+    );
   }
 
   @override
   void showTutorial(String title, String content) {
     showOverlayedInContext(
-        (context) => EditorTutorialOverlay(
-              onPressDismiss: () =>
-                  closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
-              title: title,
-              content: content,
-            ),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
+      (context) => EditorTutorialOverlay(
+        onPressDismiss: () => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
+        title: title,
+        content: content,
+      ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY,
+    );
   }
 
   @override
@@ -413,30 +359,31 @@ class _WidgetElementModelTransformer {
   Widget apply(String key, WidgetElementModel model, OnTapElement onTap) {
     // debugPrint("$key: w:${model.rect.width} h:${model.rect.height} => ${model.offset.dx} ${model.offset.dy}");
     return Positioned(
-        left: model.offset.dx,
-        top: model.offset.dy,
-        child: InkWell(
-          key: ValueKey("elementContainer"),
-          onTap: () => onTap(key),
-          child: Container(
-            width: model.rect.width,
-            height: model.rect.height,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white.withOpacity(model.selected ? 1 : .5),
-                width: model.selected ? 4 : 2,
-              ),
-            ),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                // child: Text("$key",
-                //   style: TextStyle(color: Colors.white)
-                // ),
-              ),
+      left: model.offset.dx,
+      top: model.offset.dy,
+      child: InkWell(
+        key: ValueKey("elementContainer"),
+        onTap: () => onTap(key),
+        child: Container(
+          width: model.rect.width,
+          height: model.rect.height,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.white.withOpacity(model.selected ? 1 : .5),
+              width: model.selected ? 4 : 2,
             ),
           ),
-        ));
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              // child: Text("$key",
+              //   style: TextStyle(color: Colors.white)
+              // ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -17,10 +17,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_he
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
-import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-
-import 'services/editor/versions/version_editor_service_test.dart';
 
 const Duration kLongPressTimeout = Duration(milliseconds: 500);
 
@@ -85,7 +82,7 @@ Future pumpHelperWidget(
     minVersionCode: "1.0.0",
   );
   // CREATE AN EDITOR FACTORY
-  var _elementFinder = ElementFinder(navigatorKey.currentContext);
+  // var _elementFinder = ElementFinder(navigatorKey.currentContext);
   WidgetBuilder builder;
   if(helperEntity != null) {
     switch(type) {

@@ -6,11 +6,7 @@ import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_update_helper.dart';
 import 'editor_update_helper_viewmodel.dart';
@@ -38,11 +34,6 @@ class EditorUpdateHelperPresenter
   void onInit() {
     this.viewModel.canValidate = new ValueNotifier(false);
     this.viewModel.isKeyboardVisible = false;
-    // viewModel.fields.forEach(
-    //   (field) => field.toolbarVisibility.addListener(
-    //     () => _onTextToolbarVisibilityChange(field)
-    //   )
-    // );
   }
 
   @override
@@ -50,13 +41,7 @@ class EditorUpdateHelperPresenter
     this.viewInterface.hidePalBubble();
   }
 
-  onTextPickerDone(EditedTextData editedTextData) {
-    // print(editedTextData.key);
-    // if (editedTextData.key == this.titleKey) {
-    //   this.viewModel.titleField.text.value = editedTextData.text;
-    // } else if (editedTextData.key == this.thanksButtonKey) {
-    //   this.viewModel.thanksButton.text.value = editedTextData.text;
-    // }
+  onTextPickerDone() {
     this._updateValidState();
   }
 
@@ -92,37 +77,6 @@ class EditorUpdateHelperPresenter
       status.dispose();
       viewInterface.closeEditor();
     }
-  }
-
-  // onTitleFieldChanged(String id, String newValue) =>
-  //     _onTextChanged(viewModel.titleField, newValue);
-
-  // onThanksFieldChanged(String id, String newValue)
-  //   => _onTextChanged(viewModel.thanksButton, newValue);
-
-  // onTitleTextStyleChanged(
-  //         String id, TextStyle newTextStyle, FontKeys fontKeys) =>
-  //     _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
-
-  // onThanksTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-  //   => _onStyleChanged(viewModel.thanksButton, newTextStyle, fontKeys);
-
-  // onChangelogTextChanged(String id, String newValue) =>
-  //     _onTextChanged(viewModel.changelogsFields[id], newValue);
-
-  // onChangelogTextStyleFieldChanged(
-  //         String id, TextStyle newTextStyle, FontKeys fontKeys) =>
-  //     _onStyleChanged(viewModel.changelogsFields[id], newTextStyle, fontKeys);
-
-  // onTitleFieldSubmitted(String value) => this.refreshView();
-  // onThanksFieldSubmitted(String value) => this.refreshView();
-  // onChangelogFieldSubmitted(String value) => this.refreshView();
-
-  changeBackgroundColor() {
-    this.viewInterface.showColorPickerDialog(
-        viewModel?.bodyBox?.backgroundColor?.value,
-        updateBackgroundColor,
-        () => viewInterface.closeColorPickerDialog());
   }
 
   updateBackgroundColor(Color aColor) {
@@ -163,32 +117,10 @@ class EditorUpdateHelperPresenter
   // PRIVATES
   // ----------------------------------
 
-  _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
-    textNotifier.text.value = newValue;
-    _updateValidState();
-  }
-
-  _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
-    // if(textNotifier.toolbarVisibility.value) {
-    //   viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
-    //     .forEach((element) => element.toolbarVisibility.value = false);
-    // }
-  }
-
   _updateValidState() {
     viewModel.canValidate.value = isValid();
   }
 
-  _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle,
-      FontKeys fontKeys) {
-    textNotifier?.fontColor?.value = newTextStyle?.color;
-    textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
-    if (fontKeys != null) {
-      textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
-      textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
-    }
-    _updateValidState();
-  }
 
   bool isValid() =>
       viewModel.titleField.text.value.isNotEmpty &&

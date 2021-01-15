@@ -40,6 +40,7 @@ class EditorToolBar extends StatelessWidget {
     this.onGlobalActionTap,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -79,7 +80,8 @@ class EditorToolBar extends StatelessWidget {
           AnimatedBuilder(
             animation: this.drawerAnimation,
             builder: (context, child) => Transform.rotate(
-                angle: -1.5708 * (cos(pi/2 * this.drawerAnimation.value)), child: child),
+                angle: -1.5708 * (cos(pi / 2 * this.drawerAnimation.value)),
+                child: child),
             child: CircleIconButton.animatedIcon(
               animatedIcon: AnimatedIcon(
                   icon: AnimatedIcons.arrow_menu,
@@ -99,7 +101,6 @@ class EditorToolBar extends StatelessWidget {
 
   List<Widget> _buildSpecificItemActions(BuildContext context) {
     List<Widget> actions = [];
-    int index = 0;
     for (final elementAction in this.editableElementActions) {
       IconData iconData;
       switch (elementAction) {
@@ -124,22 +125,20 @@ class EditorToolBar extends StatelessWidget {
 
       Widget globalActionToAdd = AnimatedBuilder(
         animation: this.iconsAnimation,
-        builder: (context, child) => Transform.scale(
-          scale: this.iconsAnimation.value,
-          child: child
-        ) ,
+        builder: (context, child) =>
+            Transform.scale(scale: this.iconsAnimation.value, child: child),
         child: CircleIconButton(
-        icon: Icon(
-          iconData,
-          color: Colors.white,
+          icon: Icon(
+            iconData,
+            color: Colors.white,
+          ),
+          backgroundColor: PalTheme.of(context).colors.dark,
+          onTapCallback: () => this.onActionTap(elementAction),
         ),
-        backgroundColor: PalTheme.of(context).colors.dark,
-        onTapCallback: () => this.onActionTap(elementAction),
-      ),
       );
-      index ++;
       actions.add(globalActionToAdd);
     }
+
     return actions;
   }
 
@@ -168,45 +167,3 @@ class EditorToolBar extends StatelessWidget {
     return actions;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

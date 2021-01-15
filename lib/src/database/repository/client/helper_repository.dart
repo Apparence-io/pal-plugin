@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pal/src/database/adapter/helper_entity_adapter.dart' as EntityAdapter;

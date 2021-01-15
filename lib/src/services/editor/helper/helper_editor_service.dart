@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/database/entity/pageable.dart';

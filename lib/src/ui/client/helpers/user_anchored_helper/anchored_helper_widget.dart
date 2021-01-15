@@ -2,13 +2,10 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
-import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
-import 'anchored_helper_model.dart';
 
 class AnchoredHelper extends StatefulWidget {
   final String anchorKey;

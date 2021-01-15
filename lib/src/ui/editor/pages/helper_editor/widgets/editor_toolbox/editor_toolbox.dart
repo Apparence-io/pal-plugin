@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
@@ -12,9 +11,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
-import '../../../../../../router.dart';
 import 'editor_toolbox_presenter.dart';
 import 'editor_toolbox_viewmodel.dart';
 
@@ -36,11 +33,11 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   final BoxViewHandler boxViewHandler;
 
   // Pickers
-  final Function(EditedTextData) onTextPickerDone;
-  final Function(EditedColorData) onTextColorPickerDone;
-  final Function(EditedFontData) onFontPickerDone;
-  final Function(EditedBorderData) onBorderPickerDone;
-  final Function(EditedMediaData) onMediaPickerDone;
+  final Function() onTextPickerDone;
+  final Function() onTextColorPickerDone;
+  final Function() onFontPickerDone;
+  final Function() onBorderPickerDone;
+  final Function() onMediaPickerDone;
 
   final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
   final GlobalKey scaffoldKey;
@@ -164,15 +161,6 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
 
   @override
   Future<Color> openColorPicker(Color selectedColor) async {
-    // return showOverlayedInContext(
-    //   (context) => ColorPickerDialog(
-    //     placeholderColor: model.boxViewHandler.selectedColor,
-    //     onColorSelected: presenter.notifyBgColorChange,
-    //     onCancel: (){},
-    //   ),
-    //   key: OverlayKeys.PAGE_OVERLAY_KEY,
-    // );
-
     return await showDialog(
       context: _scaffoldKey.currentContext,
       builder: (context) => ColorPickerDialog(
@@ -202,18 +190,6 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       context: _scaffoldKey.currentContext,
       builder: (context) => EditableTextDialog(currentText),
     );
-
-    // return EditedTextData();
-
-    // return EditedTextData(
-    //   this.currentEditableItemNotifier?.value?.itemKey,
-    //   text: newText,
-    // );
-
-    // return showOverlayedInContext(
-    //   (context) => EditableTextDialog('Test'),
-    //   key: OverlayKeys.PAGE_OVERLAY_KEY,
-    // );
   }
 
   @override

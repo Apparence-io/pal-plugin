@@ -4,7 +4,6 @@ import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 import 'editor_toolbox.dart';
 import 'editor_toolbox_viewmodel.dart';
@@ -13,11 +12,11 @@ class EditorToolboxPresenter
     extends Presenter<EditorToolboxModel, EditorToolboxView> {
   final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
 
-  final Function(EditedTextData) onTextPickerDone;
-  final Function(EditedColorData) onTextColorPickerDone;
-  final Function(EditedFontData) onFontPickerDone;
-  final Function(EditedBorderData) onBorderPickerDone;
-  final Function(EditedMediaData) onMediaPickerDone;
+  final Function() onTextPickerDone;
+  final Function() onTextColorPickerDone;
+  final Function() onFontPickerDone;
+  final Function() onBorderPickerDone;
+  final Function() onMediaPickerDone;
 
   EditorToolboxPresenter(
     EditorToolboxView viewInterface, {
@@ -93,7 +92,7 @@ class EditorToolboxPresenter
     }
     this.viewModel.animateIcons = true;
     this.refreshView();
-    this.refreshAnimations();
+    if(this.currentEditableItemNotifier.value != null)this.refreshAnimations();
   }
 
   @override
@@ -105,7 +104,7 @@ class EditorToolboxPresenter
   void onOutsideTap() {
     this.viewModel.editableElementActions = [];
     this.currentEditableItemNotifier.value = null;
-    // this.refreshView();
+
   }
 
   void openPicker(ToolBarActionButton toolBarActionButton) async {
@@ -119,7 +118,7 @@ class EditorToolboxPresenter
             .openColorPicker(editableFormField.fontColor.value);
         if (newColor != null) {
           editableFormField.fontColor.value = newColor;
-          this.onTextColorPickerDone(null);
+          this.onTextColorPickerDone();
         }
         break;
       case ToolBarActionButton.font:
@@ -137,8 +136,7 @@ class EditorToolboxPresenter
           editableFormField.fontFamily.value = fontFamily;
           editableFormField.fontSize.value = fontSize.toInt();
           editableFormField.fontWeight.value = fontWeight;
-          // this.refreshView();
-          this.onFontPickerDone(null);
+          this.onFontPickerDone();
         }
         break;
       case ToolBarActionButton.media:
@@ -148,8 +146,7 @@ class EditorToolboxPresenter
         if (newGraphicEntity != null) {
           mediaNotifier.url.value = newGraphicEntity?.url;
           mediaNotifier.uuid = newGraphicEntity?.id;
-          // this.refreshView();
-          this.onMediaPickerDone(null);
+          this.onMediaPickerDone();
         }
         break;
       case ToolBarActionButton.text:
@@ -160,7 +157,7 @@ class EditorToolboxPresenter
             .openTextPicker(editableFormField.text.value);
         if (newText != null) {
           editableFormField.text.value = newText;
-          this.onTextPickerDone(null);
+          this.onTextPickerDone();
         }
         break;
       default:

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';

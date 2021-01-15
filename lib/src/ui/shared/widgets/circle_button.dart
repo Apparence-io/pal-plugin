@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 // TODO: COnvert to stateless

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
@@ -9,11 +8,9 @@ import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
-import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
@@ -25,16 +22,11 @@ import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
-import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
-import '../../../../../../router.dart';
 import 'editor_update_helper_presenter.dart';
 import 'editor_update_helper_viewmodel.dart';
 
 abstract class EditorUpdateHelperView {
-  void showColorPickerDialog(
-      Color color, dynamic onColorSelected, dynamic onCancel);
-  void closeColorPickerDialog();
   void hidePalBubble();
   Future<void> scrollToBottomChangelogList();
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
@@ -151,23 +143,21 @@ class EditorUpdateHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
-            callback: presenter.updateBackgroundColor,
-            selectedColor: viewModel.bodyBox?.backgroundColor),
-        // onCancel: presenter.onCancel,
+          callback: presenter.updateBackgroundColor,
+          selectedColor: viewModel.bodyBox?.backgroundColor,
+        ),
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
         onTextPickerDone: presenter.onTextPickerDone,
         onCloseEditor: presenter.onCancel,
+        onPreview: presenter.onPreview,
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.always,
           child: EditableBackground(
             backgroundColor: viewModel.bodyBox?.backgroundColor,
-            // circleIconKey:
-            //     'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
-            // onColorChange: presenter.changeBackgroundColor,
             widget: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Container(
@@ -310,71 +300,8 @@ class EditorUpdateHelperPage extends StatelessWidget {
         buttonFormFieldNotifier: viewModel.thanksButton,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
       ),
-      // child: EditableTextField.text(
-      //   helperToolbarKey: ValueKey(
-      //     'pal_EditorUpdateHelperWidget_ThanksButtonToolbar',
-      //   ),
-      //   textFormFieldKey: ValueKey(
-      //     'pal_EditorUpdateHelperWidget_ThanksButtonField',
-      //   ),
-      //   outsideTapStream: presenter.editableTextFieldController.stream,
-      //   onChanged: presenter.onThanksFieldChanged,
-      //   onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
-      //   hintText: viewModel.thanksButton?.hintText,
-      //   maximumCharacterLength: 25,
-      //   onFieldSubmitted: presenter.onThanksFieldSubmitted,
-      //   toolbarVisibility: viewModel?.thanksButton?.toolbarVisibility,
-      //   fontFamilyKey: viewModel?.thanksButton?.fontFamily?.value,
-      //   initialValue: viewModel?.thanksButton?.text?.value,
-      //   backgroundBoxDecoration: BoxDecoration(
-      //     color: PalTheme.of(context).colors.dark,
-      //     borderRadius: BorderRadius.circular(10.0),
-      //   ),
-      //   textStyle: TextStyle(
-      //     color: viewModel.thanksButton?.fontColor?.value ?? Colors.white,
-      //     fontSize: viewModel.thanksButton?.fontSize?.value?.toDouble() ?? 22.0,
-      //     fontWeight: FontWeightMapper.toFontWeight(
-      //             viewModel.thanksButton?.fontWeight?.value) ??
-      //         FontWeight.w400,
-      //   ).merge(googleCustomFont(viewModel.thanksButton?.fontFamily?.value)),
-      // ),
     );
   }
-
-  // EditableTextField editableField(
-  //         Stream<bool> outsideTapStream,
-  //         TextFormFieldNotifier textNotifier,
-  //         OnFieldChanged onFieldValueChange,
-  //         OnTextStyleChanged onTextStyleChanged,
-  //         {String id,
-  //         Key helperToolbarKey,
-  //         Key textFormFieldKey,
-  //         TextStyle baseStyle,
-  //         int minimumCharacterLength = 1,
-  //         int maximumCharacterLength = 255,
-  //         int maxLines = 5,
-  //         BoxDecoration backgroundDecoration}) =>
-  //     EditableTextField.text(
-  //       id: id,
-  //       backgroundBoxDecoration: backgroundDecoration,
-  //       outsideTapStream: outsideTapStream,
-  //       helperToolbarKey: helperToolbarKey,
-  //       textFormFieldKey: textFormFieldKey,
-  //       onChanged: onFieldValueChange,
-  //       onTextStyleChanged: onTextStyleChanged,
-  //       maximumCharacterLength: maximumCharacterLength,
-  //       minimumCharacterLength: minimumCharacterLength,
-  //       maxLines: maxLines,
-  //       fontFamilyKey: textNotifier?.fontFamily?.value,
-  //       initialValue: textNotifier?.text?.value,
-  //       textStyle: TextStyle(
-  //         color: textNotifier?.fontColor?.value,
-  //         decoration: TextDecoration.none,
-  //         fontSize: textNotifier?.fontSize?.value?.toDouble(),
-  //         fontWeight:
-  //             FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
-  //       ).merge(baseStyle),
-  //     );
 
   //FIXME CONsider extension
   TextStyle googleCustomFont(String fontFamily) {
@@ -404,21 +331,6 @@ class _EditorUpdateHelperPage
   BuildContext get overlayContext => context;
 
   @override
-  void showColorPickerDialog(
-      Color color, dynamic onColorSelected, dynamic onCancel) {
-    // HapticFeedback.selectionClick();
-    // showOverlayedInContext(
-    //     (context) => ColorPickerDialog(
-    //         placeholderColor: color,
-    //         onColorSelected: onColorSelected,
-    //         onCancel: onCancel),
-    //     key: OverlayKeys.PAGE_OVERLAY_KEY);
-  }
-
-  @override
-  void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
-
-  @override
   Future<GraphicEntity> pushToMediaGallery(final String mediaId) async {
     final media = await Navigator.pushNamed(
       scaffoldKey.currentContext,
@@ -445,11 +357,10 @@ class _EditorUpdateHelperPage
     UserUpdateHelperPage page = UserUpdateHelperPage(
       helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
-      // thanksButtonLabel:
-      //     HelperSharedFactory.parseTextNotifier(model.thanksButton),
       changelogLabels: model.changelogsFields.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),
+      helperImageViewModel: HelperSharedFactory.parseMediaNotifier(model.media),
       onPositivButtonTap: () => Navigator.pop(context),
       packageVersionReader: this.packageVersionReader,
     );

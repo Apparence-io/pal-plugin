@@ -5,9 +5,7 @@ import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
-import 'package:pal/src/router.dart';
 import 'package:pal/src/ui/client/helper_orchestrator.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/editor/pal_editmode_wrapper.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 

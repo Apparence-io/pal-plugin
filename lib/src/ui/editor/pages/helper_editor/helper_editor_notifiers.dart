@@ -5,8 +5,11 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 // Put all notifiers models here
 class FormFieldNotifier {
   int id;
+  ValueNotifier<bool> isSelected;
 
-  FormFieldNotifier(this.id);
+  FormFieldNotifier(this.id,){
+    this.isSelected = ValueNotifier(false);
+  }
 }
 
 class EditableFormFieldNotifier extends FormFieldNotifier {
@@ -18,6 +21,7 @@ class EditableFormFieldNotifier extends FormFieldNotifier {
   // ValueNotifier<Color> backgroundColor;
   // ValueNotifier<Color> borderColor;
   ValueNotifier<int> fontSize;
+  
   // FocusNode focusNode;
   // ValueNotifier<bool> toolbarVisibility;
 
@@ -30,7 +34,7 @@ class EditableFormFieldNotifier extends FormFieldNotifier {
     // Color backgroundColor,
     // Color borderColor,
     @required int fontSize,
-    String hintText,
+    String hintText
   }) : super(id) {
     this.text = ValueNotifier(text);
     this.fontColor = ValueNotifier(fontColor);

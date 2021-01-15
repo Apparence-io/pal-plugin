@@ -55,6 +55,7 @@ class EditorToolboxPresenter
     this.viewModel.isBottomVisible.addListener(animateActionBar);
 
     this.currentEditableItemNotifier.addListener(() {
+      this.currentEditableItemNotifier.value.isSelected.value = true;
       this.displayEditableItemActions();
     });
   }

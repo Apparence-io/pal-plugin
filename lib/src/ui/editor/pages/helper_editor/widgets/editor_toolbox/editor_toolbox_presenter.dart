@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
@@ -10,7 +10,7 @@ import 'editor_toolbox_viewmodel.dart';
 
 class EditorToolboxPresenter
     extends Presenter<EditorToolboxModel, EditorToolboxView> {
-  final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
+  final ValueNotifier<EditableData> currentEditableItemNotifier;
 
   final Function() onTextPickerDone;
   final Function() onTextColorPickerDone;
@@ -34,7 +34,6 @@ class EditorToolboxPresenter
     super.onInit();
 
     // INIT ATTRIBUTES
-    this.viewModel.currentEditableItem = null;
     this.viewModel.isActionBarVisible = true;
     this.viewModel.isToolBarVisible = true;
     this.viewModel.animateIcons = false;
@@ -68,7 +67,7 @@ class EditorToolboxPresenter
 
   void displayEditableItemActions() {
     switch (this.currentEditableItemNotifier.value?.runtimeType) {
-      case ButtonFormFieldNotifier:
+      case EditableButtonFormData:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.border,
           ToolBarActionButton.text,
@@ -76,12 +75,12 @@ class EditorToolboxPresenter
           ToolBarActionButton.color,
         ];
         break;
-      case MediaNotifier:
+      case EditableMediaFormData:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.media,
         ];
         break;
-      case TextFormFieldNotifier:
+      case EditableTextFormData:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.text,
           ToolBarActionButton.font,
@@ -111,7 +110,7 @@ class EditorToolboxPresenter
     switch (toolBarActionButton) {
       // TODO: Séparer les couleurs de Font/Background/Border
       case ToolBarActionButton.color:
-        EditableFormFieldNotifier editableFormField =
+        EditableTextData editableFormField =
             this.currentEditableItemNotifier?.value;
         Color newColor = await this
             .viewInterface
@@ -122,7 +121,7 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.font:
-        EditableFormFieldNotifier editableFormField =
+        EditableTextData editableFormField =
             this.currentEditableItemNotifier?.value;
         EditedFontModel newFont = await this.viewInterface.openFontPicker(
             editableFormField.fontFamily.value,
@@ -140,7 +139,7 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.media:
-        MediaNotifier mediaNotifier = this.currentEditableItemNotifier?.value;
+        EditableMediaFormData mediaNotifier = this.currentEditableItemNotifier?.value;
         GraphicEntity newGraphicEntity =
             await this.viewInterface.openMediaPicker(mediaNotifier?.uuid);
         if (newGraphicEntity != null) {
@@ -150,7 +149,7 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.text:
-        EditableFormFieldNotifier editableFormField =
+        EditableTextData editableFormField =
             this.currentEditableItemNotifier?.value;
         String newText = await this
             .viewInterface

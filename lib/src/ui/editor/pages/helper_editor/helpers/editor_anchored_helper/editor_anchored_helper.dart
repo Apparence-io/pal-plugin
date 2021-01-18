@@ -241,7 +241,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
                 child: EditableTextField(
-                  textNotifier: model.titleField,
+                  data: model.titleField,
                   currentEditableItemNotifier:
                       model.currentEditableItemNotifier,
                 ),
@@ -249,7 +249,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: EditableTextField(
-                  textNotifier: model.descriptionField,
+                  data: model.descriptionField,
                   currentEditableItemNotifier:
                       model.currentEditableItemNotifier,
                 ),
@@ -260,14 +260,14 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 children: [
                   Flexible(
                     child: EditableButton(
-                      buttonFormFieldNotifier: model.negativBtnField,
+                      data: model.negativBtnField,
                       currentEditableItemNotifier:
                           model.currentEditableItemNotifier,
                     ),
                   ),
                   Flexible(
                     child: EditableButton(
-                      buttonFormFieldNotifier: model.positivBtnField,
+                      data: model.positivBtnField,
                       currentEditableItemNotifier:
                           model.currentEditableItemNotifier,
                     ),

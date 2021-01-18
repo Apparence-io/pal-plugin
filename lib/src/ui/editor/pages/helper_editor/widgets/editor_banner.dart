@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/theme.dart';
 
+// TODO: IS IT USEFULL ?!
+
 class EditorModeBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

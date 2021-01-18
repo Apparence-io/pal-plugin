@@ -157,7 +157,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
                               padding: EdgeInsets.all(15),
                               child: EditableTextField(
                                 key: _textKey,
-                                textNotifier: viewModel.detailsField,
+                                data: viewModel.contentTextForm,
                                 currentEditableItemNotifier:
                                     viewModel.currentEditableItemNotifier,
                               )),
@@ -194,7 +194,7 @@ class _EditorSimpleHelperPage
     SimpleHelperPage page = SimpleHelperPage(
       helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       descriptionLabel:
-          HelperSharedFactory.parseTextNotifier(model.detailsField),
+          HelperSharedFactory.parseTextNotifier(model.contentTextForm),
     );
     SimpleHelperLayout layout = SimpleHelperLayout(
       toaster: page,

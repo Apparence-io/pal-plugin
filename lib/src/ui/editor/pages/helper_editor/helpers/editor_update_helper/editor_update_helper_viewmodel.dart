@@ -15,12 +15,12 @@ class UpdateHelperViewModel extends HelperViewModel {
   bool isKeyboardVisible;
   LanguageNotifier language;
 
-  ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
-  BoxNotifier bodyBox;
-  Map<String, TextFormFieldNotifier> changelogsFields;
-  MediaNotifier media;
-  ButtonFormFieldNotifier thanksButton;
-  TextFormFieldNotifier titleField;
+  ValueNotifier<EditableData> currentEditableItemNotifier;
+  EditableBoxFormData bodyBox;
+  Map<String, EditableTextFormData> changelogsFields;
+  EditableMediaFormData media;
+  EditableButtonFormData thanksButton;
+  EditableTextFormData titleField;
 
   UpdateHelperViewModel({
     String id,
@@ -33,7 +33,7 @@ class UpdateHelperViewModel extends HelperViewModel {
     int versionMaxId,
     int languageId,
     HelperBoxViewModel helperBoxViewModel,
-    Map<String, TextFormFieldNotifier> changelogsLabels,
+    Map<String, EditableTextFormData> changelogsLabels,
     HelperImageViewModel helperImageViewModel,
     HelperTextViewModel titleLabel,
     HelperTextViewModel positivButtonLabel,
@@ -50,16 +50,16 @@ class UpdateHelperViewModel extends HelperViewModel {
     this.language = LanguageNotifier(
       id: languageId ?? 1,
     );
-    this.bodyBox = BoxNotifier(
+    this.bodyBox = EditableBoxFormData(
       id: helperBoxViewModel?.id,
       backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.blueAccent,
     );
     this.changelogsFields = changelogsLabels ?? {};
-    this.media = MediaNotifier(
+    this.media = EditableMediaFormData(
       id: helperImageViewModel?.id,
       url: helperImageViewModel?.url,
     );
-    this.thanksButton = ButtonFormFieldNotifier(
+    this.thanksButton = EditableButtonFormData(
       positivButtonLabel?.id,
       backgroundColor: Color(0xFF03045E),
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
@@ -69,7 +69,7 @@ class UpdateHelperViewModel extends HelperViewModel {
           positivButtonLabel?.fontWeight ?? FontWeight.normal),
       fontFamily: positivButtonLabel?.fontFamily,
     );
-    this.titleField = TextFormFieldNotifier(
+    this.titleField = EditableTextFormData(
       titleLabel?.id,
       fontColor: titleLabel?.fontColor ?? Colors.white,
       fontSize: titleLabel?.fontSize?.toInt() ?? 36,
@@ -78,7 +78,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       fontFamily: titleLabel?.fontFamily,
       hintText: 'Enter your title here...',
     );
-    this.currentEditableItemNotifier = ValueNotifier<FormFieldNotifier>(null);
+    this.currentEditableItemNotifier = ValueNotifier<EditableData>(null);
   }
 
   factory UpdateHelperViewModel.fromHelperViewModel(HelperViewModel model) {
@@ -105,7 +105,7 @@ class UpdateHelperViewModel extends HelperViewModel {
   }
 
   factory UpdateHelperViewModel.fromHelperEntity(HelperEntity helperEntity) {
-    Map<String, TextFormFieldNotifier> changelogsMap = {};
+    Map<String, EditableTextFormData> changelogsMap = {};
     List<HelperTextViewModel> changelogs = HelperSharedFactory.parseTextsLabel(
       UpdatescreenHelperKeys.LINES_KEY,
       helperEntity?.helperTexts,
@@ -115,7 +115,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       for (var changelog in changelogs) {
         changelogsMap.putIfAbsent(
           'template_${changelog.id.toString()}',
-          () => TextFormFieldNotifier(
+          () => EditableTextFormData(
             changelog?.id,
             text: changelog?.text ?? '',
             fontColor: changelog?.fontColor ?? Colors.white,
@@ -159,7 +159,7 @@ class UpdateHelperViewModel extends HelperViewModel {
     String textFieldId = changelogsFields.length.toString();
     this.changelogsFields.putIfAbsent(
           textFieldId,
-          () => TextFormFieldNotifier(
+          () => EditableTextFormData(
             null,
             text: '',
             fontSize: 18,

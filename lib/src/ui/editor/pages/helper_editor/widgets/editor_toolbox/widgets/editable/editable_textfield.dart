@@ -1,78 +1,33 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
-class EditableTextField extends StatefulWidget {
-  final TextFormFieldNotifier textNotifier;
-  final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
+class EditableTextField extends StatelessWidget {
+  final EditableTextFormData data;
+  final Function(String) onTap;
 
   const EditableTextField({
     Key key,
-    @required this.textNotifier,
-    @required this.currentEditableItemNotifier,
+    this.onTap,
+    @required this.data,
   }) : super(key: key);
-
-  @override
-  _EditableTextFieldState createState() => _EditableTextFieldState();
-}
-
-class _EditableTextFieldState extends State<EditableTextField> {
-
-  @override
-  void initState() {
-    // TODO: Refacto en un seul TextStyle listener
-    super.initState();
-    widget.textNotifier.fontSize.addListener(this.refreshView);
-    widget.textNotifier.fontFamily.addListener(this.refreshView);
-    widget.textNotifier.fontWeight.addListener(this.refreshView);
-    widget.textNotifier.fontColor.addListener(this.refreshView);
-    widget.textNotifier.text.addListener(this.refreshView);
-  }
-
-  @override
-  void dispose() { 
-    widget.textNotifier.fontSize.removeListener(this.refreshView);
-    widget.textNotifier.fontFamily.removeListener(this.refreshView);
-    widget.textNotifier.fontWeight.removeListener(this.refreshView);
-    widget.textNotifier.fontColor.removeListener(this.refreshView);
-    widget.textNotifier.text.removeListener(this.refreshView);
-    super.dispose();
-  }
-
-  void refreshView() {
-    this.setState(() {});
-  }
-
-  // @override
-  // void dispose() { 
-  //   widget.textNotifier.fontSize.dispose();
-  //   widget.textNotifier.fontFamily.dispose();
-  //   widget.textNotifier.fontWeight.dispose();
-  //   widget.textNotifier.fontColor.dispose();
-  //   widget.textNotifier.text.dispose();
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
-      fontFamily: widget.textNotifier?.fontFamily?.value,
-      fontWeight:
-          FontWeightMapper.toFontWeight(widget.textNotifier?.fontWeight?.value),
-      fontSize: widget.textNotifier?.fontSize?.value?.toDouble(),
-      color: widget.textNotifier?.fontColor?.value,
+      fontFamily: this.data?.fontFamily,
+      fontWeight: FontWeightMapper.toFontWeight(this.data?.fontWeight),
+      fontSize: this.data?.fontSize?.toDouble(),
+      color: this.data?.fontColor,
     ).merge(
-      _googleCustomFont(widget.textNotifier?.fontFamily?.value),
+      _googleCustomFont(this.data?.fontFamily),
     );
 
     return BouncingWidget(
-      onTap: () {
-        this.widget.currentEditableItemNotifier.value =
-            this.widget.textNotifier;
-      },
+      onTap: () => this.onTap?.call(this.data.key),
       child: DottedBorder(
         dashPattern: [6, 3],
         color: Colors.white.withAlpha(80),
@@ -80,7 +35,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(
             key: UniqueKey(),
-            initialValue: widget.textNotifier?.text?.value,
+            initialValue: this.data?.text,
             enabled: false,
             textAlign: TextAlign.center,
             decoration: InputDecoration(
@@ -99,6 +54,8 @@ class _EditableTextFieldState extends State<EditableTextField> {
       ),
     );
   }
+
+  // TODO : move to extension
 
   TextStyle _googleCustomFont(String fontFamily) {
     return (fontFamily != null && fontFamily.length > 0)

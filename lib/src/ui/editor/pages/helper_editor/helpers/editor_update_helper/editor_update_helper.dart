@@ -203,17 +203,17 @@ class EditorUpdateHelperPage extends StatelessWidget {
                             'pal_EditorUpdateHelperWidget_EditableMedia'),
                         editKey:
                             'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
-                        mediaSize: 123.0,
+                        size: 123.0,
                         onEdit: presenter.editMedia,
                         currentEditableItemNotifier:
                             viewModel.currentEditableItemNotifier,
                         url: viewModel.media?.url?.value,
-                        mediaNotifier: viewModel.media,
+                        data: viewModel.media,
                       ),
                       SizedBox(height: 40),
                       EditableTextField(
                         key: _titleKey,
-                        textNotifier: viewModel.titleField,
+                        data: viewModel.titleField,
                         currentEditableItemNotifier:
                             viewModel.currentEditableItemNotifier,
                       ),
@@ -252,7 +252,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     List<Widget> changelogsTextfieldWidgets = [];
     viewmodel.changelogsFields.forEach((key, field) {
       changelogsTextfieldWidgets.add(EditableTextField(
-        textNotifier: field,
+        data: field,
         currentEditableItemNotifier: viewmodel.currentEditableItemNotifier,
         key: ValueKey(key),
         // presenter.editableTextFieldController.stream,
@@ -297,7 +297,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
       width: double.infinity,
       child: EditableButton(
         key: _thanksButtonKey,
-        buttonFormFieldNotifier: viewModel.thanksButton,
+        data: viewModel.thanksButton,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
       ),
     );

@@ -20,21 +20,21 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
   Rect writeArea;
 
   /// background color notifier
-  BoxNotifier backgroundBox;
+  EditableBoxFormData backgroundBox;
 
   /// enables the save button
   ValueNotifier<bool> canValidate;
 
   /// titleField notifier including style
-  TextFormFieldNotifier titleField;
+  EditableTextFormData titleField;
 
   /// descriptionField notifier including style
-  TextFormFieldNotifier descriptionField;
+  EditableTextFormData descriptionField;
 
   /// buttons textNotifiers
-  ButtonFormFieldNotifier positivBtnField, negativBtnField;
+  EditableButtonFormData positivBtnField, negativBtnField;
 
-  ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
+  ValueNotifier<EditableData> currentEditableItemNotifier;
 
   /// true if user has validated the current anchor selection
   bool anchorValidated;
@@ -47,20 +47,20 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
     String minVersionCode,
     String maxVersionCode,
     HelperTheme helperTheme,
-    BoxNotifier backgroundBox,
+    EditableBoxFormData backgroundBox,
     HelperTextViewModel titleViewModel,
     HelperTextViewModel descriptionLabel,
     HelperTextViewModel positivButtonLabel,
     HelperTextViewModel negativButtonLabel,
     this.anchorValidated = false
-  }) : titleField = TextFormFieldNotifier(
+  }) : titleField = EditableTextFormData(
         titleViewModel?.id,
         fontColor: titleViewModel?.fontColor ?? Colors.white,
         fontSize: titleViewModel?.fontSize?.toInt() ?? 31,
         text: titleViewModel?.text ?? '',
         fontWeight: FontWeightMapper.toFontKey(titleViewModel?.fontWeight ?? FontWeight.normal),
       ),
-      descriptionField = TextFormFieldNotifier(
+      descriptionField = EditableTextFormData(
         descriptionLabel?.id,
         fontColor: descriptionLabel?.fontColor ?? Colors.white,
         fontSize: descriptionLabel?.fontSize?.toInt() ?? 20,
@@ -68,7 +68,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
         fontWeight: FontWeightMapper.toFontKey(descriptionLabel?.fontWeight ?? FontWeight.normal),
         fontFamily: descriptionLabel?.fontFamily,
       ),
-      positivBtnField = ButtonFormFieldNotifier(
+      positivBtnField = EditableButtonFormData(
         positivButtonLabel?.id,
         backgroundColor: Color(0xFF03045E),
         fontColor: positivButtonLabel?.fontColor ?? Colors.white,
@@ -76,7 +76,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
         text: positivButtonLabel?.text ?? 'Ok, thanks!',
         fontWeight: FontWeightMapper.toFontKey(positivButtonLabel?.fontWeight ?? FontWeight.normal),
       ),
-      negativBtnField = ButtonFormFieldNotifier(
+      negativBtnField = EditableButtonFormData(
         negativButtonLabel?.id,
         backgroundColor: Color(0xFF03045E),
         text: negativButtonLabel?.text ?? 'This is not helping',
@@ -85,10 +85,10 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
         fontSize: negativButtonLabel?.fontSize?.toInt() ?? 15,
         fontFamily: negativButtonLabel?.fontFamily,
       ),
-      backgroundBox = backgroundBox ?? BoxNotifier(
+      backgroundBox = backgroundBox ?? EditableBoxFormData(
         backgroundColor: Colors.lightGreenAccent.withOpacity(.6)
       ),
-      currentEditableItemNotifier = ValueNotifier<FormFieldNotifier>(null),
+      currentEditableItemNotifier = ValueNotifier<EditableData>(null),
       super(
         id: id,
         helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
@@ -133,7 +133,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       maxVersionCode: entity?.versionMax,
       helperTheme: null,
       triggerType: entity?.triggerType,
-      backgroundBox: BoxNotifier(
+      backgroundBox: EditableBoxFormData(
         key: entity.helperBoxes.first.key,
         backgroundColor: HexColor?.fromHex(entity.helperBoxes.first.backgroundColor)
       ),
@@ -156,7 +156,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
     );
   }
 
-  List<EditableFormFieldNotifier> get fields => [
+  List<EditableTextData> get fields => [
     titleField,
     descriptionField,
     positivBtnField,

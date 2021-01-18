@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
@@ -33,13 +33,13 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   final BoxViewHandler boxViewHandler;
 
   // Pickers
-  final Function() onTextPickerDone;
-  final Function() onTextColorPickerDone;
-  final Function() onFontPickerDone;
-  final Function() onBorderPickerDone;
-  final Function() onMediaPickerDone;
+  final Function(String) onTextPickerDone;
+  final Function(Color) onTextColorPickerDone;
+  final Function(dynamic) onFontPickerDone;
+  final Function(dynamic) onBorderPickerDone;
+  final Function(dynamic) onMediaPickerDone;
 
-  final ValueNotifier<FormFieldNotifier> currentEditableItemNotifier;
+  final ValueNotifier<EditableData> currentEditableItemNotifier;
   final GlobalKey scaffoldKey;
 
   EditorToolboxPage({

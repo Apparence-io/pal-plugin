@@ -202,24 +202,24 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           EditableMedia(
-                            mediaSize: 150.0,
+                            size: 150.0,
                             onEdit: presenter.editMedia,
                             url: model.media?.url?.value,
                             editKey:
                                 'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
                             currentEditableItemNotifier:
                                 model.currentEditableItemNotifier,
-                            mediaNotifier: model.media,
+                            data: model.media,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
-                            textNotifier: model.titleField,
+                            data: model.titleField,
                             currentEditableItemNotifier:
                                 model.currentEditableItemNotifier,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
-                            textNotifier: model.descriptionField,
+                            data: model.descriptionField,
                             currentEditableItemNotifier:
                                 model.currentEditableItemNotifier,
                           ),
@@ -227,7 +227,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 40.0),
                           ),
                           EditableButton(
-                            buttonFormFieldNotifier: model.positivButtonField,
+                            data: model.positivButtonField,
                             currentEditableItemNotifier:
                                 model.currentEditableItemNotifier,
                           ),
@@ -235,7 +235,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 12.0),
                           ),
                           EditableButton(
-                            buttonFormFieldNotifier: model.negativButtonField,
+                            data: model.negativButtonField,
                             currentEditableItemNotifier:
                                 model.currentEditableItemNotifier,
                           )

@@ -31,6 +31,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   void onInit() {
     super.onInit();
     viewModel.canValidate = new ValueNotifier(false);
+    viewModel.currentSelectedEditableNotifier = ValueNotifier(null);
   }
 
   @override
@@ -91,7 +92,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   
   _updateValidState() => viewModel.canValidate.value = isValid();
 
-  bool isValid() => viewModel.detailsField.text.value.isNotEmpty;
+  bool isValid() => viewModel.contentTextForm.text.value.isNotEmpty;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);

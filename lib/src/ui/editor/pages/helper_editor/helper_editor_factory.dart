@@ -1,7 +1,6 @@
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 
 import 'helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
@@ -100,11 +99,11 @@ class EditorEntityFactory {
           color: model.bodyBox?.backgroundColor?.value?.toHex(),
         ),
         titleText: HelperTextConfig(
-          text: model.detailsField?.text?.value,
-          fontColor: model.detailsField?.fontColor?.value?.toHex(),
-          fontWeight: model.detailsField?.fontWeight?.value,
-          fontSize: model.detailsField?.fontSize?.value,
-          fontFamily: model.detailsField?.fontFamily?.value,
+          text: model.contentTextForm?.text?.value,
+          fontColor: model.contentTextForm?.fontColor?.value?.toHex(),
+          fontWeight: model.contentTextForm?.fontWeight?.value,
+          fontSize: model.contentTextForm?.fontSize?.value,
+          fontFamily: model.contentTextForm?.fontFamily?.value,
         ),
       );
 

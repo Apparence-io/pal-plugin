@@ -147,7 +147,7 @@ class HelperSharedFactory {
   // ************ HELPER PREVIEW UTILS
 
   static HelperTextViewModel parseTextNotifier(
-    TextFormFieldNotifier notifier
+    EditableTextFormData notifier
   ) {
     return HelperTextViewModel(
       text: notifier.text?.value,
@@ -159,7 +159,7 @@ class HelperSharedFactory {
   }
 
   static HelperButtonViewModel parseButtonNotifier(
-    ButtonFormFieldNotifier notifier
+    EditableButtonFormData notifier
   ) {
     return HelperButtonViewModel(
       text: notifier.text?.value,
@@ -171,7 +171,7 @@ class HelperSharedFactory {
   }
 
   static HelperBoxViewModel parseBoxNotifier(
-    BoxNotifier notifier
+    EditableBoxFormData notifier
   ){
     return HelperBoxViewModel(
       backgroundColor: notifier.backgroundColor?.value,
@@ -179,7 +179,7 @@ class HelperSharedFactory {
   }
 
   static HelperImageViewModel parseMediaNotifier(
-    MediaNotifier notifier
+    EditableMediaFormData notifier
   ){
     return HelperImageViewModel(
       url: notifier.url?.value,

@@ -132,7 +132,7 @@ void main() {
       var editableTextsFinder = find.byType(TextField);
       await enterTextInEditable(tester, editableTextsFinder.at(0), '');
       await tester.pumpAndSettle();
-      expect(presenter.viewModel.detailsField.text.value, equals(''));
+      expect(presenter.viewModel.contentTextForm.text.value, equals(''));
 
       var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
       var validateFinder =

@@ -9,12 +9,14 @@ class EditableMedia extends StatelessWidget {
   final EditableMediaFormData data;
   final double size;
   final Function(String) onTap;
+  final bool isSelected;
 
   EditableMedia({
     Key key,
     this.size = 200.0,
     this.onTap,
     @required this.data,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override

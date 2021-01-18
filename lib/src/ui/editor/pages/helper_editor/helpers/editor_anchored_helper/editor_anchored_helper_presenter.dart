@@ -108,8 +108,6 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
     refreshView();
   }
 
-  onCallChangeBackground() {}
-
   updateBackgroundColor(Color newColor) {
     viewModel.backgroundBox.backgroundColor = newColor;
     this.refreshView();

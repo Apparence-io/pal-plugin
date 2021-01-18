@@ -8,8 +8,9 @@ import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 class EditableButton extends StatelessWidget {
   final EditableButtonFormData data;
   final Function(String) onTap;
+  final bool isSelected;
 
-  const EditableButton({Key key, @required this.data, this.onTap})
+  const EditableButton({Key key, @required this.data, this.onTap, this.isSelected = false})
       : super(key: key);
 
   @override

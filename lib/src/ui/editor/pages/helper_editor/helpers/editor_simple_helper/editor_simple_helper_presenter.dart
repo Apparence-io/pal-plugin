@@ -5,8 +5,10 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_simple_helper.dart';
 import 'editor_simple_helper_viewmodel.dart';
@@ -37,12 +39,6 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   Future onDestroy() async {
     this.viewModel.currentSelectedEditableNotifier?.dispose();
     super.onDestroy();
-  }
-
-  onTextPickerDone(String newVal) {
-    this.viewModel.contentTextForm.text = newVal;
-    this._updateValidState();
-    this.refreshView();
   }
 
   Future onValidate() async {
@@ -90,13 +86,27 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     this.viewInterface.showPreviewOfHelper(this.viewModel);
   }
   
-  onFontPickerDone(p1) {
+  onFontPickerDone(EditedFontModel newFont) {
+    this.viewModel.contentTextForm.fontFamily =  newFont.fontKeys.fontFamilyNameKey;
+    this.viewModel.contentTextForm.fontWeight =  newFont.fontKeys.fontWeightNameKey;
+    this.viewModel.contentTextForm.fontSize =  newFont.size.toInt();
+    this._updateValidState();
   }
 
-  onTextColorPickerDone(Color p1) {
+  onTextPickerDone(String newVal) {
+    this.viewModel.contentTextForm.text = newVal;
+    this._updateValidState();
   }
 
-  onNewEditableSelect(String p1) {
+  onTextColorPickerDone(Color newColor) {
+    this.viewModel.contentTextForm.fontColor = newColor;
+    this._updateValidState();
+    
+  }
+
+  onNewEditableSelect(String key) {
+    this.viewModel.currentSelectedEditableNotifier.value = _getCurrentSelectedData(key);
+    this.refreshView();
   }
 
   bool isValid() => viewModel.contentTextForm.text.isNotEmpty;
@@ -106,7 +116,14 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   // ----------------------------------
 
   
-  _updateValidState() => viewModel.canValidate.value = isValid();
+  _updateValidState() {
+    viewModel.canValidate.value = isValid();
+    this.refreshView();
+  }
+
+  EditableTextFormData _getCurrentSelectedData(String key){
+    return this.viewModel.contentTextForm;
+  }
 
 
 }

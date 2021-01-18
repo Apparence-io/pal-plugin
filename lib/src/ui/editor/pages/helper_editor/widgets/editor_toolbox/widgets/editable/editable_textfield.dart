@@ -8,11 +8,13 @@ import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 class EditableTextField extends StatelessWidget {
   final EditableTextFormData data;
   final Function(String) onTap;
+  final bool isSelected;
 
   const EditableTextField({
     Key key,
     this.onTap,
     @required this.data,
+    this.isSelected = false,
   }) : super(key: key);
 
   @override

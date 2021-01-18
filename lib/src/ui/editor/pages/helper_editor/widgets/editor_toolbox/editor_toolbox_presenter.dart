@@ -61,7 +61,7 @@ class EditorToolboxPresenter
   void animateActionBar() {
     this.viewModel.animateActionBar = true;
     this.refreshAnimations();
-    this.refreshView();
+    // this.refreshView();
     this.viewModel.animationTarget =
         this.viewModel.isBottomVisible.value ? 1 : 0;
   }
@@ -91,7 +91,6 @@ class EditorToolboxPresenter
       default:
     }
     this.viewModel.animateIcons = true;
-    this.refreshView();
     if(this.currentEditableItemNotifier.value != null)this.refreshAnimations();
   }
 

@@ -170,6 +170,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
                                 key: _textKey,
                                 data: viewModel.contentTextForm,
                                 onTap: presenter.onNewEditableSelect,
+                                isSelected: viewModel.contentTextForm?.key == viewModel.currentSelectedEditableNotifier?.value?.key
                               ),
                             ),
                           ),

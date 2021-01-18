@@ -5,6 +5,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 abstract class EditableData {
   int id;
   String key;
+  bool isSelected;
 
   EditableData(this.id, this.key);
 }

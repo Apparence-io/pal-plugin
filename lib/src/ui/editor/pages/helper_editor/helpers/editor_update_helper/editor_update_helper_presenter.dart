@@ -41,7 +41,7 @@ class EditorUpdateHelperPresenter
     this.viewInterface.hidePalBubble();
   }
 
-  onTextPickerDone() {
+  onTextPickerDone(String newVal) {
     this._updateValidState();
   }
 
@@ -80,16 +80,17 @@ class EditorUpdateHelperPresenter
   }
 
   updateBackgroundColor(Color aColor) {
-    viewModel.bodyBox.backgroundColor.value = aColor;
+    viewModel.backgroundBoxForm.backgroundColor = aColor;
+    this.refreshView();
   }
 
   onOutsideTap() => this.editableTextFieldController.add(true);
 
   editMedia() async {
     final selectedMedia =
-        await this.viewInterface.pushToMediaGallery(viewModel.media?.uuid);
-    viewModel.media?.url?.value = selectedMedia?.url;
-    viewModel.media?.uuid = selectedMedia?.id;
+        await this.viewInterface.pushToMediaGallery(viewModel.headerMediaForm?.uuid);
+    viewModel.headerMediaForm?.url = selectedMedia?.url;
+    viewModel.headerMediaForm?.uuid = selectedMedia?.id;
     this.refreshView();
   }
 
@@ -123,10 +124,22 @@ class EditorUpdateHelperPresenter
 
 
   bool isValid() =>
-      viewModel.titleField.text.value.isNotEmpty &&
-      viewModel.changelogsFields.length > 0;
+      viewModel.titleTextForm.text.isNotEmpty &&
+      viewModel.changelogsTextsForm.length > 0;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);
+  }
+
+  onFontPickerDone(p1) {
+  }
+
+  onMediaPickerDone(p1) {
+  }
+
+  onTextColorPickerDone(Color p1) {
+  }
+
+  onNewEditableSelect(String p1) {
   }
 }

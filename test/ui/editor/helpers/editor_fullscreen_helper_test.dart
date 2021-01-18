@@ -238,10 +238,10 @@ void main() {
 
       validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       await tester.pumpAndSettle();
-      expect(presenter.viewModel.titleField.text.value, equals('test title'));
-      expect(presenter.viewModel.descriptionField.text.value, equals('test description'));
-      expect(presenter.viewModel.positivButtonField.text.value, equals('Ok, thanks !'));
-      expect(presenter.viewModel.negativButtonField.text.value, equals('This is not helping'));
+      expect(presenter.viewModel.titleTextForm.text.value, equals('test title'));
+      expect(presenter.viewModel.descriptionTextForm.text.value, equals('test description'));
+      expect(presenter.viewModel.positivButtonForm.text.value, equals('Ok, thanks !'));
+      expect(presenter.viewModel.negativButtonForm.text.value, equals('This is not helping'));
       expect(validateButton.onTapCallback, isNotNull);
       validateButton.onTapCallback();
       await tester.pump(Duration(seconds: 1));
@@ -270,7 +270,7 @@ void main() {
 
     testWidgets('background color = Colors.blueAccent, change color to FFF => should change background color in model', (WidgetTester tester) async {
       await _beforeEach(tester);
-      expect(presenter.viewModel.bodyBox.backgroundColor.value, Colors.blueAccent,);
+      expect(presenter.viewModel.backgroundBoxForm.backgroundColor.value, Colors.blueAccent,);
       var colorPickerButton = find.byKey(ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
       await tester.tap(colorPickerButton);
       await tester.pumpAndSettle();
@@ -283,7 +283,7 @@ void main() {
       var validateColorButton = find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
-      expect(presenter.viewModel.bodyBox.backgroundColor.value, Color(0xFFFFFFFF),);
+      expect(presenter.viewModel.backgroundBoxForm.backgroundColor.value, Color(0xFFFFFFFF),);
     });
 
     testWidgets('tap on on field, tap on a second field => only one toolbar is shown', (WidgetTester tester) async {

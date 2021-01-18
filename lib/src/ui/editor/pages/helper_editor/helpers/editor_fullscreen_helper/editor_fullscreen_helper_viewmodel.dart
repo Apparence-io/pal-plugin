@@ -3,7 +3,7 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
@@ -19,13 +19,13 @@ class FullscreenHelperViewModel extends HelperViewModel {
   ValueNotifier<EditableData> currentEditableItemNotifier;
 
   // helper properties
-  LanguageNotifier language;
-  EditableBoxFormData bodyBox;
-  EditableMediaFormData media;
-  EditableTextFormData titleField;
-  EditableTextFormData descriptionField;
-  EditableButtonFormData positivButtonField;
-  EditableButtonFormData negativButtonField;
+  // LanguageNotifier language;
+  EditableBoxFormData backgroundBoxForm;
+  EditableMediaFormData headerMediaForm;
+  EditableTextFormData titleTextForm;
+  EditableTextFormData descriptionTextForm;
+  EditableButtonFormData positivButtonForm;
+  EditableButtonFormData negativButtonForm;
 
   FullscreenHelperViewModel({
     String id,
@@ -54,35 +54,40 @@ class FullscreenHelperViewModel extends HelperViewModel {
     helperTheme: helperTheme,
     helperType: HelperType.HELPER_FULL_SCREEN,
   ) {
-    this.language = LanguageNotifier(
-      id: languageId ?? 1,
-    );
-    this.bodyBox = EditableBoxFormData(
-      id: boxViewModel?.id,
+    // this.language = LanguageNotifier(
+    //   id: languageId ?? 1,
+    // );
+    this.backgroundBoxForm = EditableBoxFormData(
+      boxViewModel?.id,
+      FullscreenHelperKeys.BACKGROUND_KEY,
       backgroundColor: boxViewModel?.backgroundColor ?? Colors.blueAccent,
     );
-    this.media = EditableMediaFormData(
-      id: helperImageViewModel?.id,
+    this.headerMediaForm = EditableMediaFormData(
+      helperImageViewModel?.id,
+      FullscreenHelperKeys.IMAGE_KEY,
       url: helperImageViewModel?.url,
     );
-    this.titleField = EditableTextFormData(
+    this.titleTextForm = EditableTextFormData(
       titleViewModel?.id,
+      FullscreenHelperKeys.TITLE_KEY,
       fontColor: titleViewModel?.fontColor ?? Colors.white,
       fontSize: titleViewModel?.fontSize?.toInt() ?? 55,
       fontFamily: titleViewModel?.fontFamily,
       text: titleViewModel?.text ?? '',
       fontWeight: FontWeightMapper.toFontKey(titleViewModel?.fontWeight),
     );
-    this.descriptionField = EditableTextFormData(
+    this.descriptionTextForm = EditableTextFormData(
       descriptionLabel?.id,
+      FullscreenHelperKeys.DESCRIPTION_KEY,
       fontColor: descriptionLabel?.fontColor ?? Colors.white,
       fontSize: descriptionLabel?.fontSize?.toInt() ?? 14,
       text: descriptionLabel?.text ?? '',
       fontWeight: FontWeightMapper.toFontKey(descriptionLabel?.fontWeight),
       fontFamily: descriptionLabel?.fontFamily,
     );
-    this.positivButtonField = EditableButtonFormData(
+    this.positivButtonForm = EditableButtonFormData(
       positivButtonLabel?.id,
+      FullscreenHelperKeys.POSITIV_KEY,
       backgroundColor: Color(0xFF03045E),
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 23,
@@ -92,8 +97,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
       ),
       fontFamily: positivButtonLabel?.fontFamily,
     );
-    this.negativButtonField = EditableButtonFormData(
+    this.negativButtonForm = EditableButtonFormData(
       negativButtonLabel?.id,
+      FullscreenHelperKeys.NEGATIV_KEY,
       backgroundColor: Color(0xFF03045E),
       text: negativButtonLabel?.text ?? 'This is not helping',
       fontWeight: FontWeightMapper.toFontKey(
@@ -116,13 +122,13 @@ class FullscreenHelperViewModel extends HelperViewModel {
       helperTheme: model.helperTheme,
     );
     if (model is FullscreenHelperViewModel) {
-      fullscreenHelper.bodyBox = model?.bodyBox;
-      fullscreenHelper.language = model?.language;
-      fullscreenHelper.titleField = model?.titleField;
-      fullscreenHelper.descriptionField = model?.descriptionField;
-      fullscreenHelper.positivButtonField = model?.positivButtonField;
-      fullscreenHelper.negativButtonField = model?.negativButtonField;
-      fullscreenHelper.media = model?.media;
+      fullscreenHelper.backgroundBoxForm = model?.backgroundBoxForm;
+      // fullscreenHelper.language = model?.language;
+      fullscreenHelper.titleTextForm = model?.titleTextForm;
+      fullscreenHelper.descriptionTextForm = model?.descriptionTextForm;
+      fullscreenHelper.positivButtonForm = model?.positivButtonForm;
+      fullscreenHelper.negativButtonForm = model?.negativButtonForm;
+      fullscreenHelper.headerMediaForm = model?.headerMediaForm;
     }
 
     return fullscreenHelper;
@@ -164,9 +170,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
     );
 
   List<EditableTextData> get fields => [
-    titleField,
-    descriptionField,
-    positivButtonField,
-    negativButtonField,
+    titleTextForm,
+    descriptionTextForm,
+    positivButtonForm,
+    negativButtonForm,
   ];  
 }

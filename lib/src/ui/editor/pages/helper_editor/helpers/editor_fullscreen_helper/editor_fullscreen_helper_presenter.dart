@@ -78,7 +78,7 @@ class EditorFullScreenHelperPresenter
   }
 
   updateBackgroundColor(Color aColor) {
-    viewModel.bodyBox.backgroundColor.value = aColor;
+    viewModel.backgroundBoxForm.backgroundColor = aColor;
     // this.viewInterface.closeColorPickerDialog();
     this.updateValidState();
     // this.refreshView();
@@ -86,10 +86,10 @@ class EditorFullScreenHelperPresenter
 
   editMedia() async {
     final selectedMedia =
-        await this.viewInterface.pushToMediaGallery(this.viewModel.media?.uuid);
+        await this.viewInterface.pushToMediaGallery(this.viewModel.headerMediaForm?.uuid);
 
-    this.viewModel.media?.url?.value = selectedMedia?.url;
-    this.viewModel.media?.uuid = selectedMedia?.id;
+    this.viewModel.headerMediaForm?.url = selectedMedia?.url;
+    this.viewModel.headerMediaForm?.uuid = selectedMedia?.id;
     this.refreshView();
   }
 
@@ -104,12 +104,27 @@ class EditorFullScreenHelperPresenter
   }
 
   bool isValid() =>
-      viewModel.positivButtonField.text.value.isNotEmpty &&
-      viewModel.negativButtonField.text.value.isNotEmpty &&
-      viewModel.titleField.text.value.isNotEmpty &&
-      viewModel.descriptionField.text.value.isNotEmpty;
+      viewModel.positivButtonForm.text.isNotEmpty &&
+      viewModel.negativButtonForm.text.isNotEmpty &&
+      viewModel.titleTextForm.text.isNotEmpty &&
+      viewModel.descriptionTextForm.text.isNotEmpty;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);
+  }
+
+  onTextPickerDone(String p1) {
+  }
+
+  onFontPickerDone(p1) {
+  }
+
+  onMediaPickerDone(p1) {
+  }
+
+  onTextColorPickerDone(Color p1) {
+  }
+
+  onNewEditableSelect(String p1) {
   }
 }

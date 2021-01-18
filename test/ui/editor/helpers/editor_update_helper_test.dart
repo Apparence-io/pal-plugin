@@ -220,8 +220,8 @@ void main() {
       var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
       var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNotNull);
-      expect(presenter.viewModel.titleField.text.value, 'Lorem ipsum');
-      expect(presenter.viewModel.changelogsFields['0'].text.value, 'Lorem ipsum changelog');
+      expect(presenter.viewModel.titleTextForm.text.value, 'Lorem ipsum');
+      expect(presenter.viewModel.changelogsTextsForm['0'].text.value, 'Lorem ipsum changelog');
       await tester.pump(Duration(milliseconds: 100));
     });
 
@@ -259,7 +259,7 @@ void main() {
 
     testWidgets('base color is blue => change background color', (WidgetTester tester) async {
       await beforeEach(tester);
-      expect(presenter.viewModel.bodyBox.backgroundColor.value, Colors.blueAccent,);
+      expect(presenter.viewModel.backgroundBoxForm.backgroundColor.value, Colors.blueAccent,);
 
       var colorPickerButton = find.byKey(ValueKey('pal_EditorUpdateHelperWidget_BackgroundColorPicker'));
       await tester.tap(colorPickerButton);
@@ -275,7 +275,7 @@ void main() {
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
 
-      expect(presenter.viewModel.bodyBox.backgroundColor.value, Color(0xFFFFFFFF));
+      expect(presenter.viewModel.backgroundBoxForm.backgroundColor.value, Color(0xFFFFFFFF));
     });
 
     testWidgets('change thank button text => viewmodel has been updated', (WidgetTester tester) async {
@@ -284,7 +284,7 @@ void main() {
       await tester.enterText(titleTextField, 'Thanks my friend!');
       await tester.pumpAndSettle();
       expect(find.text('Thanks my friend!'), findsOneWidget);
-      expect(presenter.viewModel.thanksButton.text.value, 'Thanks my friend!');
+      expect(presenter.viewModel.positivButtonForm.text.value, 'Thanks my friend!');
     });
 
     testWidgets('tap on on field, tap on a second field => only one toolbar is shown', (WidgetTester tester) async {
@@ -426,7 +426,7 @@ void main() {
       var entity = validUpdateHelperEntity();
       await beforeEach(tester, entity);
       expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
-      expect(presenter.viewModel.changelogsFields.length, 2);
+      expect(presenter.viewModel.changelogsTextsForm.length, 2);
       entity.helperTexts.forEach((element) => expect(find.text(element.value), findsOneWidget));
     });
 

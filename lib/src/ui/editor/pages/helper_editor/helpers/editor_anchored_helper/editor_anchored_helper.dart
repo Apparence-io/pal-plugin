@@ -139,6 +139,9 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
           onCloseEditor: presenter.onCancel,
           currentEditableItemNotifier: model.currentEditableItemNotifier,
           onTextPickerDone: presenter.updateValidState,
+          onFontPickerDone: presenter.onFontPickerDone,
+          onMediaPickerDone: presenter.onMediaPickerDone,
+          onTextColorPickerDone: presenter.onTextColorPickerDone,
           onPreview: presenter.onPreview,
           child: Stack(
             children: [
@@ -182,7 +185,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
               listenable: animationController,
               currentPos: element?.value?.offset,
               anchorSize: element?.value?.rect?.size,
-              bgColor: model.backgroundBox.backgroundColor.value,
+              bgColor: model.backgroundBox.backgroundColor,
               padding: 4),
         ),
       ),
@@ -242,16 +245,14 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
                 child: EditableTextField(
                   data: model.titleField,
-                  currentEditableItemNotifier:
-                      model.currentEditableItemNotifier,
+                  onTap: presenter.onNewEditableSelect,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: EditableTextField(
                   data: model.descriptionField,
-                  currentEditableItemNotifier:
-                      model.currentEditableItemNotifier,
+                  onTap: presenter.onNewEditableSelect,
                 ),
               ),
               SizedBox(height: 16),
@@ -261,15 +262,13 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                   Flexible(
                     child: EditableButton(
                       data: model.negativBtnField,
-                      currentEditableItemNotifier:
-                          model.currentEditableItemNotifier,
+                      onTap: presenter.onNewEditableSelect,
                     ),
                   ),
                   Flexible(
                     child: EditableButton(
                       data: model.positivBtnField,
-                      currentEditableItemNotifier:
-                          model.currentEditableItemNotifier,
+                      onTap: presenter.onNewEditableSelect
                     ),
                   ),
                 ],

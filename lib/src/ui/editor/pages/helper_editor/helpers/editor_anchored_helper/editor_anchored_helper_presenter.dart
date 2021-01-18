@@ -61,7 +61,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   Future resetSelection() async {
     await scanElements();
     viewModel.anchorValidated = false;
-    viewModel.backgroundBox.backgroundColor.value =
+    viewModel.backgroundBox.backgroundColor =
         Colors.lightGreenAccent.withOpacity(0.6);
   }
 
@@ -102,7 +102,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       return;
     }
     if (viewModel.id == null) {
-      viewModel.backgroundBox.backgroundColor.value = Colors.blueGrey.shade900;
+      viewModel.backgroundBox.backgroundColor = Colors.blueGrey.shade900;
     }
     viewModel.anchorValidated = true;
     refreshView();
@@ -111,7 +111,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   onCallChangeBackground() {}
 
   updateBackgroundColor(Color newColor) {
-    viewModel.backgroundBox.backgroundColor.value = newColor;
+    viewModel.backgroundBox.backgroundColor = newColor;
     this.refreshView();
   }
 
@@ -147,17 +147,29 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   // PRIVATES
   // ----------------------------------
 
-  void updateValidState() {
+  void updateValidState(String newVal) {
     viewModel.canValidate.value = isValid();
     this.refreshView();
   }
 
   bool isValid() =>
-      viewModel.titleField.text.value.isNotEmpty &&
-      viewModel.descriptionField.text.value.isNotEmpty;
+      viewModel.titleField.text.isNotEmpty &&
+      viewModel.descriptionField.text.isNotEmpty;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(
         this.viewModel, this.finderService, this.isTestingMode);
+  }
+
+  onFontPickerDone(p1) {
+  }
+
+  onMediaPickerDone(p1) {
+  }
+
+  onTextColorPickerDone(Color p1) {
+  }
+
+  onNewEditableSelect(String p1) {
   }
 }

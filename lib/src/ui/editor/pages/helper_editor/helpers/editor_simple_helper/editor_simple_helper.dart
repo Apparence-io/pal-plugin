@@ -12,7 +12,6 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -56,6 +55,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
       this.palEditModeStateService})
       : super(key: key);
 
+  // TODO : Is it usefull ?! Rework ?
   factory EditorSimpleHelperPage.create(
           {Key key,
           HelperEditorPageArguments parameters,
@@ -117,59 +117,71 @@ class EditorSimpleHelperPage extends StatelessWidget {
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
       body: EditorToolboxPage(
-        boxViewHandler: BoxViewHandler(
-            callback: presenter.updateBackgroundColor,
-            selectedColor: viewModel.bodyBox?.backgroundColor),
-        currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
+        // TODO : Helper background
+        // boxViewHandler: BoxViewHandler(
+        //     callback: presenter.updateBackgroundColor,
+        //     selectedColor: viewModel.bodyBox?.backgroundColor
+        //     ),
+        currentEditableItemNotifier: viewModel.currentSelectedEditableNotifier,
+        // PICKER CALLBACK
         onTextPickerDone: presenter.onTextPickerDone,
+        onFontPickerDone: presenter.onFontPickerDone,
+        onTextColorPickerDone: presenter.onTextColorPickerDone,
+        // ACTION BAR FUNCTIONS
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
         onPreview: presenter.onPreview,
         onCloseEditor: presenter.onCancel,
-        child: LayoutBuilder(builder: (context, constraints) {
-          return Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // TODO: Blur background here
-                SingleChildScrollView(
-                  child: Container(
-                    color: Colors.black38,
-                    height: constraints.maxHeight,
-                    width: constraints.maxWidth,
-                    child: Column(
-                      children: [
-                        Expanded(child: Container()),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              bottom:
-                                  MediaQuery.of(context).padding.bottom + 55),
-                          child: Container(
+
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Form(
+              key: formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // TODO: Blur background here
+                  SingleChildScrollView(
+                    child: Container(
+                      color: Colors.black38,
+                      height: constraints.maxHeight,
+                      width: constraints.maxWidth,
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Container(),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).padding.bottom + 55),
+                            child: Container(
                               width: constraints.maxWidth * 0.8,
                               decoration: BoxDecoration(
                                 color: PalTheme.of(context).colors.black,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12),
+                                ),
                               ),
                               padding: EdgeInsets.all(15),
                               child: EditableTextField(
                                 key: _textKey,
                                 data: viewModel.contentTextForm,
-                                currentEditableItemNotifier:
-                                    viewModel.currentEditableItemNotifier,
-                              )),
-                        ),
-                      ],
+                                onTap: presenter.onNewEditableSelect,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -192,7 +204,7 @@ class _EditorSimpleHelperPage
   @override
   Future showPreviewOfHelper(SimpleHelperViewModel model) async {
     SimpleHelperPage page = SimpleHelperPage(
-      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
+      // helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       descriptionLabel:
           HelperSharedFactory.parseTextNotifier(model.contentTextForm),
     );

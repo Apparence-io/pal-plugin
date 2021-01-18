@@ -13,11 +13,11 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_background.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
@@ -75,13 +75,13 @@ class EditorFullScreenHelper
   @override
   Future showPreviewOfHelper(FullscreenHelperViewModel model) async {
     UserFullScreenHelperPage page = UserFullScreenHelperPage(
-      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
-      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
-      headerImageViewModel: HelperSharedFactory.parseMediaNotifier(model.media),
+      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+      headerImageViewModel: HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
       negativLabel:
-          HelperSharedFactory.parseButtonNotifier(model.negativButtonField),
+          HelperSharedFactory.parseButtonNotifier(model.negativButtonForm),
       positivLabel:
-          HelperSharedFactory.parseButtonNotifier(model.positivButtonField),
+          HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
       onNegativButtonTap: () => Navigator.pop(context),
       onPositivButtonTap: () => Navigator.pop(context),
     );
@@ -175,8 +175,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
             callback: presenter.updateBackgroundColor,
-            selectedColor: model.bodyBox?.backgroundColor),
-        onTextPickerDone: presenter.updateValidState,
+            selectedColor: model.backgroundBoxForm?.backgroundColor),
+        onTextPickerDone: presenter.onTextPickerDone,
+        onFontPickerDone: presenter.onFontPickerDone,
+        onMediaPickerDone: presenter.onMediaPickerDone,
+        onTextColorPickerDone: presenter.onTextColorPickerDone,
         currentEditableItemNotifier: model.currentEditableItemNotifier,
         onValidate:
             (model.canValidate?.value == true) ? presenter.onValidate : null,
@@ -190,7 +193,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
             key: formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: EditableBackground(
-              backgroundColor: model.bodyBox.backgroundColor,
+              backgroundColor: model.backgroundBoxForm.backgroundColor,
               widget: Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -203,41 +206,32 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                         children: [
                           EditableMedia(
                             size: 150.0,
-                            onEdit: presenter.editMedia,
-                            url: model.media?.url?.value,
-                            editKey:
-                                'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
-                            currentEditableItemNotifier:
-                                model.currentEditableItemNotifier,
-                            data: model.media,
+                            data: model.headerMediaForm,
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
-                            data: model.titleField,
-                            currentEditableItemNotifier:
-                                model.currentEditableItemNotifier,
+                            data: model.titleTextForm,
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
-                            data: model.descriptionField,
-                            currentEditableItemNotifier:
-                                model.currentEditableItemNotifier,
+                            data: model.descriptionTextForm,
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 40.0),
                           ),
                           EditableButton(
-                            data: model.positivButtonField,
-                            currentEditableItemNotifier:
-                                model.currentEditableItemNotifier,
+                            data: model.positivButtonForm,
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
                           ),
                           EditableButton(
-                            data: model.negativButtonField,
-                            currentEditableItemNotifier:
-                                model.currentEditableItemNotifier,
+                            data: model.negativButtonForm,
+                            onTap: presenter.onNewEditableSelect,
                           )
                         ],
                       ),

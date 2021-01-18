@@ -3,7 +3,7 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
@@ -13,14 +13,14 @@ class UpdateHelperViewModel extends HelperViewModel {
   // form validation boolean
   ValueNotifier<bool> canValidate;
   bool isKeyboardVisible;
-  LanguageNotifier language;
+  // LanguageNotifier language;
 
   ValueNotifier<EditableData> currentEditableItemNotifier;
-  EditableBoxFormData bodyBox;
-  Map<String, EditableTextFormData> changelogsFields;
-  EditableMediaFormData media;
-  EditableButtonFormData thanksButton;
-  EditableTextFormData titleField;
+  EditableBoxFormData backgroundBoxForm;
+  Map<String, EditableTextFormData> changelogsTextsForm;
+  EditableMediaFormData headerMediaForm;
+  EditableButtonFormData positivButtonForm;
+  EditableTextFormData titleTextForm;
 
   UpdateHelperViewModel({
     String id,
@@ -47,20 +47,23 @@ class UpdateHelperViewModel extends HelperViewModel {
           helperType: HelperType.UPDATE_HELPER,
           helperTheme: helperTheme,
         ) {
-    this.language = LanguageNotifier(
-      id: languageId ?? 1,
-    );
-    this.bodyBox = EditableBoxFormData(
-      id: helperBoxViewModel?.id,
+    // this.language = LanguageNotifier(
+    //   id: languageId ?? 1,
+    // );
+    this.backgroundBoxForm = EditableBoxFormData(
+      helperBoxViewModel?.id,
+      UpdatescreenHelperKeys.BACKGROUND_KEY,
       backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.blueAccent,
     );
-    this.changelogsFields = changelogsLabels ?? {};
-    this.media = EditableMediaFormData(
-      id: helperImageViewModel?.id,
+    this.changelogsTextsForm = changelogsLabels ?? {};
+    this.headerMediaForm = EditableMediaFormData(
+      helperImageViewModel?.id,
+      UpdatescreenHelperKeys.IMAGE_KEY,
       url: helperImageViewModel?.url,
     );
-    this.thanksButton = EditableButtonFormData(
+    this.positivButtonForm = EditableButtonFormData(
       positivButtonLabel?.id,
+      UpdatescreenHelperKeys.POSITIV_KEY,
       backgroundColor: Color(0xFF03045E),
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 22,
@@ -69,8 +72,9 @@ class UpdateHelperViewModel extends HelperViewModel {
           positivButtonLabel?.fontWeight ?? FontWeight.normal),
       fontFamily: positivButtonLabel?.fontFamily,
     );
-    this.titleField = EditableTextFormData(
+    this.titleTextForm = EditableTextFormData(
       titleLabel?.id,
+      UpdatescreenHelperKeys.TITLE_KEY,
       fontColor: titleLabel?.fontColor ?? Colors.white,
       fontSize: titleLabel?.fontSize?.toInt() ?? 36,
       text: titleLabel?.text ?? '',
@@ -93,12 +97,12 @@ class UpdateHelperViewModel extends HelperViewModel {
     );
 
     if (model is UpdateHelperViewModel) {
-      updateHelper.bodyBox = model?.bodyBox;
-      updateHelper.language = model?.language;
-      updateHelper.titleField = model?.titleField;
-      updateHelper.thanksButton = model?.thanksButton;
-      updateHelper.changelogsFields = model?.changelogsFields;
-      updateHelper.media = model?.media;
+      updateHelper.backgroundBoxForm = model?.backgroundBoxForm;
+      // updateHelper.language = model?.language;
+      updateHelper.titleTextForm = model?.titleTextForm;
+      updateHelper.positivButtonForm = model?.positivButtonForm;
+      updateHelper.changelogsTextsForm = model?.changelogsTextsForm;
+      updateHelper.headerMediaForm = model?.headerMediaForm;
     }
 
     return updateHelper;
@@ -112,11 +116,13 @@ class UpdateHelperViewModel extends HelperViewModel {
     );
 
     if (changelogs != null && changelogs.length > 0) {
+      int index = 0;
       for (var changelog in changelogs) {
         changelogsMap.putIfAbsent(
           'template_${changelog.id.toString()}',
           () => EditableTextFormData(
             changelog?.id,
+            '${UpdatescreenHelperKeys.LINES_KEY}_${index++}',
             text: changelog?.text ?? '',
             fontColor: changelog?.fontColor ?? Colors.white,
             fontSize: changelog?.fontSize?.toInt() ?? 18,
@@ -156,11 +162,12 @@ class UpdateHelperViewModel extends HelperViewModel {
   }
 
   String addChangelog() {
-    String textFieldId = changelogsFields.length.toString();
-    this.changelogsFields.putIfAbsent(
+    String textFieldId = changelogsTextsForm.length.toString();
+    this.changelogsTextsForm.putIfAbsent(
           textFieldId,
           () => EditableTextFormData(
             null,
+            '${UpdatescreenHelperKeys.LINES_KEY}_${changelogsTextsForm.length}',
             text: '',
             fontSize: 18,
             fontColor: Colors.white,
@@ -170,8 +177,8 @@ class UpdateHelperViewModel extends HelperViewModel {
   }
 
   List<dynamic> get fields => [
-        titleField,
-        ...changelogsFields.values,
-        thanksButton,
+        titleTextForm,
+        ...changelogsTextsForm.values,
+        positivButtonForm,
       ];
 }

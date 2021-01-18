@@ -17,14 +17,13 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   final HelperEditorPageArguments parameters;
 
-  final StreamController<bool> editableTextFieldController;
 
   EditorSimpleHelperPresenter(
     EditorSimpleHelperView viewInterface,
     SimpleHelperViewModel simpleHelperViewModel,
     this.editorHelperService,
     this.parameters
-  ) : editableTextFieldController = StreamController<bool>.broadcast(),
+  ) :
       super(simpleHelperViewModel, viewInterface);
 
   @override
@@ -36,11 +35,12 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
 
   @override
   Future onDestroy() async {
-    editableTextFieldController.close();
+    this.viewModel.currentSelectedEditableNotifier?.dispose();
     super.onDestroy();
   }
 
-  onTextPickerDone() {
+  onTextPickerDone(String newVal) {
+    this.viewModel.contentTextForm.text = newVal;
     this._updateValidState();
     this.refreshView();
   }
@@ -79,11 +79,27 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     }
     return null;
   }
-  updateBackgroundColor(Color aColor) {
-    viewModel.bodyBox.backgroundColor.value = aColor;
-    this.refreshView();
-    // this.viewInterface.closeColorPickerDialog();
+  
+  // updateBackgroundColor(Color aColor) {
+  //   viewModel.bodyBox.backgroundColor.value = aColor;
+  //   this.refreshView();
+  //   // this.viewInterface.closeColorPickerDialog();
+  // }
+
+  onPreview() {
+    this.viewInterface.showPreviewOfHelper(this.viewModel);
   }
+  
+  onFontPickerDone(p1) {
+  }
+
+  onTextColorPickerDone(Color p1) {
+  }
+
+  onNewEditableSelect(String p1) {
+  }
+
+  bool isValid() => viewModel.contentTextForm.text.isNotEmpty;
 
   // ----------------------------------
   // PRIVATES
@@ -92,10 +108,5 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   
   _updateValidState() => viewModel.canValidate.value = isValid();
 
-  bool isValid() => viewModel.contentTextForm.text.value.isNotEmpty;
-
-  onPreview() {
-    this.viewInterface.showPreviewOfHelper(this.viewModel);
-  }
 
 }

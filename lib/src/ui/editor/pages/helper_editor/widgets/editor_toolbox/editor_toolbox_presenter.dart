@@ -12,17 +12,18 @@ class EditorToolboxPresenter
     extends Presenter<EditorToolboxModel, EditorToolboxView> {
   final ValueNotifier<EditableData> currentEditableItemNotifier;
 
-  final Function() onTextPickerDone;
-  final Function() onTextColorPickerDone;
-  final Function() onFontPickerDone;
-  final Function() onBorderPickerDone;
-  final Function() onMediaPickerDone;
+  // TODO : Remove dynamic
+  final Function(String) onTextPickerDone;
+  final Function(Color) onTextColorPickerDone;
+  final Function(EditedFontModel) onFontPickerDone;
+  // final Function(dynamic) onBorderPickerDone;
+  final Function(GraphicEntity) onMediaPickerDone;
 
   EditorToolboxPresenter(
     EditorToolboxView viewInterface, {
     @required BoxViewHandler boxViewHandler,
     @required this.currentEditableItemNotifier,
-    this.onBorderPickerDone,
+    // this.onBorderPickerDone,
     this.onFontPickerDone,
     this.onTextColorPickerDone,
     this.onTextPickerDone,
@@ -114,28 +115,20 @@ class EditorToolboxPresenter
             this.currentEditableItemNotifier?.value;
         Color newColor = await this
             .viewInterface
-            .openColorPicker(editableFormField.fontColor.value);
+            .openColorPicker(editableFormField.fontColor);
         if (newColor != null) {
-          editableFormField.fontColor.value = newColor;
-          this.onTextColorPickerDone();
+          this.onTextColorPickerDone(newColor);
         }
         break;
       case ToolBarActionButton.font:
         EditableTextData editableFormField =
             this.currentEditableItemNotifier?.value;
         EditedFontModel newFont = await this.viewInterface.openFontPicker(
-            editableFormField.fontFamily.value,
-            editableFormField.fontSize.value,
-            editableFormField.fontWeight.value);
+            editableFormField.fontFamily,
+            editableFormField.fontSize,
+            editableFormField.fontWeight);
         if (newFont != null) {
-          String fontWeight = newFont.fontKeys.fontWeightNameKey;
-          String fontFamily = newFont.fontKeys.fontFamilyNameKey;
-          double fontSize = newFont.size;
-
-          editableFormField.fontFamily.value = fontFamily;
-          editableFormField.fontSize.value = fontSize.toInt();
-          editableFormField.fontWeight.value = fontWeight;
-          this.onFontPickerDone();
+          this.onFontPickerDone(newFont);
         }
         break;
       case ToolBarActionButton.media:
@@ -143,9 +136,7 @@ class EditorToolboxPresenter
         GraphicEntity newGraphicEntity =
             await this.viewInterface.openMediaPicker(mediaNotifier?.uuid);
         if (newGraphicEntity != null) {
-          mediaNotifier.url.value = newGraphicEntity?.url;
-          mediaNotifier.uuid = newGraphicEntity?.id;
-          this.onMediaPickerDone();
+          this.onMediaPickerDone(newGraphicEntity);
         }
         break;
       case ToolBarActionButton.text:
@@ -153,10 +144,9 @@ class EditorToolboxPresenter
             this.currentEditableItemNotifier?.value;
         String newText = await this
             .viewInterface
-            .openTextPicker(editableFormField.text.value);
+            .openTextPicker(editableFormField.text);
         if (newText != null) {
-          editableFormField.text.value = newText;
-          this.onTextPickerDone();
+          this.onTextPickerDone(newText);
         }
         break;
       default:
@@ -169,7 +159,7 @@ class EditorToolboxPresenter
       case ToolBarGlobalActionButton.backgroundColor:
         Color newColor = await this
             .viewInterface
-            .openColorPicker(this.viewModel.boxViewHandler.selectedColor.value);
+            .openColorPicker(this.viewModel.boxViewHandler?.selectedColor);
         if (newColor != null) {
           this.viewModel.boxViewHandler.callback(newColor);
         }

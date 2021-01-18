@@ -15,11 +15,11 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_background.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:pal/src/ui/editor/widgets/editable_background.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
@@ -42,7 +42,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
   final HelperEditorPageArguments arguments;
   final EditorHelperService helperService;
   final PalEditModeStateService palEditModeStateService;
-  final EditedData editedData;
 
   // inner page widgets
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -50,15 +49,14 @@ class EditorUpdateHelperPage extends StatelessWidget {
   final ScrollController scrollController = ScrollController();
   final PackageVersionReader packageVersionReader;
 
-  final GlobalKey _titleKey = GlobalKey();
-  final GlobalKey _thanksButtonKey = GlobalKey();
+  // final GlobalKey _titleKey = GlobalKey();
+  // final GlobalKey _thanksButtonKey = GlobalKey();
 
   EditorUpdateHelperPage._({
     Key key,
     this.helperService,
     this.palEditModeStateService,
     this.packageVersionReader,
-    this.editedData,
     @required this.baseviewModel,
     @required this.arguments,
   }) : super(key: key);
@@ -103,8 +101,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorUpdateHelperPresenter, UpdateHelperViewModel>()
         .build(
-      // key: ValueKey('pal_EditorUpdateHelperWidget_Builder'),
-      key: UniqueKey(),
       context: context,
       presenterBuilder: (context) {
         var presenter = EditorUpdateHelperPresenter(
@@ -119,8 +115,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
           baseviewModel,
           helperService ?? EditorInjector.of(context).helperService,
           arguments,
-          titleKey: _titleKey,
-          thanksButtonKey: _thanksButtonKey,
         );
         KeyboardVisibilityNotification()
             .addNewListener(onChange: presenter.onKeyboardVisibilityChange);
@@ -144,20 +138,23 @@ class EditorUpdateHelperPage extends StatelessWidget {
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(
           callback: presenter.updateBackgroundColor,
-          selectedColor: viewModel.bodyBox?.backgroundColor,
+          selectedColor: viewModel.backgroundBoxForm?.backgroundColor,
         ),
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
         currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
         onTextPickerDone: presenter.onTextPickerDone,
+        onFontPickerDone: presenter.onFontPickerDone,
+        onMediaPickerDone: presenter.onMediaPickerDone,
+        onTextColorPickerDone: presenter.onTextColorPickerDone,
         onCloseEditor: presenter.onCancel,
         onPreview: presenter.onPreview,
         child: Form(
           key: formKey,
           autovalidateMode: AutovalidateMode.always,
           child: EditableBackground(
-            backgroundColor: viewModel.bodyBox?.backgroundColor,
+            backgroundColor: viewModel.backgroundBoxForm?.backgroundColor,
             widget: Padding(
               padding: const EdgeInsets.all(2.0),
               child: Container(
@@ -201,29 +198,15 @@ class EditorUpdateHelperPage extends StatelessWidget {
                       EditableMedia(
                         key: ValueKey(
                             'pal_EditorUpdateHelperWidget_EditableMedia'),
-                        editKey:
-                            'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
                         size: 123.0,
-                        onEdit: presenter.editMedia,
-                        currentEditableItemNotifier:
-                            viewModel.currentEditableItemNotifier,
-                        url: viewModel.media?.url?.value,
-                        data: viewModel.media,
+                        data: viewModel.headerMediaForm,
+                        onTap: presenter.onNewEditableSelect,
                       ),
                       SizedBox(height: 40),
                       EditableTextField(
-                        key: _titleKey,
-                        data: viewModel.titleField,
-                        currentEditableItemNotifier:
-                            viewModel.currentEditableItemNotifier,
+                        data: viewModel.titleTextForm,
+                        onTap: presenter.onNewEditableSelect,
                       ),
-                      // EditableTextField.fromNotifier(
-                      //   presenter.editableTextFieldController.stream,
-                      //   viewModel.titleField,
-                      //   presenter.onTitleFieldChanged,
-                      //   presenter.onTitleFieldSubmitted,
-                      //   presenter.onTitleTextStyleChanged,
-                      // ),
                       SizedBox(height: 25.0),
                       _buildChangelogFields(context, presenter, viewModel),
                     ],
@@ -250,17 +233,11 @@ class EditorUpdateHelperPage extends StatelessWidget {
     final UpdateHelperViewModel viewmodel,
   ) {
     List<Widget> changelogsTextfieldWidgets = [];
-    viewmodel.changelogsFields.forEach((key, field) {
+    viewmodel.changelogsTextsForm.forEach((key, field) {
       changelogsTextfieldWidgets.add(EditableTextField(
         data: field,
-        currentEditableItemNotifier: viewmodel.currentEditableItemNotifier,
         key: ValueKey(key),
-        // presenter.editableTextFieldController.stream,
-        // field,
-        // presenter.onChangelogTextChanged,
-        // presenter.onChangelogFieldSubmitted,
-        // presenter.onChangelogTextStyleFieldChanged,
-        // id: key,
+        onTap: presenter.onNewEditableSelect,
       ));
     });
     return Column(
@@ -296,9 +273,8 @@ class EditorUpdateHelperPage extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: EditableButton(
-        key: _thanksButtonKey,
-        data: viewModel.thanksButton,
-        currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
+        data: viewModel.positivButtonForm,
+        onTap: presenter.onNewEditableSelect,
       ),
     );
   }
@@ -355,12 +331,12 @@ class _EditorUpdateHelperPage
   @override
   Future showPreviewOfHelper(UpdateHelperViewModel model) async {
     UserUpdateHelperPage page = UserUpdateHelperPage(
-      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
-      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
-      changelogLabels: model.changelogsFields.entries
+      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+      changelogLabels: model.changelogsTextsForm.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),
-      helperImageViewModel: HelperSharedFactory.parseMediaNotifier(model.media),
+      helperImageViewModel: HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
       onPositivButtonTap: () => Navigator.pop(context),
       packageVersionReader: this.packageVersionReader,
     );

@@ -55,7 +55,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     this.onMediaPickerDone,
     this.onPreview,
     this.onCloseEditor,
-    @required this.boxViewHandler,
+    this.boxViewHandler,
   });
 
   final _mvvmPageBuilder =
@@ -101,7 +101,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
         this,
         boxViewHandler: boxViewHandler,
         currentEditableItemNotifier: currentEditableItemNotifier,
-        onBorderPickerDone: onBorderPickerDone,
+        // onBorderPickerDone: onBorderPickerDone,
         onFontPickerDone: onFontPickerDone,
         onTextColorPickerDone: onTextColorPickerDone,
         onTextPickerDone: onTextPickerDone,

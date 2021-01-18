@@ -4,12 +4,11 @@ import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/extensions/color_extension.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
-
-import '../../helper_editor_notifiers.dart';
 
 class AnchoredFullscreenHelperViewModel extends HelperViewModel {
 
@@ -55,6 +54,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
     this.anchorValidated = false
   }) : titleField = EditableTextFormData(
         titleViewModel?.id,
+        AnchoredscreenHelperKeys.TITLE_KEY,
         fontColor: titleViewModel?.fontColor ?? Colors.white,
         fontSize: titleViewModel?.fontSize?.toInt() ?? 31,
         text: titleViewModel?.text ?? '',
@@ -62,6 +62,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       ),
       descriptionField = EditableTextFormData(
         descriptionLabel?.id,
+        AnchoredscreenHelperKeys.DESCRIPTION_KEY,
         fontColor: descriptionLabel?.fontColor ?? Colors.white,
         fontSize: descriptionLabel?.fontSize?.toInt() ?? 20,
         text: descriptionLabel?.text ?? '',
@@ -70,6 +71,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       ),
       positivBtnField = EditableButtonFormData(
         positivButtonLabel?.id,
+        AnchoredscreenHelperKeys.POSITIV_KEY,
         backgroundColor: Color(0xFF03045E),
         fontColor: positivButtonLabel?.fontColor ?? Colors.white,
         fontSize: positivButtonLabel?.fontSize?.toInt() ?? 20,
@@ -78,6 +80,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       ),
       negativBtnField = EditableButtonFormData(
         negativButtonLabel?.id,
+        AnchoredscreenHelperKeys.NEGATIV_KEY,
         backgroundColor: Color(0xFF03045E),
         text: negativButtonLabel?.text ?? 'This is not helping',
         fontWeight: FontWeightMapper.toFontKey(negativButtonLabel?.fontWeight ?? FontWeight.normal),
@@ -86,6 +89,8 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
         fontFamily: negativButtonLabel?.fontFamily,
       ),
       backgroundBox = backgroundBox ?? EditableBoxFormData(
+        backgroundBox.id,
+        AnchoredscreenHelperKeys.BACKGROUND_KEY,
         backgroundColor: Colors.lightGreenAccent.withOpacity(.6)
       ),
       currentEditableItemNotifier = ValueNotifier<EditableData>(null),
@@ -133,8 +138,10 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       maxVersionCode: entity?.versionMax,
       helperTheme: null,
       triggerType: entity?.triggerType,
+      // TODO : Finish factory for multiple boxes
       backgroundBox: EditableBoxFormData(
-        key: entity.helperBoxes.first.key,
+        entity.helperBoxes.first.id,
+        entity.helperBoxes.first.key,
         backgroundColor: HexColor?.fromHex(entity.helperBoxes.first.backgroundColor)
       ),
       titleViewModel: HelperSharedFactory.parseTextLabel(

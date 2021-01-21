@@ -44,7 +44,6 @@ class _EditorActionItemState extends State<EditorActionItem>
 
   Widget build(BuildContext contexte) {
     _scale = 1 - _animationController.value;
-
     return Transform.scale(
       scale: _scale,
       child: IgnorePointer(
@@ -82,7 +81,9 @@ class _EditorActionItemState extends State<EditorActionItem>
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(_duration, () {
-      _animationController.reverse();
+      if(mounted){
+        _animationController.reverse();
+      }
     });
     HapticFeedback.selectionClick();
     this.widget.onTap?.call();

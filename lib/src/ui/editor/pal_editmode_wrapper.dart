@@ -10,7 +10,7 @@ import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 class PalEditModeWrapper extends StatefulWidget {
   // this is the client embedded application that wanna use our Pal
-  final MaterialApp userApp;
+  final Widget userApp;
 
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
 

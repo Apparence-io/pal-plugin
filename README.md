@@ -101,6 +101,25 @@ class MyApp extends StatelessWidget {
   }  
 }
 ```
+For GetX users:
+```dart
+class GetXMyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Pal.fromAppBuilder(
+      navigatorKey: navigatorKey,
+      editorModeEnabled: false,
+      appToken: 'MY_APP_TOKEN_HERE',
+      childAppBuilder: (context) => GetMaterialApp(
+        navigatorKey: navigatorKey,
+        title: 'Pal Plugin Demo',
+        navigatorObservers: [PalNavigatorObserver.instance()],
+        onGenerateRoute: routes,
+      ),
+    );
+  }
+}
+```
 
 ## 🎥&nbsp; Youtube Videos
 

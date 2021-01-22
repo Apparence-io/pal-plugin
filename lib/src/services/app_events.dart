@@ -13,8 +13,8 @@ class PalEvents {
     return _instance;
   }
 
-  void pushPage(String routeName, {Map<String, String> arguments}) => PalNavigatorObserver.instance().changePage(routeName, arguments: arguments);
-
+  void pushPage(String routeName, {Map<String, String> arguments})
+    => PalNavigatorObserver.instance().changePage(routeName, arguments: arguments);
 
 
 }

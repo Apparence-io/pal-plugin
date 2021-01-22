@@ -121,6 +121,15 @@ class GetXMyApp extends StatelessWidget {
 }
 ```
 
+## Configure Events
+You can manually specify events within your code so we can use them to let you configure hints with editor.
+
+#### Push a page
+(If you use named route, you don't need to use this as we recognize automatically new pages)
+```dart
+   PalEvents.instance().pushPage(String routeName, {Map<String, String> arguments});
+```
+
 ## 🎥&nbsp; Youtube Videos
 
 - [Pal introduction](https://www.youtube.com/watch?v=RIeeTG928Rc)
@@ -197,6 +206,7 @@ Navigator.push(
     builder: (context) => YourNewPage(),
 );
 ```
+
 
 ## 📣&nbsp; Author
 <img src="https://en.apparence.io/assets/images/logo.svg" width="64" />

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PalRouteObserver {
@@ -28,9 +29,25 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
 
   _notifyRoute(PageRoute route) => _routeSubject.add(route);
 
+  void changePage(String route, {Map<String, String> arguments}) {
+    if(route != null && route.isNotEmpty) {
+      _notify(RouteSettings(name: route, arguments: arguments));
+    }
+  }
+
   @override
   void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
     super.didPush(route, previousRoute);
+    if(route.settings == null || route.settings.name == null) {
+      debugPrint("Pal Warning ------------------");
+      debugPrint("You pushed a route without any name");
+      debugPrint("If you want to use pal on this page please push a route with a settingsName ");
+      debugPrint("or using pushNamed so we can recognize this page using this name as identifier");
+      debugPrint("   Navigator.of(context).push(");
+      debugPrint("       MaterialPageRoute(builder: (context) => MyPage(), settings: RouteSettings(name: '/myPageName'))");
+      debugPrint("   );");
+      debugPrint("------------------------------");
+    }
     if (route is PageRoute) {
       _notify(route.settings);
       _notifyRoute(route);

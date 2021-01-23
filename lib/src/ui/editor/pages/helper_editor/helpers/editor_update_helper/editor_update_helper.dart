@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
@@ -129,8 +128,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
             baseviewModel,
             helperService ?? EditorInjector.of(context).helperService,
             arguments);
-        KeyboardVisibilityNotification()
-            .addNewListener(onChange: presenter.onKeyboardVisibilityChange);
         return presenter;
       },
       builder: (context, presenter, model) =>

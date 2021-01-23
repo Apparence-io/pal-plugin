@@ -1,3 +1,7 @@
+## [0.1.1] - 2021/20/01
+- You can use now a builder method to defer your app building within (Pal is now usable with GetX for example)
+- introducing PalEvents to fire new events within your code catchable by Pal
+
 ## [0.1.0+2] - 2021/14/01
 - fix changing version wasn't sent correctly to editor
 

@@ -101,6 +101,34 @@ class MyApp extends StatelessWidget {
   }  
 }
 ```
+For GetX users:
+```dart
+class GetXMyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Pal.fromAppBuilder(
+      navigatorKey: navigatorKey,
+      editorModeEnabled: false,
+      appToken: 'MY_APP_TOKEN_HERE',
+      childAppBuilder: (context) => GetMaterialApp(
+        navigatorKey: navigatorKey,
+        title: 'Pal Plugin Demo',
+        navigatorObservers: [PalNavigatorObserver.instance()],
+        onGenerateRoute: routes,
+      ),
+    );
+  }
+}
+```
+
+## Configure Events
+You can manually specify events within your code so we can use them to let you configure hints with editor.
+
+#### Push a page
+(If you use named route, you don't need to use this as we recognize automatically new pages)
+```dart
+   PalEvents.instance().pushPage(String routeName, {Map<String, String> arguments});
+```
 
 ## 🎥&nbsp; Youtube Videos
 
@@ -178,6 +206,7 @@ Navigator.push(
     builder: (context) => YourNewPage(),
 );
 ```
+
 
 ## 📣&nbsp; Author
 <img src="https://en.apparence.io/assets/images/logo.svg" width="64" />

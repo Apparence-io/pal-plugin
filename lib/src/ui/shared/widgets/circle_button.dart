@@ -183,7 +183,8 @@ class _CircleIconButtonState extends State<CircleIconButton>
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(_duration, () {
-      _animationController.reverse();
+      if(mounted)
+        _animationController.reverse();
     });
     widget.onTapCallback?.call();
   }

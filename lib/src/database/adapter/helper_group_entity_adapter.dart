@@ -12,7 +12,7 @@ class HelperGroupEntityAdapter extends GenericEntityAdapter<HelperGroupEntity> {
       id: map['id'],
       priority: map['priority'],
       helpers: new HelperEntityAdapter().parseDynamicArray(map['helpers']),
-      page: new PageEntityAdapter().parseMap(map['page']),
+      page: map.containsKey('page') ? new PageEntityAdapter().parseMap(map['page']) : null,
     );
   }
 }

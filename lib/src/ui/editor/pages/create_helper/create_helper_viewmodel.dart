@@ -54,3 +54,9 @@ class CreateHelperModel extends MVVMModel {
 
 
 }
+
+class HelperGroupViewModel {
+  String groupId;
+  String title;
+  HelperGroupViewModel({@required this.groupId, @required this.title});
+}

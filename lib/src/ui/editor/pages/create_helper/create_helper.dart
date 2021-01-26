@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/services/editor/project/project_editor_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/select_helper_group.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_router.dart';
@@ -33,6 +35,8 @@ abstract class CreateHelperView {
   void popStep(GlobalKey<NavigatorState> nestedNavigationKey);
 
   void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter);
+
+  void selectHelperGroup(GlobalKey<NavigatorState> nestedNavigationKey, HelperGroupLoader helperGroupLoader);
 }
 
 class CreateHelperPage extends StatelessWidget implements CreateHelperView {
@@ -41,15 +45,18 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   final PalRouteObserver routeObserver;
   final String pageId;
   final PackageVersionReader packageVersionReader;
+  final ProjectEditorService projectEditorService;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
 
   CreateHelperPage({
     Key key,
     this.hostedAppNavigatorKey,
     this.packageVersionReader,
     this.pageId,
-    this.routeObserver
+    this.routeObserver,
+    this.projectEditorService
   });
 
   final _mvvmPageBuilder = MVVMPageBuilder<CreateHelperPresenter, CreateHelperModel>();
@@ -57,14 +64,13 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
-      key: UniqueKey(),
+      key: ValueKey("createHelperPresenter"),
       context: context,
       presenterBuilder: (context) => CreateHelperPresenter(
         this,
-        routeObserver: routeObserver
-          ?? EditorInjector.of(context).routeObserver,
-        packageVersionReader: packageVersionReader
-          ?? EditorInjector.of(context).packageVersionReader,
+        routeObserver: routeObserver ?? EditorInjector.of(context).routeObserver,
+        packageVersionReader: packageVersionReader ?? EditorInjector.of(context).packageVersionReader,
+        projectEditorService: projectEditorService ?? EditorInjector.of(context).projectEditorService
       ),
       builder: (context, presenter, model)
         => Scaffold(
@@ -237,5 +243,14 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     }
 
     presenter.refreshView();
+  }
+
+  @override
+  void selectHelperGroup(GlobalKey<NavigatorState> nestedNavigationKey, HelperGroupLoader helperGroupLoader) {
+    Navigator.of(nestedNavigationKey.currentContext)
+      .push(MaterialPageRoute(
+        builder: (context) => SelectHelperGroupPage(helperGroupLoader)
+      )
+    );
   }
 }

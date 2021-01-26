@@ -1,24 +1,30 @@
 import 'dart:typed_data';
 
 import 'package:pal/src/database/entity/app_icon_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
+import 'package:pal/src/database/repository/editor/helper_group_repository.dart';
 import 'package:pal/src/database/repository/project_repository.dart';
 
 abstract class ProjectEditorService {
-  factory ProjectEditorService.build(
-    ProjectRepository projectRepository,
-  ) =>
-      ProjectEditorHttpService(projectRepository);
+
+  factory ProjectEditorService.build(ProjectRepository projectRepository, EditorHelperGroupRepository editorHelperGroupRepository) =>
+      ProjectEditorHttpService(projectRepository, editorHelperGroupRepository);
 
   Future<AppIconEntity> sendAppIcon(Uint8List icon, String imageType) => throw "not implemented yet";
+
   Future<AppIconEntity> updateAppIcon(String appIconId, Uint8List icon, String imageType) => throw "not implemented yet";
+
   Future<AppIconEntity> getAppIcon() => throw "not implemented yet";
 
+  Future<List<HelperGroupEntity>> getPageGroups(String routeName) => throw "not implemented yet";
 }
 
 class ProjectEditorHttpService implements ProjectEditorService {
-  final ProjectRepository projectRepository;
 
-  ProjectEditorHttpService(this.projectRepository);
+  final ProjectRepository projectRepository;
+  final EditorHelperGroupRepository editorHelperGroupRepository;
+
+  ProjectEditorHttpService(this.projectRepository, this.editorHelperGroupRepository);
 
   @override
   Future<AppIconEntity> sendAppIcon(Uint8List icon, String imageType) async {
@@ -30,7 +36,9 @@ class ProjectEditorHttpService implements ProjectEditorService {
   }
 
   @override
-  Future<AppIconEntity> getAppIcon() {
-    return this.projectRepository.getAppIcon();
-  }
+  Future<AppIconEntity> getAppIcon() => this.projectRepository.getAppIcon();
+
+  @override
+  Future<List<HelperGroupEntity>> getPageGroups(String routeName) => editorHelperGroupRepository.listHelperGroups(routeName: routeName);
+
 }

@@ -28,11 +28,7 @@ class CreateHelperInfosStep extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                _buildForm(),
-              ],
-            ),
+            child: _buildForm(),
           ),
         ),
       ),
@@ -65,16 +61,6 @@ class CreateHelperInfosStep extends StatelessWidget {
             ),
           ),
           LabeledForm(
-            label: 'Trigger type',
-            widget: DropdownButtonFormField(
-              key: ValueKey('pal_CreateHelper_Dropdown_Type'),
-              validator: _checkHelperTriggerType,
-              value: model.triggerTypes.first.key,
-              onChanged: _onTriggerTypeChanged,
-              items: _buildDropdownArray(),
-            ),
-          ),
-          LabeledForm(
             label: 'Minimum app version',
             widget: BorderedTextField(
               key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
@@ -84,14 +70,19 @@ class CreateHelperInfosStep extends StatelessWidget {
               isLoading: model.isAppVersionLoading,
             ),
           ),
+          LabeledForm(
+            label: 'Trigger type',
+            widget: DropdownButtonFormField(
+              key: ValueKey('pal_CreateHelper_Dropdown_Type'),
+              validator: _checkHelperTriggerType,
+              value: model.triggerTypes.first.key,
+              onChanged: presenter.onTriggerTypeChanged,
+              items: _buildDropdownArray(),
+            ),
+          ),
         ],
       ),
     );
-  }
-
-  _onTriggerTypeChanged(String newValue) {
-    model.selectedTriggerType = newValue;
-    presenter.refreshView();
   }
 
   List<DropdownMenuItem<String>> _buildDropdownArray() {

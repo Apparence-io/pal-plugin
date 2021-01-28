@@ -20,7 +20,7 @@ class EditorActionBar extends StatelessWidget {
   final OnSettings onSettings;
   final OnText onText;
   // CONST ANIMATIONS BOUNDS
-  final double kUpperbound = 70;
+  final double kUpperbound = 65;
   final double kLowerbound = 0;
 
   EditorActionBar({

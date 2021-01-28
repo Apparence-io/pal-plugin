@@ -95,6 +95,7 @@ class EditorToolboxPresenter {
   void onOutsideTap() {
     this.viewModel.editableElementActions = [];
     this.currentEditableItemNotifier.value = null;
+    this.viewInterface.refresh();
   }
 
   void openPicker(ToolBarActionButton toolBarActionButton) async {

@@ -40,13 +40,14 @@ class EditorToolBar extends StatelessWidget {
     this.onGlobalActionTap,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: this.drawerAnimation,
       builder: (context, child) => Positioned(
-          bottom: 120.0 - ((MediaQuery.of(context).padding.bottom + 10) * this.drawerAnimation.value),
+          bottom: 120.0 -
+              ((MediaQuery.of(context).padding.bottom + 10) *
+                  this.drawerAnimation.value),
           right: 30.0,
           child: child),
       child: Wrap(
@@ -57,24 +58,24 @@ class EditorToolBar extends StatelessWidget {
         children: [
           // TODO: Create it in parent, then factor to create widget
           ..._buildSpecificItemActions(context),
-          (this.editableElementActions != null &&
-                  this.editableElementActions.length > 0)
-              ? SizedBox(
-                  width: 20,
-                  child: Divider(
-                    color: Colors.white60,
-                    thickness: 1.5,
-                  ),
-                )
-              : Container(),
-          ..._buildGlobalActions(context),
-          SizedBox(
-            width: 20,
-            child: Divider(
-              color: Colors.white60,
-              thickness: 1.5,
+          if (this.editableElementActions != null &&
+              this.editableElementActions.length > 0)
+            SizedBox(
+              width: 20,
+              child: Divider(
+                color: Colors.white60,
+                thickness: 1.5,
+              ),
             ),
-          ),
+          ..._buildGlobalActions(context),
+          if (this.globalActions != null && this.globalActions.length > 0)
+            SizedBox(
+              width: 20,
+              child: Divider(
+                color: Colors.white60,
+                thickness: 1.5,
+              ),
+            ),
 
           // /!\ BOTTOM DRAWER ICON /!\
           AnimatedBuilder(

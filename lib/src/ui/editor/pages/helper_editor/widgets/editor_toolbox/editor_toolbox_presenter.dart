@@ -34,7 +34,7 @@ class EditorToolboxPresenter {
     if (this.viewModel.editableElementActions == null)
       this.viewModel.editableElementActions = [];
     this.viewModel.globalActions = [
-      ToolBarGlobalActionButton.backgroundColor,
+      if(this.viewModel.boxViewHandler != null)ToolBarGlobalActionButton.backgroundColor,
     ];
 
     // Bottom drawer animation listener

@@ -40,6 +40,7 @@ class _BouncingWidgetState extends State<BouncingWidget>
   @override
   void dispose() {
     _controller?.dispose();
+    this._controller = null;
     super.dispose();
   }
 
@@ -73,11 +74,10 @@ class _BouncingWidgetState extends State<BouncingWidget>
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(widget.duration, () {
-      if(_controller.isDismissed)_controller?.reverse?.call();
+      _controller?.reverse?.call();
     });
-
     widget.onTap?.call();
-  }
+  } 
 
   _onTapCancel() {
     _controller?.reverse?.call();

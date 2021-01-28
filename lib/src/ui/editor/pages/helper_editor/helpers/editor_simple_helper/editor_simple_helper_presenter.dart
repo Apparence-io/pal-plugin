@@ -101,11 +101,10 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   onTextColorPickerDone(Color newColor) {
     this.viewModel.contentTextForm.fontColor = newColor;
     this._updateValidState();
-    
   }
 
-  onNewEditableSelect(String key) {
-    this.viewModel.currentSelectedEditableNotifier.value = _getCurrentSelectedData(key);
+  onNewEditableSelect(EditableTextFormData data) {
+    this.viewModel.currentSelectedEditableNotifier.value = data;
     this.refreshView();
   }
 
@@ -120,10 +119,5 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     viewModel.canValidate.value = isValid();
     this.refreshView();
   }
-
-  EditableTextFormData _getCurrentSelectedData(String key){
-    return this.viewModel.contentTextForm;
-  }
-
 
 }

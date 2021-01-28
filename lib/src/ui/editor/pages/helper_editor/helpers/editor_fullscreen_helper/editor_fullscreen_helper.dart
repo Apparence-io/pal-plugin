@@ -75,9 +75,11 @@ class EditorFullScreenHelper
   @override
   Future showPreviewOfHelper(FullscreenHelperViewModel model) async {
     UserFullScreenHelperPage page = UserFullScreenHelperPage(
-      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
+      helperBoxViewModel:
+          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
-      headerImageViewModel: HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
+      headerImageViewModel:
+          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
       negativLabel:
           HelperSharedFactory.parseButtonNotifier(model.negativButtonForm),
       positivLabel:
@@ -207,31 +209,37 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                           EditableMedia(
                             size: 150.0,
                             data: model.headerMediaForm,
-                            onTap: presenter.onNewEditableSelect,
+                            // TODO: Return directly data
+                            onTap: () => presenter
+                                .onNewEditableSelect(model.headerMediaForm),
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
                             data: model.titleTextForm,
-                            onTap: presenter.onNewEditableSelect,
+                            onTap: () => presenter
+                                .onNewEditableSelect(model.titleTextForm),
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
                             data: model.descriptionTextForm,
-                            onTap: presenter.onNewEditableSelect,
+                            onTap: () => presenter
+                                .onNewEditableSelect(model.descriptionTextForm),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 40.0),
                           ),
                           EditableButton(
                             data: model.positivButtonForm,
-                            onTap: presenter.onNewEditableSelect,
+                            onTap: () => presenter
+                                .onNewEditableSelect(model.positivButtonForm),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
                           ),
                           EditableButton(
                             data: model.negativButtonForm,
-                            onTap: presenter.onNewEditableSelect,
+                            onTap: () => presenter
+                                .onNewEditableSelect(model.negativButtonForm),
                           )
                         ],
                       ),

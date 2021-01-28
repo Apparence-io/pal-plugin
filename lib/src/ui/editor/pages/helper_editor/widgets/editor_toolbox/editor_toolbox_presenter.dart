@@ -151,6 +151,7 @@ class EditorToolboxPresenter {
             .viewInterface
             .openColorPicker(this.viewModel.boxViewHandler?.selectedColor);
         if (newColor != null) {
+          this.viewModel.boxViewHandler.selectedColor = newColor;
           this.viewModel.boxViewHandler.callback(newColor);
         }
         break;

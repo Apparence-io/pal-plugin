@@ -38,7 +38,7 @@ class EditorActionBar extends StatelessWidget {
     return AnimatedBuilder(
       animation: this.animation,
       builder: (context, child) => Transform.translate(
-          offset: Offset(0, this.animation.value * kUpperbound), child: child),
+          offset: Offset(0, this.animation.value * (MediaQuery.of(context).padding.bottom + kUpperbound)), child: child),
       child: BottomAppBar(
         color: PalTheme.of(context).colors.dark,
         shape: null,

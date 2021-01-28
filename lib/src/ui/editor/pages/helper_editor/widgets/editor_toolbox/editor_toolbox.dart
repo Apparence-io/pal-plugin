@@ -38,7 +38,7 @@ class EditorToolboxPage extends StatefulWidget {
   final Function(Color) onTextColorPickerDone;
   final Function(EditedFontModel) onFontPickerDone;
   final Function(dynamic) onBorderPickerDone;
-  final Function(dynamic) onMediaPickerDone;
+  final Function(GraphicEntity) onMediaPickerDone;
 
   final ValueNotifier<EditableData> currentEditableItemNotifier;
   final GlobalKey scaffoldKey;
@@ -85,7 +85,7 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   void initState() {
     super.initState();
     this.presenter = EditorToolboxPresenter(
-      EditorToolboxModel(),
+      EditorToolboxModel(boxViewHandler: widget.boxViewHandler),
       widget.currentEditableItemNotifier,
       this,
       onFontPickerDone: widget.onFontPickerDone,
@@ -216,8 +216,7 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
           .controllers[0]
           .animateTo(model.animationTarget, curve: Curves.easeOut);
       model.animateActionBar = false;
-      this.setState(() {
-      });
+      this.setState(() {});
     }
     if (model.animateIcons) {
       this.controllers[1].value = 0;

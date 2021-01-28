@@ -59,8 +59,8 @@ class EditorToolboxModel {
 }
 
 class BoxViewHandler{
-  final Color selectedColor;
-  final OnNewBgColor callback;
+  Color selectedColor;
+  OnNewBgColor callback;
 
   BoxViewHandler({this.selectedColor, this.callback});
 }

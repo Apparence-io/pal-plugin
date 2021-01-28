@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_update_helper.dart';
 import 'editor_update_helper_viewmodel.dart';
@@ -43,9 +45,32 @@ class EditorUpdateHelperPresenter
   }
 
   onTextPickerDone(String newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextFormData).text = newVal;
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).text = newVal;
     this.refreshView();
     this._updateValidState();
+  }
+
+  onFontPickerDone(EditedFontModel newVal) {
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontFamily = newVal.fontKeys.fontFamilyNameKey;
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontSize = newVal.size.toInt();
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontWeight = newVal.fontKeys.fontWeightNameKey;
+    this.refreshView();
+  }
+
+  onMediaPickerDone(GraphicEntity newVal) {
+    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData).url = newVal.url;
+    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData).uuid = newVal.id;
+    this.refreshView();
+  }
+
+  onTextColorPickerDone(Color newVal) {
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontColor = newVal;
+    this.refreshView();
+  }
+
+  onNewEditableSelect(EditableData p1) {
+    this.viewModel.currentEditableItemNotifier.value = p1;
+    this.refreshView();
   }
 
   onKeyboardVisibilityChange(bool visible) {
@@ -132,19 +157,5 @@ class EditorUpdateHelperPresenter
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);
-  }
-
-  onFontPickerDone(p1) {
-  }
-
-  onMediaPickerDone(p1) {
-  }
-
-  onTextColorPickerDone(Color p1) {
-  }
-
-  onNewEditableSelect(EditableData p1) {
-    this.viewModel.currentEditableItemNotifier.value = p1;
-    this.refreshView();
   }
 }

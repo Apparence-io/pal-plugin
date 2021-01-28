@@ -73,7 +73,7 @@ class _BouncingWidgetState extends State<BouncingWidget>
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(widget.duration, () {
-      _controller?.reverse?.call();
+      if(_controller.isDismissed)_controller?.reverse?.call();
     });
 
     widget.onTap?.call();

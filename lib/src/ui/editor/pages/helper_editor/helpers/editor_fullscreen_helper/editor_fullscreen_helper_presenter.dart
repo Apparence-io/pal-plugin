@@ -145,7 +145,7 @@ class EditorFullScreenHelperPresenter
   }
 
   onTextColorPickerDone(Color newVal) {
-    EditableTextFormData formData =
+    EditableTextData formData =
         this.viewModel.currentEditableItemNotifier.value;
     formData.fontColor = newVal;
     this.refreshView();

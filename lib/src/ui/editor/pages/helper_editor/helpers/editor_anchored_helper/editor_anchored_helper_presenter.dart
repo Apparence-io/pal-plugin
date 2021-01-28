@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import '../../helper_editor_factory.dart';
 import 'editor_anchored_helper.dart';
@@ -145,7 +149,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   // PRIVATES
   // ----------------------------------
 
-  void updateValidState(String newVal) {
+  void _updateValidState() {
     viewModel.canValidate.value = isValid();
     this.refreshView();
   }
@@ -159,15 +163,44 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
         this.viewModel, this.finderService, this.isTestingMode);
   }
 
-  onFontPickerDone(p1) {
+  onTextPickerDone(String newVal) {
+    EditableTextData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.text = newVal;
+    this.refreshView();
+    this._updateValidState();
   }
 
-  onMediaPickerDone(p1) {
+  onFontPickerDone(EditedFontModel newVal) {
+    EditableTextData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.fontSize = newVal.size.toInt();
+    formData.fontFamily = newVal.fontKeys.fontFamilyNameKey;
+    formData.fontWeight = newVal.fontKeys.fontWeightNameKey;
+
+    this.refreshView();
+    this._updateValidState();
   }
 
-  onTextColorPickerDone(Color p1) {
+  onMediaPickerDone(GraphicEntity newVal) {
+    EditableMediaFormData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.url = newVal.url;
+    formData.uuid = newVal.id;
+    this.refreshView();
+    this._updateValidState();
   }
 
-  onNewEditableSelect(String p1) {
+  onTextColorPickerDone(Color newVal) {
+    EditableTextData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.fontColor = newVal;
+    this.refreshView();
+    this._updateValidState();
+  }
+
+  onNewEditableSelect(EditableData p1) {
+    this.viewModel.currentEditableItemNotifier.value = p1;
+    this.refreshView();
   }
 }

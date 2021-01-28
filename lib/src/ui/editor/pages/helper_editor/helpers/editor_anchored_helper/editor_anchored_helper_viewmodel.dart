@@ -89,7 +89,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
         fontFamily: negativButtonLabel?.fontFamily,
       ),
       backgroundBox = backgroundBox ?? EditableBoxFormData(
-        backgroundBox.id,
+        backgroundBox?.id,
         AnchoredscreenHelperKeys.BACKGROUND_KEY,
         backgroundColor: Colors.lightGreenAccent.withOpacity(.6)
       ),

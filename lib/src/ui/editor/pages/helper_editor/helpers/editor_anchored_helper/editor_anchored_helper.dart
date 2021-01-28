@@ -138,7 +138,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
               (model.canValidate?.value == true) ? presenter.onValidate : null,
           onCloseEditor: presenter.onCancel,
           currentEditableItemNotifier: model.currentEditableItemNotifier,
-          onTextPickerDone: presenter.updateValidState,
+          onTextPickerDone: presenter.onTextPickerDone,
           onFontPickerDone: presenter.onFontPickerDone,
           onMediaPickerDone: presenter.onMediaPickerDone,
           onTextColorPickerDone: presenter.onTextColorPickerDone,
@@ -245,14 +245,15 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
                 child: EditableTextField(
                   data: model.titleField,
-                  onTap: presenter.onNewEditableSelect,
+                  onTap: () => presenter.onNewEditableSelect(model.titleField),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: EditableTextField(
                   data: model.descriptionField,
-                  onTap: presenter.onNewEditableSelect,
+                  onTap: () =>
+                      presenter.onNewEditableSelect(model.descriptionField),
                 ),
               ),
               SizedBox(height: 16),
@@ -262,13 +263,15 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                   Flexible(
                     child: EditableButton(
                       data: model.negativBtnField,
-                      onTap: presenter.onNewEditableSelect,
+                      onTap: () =>
+                          presenter.onNewEditableSelect(model.negativBtnField),
                     ),
                   ),
                   Flexible(
                     child: EditableButton(
                       data: model.positivBtnField,
-                      onTap: presenter.onNewEditableSelect
+                      onTap: () =>
+                          presenter.onNewEditableSelect(model.positivBtnField),
                     ),
                   ),
                 ],

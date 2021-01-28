@@ -30,7 +30,7 @@ class EditedFontData {
   });
 }
 
-class EditorToolboxModel extends MVVMModel {
+class EditorToolboxModel {
   bool isActionBarVisible;
   bool isToolBarVisible;
 

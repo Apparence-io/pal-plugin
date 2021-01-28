@@ -8,7 +8,7 @@ import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 class EditableMedia extends StatelessWidget {
   final EditableMediaFormData data;
   final double size;
-  final Function(String) onTap;
+  final Function onTap;
   final bool isSelected;
 
   EditableMedia({
@@ -22,7 +22,7 @@ class EditableMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BouncingWidget(
-      onTap: () => this.onTap?.call(this.data.key),
+      onTap: () => this.onTap?.call(),
       child: DottedBorder(
         dashPattern: [6, 3],
         color: Colors.white.withAlpha(80),

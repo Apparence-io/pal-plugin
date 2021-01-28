@@ -1,39 +1,29 @@
-import 'package:flutter/widgets.dart';
-import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_toolbox.dart';
-import 'editor_toolbox_viewmodel.dart';
 
-class EditorToolboxPresenter
-    extends Presenter<EditorToolboxModel, EditorToolboxView> {
+class EditorToolboxPresenter {
+  final EditorToolboxModel viewModel;
   final ValueNotifier<EditableData> currentEditableItemNotifier;
-
-  // TODO : Remove dynamic
-  final Function(String) onTextPickerDone;
-  final Function(Color) onTextColorPickerDone;
-  final Function(EditedFontModel) onFontPickerDone;
-  // final Function(dynamic) onBorderPickerDone;
-  final Function(GraphicEntity) onMediaPickerDone;
+  final EditorToolboxView viewInterface;
+  final Function onTextColorPickerDone;
+  final Function onFontPickerDone;
+  final Function onMediaPickerDone;
+  final Function onTextPickerDone;
 
   EditorToolboxPresenter(
-    EditorToolboxView viewInterface, {
-    @required BoxViewHandler boxViewHandler,
-    @required this.currentEditableItemNotifier,
-    // this.onBorderPickerDone,
-    this.onFontPickerDone,
-    this.onTextColorPickerDone,
-    this.onTextPickerDone,
-    this.onMediaPickerDone,
-  }) : super(EditorToolboxModel(boxViewHandler: boxViewHandler), viewInterface);
+      this.viewModel, this.currentEditableItemNotifier, this.viewInterface,
+      {this.onTextColorPickerDone,
+      this.onFontPickerDone,
+      this.onMediaPickerDone,
+      this.onTextPickerDone});
 
-  @override
-  void onInit() {
-    super.onInit();
-
+  EditorToolboxPresenter init() {
     // INIT ATTRIBUTES
     this.viewModel.isActionBarVisible = true;
     this.viewModel.isToolBarVisible = true;
@@ -41,7 +31,8 @@ class EditorToolboxPresenter
     this.viewModel.animateActionBar = false;
     // INIT ATTRIBUTES
 
-    if(this.viewModel.editableElementActions == null) this.viewModel.editableElementActions = [];
+    if (this.viewModel.editableElementActions == null)
+      this.viewModel.editableElementActions = [];
     this.viewModel.globalActions = [
       ToolBarGlobalActionButton.backgroundColor,
     ];
@@ -56,11 +47,17 @@ class EditorToolboxPresenter
     this.currentEditableItemNotifier.addListener(() {
       this.displayEditableItemActions();
     });
+
+    return this;
+  }
+
+  dispose() {
+    this.viewModel.isBottomVisible.removeListener(animateActionBar);
   }
 
   void animateActionBar() {
     this.viewModel.animateActionBar = true;
-    this.refreshAnimations();
+    this.viewInterface.refreshAnimations();
     // this.refreshView();
     this.viewModel.animationTarget =
         this.viewModel.isBottomVisible.value ? 1 : 0;
@@ -91,19 +88,13 @@ class EditorToolboxPresenter
       default:
     }
     this.viewModel.animateIcons = true;
-    if(this.currentEditableItemNotifier.value != null)this.refreshAnimations();
-  }
-
-  @override
-  void afterViewDestroyed() {
-    this.viewModel.isBottomVisible.removeListener(animateActionBar);
-    super.afterViewDestroyed();
+    if (this.currentEditableItemNotifier.value != null)
+      this.viewInterface.refreshAnimations();
   }
 
   void onOutsideTap() {
     this.viewModel.editableElementActions = [];
     this.currentEditableItemNotifier.value = null;
-
   }
 
   void openPicker(ToolBarActionButton toolBarActionButton) async {
@@ -131,7 +122,8 @@ class EditorToolboxPresenter
         }
         break;
       case ToolBarActionButton.media:
-        EditableMediaFormData mediaNotifier = this.currentEditableItemNotifier?.value;
+        EditableMediaFormData mediaNotifier =
+            this.currentEditableItemNotifier?.value;
         GraphicEntity newGraphicEntity =
             await this.viewInterface.openMediaPicker(mediaNotifier?.uuid);
         if (newGraphicEntity != null) {
@@ -141,9 +133,8 @@ class EditorToolboxPresenter
       case ToolBarActionButton.text:
         EditableTextData editableFormField =
             this.currentEditableItemNotifier?.value;
-        String newText = await this
-            .viewInterface
-            .openTextPicker(editableFormField.text);
+        String newText =
+            await this.viewInterface.openTextPicker(editableFormField.text);
         if (newText != null) {
           this.onTextPickerDone(newText);
         }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
@@ -21,9 +20,11 @@ abstract class EditorToolboxView {
       String family, int size, String weight);
   Future<Color> openColorPicker(Color selectedColor);
   Future<GraphicEntity> openMediaPicker(String mediaId);
+
+  void refreshAnimations() {}
 }
 
-class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
+class EditorToolboxPage extends StatefulWidget {
   /// the editor helper
   final Widget child;
   // Save button function
@@ -35,7 +36,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
   // Pickers
   final Function(String) onTextPickerDone;
   final Function(Color) onTextColorPickerDone;
-  final Function(dynamic) onFontPickerDone;
+  final Function(EditedFontModel) onFontPickerDone;
   final Function(dynamic) onBorderPickerDone;
   final Function(dynamic) onMediaPickerDone;
 
@@ -58,83 +59,86 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     this.boxViewHandler,
   });
 
-  final _mvvmPageBuilder =
-      MVVMPageBuilder<EditorToolboxPresenter, EditorToolboxModel>();
+  @override
+  _EditorToolboxPageState createState() => _EditorToolboxPageState();
+}
+
+class _EditorToolboxPageState extends State<EditorToolboxPage>
+    with TickerProviderStateMixin
+    implements EditorToolboxView {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  List<AnimationController> controllers;
+
+  EditorToolboxModel model;
+  EditorToolboxPresenter presenter;
+
+  _EditorToolboxPageState();
+
+  @override
+  void dispose() {
+    this.presenter.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.presenter = EditorToolboxPresenter(
+      EditorToolboxModel(),
+      widget.currentEditableItemNotifier,
+      this,
+      onFontPickerDone: widget.onFontPickerDone,
+      onMediaPickerDone: widget.onMediaPickerDone,
+      onTextColorPickerDone: widget.onTextColorPickerDone,
+      onTextPickerDone: widget.onTextPickerDone,
+    ).init();
+    this.model = this.presenter.viewModel;
+    this.controllers = [
+      AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 500),
+        value: 0,
+        lowerBound: 0,
+        upperBound: 1,
+      ),
+      AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 1500),
+        value: 0,
+        lowerBound: 0,
+        upperBound: 2,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
-    return _mvvmPageBuilder.build(
-      // TODO: Update MVVM_Builder to get non unique key
-      key: UniqueKey(),
-      context: context,
-      multipleAnimControllerBuilder: (ticker) => [
-        AnimationController(
-          vsync: ticker,
-          duration: Duration(milliseconds: 500),
-          value: 0,
-          lowerBound: 0,
-          upperBound: 1,
-        ),
-        AnimationController(
-          vsync: ticker,
-          duration: Duration(milliseconds: 1500),
-          value: 0,
-          lowerBound: 0,
-          upperBound: 2,
-        ),
-      ],
-      animListener: (context, presenter, model) {
-        if (model.animateActionBar) {
-          context.animationsControllers[0]
-              .animateTo(model.animationTarget, curve: Curves.easeOut);
-          model.animateActionBar = false;
-        }
-        if (model.animateIcons) {
-          context.animationsControllers[1].value = 0;
-          context.animationsControllers[1]
-              .animateTo(1, curve: Curves.elasticOut);
-          model.animateIcons = false;
-        }
-      },
-      presenterBuilder: (context) => EditorToolboxPresenter(
-        this,
-        boxViewHandler: boxViewHandler,
-        currentEditableItemNotifier: currentEditableItemNotifier,
-        // onBorderPickerDone: onBorderPickerDone,
-        onFontPickerDone: onFontPickerDone,
-        onTextColorPickerDone: onTextColorPickerDone,
-        onTextPickerDone: onTextPickerDone,
-        onMediaPickerDone: onMediaPickerDone,
-      ),
-      builder: (context, presenter, model) {
-        return Scaffold(
-          key: _scaffoldKey,
-          resizeToAvoidBottomInset: false,
-          body: this._buildPage(context, presenter, model),
-          extendBody: true,
-          backgroundColor: Colors.transparent,
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.miniCenterDocked,
-          floatingActionButton:
-              model.isActionBarVisible && model.animationTarget == 1
-                  ? EditorSaveFloatingButton(onTap: this.onValidate)
-                  : null,
-          bottomNavigationBar: model.isActionBarVisible
-              ? EditorActionBar(
-                  animation: context.animationsControllers[0],
-                  iconsColor: Colors.white,
-                  onPreview: onPreview,
-                  onCancel: () => this.onCloseEditor?.call(),
-                )
+    return Scaffold(
+      key: this._scaffoldKey,
+      resizeToAvoidBottomInset: false,
+      body: this._buildPage(context, presenter, model),
+      extendBody: true,
+      backgroundColor: Colors.transparent,
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton:
+          model.isActionBarVisible && model.animationTarget == 1
+              ? EditorSaveFloatingButton(onTap: this.widget.onValidate)
               : null,
-        );
-      },
+      bottomNavigationBar: model.isActionBarVisible
+          ? EditorActionBar(
+              animation: this.controllers[0],
+              iconsColor: Colors.white,
+              onPreview: widget.onPreview,
+              onCancel: () => this.widget.onCloseEditor?.call(),
+            )
+          : null,
     );
   }
 
   Widget _buildPage(
-    final MvvmContext context,
+    final BuildContext context,
     final EditorToolboxPresenter presenter,
     final EditorToolboxModel model,
   ) {
@@ -142,7 +146,7 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
       children: [
         // the editor helper
         GestureDetector(
-          child: child,
+          child: widget.child,
           onTap: presenter.onOutsideTap,
         ),
         // vertical editor toolbar
@@ -150,8 +154,8 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
           editableElementActions: model.editableElementActions,
           globalActions: model.globalActions,
           isBottomBarVisibleNotifier: model.isBottomVisible,
-          drawerAnimation: context.animationsControllers[0],
-          iconsAnimation: context.animationsControllers[1],
+          drawerAnimation: this.controllers[0],
+          iconsAnimation: this.controllers[1],
           onActionTap: presenter.openPicker,
           onGlobalActionTap: presenter.openGlobalPicker,
         ),
@@ -203,5 +207,22 @@ class EditorToolboxPage extends StatelessWidget implements EditorToolboxView {
     ) as GraphicEntity;
 
     return graphicEntity;
+  }
+
+  @override
+  void refreshAnimations() {
+    if (model.animateActionBar) {
+      this
+          .controllers[0]
+          .animateTo(model.animationTarget, curve: Curves.easeOut);
+      model.animateActionBar = false;
+      this.setState(() {
+      });
+    }
+    if (model.animateIcons) {
+      this.controllers[1].value = 0;
+      this.controllers[1].animateTo(1, curve: Curves.elasticOut);
+      model.animateIcons = false;
+    }
   }
 }

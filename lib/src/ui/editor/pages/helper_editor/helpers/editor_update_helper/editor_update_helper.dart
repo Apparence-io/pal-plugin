@@ -200,12 +200,14 @@ class EditorUpdateHelperPage extends StatelessWidget {
                             'pal_EditorUpdateHelperWidget_EditableMedia'),
                         size: 123.0,
                         data: viewModel.headerMediaForm,
-                        onTap: presenter.onNewEditableSelect,
+                        onTap: () => presenter
+                            .onNewEditableSelect(viewModel.headerMediaForm),
                       ),
                       SizedBox(height: 40),
                       EditableTextField(
                         data: viewModel.titleTextForm,
-                        onTap: presenter.onNewEditableSelect,
+                        onTap: () => presenter
+                            .onNewEditableSelect(viewModel.titleTextForm),
                       ),
                       SizedBox(height: 25.0),
                       _buildChangelogFields(context, presenter, viewModel),
@@ -237,7 +239,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
       changelogsTextfieldWidgets.add(EditableTextField(
         data: field,
         key: ValueKey(key),
-        onTap: presenter.onNewEditableSelect,
+        onTap: () =>  presenter.onNewEditableSelect(field),
       ));
     });
     return Column(
@@ -274,7 +276,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
       width: double.infinity,
       child: EditableButton(
         data: viewModel.positivButtonForm,
-        onTap: presenter.onNewEditableSelect,
+        onTap: () => presenter.onNewEditableSelect(viewModel.positivButtonForm),
       ),
     );
   }
@@ -331,12 +333,14 @@ class _EditorUpdateHelperPage
   @override
   Future showPreviewOfHelper(UpdateHelperViewModel model) async {
     UserUpdateHelperPage page = UserUpdateHelperPage(
-      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
+      helperBoxViewModel:
+          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
       changelogLabels: model.changelogsTextsForm.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),
-      helperImageViewModel: HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
+      helperImageViewModel:
+          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
       onPositivButtonTap: () => Navigator.pop(context),
       packageVersionReader: this.packageVersionReader,
     );

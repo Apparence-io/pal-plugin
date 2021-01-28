@@ -22,6 +22,8 @@ abstract class EditorToolboxView {
   Future<GraphicEntity> openMediaPicker(String mediaId);
 
   void refreshAnimations() {}
+
+  void refresh() {}
 }
 
 class EditorToolboxPage extends StatefulWidget {
@@ -223,5 +225,12 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
       this.controllers[1].animateTo(1, curve: Curves.elasticOut);
       model.animateIcons = false;
     }
+  }
+
+  @override
+  void refresh() {
+    this.setState(() {
+      
+    });
   }
 }

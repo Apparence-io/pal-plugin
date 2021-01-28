@@ -45,11 +45,8 @@ class EditorToolBar extends StatelessWidget {
     return AnimatedBuilder(
       animation: this.drawerAnimation,
       builder: (context, child) => Positioned(
-          bottom: 120.0 -
-              ((MediaQuery.of(context).padding.bottom + 10) *
-                  this.drawerAnimation.value),
-          right: 30.0,
-          child: child),
+          bottom: (MediaQuery.of(context).padding.bottom + 10) - ((MediaQuery.of(context).padding.bottom - 10) * drawerAnimation.value),// * this.drawerAnimation.value,
+           right: 30.0, child: child),
       child: Wrap(
         direction: Axis.vertical,
         crossAxisAlignment: WrapCrossAlignment.center,

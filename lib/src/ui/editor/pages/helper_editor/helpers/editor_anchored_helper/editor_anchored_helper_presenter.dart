@@ -46,13 +46,16 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   @override
   void afterViewInit() async {
     await scanElements();
-    if (viewModel.backgroundBox.key != null) {
-      await this.onTapElement(viewModel.backgroundBox.key);
-      await validateSelection();
-    } else {
-      viewInterface.showTutorial("First step",
+    // FIXME: Useful ??
+    // if (viewModel.backgroundBox.key != null) {
+    //   await this.onTapElement(viewModel.backgroundBox.key);
+    //   await validateSelection();
+    // } else {
+    //   viewInterface.showTutorial("First step",
+    //       "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
+    // }
+    viewInterface.showTutorial("First step",
           "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
-    }
   }
 
   @override

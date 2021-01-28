@@ -2,11 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_fullscreen_helper.dart';
 import 'editor_fullscreen_helper_viewmodel.dart';
@@ -80,13 +83,14 @@ class EditorFullScreenHelperPresenter
   updateBackgroundColor(Color aColor) {
     viewModel.backgroundBoxForm.backgroundColor = aColor;
     // this.viewInterface.closeColorPickerDialog();
-    this.updateValidState();
+    this._updateValidState();
     // this.refreshView();
   }
 
   editMedia() async {
-    final selectedMedia =
-        await this.viewInterface.pushToMediaGallery(this.viewModel.headerMediaForm?.uuid);
+    final selectedMedia = await this
+        .viewInterface
+        .pushToMediaGallery(this.viewModel.headerMediaForm?.uuid);
 
     this.viewModel.headerMediaForm?.url = selectedMedia?.url;
     this.viewModel.headerMediaForm?.uuid = selectedMedia?.id;
@@ -97,10 +101,9 @@ class EditorFullScreenHelperPresenter
   // PRIVATES
   // ----------------------------------
 
-  updateValidState() {
+  _updateValidState() {
     viewModel.canValidate.value = isValid();
     this.refreshView();
-
   }
 
   bool isValid() =>
@@ -113,18 +116,44 @@ class EditorFullScreenHelperPresenter
     this.viewInterface.showPreviewOfHelper(this.viewModel);
   }
 
-  onTextPickerDone(String p1) {
+  onTextPickerDone(String newVal) {
+    EditableTextData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.text = newVal;
+    this.refreshView();
+    this._updateValidState();
   }
 
-  onFontPickerDone(p1) {
+  onFontPickerDone(EditedFontModel newVal) {
+    EditableTextData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.fontSize = newVal.size.toInt();
+    formData.fontFamily = newVal.fontKeys.fontFamilyNameKey;
+    formData.fontWeight = newVal.fontKeys.fontWeightNameKey;
+
+    this.refreshView();
+    this._updateValidState();
   }
 
-  onMediaPickerDone(p1) {
+  onMediaPickerDone(GraphicEntity newVal) {
+    EditableMediaFormData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.url = newVal.url;
+    formData.uuid = newVal.id;
+    this.refreshView();
+    this._updateValidState();
   }
 
-  onTextColorPickerDone(Color p1) {
+  onTextColorPickerDone(Color newVal) {
+    EditableTextFormData formData =
+        this.viewModel.currentEditableItemNotifier.value;
+    formData.fontColor = newVal;
+    this.refreshView();
+    this._updateValidState();
   }
 
-  onNewEditableSelect(String p1) {
+  onNewEditableSelect(EditableData p1) {
+    this.viewModel.currentEditableItemNotifier.value = p1;
+    this.refreshView();
   }
 }

@@ -6,16 +6,24 @@ import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.da
 import 'package:pal/src/ui/editor/widgets/labeled_form.dart';
 import 'package:pal/src/ui/editor/widgets/bordered_text_field.dart';
 
+import '../../../../../../theme.dart';
+
 class CreateHelperInfosStep extends StatelessWidget {
+
   final CreateHelperModel model;
+
   final CreateHelperPresenter presenter;
+
   final Function() onFormChanged;
+
+  final Function onTapChangePosition;
 
   const CreateHelperInfosStep({
     Key key,
     @required this.model,
     @required this.presenter,
     this.onFormChanged,
+    this.onTapChangePosition
   }) : super(key: key);
 
   @override
@@ -28,7 +36,7 @@ class CreateHelperInfosStep extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _buildForm(),
+            child: _buildForm(context),
           ),
         ),
       ),
@@ -42,7 +50,7 @@ class CreateHelperInfosStep extends StatelessWidget {
     }
   }
 
-  Widget _buildForm() {
+  Widget _buildForm(BuildContext context) {
     return Form(
       key: model.infosForm,
       onChanged: _checkFormValid,
@@ -70,30 +78,13 @@ class CreateHelperInfosStep extends StatelessWidget {
               isLoading: model.isAppVersionLoading,
             ),
           ),
-          LabeledForm(
-            label: 'Trigger type',
-            widget: DropdownButtonFormField(
-              key: ValueKey('pal_CreateHelper_Dropdown_Type'),
-              validator: _checkHelperTriggerType,
-              value: model.triggerTypes.first.key,
-              onChanged: presenter.onTriggerTypeChanged,
-              items: _buildDropdownArray(),
-            ),
-          ),
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: _buildPositionButton(context),
+          )
         ],
       ),
     );
-  }
-
-  List<DropdownMenuItem<String>> _buildDropdownArray() {
-    List<DropdownMenuItem<String>> dropdownArray = [];
-    model.triggerTypes.forEach((element) {
-      dropdownArray.add(DropdownMenuItem<String>(
-        value: element.key,
-        child: Text(element.description),
-      ));
-    });
-    return dropdownArray;
   }
 
   // Check fields
@@ -104,10 +95,6 @@ class CreateHelperInfosStep extends StatelessWidget {
       return 'Maximum 45 character allowed';
     }
     return null;
-  }
-
-  String _checkHelperTriggerType(String value) {
-    return (value.isEmpty) ? 'Please select a type' : null;
   }
 
   String _checkValidVersion(String value) {
@@ -121,5 +108,26 @@ class CreateHelperInfosStep extends StatelessWidget {
       else
         return null;
     }
+  }
+
+  _buildPositionButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlineButton(
+        key: ValueKey('palHelperPositionNextButton'),
+        borderSide: BorderSide(color: PalTheme.of(context).colors.dark),
+        child: Text(
+          'Change position in group',
+          style: TextStyle(
+            color: PalTheme.of(context).colors.dark,
+          ),
+        ),
+        color: PalTheme.of(context).colors.dark,
+        onPressed: onTapChangePosition,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0,),
+        ),
+      ),
+    );
   }
 }

@@ -17,7 +17,7 @@ class BorderedTextField extends StatelessWidget {
     Key key,
     this.hintText,
     @required this.validator,
-    @required this.controller,
+    this.controller,
     this.inputFormatters,
     this.textInputType,
     this.enableSuggestions = false,
@@ -43,7 +43,6 @@ class BorderedTextField extends StatelessWidget {
             border: OutlineInputBorder(
                 borderRadius: const BorderRadius.all(Radius.circular(7.0))),
             hintText: hintText,
-            
           ),
           inputFormatters: inputFormatters,
           validator: validator,

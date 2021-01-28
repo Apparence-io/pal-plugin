@@ -14,7 +14,9 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/select_helper_group.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_group/create_helper_group.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/select_group_position/helper_position_setup.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/setup_group/select_helper_group.dart';
 import 'package:pal/src/ui/editor/widgets/nested_navigator.dart';
 import 'package:pal/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
 
@@ -36,14 +38,14 @@ void main() {
 
   final routeObserverMock = PalObserverMock();
 
-  ProjectEditorService projectEditorService;
+  final HttpClient httpClientMock = _HttpClientMock();
 
-  HttpClient httpClientMock;
+  ProjectEditorService projectEditorService;
 
   CreateHelperPresenter presenter;
 
   Future _before(WidgetTester tester) async {
-    httpClientMock = new _HttpClientMock();
+    reset(httpClientMock);
     projectEditorService = ProjectEditorHttpService(
       ProjectRepository(httpClient: httpClientMock),
       EditorHelperGroupRepository(httpClient: httpClientMock)
@@ -104,32 +106,139 @@ void main() {
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
     });
 
-    testWidgets('select trigger type AFTER_GROUP_HELPER => pops a new page to select a group helper then an helper', (WidgetTester tester) async {
-      await _before(tester);
+    // ------------------------------------------------------
+    // STEP 1 Tests
+    // ------------------------------------------------------
+
+    testWidgets('[step 1] 2 groups are available on page => click on one then call next goes to step 2', (WidgetTester tester) async {
       var helperGroupListJson = '''[
-          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}]},
+          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
           {"id":"jdlqsjdlq132", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
       when(httpClientMock.get('editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
-
-      final drop = find.byKey(ValueKey('pal_CreateHelper_Dropdown_Type'));
-      final dropText = find.text("On screen visit");
-      var dropDownWidget = drop.evaluate().first.widget as DropdownButtonFormField;
-      expect(dropText, findsOneWidget);
-      await tester.tap(dropText);
-      expect(find.text("On screen visit"), findsOneWidget);
-      expect(find.text("After helper"), findsOneWidget);
-      // not working
-      await tester.tap(find.text('After helper').first);
-      // as action is not called by test we call it manually
-      presenter.onTriggerTypeChanged(HelperTriggerType.AFTER_GROUP_HELPER.toString().split(".")[1]);
+      await _before(tester);
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
-      await tester.pump(Duration(seconds: 1));
-      expect(presenter.viewModel.selectedTriggerType, equals("AFTER_GROUP_HELPER"));
+      // helper group selection is active
+      expect(find.byType(ListTile), findsNWidgets(2));
       expect(find.text("introduction"), findsOneWidget);
       expect(find.text("test_intro2"), findsOneWidget);
+      // tap on helper group then go next
+      await tester.tap(find.text("test_intro2"));
+      await tester.pump();
+      expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isTrue);
+      await tester.tap(find.text("Next"));
+      await tester.pump();
+      // current step is 1
+      expect(presenter.viewModel.step.value, 1);
     });
+
+    testWidgets('[step 1] 2 groups are available on page, click on first, click on second => second only is selected', (WidgetTester tester) async {
+      var helperGroupListJson = '''[
+          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
+          {"id":"jdlqsjdlq132", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
+        ]
+      ''';
+      when(httpClientMock.get('editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      await _before(tester);
+      await tester.pump();
+      await tester.pump(Duration(seconds: 1));
+      // helper group selection is active
+      expect(find.byType(ListTile), findsNWidgets(2));
+      expect(find.text("introduction"), findsOneWidget);
+      expect(find.text("test_intro2"), findsOneWidget);
+      // tap on helper group then go next
+      await tester.tap(find.text("test_intro2"));
+      await tester.pump();
+      await tester.tap(find.text("introduction"));
+      await tester.pump();
+      await tester.pump(Duration(seconds: 1));
+      expect(find.byType(HelperGroupItemLine), findsNWidgets(2));
+      var lineWidget1 = find.byType(HelperGroupItemLine).evaluate().first.widget as HelperGroupItemLine;
+      var lineWidget2 = find.byType(HelperGroupItemLine).evaluate().elementAt(1).widget as HelperGroupItemLine;
+      expect(presenter.viewModel.helperGroups[0].selected, isTrue);
+      expect(presenter.viewModel.helperGroups[1].selected, isFalse);
+      expect(lineWidget1.model.selected, isTrue);
+      expect(lineWidget2.model.selected, isFalse);
+    });
+
+    testWidgets('[step 1] 2 groups available on page => can create a group', (WidgetTester tester) async {
+      var helperGroupListJson = '''[
+          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
+          {"id":"jdlqsjdlq132", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
+        ]
+      ''';
+      when(httpClientMock.get('editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      await _before(tester);
+      await tester.pump();
+      await tester.pump(Duration(seconds: 1));
+      // helper group selection is active
+      expect(find.text("introduction"), findsOneWidget);
+      expect(find.text("test_intro2"), findsOneWidget);
+      // click on Add
+      await tester.tap(find.text("Create new group"));
+      await tester.pump();
+      // click on Add and see create page
+      await tester.tap(find.text("Create new group"));
+      await tester.pump();
+      expect(find.byType(CreateHelperGroup), findsOneWidget);
+    });
+
+    testWidgets('[step 1] no groups available on page => click on create new group and create a group', (WidgetTester tester) async {
+      var helperGroupListJson = '''[]''';
+      var myNewHelperGroupName = 'My Helper Group Name';
+      when(httpClientMock.get('editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      await _before(tester);
+      await tester.pump(Duration(seconds: 1));
+      await tester.pump(Duration(seconds: 1));
+      // Circle progress is not visible
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      // click on Add
+      await tester.tap(find.text("Create new group"));
+      await tester.pump();
+      // create a group
+      expect(find.byType(CreateHelperGroup), findsOneWidget);
+      await tester.enterText(find.byKey(ValueKey('pal_CreateHelperGroup_TextField_Name')), myNewHelperGroupName);
+      expect(presenter.viewModel.selectedHelperGroup.title, equals(myNewHelperGroupName));
+      // go next step
+      await tester.pump();
+      expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isTrue);
+      await tester.tap(find.text("Next"));
+      await tester.pump();
+      // current step is 1
+      expect(presenter.viewModel.step.value, 1);
+      expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
+    });
+
+    // ------------------------------------------------------
+    // STEP 2 Tests
+    // ------------------------------------------------------
+
+    testWidgets('[step 2] an existing group is selected, click on helper position => show group helpers list, by default ou helper is last', (WidgetTester tester) async {
+      var groupHelperListJson = '''[
+        {"id":"8290832093", "name":"my helper 1", "priority": 1},
+        {"id":"8290832093", "name":"my helper 2", "priority": 2},
+        {"id":"8290832093", "name":"my helper 3", "priority": 3},
+        {"id":"8290832093", "name":"my helper 4", "priority": 4}
+      ]''';
+      await _before(tester);
+      presenter.viewModel.step.value = 1;
+      presenter.refreshView();
+      await tester.pump(Duration(seconds: 1));
+      await tester.pump(Duration(seconds: 1));
+      // current step is 1
+      expect(presenter.viewModel.step.value, 1);
+      await tester.enterText(find.byKey(ValueKey('pal_CreateHelperGroup_TextField_Name')), 'my helper test');
+      await tester.tap(find.byKey(ValueKey('pal_helperposition_group_field')));
+      await tester.pump(Duration(seconds: 1));
+      // select helper position in group
+      expect(find.byType(HelperPositionPage), findsOneWidget);
+      expect(find.byType(ListTile), findsNWidgets(5));
+      // validate helper position in group
+      await tester.tap(find.text("Validate position"));
+      await tester.pump();
+    });
+
   });
 }

@@ -35,8 +35,8 @@ class HelperTypeOption {
 }
 
 class HelperViewModel extends MVVMModel {
-  final String id;
-  final String name;
+  final String id, helperGroupId;
+  final String name, helperGroupName;
   final HelperTriggerType triggerType;
   final int priority;
   final String minVersionCode;
@@ -48,11 +48,13 @@ class HelperViewModel extends MVVMModel {
     this.id,
     @required this.name,
     @required this.triggerType,
+    @required this.helperType,
     this.priority,
     this.minVersionCode,
-    @required this.helperType,
     this.helperTheme,
     this.maxVersionCode,
+    this.helperGroupId,
+    this.helperGroupName
   });
 
 }

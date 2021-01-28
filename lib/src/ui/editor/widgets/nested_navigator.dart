@@ -39,12 +39,10 @@ class NestedNavigator extends StatelessWidget {
         if (this.onWillPop != null) {
           this.onWillPop();
         }
-        
         if (navigationKey.currentState.canPop()) {
           navigationKey.currentState.pop();
           return Future<bool>.value(false);
         }
-        
         return Future<bool>.value(true);
       },
     );

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
@@ -7,20 +8,25 @@ import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 class CreateHelperModel extends MVVMModel {
-  GlobalKey<NavigatorState> nestedNavigationKey;
+
   bool isFormValid;
   List<String> stepsTitle;
   ValueNotifier<int> step;
 
+  // Step 0
+  List<HelperGroupViewModel> helperGroups;
+  HelperGroupViewModel selectedHelperGroup;
+  List<HelperTriggerTypeDisplay> triggerTypes;
+  HelperTriggerTypeDisplay selectedTriggerType;
+
   // Step 1
   GlobalKey<FormState> infosForm;
-  String selectedTriggerType;
   String appVersion;
   bool isAppVersionLoading;
   TextEditingController helperNameController;
   TextEditingController minVersionController;
-  List<HelperTriggerTypeDisplay> triggerTypes;
-  
+  List<GroupHelperViewModel> currentGroupHelpersList;
+
   // Step 2
   HelperType selectedHelperType;
 
@@ -30,7 +36,6 @@ class CreateHelperModel extends MVVMModel {
   CreateHelperModel({
     this.selectedTriggerType,
     this.minVersionController,
-    this.nestedNavigationKey,
     this.infosForm,
     this.appVersion,
     this.isAppVersionLoading,
@@ -46,17 +51,53 @@ class CreateHelperModel extends MVVMModel {
   HelperViewModel asHelperViewModel() => HelperViewModel(
     helperType: selectedHelperType,
     helperTheme: selectedHelperTheme,
-    triggerType: getHelperTriggerType(selectedTriggerType),
+    triggerType: selectedTriggerType.key,
     name: helperNameController?.value?.text,
     minVersionCode: minVersionController?.value?.text,
-    maxVersionCode: null
+    maxVersionCode: null,
+    helperGroupId: selectedHelperGroup.groupId,
+    helperGroupName: selectedHelperGroup.title
   );
 
-
+  selectHelperGroup(HelperGroupViewModel select) {
+    this.helperGroups.forEach((element) => element.selected = false);
+    this.selectedHelperGroup = this.helperGroups
+      .firstWhere((element) => element == select)
+      ..selected = true;
+  }
 }
 
-class HelperGroupViewModel {
+class HelperGroupViewModel extends ChangeNotifier implements ValueListenable<HelperGroupViewModel> {
+  bool _selected;
   String groupId;
   String title;
-  HelperGroupViewModel({@required this.groupId, @required this.title});
+
+  HelperGroupViewModel({@required this.groupId, @required this.title})
+    : this._selected = false;
+
+  set selected(bool selected) {
+    if(this._selected != selected) {
+      this._selected = selected;
+      notifyListeners();
+    }
+  }
+
+  bool get selected => this._selected;
+
+  @override
+  HelperGroupViewModel get value => this;
+
+  void refresh() => notifyListeners();
+}
+
+class HelperSelectionViewModel {
+  String id, title;
+  HelperSelectionViewModel({@required this.id, @required this.title});
+}
+
+class GroupHelperViewModel {
+  String id;
+  String title;
+
+  GroupHelperViewModel({this.id, this.title});
 }

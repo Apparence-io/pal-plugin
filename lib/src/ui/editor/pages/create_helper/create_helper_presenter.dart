@@ -7,7 +7,7 @@ import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
-import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/select_helper_group.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/setup_group/select_helper_group.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
 
@@ -28,21 +28,109 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
 
   @override
   Future onInit() async {
-    this.viewModel.nestedNavigationKey = GlobalKey<NavigatorState>();
     this.viewModel.step = ValueNotifier<int>(0);
-
     this.viewModel.isFormValid = false;
     this.viewModel.stepsTitle = [
+      'Setup your group',
       'Setup your helper',
       'Choose your helper type',
       'Choose a theme',
     ];
-
     // Setup steps
     this.setupInfosStep();
     this.setupTypeStep();
     this.setupThemeStep();
   }
+
+  ////////////////////////////////////////////////////////////////
+  // STEP 1
+  ////////////////////////////////////////////////////////////////
+
+  Future<List<HelperGroupViewModel>> loadHelperGroup() async {
+    if(viewModel.helperGroups != null) {
+      return viewModel.helperGroups;
+    }
+    var res = [
+      HelperGroupViewModel(groupId: "test1", title: "Introduction mock"),
+      HelperGroupViewModel(groupId: "test2", title: "Second group mock"),
+    ];
+    viewModel.helperGroups = res;
+    return Future.value(viewModel.helperGroups);
+    // var currentPageRoute = await this.routeObserver.routeSettings.first;
+    // return projectEditorService.getPageGroups(currentPageRoute.name)
+    //   .catchError((error) => print("error $error"))
+    //   .then((groupsEntity) {
+    //     List<HelperGroupViewModel> res = [];
+    //     groupsEntity.forEach((element) => res.add(
+    //       HelperGroupViewModel(groupId: element.id, title: element.helpers?.first?.name))
+    //     );
+    //     viewModel.helperGroups = res;
+    //     return viewModel.helperGroups;
+    //   });
+  }
+
+  void onTapHelperGroupSelection(HelperGroupViewModel select) {
+    viewModel.selectHelperGroup(select);
+    checkValidStep();
+    refreshView();
+  }
+
+  void onTapAddNewGroup() {
+    this.viewModel.selectedHelperGroup = new HelperGroupViewModel(groupId: null, title: "");
+    viewInterface.showNewHelperGroupForm();
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // STEP 1 - create new helper group
+  ////////////////////////////////////////////////////////////////
+
+  String checkHelperGroupName(String value) {
+    if (value.isEmpty) {
+      return 'Please enter a name';
+    } else if (value.length >= 45) {
+      return 'Maximum 45 character allowed';
+    }
+    return null;
+  }
+
+  void onChangedHelperGroupName(String value) {
+    this.viewModel.selectedHelperGroup.title = value;
+    checkValidStep();
+    refreshView();
+  }
+
+  void selectHelperGroupTrigger(HelperTriggerTypeDisplay triggerType) {
+    this.viewModel.selectedTriggerType = triggerType;
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // STEP 2
+  ////////////////////////////////////////////////////////////////
+
+  Future<List<GroupHelperViewModel>> loadGroupHelpers() async {
+    // MOCK
+    var res = [
+      GroupHelperViewModel(id: "3802832", title: "helper 1"),
+      GroupHelperViewModel(id: "3802833", title: "helper 2"),
+      GroupHelperViewModel(id: "3802834", title: "helper 3"),
+      GroupHelperViewModel(id: "3802835", title: "helper 4"),
+      GroupHelperViewModel(id: "3802836", title: "helper 5"),
+    ];
+    // put our new helper in the list and highlight it
+    return res;
+  }
+
+  void onGroupReorder(List<GroupHelperViewModel> reorderedList) {
+    viewModel.currentGroupHelpersList = reorderedList;
+  }
+
+  void onTapChangePosition() {
+    viewInterface.showGroupHelpersPositions(loadGroupHelpers(), this.onGroupReorder);
+  }
+
+  ////////////////////////////////////////////////////////////////
+  // STEP 3
+  ////////////////////////////////////////////////////////////////
 
   setupInfosStep() async {
     this.viewModel.infosForm = GlobalKey<FormState>();
@@ -57,23 +145,13 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
     HelperTriggerType.values.forEach((HelperTriggerType type) {
       this.viewModel.triggerTypes.add(
             HelperTriggerTypeDisplay(
-              key: helperTriggerTypeToString(type),
+              key: type,
               description: getHelperTriggerTypeDescription(type),
             ),
           );
     });
-    this.viewModel.selectedTriggerType = this.viewModel.triggerTypes?.first?.key;
+    this.viewModel.selectedTriggerType = this.viewModel.triggerTypes?.first;
     readAppVersion();
-  }
-
-  // refactoring : why use string type here ???
-  onTriggerTypeChanged(String newValue) {
-    if((viewModel.selectedTriggerType == null || viewModel.selectedTriggerType != newValue)
-      && newValue == HelperTriggerType.AFTER_GROUP_HELPER.toString().split(".")[1]) {
-      viewInterface.selectHelperGroup(viewModel.nestedNavigationKey, _loadHelperGroup);
-    }
-    viewModel.selectedTriggerType = newValue;
-    refreshView();
   }
 
   readAppVersion() async {
@@ -109,20 +187,16 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
       this.viewInterface.launchHelperEditor(currentPageRoute.name, viewModel);
       return;
     }
-    this.viewModel.step.value++;
-    this.viewInterface.changeStep(
-          this.viewModel.nestedNavigationKey,
-          this.viewModel.step.value,
-        );
-    this.checkValidStep();
-    this.refreshView();
+    viewModel.step.value++;
+    viewInterface.changeStep(viewModel.step.value);
+    checkValidStep();
+    refreshView();
   }
 
   decrementStep() {
     if (this.viewModel.step.value <= 0) {
       return;
     }
-
     this.viewModel.step.value--;
     this.checkValidStep();
     this.refreshView();
@@ -131,30 +205,23 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   void checkValidStep() {
     switch (this.viewModel.step.value) {
       case 0:
-        this.viewModel.isFormValid =
-            this.viewModel.infosForm.currentState.validate();
+        this.viewModel.isFormValid = this.viewModel.selectedHelperGroup != null
+          && this.viewModel.selectedHelperGroup.title.isNotEmpty;
         break;
       case 1:
-        this.viewModel.isFormValid = this.viewModel.selectedHelperType != null;
+        this.viewModel.isFormValid = viewModel.infosForm != null && this.viewModel.infosForm.currentState != null
+            ? this.viewModel.infosForm.currentState.validate()
+            : false;
         break;
       case 2:
+        this.viewModel.isFormValid = this.viewModel.selectedHelperType != null;
+        break;
+      case 3:
         this.viewModel.isFormValid = this.viewModel.selectedHelperTheme != null;
         break;
       default:
     }
   }
 
-  // PRIVATES
-
-  Future<List<HelperGroupViewModel>> _loadHelperGroup() async {
-    var currentPageRoute = await this.routeObserver.routeSettings.first;
-    return projectEditorService.getPageGroups(currentPageRoute.name)
-      .catchError((error) => print("error $error"))
-      .then((groupsEntity) {
-        List<HelperGroupViewModel> res = [];
-        groupsEntity.forEach((element) => res.add(HelperGroupViewModel(groupId: element.id, title: element.helpers?.first?.name)));
-        return res;
-      });
-  }
 
 }

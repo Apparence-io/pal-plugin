@@ -5,9 +5,7 @@ part 'helper_trigger_type.g.dart';
 @HiveType(typeId: 11)
 enum HelperTriggerType {
   @HiveField(0)
-  ON_SCREEN_VISIT,
-  @HiveField(1)
-  AFTER_GROUP_HELPER
+  ON_SCREEN_VISIT
 }
 
 HelperTriggerType getHelperTriggerType(final String value) {
@@ -23,9 +21,6 @@ String getHelperTriggerTypeDescription(final HelperTriggerType helperTriggerType
   switch (helperTriggerType) {
     case HelperTriggerType.ON_SCREEN_VISIT:
       description = 'On screen visit';
-      break;
-    case HelperTriggerType.AFTER_GROUP_HELPER:
-      description = 'After helper';
       break;
     default:
   }

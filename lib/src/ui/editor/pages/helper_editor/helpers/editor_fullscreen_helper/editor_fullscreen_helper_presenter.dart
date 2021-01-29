@@ -32,6 +32,20 @@ class EditorFullScreenHelperPresenter
     super.onInit();
     this.viewModel.helperOpacity = 1;
     this.viewModel.canValidate = new ValueNotifier(false);
+
+    // Refresh UI to remove all selected items
+    this.viewModel.currentEditableItemNotifier.addListener(removeSelectedEditableItems);
+  }
+
+  @override
+  Future onDestroy() async {
+    this.viewModel.currentEditableItemNotifier.removeListener(removeSelectedEditableItems);
+  }
+
+  void removeSelectedEditableItems() {
+    if (this.viewModel.currentEditableItemNotifier?.value == null) {
+      this.refreshView();
+    }
   }
 
   Future onValidate() async {
@@ -58,12 +72,6 @@ class EditorFullScreenHelperPresenter
 
   onCancel() {
     viewInterface.closeEditor();
-  }
-
-  @override
-  void afterViewDestroyed() {
-    // this.viewModel.canValidate.dispose();
-    // this.viewModel.canValidate = null;
   }
 
   //TODO move  to view

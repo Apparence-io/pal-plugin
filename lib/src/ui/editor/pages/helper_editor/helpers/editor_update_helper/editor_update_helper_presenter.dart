@@ -37,6 +37,26 @@ class EditorUpdateHelperPresenter
   void onInit() {
     this.viewModel.canValidate = new ValueNotifier(false);
     this.viewModel.isKeyboardVisible = false;
+    
+    // Refresh UI to remove all selected items
+    this
+        .viewModel
+        .currentEditableItemNotifier
+        .addListener(removeSelectedEditableItems);
+  }
+
+  @override
+  void onDestroy() {
+    this
+        .viewModel
+        .currentEditableItemNotifier
+        .removeListener(removeSelectedEditableItems);
+  }
+
+  void removeSelectedEditableItems() {
+    if (this.viewModel.currentEditableItemNotifier?.value == null) {
+      this.refreshView();
+    }
   }
 
   @override
@@ -45,26 +65,33 @@ class EditorUpdateHelperPresenter
   }
 
   onTextPickerDone(String newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).text = newVal;
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .text = newVal;
     this.refreshView();
     this._updateValidState();
   }
 
   onFontPickerDone(EditedFontModel newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontFamily = newVal.fontKeys.fontFamilyNameKey;
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontSize = newVal.size.toInt();
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontWeight = newVal.fontKeys.fontWeightNameKey;
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontFamily = newVal.fontKeys.fontFamilyNameKey;
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontSize = newVal.size.toInt();
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontWeight = newVal.fontKeys.fontWeightNameKey;
     this.refreshView();
   }
 
   onMediaPickerDone(GraphicEntity newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData).url = newVal.url;
-    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData).uuid = newVal.id;
+    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData)
+        .url = newVal.url;
+    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData)
+        .uuid = newVal.id;
     this.refreshView();
   }
 
   onTextColorPickerDone(Color newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData).fontColor = newVal;
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontColor = newVal;
     this.refreshView();
   }
 
@@ -115,8 +142,9 @@ class EditorUpdateHelperPresenter
   onOutsideTap() => this.editableTextFieldController.add(true);
 
   editMedia() async {
-    final selectedMedia =
-        await this.viewInterface.pushToMediaGallery(viewModel.headerMediaForm?.uuid);
+    final selectedMedia = await this
+        .viewInterface
+        .pushToMediaGallery(viewModel.headerMediaForm?.uuid);
     viewModel.headerMediaForm?.url = selectedMedia?.url;
     viewModel.headerMediaForm?.uuid = selectedMedia?.id;
     this.refreshView();
@@ -149,7 +177,6 @@ class EditorUpdateHelperPresenter
   _updateValidState() {
     viewModel.canValidate.value = isValid();
   }
-
 
   bool isValid() =>
       viewModel.titleTextForm.text.isNotEmpty &&

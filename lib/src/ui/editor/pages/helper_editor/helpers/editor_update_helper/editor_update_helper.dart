@@ -201,11 +201,21 @@ class EditorUpdateHelperPage extends StatelessWidget {
                         size: 123.0,
                         data: viewModel.headerMediaForm,
                         onTap: presenter.onNewEditableSelect,
+                        backgroundColor:
+                            viewModel.backgroundBoxForm?.backgroundColor,
+                        isSelected:
+                            viewModel.currentEditableItemNotifier?.value?.key ==
+                                viewModel.headerMediaForm.key,
                       ),
                       SizedBox(height: 40),
                       EditableTextField(
                         data: viewModel.titleTextForm,
                         onTap: presenter.onNewEditableSelect,
+                        backgroundColor:
+                            viewModel.backgroundBoxForm?.backgroundColor,
+                        isSelected:
+                            viewModel.currentEditableItemNotifier?.value?.key ==
+                                viewModel.titleTextForm.key,
                       ),
                       SizedBox(height: 25.0),
                       _buildChangelogFields(context, presenter, viewModel),
@@ -234,11 +244,16 @@ class EditorUpdateHelperPage extends StatelessWidget {
   ) {
     List<Widget> changelogsTextfieldWidgets = [];
     viewmodel.changelogsTextsForm.forEach((key, field) {
-      changelogsTextfieldWidgets.add(EditableTextField(
-        data: field,
-        key: ValueKey(key),
-        onTap: presenter.onNewEditableSelect,
-      ));
+      changelogsTextfieldWidgets.add(
+        EditableTextField(
+          data: field,
+          key: ValueKey(key),
+          onTap: presenter.onNewEditableSelect,
+          backgroundColor: viewmodel.backgroundBoxForm?.backgroundColor,
+          isSelected:
+              viewmodel.currentEditableItemNotifier?.value?.key == field.key,
+        ),
+      );
     });
     return Column(
       children: [
@@ -275,6 +290,9 @@ class EditorUpdateHelperPage extends StatelessWidget {
       child: EditableButton(
         data: viewModel.positivButtonForm,
         onTap: presenter.onNewEditableSelect,
+        backgroundColor: viewModel.backgroundBoxForm?.backgroundColor,
+        isSelected: viewModel.currentEditableItemNotifier?.value?.key ==
+            viewModel.positivButtonForm.key,
       ),
     );
   }

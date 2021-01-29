@@ -167,12 +167,16 @@ class EditorSimpleHelperPage extends StatelessWidget {
                               ),
                               padding: EdgeInsets.all(15),
                               child: EditableTextField(
-                                  key: _textKey,
-                                  data: viewModel.contentTextForm,
-                                 onTap: presenter.onNewEditableSelect,
-                                  isSelected: viewModel.contentTextForm?.key ==
-                                      viewModel.currentSelectedEditableNotifier
-                                          ?.value?.key),
+                                key: _textKey,
+                                data: viewModel.contentTextForm,
+                                onTap: presenter.onNewEditableSelect,
+                                isSelected: viewModel.contentTextForm?.key ==
+                                    viewModel.currentSelectedEditableNotifier
+                                        ?.value?.key,
+                                backgroundColor: PalTheme.of(context)
+                                    .colors
+                                    .black, // Currently we can't change background
+                              ),
                             ),
                           ),
                         ],

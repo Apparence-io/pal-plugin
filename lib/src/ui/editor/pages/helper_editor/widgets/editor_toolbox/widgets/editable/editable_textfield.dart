@@ -9,11 +9,13 @@ class EditableTextField extends StatelessWidget {
   final EditableTextFormData data;
   final Function(EditableData) onTap;
   final bool isSelected;
+  final Color backgroundColor;
 
   const EditableTextField({
     Key key,
     this.onTap,
     @required this.data,
+    @required this.backgroundColor,
     this.isSelected = false,
   }) : super(key: key);
 
@@ -28,11 +30,13 @@ class EditableTextField extends StatelessWidget {
       _googleCustomFont(this.data?.fontFamily),
     );
 
+    Color _borderColor = this.backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
     return BouncingWidget(
       onTap: () => this.onTap?.call(this.data),
       child: DottedBorder(
         dashPattern: [6, 3],
-        color: Colors.white.withAlpha(80),
+        color: this.isSelected ? _borderColor.withAlpha(200) : _borderColor.withAlpha(80),
+        strokeWidth: this.isSelected ? 3.0 : 1.0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: TextFormField(

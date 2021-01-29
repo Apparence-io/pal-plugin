@@ -229,8 +229,6 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
 
   @override
   void refresh() {
-    this.setState(() {
-      
-    });
+    this.setState(() {});
   }
 }

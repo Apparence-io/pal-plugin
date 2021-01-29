@@ -210,16 +210,31 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                             size: 150.0,
                             data: model.headerMediaForm,
                             onTap: presenter.onNewEditableSelect,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.headerMediaForm.key,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
                             data: model.titleTextForm,
                             onTap: presenter.onNewEditableSelect,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.titleTextForm.key,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
                             data: model.descriptionTextForm,
                             onTap: presenter.onNewEditableSelect,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.descriptionTextForm.key,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 40.0),
@@ -227,6 +242,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                           EditableButton(
                             data: model.positivButtonForm,
                             onTap: presenter.onNewEditableSelect,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.positivButtonForm.key,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
@@ -234,6 +254,11 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                           EditableButton(
                             data: model.negativButtonForm,
                             onTap: presenter.onNewEditableSelect,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.negativButtonForm.key,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
                           )
                         ],
                       ),

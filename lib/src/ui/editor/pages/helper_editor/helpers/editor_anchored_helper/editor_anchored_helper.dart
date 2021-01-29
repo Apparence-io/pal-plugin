@@ -246,6 +246,9 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 child: EditableTextField(
                   data: model.titleField,
                   onTap: presenter.onNewEditableSelect,
+                  backgroundColor: model.backgroundBox?.backgroundColor,
+                  isSelected: model.currentEditableItemNotifier?.value?.key ==
+                      model.titleField.key,
                 ),
               ),
               Padding(
@@ -253,6 +256,9 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 child: EditableTextField(
                   data: model.descriptionField,
                   onTap: presenter.onNewEditableSelect,
+                  backgroundColor: model.backgroundBox?.backgroundColor,
+                  isSelected: model.currentEditableItemNotifier?.value?.key ==
+                      model.descriptionField.key,
                 ),
               ),
               SizedBox(height: 16),
@@ -263,12 +269,20 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                     child: EditableButton(
                       data: model.negativBtnField,
                       onTap: presenter.onNewEditableSelect,
+                      backgroundColor: model.backgroundBox?.backgroundColor,
+                      isSelected:
+                          model.currentEditableItemNotifier?.value?.key ==
+                              model.negativBtnField.key,
                     ),
                   ),
                   Flexible(
                     child: EditableButton(
                       data: model.positivBtnField,
                       onTap: presenter.onNewEditableSelect,
+                      backgroundColor: model.backgroundBox?.backgroundColor,
+                      isSelected:
+                          model.currentEditableItemNotifier?.value?.key ==
+                              model.positivBtnField.key,
                     ),
                   ),
                 ],

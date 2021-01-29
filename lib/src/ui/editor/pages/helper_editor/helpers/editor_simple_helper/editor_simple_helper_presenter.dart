@@ -13,44 +13,59 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'editor_simple_helper.dart';
 import 'editor_simple_helper_viewmodel.dart';
 
-class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, EditorSimpleHelperView>{
-
+class EditorSimpleHelperPresenter
+    extends Presenter<SimpleHelperViewModel, EditorSimpleHelperView> {
   final EditorHelperService editorHelperService;
 
   final HelperEditorPageArguments parameters;
 
-
   EditorSimpleHelperPresenter(
-    EditorSimpleHelperView viewInterface,
-    SimpleHelperViewModel simpleHelperViewModel,
-    this.editorHelperService,
-    this.parameters
-  ) :
-      super(simpleHelperViewModel, viewInterface);
+      EditorSimpleHelperView viewInterface,
+      SimpleHelperViewModel simpleHelperViewModel,
+      this.editorHelperService,
+      this.parameters)
+      : super(simpleHelperViewModel, viewInterface);
 
   @override
   void onInit() {
     super.onInit();
     viewModel.canValidate = new ValueNotifier(false);
     viewModel.currentSelectedEditableNotifier = ValueNotifier(null);
+
+    // Refresh UI to remove all selected items
+    this
+        .viewModel
+        .currentSelectedEditableNotifier
+        .addListener(removeSelectedEditableItems);
+  }
+
+  void removeSelectedEditableItems() {
+    if (this.viewModel.currentSelectedEditableNotifier?.value == null) {
+      this.refreshView();
+    }
   }
 
   @override
   Future onDestroy() async {
     this.viewModel.currentSelectedEditableNotifier?.dispose();
+    this
+        .viewModel
+        .currentSelectedEditableNotifier
+        .removeListener(removeSelectedEditableItems);
     super.onDestroy();
   }
 
   Future onValidate() async {
-    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
+    ValueNotifier<SendingStatus> status =
+        new ValueNotifier(SendingStatus.SENDING);
     final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
       await editorHelperService.saveSimpleHelper(
-        EditorEntityFactory.buildSimpleArgs(config, viewModel));
+          EditorEntityFactory.buildSimpleArgs(config, viewModel));
       status.value = SendingStatus.SENT;
-    } catch(error) {
+    } catch (error) {
       print("error: $error");
       status.value = SendingStatus.ERROR;
     } finally {
@@ -75,7 +90,7 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     }
     return null;
   }
-  
+
   // updateBackgroundColor(Color aColor) {
   //   viewModel.bodyBox.backgroundColor.value = aColor;
   //   this.refreshView();
@@ -85,11 +100,13 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);
   }
-  
+
   onFontPickerDone(EditedFontModel newFont) {
-    this.viewModel.contentTextForm.fontFamily =  newFont.fontKeys.fontFamilyNameKey;
-    this.viewModel.contentTextForm.fontWeight =  newFont.fontKeys.fontWeightNameKey;
-    this.viewModel.contentTextForm.fontSize =  newFont.size.toInt();
+    this.viewModel.contentTextForm.fontFamily =
+        newFont.fontKeys.fontFamilyNameKey;
+    this.viewModel.contentTextForm.fontWeight =
+        newFont.fontKeys.fontWeightNameKey;
+    this.viewModel.contentTextForm.fontSize = newFont.size.toInt();
     this._updateValidState();
   }
 
@@ -114,10 +131,8 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
   // PRIVATES
   // ----------------------------------
 
-  
   _updateValidState() {
     viewModel.canValidate.value = isValid();
     this.refreshView();
   }
-
 }

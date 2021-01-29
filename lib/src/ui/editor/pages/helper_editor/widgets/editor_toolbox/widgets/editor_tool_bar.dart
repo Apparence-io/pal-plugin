@@ -45,8 +45,12 @@ class EditorToolBar extends StatelessWidget {
     return AnimatedBuilder(
       animation: this.drawerAnimation,
       builder: (context, child) => Positioned(
-          bottom: (MediaQuery.of(context).padding.bottom + 10) - ((MediaQuery.of(context).padding.bottom - 10) * drawerAnimation.value),// * this.drawerAnimation.value,
-           right: 30.0, child: child),
+        bottom: (MediaQuery.of(context).padding.bottom + 10) -
+            ((MediaQuery.of(context).padding.bottom - 10) *
+                drawerAnimation.value), // * this.drawerAnimation.value,
+        right: 30.0,
+        child: child,
+      ),
       child: Wrap(
         direction: Axis.vertical,
         crossAxisAlignment: WrapCrossAlignment.center,
@@ -101,27 +105,38 @@ class EditorToolBar extends StatelessWidget {
     List<Widget> actions = [];
     for (final elementAction in this.editableElementActions) {
       IconData iconData;
+      Key key;
       switch (elementAction) {
         case ToolBarActionButton.border:
           iconData = Icons.border_all;
+          key = ValueKey('EditorToolBar_SpecificAction_Border');
           break;
         case ToolBarActionButton.color:
           iconData = Icons.format_color_text;
+          key = ValueKey('EditorToolBar_SpecificAction_Color');
+
           break;
         case ToolBarActionButton.font:
           iconData = Icons.font_download;
+          key = ValueKey('EditorToolBar_SpecificAction_Font');
+
           break;
         case ToolBarActionButton.media:
           iconData = Icons.insert_link;
+          key = ValueKey('EditorToolBar_SpecificAction_Media');
+
           break;
         case ToolBarActionButton.text:
           iconData = Icons.edit;
+          key = ValueKey('EditorToolBar_SpecificAction_Text');
           break;
         default:
           iconData = Icons.more_horiz;
+          key = ValueKey('EditorToolBar_SpecificAction_More');
       }
 
       Widget globalActionToAdd = AnimatedBuilder(
+        key: key,
         animation: this.iconsAnimation,
         builder: (context, child) =>
             Transform.scale(scale: this.iconsAnimation.value, child: child),
@@ -144,15 +159,19 @@ class EditorToolBar extends StatelessWidget {
     List<Widget> actions = [];
     for (final globalAction in this.globalActions) {
       IconData iconData;
+      Key key;
       switch (globalAction) {
         case ToolBarGlobalActionButton.backgroundColor:
           iconData = Icons.invert_colors;
+          key = ValueKey('EditorToolBar_GlobalAction_BackgroundColor');
           break;
         default:
           iconData = Icons.more_horiz;
+          key = ValueKey('EditorToolBar_GlobalAction_More');
       }
 
       Widget globalActionToAdd = CircleIconButton(
+        key: key,
         icon: Icon(
           iconData,
           color: PalTheme.of(context).colors.dark,

@@ -26,12 +26,11 @@ import 'package:mockito/mockito.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
-class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
+class PalEditModeStateServiceMock extends Mock
+    implements PalEditModeStateService {}
 
 void main() {
-
   group('[Editor] Fullscreen helper - creation mode', () {
-
     EditorFullScreenHelperPresenter presenter;
 
     final _navigatorKey = GlobalKey<NavigatorState>();
@@ -41,7 +40,10 @@ void main() {
     Scaffold _overlayedApplicationPage = Scaffold(
       body: Column(
         children: [
-          Text("text1", key: ValueKey("text1"),),
+          Text(
+            "text1",
+            key: ValueKey("text1"),
+          ),
           Text("text2", key: ValueKey("text2")),
           Padding(
             padding: EdgeInsets.only(top: 32),
@@ -72,19 +74,21 @@ void main() {
             );
         }
       };
-      await initAppWithPal(tester, null, _navigatorKey, routeFactory: routeFactory);
+      await initAppWithPal(tester, null, _navigatorKey,
+          routeFactory: routeFactory);
       await pumpHelperWidget(
-        tester, _navigatorKey,
-        HelperTriggerType.ON_SCREEN_VISIT,
-        HelperType.HELPER_FULL_SCREEN,
-        HelperTheme.BLACK,
-        editorHelperService: helperEditorServiceMock,
-        palEditModeStateService: new PalEditModeStateServiceMock()
-      );
+          tester,
+          _navigatorKey,
+          HelperTriggerType.ON_SCREEN_VISIT,
+          HelperType.HELPER_FULL_SCREEN,
+          HelperTheme.BLACK,
+          editorHelperService: helperEditorServiceMock,
+          palEditModeStateService: new PalEditModeStateServiceMock());
       await tester.pumpAndSettle(Duration(milliseconds: 1000));
-      var presenterFinder = find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
-      var page = presenterFinder.evaluate().first.widget
-        as PresenterInherited<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
+      var presenterFinder =
+          find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
+      var page = presenterFinder.evaluate().first.widget as PresenterInherited<
+          EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
       presenter = page.presenter;
     }
 
@@ -99,7 +103,8 @@ void main() {
       expect(presenter.editorHelperService, isNotNull);
     });
 
-    testWidgets('on text press  => button is disabled', (WidgetTester tester) async {
+    testWidgets('on text press  => button is disabled',
+        (WidgetTester tester) async {
       await _beforeEach(tester);
       expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
       var textMode = find.byKey(ValueKey('editableActionBarTextButton'));
@@ -107,7 +112,8 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets('on settings press  => button is disabled', (WidgetTester tester) async {
+    testWidgets('on settings press  => button is disabled',
+        (WidgetTester tester) async {
       await _beforeEach(tester);
       expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
       var textMode = find.byKey(ValueKey('editableActionBarSettingsButton'));
@@ -115,29 +121,28 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    Future _fillFields(WidgetTester tester, String firstField,String secondField,String thirdField) async {
+    Future _fillFields(WidgetTester tester, String firstField,
+        String secondField, String thirdField) async {
       // INIT TEXTFIELDS
       var editableTextsFinder = find.byType(TextField);
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(0), firstField);
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(1), 'Description');
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(2), secondField);
-        await enterTextInEditable(
-          tester, editableTextsFinder.at(3), thirdField);
+      await enterTextInEditable(tester, 0, firstField);
+      await enterTextInEditable(tester, 1, 'Description');
+      await enterTextInEditable(tester, 2, secondField);
+      await enterTextInEditable(tester, 3, thirdField);
       await tester.pump();
       // INIT TEXTFIELDS
     }
-    testWidgets('on preview press  => show fullscreen client preview & cancel with positiv button',
+
+    testWidgets(
+        'on preview press  => show fullscreen client preview & cancel with positiv button',
         (WidgetTester tester) async {
       await _beforeEach(tester);
 
       final String firstField = 'test title edited';
       final String secondField = 'positiv edit';
       final String thirdField = 'negativ edit';
-      await _fillFields(tester, firstField, secondField,thirdField);
-      
+      await _fillFields(tester, firstField, secondField, thirdField);
+
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
@@ -150,42 +155,47 @@ void main() {
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
-      Finder titleFinder = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title'));
+      Finder titleFinder =
+          find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title'));
       expect(titleFinder, findsOneWidget);
       Text titleText = tester.widget(titleFinder);
       expect(titleText.data, equals('test title edited'));
 
-      Finder positivLabelFinder = find.byKey(ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_PositivLabel'));
+      Finder positivLabelFinder = find.byKey(
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivLabel'));
       expect(positivLabelFinder, findsOneWidget);
       Text positivText = tester.widget(positivLabelFinder);
       expect(positivText.data, equals('positiv edit'));
 
-      Finder negativLabelFinder = find.byKey(ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_NegativLabel'));
+      Finder negativLabelFinder = find.byKey(
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativLabel'));
       expect(negativLabelFinder, findsOneWidget);
       Text negativText = tester.widget(negativLabelFinder);
       expect(negativText.data, equals('negativ edit'));
 
-      (tester.widget(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'))) as RaisedButton).onPressed();
+      (tester.widget(find.byKey(ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_PositivButton')))
+              as RaisedButton)
+          .onPressed();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pumpAndSettle();
-      
+
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
 
-    testWidgets('on preview press  => show fullscreen client preview & cancel with negativ button',
+    testWidgets(
+        'on preview press  => show fullscreen client preview & cancel with negativ button',
         (WidgetTester tester) async {
       await _beforeEach(tester);
 
       final String firstField = 'test title edited';
       final String secondField = 'positiv edit';
       final String thirdField = 'negativ edit';
-      await _fillFields(tester, firstField, secondField,thirdField);
-      
+      await _fillFields(tester, firstField, secondField, thirdField);
+
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
@@ -198,50 +208,65 @@ void main() {
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
-      Finder titleFinder = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title'));
+      Finder titleFinder =
+          find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title'));
       expect(titleFinder, findsOneWidget);
       Text titleText = tester.widget(titleFinder);
       expect(titleText.data, equals('test title edited'));
 
-      Finder positivFinder = find.byKey(ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_PositivLabel'));
+      Finder positivFinder = find.byKey(
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivLabel'));
       expect(positivFinder, findsOneWidget);
       Text positivText = tester.widget(positivFinder);
       expect(positivText.data, equals('positiv edit'));
 
-      Finder negativFinder = find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativLabel'));
+      Finder negativFinder = find.byKey(
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativLabel'));
       expect(negativFinder, findsOneWidget);
       Text negativText = tester.widget(negativFinder);
       expect(negativText.data, equals('negativ edit'));
 
-      (tester.widget(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'))) as RaisedButton).onPressed();
-      
+      (tester.widget(find.byKey(ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_NegativButton')))
+              as RaisedButton)
+          .onPressed();
+
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pumpAndSettle();
-      
+
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
 
-    testWidgets('title = "test title", description = "test description" '
-      '=> save call helperService.saveFullscreen', (WidgetTester tester) async {
+    testWidgets(
+        'title = "test title", description = "test description" '
+        '=> save call helperService.saveFullscreen',
+        (WidgetTester tester) async {
       await _beforeEach(tester);
       var editableTextsFinder = find.byType(TextField);
       var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
-      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
-      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
+      var validateFinder =
+          find.byKey(ValueKey('editableActionBarValidateButton'));
+      var validateButton =
+          validateFinder.evaluate().first.widget as CircleIconButton;
 
       expect(validateButton.onTapCallback, isNull);
-      await enterTextInEditable(tester, editableTextsFinder.at(0), 'test title');
-      await enterTextInEditable(tester, editableTextsFinder.at(1), 'test description');
+      await enterTextInEditable(
+          tester, 0, 'test title');
+      await enterTextInEditable(
+          tester, 1, 'test description');
 
-      validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
+      validateButton =
+          validateFinder.evaluate().first.widget as CircleIconButton;
       await tester.pumpAndSettle();
       expect(presenter.viewModel.titleTextForm.text, equals('test title'));
-      expect(presenter.viewModel.descriptionTextForm.text, equals('test description'));
-      expect(presenter.viewModel.positivButtonForm.text, equals('Ok, thanks !'));
-      expect(presenter.viewModel.negativButtonForm.text, equals('This is not helping'));
+      expect(presenter.viewModel.descriptionTextForm.text,
+          equals('test description'));
+      expect(
+          presenter.viewModel.positivButtonForm.text, equals('Ok, thanks !'));
+      expect(presenter.viewModel.negativButtonForm.text,
+          equals('This is not helping'));
       expect(validateButton.onTapCallback, isNotNull);
       validateButton.onTapCallback();
       await tester.pump(Duration(seconds: 1));
@@ -250,47 +275,69 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
     });
 
-    testWidgets('save call helperService.saveFullscreen with error => shows error overlay', (WidgetTester tester) async {
+    testWidgets(
+        'save call helperService.saveFullscreen with error => shows error overlay',
+        (WidgetTester tester) async {
       await _beforeEach(tester);
-      when(helperEditorServiceMock.saveFullScreenHelper(any)).thenThrow(ArgumentError());
+      when(helperEditorServiceMock.saveFullScreenHelper(any))
+          .thenThrow(ArgumentError());
       var editableTextsFinder = find.byType(TextField);
-      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
+      var validateFinder =
+          find.byKey(ValueKey('editableActionBarValidateButton'));
 
-      await enterTextInEditable(tester, editableTextsFinder.at(0), 'test title');
-      await enterTextInEditable(tester, editableTextsFinder.at(1), 'test description');
+      await enterTextInEditable(
+          tester, 0, 'test title');
+      await enterTextInEditable(
+          tester, 1, 'test description');
       await tester.pumpAndSettle();
-      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
+      var validateButton =
+          validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNotNull);
       validateButton.onTapCallback();
       await tester.pump(Duration(seconds: 1));
-      expect(find.text('Error occured, please try again later'), findsOneWidget);
+      expect(
+          find.text('Error occured, please try again later'), findsOneWidget);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
     });
 
-    testWidgets('background color = Colors.blueAccent, change color to FFF => should change background color in model', (WidgetTester tester) async {
+    testWidgets(
+        'background color = Colors.blueAccent, change color to FFF => should change background color in model',
+        (WidgetTester tester) async {
       await _beforeEach(tester);
-      expect(presenter.viewModel.backgroundBoxForm.backgroundColor.value, Colors.blueAccent,);
-      var colorPickerButton = find.byKey(ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
+      expect(
+        presenter.viewModel.backgroundBoxForm.backgroundColor.value,
+        Colors.blueAccent,
+      );
+      var colorPickerButton = find.byKey(
+          ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
       await tester.tap(colorPickerButton);
       await tester.pumpAndSettle();
       expect(find.byType(ColorPickerDialog), findsOneWidget);
 
-      var hecColorField = find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
+      var hecColorField =
+          find.byKey(ValueKey('pal_ColorPickerAlertDialog_HexColorTextField'));
       await tester.enterText(hecColorField, '#FFFFFF');
       await tester.pumpAndSettle();
 
-      var validateColorButton = find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
+      var validateColorButton =
+          find.byKey(ValueKey('pal_ColorPickerAlertDialog_ValidateButton'));
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
-      expect(presenter.viewModel.backgroundBoxForm.backgroundColor.value, Color(0xFFFFFFFF),);
+      expect(
+        presenter.viewModel.backgroundBoxForm.backgroundColor.value,
+        Color(0xFFFFFFFF),
+      );
     });
 
-    testWidgets('tap on on field, tap on a second field => only one toolbar is shown', (WidgetTester tester) async {
+    testWidgets(
+        'tap on on field, tap on a second field => only one toolbar is shown',
+        (WidgetTester tester) async {
       await _beforeEach(tester);
       var textFinder = find.byType(EditableTextField);
       var text1 = textFinder.evaluate().first.widget as EditableTextField;
-      var text2 = textFinder.evaluate().elementAt(1).widget as EditableTextField;
+      var text2 =
+          textFinder.evaluate().elementAt(1).widget as EditableTextField;
       expect(find.byType(EditHelperToolbar), findsNothing);
       expect(textFinder, findsNWidgets(4));
 
@@ -298,10 +345,10 @@ void main() {
       await tester.pump(Duration(seconds: 1));
       expect(find.byType(EditHelperToolbar), findsOneWidget);
 
-      text2.toolbarVisibility.value = true;
+      // text2.toolbarVisibility.value = true;
       await tester.pump(Duration(seconds: 1));
       expect(find.byType(EditHelperToolbar), findsOneWidget);
-      
+
       await tester.pump(Duration(seconds: 1));
     });
 
@@ -316,7 +363,8 @@ void main() {
         minVersionCode: "0.0.0",
         maxVersionCode: "1.0.1",
       );
-      var helper = FullscreenHelperViewModel.fromHelperViewModel(helperViewModel);
+      var helper =
+          FullscreenHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(helper.id, helperViewModel.id);
       expect(helper.name, helperViewModel.name);
       expect(helper.minVersionCode, helperViewModel.minVersionCode);
@@ -324,90 +372,80 @@ void main() {
       expect(helper.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
       expect(helper.helperTheme, HelperTheme.BLACK);
     });
-
   });
 
   group('[Editor] Fullscreen helper - update mode', () {
-
     EditorFullScreenHelperPresenter presenter;
 
     HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
 
-    HelperEntity validFullscreenHelperEntity()
-      => HelperEntity(
-        id: "JDLSKJDSD",
-        name: "fullscreen test",
-        type: HelperType.HELPER_FULL_SCREEN,
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-        priority: 1,
-        versionMinId: 25,
-        versionMaxId: 25,
-        helperTexts: [
-          HelperTextEntity(
-            value: "title text",
-            fontColor: "#CCCCCC",
-            fontWeight: "w100",
-            fontSize: 21,
-            fontFamily: "Montserrat",
-            key: FullscreenHelperKeys.TITLE_KEY,
-          ),
-          HelperTextEntity(
-            value: "description text",
-            fontColor: "#FFFFFF",
-            fontWeight: "w100",
-            fontSize: 18,
-            fontFamily: "Montserrat",
-            key: FullscreenHelperKeys.DESCRIPTION_KEY,
-          ),
-        ],
-        helperImages: [
-          HelperImageEntity(
-            url: null,
-            key: FullscreenHelperKeys.IMAGE_KEY,
-          )
-        ],
-        helperBoxes: [
-          HelperBoxEntity(
-            key: FullscreenHelperKeys.BACKGROUND_KEY,
-            backgroundColor: "#000000",
-          )
-        ],
-      );
+    HelperEntity validFullscreenHelperEntity() => HelperEntity(
+          id: "JDLSKJDSD",
+          name: "fullscreen test",
+          type: HelperType.HELPER_FULL_SCREEN,
+          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+          priority: 1,
+          versionMinId: 25,
+          versionMaxId: 25,
+          helperTexts: [
+            HelperTextEntity(
+              value: "title text",
+              fontColor: "#CCCCCC",
+              fontWeight: "w100",
+              fontSize: 21,
+              fontFamily: "Montserrat",
+              key: FullscreenHelperKeys.TITLE_KEY,
+            ),
+            HelperTextEntity(
+              value: "description text",
+              fontColor: "#FFFFFF",
+              fontWeight: "w100",
+              fontSize: 18,
+              fontFamily: "Montserrat",
+              key: FullscreenHelperKeys.DESCRIPTION_KEY,
+            ),
+          ],
+          helperImages: [
+            HelperImageEntity(
+              url: null,
+              key: FullscreenHelperKeys.IMAGE_KEY,
+            )
+          ],
+          helperBoxes: [
+            HelperBoxEntity(
+              key: FullscreenHelperKeys.BACKGROUND_KEY,
+              backgroundColor: "#000000",
+            )
+          ],
+        );
 
     Future _beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);
       EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.edit(
         palEditModeStateService: PalEditModeStateServiceMock(),
         helperEntity: helperEntity,
-        parameters: HelperEditorPageArguments(
-          null,
-          "pageId_IEPZE",
-          helperMinVersion: "1.0.1",
-          helperMaxVersion: null
-        ) ,
+        parameters: HelperEditorPageArguments(null, "pageId_IEPZE",
+            helperMinVersion: "1.0.1", helperMaxVersion: null),
         helperService: helperEditorServiceMock,
       );
-      await tester.pumpWidget(
-        PalTheme(
-          theme: PalThemeData.light(),
-          child: MaterialApp(
-            home: Overlayed(child: editor)
-          ),
-        )
-      );
+      await tester.pumpWidget(PalTheme(
+        theme: PalThemeData.light(),
+        child: MaterialApp(home: Overlayed(child: editor)),
+      ));
       await tester.pumpAndSettle(Duration(milliseconds: 1000));
-      var presenterFinder = find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
-      var page = presenterFinder.evaluate().first.widget
-      as PresenterInherited<EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
+      var presenterFinder =
+          find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
+      var page = presenterFinder.evaluate().first.widget as PresenterInherited<
+          EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
       presenter = page.presenter;
     }
-    
-    testWidgets('valid fullscreen helper entity => fill all text in editor', (WidgetTester tester) async {
+
+    testWidgets('valid fullscreen helper entity => fill all text in editor',
+        (WidgetTester tester) async {
       var entity = validFullscreenHelperEntity();
       await _beforeEach(tester, entity);
-      entity.helperTexts.forEach((element) => expect(find.text(element.value), findsOneWidget));
+      entity.helperTexts.forEach(
+          (element) => expect(find.text(element.value), findsOneWidget));
     });
-    
-    
   });
 }

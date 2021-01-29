@@ -15,7 +15,7 @@ class EditorSaveFloatingButton extends StatelessWidget {
     final kFloatingRadius = 45.0;
 
     return CircleIconButton(
-      key: ValueKey('editor_Save_Floating_Button'),
+      key: ValueKey('editableActionBarValidateButton'),
       backgroundColor: PalTheme.of(context).colors.color2,
       radius: 40.0,
       borderSide: BorderSide(

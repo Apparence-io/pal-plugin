@@ -31,6 +31,7 @@ class EditableTextDialog extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             child: Center(
               child: TextFormField(
+                key: ValueKey('EditableTextDialog_Field'),
                 autofocus: true,
                 controller: controller,
                 focusNode: focusNode,

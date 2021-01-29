@@ -128,8 +128,8 @@ void main() {
         'text is empty => cancel, validate buttons exists, validate button is disabled',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      var editableTextsFinder = find.byType(TextField);
-      await enterTextInEditable(tester, editableTextsFinder.at(0), '');
+      
+      await enterTextInEditable(tester, 0, '');
       await tester.pumpAndSettle();
       expect(presenter.viewModel.contentTextForm.text, equals(''));
 
@@ -145,8 +145,7 @@ void main() {
 
     Future _fillFields(WidgetTester tester, String firstField) async {
       // INIT TEXTFIELDS
-      var editableTextsFinder = find.byType(TextField);
-      await enterTextInEditable(tester, editableTextsFinder.at(0), firstField);
+      await enterTextInEditable(tester, 0, firstField);
       await tester.pump();
       // INIT TEXTFIELDS
     }
@@ -254,9 +253,8 @@ void main() {
         'title = "my helper tips lorem" => save call helperService.saveSimpleHelper',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      var editableTextsFinder = find.byType(TextField);
       await enterTextInEditable(
-          tester, editableTextsFinder.at(0), 'my helper tips lorem');
+          tester, 0, 'my helper tips lorem');
       await tester.pumpAndSettle();
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
@@ -277,9 +275,8 @@ void main() {
       await _beforeEach(tester);
       when(helperEditorServiceMock.saveSimpleHelper(any))
           .thenThrow(new ArgumentError());
-      var editableTextsFinder = find.byType(TextField);
       await enterTextInEditable(
-          tester, editableTextsFinder.at(0), 'my helper tips lorem');
+          tester, 0, 'my helper tips lorem');
       await tester.pumpAndSettle();
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));

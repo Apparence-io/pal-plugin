@@ -49,22 +49,23 @@ void main() {
 
     HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
 
-    Widget _myHomeTest = MaterialApp(home:Scaffold(
-          body: Column(
-            children: [
-              Text("text1", key: ValueKey("text1")),
-              Text("text2", key: ValueKey("text2")),
-              Padding(
-                padding: EdgeInsets.only(top: 32),
-                child: FlatButton(
-                  key: ValueKey("MFlatButton"),
-                  child: Text("tapme"),
-                  onPressed: () => print("impressed!"),
-                ),
-              )
-            ],
-          ),
-        ));
+    Widget _myHomeTest = MaterialApp(
+        home: Scaffold(
+      body: Column(
+        children: [
+          Text("text1", key: ValueKey("text1")),
+          Text("text2", key: ValueKey("text2")),
+          Padding(
+            padding: EdgeInsets.only(top: 32),
+            child: FlatButton(
+              key: ValueKey("MFlatButton"),
+              child: Text("tapme"),
+              onPressed: () => print("impressed!"),
+            ),
+          )
+        ],
+      ),
+    ));
 
     // init pal + go to editor
     Future beforeEach(WidgetTester tester) async {
@@ -135,10 +136,10 @@ void main() {
     ) async {
       // INIT TEXTFIELDS
       var editableTextsFinder = find.byType(TextField);
-      await enterTextInEditable(tester, editableTextsFinder.at(0), firstField);
-      await enterTextInEditable(tester, editableTextsFinder.at(1), secondField);
-      await enterTextInEditable(tester, editableTextsFinder.at(2), thirdField);
-      await enterTextInEditable(tester, editableTextsFinder.at(3), fourthField);
+      await enterTextInEditable(tester, 0, firstField);
+      await enterTextInEditable(tester, 1, secondField);
+      await enterTextInEditable(tester, 2, thirdField);
+      await enterTextInEditable(tester, 3, fourthField);
       await tester.pump();
       // INIT TEXTFIELDS
     }
@@ -178,117 +179,111 @@ void main() {
     testWidgets(
         'on preview press  => show anchored client preview & cancel with positiv button',
         (WidgetTester tester) async {
-        await beforeEach(tester);
-        await _passFirstStep(tester);
+      await beforeEach(tester);
+      await _passFirstStep(tester);
 
-        final String firstField = 'test title edited';
-        final String secondField = 'test description edited';
-        final String thirdField = 'negativ edit';
-        final String fourthField = 'positiv edit';
-        await _passSecondStep(
-            tester, firstField, secondField, thirdField, fourthField);
+      final String firstField = 'test title edited';
+      final String secondField = 'test description edited';
+      final String thirdField = 'negativ edit';
+      final String fourthField = 'positiv edit';
+      await _passSecondStep(
+          tester, firstField, secondField, thirdField, fourthField);
 
-        final previewButtonFinder =
-            find.byKey(ValueKey('editableActionBarPreviewButton'));
-        final previewButton =
-            previewButtonFinder.evaluate().first.widget as EditorActionItem;
-        previewButton.onTap();
-        // await tester.pumpAndSettle();
-        await tester.pump();
-        await tester.pump();
+      final previewButtonFinder =
+          find.byKey(ValueKey('editableActionBarPreviewButton'));
+      final previewButton =
+          previewButtonFinder.evaluate().first.widget as EditorActionItem;
+      previewButton.onTap();
+      // await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump();
 
-        expect(
-            find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
+      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
-        Finder titleFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperTitleLabel'));
-        expect(titleFinder, findsOneWidget);
-        Text titleText = tester.widget(titleFinder);
-        expect(titleText.data, equals('test title edited'));
+      Finder titleFinder = find.byKey(ValueKey('pal_AnchoredHelperTitleLabel'));
+      expect(titleFinder, findsOneWidget);
+      Text titleText = tester.widget(titleFinder);
+      expect(titleText.data, equals('test title edited'));
 
-        Finder descriptionFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperDescriptionLabel'));
-        expect(descriptionFinder, findsOneWidget);
-        Text descriptionText = tester.widget(descriptionFinder);
-        expect(descriptionText.data, equals('test description edited'));
+      Finder descriptionFinder =
+          find.byKey(ValueKey('pal_AnchoredHelperDescriptionLabel'));
+      expect(descriptionFinder, findsOneWidget);
+      Text descriptionText = tester.widget(descriptionFinder);
+      expect(descriptionText.data, equals('test description edited'));
 
-        Finder negativFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperNegativFeedbackLabel'));
-        expect(negativFinder, findsOneWidget);
-        Text negativText = tester.widget(negativFinder);
-        expect(negativText.data, equals('negativ edit'));
+      Finder negativFinder =
+          find.byKey(ValueKey('pal_AnchoredHelperNegativFeedbackLabel'));
+      expect(negativFinder, findsOneWidget);
+      Text negativText = tester.widget(negativFinder);
+      expect(negativText.data, equals('negativ edit'));
 
-        Finder positivFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperPositivFeedbackLabel'));
-        expect(positivFinder, findsOneWidget);
-        Text positivText = tester.widget(positivFinder);
-        expect(positivText.data, equals('positiv edit'));
+      Finder positivFinder =
+          find.byKey(ValueKey('pal_AnchoredHelperPositivFeedbackLabel'));
+      expect(positivFinder, findsOneWidget);
+      Text positivText = tester.widget(positivFinder);
+      expect(positivText.data, equals('positiv edit'));
 
-        (tester.widget(find.byKey(ValueKey("positiveFeedback")))
-                as OutlineButton)
-            .onPressed();
-        await tester.pump();
-        await tester.pump();
+      (tester.widget(find.byKey(ValueKey("positiveFeedback"))) as OutlineButton)
+          .onPressed();
+      await tester.pump();
+      await tester.pump();
 
-        expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
+      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
 
     testWidgets(
         'on preview press  => show anchored client preview & cancel with negativ button',
         (WidgetTester tester) async {
       await beforeEach(tester);
-        await _passFirstStep(tester);
+      await _passFirstStep(tester);
 
-        final String firstField = 'test title edited';
-        final String secondField = 'test description edited';
-        final String thirdField = 'negativ edit';
-        final String fourthField = 'positiv edit';
-        await _passSecondStep(
-            tester, firstField, secondField, thirdField, fourthField);
+      final String firstField = 'test title edited';
+      final String secondField = 'test description edited';
+      final String thirdField = 'negativ edit';
+      final String fourthField = 'positiv edit';
+      await _passSecondStep(
+          tester, firstField, secondField, thirdField, fourthField);
 
-        final previewButtonFinder =
-            find.byKey(ValueKey('editableActionBarPreviewButton'));
-        final previewButton =
-            previewButtonFinder.evaluate().first.widget as EditorActionItem;
-        previewButton.onTap();
-        // await tester.pumpAndSettle();
-        await tester.pump();
-        await tester.pump();
+      final previewButtonFinder =
+          find.byKey(ValueKey('editableActionBarPreviewButton'));
+      final previewButton =
+          previewButtonFinder.evaluate().first.widget as EditorActionItem;
+      previewButton.onTap();
+      // await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump();
 
-        expect(
-            find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
+      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
-        Finder titleFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperTitleLabel'));
-        expect(titleFinder, findsOneWidget);
-        Text titleText = tester.widget(titleFinder);
-        expect(titleText.data, equals('test title edited'));
+      Finder titleFinder = find.byKey(ValueKey('pal_AnchoredHelperTitleLabel'));
+      expect(titleFinder, findsOneWidget);
+      Text titleText = tester.widget(titleFinder);
+      expect(titleText.data, equals('test title edited'));
 
-        Finder descriptionFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperDescriptionLabel'));
-        expect(descriptionFinder, findsOneWidget);
-        Text descriptionText = tester.widget(descriptionFinder);
-        expect(descriptionText.data, equals('test description edited'));
+      Finder descriptionFinder =
+          find.byKey(ValueKey('pal_AnchoredHelperDescriptionLabel'));
+      expect(descriptionFinder, findsOneWidget);
+      Text descriptionText = tester.widget(descriptionFinder);
+      expect(descriptionText.data, equals('test description edited'));
 
-        Finder negativFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperNegativFeedbackLabel'));
-        expect(negativFinder, findsOneWidget);
-        Text negativText = tester.widget(negativFinder);
-        expect(negativText.data, equals('negativ edit'));
+      Finder negativFinder =
+          find.byKey(ValueKey('pal_AnchoredHelperNegativFeedbackLabel'));
+      expect(negativFinder, findsOneWidget);
+      Text negativText = tester.widget(negativFinder);
+      expect(negativText.data, equals('negativ edit'));
 
-        Finder positivFinder =
-            find.byKey(ValueKey('pal_AnchoredHelperPositivFeedbackLabel'));
-        expect(positivFinder, findsOneWidget);
-        Text positivText = tester.widget(positivFinder);
-        expect(positivText.data, equals('positiv edit'));
+      Finder positivFinder =
+          find.byKey(ValueKey('pal_AnchoredHelperPositivFeedbackLabel'));
+      expect(positivFinder, findsOneWidget);
+      Text positivText = tester.widget(positivFinder);
+      expect(positivText.data, equals('positiv edit'));
 
-        (tester.widget(find.byKey(ValueKey("negativeFeedback")))
-                as OutlineButton)
-            .onPressed();
-        await tester.pump();
-        await tester.pump();
+      (tester.widget(find.byKey(ValueKey("negativeFeedback"))) as OutlineButton)
+          .onPressed();
+      await tester.pump();
+      await tester.pump();
 
-        expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
+      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
 
     testWidgets(
@@ -426,23 +421,16 @@ void main() {
       await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
       await tester.pump(Duration(milliseconds: 100));
       var editableTextsFinder = find.byType(TextField);
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(0), 'test title edited');
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(1), 'test description edited');
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(2), 'negativ edit');
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(3), 'positiv edit');
+      await enterTextInEditable(tester, 0, 'test title edited');
+      await enterTextInEditable(tester, 1, 'test description edited');
+      await enterTextInEditable(tester, 2, 'negativ edit');
+      await enterTextInEditable(tester, 3, 'positiv edit');
       await tester.pump();
-      expect(presenter.viewModel.titleField.text,
-          equals('test title edited'));
+      expect(presenter.viewModel.titleField.text, equals('test title edited'));
       expect(presenter.viewModel.descriptionField.text,
           equals('test description edited'));
-      expect(presenter.viewModel.negativBtnField.text,
-          equals('negativ edit'));
-      expect(presenter.viewModel.positivBtnField.text,
-          equals('positiv edit'));
+      expect(presenter.viewModel.negativBtnField.text, equals('negativ edit'));
+      expect(presenter.viewModel.positivBtnField.text, equals('positiv edit'));
     });
 
     testWidgets(
@@ -532,7 +520,7 @@ void main() {
       await tester.pump(Duration(seconds: 1));
       expect(find.byType(EditHelperToolbar), findsOneWidget);
       // tap a second field only one toolbar is visible
-      text2.toolbarVisibility.value = true;
+      // text2.toolbarVisibility.value = true;
       await tester.pump(Duration(seconds: 1));
       expect(find.byType(EditHelperToolbar), findsOneWidget);
     });
@@ -555,11 +543,10 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
       // enter texts
       var editableTextsFinder = find.byType(TextField);
-      await enterTextInEditable(tester, editableTextsFinder.at(0), 'Today tip');
-      await enterTextInEditable(
-          tester, editableTextsFinder.at(1), 'test description');
-      await enterTextInEditable(tester, editableTextsFinder.at(2), 'Not');
-      await enterTextInEditable(tester, editableTextsFinder.at(3), 'Ok');
+      await enterTextInEditable(tester, 0, 'Today tip');
+      await enterTextInEditable(tester, 1, 'test description');
+      await enterTextInEditable(tester, 2, 'Not');
+      await enterTextInEditable(tester, 3, 'Ok');
       await tester.pump();
       // save anchor
       var validateFinder =

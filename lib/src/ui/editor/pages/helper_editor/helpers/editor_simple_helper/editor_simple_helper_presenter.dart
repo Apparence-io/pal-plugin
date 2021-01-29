@@ -47,12 +47,13 @@ class EditorSimpleHelperPresenter
 
   @override
   Future onDestroy() async {
-    this.viewModel.currentSelectedEditableNotifier?.dispose();
+    super.onDestroy();
+
     this
         .viewModel
         .currentSelectedEditableNotifier
         .removeListener(removeSelectedEditableItems);
-    super.onDestroy();
+    this.viewModel.currentSelectedEditableNotifier?.dispose();
   }
 
   Future onValidate() async {

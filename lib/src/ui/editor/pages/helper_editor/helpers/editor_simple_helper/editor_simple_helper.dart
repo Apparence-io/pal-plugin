@@ -92,7 +92,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorSimpleHelperPresenter, SimpleHelperViewModel>()
         .build(
-      key: UniqueKey(),
+      key: ValueKey('palEditorSimpleHelperWidgetBuilder'),
       context: context,
       presenterBuilder: (context) => EditorSimpleHelperPresenter(
           new _EditorSimpleHelperPage(

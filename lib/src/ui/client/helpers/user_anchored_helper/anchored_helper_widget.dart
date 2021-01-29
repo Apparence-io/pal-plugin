@@ -247,7 +247,6 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         ),
       );
   
-  // TODO: Renvoyer un button a la place
   Widget _buildButton(HelperButtonViewModel text, Key key) => Text(
         text.text,
         key: key,

@@ -67,7 +67,7 @@ class EditorToolboxPresenter {
     switch (this.currentEditableItemNotifier.value?.runtimeType) {
       case EditableButtonFormData:
         this.viewModel.editableElementActions = [
-          ToolBarActionButton.border,
+          // ToolBarActionButton.border, // TODO: Add border picker
           ToolBarActionButton.text,
           ToolBarActionButton.font,
           ToolBarActionButton.color,

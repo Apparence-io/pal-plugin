@@ -193,5 +193,3 @@ class HelperBoxConfig {
     "color":color
   };
 }
-
-// TODO: Create config for media

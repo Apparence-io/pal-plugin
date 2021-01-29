@@ -245,15 +245,14 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
                 child: EditableTextField(
                   data: model.titleField,
-                  onTap: () => presenter.onNewEditableSelect(model.titleField),
+                  onTap: presenter.onNewEditableSelect,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: EditableTextField(
                   data: model.descriptionField,
-                  onTap: () =>
-                      presenter.onNewEditableSelect(model.descriptionField),
+                  onTap: presenter.onNewEditableSelect,
                 ),
               ),
               SizedBox(height: 16),
@@ -263,15 +262,13 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                   Flexible(
                     child: EditableButton(
                       data: model.negativBtnField,
-                      onTap: () =>
-                          presenter.onNewEditableSelect(model.negativBtnField),
+                      onTap: presenter.onNewEditableSelect,
                     ),
                   ),
                   Flexible(
                     child: EditableButton(
                       data: model.positivBtnField,
-                      onTap: () =>
-                          presenter.onNewEditableSelect(model.positivBtnField),
+                      onTap: presenter.onNewEditableSelect,
                     ),
                   ),
                 ],

@@ -202,8 +202,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
     this._updateValidState();
   }
 
-  onNewEditableSelect(EditableData p1) {
-    this.viewModel.currentEditableItemNotifier.value = p1;
+  onNewEditableSelect(EditableData editedData) {
+    this.viewModel.currentEditableItemNotifier.value = editedData;
     this.refreshView();
   }
 }

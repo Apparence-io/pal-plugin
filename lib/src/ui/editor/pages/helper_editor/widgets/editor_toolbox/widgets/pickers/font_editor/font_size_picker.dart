@@ -43,7 +43,6 @@ class _FontSizePickerState extends State<FontSizePicker> {
           max: 80,
           label: _currentSliderValue.round().toString(),
           onChanged: (double value) {
-            print("value : $value");
             num section = (value % 10).round();
             if (section == 0 && !_isHapticPlayed) {
               HapticFeedback.selectionClick();

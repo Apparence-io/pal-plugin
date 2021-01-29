@@ -200,14 +200,12 @@ class EditorUpdateHelperPage extends StatelessWidget {
                             'pal_EditorUpdateHelperWidget_EditableMedia'),
                         size: 123.0,
                         data: viewModel.headerMediaForm,
-                        onTap: () => presenter
-                            .onNewEditableSelect(viewModel.headerMediaForm),
+                        onTap: presenter.onNewEditableSelect,
                       ),
                       SizedBox(height: 40),
                       EditableTextField(
                         data: viewModel.titleTextForm,
-                        onTap: () => presenter
-                            .onNewEditableSelect(viewModel.titleTextForm),
+                        onTap: presenter.onNewEditableSelect,
                       ),
                       SizedBox(height: 25.0),
                       _buildChangelogFields(context, presenter, viewModel),
@@ -239,7 +237,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
       changelogsTextfieldWidgets.add(EditableTextField(
         data: field,
         key: ValueKey(key),
-        onTap: () =>  presenter.onNewEditableSelect(field),
+        onTap: presenter.onNewEditableSelect,
       ));
     });
     return Column(
@@ -276,7 +274,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
       width: double.infinity,
       child: EditableButton(
         data: viewModel.positivButtonForm,
-        onTap: () => presenter.onNewEditableSelect(viewModel.positivButtonForm),
+        onTap: presenter.onNewEditableSelect,
       ),
     );
   }

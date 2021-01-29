@@ -209,37 +209,31 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                           EditableMedia(
                             size: 150.0,
                             data: model.headerMediaForm,
-                            // TODO: Return directly data
-                            onTap: () => presenter
-                                .onNewEditableSelect(model.headerMediaForm),
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
                             data: model.titleTextForm,
-                            onTap: () => presenter
-                                .onNewEditableSelect(model.titleTextForm),
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           SizedBox(height: 24),
                           EditableTextField(
                             data: model.descriptionTextForm,
-                            onTap: () => presenter
-                                .onNewEditableSelect(model.descriptionTextForm),
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 40.0),
                           ),
                           EditableButton(
                             data: model.positivButtonForm,
-                            onTap: () => presenter
-                                .onNewEditableSelect(model.positivButtonForm),
+                            onTap: presenter.onNewEditableSelect,
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 12.0),
                           ),
                           EditableButton(
                             data: model.negativButtonForm,
-                            onTap: () => presenter
-                                .onNewEditableSelect(model.negativButtonForm),
+                            onTap: presenter.onNewEditableSelect,
                           )
                         ],
                       ),

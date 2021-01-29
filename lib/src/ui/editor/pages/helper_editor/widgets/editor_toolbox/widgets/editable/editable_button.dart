@@ -7,7 +7,7 @@ import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 class EditableButton extends StatelessWidget {
   final EditableButtonFormData data;
-  final Function onTap;
+  final Function(EditableData) onTap;
   final bool isSelected;
 
   const EditableButton({Key key, @required this.data, this.onTap, this.isSelected = false})
@@ -27,7 +27,7 @@ class EditableButton extends StatelessWidget {
     );
 
     return BouncingWidget(
-      onTap: () => this.onTap?.call(),
+      onTap: () => this.onTap?.call(this.data),
       child: DottedBorder(
         dashPattern: [6, 3],
         color: Colors.white.withAlpha(80),

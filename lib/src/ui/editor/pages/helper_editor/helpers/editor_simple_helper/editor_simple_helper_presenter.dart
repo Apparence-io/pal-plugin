@@ -103,8 +103,8 @@ class EditorSimpleHelperPresenter extends Presenter<SimpleHelperViewModel, Edito
     this._updateValidState();
   }
 
-  onNewEditableSelect(EditableTextFormData data) {
-    this.viewModel.currentSelectedEditableNotifier.value = data;
+  onNewEditableSelect(EditableData editedData) {
+    this.viewModel.currentSelectedEditableNotifier.value = editedData;
     this.refreshView();
   }
 

@@ -4,33 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:pal/pal.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
-import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/widgets/editor_action_item.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/widgets/editor_action_item.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
-import '../../screen_tester_utilities.dart';
+import '../../../../screen_tester_utilities.dart';
 import 'package:pal/src/extensions/color_extension.dart';
-import '../../../pal_test_utilities.dart';
+import '../../../../../pal_test_utilities.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
@@ -438,13 +435,13 @@ void main() {
       await enterTextInEditable(
           tester, editableTextsFinder.at(3), 'positiv edit');
       await tester.pump();
-      expect(presenter.viewModel.titleField.text.value,
+      expect(presenter.viewModel.titleField.text,
           equals('test title edited'));
-      expect(presenter.viewModel.descriptionField.text.value,
+      expect(presenter.viewModel.descriptionField.text,
           equals('test description edited'));
-      expect(presenter.viewModel.negativBtnField.text.value,
+      expect(presenter.viewModel.negativBtnField.text,
           equals('negativ edit'));
-      expect(presenter.viewModel.positivBtnField.text.value,
+      expect(presenter.viewModel.positivBtnField.text,
           equals('positiv edit'));
     });
 

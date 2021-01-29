@@ -14,14 +14,14 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/widgets/editor_action_item.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/widgets/editor_action_item.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
-import '../../../pal_test_utilities.dart';
+import '../../../../../pal_test_utilities.dart';
 import 'package:mockito/mockito.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
@@ -238,10 +238,10 @@ void main() {
 
       validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       await tester.pumpAndSettle();
-      expect(presenter.viewModel.titleTextForm.text.value, equals('test title'));
-      expect(presenter.viewModel.descriptionTextForm.text.value, equals('test description'));
-      expect(presenter.viewModel.positivButtonForm.text.value, equals('Ok, thanks !'));
-      expect(presenter.viewModel.negativButtonForm.text.value, equals('This is not helping'));
+      expect(presenter.viewModel.titleTextForm.text, equals('test title'));
+      expect(presenter.viewModel.descriptionTextForm.text, equals('test description'));
+      expect(presenter.viewModel.positivButtonForm.text, equals('Ok, thanks !'));
+      expect(presenter.viewModel.negativButtonForm.text, equals('This is not helping'));
       expect(validateButton.onTapCallback, isNotNull);
       validateButton.onTapCallback();
       await tester.pump(Duration(seconds: 1));

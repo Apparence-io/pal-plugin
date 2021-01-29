@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -53,11 +53,11 @@ void main() {
               ),
               // TODO: Create on back correct way to save id
               anchorKey: helperEntity.helperBoxes.first.key,
-              positivButtonLabel: HelperSharedFactory.parseTextLabel(
+              positivButtonLabel: HelperSharedFactory.parseButtonLabel(
                 AnchoredscreenHelperKeys.POSITIV_KEY,
                 helperEntity.helperTexts,
               ),
-              negativButtonLabel: HelperSharedFactory.parseTextLabel(
+              negativButtonLabel: HelperSharedFactory.parseButtonLabel(
                 AnchoredscreenHelperKeys.NEGATIV_KEY,
                 helperEntity.helperTexts,
               ),

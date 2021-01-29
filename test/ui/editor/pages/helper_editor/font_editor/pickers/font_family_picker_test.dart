@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_loader.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_family_picker/font_family_picker_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker_loader.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker_viewmodel.dart';
 
 class FontFamilyPickerLoaderMock extends Mock
     implements FontFamilyPickerLoader {}

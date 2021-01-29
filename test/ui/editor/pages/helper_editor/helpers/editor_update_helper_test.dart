@@ -14,14 +14,14 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/widgets/editor_action_item.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/widgets/editor_action_item.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
-import '../../../pal_test_utilities.dart';
+import '../../../../../pal_test_utilities.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
@@ -220,8 +220,8 @@ void main() {
       var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
       var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNotNull);
-      expect(presenter.viewModel.titleTextForm.text.value, 'Lorem ipsum');
-      expect(presenter.viewModel.changelogsTextsForm['0'].text.value, 'Lorem ipsum changelog');
+      expect(presenter.viewModel.titleTextForm.text, 'Lorem ipsum');
+      expect(presenter.viewModel.changelogsTextsForm['0'].text, 'Lorem ipsum changelog');
       await tester.pump(Duration(milliseconds: 100));
     });
 
@@ -284,7 +284,7 @@ void main() {
       await tester.enterText(titleTextField, 'Thanks my friend!');
       await tester.pumpAndSettle();
       expect(find.text('Thanks my friend!'), findsOneWidget);
-      expect(presenter.viewModel.positivButtonForm.text.value, 'Thanks my friend!');
+      expect(presenter.viewModel.positivButtonForm.text, 'Thanks my friend!');
     });
 
     testWidgets('tap on on field, tap on a second field => only one toolbar is shown', (WidgetTester tester) async {

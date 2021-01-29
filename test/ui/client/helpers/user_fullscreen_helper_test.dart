@@ -19,12 +19,12 @@ void main() {
         fontSize: 60.0,
         fontColor: Colors.white,
       ),
-      positivLabel: HelperTextViewModel(
+      positivLabel: HelperButtonViewModel(
         text: 'Positiv button',
         fontSize: 14.0,
         fontColor: Colors.red,
       ),
-      negativLabel: HelperTextViewModel(
+      negativLabel: HelperButtonViewModel(
         text: 'Negativ button',
         fontSize: 12.0,
         fontColor: Colors.black,
@@ -87,12 +87,12 @@ void main() {
             helperBoxViewModel: HelperBoxViewModel(
               backgroundColor: Colors.black,
             ),
-            positivLabel: HelperTextViewModel(
+            positivLabel: HelperButtonViewModel(
               text: 'test',
               fontColor: Colors.white,
               fontSize: 23.0,
             ),
-            negativLabel: HelperTextViewModel(
+            negativLabel: HelperButtonViewModel(
               text: 'test',
               fontColor: Colors.white,
               fontSize: 23.0,

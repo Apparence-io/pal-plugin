@@ -72,7 +72,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       positivBtnField = EditableButtonFormData(
         positivButtonLabel?.id,
         AnchoredscreenHelperKeys.POSITIV_KEY,
-        backgroundColor: Color(0xFF03045E),
+        backgroundColor: Color(0xFF2ecc71),
         fontColor: positivButtonLabel?.fontColor ?? Colors.white,
         fontSize: positivButtonLabel?.fontSize?.toInt() ?? 20,
         text: positivButtonLabel?.text ?? 'Ok, thanks!',
@@ -81,7 +81,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       negativBtnField = EditableButtonFormData(
         negativButtonLabel?.id,
         AnchoredscreenHelperKeys.NEGATIV_KEY,
-        backgroundColor: Color(0xFF03045E),
+        backgroundColor: Color(0xFFe74c3c),
         text: negativButtonLabel?.text ?? 'This is not helping',
         fontWeight: FontWeightMapper.toFontKey(negativButtonLabel?.fontWeight ?? FontWeight.normal),
         fontColor: negativButtonLabel?.fontColor ?? Colors.white,

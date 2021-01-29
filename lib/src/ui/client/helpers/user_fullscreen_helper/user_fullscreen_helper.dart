@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
@@ -219,7 +220,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 HapticFeedback.selectionClick();
                 presenter.onPositivButtonCallback();
               },
-              color: Colors.greenAccent,
+              color: PalTheme.of(context.buildContext).colors.green,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -250,7 +251,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 HapticFeedback.selectionClick();
                 presenter.onNegativButtonCallback();
               },
-              color: Colors.redAccent,
+              color: PalTheme.of(context.buildContext).colors.accent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),

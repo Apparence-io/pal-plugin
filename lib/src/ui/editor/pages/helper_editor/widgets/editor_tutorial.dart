@@ -214,6 +214,7 @@ class _EditorTutorialOverlayState extends State<EditorTutorialOverlay>
               borderSide: BorderSide(
                 color: Colors.white,
               ),
+              highlightedBorderColor: Colors.white,
               splashColor: Colors.white.withAlpha(80),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),

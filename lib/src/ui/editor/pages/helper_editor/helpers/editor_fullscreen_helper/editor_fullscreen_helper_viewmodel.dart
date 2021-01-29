@@ -88,7 +88,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
     this.positivButtonForm = EditableButtonFormData(
       positivButtonLabel?.id,
       FullscreenHelperKeys.POSITIV_KEY,
-      backgroundColor: Color(0xFF03045E),
+      backgroundColor: Color(0xFF2ecc71),
       fontColor: positivButtonLabel?.fontColor ?? Colors.white,
       fontSize: positivButtonLabel?.fontSize?.toInt() ?? 23,
       text: positivButtonLabel?.text ?? 'Ok, thanks !',
@@ -100,7 +100,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
     this.negativButtonForm = EditableButtonFormData(
       negativButtonLabel?.id,
       FullscreenHelperKeys.NEGATIV_KEY,
-      backgroundColor: Color(0xFF03045E),
+      backgroundColor: Color(0xFFe74c3c),
       text: negativButtonLabel?.text ?? 'This is not helping',
       fontWeight: FontWeightMapper.toFontKey(
         negativButtonLabel?.fontWeight ?? FontWeight.bold),

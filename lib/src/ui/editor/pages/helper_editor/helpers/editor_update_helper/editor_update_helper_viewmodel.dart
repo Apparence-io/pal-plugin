@@ -77,7 +77,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       UpdatescreenHelperKeys.TITLE_KEY,
       fontColor: titleLabel?.fontColor ?? Colors.white,
       fontSize: titleLabel?.fontSize?.toInt() ?? 36,
-      text: titleLabel?.text ?? '',
+      text: titleLabel?.text ?? 'New update',
       fontWeight: FontWeightMapper.toFontKey(titleLabel?.fontWeight),
       fontFamily: titleLabel?.fontFamily,
       hintText: 'Enter your title here...',

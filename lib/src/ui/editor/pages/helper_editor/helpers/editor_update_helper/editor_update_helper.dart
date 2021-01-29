@@ -180,47 +180,45 @@ class EditorUpdateHelperPage extends StatelessWidget {
         Expanded(
           child: SafeArea(
             bottom: false,
-            child: Center(
-              child: SingleChildScrollView(
-                reverse: false,
-                controller: scrollController,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10.0,
-                    right: 10.0,
-                    top: 25.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // FIXME: This is a POC, Need to wrap all editable item to
-                      // gesture detector & change notifier value
-                      EditableMedia(
-                        key: ValueKey(
-                            'pal_EditorUpdateHelperWidget_EditableMedia'),
-                        size: 123.0,
-                        data: viewModel.headerMediaForm,
-                        onTap: presenter.onNewEditableSelect,
-                        backgroundColor:
-                            viewModel.backgroundBoxForm?.backgroundColor,
-                        isSelected:
-                            viewModel.currentEditableItemNotifier?.value?.key ==
-                                viewModel.headerMediaForm.key,
-                      ),
-                      SizedBox(height: 40),
-                      EditableTextField(
-                        data: viewModel.titleTextForm,
-                        onTap: presenter.onNewEditableSelect,
-                        backgroundColor:
-                            viewModel.backgroundBoxForm?.backgroundColor,
-                        isSelected:
-                            viewModel.currentEditableItemNotifier?.value?.key ==
-                                viewModel.titleTextForm.key,
-                      ),
-                      SizedBox(height: 25.0),
-                      _buildChangelogFields(context, presenter, viewModel),
-                    ],
-                  ),
+            child: SingleChildScrollView(
+              reverse: false,
+              controller: scrollController,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 10.0,
+                  right: 10.0,
+                  top: 25.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // FIXME: This is a POC, Need to wrap all editable item to
+                    // gesture detector & change notifier value
+                    EditableMedia(
+                      key: ValueKey(
+                          'pal_EditorUpdateHelperWidget_EditableMedia'),
+                      size: 123.0,
+                      data: viewModel.headerMediaForm,
+                      onTap: presenter.onNewEditableSelect,
+                      backgroundColor:
+                          viewModel.backgroundBoxForm?.backgroundColor,
+                      isSelected:
+                          viewModel.currentEditableItemNotifier?.value?.key ==
+                              viewModel.headerMediaForm.key,
+                    ),
+                    SizedBox(height: 40),
+                    EditableTextField(
+                      data: viewModel.titleTextForm,
+                      onTap: presenter.onNewEditableSelect,
+                      backgroundColor:
+                          viewModel.backgroundBoxForm?.backgroundColor,
+                      isSelected:
+                          viewModel.currentEditableItemNotifier?.value?.key ==
+                              viewModel.titleTextForm.key,
+                    ),
+                    SizedBox(height: 25.0),
+                    _buildChangelogFields(context, presenter, viewModel),
+                  ],
                 ),
               ),
             ),

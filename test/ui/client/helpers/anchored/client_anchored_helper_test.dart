@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/router.dart';
+import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
@@ -36,40 +37,43 @@ void main() {
         editorModeEnabled: false);
     showOverlayed(
         _navigatorKey,
-        (context) => AnchoredHelper.fromEntity(
-              titleLabel: HelperSharedFactory.parseTextLabel(
-                AnchoredscreenHelperKeys.TITLE_KEY,
-                helperEntity.helperTexts,
+        (context) => PalTheme(
+              theme: PalThemeData.light(),
+              child: AnchoredHelper.fromEntity(
+                titleLabel: HelperSharedFactory.parseTextLabel(
+                  AnchoredscreenHelperKeys.TITLE_KEY,
+                  helperEntity.helperTexts,
+                ),
+                descriptionLabel: HelperSharedFactory.parseTextLabel(
+                  AnchoredscreenHelperKeys.DESCRIPTION_KEY,
+                  helperEntity.helperTexts,
+                ),
+                // TODO: Create ID for box
+                helperBoxViewModel: HelperBoxViewModel(
+                  backgroundColor: HexColor.fromHex(
+                      helperEntity.helperBoxes.first.backgroundColor),
+                  id: helperEntity.helperBoxes.first.id,
+                ),
+                // TODO: Create on back correct way to save id
+                anchorKey: helperEntity.helperBoxes.first.key,
+                positivButtonLabel: HelperSharedFactory.parseButtonLabel(
+                  AnchoredscreenHelperKeys.POSITIV_KEY,
+                  helperEntity.helperTexts,
+                ),
+                negativButtonLabel: HelperSharedFactory.parseButtonLabel(
+                  AnchoredscreenHelperKeys.NEGATIV_KEY,
+                  helperEntity.helperTexts,
+                ),
+                onError: () {
+                  var key = OverlayKeys.PAGE_OVERLAY_KEY;
+                  Overlayed.of(_navigatorKey.currentState.context)
+                      .entries[key]
+                      .remove();
+                  Overlayed.of(_navigatorKey.currentState.context)
+                      .entries
+                      .remove(key);
+                },
               ),
-              descriptionLabel: HelperSharedFactory.parseTextLabel(
-                AnchoredscreenHelperKeys.DESCRIPTION_KEY,
-                helperEntity.helperTexts,
-              ),
-              // TODO: Create ID for box
-              helperBoxViewModel: HelperBoxViewModel(
-                backgroundColor: HexColor.fromHex(
-                    helperEntity.helperBoxes.first.backgroundColor),
-                id: helperEntity.helperBoxes.first.id,
-              ),
-              // TODO: Create on back correct way to save id
-              anchorKey: helperEntity.helperBoxes.first.key,
-              positivButtonLabel: HelperSharedFactory.parseButtonLabel(
-                AnchoredscreenHelperKeys.POSITIV_KEY,
-                helperEntity.helperTexts,
-              ),
-              negativButtonLabel: HelperSharedFactory.parseButtonLabel(
-                AnchoredscreenHelperKeys.NEGATIV_KEY,
-                helperEntity.helperTexts,
-              ),
-              onError: () {
-                var key = OverlayKeys.PAGE_OVERLAY_KEY;
-                Overlayed.of(_navigatorKey.currentState.context)
-                    .entries[key]
-                    .remove();
-                Overlayed.of(_navigatorKey.currentState.context)
-                    .entries
-                    .remove(key);
-              },
             ),
         key: OverlayKeys.PAGE_OVERLAY_KEY);
     await tester.pump(Duration(seconds: 2));

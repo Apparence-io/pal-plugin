@@ -12,7 +12,9 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/widgets/editor_action_item.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import '../../../../../pal_test_utilities.dart';
@@ -128,7 +130,7 @@ void main() {
         'text is empty => cancel, validate buttons exists, validate button is disabled',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      
+
       await enterTextInEditable(tester, 0, '');
       await tester.pumpAndSettle();
       expect(presenter.viewModel.contentTextForm.text, equals(''));
@@ -153,14 +155,14 @@ void main() {
     testWidgets(
         'on preview press  => show simple client preview & cancel with positiv button',
         (WidgetTester tester) async {
-
       await _beforeEach(tester);
 
       final String firstField = 'test title edited';
       await _fillFields(tester, firstField);
 
-      expect(find.byKey(ValueKey('palEditorSimpleHelperWidgetBuilder')), findsOneWidget);
-      
+      expect(find.byKey(ValueKey('palEditorSimpleHelperWidgetBuilder')),
+          findsOneWidget);
+
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
@@ -175,7 +177,8 @@ void main() {
 
       Finder contentFinder = find.byKey(ValueKey('SimpleHelperContentText'));
       expect(contentFinder, findsOneWidget);
-      expect((tester.widget(contentFinder) as Text).data, equals('test title edited'));
+      expect((tester.widget(contentFinder) as Text).data,
+          equals('test title edited'));
 
       final toastFinder = find.byType(Dismissible);
       expect(toastFinder, findsOneWidget);
@@ -187,7 +190,8 @@ void main() {
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pump(Duration(milliseconds: 1300));
 
-      expect(find.byKey(ValueKey('editableActionBarPreviewButton')), findsOneWidget);
+      expect(find.byKey(ValueKey('editableActionBarPreviewButton')),
+          findsOneWidget);
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
 
@@ -199,8 +203,9 @@ void main() {
       final String firstField = 'test title edited';
       await _fillFields(tester, firstField);
 
-      expect(find.byKey(ValueKey('palEditorSimpleHelperWidgetBuilder')), findsOneWidget);
-      
+      expect(find.byKey(ValueKey('palEditorSimpleHelperWidgetBuilder')),
+          findsOneWidget);
+
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
@@ -215,7 +220,8 @@ void main() {
 
       Finder contentFinder = find.byKey(ValueKey('SimpleHelperContentText'));
       expect(contentFinder, findsOneWidget);
-      expect((tester.widget(contentFinder) as Text).data, equals('test title edited'));
+      expect((tester.widget(contentFinder) as Text).data,
+          equals('test title edited'));
 
       final toastFinder = find.byType(Dismissible);
       expect(toastFinder, findsOneWidget);
@@ -227,7 +233,8 @@ void main() {
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pump(Duration(milliseconds: 1300));
 
-      expect(find.byKey(ValueKey('editableActionBarPreviewButton')), findsOneWidget);
+      expect(find.byKey(ValueKey('editableActionBarPreviewButton')),
+          findsOneWidget);
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
@@ -236,25 +243,35 @@ void main() {
         'text is clicked, toolbar is visible => click outside of it close the toolbar',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      var simpleHelperDetailTextField =
-          find.byKey(ValueKey('palSimpleHelperDetailField'));
-      await tester.tap(simpleHelperDetailTextField);
-      await tester.pumpAndSettle();
+      // var simpleHelperDetailTextField =
+      //     find.byKey(ValueKey('palSimpleHelperDetailField'));
+      // await tester.tap(simpleHelperDetailTextField);
+      // await tester.pumpAndSettle();
 
-      expect(find.byType(EditHelperToolbar), findsOneWidget);
-      var closeButtonToolbar =
-          find.byKey(ValueKey('pal_EditHelperToolbar_Close'));
-      await tester.tap(closeButtonToolbar);
-      await tester.pumpAndSettle();
-      expect(find.byType(EditHelperToolbar), findsNothing);
+      // expect(find.byType(EditHelperToolbar), findsOneWidget);
+      // var closeButtonToolbar =
+      //     find.byKey(ValueKey('pal_EditHelperToolbar_Close'));
+      // await tester.tap(closeButtonToolbar);
+      // await tester.pumpAndSettle();
+      // expect(find.byType(EditHelperToolbar), findsNothing);
+
+      var editableTextsFinder = find.byType(EditableTextField).at(0);
+      await tester.tap(editableTextsFinder);
+      await tester.pumpAndSettle(Duration(milliseconds: 200));
+
+      expect(find.byType(EditorToolBar), findsOneWidget);
+      expect(
+        find.byKey(ValueKey('EditorToolBar_SpecificAction_Text')),
+        findsOneWidget,
+      );
+
     });
 
     testWidgets(
         'title = "my helper tips lorem" => save call helperService.saveSimpleHelper',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      await enterTextInEditable(
-          tester, 0, 'my helper tips lorem');
+      await enterTextInEditable(tester, 0, 'my helper tips lorem');
       await tester.pumpAndSettle();
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
@@ -275,8 +292,7 @@ void main() {
       await _beforeEach(tester);
       when(helperEditorServiceMock.saveSimpleHelper(any))
           .thenThrow(new ArgumentError());
-      await enterTextInEditable(
-          tester, 0, 'my helper tips lorem');
+      await enterTextInEditable(tester, 0, 'my helper tips lorem');
       await tester.pumpAndSettle();
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));

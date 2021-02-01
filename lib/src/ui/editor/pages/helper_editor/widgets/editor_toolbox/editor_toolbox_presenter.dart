@@ -59,9 +59,12 @@ class EditorToolboxPresenter {
   void animateActionBar() {
     this.viewModel.animateActionBar = true;
     this.viewInterface.refreshAnimations();
+    // this.viewInterface.refresh();
     // this.refreshView();
     this.viewModel.animationTarget =
         this.viewModel.isBottomVisible.value ? 1 : 0;
+    this.viewInterface.refresh();
+
   }
 
   void displayEditableItemActions() {

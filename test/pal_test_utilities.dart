@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/pal.dart';
@@ -18,6 +19,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 
 const Duration kLongPressTimeout = Duration(milliseconds: 500);
@@ -179,22 +181,45 @@ Future<void> longPressDrag(
 
 // ***************** TEXT FIELD UTILITIES ***************** \\
 
-Future enterTextInEditable(
+Future enterTextInTextForm(
   WidgetTester tester,
   int textFieldIndex,
   String text,
+  {bool button = false}
 ) async {
-  var editableTextsFinder = find.byType(EditableTextField).at(0);
-  await tester.tap(editableTextsFinder);
-  await tester.pumpAndSettle(Duration(milliseconds: 200));
+  var editableTextsFinder = find.byType(button ? EditableButton : EditableTextField);
+  await tester.tap(editableTextsFinder.at(textFieldIndex));
+  await tester.pump(Duration(milliseconds: 500));
+  await tester.pump(Duration(milliseconds: 1500));
 
   final textToolbarButton =
       find.byKey(ValueKey('EditorToolBar_SpecificAction_Text'));
   await tester.tap(textToolbarButton);
-  await tester.pumpAndSettle();
+  await tester.pump(Duration(milliseconds: 1500));
 
   final textField = find.byKey(ValueKey('EditableTextDialog_Field'));
   await tester.enterText(textField, text);
   await tester.testTextInput.receiveAction(TextInputAction.done);
-  await tester.pumpAndSettle();
+  await tester.pump(Duration(milliseconds: 500));
 }
+
+// Future entreTextInButton(
+//   WidgetTester tester,
+//   int textFieldIndex,
+//   String text,
+// ) async {
+//   var editableTextsFinder = find.byType(EditableButton);
+//   await tester.tap(editableTextsFinder.at(textFieldIndex));
+//   await tester.pump(Duration(milliseconds: 500));
+//   await tester.pump(Duration(milliseconds: 1500));
+
+//   final textToolbarButton =
+//       find.byKey(ValueKey('EditorToolBar_SpecificAction_Text'));
+//   await tester.tap(textToolbarButton);
+//   await tester.pump(Duration(milliseconds: 500));
+
+//   final textField = find.byKey(ValueKey('EditableTextDialog_Field'));
+//   await tester.enterText(textField, text);
+//   await tester.testTextInput.receiveAction(TextInputAction.done);
+//   await tester.pump(Duration(milliseconds: 500));
+// }

@@ -124,11 +124,10 @@ void main() {
     Future _fillFields(WidgetTester tester, String firstField,
         String secondField, String thirdField) async {
       // INIT TEXTFIELDS
-      var editableTextsFinder = find.byType(TextField);
-      await enterTextInEditable(tester, 0, firstField);
-      await enterTextInEditable(tester, 1, 'Description');
-      await enterTextInEditable(tester, 2, secondField);
-      await enterTextInEditable(tester, 3, thirdField);
+      await enterTextInTextForm(tester, 0, firstField);
+      await enterTextInTextForm(tester, 1, 'Description');
+      // await enterTextInTextForm(tester, 0, secondField, button: true);
+      await enterTextInTextForm(tester, 1, thirdField, button: true);
       await tester.pump();
       // INIT TEXTFIELDS
     }
@@ -252,9 +251,9 @@ void main() {
           validateFinder.evaluate().first.widget as CircleIconButton;
 
       expect(validateButton.onTapCallback, isNull);
-      await enterTextInEditable(
+      await enterTextInTextForm(
           tester, 0, 'test title');
-      await enterTextInEditable(
+      await enterTextInTextForm(
           tester, 1, 'test description');
 
       validateButton =
@@ -285,9 +284,9 @@ void main() {
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
 
-      await enterTextInEditable(
+      await enterTextInTextForm(
           tester, 0, 'test title');
-      await enterTextInEditable(
+      await enterTextInTextForm(
           tester, 1, 'test description');
       await tester.pumpAndSettle();
       var validateButton =

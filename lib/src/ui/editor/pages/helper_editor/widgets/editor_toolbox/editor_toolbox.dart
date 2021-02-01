@@ -198,7 +198,7 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   Future<String> openTextPicker(String currentText) async {
     return await showDialog(
       context: _scaffoldKey.currentContext,
-      builder: (context) => EditableTextDialog(currentText),
+      builder: (context) => EditableTextDialog(''),
     );
   }
 

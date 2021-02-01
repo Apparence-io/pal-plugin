@@ -80,6 +80,10 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   @override
   void dispose() {
     this.presenter.dispose();
+
+    for (var controller in this.controllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -218,13 +222,13 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
           .controllers[0]
           .animateTo(model.animationTarget, curve: Curves.easeOut);
       model.animateActionBar = false;
-      this.setState(() {});
     }
     if (model.animateIcons) {
       this.controllers[1].value = 0;
       this.controllers[1].animateTo(1, curve: Curves.elasticOut);
       model.animateIcons = false;
     }
+    this.refresh();
   }
 
   @override

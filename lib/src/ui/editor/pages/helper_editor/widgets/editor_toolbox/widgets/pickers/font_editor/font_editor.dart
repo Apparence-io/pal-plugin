@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_list_tile.dart';
@@ -15,7 +16,6 @@ typedef OnValidatePicker = void Function();
 typedef OnFontModified = Future Function(TextStyle, FontKeys);
 
 abstract class FontEditorDialogView {
-
   Future<String> openFontFamilyPicker(
     BuildContext context,
     FontKeys fontKeys,
@@ -29,9 +29,8 @@ abstract class FontEditorDialogView {
   TextStyle defaultTextFieldPreviewColor();
 }
 
-
-class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogView {
-
+class FontEditorDialogPage extends StatelessWidget
+    implements FontEditorDialogView {
   final OnCancelPicker onCancelPicker;
 
   final OnValidatePicker onValidatePicker;
@@ -49,10 +48,11 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
     this.onCancelPicker,
     this.onFontModified,
     this.onValidatePicker,
-  }) : this.actualTextStyle = actualTextStyle.copyWith(),
-       super(key: key);
+  })  : this.actualTextStyle = actualTextStyle.copyWith(),
+        super(key: key);
 
-  final _mvvmPageBuilder = MVVMPageBuilder<FontEditorDialogPresenter, FontEditorDialogModel>();
+  final _mvvmPageBuilder =
+      MVVMPageBuilder<FontEditorDialogPresenter, FontEditorDialogModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -79,13 +79,15 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
     final FontEditorDialogPresenter presenter,
     final FontEditorDialogModel model,
   ) {
-    return AlertDialog(
-      key: ValueKey('pal_FontEditorDialog'),
-      actions: _buildActions(model,context),
-      content: SingleChildScrollView(
-        child: Container(
-          width: double.maxFinite,
-          child: Column(
+    return PalTheme(
+      theme: PalThemeData.light(),
+      child: AlertDialog(
+        key: ValueKey('pal_FontEditorDialog'),
+        actions: _buildActions(model, context),
+        content: SingleChildScrollView(
+          child: Container(
+            width: double.maxFinite,
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
@@ -134,10 +136,11 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
             ),
           ),
         ),
+      ),
     );
   }
 
-  _buildActions(final FontEditorDialogModel model,BuildContext context) {
+  _buildActions(final FontEditorDialogModel model, BuildContext context) {
     return [
       FlatButton(
         key: ValueKey('pal_FontEditorDialog_CancelButton'),
@@ -157,7 +160,10 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
         ),
         onPressed: () async {
           HapticFeedback.selectionClick();
-          Navigator.pop(context,EditedFontModel(model.fontKeys,model.modifiedTextStyle.fontSize));
+          Navigator.pop(
+              context,
+              EditedFontModel(
+                  model.fontKeys, model.modifiedTextStyle.fontSize));
           // onValidatePicker();
           // if (onFontModified != null) {
           //   await onFontModified(
@@ -201,5 +207,6 @@ class FontEditorDialogPage extends StatelessWidget implements FontEditorDialogVi
   }
 
   @override
-  TextStyle defaultTextFieldPreviewColor() => TextStyle(color: Color(0xFF03045E));
+  TextStyle defaultTextFieldPreviewColor() =>
+      TextStyle(color: Color(0xFF03045E));
 }

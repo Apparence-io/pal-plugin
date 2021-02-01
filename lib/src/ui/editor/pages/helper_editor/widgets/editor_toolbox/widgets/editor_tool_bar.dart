@@ -20,6 +20,7 @@ enum ToolBarGlobalActionButton {
 class EditorToolBar extends StatelessWidget {
   final AnimationController drawerAnimation;
   final AnimationController iconsAnimation;
+  final bool isTesting;
 
   final List<ToolBarGlobalActionButton> globalActions;
   final List<ToolBarActionButton> editableElementActions;
@@ -34,10 +35,11 @@ class EditorToolBar extends StatelessWidget {
     @required this.globalActions,
     @required this.editableElementActions,
     @required this.isBottomBarVisibleNotifier,
-    @required this.drawerAnimation,
-    @required this.iconsAnimation,
+    this.drawerAnimation,
+    this.iconsAnimation,
     this.onActionTap,
     this.onGlobalActionTap,
+    this.isTesting = false,
   }) : super(key: key);
 
   @override
@@ -85,6 +87,7 @@ class EditorToolBar extends StatelessWidget {
                 angle: -1.5708 * (cos(pi / 2 * this.drawerAnimation.value)),
                 child: child),
             child: CircleIconButton.animatedIcon(
+              key: ValueKey('EditorToolBar_Menu'),
               animatedIcon: AnimatedIcon(
                   icon: AnimatedIcons.arrow_menu,
                   color: Colors.white,
@@ -136,17 +139,19 @@ class EditorToolBar extends StatelessWidget {
       }
 
       Widget globalActionToAdd = AnimatedBuilder(
-        key: key,
         animation: this.iconsAnimation,
         builder: (context, child) =>
             Transform.scale(scale: this.iconsAnimation.value, child: child),
         child: CircleIconButton(
+          key: key,
           icon: Icon(
             iconData,
             color: Colors.white,
           ),
           backgroundColor: PalTheme.of(context).colors.dark,
-          onTapCallback: () => this.onActionTap(elementAction),
+          onTapCallback: () {
+            this.onActionTap(elementAction);
+          },
         ),
       );
       actions.add(globalActionToAdd);

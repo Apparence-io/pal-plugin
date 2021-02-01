@@ -121,24 +121,25 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
         ];
       },
       animListener: (context, presenter, model) {
-        if (model.boxTransitionAnimation) {
-          context.animationsControllers[0].forward().then(
-                (value) => presenter.onBoxAnimationEnd(),
-              );
-        }
-        if (model.thumbAnimation) {
-          context.animationsControllers[1].repeat(reverse: true).then(
-                (value) => presenter.onThumbAnimationEnd(),
-              );
-        }
-        if (model.shakeAnimation) {
-          context.animationsControllers[2].forward().then(
-            (value) {
-              presenter.onShakeAnimationEnd();
-              context.animationsControllers[2].reverse();
-            },
-          );
-        }
+
+        // if (model.boxTransitionAnimation) {
+        //   context.animationsControllers[0].forward().then(
+        //         (value) => presenter.onBoxAnimationEnd(),
+        //       );
+        // }
+        // if (model.thumbAnimation) {
+        //   context.animationsControllers[1].repeat(reverse: true).then(
+        //         (value) => presenter.onThumbAnimationEnd(),
+        //       );
+        // }
+        // if (model.shakeAnimation) {
+        //   context.animationsControllers[2].forward().then(
+        //     (value) {
+        //       presenter.onShakeAnimationEnd();
+        //       context.animationsControllers[2].reverse();
+        //     },
+        //   );
+        // }
       },
     );
   }

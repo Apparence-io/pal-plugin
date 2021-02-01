@@ -131,6 +131,8 @@ class _AnchoredHelperState extends State<AnchoredHelper>
 
   @override
   void dispose() {
+    anchorAnimationController.stop();
+    fadeAnimController.stop();
     anchorAnimationController.dispose();
     fadeAnimController.dispose();
     super.dispose();

@@ -26,69 +26,65 @@ class PalEditModeStateServiceMock extends Mock
 
 void main() {
   group('[Editor] Simple helper', () {
-    // final _navigatorKey = GlobalKey<NavigatorState>();
+    final _navigatorKey = GlobalKey<NavigatorState>();
 
-    // EditorSimpleHelperPresenter presenter;
+    EditorSimpleHelperPresenter presenter;
 
-    // HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
+    HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
 
-    // Scaffold _myHomeTest = Scaffold(
-    //   body: Column(
-    //     children: [
-    //       Text(
-    //         "text1",
-    //         key: ValueKey("text1"),
-    //       ),
-    //       Text("text2", key: ValueKey("text2")),
-    //       Padding(
-    //         padding: EdgeInsets.only(top: 32),
-    //         child: FlatButton(
-    //           key: ValueKey("MFlatButton"),
-    //           child: Text("tapme"),
-    //           onPressed: () => print("impressed!"),
-    //         ),
-    //       )
-    //     ],
-    //   ),
-    // );
-
-    // Future _beforeEach(WidgetTester tester) async {
-    //   reset(helperEditorServiceMock);
-    //   var routeFactory = (settings) {
-    //     switch (settings.name) {
-    //       case '/':
-    //         return MaterialPageRoute(
-    //           builder: (context) => _myHomeTest,
-    //         );
-    //       case '/editor/preview':
-    //         EditorPreviewArguments args = settings.arguments;
-    //         return MaterialPageRoute(
-    //           builder: (context) => EditorPreviewPage(
-    //             previewHelper: args.previewHelper,
-    //           ),
-    //         );
-    //     }
-    //   };
-    //   await initAppWithPal(tester, null, _navigatorKey,
-    //       routeFactory: routeFactory);
-    //   await pumpHelperWidget(
-    //       tester,
-    //       _navigatorKey,
-    //       HelperTriggerType.ON_SCREEN_VISIT,
-    //       HelperType.SIMPLE_HELPER,
-    //       HelperTheme.BLACK,
-    //       editorHelperService: helperEditorServiceMock,
-    //       palEditModeStateService: new PalEditModeStateServiceMock());
-    //   var presenterFinder =
-    //       find.byKey(ValueKey("palEditorSimpleHelperWidgetBuilder"));
-    //   var page = presenterFinder.evaluate().first.widget as PresenterInherited<
-    //       EditorSimpleHelperPresenter, SimpleHelperViewModel>;
-    //   presenter = page.presenter;
-    //   await tester.pumpAndSettle(Duration(milliseconds: 1000));
-    // }
+    Scaffold _myHomeTest = Scaffold(
+      body: Column(
+        children: [
+          Text(
+            "text1",
+            key: ValueKey("text1"),
+          ),
+          Text("text2", key: ValueKey("text2")),
+          Padding(
+            padding: EdgeInsets.only(top: 32),
+            child: FlatButton(
+              key: ValueKey("MFlatButton"),
+              child: Text("tapme"),
+              onPressed: () => print("impressed!"),
+            ),
+          )
+        ],
+      ),
+    );
 
     Future _beforeEach(WidgetTester tester) async {
-      
+      reset(helperEditorServiceMock);
+      var routeFactory = (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(
+              builder: (context) => _myHomeTest,
+            );
+          case '/editor/preview':
+            EditorPreviewArguments args = settings.arguments;
+            return MaterialPageRoute(
+              builder: (context) => EditorPreviewPage(
+                previewHelper: args.previewHelper,
+              ),
+            );
+        }
+      };
+      await initAppWithPal(tester, null, _navigatorKey,
+          routeFactory: routeFactory);
+      await pumpHelperWidget(
+          tester,
+          _navigatorKey,
+          HelperTriggerType.ON_SCREEN_VISIT,
+          HelperType.SIMPLE_HELPER,
+          HelperTheme.BLACK,
+          editorHelperService: helperEditorServiceMock,
+          palEditModeStateService: new PalEditModeStateServiceMock());
+      var presenterFinder =
+          find.byKey(ValueKey("palEditorSimpleHelperWidgetBuilder"));
+      var page = presenterFinder.evaluate().first.widget as PresenterInherited<
+          EditorSimpleHelperPresenter, SimpleHelperViewModel>;
+      presenter = page.presenter;
+      await tester.pumpAndSettle(Duration(milliseconds: 1000));
     }
 
     // ------------------------------------------------
@@ -135,7 +131,7 @@ void main() {
         (WidgetTester tester) async {
       await _beforeEach(tester);
 
-      await enterTextInEditable(tester, 0, '');
+      await enterTextInTextForm(tester, 0, '');
       await tester.pumpAndSettle();
       expect(presenter.viewModel.contentTextForm.text, equals(''));
 
@@ -151,8 +147,9 @@ void main() {
 
     Future _fillFields(WidgetTester tester, String firstField) async {
       // INIT TEXTFIELDS
-      await enterTextInEditable(tester, 0, firstField);
-      await tester.pump();
+      presenter.viewModel.contentTextForm.text = firstField;
+      // await enterTextInTextForm(tester, 0, firstField);
+      // await tester.pump();
       // INIT TEXTFIELDS
     }
 
@@ -172,7 +169,6 @@ void main() {
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
       previewButton.onTap();
-
       await tester.pump(Duration(milliseconds: 1300));
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pump(Duration(milliseconds: 500));
@@ -268,14 +264,13 @@ void main() {
         find.byKey(ValueKey('EditorToolBar_SpecificAction_Text')),
         findsOneWidget,
       );
-
     });
 
     testWidgets(
         'title = "my helper tips lorem" => save call helperService.saveSimpleHelper',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      await enterTextInEditable(tester, 0, 'my helper tips lorem');
+      await enterTextInTextForm(tester, 0, 'my helper tips lorem');
       await tester.pumpAndSettle();
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
@@ -296,7 +291,7 @@ void main() {
       await _beforeEach(tester);
       when(helperEditorServiceMock.saveSimpleHelper(any))
           .thenThrow(new ArgumentError());
-      await enterTextInEditable(tester, 0, 'my helper tips lorem');
+      await enterTextInTextForm(tester, 0, 'my helper tips lorem');
       await tester.pumpAndSettle();
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));

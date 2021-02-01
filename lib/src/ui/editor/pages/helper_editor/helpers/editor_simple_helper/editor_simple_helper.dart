@@ -97,7 +97,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
       presenterBuilder: (context) => EditorSimpleHelperPresenter(
           new _EditorSimpleHelperPage(
               context,
-              _scaffoldKey,
+              null,
               palEditModeStateService ??
                   EditorInjector.of(context).palEditModeStateService),
           baseviewModel,

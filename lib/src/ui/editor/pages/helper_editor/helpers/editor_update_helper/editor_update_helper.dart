@@ -101,6 +101,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorUpdateHelperPresenter, UpdateHelperViewModel>()
         .build(
+          key: ValueKey("pal_EditorUpdateHelperWidget_Builder"),
       context: context,
       presenterBuilder: (context) {
         var presenter = EditorUpdateHelperPresenter(

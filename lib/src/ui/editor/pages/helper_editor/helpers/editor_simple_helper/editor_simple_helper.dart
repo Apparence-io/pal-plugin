@@ -116,6 +116,8 @@ class EditorSimpleHelperPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: true,
       body: EditorToolboxPage(
         // TODO : Helper background
         // boxViewHandler: BoxViewHandler(

@@ -174,6 +174,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
   ) {
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
       body: EditorToolboxPage(
         boxViewHandler: BoxViewHandler(

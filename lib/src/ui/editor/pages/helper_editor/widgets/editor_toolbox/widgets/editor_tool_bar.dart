@@ -20,6 +20,7 @@ enum ToolBarGlobalActionButton {
 class EditorToolBar extends StatelessWidget {
   final AnimationController drawerAnimation;
   final AnimationController iconsAnimation;
+  final bool isTesting;
 
   final List<ToolBarGlobalActionButton> globalActions;
   final List<ToolBarActionButton> editableElementActions;
@@ -34,10 +35,11 @@ class EditorToolBar extends StatelessWidget {
     @required this.globalActions,
     @required this.editableElementActions,
     @required this.isBottomBarVisibleNotifier,
-    @required this.drawerAnimation,
-    @required this.iconsAnimation,
+    this.drawerAnimation,
+    this.iconsAnimation,
     this.onActionTap,
     this.onGlobalActionTap,
+    this.isTesting = false,
   }) : super(key: key);
 
   @override

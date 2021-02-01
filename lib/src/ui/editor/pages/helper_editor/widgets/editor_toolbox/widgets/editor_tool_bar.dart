@@ -87,6 +87,7 @@ class EditorToolBar extends StatelessWidget {
                 angle: -1.5708 * (cos(pi / 2 * this.drawerAnimation.value)),
                 child: child),
             child: CircleIconButton.animatedIcon(
+              key: ValueKey('EditorToolBar_Menu'),
               animatedIcon: AnimatedIcon(
                   icon: AnimatedIcons.arrow_menu,
                   color: Colors.white,
@@ -138,17 +139,19 @@ class EditorToolBar extends StatelessWidget {
       }
 
       Widget globalActionToAdd = AnimatedBuilder(
-        key: key,
         animation: this.iconsAnimation,
         builder: (context, child) =>
             Transform.scale(scale: this.iconsAnimation.value, child: child),
         child: CircleIconButton(
+          key: key,
           icon: Icon(
             iconData,
             color: Colors.white,
           ),
           backgroundColor: PalTheme.of(context).colors.dark,
-          onTapCallback: () => this.onActionTap(elementAction),
+          onTapCallback: () {
+            this.onActionTap(elementAction);
+          },
         ),
       );
       actions.add(globalActionToAdd);

@@ -14,10 +14,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/widgets/editor_action_item.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
-import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -140,7 +138,15 @@ void main() {
       final String firstField = 'test title edited';
       final String secondField = 'positiv edit';
       final String thirdField = 'negativ edit';
-      await _fillFields(tester, firstField, secondField, thirdField);
+
+      EditorFullScreenHelperPage page = tester.widget(find.byType(EditorFullScreenHelperPage));
+      EditorFullScreenHelperPresenter presenter = page.builder.presenter;
+
+      presenter.viewModel.titleTextForm.text = firstField;
+      presenter.viewModel.positivButtonForm.text = secondField;
+      presenter.viewModel.negativButtonForm.text = thirdField;
+
+      // await _fillFields(tester, firstField, secondField, thirdField);
 
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
@@ -193,7 +199,13 @@ void main() {
       final String firstField = 'test title edited';
       final String secondField = 'positiv edit';
       final String thirdField = 'negativ edit';
-      await _fillFields(tester, firstField, secondField, thirdField);
+
+      EditorFullScreenHelperPage page = tester.widget(find.byType(EditorFullScreenHelperPage));
+      EditorFullScreenHelperPresenter presenter = page.builder.presenter;
+
+      presenter.viewModel.titleTextForm.text = firstField;
+      presenter.viewModel.positivButtonForm.text = secondField;
+      presenter.viewModel.negativButtonForm.text = thirdField;
 
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
@@ -243,8 +255,6 @@ void main() {
         '=> save call helperService.saveFullscreen',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      var editableTextsFinder = find.byType(TextField);
-      var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
       var validateButton =
@@ -280,7 +290,6 @@ void main() {
       await _beforeEach(tester);
       when(helperEditorServiceMock.saveFullScreenHelper(any))
           .thenThrow(ArgumentError());
-      var editableTextsFinder = find.byType(TextField);
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
 
@@ -305,11 +314,11 @@ void main() {
         (WidgetTester tester) async {
       await _beforeEach(tester);
       expect(
-        presenter.viewModel.backgroundBoxForm.backgroundColor.value,
+        presenter.viewModel.backgroundBoxForm.backgroundColor,
         Colors.blueAccent,
       );
       var colorPickerButton = find.byKey(
-          ValueKey('pal_EditorFullScreenHelperPage_BackgroundColorPicker'));
+          ValueKey('EditorToolBar_GlobalAction_BackgroundColor'));
       await tester.tap(colorPickerButton);
       await tester.pumpAndSettle();
       expect(find.byType(ColorPickerDialog), findsOneWidget);
@@ -324,31 +333,9 @@ void main() {
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
       expect(
-        presenter.viewModel.backgroundBoxForm.backgroundColor.value,
+        presenter.viewModel.backgroundBoxForm.backgroundColor,
         Color(0xFFFFFFFF),
       );
-    });
-
-    testWidgets(
-        'tap on on field, tap on a second field => only one toolbar is shown',
-        (WidgetTester tester) async {
-      await _beforeEach(tester);
-      var textFinder = find.byType(EditableTextField);
-      var text1 = textFinder.evaluate().first.widget as EditableTextField;
-      var text2 =
-          textFinder.evaluate().elementAt(1).widget as EditableTextField;
-      expect(find.byType(EditHelperToolbar), findsNothing);
-      expect(textFinder, findsNWidgets(4));
-
-      await tester.tap(find.byType(EditableTextField).first);
-      await tester.pump(Duration(seconds: 1));
-      expect(find.byType(EditHelperToolbar), findsOneWidget);
-
-      // text2.toolbarVisibility.value = true;
-      await tester.pump(Duration(seconds: 1));
-      expect(find.byType(EditHelperToolbar), findsOneWidget);
-
-      await tester.pump(Duration(seconds: 1));
     });
 
     test('HelperViewModel => transform to FullscreenHelperViewModel ', () {

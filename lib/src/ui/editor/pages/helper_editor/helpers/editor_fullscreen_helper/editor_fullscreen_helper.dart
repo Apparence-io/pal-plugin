@@ -153,11 +153,12 @@ class EditorFullScreenHelperPage extends StatelessWidget {
             parameters),
       );
 
+  final MVVMPageBuilder builder = MVVMPageBuilder<
+      EditorFullScreenHelperPresenter, FullscreenHelperViewModel>();
+
   @override
   Widget build(BuildContext context) {
-    return MVVMPageBuilder<EditorFullScreenHelperPresenter,
-            FullscreenHelperViewModel>()
-        .build(
+    return builder.build(
       key: ValueKey('palEditorFullscreenHelperWidgetBuilder'),
       context: context,
       presenterBuilder: presenterBuilder,
@@ -190,7 +191,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
         child: AnimatedOpacity(
           duration: Duration(milliseconds: 500),
           curve: Curves.fastOutSlowIn,
-          opacity: model.helperOpacity,
+          opacity: model.helperOpacity ?? 1.0,
           child: Form(
             key: formKey,
             autovalidateMode: AutovalidateMode.onUserInteraction,

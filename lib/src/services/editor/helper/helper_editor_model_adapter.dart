@@ -9,7 +9,7 @@ class HelperEditorAdapter {
   static HelperEntity parseSimpleHelper(CreateSimpleHelper args, int minVersionId, int maxVersionId)
     => _parseConfig(args.config, HelperType.SIMPLE_HELPER, minVersionId, maxVersionId)
         ..helperTexts = [_parseHelperText(SimpleHelperKeys.CONTENT_KEY, args.titleText)]
-        ..helperBoxes =  [_parseHelperBox(SimpleHelperKeys.BACKGROUND_KEY, args.boxConfig)];
+        ..helperBoxes = args.boxConfig?.color != null ? [_parseHelperBox(SimpleHelperKeys.BACKGROUND_KEY, args.boxConfig)] : [];
   
   static HelperEntity parseFullscreenHelper(CreateFullScreenHelper args, int minVersionId, int maxVersionId)
     => _parseConfig(args.config, HelperType.HELPER_FULL_SCREEN, minVersionId, maxVersionId)

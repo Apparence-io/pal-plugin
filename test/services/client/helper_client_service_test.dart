@@ -116,13 +116,13 @@ void main() {
       var pageId = 'p1';
       var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
       var helperGroupId = helperGroup.id;
-      when(httpClientMock.put('client/group/$helperGroupId/triggered',
+      when(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).thenAnswer((_) => Future.value());
 
       await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, true);
-      verify(httpClientMock.put('client/group/$helperGroupId/triggered',
+      verify(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).called(1);
@@ -134,13 +134,13 @@ void main() {
       var pageId = 'p1';
       var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
       var helperGroupId = helperGroup.id;
-      when(httpClientMock.put('client/group/$helperGroupId/triggered',
+      when(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).thenThrow((_) => throw "ERROR");
 
       await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, true);
-      verify(httpClientMock.put('client/group/$helperGroupId/triggered',
+      verify(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
         body: jsonEncode({ 'positiveFeedback': true }),
         headers: {"inAppUserId": inAppUserId})
       ).called(1);

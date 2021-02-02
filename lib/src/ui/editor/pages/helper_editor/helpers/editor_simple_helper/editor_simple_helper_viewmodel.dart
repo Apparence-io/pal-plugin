@@ -30,7 +30,7 @@ class SimpleHelperViewModel extends HelperViewModel {
     HelperTheme helperTheme,
     int versionMaxId,
     int languageId,
-    HelperBoxViewModel helperBoxViewModel,
+    // HelperBoxViewModel helperBoxViewModel,
     HelperTextViewModel contentTextViewModel,
   }) : super(
     id: id,
@@ -88,10 +88,10 @@ class SimpleHelperViewModel extends HelperViewModel {
       minVersionCode: helperEntity?.versionMin,
       maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
-      helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
-        SimpleHelperKeys.BACKGROUND_KEY,
-        helperEntity?.helperBoxes,
-      ),
+      // helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
+      //   SimpleHelperKeys.BACKGROUND_KEY,
+      //   helperEntity?.helperBoxes,
+      // ),
       contentTextViewModel: HelperSharedFactory.parseTextLabel(
         SimpleHelperKeys.CONTENT_KEY,
         helperEntity?.helperTexts,

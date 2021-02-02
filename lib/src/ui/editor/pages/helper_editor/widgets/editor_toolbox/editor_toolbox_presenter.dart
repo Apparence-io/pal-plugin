@@ -99,6 +99,10 @@ class EditorToolboxPresenter {
   void onOutsideTap() {
     this.viewModel.editableElementActions = [];
     this.currentEditableItemNotifier.value = null;
+
+    // Hide bottom bar & toolbar here
+    this.viewModel.isBottomVisible.value = false;
+
     this.viewInterface.refresh();
   }
 

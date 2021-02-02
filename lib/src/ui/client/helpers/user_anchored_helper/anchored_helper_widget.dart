@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/theme.dart';
@@ -248,13 +249,14 @@ class _AnchoredHelperState extends State<AnchoredHelper>
           fontSize: text.fontSize,
           fontWeight: text.fontWeight,
           color: text.fontColor,
-          fontFamily: text.fontFamily,
+        ).merge(
+          GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
         ),
       );
 
   Widget _buildButton(HelperButtonViewModel text, Key key) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12.0),
-    child: Text(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        child: Text(
           text.text,
           key: key,
           textAlign: TextAlign.center,
@@ -262,10 +264,11 @@ class _AnchoredHelperState extends State<AnchoredHelper>
             fontSize: text.fontSize,
             fontWeight: text.fontWeight,
             color: text.fontColor,
-            fontFamily: text.fontFamily,
-          ),
+          ).merge(
+          GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
         ),
-  );
+        ),
+      );
 
   Widget _buildNegativFeedback() {
     return RaisedButton(

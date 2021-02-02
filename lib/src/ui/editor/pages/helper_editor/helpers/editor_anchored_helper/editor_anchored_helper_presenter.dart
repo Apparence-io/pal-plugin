@@ -119,7 +119,6 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       return;
     }
     viewModel.backgroundBox.backgroundColor = Colors.blueGrey.shade900;
-    print('hello');
     viewModel.anchorValidated = true;
     refreshView();
   }

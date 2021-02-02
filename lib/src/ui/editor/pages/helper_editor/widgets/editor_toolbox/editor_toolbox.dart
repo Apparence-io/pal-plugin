@@ -123,7 +123,6 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
 
   @override
   void didUpdateWidget(covariant EditorToolboxPage oldWidget) {
-    print('Updated');
     if (oldWidget.boxViewHandler.selectedColor !=
         widget.boxViewHandler.selectedColor)
       this.model.boxViewHandler.selectedColor =

@@ -29,7 +29,7 @@ class UserUpdateHelperPage extends StatelessWidget
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
   final List<HelperTextViewModel> changelogLabels;
-  final HelperTextViewModel thanksButtonLabel;
+  final HelperButtonViewModel thanksButtonLabel;
   final PackageVersionReader packageVersionReader;
   final HelperImageViewModel helperImageViewModel;
   final Function onPositivButtonTap;
@@ -289,6 +289,7 @@ class UserUpdateHelperPage extends StatelessWidget
                     child: Text(
                       thanksButtonLabel?.text ?? 'Thank you !',
                       key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Label'),
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: thanksButtonLabel?.fontSize ?? 18.0,
                         color: thanksButtonLabel?.fontColor ?? Colors.white,

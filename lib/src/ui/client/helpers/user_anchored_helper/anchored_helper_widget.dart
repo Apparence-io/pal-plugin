@@ -253,8 +253,8 @@ class _AnchoredHelperState extends State<AnchoredHelper>
       );
 
   Widget _buildButton(HelperButtonViewModel text, Key key) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12.0),
-    child: Text(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        child: Text(
           text.text,
           key: key,
           textAlign: TextAlign.center,
@@ -265,7 +265,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
             fontFamily: text.fontFamily,
           ),
         ),
-  );
+      );
 
   Widget _buildNegativFeedback() {
     return RaisedButton(

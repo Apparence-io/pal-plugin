@@ -228,6 +228,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
                   positivLabel?.text ?? 'Ok, thanks !',
+                  textAlign: TextAlign.center,
                   key: ValueKey(
                   'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
                   style: TextStyle(
@@ -259,6 +260,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
                   negativLabel?.text ?? 'This is not helping',
+                  textAlign: TextAlign.center,
                   key: ValueKey(
                   'pal_UserFullScreenHelperPage_Feedback_NegativLabel'),
                   style: TextStyle(

@@ -144,7 +144,7 @@ class HelperFactory {
         UpdatescreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
-      thanksButtonLabel: HelperSharedFactory.parseTextLabel(
+      thanksButtonLabel: HelperSharedFactory.parseButtonLabel(
         UpdatescreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),

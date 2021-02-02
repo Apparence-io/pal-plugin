@@ -51,6 +51,7 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
     throw UnimplementedError();
   }
 
+  // TODO: change URL
   @override
   Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId}) async  {
     var url = 'pal-business/client/group/${visit.helperGroupId}/triggered';

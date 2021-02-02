@@ -61,6 +61,7 @@ class EditableButton extends StatelessWidget {
                   child: Text(
                     this.data?.text ?? 'Edit me!',
                     style: textStyle,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),

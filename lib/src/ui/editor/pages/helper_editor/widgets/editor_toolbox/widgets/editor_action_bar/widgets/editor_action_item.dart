@@ -17,19 +17,25 @@ class EditorActionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return BouncingWidget(
       onTap: this.onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          this.icon,
-          Divider(height: 8),
-          Text(
-            this.text,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-          )
-        ],
+      child: Container(
+        color: Colors.transparent,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minWidth: 65),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              this.icon,
+              Divider(height: 8),
+              Text(
+                this.text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

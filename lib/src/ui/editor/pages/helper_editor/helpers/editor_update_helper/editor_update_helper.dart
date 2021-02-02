@@ -351,6 +351,7 @@ class _EditorUpdateHelperPage
       helperBoxViewModel:
           HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+      thanksButtonLabel: HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
       changelogLabels: model.changelogsTextsForm.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),

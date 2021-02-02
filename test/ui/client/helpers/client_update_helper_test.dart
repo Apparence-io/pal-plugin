@@ -19,7 +19,7 @@ void main() {
       onPositivButtonTap: () {},
       packageVersionReader: packageVersionReaderService,
       helperBoxViewModel: HelperBoxViewModel(backgroundColor: Colors.blue),
-      thanksButtonLabel: HelperTextViewModel(
+      thanksButtonLabel: HelperButtonViewModel(
         text: 'Free Ademo',
         fontColor: Colors.white,
         fontSize: 9.0,

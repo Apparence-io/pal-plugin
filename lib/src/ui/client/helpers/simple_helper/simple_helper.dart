@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper_presenter.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper_viewmodel.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
@@ -17,9 +18,8 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
   SimpleHelperPage({
     Key key,
     @required this.descriptionLabel,
-    @required this.helperBoxViewModel,
-  })  : assert(helperBoxViewModel != null),
-        assert(descriptionLabel != null);
+    this.helperBoxViewModel,
+  }) : assert(descriptionLabel != null);
 
   final _mvvmPageBuilder =
       MVVMPageBuilder<SimpleHelperPresenter, SimpleHelperModel>();
@@ -52,7 +52,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: this.helperBoxViewModel?.backgroundColor,
+                            color: PalTheme.of(context).colors.black, //this.helperBoxViewModel?.backgroundColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8.0)),
                             boxShadow: [

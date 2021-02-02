@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
@@ -28,8 +29,8 @@ class UserFullScreenHelperPage extends StatelessWidget
 
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
-  final HelperTextViewModel positivLabel;
-  final HelperTextViewModel negativLabel;
+  final HelperButtonViewModel positivLabel;
+  final HelperButtonViewModel negativLabel;
   final HelperImageViewModel headerImageViewModel;
   final Function onPositivButtonTap;
   final Function onNegativButtonTap;
@@ -219,7 +220,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 HapticFeedback.selectionClick();
                 presenter.onPositivButtonCallback();
               },
-              color: Colors.greenAccent,
+              color: PalTheme.of(context.buildContext).colors.green,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -227,6 +228,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
                   positivLabel?.text ?? 'Ok, thanks !',
+                  textAlign: TextAlign.center,
                   key: ValueKey(
                   'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
                   style: TextStyle(
@@ -250,7 +252,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 HapticFeedback.selectionClick();
                 presenter.onNegativButtonCallback();
               },
-              color: Colors.redAccent,
+              color: PalTheme.of(context.buildContext).colors.accent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -258,6 +260,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
                   negativLabel?.text ?? 'This is not helping',
+                  textAlign: TextAlign.center,
                   key: ValueKey(
                   'pal_UserFullScreenHelperPage_Feedback_NegativLabel'),
                   style: TextStyle(

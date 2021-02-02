@@ -2,48 +2,102 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/font_editor_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import 'editor_update_helper.dart';
 import 'editor_update_helper_viewmodel.dart';
 
-class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, EditorUpdateHelperView> {
-
+class EditorUpdateHelperPresenter
+    extends Presenter<UpdateHelperViewModel, EditorUpdateHelperView> {
   final EditorHelperService editorHelperService;
-
   final HelperEditorPageArguments parameters;
-
   final StreamController<bool> editableTextFieldController;
 
+  final GlobalKey titleKey;
+  final GlobalKey thanksButtonKey;
+
   EditorUpdateHelperPresenter(
-      EditorUpdateHelperView viewInterface,
-      UpdateHelperViewModel updateHelperViewModel,
-      this.editorHelperService,
-      this.parameters
-  ) : editableTextFieldController = StreamController<bool>.broadcast(),
-      super(updateHelperViewModel, viewInterface) {
-    viewModel.canValidate = new ValueNotifier(false);
-  }
+    EditorUpdateHelperView viewInterface,
+    UpdateHelperViewModel updateHelperViewModel,
+    this.editorHelperService,
+    this.parameters, {
+    this.titleKey,
+    this.thanksButtonKey,
+  })  : editableTextFieldController = StreamController<bool>.broadcast(),
+        super(updateHelperViewModel, viewInterface);
 
   @override
   void onInit() {
+    this.viewModel.canValidate = new ValueNotifier(false);
     this.viewModel.isKeyboardVisible = false;
-    viewModel.fields.forEach(
-      (field) => field.toolbarVisibility.addListener(
-        () => _onTextToolbarVisibilityChange(field)
-      )
-    );
+    
+    // Refresh UI to remove all selected items
+    this
+        .viewModel
+        .currentEditableItemNotifier
+        .addListener(removeSelectedEditableItems);
+  }
+
+  @override
+  void onDestroy() {
+    this
+        .viewModel
+        .currentEditableItemNotifier
+        .removeListener(removeSelectedEditableItems);
+  }
+
+  void removeSelectedEditableItems() {
+    if (this.viewModel.currentEditableItemNotifier?.value == null) {
+      this.refreshView();
+    }
   }
 
   @override
   void afterViewInit() {
     this.viewInterface.hidePalBubble();
+  }
+
+  onTextPickerDone(String newVal) {
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .text = newVal;
+    this.refreshView();
+    this._updateValidState();
+  }
+
+  onFontPickerDone(EditedFontModel newVal) {
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontFamily = newVal.fontKeys.fontFamilyNameKey;
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontSize = newVal.size.toInt();
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontWeight = newVal.fontKeys.fontWeightNameKey;
+    this.refreshView();
+  }
+
+  onMediaPickerDone(GraphicEntity newVal) {
+    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData)
+        .url = newVal.url;
+    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData)
+        .uuid = newVal.id;
+    this.refreshView();
+  }
+
+  onTextColorPickerDone(Color newVal) {
+    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+        .fontColor = newVal;
+    this.refreshView();
+  }
+
+  onNewEditableSelect(EditableData editedData) {
+    this.viewModel.currentEditableItemNotifier.value = editedData;
+    this.refreshView();
   }
 
   onKeyboardVisibilityChange(bool visible) {
@@ -60,15 +114,16 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   void onCancel() => viewInterface.closeEditor();
 
   Future<void> onValidate() async {
-    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
+    ValueNotifier<SendingStatus> status =
+        new ValueNotifier(SendingStatus.SENDING);
     final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
-      await editorHelperService
-        .saveUpdateHelper(EditorEntityFactory.buildUpdateArgs(config, viewModel));
+      await editorHelperService.saveUpdateHelper(
+          EditorEntityFactory.buildUpdateArgs(config, viewModel));
       status.value = SendingStatus.SENT;
-    } catch(error) {
+    } catch (error) {
       status.value = SendingStatus.ERROR;
     } finally {
       await Future.delayed(Duration(seconds: 2));
@@ -79,39 +134,9 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
     }
   }
 
-  onTitleFieldChanged(String id, String newValue)
-    => _onTextChanged(viewModel.titleField, newValue);
-
-  onThanksFieldChanged(String id, String newValue)
-    => _onTextChanged(viewModel.thanksButton, newValue);
-
-  onTitleTextStyleChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.titleField, newTextStyle, fontKeys);
-
-  onThanksTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.thanksButton, newTextStyle, fontKeys);
-
-  onChangelogTextChanged(String id, String newValue)
-    => _onTextChanged(viewModel.changelogsFields[id], newValue);
-
-  onChangelogTextStyleFieldChanged(String id, TextStyle newTextStyle, FontKeys fontKeys)
-    => _onStyleChanged(viewModel.changelogsFields[id], newTextStyle, fontKeys);
-
-  onTitleFieldSubmitted(String value) => this.refreshView();
-  onThanksFieldSubmitted(String value) => this.refreshView();
-  onChangelogFieldSubmitted(String value) => this.refreshView();
-
-  changeBackgroundColor() {
-    this.viewInterface.showColorPickerDialog(
-      viewModel?.bodyBox?.backgroundColor?.value,
-      updateBackgroundColor,
-      () => viewInterface.closeColorPickerDialog()
-    );
-  }
-
   updateBackgroundColor(Color aColor) {
-    viewModel.bodyBox.backgroundColor.value = aColor;
-    viewInterface.closeColorPickerDialog();
+    viewModel.backgroundBoxForm.backgroundColor = aColor;
+    this._updateValidState();
     this.refreshView();
   }
 
@@ -120,9 +145,9 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   editMedia() async {
     final selectedMedia = await this
         .viewInterface
-        .pushToMediaGallery(viewModel.media?.uuid);
-    viewModel.media?.url?.value = selectedMedia?.url;
-    viewModel.media?.uuid = selectedMedia?.id;
+        .pushToMediaGallery(viewModel.headerMediaForm?.uuid);
+    viewModel.headerMediaForm?.url = selectedMedia?.url;
+    viewModel.headerMediaForm?.uuid = selectedMedia?.id;
     this.refreshView();
   }
 
@@ -150,32 +175,13 @@ class EditorUpdateHelperPresenter extends Presenter<UpdateHelperViewModel, Edito
   // PRIVATES
   // ----------------------------------
 
-  _onTextChanged(TextFormFieldNotifier textNotifier, String newValue) {
-    textNotifier.text.value = newValue;
-    _updateValidState();
+  _updateValidState() {
+    viewModel.canValidate.value = isValid();
   }
 
-  _onTextToolbarVisibilityChange(TextFormFieldNotifier textNotifier) {
-    if(textNotifier.toolbarVisibility.value) {
-      viewModel.fields.where((element) => element != textNotifier && element.toolbarVisibility.value)
-        .forEach((element) => element.toolbarVisibility.value = false);
-    }
-  }
-
-  _updateValidState() => viewModel.canValidate.value = isValid();
-
-  _onStyleChanged(TextFormFieldNotifier textNotifier, TextStyle newTextStyle, FontKeys fontKeys) {
-    textNotifier?.fontColor?.value = newTextStyle?.color;
-    textNotifier?.fontSize?.value = newTextStyle?.fontSize?.toInt();
-    if (fontKeys != null) {
-      textNotifier?.fontWeight?.value = fontKeys.fontWeightNameKey;
-      textNotifier?.fontFamily?.value = fontKeys.fontFamilyNameKey;
-    }
-    _updateValidState();
-  }
-
-  bool isValid() => viewModel.titleField.text.value.isNotEmpty
-    && viewModel.changelogsFields.length > 0;
+  bool isValid() =>
+      viewModel.titleTextForm.text.isNotEmpty &&
+      viewModel.changelogsTextsForm.length > 0;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);

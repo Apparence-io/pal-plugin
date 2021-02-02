@@ -44,11 +44,11 @@ class HelperFactory {
         FullscreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
-      positivLabel: HelperSharedFactory.parseTextLabel(
+      positivLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
-      negativLabel: HelperSharedFactory.parseTextLabel(
+      negativLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts,
       ),
@@ -123,10 +123,10 @@ class HelperFactory {
           SimpleHelperKeys.CONTENT_KEY,
           helper.helperTexts,
         ),
-        helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
-          SimpleHelperKeys.BACKGROUND_KEY,
-          helper.helperBoxes,
-        ),
+        // helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
+        //   SimpleHelperKeys.BACKGROUND_KEY,
+        //   helper.helperBoxes,
+        // ),
       ),
       onDismissed: (res) async {
         await _simpleHelperLayoutKey.currentState.reverseAnimations();
@@ -144,7 +144,7 @@ class HelperFactory {
         UpdatescreenHelperKeys.BACKGROUND_KEY,
         helper.helperBoxes,
       ),
-      thanksButtonLabel: HelperSharedFactory.parseTextLabel(
+      thanksButtonLabel: HelperSharedFactory.parseButtonLabel(
         UpdatescreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
@@ -180,11 +180,11 @@ class HelperFactory {
       ),
       // TODO: Create on back correct way to save id
       anchorKey: helper.helperBoxes.first.key,
-      positivButtonLabel:  HelperSharedFactory.parseTextLabel(
+      positivButtonLabel:  HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
-      negativButtonLabel:  HelperSharedFactory.parseTextLabel(
+      negativButtonLabel:  HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts,
       ),

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/pal.dart';
@@ -17,19 +18,16 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_he
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_fullscreen_helper/editor_fullscreen_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_simple_helper/editor_simple_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_update_helper/editor_update_helper.dart';
-import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-
-import 'services/editor/versions/version_editor_service_test.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 
 const Duration kLongPressTimeout = Duration(milliseconds: 500);
 
 const Duration kPressTimeout = Duration(milliseconds: 100);
 
 Future initAppWithPal(
-    WidgetTester tester,
-    Widget userApp,
-    GlobalKey<NavigatorState> navigatorKey,
+    WidgetTester tester, Widget userApp, GlobalKey<NavigatorState> navigatorKey,
     {RouteFactory routeFactory,
     bool editorModeEnabled = true,
     EditorAppContext editorAppContext,
@@ -42,10 +40,10 @@ Future initAppWithPal(
     editorModeEnabled: editorModeEnabled,
     childApp: new MaterialApp(
       onGenerateRoute: routeFactory ??
-        (_) => MaterialPageRoute(builder: (ctx) {
-          context = ctx;
-          return userApp;
-        }),
+          (_) => MaterialPageRoute(builder: (ctx) {
+                context = ctx;
+                return userApp;
+              }),
       navigatorKey: navigatorKey,
       navigatorObservers: [PalNavigatorObserver.instance()],
     ),
@@ -61,15 +59,13 @@ Future pumpHelperWidget(
   GlobalKey<NavigatorState> navigatorKey,
   HelperTriggerType triggerType,
   HelperType type,
-  HelperTheme theme,
-  { 
-    EditorHelperService editorHelperService,
-    PalEditModeStateService palEditModeStateService,
-    HelperEntity helperEntity, 
-    PackageVersionReader packageVersionReader,
-    FinderService finderService,
-  }
-) async {
+  HelperTheme theme, {
+  EditorHelperService editorHelperService,
+  PalEditModeStateService palEditModeStateService,
+  HelperEntity helperEntity,
+  PackageVersionReader packageVersionReader,
+  FinderService finderService,
+}) async {
   // push helper editor page
   HelperEditorPageArguments args = HelperEditorPageArguments(
     navigatorKey,
@@ -85,82 +81,82 @@ Future pumpHelperWidget(
     minVersionCode: "1.0.0",
   );
   // CREATE AN EDITOR FACTORY
-  var _elementFinder = ElementFinder(navigatorKey.currentContext);
+  // var _elementFinder = ElementFinder(navigatorKey.currentContext);
   WidgetBuilder builder;
-  if(helperEntity != null) {
-    switch(type) {
+  if (helperEntity != null) {
+    switch (type) {
       case HelperType.SIMPLE_HELPER:
         builder = (context) => EditorSimpleHelperPage.edit(
-          parameters: args,
-          helperEntity: helperEntity,
-          palEditModeStateService: palEditModeStateService,
-          helperService: editorHelperService,
-        );
+              parameters: args,
+              helperEntity: helperEntity,
+              palEditModeStateService: palEditModeStateService,
+              helperService: editorHelperService,
+            );
         break;
       case HelperType.UPDATE_HELPER:
         builder = (context) => EditorUpdateHelperPage.edit(
-          parameters: args,
-          helperEntity: helperEntity,
-          palEditModeStateService: palEditModeStateService,
-          helperService: editorHelperService,
-          packageVersionReader: packageVersionReader,
-        );
+              parameters: args,
+              helperEntity: helperEntity,
+              palEditModeStateService: palEditModeStateService,
+              helperService: editorHelperService,
+              packageVersionReader: packageVersionReader,
+            );
         break;
       case HelperType.HELPER_FULL_SCREEN:
         builder = (context) => EditorFullScreenHelperPage.edit(
-          parameters: args,
-          helperEntity: helperEntity,
-          palEditModeStateService: palEditModeStateService,
-          helperService: editorHelperService,
-        );
+              parameters: args,
+              helperEntity: helperEntity,
+              palEditModeStateService: palEditModeStateService,
+              helperService: editorHelperService,
+            );
         break;
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         builder = (context) => EditorAnchoredFullscreenHelper.edit(
-          parameters: args,
-          helperEntity: helperEntity,
-          palEditModeStateService: palEditModeStateService,
-          helperService: editorHelperService,
-          finderService: finderService,
-          isTestingMode: true,
-        );
-        break;  
+              parameters: args,
+              helperEntity: helperEntity,
+              palEditModeStateService: palEditModeStateService,
+              helperService: editorHelperService,
+              finderService: finderService,
+              isTestingMode: true,
+            );
+        break;
       default:
         throw 'HELPER TYPE NOT HANDLED';
     }
   } else {
-    switch(type) {
+    switch (type) {
       case HelperType.SIMPLE_HELPER:
         builder = (context) => EditorSimpleHelperPage.create(
-          parameters: args,
-          helperViewModel: templateViewModel,
-          helperService: editorHelperService,
-          palEditModeStateService: palEditModeStateService,
-        );
+              parameters: args,
+              helperViewModel: templateViewModel,
+              helperService: editorHelperService,
+              palEditModeStateService: palEditModeStateService,
+            );
         break;
       case HelperType.UPDATE_HELPER:
         builder = (context) => EditorUpdateHelperPage.create(
-          parameters: args,
-          helperViewModel: templateViewModel,
-          helperService: editorHelperService,
-          palEditModeStateService: palEditModeStateService,
-        );
+              parameters: args,
+              helperViewModel: templateViewModel,
+              helperService: editorHelperService,
+              palEditModeStateService: palEditModeStateService,
+            );
         break;
       case HelperType.HELPER_FULL_SCREEN:
         builder = (context) => EditorFullScreenHelperPage.create(
-          parameters: args,
-          helperViewModel: templateViewModel,
-          helperService: editorHelperService,
-          palEditModeStateService: palEditModeStateService,
-        );
+              parameters: args,
+              helperViewModel: templateViewModel,
+              helperService: editorHelperService,
+              palEditModeStateService: palEditModeStateService,
+            );
         break;
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         builder = (context) => EditorAnchoredFullscreenHelper.create(
-          parameters: args,
-          helperViewModel: templateViewModel,
-          helperService: editorHelperService,
-          finderService: finderService,
-          isTestingMode: true,
-        );
+              parameters: args,
+              helperViewModel: templateViewModel,
+              helperService: editorHelperService,
+              finderService: finderService,
+              isTestingMode: true,
+            );
         break;
       default:
         throw 'HELPER TYPE NOT HANDLED';
@@ -176,20 +172,54 @@ Future<void> longPressDrag(
   Finder startElement,
   Finder endElement,
 ) async {
-  final TestGesture drag = await tester.startGesture(tester.getCenter(startElement));
+  final TestGesture drag =
+      await tester.startGesture(tester.getCenter(startElement));
   await tester.pump(kLongPressTimeout + kPressTimeout);
   await drag.moveTo(tester.getBottomLeft(endElement) * 2);
   await drag.up();
 }
 
-
 // ***************** TEXT FIELD UTILITIES ***************** \\
 
-Future enterTextInEditable(WidgetTester tester, Finder finder, String text) async {
-  final TextField textField = finder.evaluate().first.widget;
+Future enterTextInTextForm(
+  WidgetTester tester,
+  int textFieldIndex,
+  String text,
+  {bool button = false}
+) async {
+  var editableTextsFinder = find.byType(button ? EditableButton : EditableTextField);
+  await tester.tap(editableTextsFinder.at(textFieldIndex));
+  await tester.pump(Duration(milliseconds: 500));
+  await tester.pump(Duration(milliseconds: 1500));
 
-  await tester.tap(finder);
-  await tester.pump();
-  await tester.enterText(finder, text);
-  textField.onSubmitted(text);
+  final textToolbarButton =
+      find.byKey(ValueKey('EditorToolBar_SpecificAction_Text'));
+  await tester.tap(textToolbarButton);
+  await tester.pump(Duration(milliseconds: 1500));
+
+  final textField = find.byKey(ValueKey('EditableTextDialog_Field'));
+  await tester.enterText(textField, text);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pump(Duration(milliseconds: 500));
 }
+
+// Future entreTextInButton(
+//   WidgetTester tester,
+//   int textFieldIndex,
+//   String text,
+// ) async {
+//   var editableTextsFinder = find.byType(EditableButton);
+//   await tester.tap(editableTextsFinder.at(textFieldIndex));
+//   await tester.pump(Duration(milliseconds: 500));
+//   await tester.pump(Duration(milliseconds: 1500));
+
+//   final textToolbarButton =
+//       find.byKey(ValueKey('EditorToolBar_SpecificAction_Text'));
+//   await tester.tap(textToolbarButton);
+//   await tester.pump(Duration(milliseconds: 500));
+
+//   final textField = find.byKey(ValueKey('EditableTextDialog_Field'));
+//   await tester.enterText(textField, text);
+//   await tester.testTextInput.receiveAction(TextInputAction.done);
+//   await tester.pump(Duration(milliseconds: 500));
+// }

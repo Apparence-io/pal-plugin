@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
@@ -9,17 +8,16 @@ import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_model.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_button.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
-import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -32,11 +30,6 @@ import 'editor_anchored_helper_viewmodel.dart';
 /// Interface for presenter view contract
 /// ------------------------------------------------------------
 abstract class EditorAnchoredFullscreenHelperView {
-  void showColorPickerDialog(Color defaultColor,
-      OnColorSelected onColorSelected, OnCancelPicker onCancel);
-
-  void closeColorPickerDialog();
-
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
 
   void closeLoadingScreen();
@@ -133,28 +126,34 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         }
       },
       builder: (context, presenter, model) => Material(
-          color: Colors.black.withOpacity(0.3),
-          child: EditorActionsBar(
-            onCancel: presenter.onCancel,
-            onValidate: (model.canValidate?.value == true)
-                ? presenter.onValidate
-                : null,
-            visible: model.anchorValidated,
-            onPreview: presenter.onPreview,
-            child: Stack(
-              children: [
-                _createAnchoredWidget(model, context.animationsControllers[0],
-                    context.animationsControllers[1]),
-                _buildEditableTexts(presenter, model),
-                ..._createSelectableElements(presenter, model),
-                _buildRefreshButton(presenter),
-                _buildConfirmSelectionButton(
-                    context.buildContext, presenter, model),
-                _buildBackgroundSelectButton(
-                    context.buildContext, model.anchorValidated, presenter),
-              ],
-            ),
-          )),
+        color: Colors.black.withOpacity(0.3),
+        child: EditorToolboxPage(
+          boxViewHandler: BoxViewHandler(
+              callback: presenter.updateBackgroundColor,
+              selectedColor: model.backgroundBox?.backgroundColor),
+          onValidate:
+              (model.canValidate?.value == true) ? presenter.onValidate : null,
+          onCloseEditor: presenter.onCancel,
+          currentEditableItemNotifier: model.currentEditableItemNotifier,
+          onTextPickerDone: presenter.onTextPickerDone,
+          onFontPickerDone: presenter.onFontPickerDone,
+          onMediaPickerDone: presenter.onMediaPickerDone,
+          onTextColorPickerDone: presenter.onTextColorPickerDone,
+          onPreview: presenter.onPreview,
+          isToolsVisible: model.anchorValidated,
+          child: Stack(
+            children: [
+              _createAnchoredWidget(model, context.animationsControllers[0],
+                  context.animationsControllers[1]),
+              _buildEditableTexts(presenter, model),
+              ..._createSelectableElements(presenter, model),
+              _buildRefreshButton(presenter),
+              _buildConfirmSelectionButton(
+                  context.buildContext, presenter, model),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -176,32 +175,16 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       AnimationController fadeinAnimController) {
     final element = model.selectedAnchor;
     return Positioned.fill(
-        child: FadeTransition(
-      opacity: fadeinAnimController,
-      child: Visibility(
-        visible: model.selectedAnchor != null,
-        child: AnimatedAnchoredFullscreenCircle(
-            listenable: animationController,
-            currentPos: element?.value?.offset,
-            anchorSize: element?.value?.rect?.size,
-            bgColor: model.backgroundBox.backgroundColor.value,
-            padding: 4),
-      ),
-    ));
-  }
-
-  _buildBackgroundSelectButton(BuildContext context, bool show,
-      EditorAnchoredFullscreenPresenter presenter) {
-    if (!show) return Container();
-    return Positioned(
-      top: 20.0,
-      left: 20.0,
-      child: SafeArea(
-        child: CircleIconButton(
-          key: ValueKey("bgColorPicker"),
-          icon: Icon(Icons.invert_colors),
-          backgroundColor: PalTheme.of(context).colors.light,
-          onTapCallback: presenter.onCallChangeBackground,
+      child: FadeTransition(
+        opacity: fadeinAnimController,
+        child: Visibility(
+          visible: model.selectedAnchor != null,
+          child: AnimatedAnchoredFullscreenCircle(
+              listenable: animationController,
+              currentPos: element?.value?.offset,
+              anchorSize: element?.value?.rect?.size,
+              bgColor: model.backgroundBox.backgroundColor,
+              padding: 4),
         ),
       ),
     );
@@ -226,17 +209,18 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       top: 32,
       right: 16,
       child: FlatButton.icon(
-          key: ValueKey("refreshButton"),
-          onPressed: presenter.resetSelection,
-          color: Colors.black,
-          icon: Icon(
-            Icons.refresh,
-            color: Colors.white,
-          ),
-          label: Text(
-            "reset",
-            style: TextStyle(color: Colors.white),
-          )),
+        key: ValueKey("refreshButton"),
+        onPressed: presenter.resetSelection,
+        color: Colors.black,
+        icon: Icon(
+          Icons.refresh,
+          color: Colors.white,
+        ),
+        label: Text(
+          "reset",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 
@@ -247,64 +231,61 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         !model.anchorValidated) return Container();
     return Positioned.fromRect(
       rect: model.writeArea ?? Rect.largest,
-      child: LayoutBuilder(
-        builder: (context, constraints) =>
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical:8.0),
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight-16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                    child: EditableTextField.fromNotifier(
-                      editableTextFieldController.stream,
-                      model.titleField,
-                      presenter.onTitleChanged,
-                      presenter.onTitleSubmit,
-                      presenter.onTitleTextStyleChanged,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: EditableTextField.fromNotifier(
-                      editableTextFieldController.stream,
-                      model.descriptionField,
-                      presenter.onDescriptionChanged,
-                      presenter.onDescriptionSubmit,
-                      presenter.onDescriptionTextStyleChanged,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: EditableTextField.editableButton(
-                          editableTextFieldController.stream,
-                          model.negativBtnField,
-                          presenter.onNegativTextChanged,
-                          presenter.onNegativSubmit,
-                          presenter.onNegativTextStyleChanged,
-                        ),
-                      ),
-                      Flexible(
-                        child: EditableTextField.editableButton(
-                          editableTextFieldController.stream,
-                          model.positivBtnField,
-                          presenter.onPositivTextChanged,
-                          presenter.onPositivSubmit,
-                          presenter.onPositivTextStyleChanged,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+      child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
+                child: EditableTextField(
+                  data: model.titleField,
+                  onTap: presenter.onNewEditableSelect,
+                  backgroundColor: model.backgroundBox?.backgroundColor,
+                  isSelected: model.currentEditableItemNotifier?.value?.key ==
+                      model.titleField.key,
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: EditableTextField(
+                  data: model.descriptionField,
+                  onTap: presenter.onNewEditableSelect,
+                  backgroundColor: model.backgroundBox?.backgroundColor,
+                  isSelected: model.currentEditableItemNotifier?.value?.key ==
+                      model.descriptionField.key,
+                ),
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: EditableButton(
+                      data: model.negativBtnField,
+                      onTap: presenter.onNewEditableSelect,
+                      backgroundColor: model.backgroundBox?.backgroundColor,
+                      isSelected:
+                          model.currentEditableItemNotifier?.value?.key ==
+                              model.negativBtnField.key,
+                    ),
+                  ),
+                  Flexible(
+                    child: EditableButton(
+                      data: model.positivBtnField,
+                      onTap: presenter.onNewEditableSelect,
+                      backgroundColor: model.backgroundBox?.backgroundColor,
+                      isSelected:
+                          model.currentEditableItemNotifier?.value?.key ==
+                              model.positivBtnField.key,
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
         ),
       ),
@@ -326,42 +307,30 @@ class _EditorAnchoredFullscreenHelperView
     overlayContext = context;
   }
 
-  @override
-  void showColorPickerDialog(Color defaultColor,
-      OnColorSelected onColorSelected, OnCancelPicker onCancel) {
-    HapticFeedback.selectionClick();
-    showOverlayedInContext(
-        (context) => ColorPickerDialog(
-            placeholderColor: defaultColor,
-            onColorSelected: onColorSelected,
-            onCancel: onCancel),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
-  }
-
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
   @override
   void showErrorMessage(String message) {
     showOverlayedInContext(
-        (context) => EditorTutorialOverlay(
-              onPressDismiss: () =>
-                  closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
-              title: "Error",
-              content: "$message",
-            ),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
+      (context) => EditorTutorialOverlay(
+        onPressDismiss: () => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
+        title: "Error",
+        content: "$message",
+      ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY,
+    );
   }
 
   @override
   void showTutorial(String title, String content) {
     showOverlayedInContext(
-        (context) => EditorTutorialOverlay(
-              onPressDismiss: () =>
-                  closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
-              title: title,
-              content: content,
-            ),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
+      (context) => EditorTutorialOverlay(
+        onPressDismiss: () => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY),
+        title: title,
+        content: content,
+      ),
+      key: OverlayKeys.PAGE_OVERLAY_KEY,
+    );
   }
 
   @override
@@ -370,12 +339,12 @@ class _EditorAnchoredFullscreenHelperView
     AnchoredHelper page = AnchoredHelper.fromEntity(
       finderService: finderService,
       positivButtonLabel:
-          HelperSharedFactory.parseTextNotifier(model.positivBtnField),
+          HelperSharedFactory.parseButtonNotifier(model.positivBtnField),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
       descriptionLabel:
           HelperSharedFactory.parseTextNotifier(model.descriptionField),
       negativButtonLabel:
-          HelperSharedFactory.parseTextNotifier(model.negativBtnField),
+          HelperSharedFactory.parseButtonNotifier(model.negativBtnField),
       helperBoxViewModel:
           HelperSharedFactory.parseBoxNotifier(model.backgroundBox),
       anchorKey: model.selectedAnchorKey,
@@ -401,30 +370,31 @@ class _WidgetElementModelTransformer {
   Widget apply(String key, WidgetElementModel model, OnTapElement onTap) {
     // debugPrint("$key: w:${model.rect.width} h:${model.rect.height} => ${model.offset.dx} ${model.offset.dy}");
     return Positioned(
-        left: model.offset.dx,
-        top: model.offset.dy,
-        child: InkWell(
-          key: ValueKey("elementContainer"),
-          onTap: () => onTap(key),
-          child: Container(
-            width: model.rect.width,
-            height: model.rect.height,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white.withOpacity(model.selected ? 1 : .5),
-                width: model.selected ? 4 : 2,
-              ),
-            ),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                // child: Text("$key",
-                //   style: TextStyle(color: Colors.white)
-                // ),
-              ),
+      left: model.offset.dx,
+      top: model.offset.dy,
+      child: InkWell(
+        key: ValueKey("elementContainer"),
+        onTap: () => onTap(key),
+        child: Container(
+          width: model.rect.width,
+          height: model.rect.height,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.white.withOpacity(model.selected ? 1 : .5),
+              width: model.selected ? 4 : 2,
             ),
           ),
-        ));
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              // child: Text("$key",
+              //   style: TextStyle(color: Colors.white)
+              // ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

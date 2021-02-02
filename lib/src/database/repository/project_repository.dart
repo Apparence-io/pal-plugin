@@ -20,7 +20,7 @@ class ProjectRepository extends BaseHttpRepository {
   ) async {
     var result = await httpClient
         .multipartImage(
-          'editor/app-icon',
+          'pal-business/editor/app-icon',
           fileData: imageData.toList(),
           imageType: imageType,
           fileFieldName: 'appIcon',
@@ -46,7 +46,7 @@ class ProjectRepository extends BaseHttpRepository {
   ) async {
     var result = await httpClient
         .multipartImage(
-          'editor/app-icon/$appIconId',
+          'pal-business/editor/app-icon/$appIconId',
           fileData: imageData.toList(),
           imageType: imageType,
           fileFieldName: 'appIcon',
@@ -67,7 +67,7 @@ class ProjectRepository extends BaseHttpRepository {
 
   Future<AppIconEntity> getAppIcon() async {
     final Response response =
-        await this.httpClient.get('editor/app-icon');
+        await this.httpClient.get('pal-business/editor/app-icon');
     return this._adapter.parse(response.body);
   }
 }

@@ -1,8 +1,8 @@
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/extensions/color_extension.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 ///-------------------------------
 /// KEYS to link data to right element
@@ -34,6 +34,7 @@ class AnchoredscreenHelperKeys {
   static const DESCRIPTION_KEY = "DESCRIPTION_KEY"; // mandatory
   static const POSITIV_KEY = "POSITIV_KEY"; // not mandatory
   static const NEGATIV_KEY = "NEGATIV_KEY"; // not mandatory
+  static const BACKGROUND_KEY = "BACKGROUND_KEY"; // mandatory
 }
 
 class HelperSharedFactory {
@@ -44,6 +45,25 @@ class HelperSharedFactory {
     for (HelperTextEntity helperText in helperTexts) {
       if (key == helperText?.key) {
         return HelperTextViewModel(
+          id: helperText?.id,
+          text: helperText?.value,
+          fontColor: HexColor.fromHex(helperText?.fontColor),
+          fontSize: helperText?.fontSize?.toDouble(),
+          fontFamily: helperText?.fontFamily,
+          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+        );
+      }
+    }
+    return null;
+  }
+
+  static HelperButtonViewModel parseButtonLabel(
+    final String key,
+    final List<HelperTextEntity> helperTexts,
+  ) {
+    for (HelperTextEntity helperText in helperTexts) {
+      if (key == helperText?.key) {
+        return HelperButtonViewModel(
           id: helperText?.id,
           text: helperText?.value,
           fontColor: HexColor.fromHex(helperText?.fontColor),
@@ -128,30 +148,42 @@ class HelperSharedFactory {
   // ************ HELPER PREVIEW UTILS
 
   static HelperTextViewModel parseTextNotifier(
-    TextFormFieldNotifier notifier
+    EditableTextFormData notifier
   ) {
     return HelperTextViewModel(
-      text: notifier.text?.value,
-      fontColor: notifier.fontColor?.value,
-      fontSize: notifier.fontSize?.value?.toDouble(),
-      fontWeight: FontWeightMapper.toFontWeight(notifier.fontWeight?.value),
-      fontFamily: notifier.fontFamily.value,
+      text: notifier.text,
+      fontColor: notifier.fontColor,
+      fontSize: notifier.fontSize?.toDouble(),
+      fontWeight: FontWeightMapper.toFontWeight(notifier.fontWeight),
+      fontFamily: notifier.fontFamily,
+    );
+  }
+
+  static HelperButtonViewModel parseButtonNotifier(
+    EditableButtonFormData notifier
+  ) {
+    return HelperButtonViewModel(
+      text: notifier.text,
+      fontColor: notifier.fontColor,
+      fontSize: notifier.fontSize?.toDouble(),
+      fontWeight: FontWeightMapper.toFontWeight(notifier.fontWeight),
+      fontFamily: notifier.fontFamily,
     );
   }
 
   static HelperBoxViewModel parseBoxNotifier(
-    BoxNotifier notifier
+    EditableBoxFormData notifier
   ){
     return HelperBoxViewModel(
-      backgroundColor: notifier.backgroundColor?.value,
+      backgroundColor: notifier.backgroundColor,
     );
   }
 
   static HelperImageViewModel parseMediaNotifier(
-    MediaNotifier notifier
+    EditableMediaFormData notifier
   ){
     return HelperImageViewModel(
-      url: notifier.url?.value,
+      url: notifier.url,
     );
   }
 

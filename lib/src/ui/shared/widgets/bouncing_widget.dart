@@ -40,6 +40,7 @@ class _BouncingWidgetState extends State<BouncingWidget>
   @override
   void dispose() {
     _controller?.dispose();
+    this._controller = null;
     super.dispose();
   }
 
@@ -68,18 +69,17 @@ class _BouncingWidgetState extends State<BouncingWidget>
     if (widget.vibrationEnabled) {
       HapticFeedback.selectionClick();
     }
-    _controller.forward();
+    _controller?.forward?.call();
   }
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(widget.duration, () {
-      _controller.reverse();
+      _controller?.reverse?.call();
     });
-
     widget.onTap?.call();
-  }
+  } 
 
   _onTapCancel() {
-    _controller.reverse();
+    _controller?.reverse?.call();
   }
 }

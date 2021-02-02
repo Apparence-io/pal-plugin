@@ -20,6 +20,30 @@ class HelperTextViewModel {
   });
 }
 
+class HelperButtonViewModel {
+  int id;
+  String key;
+  String text;
+  Color fontColor;
+  double fontSize;
+  String fontFamily;
+  FontWeight fontWeight;
+  Color borderColor;
+  Color backgroundColor;
+
+  HelperButtonViewModel({
+    this.id,
+    this.text,
+    this.key,
+    @required this.fontColor,
+    @required this.fontSize,
+    this.fontFamily,
+    this.fontWeight,
+    this.backgroundColor,
+    this.borderColor,
+  });
+}
+
 class HelperImageViewModel {
   int id;
   String url;

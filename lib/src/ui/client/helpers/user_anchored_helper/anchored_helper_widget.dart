@@ -2,8 +2,11 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
+import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 
@@ -18,8 +21,8 @@ class AnchoredHelper extends StatefulWidget {
   // ATTRIBUTES MODELS
   final HelperTextViewModel titleLabel;
   final HelperTextViewModel descriptionLabel;
-  final HelperTextViewModel positivButtonLabel;
-  final HelperTextViewModel negativButtonLabel;
+  final HelperButtonViewModel positivButtonLabel;
+  final HelperButtonViewModel negativButtonLabel;
   final HelperBoxViewModel helperBoxViewModel;
 
   factory AnchoredHelper.fromEntity({
@@ -27,8 +30,8 @@ class AnchoredHelper extends StatefulWidget {
     String anchorKey,
     @required HelperTextViewModel titleLabel,
     @required HelperTextViewModel descriptionLabel,
-    @required HelperTextViewModel positivButtonLabel,
-    @required HelperTextViewModel negativButtonLabel,
+    @required HelperButtonViewModel positivButtonLabel,
+    @required HelperButtonViewModel negativButtonLabel,
     @required HelperBoxViewModel helperBoxViewModel,
     Function onPositivButtonTap,
     Function onNegativButtonTap,
@@ -131,6 +134,8 @@ class _AnchoredHelperState extends State<AnchoredHelper>
 
   @override
   void dispose() {
+    anchorAnimationController.stop();
+    fadeAnimController.stop();
     anchorAnimationController.dispose();
     fadeAnimController.dispose();
     super.dispose();
@@ -172,20 +177,20 @@ class _AnchoredHelperState extends State<AnchoredHelper>
           Positioned.fromRect(
             rect: writeArea ?? Rect.largest,
             child: LayoutBuilder(
-              builder: (context, constraints) =>
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical:8.0),
-                  child: SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: constraints.maxHeight-16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: _buildAnimItem(
+              builder: (context, constraints) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints:
+                        BoxConstraints(minHeight: constraints.maxHeight - 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: _buildAnimItem(
                               opacityAnim: titleOpacityAnimation,
                               sizeAnim: titleSizeAnimation,
                               child: _buildText(widget.titleLabel,
@@ -196,11 +201,13 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                             child: _buildAnimItem(
                               opacityAnim: descriptionOpacityAnimation,
                               sizeAnim: descriptionSizeAnimation,
-                              child: _buildText(widget.descriptionLabel,
-                                ValueKey('pal_AnchoredHelperDescriptionLabel'))),
-                          ),
-                          SizedBox(height: 24),
-                          Row(
+                              child: _buildText(
+                                  widget.descriptionLabel,
+                                  ValueKey(
+                                      'pal_AnchoredHelperDescriptionLabel'))),
+                        ),
+                        SizedBox(height: 24),
+                        Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -219,8 +226,8 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                     ),
                   ),
                 ),
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -236,41 +243,66 @@ class _AnchoredHelperState extends State<AnchoredHelper>
     : Container();
 
   Widget _buildText(HelperTextViewModel text, Key key) => Text(
-    text.text,
-    key: key,
-    textAlign: TextAlign.center,
-    style: TextStyle(
-      fontSize: text.fontSize,
-      fontWeight: text.fontWeight,
-      color: text.fontColor,
-      fontFamily: text.fontFamily,
-    ),
-  );
+        text.text,
+        key: key,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: text.fontSize,
+          fontWeight: text.fontWeight,
+          color: text.fontColor,
+        ).merge(
+          GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
+        ),
+      );
+
+  Widget _buildButton(HelperButtonViewModel text, Key key) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+        child: Text(
+          text.text,
+          key: key,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: text.fontSize,
+            fontWeight: text.fontWeight,
+            color: text.fontColor,
+          ).merge(
+          GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
+        ),
+        ),
+      );
 
   Widget _buildNegativFeedback() {
-    return OutlineButton(
+    return RaisedButton(
       key: ValueKey("negativeFeedback"),
-      borderSide: BorderSide(color: widget.negativButtonLabel.fontColor),
+      color: PalTheme.of(context).colors.accent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       onPressed: () async {
+        HapticFeedback.selectionClick();
         await fadeAnimController.reverse();
         widget.onNegativButtonTap();
       },
-      child: _buildText(widget.negativButtonLabel,
-        ValueKey('pal_AnchoredHelperNegativFeedbackLabel')),
+      child: _buildButton(widget.negativButtonLabel,
+          ValueKey('pal_AnchoredHelperNegativFeedbackLabel')),
       // onTap: this.widget.onTrigger,
     );
   }
 
   Widget _buildPositivFeedback() {
-    return OutlineButton(
+    return RaisedButton(
       key: ValueKey("positiveFeedback"),
-      borderSide: BorderSide(color: widget.positivButtonLabel.fontColor),
+      color: PalTheme.of(context).colors.green,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       onPressed: () async {
+        HapticFeedback.selectionClick();
         await fadeAnimController.reverse();
         widget.onPositivButtonTap();
       },
-      child: _buildText(widget.positivButtonLabel,
-        ValueKey('pal_AnchoredHelperPositivFeedbackLabel')),
+      child: _buildButton(widget.positivButtonLabel,
+          ValueKey('pal_AnchoredHelperPositivFeedbackLabel')),
       // onTap: this.widget.onTrigger,
     );
   }

@@ -7,15 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_router.dart';
 import 'package:pal/src/ui/editor/widgets/snackbar_mixin.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
-import 'package:pal/src/ui/shared/utilities/element_finder.dart';
-import 'package:pal/src/router.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_factory.dart';
 
 import 'helper_details_model.dart';
 import 'helper_details_presenter.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
@@ -11,15 +10,15 @@ import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_background.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:pal/src/ui/editor/widgets/editable_background.dart';
-import 'package:pal/src/ui/editor/widgets/editable_media.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
-import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -27,14 +26,7 @@ import 'editor_fullscreen_helper_presenter.dart';
 import 'editor_fullscreen_helper_viewmodel.dart';
 
 abstract class EditorFullScreenHelperView {
-  void showColorPickerDialog(
-    FullscreenHelperViewModel viewModel,
-    EditorFullScreenHelperPresenter presenter,
-  );
-
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
-
-  void closeColorPickerDialog();
 
   TextStyle googleCustomFont(String fontFamily);
 
@@ -60,20 +52,6 @@ class EditorFullScreenHelper
     overlayContext = context;
   }
 
-  @override
-  void showColorPickerDialog(
-    FullscreenHelperViewModel viewModel,
-    EditorFullScreenHelperPresenter presenter,
-  ) {
-    HapticFeedback.selectionClick();
-    showOverlayedInContext(
-        (context) => ColorPickerDialog(
-            placeholderColor: viewModel.bodyBox.backgroundColor?.value,
-            onColorSelected: presenter.updateBackgroundColor,
-            onCancel: presenter.cancelUpdateBackgroundColor),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
-  }
-
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
   @override
@@ -97,17 +75,22 @@ class EditorFullScreenHelper
   @override
   Future showPreviewOfHelper(FullscreenHelperViewModel model) async {
     UserFullScreenHelperPage page = UserFullScreenHelperPage(
-      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
-      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
-      headerImageViewModel: HelperSharedFactory.parseMediaNotifier(model.media),
-      negativLabel: HelperSharedFactory.parseTextNotifier(model.negativButtonField),
-      positivLabel: HelperSharedFactory.parseTextNotifier(model.positivButtonField),
+      helperBoxViewModel:
+          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+      headerImageViewModel:
+          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
+      negativLabel:
+          HelperSharedFactory.parseButtonNotifier(model.negativButtonForm),
+      positivLabel:
+          HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
       onNegativButtonTap: () => Navigator.pop(context),
       onPositivButtonTap: () => Navigator.pop(context),
     );
-    
+
     EditorPreviewArguments arguments = EditorPreviewArguments(
-        previewHelper: page,);
+      previewHelper: page,
+    );
     await Navigator.pushNamed(
       context,
       '/editor/preview',
@@ -170,11 +153,12 @@ class EditorFullScreenHelperPage extends StatelessWidget {
             parameters),
       );
 
+  final MVVMPageBuilder builder = MVVMPageBuilder<
+      EditorFullScreenHelperPresenter, FullscreenHelperViewModel>();
+
   @override
   Widget build(BuildContext context) {
-    return MVVMPageBuilder<EditorFullScreenHelperPresenter,
-            FullscreenHelperViewModel>()
-        .build(
+    return builder.build(
       key: ValueKey('palEditorFullscreenHelperWidgetBuilder'),
       context: context,
       presenterBuilder: presenterBuilder,
@@ -190,100 +174,95 @@ class EditorFullScreenHelperPage extends StatelessWidget {
   ) {
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
-      body: EditorActionsBar(
-        onCancel: presenter.onCancel,
+      body: EditorToolboxPage(
+        boxViewHandler: BoxViewHandler(
+            callback: presenter.updateBackgroundColor,
+            selectedColor: model.backgroundBoxForm?.backgroundColor),
+        onTextPickerDone: presenter.onTextPickerDone,
+        onFontPickerDone: presenter.onFontPickerDone,
+        onMediaPickerDone: presenter.onMediaPickerDone,
+        onTextColorPickerDone: presenter.onTextColorPickerDone,
+        currentEditableItemNotifier: model.currentEditableItemNotifier,
         onValidate:
             (model.canValidate?.value == true) ? presenter.onValidate : null,
         onPreview: presenter.onPreview,
-        child: GestureDetector(
-          key: ValueKey('palEditorFullscreenHelperWidget'),
-          onTap: presenter.onOutsideTap,
-          child: AnimatedOpacity(
-            duration: Duration(milliseconds: 500),
-            curve: Curves.fastOutSlowIn,
-            opacity: model.helperOpacity,
-            child: Form(
-              key: formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: EditableBackground(
-                backgroundColor: model.bodyBox.backgroundColor?.value,
-                circleIconKey:
-                    'pal_EditorFullScreenHelperPage_BackgroundColorPicker',
-                onColorChange: () => presenter.changeBackgroundColor(),
-                widget: Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: SafeArea(
-                      bottom: false,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.only(top: 25.0, bottom: 50.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            EditableMedia(
-                              mediaSize: 240.0,
-                              onEdit: presenter.editMedia,
-                              url: model.media?.url?.value,
-                              editKey:
-                                  'pal_EditorFullScreenHelperPage_EditableMedia_EditButton',
-                            ),
-                            SizedBox(height: 24),
-                            EditableTextField.fromNotifier(
-                              model.editableTextFieldController.stream,
-                              model?.titleField,
-                              presenter.onTitleChanged,
-                              presenter.onTitleSubmit,
-                              presenter.onTitleTextStyleChanged,
-                              baseStyle: presenter.googleCustomFont(
-                                  model?.titleField?.fontFamily?.value),
-                              helperToolbarKey: ValueKey(
-                                  'palEditorFullscreenHelperWidgetToolbar'),
-                              textFormFieldKey:
-                                  ValueKey('palFullscreenHelperTitleField'),
-                            ),
-                            SizedBox(height: 24),
-                            EditableTextField.fromNotifier(
-                              model.editableTextFieldController.stream,
-                              model?.descriptionField,
-                              presenter.onDescriptionChanged,
-                              presenter.onDescriptionSubmit,
-                              presenter.onDescriptionTextStyleChanged,
-                              baseStyle: presenter.googleCustomFont(
-                                  model?.titleField?.fontFamily?.value),
-                              helperToolbarKey: ValueKey(
-                                  'palEditorFullscreenHelperWidgetToolbar'),
-                              textFormFieldKey: ValueKey(
-                                  'palFullscreenHelperDescriptionField'),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 40.0),
-                              child: EditableTextField.editableButton(
-                                  model.editableTextFieldController.stream,
-                                  model.positivButtonField,
-                                  presenter.onPositivTextChanged,
-                                  presenter.onPositivTextSubmit,
-                                  presenter.onPositivTextStyleChanged,
-                                  helperToolbarKey: ValueKey(
-                                      'palEditorFullscreenHelperWidgetToolbar'),
-                                  textFormFieldKey: ValueKey(
-                                      'palFullscreenHelperPositivField')),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: EditableTextField.editableButton(
-                                  model.editableTextFieldController.stream,
-                                  model.negativButtonField,
-                                  presenter.onNegativTextChanged,
-                                  presenter.onNegativTextSubmit,
-                                  presenter.onNegativTextStyleChanged,
-                                  helperToolbarKey: ValueKey(
-                                      'palEditorFullscreenHelperWidgetToolbar'),
-                                  textFormFieldKey: ValueKey(
-                                      'palFullscreenHelperNegativField')),
-                            ),
-                          ],
-                        ),
+        onCloseEditor: presenter.onCancel,
+        child: AnimatedOpacity(
+          duration: Duration(milliseconds: 500),
+          curve: Curves.fastOutSlowIn,
+          opacity: model.helperOpacity ?? 1.0,
+          child: Form(
+            key: formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: EditableBackground(
+              backgroundColor: model.backgroundBoxForm.backgroundColor,
+              widget: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: SafeArea(
+                    bottom: false,
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.only(top: 25.0, bottom: 50.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          EditableMedia(
+                            size: 150.0,
+                            data: model.headerMediaForm,
+                            onTap: presenter.onNewEditableSelect,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.headerMediaForm.key,
+                          ),
+                          SizedBox(height: 24),
+                          EditableTextField(
+                            data: model.titleTextForm,
+                            onTap: presenter.onNewEditableSelect,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.titleTextForm.key,
+                          ),
+                          SizedBox(height: 24),
+                          EditableTextField(
+                            data: model.descriptionTextForm,
+                            onTap: presenter.onNewEditableSelect,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.descriptionTextForm.key,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 40.0),
+                          ),
+                          EditableButton(
+                            data: model.positivButtonForm,
+                            onTap: presenter.onNewEditableSelect,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.positivButtonForm.key,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                          ),
+                          EditableButton(
+                            data: model.negativButtonForm,
+                            onTap: presenter.onNewEditableSelect,
+                            isSelected:
+                                model.currentEditableItemNotifier?.value?.key ==
+                                    model.negativButtonForm.key,
+                            backgroundColor:
+                                model.backgroundBoxForm?.backgroundColor,
+                          )
+                        ],
                       ),
                     ),
                   ),

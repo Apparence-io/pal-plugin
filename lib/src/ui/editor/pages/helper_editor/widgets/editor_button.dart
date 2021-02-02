@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
+
+// TODO: IS IT USEFULL ?!
 
 class EditorButton extends StatelessWidget {
   final Function onPressed;
@@ -12,36 +13,38 @@ class EditorButton extends StatelessWidget {
   final bool bordered;
   final bool isEnabled;
 
-  EditorButton(
-      {this.onPressed,
-      this.size,
-      this.icon,
-      this.bgColor,
-      this.iconColor,
-      this.bordered = false,
-      this.isEnabled = true,
-      Key key})
-      : super(key: key);
+  EditorButton({
+    this.onPressed,
+    this.size,
+    this.icon,
+    this.bgColor,
+    this.iconColor,
+    this.bordered = false,
+    this.isEnabled = true,
+    Key key,
+  }) : super(key: key);
 
   factory EditorButton.validate(PalThemeData theme, Function onPressed,
           {Key key, bool isEnabled = true}) =>
       EditorButton(
-          onPressed: onPressed,
-          size: 52,
-          isEnabled: isEnabled,
-          icon: Icon(Icons.check, size: 32, color: theme.colors.dark),
-          bgColor: theme.colors.color3,
-          key: key);
+        onPressed: onPressed,
+        size: 52,
+        isEnabled: isEnabled,
+        icon: Icon(Icons.check, size: 32, color: theme.colors.dark),
+        bgColor: theme.colors.color3,
+        key: key,
+      );
 
   factory EditorButton.cancel(PalThemeData theme, Function onPressed,
           {Key key, bool isEnabled = true}) =>
       EditorButton(
-          onPressed: onPressed,
-          size: 40,
-          isEnabled: isEnabled,
-          icon: Icon(Icons.close, size: 24, color: theme.colors.accent),
-          bgColor: theme.colors.light,
-          key: key);
+        onPressed: onPressed,
+        size: 40,
+        isEnabled: isEnabled,
+        icon: Icon(Icons.close, size: 24, color: theme.colors.accent),
+        bgColor: theme.colors.light,
+        key: key,
+      );
 
   factory EditorButton.editMode(PalThemeData theme, Function onPressed,
           {Key key, bool isEnabled = true}) =>
@@ -61,9 +64,7 @@ class EditorButton extends StatelessWidget {
       icon: icon,
       radius: size / 2,
       backgroundColor: bgColor,
-      onTapCallback: (onPressed != null && this.isEnabled)
-          ? onPressed
-          : null,
+      onTapCallback: (onPressed != null && this.isEnabled) ? onPressed : null,
     );
   }
 }

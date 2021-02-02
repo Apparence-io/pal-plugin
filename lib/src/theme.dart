@@ -8,9 +8,10 @@ class _PalThemeLightColors {
   static const Color lightBlue = Color(0xFF00B4D8);
   static const Color cyan = Color(0xFF90E0EF);
   static const Color aqua = Color(0xFFCAF0F8);
-  static const Color red = Color(0xFFeB5160);
+  static const Color red = Color(0xFFe74c3c);
   static const Color white = Color(0xFFFAFEFF);
   static const Color gray = Color(0xFF4F4E57);
+  static const Color green = Color(0xFF2ecc71);
 
   static const Gradient gradient1 = const LinearGradient(
     begin: Alignment.topCenter,
@@ -35,6 +36,8 @@ class _PalThemeColors {
 
   final Color black;
 
+  final Color green;
+
   final Color color1, color2, color3, color4, color5;
 
   final Color accent;
@@ -54,6 +57,7 @@ class _PalThemeColors {
     this.color4,
     this.color5,
     this.accent,
+    this.green,
     this.light,
     this.bottomNavEditorGradient,
     this.settingsSilverGradient,
@@ -69,6 +73,7 @@ class _PalThemeColors {
         color5: _PalThemeLightColors.gray,
         light: _PalThemeLightColors.white,
         accent: _PalThemeLightColors.red,
+        green: _PalThemeLightColors.green,
         bottomNavEditorGradient: _PalThemeLightColors.gradient1,
         settingsSilverGradient: _PalThemeLightColors.gradient2,
       );
@@ -114,6 +119,7 @@ class PalThemeData {
     const Color aqua = Color(0xFF90E0EF);
     const Color red = Color(0xFFe7636a);// ignore: unused_local_variable
     const Color black = Color(0xFF292931);// ignore: unused_local_variable
+    const Color green = Color(0xFF1abc9c);// ignore: unused_local_variable
 
     return base.copyWith(
       accentColor: dark,

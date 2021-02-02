@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
@@ -8,46 +7,31 @@ import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
-import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_notifiers.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/color_picker.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_background.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_button.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_media.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:pal/src/ui/editor/widgets/editable_background.dart';
-import 'package:pal/src/ui/editor/widgets/editable_media.dart';
-import 'package:pal/src/ui/editor/widgets/editable_textfield.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
-import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
-import '../../../../../../router.dart';
 import 'editor_update_helper_presenter.dart';
 import 'editor_update_helper_viewmodel.dart';
 
 abstract class EditorUpdateHelperView {
-  void showColorPickerDialog(
-      Color color, OnColorSelected onColorSelected, OnCancelPicker onCancel);
-
-  void closeColorPickerDialog();
-
   void hidePalBubble();
-
   Future<void> scrollToBottomChangelogList();
-
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
-
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
-
   Future closeEditor();
-
   void closeLoadingScreen();
-
   Future showPreviewOfHelper(UpdateHelperViewModel model);
 }
 
@@ -63,6 +47,9 @@ class EditorUpdateHelperPage extends StatelessWidget {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final ScrollController scrollController = ScrollController();
   final PackageVersionReader packageVersionReader;
+
+  // final GlobalKey _titleKey = GlobalKey();
+  // final GlobalKey _thanksButtonKey = GlobalKey();
 
   EditorUpdateHelperPage._({
     Key key,
@@ -113,7 +100,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorUpdateHelperPresenter, UpdateHelperViewModel>()
         .build(
-      key: ValueKey('pal_EditorUpdateHelperWidget_Builder'),
+          key: ValueKey("pal_EditorUpdateHelperWidget_Builder"),
       context: context,
       presenterBuilder: (context) {
         var presenter = EditorUpdateHelperPresenter(
@@ -142,34 +129,37 @@ class EditorUpdateHelperPage extends StatelessWidget {
   ) {
     return Scaffold(
       key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
-      body: EditorActionsBar(
-        onCancel: presenter.onCancel,
+      body: EditorToolboxPage(
+        boxViewHandler: BoxViewHandler(
+          callback: presenter.updateBackgroundColor,
+          selectedColor: viewModel.backgroundBoxForm?.backgroundColor,
+        ),
         onValidate: (viewModel.canValidate?.value == true)
             ? presenter.onValidate
             : null,
+        currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
+        onTextPickerDone: presenter.onTextPickerDone,
+        onFontPickerDone: presenter.onFontPickerDone,
+        onMediaPickerDone: presenter.onMediaPickerDone,
+        onTextColorPickerDone: presenter.onTextColorPickerDone,
+        onCloseEditor: presenter.onCancel,
         onPreview: presenter.onPreview,
-        child: GestureDetector(
-          onTap: presenter.onOutsideTap,
-          child: Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.always,
-            child: EditableBackground(
-              backgroundColor: viewModel.bodyBox?.backgroundColor?.value,
-              circleIconKey:
-                  'pal_EditorUpdateHelperWidget_BackgroundColorPicker',
-              onColorChange: presenter.changeBackgroundColor,
-              widget: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Container(
-                  width: double.infinity,
-                  color: viewModel.bodyBox?.backgroundColor?.value,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:
-                        _buildEditableContent(presenter, viewModel, context),
-                  ),
+        child: Form(
+          key: formKey,
+          autovalidateMode: AutovalidateMode.always,
+          child: EditableBackground(
+            backgroundColor: viewModel.backgroundBoxForm?.backgroundColor,
+            widget: Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Container(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children:
+                      _buildEditableContent(presenter, viewModel, context),
                 ),
               ),
             ),
@@ -187,37 +177,45 @@ class EditorUpdateHelperPage extends StatelessWidget {
         Expanded(
           child: SafeArea(
             bottom: false,
-            child: Center(
-              child: SingleChildScrollView(
-                reverse: false,
-                controller: scrollController,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10.0,
-                    right: 10.0,
-                    top: 25.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      EditableMedia(
-                        editKey:
-                            'pal_EditorUpdateHelperWidget_EditableMedia_EditButton',
-                        mediaSize: 123.0,
-                        onEdit: presenter.editMedia,
-                        url: viewModel.media?.url?.value,
-                      ),
-                      SizedBox(height: 40),
-                      EditableTextField.fromNotifier(
-                          presenter.editableTextFieldController.stream,
-                          viewModel.titleField,
-                          presenter.onTitleFieldChanged,
-                          presenter.onTitleFieldSubmitted,
-                          presenter.onTitleTextStyleChanged),
-                      SizedBox(height: 25.0),
-                      _buildChangelogFields(context, presenter, viewModel),
-                    ],
-                  ),
+            child: SingleChildScrollView(
+              reverse: false,
+              controller: scrollController,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 10.0,
+                  right: 10.0,
+                  top: 25.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // FIXME: This is a POC, Need to wrap all editable item to
+                    // gesture detector & change notifier value
+                    EditableMedia(
+                      key: ValueKey(
+                          'pal_EditorUpdateHelperWidget_EditableMedia'),
+                      size: 123.0,
+                      data: viewModel.headerMediaForm,
+                      onTap: presenter.onNewEditableSelect,
+                      backgroundColor:
+                          viewModel.backgroundBoxForm?.backgroundColor,
+                      isSelected:
+                          viewModel.currentEditableItemNotifier?.value?.key ==
+                              viewModel.headerMediaForm.key,
+                    ),
+                    SizedBox(height: 40),
+                    EditableTextField(
+                      data: viewModel.titleTextForm,
+                      onTap: presenter.onNewEditableSelect,
+                      backgroundColor:
+                          viewModel.backgroundBoxForm?.backgroundColor,
+                      isSelected:
+                          viewModel.currentEditableItemNotifier?.value?.key ==
+                              viewModel.titleTextForm.key,
+                    ),
+                    SizedBox(height: 25.0),
+                    _buildChangelogFields(context, presenter, viewModel),
+                  ],
                 ),
               ),
             ),
@@ -228,6 +226,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
             bottom: 45.0,
             left: 10.0,
             right: 10.0,
+            top: 5.0,
           ),
           child: _buildThanksButton(context, presenter, viewModel),
         ),
@@ -238,16 +237,18 @@ class EditorUpdateHelperPage extends StatelessWidget {
     final EditorUpdateHelperPresenter presenter,
     final UpdateHelperViewModel viewmodel,
   ) {
-    List<Widget> changelogsTextfieldWidgets = List();
-    viewmodel.changelogsFields.forEach((key, field) {
-      changelogsTextfieldWidgets.add(EditableTextField.fromNotifier(
-        presenter.editableTextFieldController.stream,
-        field,
-        presenter.onChangelogTextChanged,
-        presenter.onChangelogFieldSubmitted,
-        presenter.onChangelogTextStyleFieldChanged,
-        id: key,
-      ));
+    List<Widget> changelogsTextfieldWidgets = [];
+    viewmodel.changelogsTextsForm.forEach((key, field) {
+      changelogsTextfieldWidgets.add(
+        EditableTextField(
+          data: field,
+          key: ValueKey(key),
+          onTap: presenter.onNewEditableSelect,
+          backgroundColor: viewmodel.backgroundBoxForm?.backgroundColor,
+          isSelected:
+              viewmodel.currentEditableItemNotifier?.value?.key == field.key,
+        ),
+      );
     });
     return Column(
       children: [
@@ -281,71 +282,15 @@ class EditorUpdateHelperPage extends StatelessWidget {
   ) {
     return SizedBox(
       width: double.infinity,
-      child: EditableTextField.text(
-        helperToolbarKey: ValueKey(
-          'pal_EditorUpdateHelperWidget_ThanksButtonToolbar',
-        ),
-        textFormFieldKey: ValueKey(
-          'pal_EditorUpdateHelperWidget_ThanksButtonField',
-        ),
-        outsideTapStream: presenter.editableTextFieldController.stream,
-        onChanged: presenter.onThanksFieldChanged,
-        onTextStyleChanged: presenter.onThanksTextStyleFieldChanged,
-        hintText: viewModel.thanksButton?.hintText,
-        maximumCharacterLength: 25,
-        onFieldSubmitted: presenter.onThanksFieldSubmitted,
-        toolbarVisibility: viewModel?.thanksButton?.toolbarVisibility,
-        fontFamilyKey: viewModel?.thanksButton?.fontFamily?.value,
-        initialValue: viewModel?.thanksButton?.text?.value,
-        backgroundBoxDecoration: BoxDecoration(
-          color: PalTheme.of(context).colors.dark,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        textStyle: TextStyle(
-          color: viewModel.thanksButton?.fontColor?.value ?? Colors.white,
-          fontSize: viewModel.thanksButton?.fontSize?.value?.toDouble() ?? 22.0,
-          fontWeight: FontWeightMapper.toFontWeight(
-                  viewModel.thanksButton?.fontWeight?.value) ??
-              FontWeight.w400,
-        ).merge(googleCustomFont(viewModel.thanksButton?.fontFamily?.value)),
+      child: EditableButton(
+        data: viewModel.positivButtonForm,
+        onTap: presenter.onNewEditableSelect,
+        backgroundColor: viewModel.backgroundBoxForm?.backgroundColor,
+        isSelected: viewModel.currentEditableItemNotifier?.value?.key ==
+            viewModel.positivButtonForm.key,
       ),
     );
   }
-
-  EditableTextField editableField(
-          Stream<bool> outsideTapStream,
-          TextFormFieldNotifier textNotifier,
-          OnFieldChanged onFieldValueChange,
-          OnTextStyleChanged onTextStyleChanged,
-          {String id,
-          Key helperToolbarKey,
-          Key textFormFieldKey,
-          TextStyle baseStyle,
-          int minimumCharacterLength = 1,
-          int maximumCharacterLength = 255,
-          int maxLines = 5,
-          BoxDecoration backgroundDecoration}) =>
-      EditableTextField.text(
-        id: id,
-        backgroundBoxDecoration: backgroundDecoration,
-        outsideTapStream: outsideTapStream,
-        helperToolbarKey: helperToolbarKey,
-        textFormFieldKey: textFormFieldKey,
-        onChanged: onFieldValueChange,
-        onTextStyleChanged: onTextStyleChanged,
-        maximumCharacterLength: maximumCharacterLength,
-        minimumCharacterLength: minimumCharacterLength,
-        maxLines: maxLines,
-        fontFamilyKey: textNotifier?.fontFamily?.value,
-        initialValue: textNotifier?.text?.value,
-        textStyle: TextStyle(
-          color: textNotifier?.fontColor?.value,
-          decoration: TextDecoration.none,
-          fontSize: textNotifier?.fontSize?.value?.toDouble(),
-          fontWeight:
-              FontWeightMapper.toFontWeight(textNotifier?.fontWeight?.value),
-        ).merge(baseStyle),
-      );
 
   //FIXME CONsider extension
   TextStyle googleCustomFont(String fontFamily) {
@@ -375,21 +320,6 @@ class _EditorUpdateHelperPage
   BuildContext get overlayContext => context;
 
   @override
-  void showColorPickerDialog(
-      Color color, OnColorSelected onColorSelected, OnCancelPicker onCancel) {
-    HapticFeedback.selectionClick();
-    showOverlayedInContext(
-        (context) => ColorPickerDialog(
-            placeholderColor: color,
-            onColorSelected: onColorSelected,
-            onCancel: onCancel),
-        key: OverlayKeys.PAGE_OVERLAY_KEY);
-  }
-
-  @override
-  void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
-
-  @override
   Future<GraphicEntity> pushToMediaGallery(final String mediaId) async {
     final media = await Navigator.pushNamed(
       scaffoldKey.currentContext,
@@ -414,12 +344,15 @@ class _EditorUpdateHelperPage
   @override
   Future showPreviewOfHelper(UpdateHelperViewModel model) async {
     UserUpdateHelperPage page = UserUpdateHelperPage(
-      helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
-      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleField),
-      thanksButtonLabel: HelperSharedFactory.parseTextNotifier(model.thanksButton),
-      changelogLabels: model.changelogsFields.entries
+      helperBoxViewModel:
+          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+      thanksButtonLabel: HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
+      changelogLabels: model.changelogsTextsForm.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),
+      helperImageViewModel:
+          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
       onPositivButtonTap: () => Navigator.pop(context),
       packageVersionReader: this.packageVersionReader,
     );

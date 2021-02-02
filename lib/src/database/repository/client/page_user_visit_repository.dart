@@ -34,7 +34,7 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
   Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion) async {
     final Response response = await this
       .httpClient
-      .get('client/visited-user-groups', headers: {
+      .get('pal-business/client/visited-user-groups', headers: {
         'appVersion': minAppVersion,
         'inAppUserId': userId
       });
@@ -51,9 +51,10 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
     throw UnimplementedError();
   }
 
+  // TODO: change URL
   @override
   Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId}) async  {
-    var url = 'client/group/${visit.helperGroupId}/triggered';
+    var url = 'pal-business/client/group/${visit.helperGroupId}/triggered';
     var body = jsonEncode({'positiveFeedback': feedback});
     await httpClient
       .put(url, body: body, headers: {"inAppUserId": inAppUserId});

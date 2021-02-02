@@ -47,10 +47,12 @@ class FullscreenHelperViewModel extends HelperViewModel {
   }) : super(
     id: id,
     name: name,
-    triggerType: triggerType,
     priority: priority,
-    minVersionCode: minVersionCode,
-    maxVersionCode: maxVersionCode,
+    helperGroup: HelperGroupModel(
+      triggerType: triggerType,
+      minVersionCode: minVersionCode,
+      maxVersionCode: maxVersionCode,
+    ),
     helperTheme: helperTheme,
     helperType: HelperType.HELPER_FULL_SCREEN,
   ) {
@@ -115,10 +117,10 @@ class FullscreenHelperViewModel extends HelperViewModel {
     final fullscreenHelper = FullscreenHelperViewModel(
       id: model.id,
       name: model.name,
-      triggerType: model.triggerType,
       priority: model.priority,
-      maxVersionCode: model.maxVersionCode,
-      minVersionCode: model.minVersionCode,
+      minVersionCode: model.helperGroup?.minVersionCode,
+      maxVersionCode: model.helperGroup?.maxVersionCode,
+      triggerType: model.helperGroup?.triggerType,
       helperTheme: model.helperTheme,
     );
     if (model is FullscreenHelperViewModel) {

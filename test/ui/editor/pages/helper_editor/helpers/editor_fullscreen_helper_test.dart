@@ -342,20 +342,22 @@ void main() {
       HelperViewModel helperViewModel = HelperViewModel(
         id: "testid",
         name: "test",
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
         helperType: HelperType.HELPER_FULL_SCREEN,
         helperTheme: HelperTheme.BLACK,
         priority: 1,
-        minVersionCode: "0.0.0",
-        maxVersionCode: "1.0.1",
+        helperGroup: HelperGroupModel(
+          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+          minVersionCode: "0.0.0",
+          maxVersionCode: "1.0.1",
+        ),
       );
       var helper =
           FullscreenHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(helper.id, helperViewModel.id);
       expect(helper.name, helperViewModel.name);
-      expect(helper.minVersionCode, helperViewModel.minVersionCode);
-      expect(helper.maxVersionCode, helperViewModel.maxVersionCode);
-      expect(helper.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(helper.helperGroup.minVersionCode, helperViewModel.helperGroup.minVersionCode);
+      expect(helper.helperGroup.maxVersionCode, helperViewModel.helperGroup.maxVersionCode);
+      expect(helper.helperGroup.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
       expect(helper.helperTheme, HelperTheme.BLACK);
     });
   });

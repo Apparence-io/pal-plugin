@@ -34,11 +34,11 @@ class CreateHelperConfig {
       id: viewModel?.id,
       route: route,
       name: viewModel.name,
-      triggerType: viewModel?.triggerType,
+      triggerType: viewModel?.helperGroup?.triggerType,
       helperType: viewModel?.helperType,
       priority: viewModel?.priority,
-      minVersion: viewModel?.minVersionCode,
-      maxVersion: viewModel?.maxVersionCode,
+      minVersion: viewModel?.helperGroup?.minVersionCode,
+      maxVersion: viewModel?.helperGroup?.maxVersionCode,
     );
 
   toJson() => {

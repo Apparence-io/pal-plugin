@@ -101,10 +101,12 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
             helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
             name: name,
             priority: priority,
-            minVersionCode: minVersionCode,
-            maxVersionCode: maxVersionCode,
             helperTheme: helperTheme,
-            triggerType: triggerType);
+            helperGroup: HelperGroupModel(
+              triggerType: triggerType,
+              minVersionCode: minVersionCode,
+              maxVersionCode: maxVersionCode,
+            ));
 
   /// the current selected element to show anchor
   MapEntry<String, WidgetElementModel> get selectedAnchor =>
@@ -126,10 +128,10 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       id: model.id,
       name: model.name,
       priority: model.priority,
-      minVersionCode: model.minVersionCode,
-      maxVersionCode: model.maxVersionCode,
       helperTheme: model.helperTheme,
-      triggerType: model.triggerType,
+      minVersionCode: model.helperGroup?.minVersionCode,
+      maxVersionCode: model.helperGroup?.maxVersionCode,
+      triggerType: model.helperGroup?.triggerType,
     );
   }
 

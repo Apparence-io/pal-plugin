@@ -28,6 +28,7 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: ValueKey("helper_position_page"),
       appBar: AppBar(title: Text("Position inside your group")),
       body: FutureBuilder(
         future: widget.helpersLoader,
@@ -38,38 +39,43 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
           if(snapshot.hasData) {
             reorderableList = snapshot.data;
           }
-          return Container(
-            child: Column(
-              children: [
-                Expanded(
-                  child: ReorderableListView(
-                    children: reorderableList.map((element) => _buildItem(element)).toList(),
-                    onReorder: (oldIndex, newIndex) {
-                      setState(() {
-                        if (oldIndex < newIndex) {
-                          newIndex -= 1;
-                        }
-                        var element = reorderableList.removeAt(oldIndex);
-                        reorderableList.insert(newIndex, element);
-                      });
-                    },
-                  )
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 8.0,
-                    bottom: 8.0,
-                    left: 16.0,
-                    right: 16.0,
-                  ),
-                  child: Container(
-                    width: double.infinity,
-                    child: _buildValidateButton(context),
-                  ),
-                ),
-              ],
-            ),
+          return Stack(
+            children: [
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: LayoutBuilder(builder: (context, constraints) => _buildReorderebleList(constraints)),
+              ),
+              Positioned(
+                bottom: 8.0,
+                left: 16.0,
+                right: 16.0,
+                child: _buildValidateButton(context)
+              )
+            ],
           );
+        },
+      ),
+    );
+  }
+
+  Widget _buildReorderebleList(BoxConstraints constraints) {
+    return SizedBox(
+      key: ValueKey("container_listreorder"),
+      height: constraints.maxHeight == double.infinity ? 500 : constraints.maxHeight,
+      child: ReorderableListView(
+        children: reorderableList
+          .map((element) => _buildItem(element)).toList(),
+        onReorder: (oldIndex, newIndex) {
+          setState(() {
+            if (oldIndex < newIndex) {
+              newIndex -= 1;
+            }
+            var element = reorderableList.removeAt(oldIndex);
+            reorderableList.insert(newIndex, element);
+          });
         },
       ),
     );
@@ -77,11 +83,10 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
 
   Widget _buildItem(GroupHelperViewModel element) {
     return Column(
+      key: ValueKey(element != null ? element?.id : "NEW"),
       mainAxisSize: MainAxisSize.min,
-      key: ValueKey(element.id),
       children: [
-        ListTile(
-          title: Text(element.title)),
+        ListTile(title: Text(element.title)),
         Divider()
       ],
     );

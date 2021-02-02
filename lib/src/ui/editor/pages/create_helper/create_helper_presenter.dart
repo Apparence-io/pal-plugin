@@ -29,7 +29,8 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   @override
   Future onInit() async {
     this.viewModel.step = ValueNotifier<int>(0);
-    this.viewModel.isFormValid = false;
+    this.viewModel.isFormValid = ValueNotifier<bool>(false);
+    this.viewModel.helperGroupCreationState = false;
     this.viewModel.stepsTitle = [
       'Setup your group',
       'Setup your helper',
@@ -47,32 +48,32 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   ////////////////////////////////////////////////////////////////
 
   Future<List<HelperGroupViewModel>> loadHelperGroup() async {
-    if(viewModel.helperGroups != null) {
-      return viewModel.helperGroups;
-    }
-    var res = [
-      HelperGroupViewModel(groupId: "test1", title: "Introduction mock"),
-      HelperGroupViewModel(groupId: "test2", title: "Second group mock"),
-    ];
-    viewModel.helperGroups = res;
-    return Future.value(viewModel.helperGroups);
-    // var currentPageRoute = await this.routeObserver.routeSettings.first;
-    // return projectEditorService.getPageGroups(currentPageRoute.name)
-    //   .catchError((error) => print("error $error"))
-    //   .then((groupsEntity) {
-    //     List<HelperGroupViewModel> res = [];
-    //     groupsEntity.forEach((element) => res.add(
-    //       HelperGroupViewModel(groupId: element.id, title: element.helpers?.first?.name))
-    //     );
-    //     viewModel.helperGroups = res;
-    //     return viewModel.helperGroups;
-    //   });
+    // if(viewModel.helperGroups != null) {
+    //   return viewModel.helperGroups;
+    // }
+    // var res = [
+    //   HelperGroupViewModel(groupId: "test1", title: "Introduction mock"),
+    //   HelperGroupViewModel(groupId: "test2", title: "Second group mock"),
+    // ];
+    // viewModel.helperGroups = res;
+    // return Future.value(viewModel.helperGroups);
+
+    var currentPageRoute = await this.routeObserver.routeSettings.first;
+    return projectEditorService.getPageGroups(currentPageRoute.name)
+      .catchError((error) => print("error $error"))
+      .then((groupsEntity) {
+        List<HelperGroupViewModel> res = [];
+        groupsEntity.forEach((element) => res.add(
+          HelperGroupViewModel(groupId: element.id, title: element.helpers?.first?.name))
+        );
+        viewModel.helperGroups = res;
+        return viewModel.helperGroups;
+      });
   }
 
   void onTapHelperGroupSelection(HelperGroupViewModel select) {
     viewModel.selectHelperGroup(select);
     checkValidStep();
-    refreshView();
   }
 
   void onTapAddNewGroup() {
@@ -96,11 +97,49 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   void onChangedHelperGroupName(String value) {
     this.viewModel.selectedHelperGroup.title = value;
     checkValidStep();
-    refreshView();
   }
 
   void selectHelperGroupTrigger(HelperTriggerTypeDisplay triggerType) {
     this.viewModel.selectedTriggerType = triggerType;
+  }
+
+  String checkValidVersion(String value) {
+    final String pattern = r'^\d+(\.\d+){0,2}$';
+    final RegExp regExp = new RegExp(pattern);
+    if (value == null || value.isEmpty) {
+      return 'Please enter a version';
+    } else {
+      if (!regExp.hasMatch(value))
+        return 'Please enter a valid version';
+      else
+        return null;
+    }
+  }
+
+  String checkMaxValidVersion(String value) {
+    final String pattern = r'^\d+(\.\d+){0,2}$';
+    final RegExp regExp = new RegExp(pattern);
+    if (value == null || value.isEmpty) {
+      return null;
+    } else {
+      if (!regExp.hasMatch(value))
+        return 'Please enter a valid version';
+      else
+        return null;
+    }
+  }
+
+  void groupCreationFormChanged(bool state)
+    => viewModel.helperGroupCreationState = state;
+
+  void setMinAppVersion(String value) {
+    viewModel.minVersion = value;
+    checkValidStep();
+  }
+
+  void setMaxAppVersion(String value) {
+    viewModel.maxVersion = value;
+    checkValidStep();
   }
 
   ////////////////////////////////////////////////////////////////
@@ -109,15 +148,27 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
 
   Future<List<GroupHelperViewModel>> loadGroupHelpers() async {
     // MOCK
-    var res = [
-      GroupHelperViewModel(id: "3802832", title: "helper 1"),
-      GroupHelperViewModel(id: "3802833", title: "helper 2"),
-      GroupHelperViewModel(id: "3802834", title: "helper 3"),
-      GroupHelperViewModel(id: "3802835", title: "helper 4"),
-      GroupHelperViewModel(id: "3802836", title: "helper 5"),
-    ];
+    // var res = [
+    //   GroupHelperViewModel(id: "3802832", title: "my helper 1"),
+    //   GroupHelperViewModel(id: "3802833", title: "my helper 2"),
+    //   GroupHelperViewModel(id: "3802834", title: "my helper 3"),
+    //   GroupHelperViewModel(id: "3802835", title: "my helper 4"),
+    //   GroupHelperViewModel(id: "3802836", title: "my helper 5"),
+    // ];
+    // return res;
+
+    if(viewModel.selectedHelperGroup == null || viewModel.selectedHelperGroup.groupId == null) {
+      return [];
+    }
     // put our new helper in the list and highlight it
-    return res;
+    try {
+      var helpers = await projectEditorService.getGroupHelpers(viewModel.selectedHelperGroup.groupId);
+      return helpers.map((e) => GroupHelperViewModel(id: e.id, title: e.name))
+        .toList()
+        ..add(GroupHelperViewModel(id: "NEW_HELPER", title: viewModel?.helperNameController?.text ?? "My new helper"));
+    } catch(e) {
+      return Future.error("error while parsing helpers");
+    }
   }
 
   void onGroupReorder(List<GroupHelperViewModel> reorderedList) {
@@ -134,10 +185,7 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
 
   setupInfosStep() async {
     this.viewModel.infosForm = GlobalKey<FormState>();
-
     this.viewModel.helperNameController = TextEditingController();
-    this.viewModel.minVersionController = TextEditingController();
-
     this.viewModel.isAppVersionLoading = false;
 
     // Trigger type dropdown
@@ -160,7 +208,7 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
     this.refreshView();
     await this.packageVersionReader.init();
     this.viewModel.appVersion = this.packageVersionReader.version;
-    this.viewModel.minVersionController.text = this.viewModel.appVersion;
+    this.viewModel.minVersion = this.packageVersionReader.version;
     this.viewModel.isAppVersionLoading = false;
     this.refreshView();
   }
@@ -205,23 +253,27 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   void checkValidStep() {
     switch (this.viewModel.step.value) {
       case 0:
-        this.viewModel.isFormValid = this.viewModel.selectedHelperGroup != null
-          && this.viewModel.selectedHelperGroup.title.isNotEmpty;
+        this.viewModel.isFormValid.value = this.viewModel.selectedHelperGroup != null
+          && this.viewModel.selectedHelperGroup.title.isNotEmpty
+          && (this.viewModel.selectedHelperGroup.groupId != null
+            || (checkValidVersion(viewModel.minVersion) == null
+              && checkMaxValidVersion(viewModel.maxVersion) == null)
+          );
         break;
       case 1:
-        this.viewModel.isFormValid = viewModel.infosForm != null && this.viewModel.infosForm.currentState != null
+        this.viewModel.isFormValid.value = viewModel.infosForm != null
+          && this.viewModel.infosForm.currentState != null
             ? this.viewModel.infosForm.currentState.validate()
             : false;
         break;
       case 2:
-        this.viewModel.isFormValid = this.viewModel.selectedHelperType != null;
+        this.viewModel.isFormValid.value = this.viewModel.selectedHelperType != null;
         break;
       case 3:
-        this.viewModel.isFormValid = this.viewModel.selectedHelperTheme != null;
+        this.viewModel.isFormValid.value = this.viewModel.selectedHelperTheme != null;
         break;
       default:
     }
   }
-
 
 }

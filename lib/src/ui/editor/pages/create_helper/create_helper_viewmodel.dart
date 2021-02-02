@@ -9,7 +9,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 
 class CreateHelperModel extends MVVMModel {
 
-  bool isFormValid;
+  ValueNotifier<bool> isFormValid = ValueNotifier(false);
   List<String> stepsTitle;
   ValueNotifier<int> step;
 
@@ -18,13 +18,13 @@ class CreateHelperModel extends MVVMModel {
   HelperGroupViewModel selectedHelperGroup;
   List<HelperTriggerTypeDisplay> triggerTypes;
   HelperTriggerTypeDisplay selectedTriggerType;
+  String appVersion, minVersion, maxVersion;
+  bool helperGroupCreationState;
 
   // Step 1
   GlobalKey<FormState> infosForm;
-  String appVersion;
   bool isAppVersionLoading;
   TextEditingController helperNameController;
-  TextEditingController minVersionController;
   List<GroupHelperViewModel> currentGroupHelpersList;
 
   // Step 2
@@ -33,9 +33,9 @@ class CreateHelperModel extends MVVMModel {
   // Step 3
   HelperTheme selectedHelperTheme;
 
+
   CreateHelperModel({
     this.selectedTriggerType,
-    this.minVersionController,
     this.infosForm,
     this.appVersion,
     this.isAppVersionLoading,
@@ -51,12 +51,15 @@ class CreateHelperModel extends MVVMModel {
   HelperViewModel asHelperViewModel() => HelperViewModel(
     helperType: selectedHelperType,
     helperTheme: selectedHelperTheme,
-    triggerType: selectedTriggerType.key,
     name: helperNameController?.value?.text,
-    minVersionCode: minVersionController?.value?.text,
-    maxVersionCode: null,
-    helperGroupId: selectedHelperGroup.groupId,
-    helperGroupName: selectedHelperGroup.title
+    // priority: ,
+    helperGroup: HelperGroupModel(
+      id: selectedHelperGroup?.groupId,
+      name: selectedHelperGroup?.title,
+      triggerType: selectedTriggerType.key,
+      minVersionCode: selectedHelperGroup?.groupId != null ? minVersion : null,
+      maxVersionCode: selectedHelperGroup?.groupId != null ? maxVersion : null,
+    )
   );
 
   selectHelperGroup(HelperGroupViewModel select) {
@@ -88,6 +91,11 @@ class HelperGroupViewModel extends ChangeNotifier implements ValueListenable<Hel
   HelperGroupViewModel get value => this;
 
   void refresh() => notifyListeners();
+
+  HelperGroupViewModel copy() => HelperGroupViewModel(
+    groupId: this.groupId,
+    title: this.title
+  );
 }
 
 class HelperSelectionViewModel {

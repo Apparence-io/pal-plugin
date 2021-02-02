@@ -38,21 +38,22 @@ class UpdateHelperViewModel extends HelperViewModel {
     HelperTextViewModel titleLabel,
     HelperTextViewModel positivButtonLabel,
   }) : super(
-          id: id,
-          name: name,
-          triggerType: triggerType,
-          priority: priority,
-          minVersionCode: minVersionCode,
-          maxVersionCode: maxVersionCode,
-          helperType: HelperType.UPDATE_HELPER,
-          helperTheme: helperTheme,
-        ) {
-    // this.language = LanguageNotifier(
-    //   id: languageId ?? 1,
-    // );
-    this.backgroundBoxForm = EditableBoxFormData(
-      helperBoxViewModel?.id,
-      UpdatescreenHelperKeys.BACKGROUND_KEY,
+    id: id,
+    name: name,
+    priority: priority,
+    helperGroup: HelperGroupModel(
+      triggerType: triggerType,
+      minVersionCode: minVersionCode,
+      maxVersionCode: maxVersionCode,
+    ),
+    helperType: HelperType.UPDATE_HELPER,
+    helperTheme: helperTheme,
+  ) {
+    this.language = LanguageNotifier(
+      id: languageId ?? 1,
+    );
+    this.bodyBox = BoxNotifier(
+      id: helperBoxViewModel?.id,
       backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.blueAccent,
     );
     this.changelogsTextsForm = changelogsLabels ?? {};
@@ -89,11 +90,11 @@ class UpdateHelperViewModel extends HelperViewModel {
     final updateHelper = UpdateHelperViewModel(
       id: model.id,
       name: model.name,
-      triggerType: model.triggerType,
       priority: model.priority,
-      minVersionCode: model.minVersionCode,
-      maxVersionCode: model.maxVersionCode,
       helperTheme: model.helperTheme,
+      triggerType: model?.helperGroup?.triggerType,
+      minVersionCode: model?.helperGroup?.minVersionCode,
+      maxVersionCode: model?.helperGroup?.maxVersionCode,
     );
 
     if (model is UpdateHelperViewModel) {

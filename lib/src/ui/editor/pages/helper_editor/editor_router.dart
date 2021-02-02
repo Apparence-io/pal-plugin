@@ -30,7 +30,7 @@ class EditorRouter {
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
       currentPageRoute,
-      helperMinVersion: model.minVersionController?.value?.text,
+      helperMinVersion: model.minVersion,
     );
     WidgetBuilder builder;
     switch (model.selectedHelperType) {

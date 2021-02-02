@@ -36,8 +36,6 @@ abstract class CreateHelperView {
 
   void popStep();
 
-  void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter);
-
   void showNewHelperGroupForm();
 
   void showGroupHelpersPositions(Future<List<GroupHelperViewModel>> loadGroupHelpers, OnValidate onValidate);
@@ -130,6 +128,13 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
                     onTriggerValueSelected: presenter.selectHelperGroupTrigger,
                     onChangedNameText: presenter.onChangedHelperGroupName,
                     triggerTypeValidator: null,
+                    minVersionChanged: presenter.setMinAppVersion,
+                    maxVersionChanged: presenter.setMaxAppVersion,
+                    minVersionInitialValue: model.minVersion,
+                    maxVersionInitialValue: model.maxVersion,
+                    onFormChanged: presenter.groupCreationFormChanged,
+                    minVersionValidator: presenter.checkValidVersion,
+                    maxVersionValidator: presenter.checkMaxValidVersion,
                   ),
                   'create/helper_group': (context) => SelectHelperGroupPage(
                       helperGroupLoader: presenter.loadHelperGroup,
@@ -197,19 +202,22 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     final CreateHelperModel model,
     final CreateHelperPresenter presenter,
   ) {
-    return RaisedButton(
-      key: ValueKey('palCreateHelperNextButton'),
-      disabledColor: PalTheme.of(context).colors.color4,
-      child: Text(
-        'Next',
-        style: TextStyle(
-          color: Colors.white,
+    return ValueListenableBuilder<bool>(
+      valueListenable: model.isFormValid,
+      builder: (context, value, child) => RaisedButton(
+        key: ValueKey('palCreateHelperNextButton'),
+        disabledColor: PalTheme.of(context).colors.color4,
+        child: Text(
+          'Next',
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
-      ),
-      color: PalTheme.of(context).colors.color1,
-      onPressed: (model.isFormValid) ? presenter.incrementStep : null,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        color: PalTheme.of(context).colors.color1,
+        onPressed: (value) ? presenter.incrementStep : null,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
       ),
     );
   }
@@ -236,26 +244,8 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     => Navigator.of(_nestedNavigationKey.currentContext).pushNamed('create/new_helper_group');
 
   @override
-  void popStep() {
-    Navigator.of(_nestedNavigationKey.currentContext).pop();
-  }
-
-  @override
-  void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter) {
-    switch (model.step.value) {
-      case 0:
-        model.isFormValid = model.infosForm.currentState.validate();
-        break;
-      case 1:
-        model.isFormValid = model.selectedHelperType != null;
-        break;
-      case 2:
-        model.isFormValid = model.selectedHelperType != null;
-        break;
-      default:
-    }
-    presenter.refreshView();
-  }
+  void popStep()
+    => Navigator.of(_nestedNavigationKey.currentContext).pop();
 
   @override
   void showGroupHelpersPositions(Future<List<GroupHelperViewModel>> loadGroupHelpers, OnValidate onValidate) {

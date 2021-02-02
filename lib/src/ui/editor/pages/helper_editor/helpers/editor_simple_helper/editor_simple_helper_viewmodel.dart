@@ -35,10 +35,12 @@ class SimpleHelperViewModel extends HelperViewModel {
   }) : super(
     id: id,
     name: name,
-    triggerType: triggerType,
     priority: priority,
-    minVersionCode: minVersionCode,
-    maxVersionCode: maxVersionCode,
+    helperGroup: HelperGroupModel(
+      triggerType: triggerType,
+      minVersionCode: minVersionCode,
+      maxVersionCode: maxVersionCode,
+    ),
     helperType: HelperType.SIMPLE_HELPER,
     helperTheme: helperTheme,
   ) {
@@ -64,11 +66,11 @@ class SimpleHelperViewModel extends HelperViewModel {
     final simpleHelper = SimpleHelperViewModel(
       id: model?.id,
       name: model.name,
-      triggerType: model.triggerType,
       priority: model.priority,
-      minVersionCode: model.minVersionCode,
-      maxVersionCode: model.maxVersionCode,
       helperTheme: model.helperTheme,
+      triggerType: model.helperGroup?.triggerType,
+      minVersionCode: model.helperGroup?.minVersionCode,
+      maxVersionCode: model.helperGroup?.maxVersionCode,
     );
 
     if (model is SimpleHelperViewModel) {

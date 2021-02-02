@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+
+typedef OnValueChanged = void Function(String);
+
 class BorderedTextField extends StatelessWidget {
-  final String hintText;
+  final String hintText, initialValue;
   final String Function(String) validator;
-  final Function(String) onValueChanged;
+  final OnValueChanged onValueChanged;
   final TextEditingController controller;
   final TextInputType textInputType;
   final List<TextInputFormatter> inputFormatters;
@@ -23,6 +26,7 @@ class BorderedTextField extends StatelessWidget {
     this.enableSuggestions = false,
     this.autovalidate = false,
     this.onValueChanged,
+    this.initialValue,
     this.isLoading = true,
     this.textCapitalization = TextCapitalization.none,
   }) : super(key: key);
@@ -36,6 +40,7 @@ class BorderedTextField extends StatelessWidget {
               ? AutovalidateMode.onUserInteraction
               : AutovalidateMode.disabled,
           controller: controller,
+          initialValue: initialValue,
           enableSuggestions: enableSuggestions,
           keyboardType: textInputType,
           textCapitalization: textCapitalization,
@@ -52,7 +57,7 @@ class BorderedTextField extends StatelessWidget {
             }
           },
         ),
-        if (isLoading && hintText == null && (controller.text == null || controller.text.length <= 0))
+        if (isLoading && hintText == null)
           Positioned(
             top: 25.0,
             left: 15,

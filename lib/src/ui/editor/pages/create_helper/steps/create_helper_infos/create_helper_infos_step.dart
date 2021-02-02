@@ -45,7 +45,7 @@ class CreateHelperInfosStep extends StatelessWidget {
 
   void _checkFormValid() {
     if (!model.isAppVersionLoading) {
-      model.isFormValid = model.infosForm.currentState.validate();
+      model.isFormValid?.value = model.infosForm.currentState.validate();
       presenter.refreshView();
     }
   }
@@ -68,16 +68,6 @@ class CreateHelperInfosStep extends StatelessWidget {
               textCapitalization: TextCapitalization.sentences,
             ),
           ),
-          LabeledForm(
-            label: 'Minimum app version',
-            widget: BorderedTextField(
-              key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
-              textInputType: TextInputType.numberWithOptions(decimal: true),
-              controller: model.minVersionController,
-              validator: _checkValidVersion,
-              isLoading: model.isAppVersionLoading,
-            ),
-          ),
           Padding(
             padding: EdgeInsets.only(top: 16),
             child: _buildPositionButton(context),
@@ -95,19 +85,6 @@ class CreateHelperInfosStep extends StatelessWidget {
       return 'Maximum 45 character allowed';
     }
     return null;
-  }
-
-  String _checkValidVersion(String value) {
-    final String pattern = r'^\d+(\.\d+){0,2}$';
-    final RegExp regExp = new RegExp(pattern);
-    if (value.isEmpty) {
-      return 'Please enter a version';
-    } else {
-      if (!regExp.hasMatch(value))
-        return 'Please enter a valid version';
-      else
-        return null;
-    }
   }
 
   _buildPositionButton(BuildContext context) {

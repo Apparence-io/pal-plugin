@@ -73,12 +73,14 @@ Future pumpHelperWidget(
   );
   var templateViewModel = HelperViewModel(
     name: "helper name",
-    triggerType: triggerType,
     helperType: type,
     helperTheme: theme,
     priority: 1,
-    maxVersionCode: "1.0.0",
-    minVersionCode: "1.0.0",
+    helperGroup: HelperGroupModel(
+      triggerType: triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
+      minVersionCode: "0.0.0",
+      maxVersionCode: "1.0.1",
+    ),
   );
   // CREATE AN EDITOR FACTORY
   // var _elementFinder = ElementFinder(navigatorKey.currentContext);

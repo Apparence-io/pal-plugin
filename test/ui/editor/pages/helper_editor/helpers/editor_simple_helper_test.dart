@@ -64,6 +64,7 @@ void main() {
           case '/editor/preview':
             EditorPreviewArguments args = settings.arguments;
             return MaterialPageRoute(
+              maintainState: true,
               builder: (context) => EditorPreviewPage(
                 previewHelper: args.previewHelper,
               ),
@@ -184,31 +185,31 @@ void main() {
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
-      previewButton.onTap();
-      await tester.pump(Duration(milliseconds: 1300));
-      await tester.pump(Duration(milliseconds: 1100));
-      await tester.pump(Duration(milliseconds: 500));
+      await tester.runAsync(() async {
+        previewButton.onTap();
+        await tester.pump(Duration(milliseconds: 1100));
+        await tester.pump(Duration(milliseconds: 500));
+        await tester.pump(Duration(milliseconds: 500));
 
-      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
+        expect(
+            find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
+        Finder contentFinder = find.byKey(ValueKey('SimpleHelperContentText'));
+        expect(contentFinder, findsOneWidget);
+        expect((tester.widget(contentFinder) as Text).data,
+            equals('test title edited'));
+        final toastFinder = find.byType(Dismissible);
+        expect(toastFinder, findsOneWidget);
 
-      Finder contentFinder = find.byKey(ValueKey('SimpleHelperContentText'));
-      expect(contentFinder, findsOneWidget);
-      expect((tester.widget(contentFinder) as Text).data,
-          equals('test title edited'));
+        Dismissible dis = tester.widget(toastFinder);
+        dis.onDismissed(DismissDirection.endToStart);
+        await tester.pump(Duration(milliseconds: 1100));
+        await tester.pump(Duration(milliseconds: 500));
+        await tester.pump(Duration(milliseconds: 500));
 
-      final toastFinder = find.byType(Dismissible);
-      expect(toastFinder, findsOneWidget);
-
-      Dismissible dis = tester.widget(toastFinder);
-      dis.onDismissed(DismissDirection.endToStart);
-
-      await tester.pump(Duration(milliseconds: 500));
-      await tester.pump(Duration(milliseconds: 1100));
-      await tester.pump(Duration(milliseconds: 1300));
-
-      expect(find.byKey(ValueKey('editableActionBarPreviewButton')),
-          findsOneWidget);
-      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
+        expect(find.byKey(ValueKey('editableActionBarPreviewButton')),
+            findsOneWidget);
+        expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
+      });
     });
 
     testWidgets(
@@ -226,33 +227,36 @@ void main() {
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
-      previewButton.onTap();
+      await tester.runAsync(() async {
+        previewButton.onTap();
 
-      await tester.pump(Duration(milliseconds: 1300));
-      await tester.pump(Duration(milliseconds: 1100));
-      await tester.pump(Duration(milliseconds: 500));
+        await tester.pump(Duration(milliseconds: 1300));
+        await tester.pump(Duration(milliseconds: 1100));
+        await tester.pump(Duration(milliseconds: 500));
 
-      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
+        expect(
+            find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
-      Finder contentFinder = find.byKey(ValueKey('SimpleHelperContentText'));
-      expect(contentFinder, findsOneWidget);
-      expect((tester.widget(contentFinder) as Text).data,
-          equals('test title edited'));
+        Finder contentFinder = find.byKey(ValueKey('SimpleHelperContentText'));
+        expect(contentFinder, findsOneWidget);
+        expect((tester.widget(contentFinder) as Text).data,
+            equals('test title edited'));
 
-      final toastFinder = find.byType(Dismissible);
-      expect(toastFinder, findsOneWidget);
+        final toastFinder = find.byType(Dismissible);
+        expect(toastFinder, findsOneWidget);
 
-      Dismissible dis = tester.widget(toastFinder);
-      dis.onDismissed(DismissDirection.startToEnd);
+        Dismissible dis = tester.widget(toastFinder);
+        dis.onDismissed(DismissDirection.startToEnd);
 
-      await tester.pump(Duration(milliseconds: 500));
-      await tester.pump(Duration(milliseconds: 1100));
-      await tester.pump(Duration(milliseconds: 1300));
+        await tester.pump(Duration(milliseconds: 500));
+        await tester.pump(Duration(milliseconds: 1100));
+        await tester.pump(Duration(milliseconds: 1300));
 
-      expect(find.byKey(ValueKey('editableActionBarPreviewButton')),
-          findsOneWidget);
+        expect(find.byKey(ValueKey('editableActionBarPreviewButton')),
+            findsOneWidget);
 
-      expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
+        expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
+      });
     });
 
     testWidgets(
@@ -268,7 +272,9 @@ void main() {
       expect(validateButton.onTapCallback, isNotNull);
 
       validateButton.onTapCallback();
-      await tester.pumpAndSettle(Duration(milliseconds: 2000));
+      await tester.pump(Duration(seconds: 1));
+      await tester.pump(Duration(seconds: 2));
+      await tester.pump(Duration(milliseconds: 100));
       // await tester.pump(Duration(seconds: 1));
       verify(helperEditorServiceMock.saveSimpleHelper(any)).called(1);
       await tester.pumpAndSettle(Duration(milliseconds: 2000));

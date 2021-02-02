@@ -45,7 +45,7 @@ class EditorToolboxPresenter {
     // BOTTOM ANIMATION
     this.viewModel.isBottomVisible.addListener(animateActionBar);
 
-    this.currentEditableItemNotifier.addListener(() {
+    if(this.currentEditableItemNotifier != null)this.currentEditableItemNotifier.addListener(() {
       this.displayEditableItemActions();
     });
 

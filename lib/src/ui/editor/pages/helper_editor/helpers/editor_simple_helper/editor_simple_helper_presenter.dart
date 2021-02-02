@@ -52,7 +52,7 @@ class EditorSimpleHelperPresenter
     this
         .viewModel
         .currentSelectedEditableNotifier
-        .removeListener(removeSelectedEditableItems);
+        ?.removeListener(removeSelectedEditableItems);
     this.viewModel.currentSelectedEditableNotifier?.dispose();
   }
 

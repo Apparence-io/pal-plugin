@@ -61,7 +61,7 @@ class EditorToolboxPage extends StatefulWidget {
     this.onPreview,
     this.onCloseEditor,
     this.boxViewHandler,
-    this.isToolsVisible,
+    this.isToolsVisible = true,
   });
 
   @override

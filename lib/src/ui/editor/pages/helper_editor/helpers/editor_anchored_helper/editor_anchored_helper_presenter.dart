@@ -67,7 +67,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   @override
   void afterViewInit() async {
     await scanElements();
-    if (viewModel.backgroundBox.key != null) {
+    if (viewModel.backgroundBox.id != null) {
       await this.onTapElement(viewModel.backgroundBox.key);
       await validateSelection();
     } else {

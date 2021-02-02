@@ -135,11 +135,15 @@ void main() {
       String thirdField,
       String fourthField,
     ) async {
-      // INIT TEXTFIELDS
-      presenter.viewModel.titleField.text = firstField;
-      presenter.viewModel.descriptionField.text = secondField;
-      presenter.viewModel.negativBtnField.text = thirdField;
-      presenter.viewModel.positivBtnField.text = fourthField;
+      // // INIT TEXTFIELDS
+      await enterTextInTextForm(tester, 0, firstField);
+      await enterTextInTextForm(tester, 1, secondField);
+      await enterTextInTextForm(tester, 0, thirdField, button: true);
+      await enterTextInTextForm(tester, 1, fourthField, button: true);
+      // presenter.viewModel.titleField.text = firstField;
+      // presenter.viewModel.descriptionField.text = secondField;
+      // presenter.viewModel.negativBtnField.text = thirdField;
+      // presenter.viewModel.positivBtnField.text = fourthField;
       await tester.pump();
       // INIT TEXTFIELDS
     }
@@ -188,7 +192,7 @@ void main() {
       final String fourthField = 'positiv edit';
       await _passSecondStep(
           tester, firstField, secondField, thirdField, fourthField);
-      
+
 
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
@@ -196,8 +200,9 @@ void main() {
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
       previewButton.onTap();
       // await tester.pumpAndSettle();
-      await tester.pump();
-      await tester.pump();
+      await tester.pump(Duration(seconds: 1));
+      await tester.pump(Duration(seconds: 2));
+
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
@@ -224,8 +229,12 @@ void main() {
       Text positivText = tester.widget(positivFinder);
       expect(positivText.data, equals('positiv edit'));
 
+      expect(find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage")), findsOneWidget);
+
       (tester.widget(find.byKey(ValueKey("positiveFeedback"))) as RaisedButton)
           .onPressed();
+
+      await tester.pump(Duration(milliseconds: 1000));
       await tester.pump(Duration(milliseconds: 2000));
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
@@ -250,8 +259,8 @@ void main() {
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
       previewButton.onTap();
       // await tester.pumpAndSettle();
-      await tester.pump();
-      await tester.pump();
+      await tester.pump(Duration(seconds: 1));
+      await tester.pump(Duration(seconds: 2));
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
@@ -278,10 +287,10 @@ void main() {
       Text positivText = tester.widget(positivFinder);
       expect(positivText.data, equals('positiv edit'));
 
-      (tester.widget(find.byKey(ValueKey("negativeFeedback"))) as OutlineButton)
+      (tester.widget(find.byKey(ValueKey("negativeFeedback"))) as RaisedButton)
           .onPressed();
-      await tester.pump();
-      await tester.pump();
+      await tester.pump(Duration(milliseconds: 1000));
+      await tester.pump(Duration(milliseconds: 2000));
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
@@ -359,7 +368,7 @@ void main() {
       await beforeEach(tester);
       await closeFirstStepTutorial(tester);
       // action bar is not visible
-      expect(_getActionBar().animation.value, equals(1));
+      expect(find.byType(EditorActionBar),findsNothing);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -370,8 +379,10 @@ void main() {
       await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
       await tester.pump(Duration(milliseconds: 100));
 
+      await _passSecondStep(tester, "My helper title", "Describe your element here", "Ok, thanks!", "This is not helping");
       expect(find.byKey(ValueKey("elementContainer")), findsNothing);
-      expect(_getActionBar().animation.value, equals(0));
+      expect(find.byType(EditorActionBar),findsOneWidget);
+      // expect(_getActionBar().animation.value, equals(0));
       expect(find.byKey(ValueKey("validateSelectionBtn")), findsNothing);
       expect(presenter.viewModel.backgroundBox.backgroundColor.opacity, 1);
       expect(find.text("My helper title"), findsOneWidget);
@@ -424,7 +435,8 @@ void main() {
       // await enterTextInTextForm(tester, 1, 'test description edited');
       // await enterTextInTextForm(tester, 2, 'negativ edit');
       // await enterTextInTextForm(tester, 3, 'positiv edit');
-      _passSecondStep(tester, 'test title edited', 'test description edited', 'negativ edit', 'positiv edit');
+      await _passSecondStep(tester, 'test title edited', 'test description edited',
+          'negativ edit', 'positiv edit');
 
       await tester.pump();
       expect(presenter.viewModel.titleField.text, equals('test title edited'));
@@ -432,26 +444,6 @@ void main() {
           equals('test description edited'));
       expect(presenter.viewModel.negativBtnField.text, equals('negativ edit'));
       expect(presenter.viewModel.positivBtnField.text, equals('positiv edit'));
-    });
-
-    testWidgets(
-        "step 2 => title, description positiv button, negative button can change color",
-        (WidgetTester tester) async {
-      // init pal + go to editor
-      await tester.setIphone11Max();
-      await beforeEach(tester);
-      await closeFirstStepTutorial(tester);
-      // tap on first element
-      var elementsFinder = find.byKey(ValueKey("elementContainer"));
-      var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
-      element1.onTap();
-      await tester.pump();
-      await tester.pump();
-      // validate this anchor
-      await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
-      await tester.pump(Duration(milliseconds: 100));
-      var editableTextsFinder = find.byType(TextField);
-      //TODO
     });
 
     testWidgets(
@@ -470,10 +462,10 @@ void main() {
       // validate this anchor
       await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
       await tester.pump(Duration(milliseconds: 100));
-      expect(presenter.viewModel.backgroundBox.backgroundColor.value,
+      expect(presenter.viewModel.backgroundBox.backgroundColor,
           isNot(Color(0xFFFFFFFF)));
       // open color picker
-      var colorPickerButton = find.byKey(ValueKey('bgColorPicker'));
+      var colorPickerButton = find.byKey(ValueKey('EditorToolBar_GlobalAction_BackgroundColor'));
       await tester.tap(colorPickerButton);
       await tester.pump();
       expect(find.byType(ColorPickerDialog), findsOneWidget);
@@ -489,7 +481,7 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
 
       expect(_getAnchorFullscreenPainter().bgColor, Color(0xFFFFFFFF));
-      expect(presenter.viewModel.backgroundBox.backgroundColor.value,
+      expect(presenter.viewModel.backgroundBox.backgroundColor,
           Color(0xFFFFFFFF));
     });
 
@@ -515,7 +507,7 @@ void main() {
       // await enterTextInTextForm(tester, 1, 'test description');
       // await enterTextInTextForm(tester, 2, 'Not');
       // await enterTextInTextForm(tester, 3, 'Ok');
-      _passSecondStep(tester, 'Today tip', 'test description', 'Not', 'Ok');
+      await _passSecondStep(tester, 'Today tip', 'test description', 'Not', 'Ok');
       await tester.pump();
       // save anchor
       var validateFinder =
@@ -753,7 +745,7 @@ void main() {
       // expect to find only our helper type editor
       expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
       // action bar is visible only on step 2
-      expect(_getActionBar().animation.value, equals(0));
+      expect(find.byType(EditorActionBar), findsOneWidget);
       expect(find.byType(EditorTutorialOverlay), findsNothing);
     });
 
@@ -766,7 +758,7 @@ void main() {
       // expect to find only our helper type editor
       expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
       // action bar is visible only on step 2
-      expect(_getActionBar().animation.value, equals(1));
+      expect(find.byType(EditorActionBar), findsNothing);
     });
 
     testWidgets(
@@ -776,16 +768,16 @@ void main() {
       await tester.pump();
       await tester.pump();
       helperEntity.helperTexts.forEach((element) {
-        var textWidget =
-            find.text(element.value).evaluate().first.widget as EditableText;
+        dynamic textWidget =
+            find.text(element.value).evaluate().first.widget;
         expect(textWidget, isNotNull);
-        expect(textWidget.style.color.toHex(), element.fontColor);
+        expect((textWidget.style.color as Color).toHex(), element.fontColor);
         expect(textWidget.style.fontWeight,
             FontWeightMapper.toFontWeight(element.fontWeight));
         expect(textWidget.style.fontFamily, contains(element.fontFamily));
         expect(textWidget.style.fontSize, element.fontSize);
       });
-      expect(presenter.viewModel.backgroundBox.backgroundColor.value,
+      expect(presenter.viewModel.backgroundBox.backgroundColor,
           equals(Colors.black));
       expect(presenter.viewModel.anchorValidated, isTrue);
     });

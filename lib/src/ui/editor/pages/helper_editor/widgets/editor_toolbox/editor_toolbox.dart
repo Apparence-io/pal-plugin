@@ -45,6 +45,8 @@ class EditorToolboxPage extends StatefulWidget {
   final ValueNotifier<EditableData> currentEditableItemNotifier;
   final GlobalKey scaffoldKey;
 
+  final bool isToolsVisible;
+
   EditorToolboxPage({
     Key key,
     @required this.child,
@@ -59,6 +61,7 @@ class EditorToolboxPage extends StatefulWidget {
     this.onPreview,
     this.onCloseEditor,
     this.boxViewHandler,
+    this.isToolsVisible,
   });
 
   @override
@@ -132,7 +135,7 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
           model.isActionBarVisible && model.animationTarget == 1
               ? EditorSaveFloatingButton(onTap: this.widget.onValidate)
               : null,
-      bottomNavigationBar: model.isActionBarVisible
+      bottomNavigationBar: widget.isToolsVisible
           ? EditorActionBar(
               animation: this.controllers[0],
               iconsColor: Colors.white,
@@ -156,7 +159,7 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
           onTap: presenter.onOutsideTap,
         ),
         // vertical editor toolbar
-        EditorToolBar(
+        if(widget.isToolsVisible) EditorToolBar(
           editableElementActions: model.editableElementActions,
           globalActions: model.globalActions,
           isBottomBarVisibleNotifier: model.isBottomVisible,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_tool_bar.dart';
 
 typedef OnNewBgColor(Color color);

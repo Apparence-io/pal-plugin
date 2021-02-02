@@ -143,6 +143,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
           onMediaPickerDone: presenter.onMediaPickerDone,
           onTextColorPickerDone: presenter.onTextColorPickerDone,
           onPreview: presenter.onPreview,
+          isToolsVisible: model.anchorValidated,
           child: Stack(
             children: [
               _createAnchoredWidget(model, context.animationsControllers[0],

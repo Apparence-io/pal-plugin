@@ -193,6 +193,7 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath>
           case '/editor/preview':
             EditorPreviewArguments args = settings.arguments;
             return MaterialPageRoute(
+              maintainState: true,
               builder: (context) => EditorPreviewPage(
                 previewHelper: args.previewHelper,
               ),

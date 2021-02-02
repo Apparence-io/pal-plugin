@@ -49,14 +49,14 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
         .addListener(removeSelectedEditableItems);
   }
 
-  @override
-  Future onDestroy() async {
-    this
-        .viewModel
-        .currentEditableItemNotifier
-        .removeListener(removeSelectedEditableItems);
-    this.viewModel.canValidate.dispose();
-  }
+  // @override
+  // Future onDestroy() async {
+  //   this
+  //       .viewModel
+  //       .currentEditableItemNotifier
+  //       .removeListener(removeSelectedEditableItems);
+  //   this.viewModel.canValidate.dispose();
+  // }
 
   void removeSelectedEditableItems() {
     if (this.viewModel.currentEditableItemNotifier?.value == null) {
@@ -67,16 +67,13 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   @override
   void afterViewInit() async {
     await scanElements();
-    // FIXME: Useful ??
-    // if (viewModel.backgroundBox.key != null) {
-    //   await this.onTapElement(viewModel.backgroundBox.key);
-    //   await validateSelection();
-    // } else {
-    //   viewInterface.showTutorial("First step",
-    //       "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
-    // }
-    viewInterface.showTutorial("First step",
-        "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
+    if (viewModel.backgroundBox.key != null) {
+      await this.onTapElement(viewModel.backgroundBox.key);
+      await validateSelection();
+    } else {
+      viewInterface.showTutorial("First step",
+          "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
+    }
   }
 
   Future resetSelection() async {

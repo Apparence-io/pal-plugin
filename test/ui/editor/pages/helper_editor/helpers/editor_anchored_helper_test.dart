@@ -779,7 +779,7 @@ void main() {
         expect(textWidget.style.fontSize, element.fontSize);
       });
       expect(presenter.viewModel.backgroundBox.backgroundColor,
-          equals(Colors.blueGrey.shade900));
+          equals(Colors.black));
       expect(presenter.viewModel.anchorValidated, isTrue);
     });
   });

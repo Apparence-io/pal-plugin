@@ -191,6 +191,7 @@ class EditorEntityFactory {
         fontFamily: model.negativBtnField?.fontFamily,
       ),
       bodyBox: HelperBoxConfig(
+        id: model.backgroundBox.id,
         key: model.selectedAnchorKey,
         color: model.backgroundBox?.backgroundColor?.toHex(),
       )

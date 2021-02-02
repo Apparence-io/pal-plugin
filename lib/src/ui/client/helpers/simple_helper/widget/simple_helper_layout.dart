@@ -63,6 +63,9 @@ class SimpleHelperLayoutState extends State<SimpleHelperLayout>
       // backgroundColor: Colors.transparent,
       child: Stack(
         children: <Widget>[
+          Container(
+            color: Colors.black26,
+          ),
           // BackdropFilter(
           //   filter: ImageFilter.blur(
           //     sigmaX: _blurAnimation.value,

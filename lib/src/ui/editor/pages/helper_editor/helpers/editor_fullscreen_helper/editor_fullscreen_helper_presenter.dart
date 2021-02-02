@@ -92,7 +92,7 @@ class EditorFullScreenHelperPresenter
     viewModel.backgroundBoxForm.backgroundColor = aColor;
     // this.viewInterface.closeColorPickerDialog();
     this._updateValidState();
-    // this.refreshView();
+    this.refreshView();
   }
 
   editMedia() async {

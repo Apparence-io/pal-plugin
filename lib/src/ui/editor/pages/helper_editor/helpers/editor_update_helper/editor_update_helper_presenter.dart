@@ -136,6 +136,7 @@ class EditorUpdateHelperPresenter
 
   updateBackgroundColor(Color aColor) {
     viewModel.backgroundBoxForm.backgroundColor = aColor;
+    this._updateValidState();
     this.refreshView();
   }
 

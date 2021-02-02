@@ -129,6 +129,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   updateBackgroundColor(Color newColor) {
     viewModel.backgroundBox.backgroundColor = newColor;
     this.refreshView();
+    this._updateValidState();
   }
 
   // save and cancel

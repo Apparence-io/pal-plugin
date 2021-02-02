@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/theme.dart';
@@ -274,6 +275,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         borderRadius: BorderRadius.circular(8.0),
       ),
       onPressed: () async {
+        HapticFeedback.selectionClick();
         await fadeAnimController.reverse();
         widget.onNegativButtonTap();
       },
@@ -291,6 +293,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         borderRadius: BorderRadius.circular(8.0),
       ),
       onPressed: () async {
+        HapticFeedback.selectionClick();
         await fadeAnimController.reverse();
         widget.onPositivButtonTap();
       },

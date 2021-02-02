@@ -34,7 +34,7 @@ class ClientSchemaRemoteRepository extends BaseHttpRepository implements ClientS
       .get('pal-business/client/schema', headers: {
         'appVersion': appVersion,
         'languageCode': language,
-        // 'schemaVersion': schemaVersion?.toString() ?? '-1'
+        'schemaVersion': schemaVersion?.toString() ?? '-1'
       });
     if(response.body.isNotEmpty) {
       return this._adapter.parse(response.body);

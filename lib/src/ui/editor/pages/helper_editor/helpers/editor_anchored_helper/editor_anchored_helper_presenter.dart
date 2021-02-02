@@ -79,8 +79,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   Future resetSelection() async {
     await scanElements();
     viewModel.anchorValidated = false;
-    viewModel.backgroundBox.backgroundColor =
-        Colors.lightGreenAccent.withOpacity(0.6);
+    viewModel.backgroundBox.backgroundColor = Colors.black.withOpacity(0.3);
   }
 
   // this methods scan elements on the user page we want to add an helper
@@ -119,9 +118,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
     if (viewModel.selectedAnchorKey == null) {
       return;
     }
-    if (viewModel.id == null) {
-      viewModel.backgroundBox.backgroundColor = Colors.blueGrey.shade900;
-    }
+    viewModel.backgroundBox.backgroundColor = Colors.blueGrey.shade900;
+    print('hello');
     viewModel.anchorValidated = true;
     refreshView();
   }

@@ -122,6 +122,16 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   }
 
   @override
+  void didUpdateWidget(covariant EditorToolboxPage oldWidget) {
+    print('Updated');
+    if (oldWidget.boxViewHandler.selectedColor !=
+        widget.boxViewHandler.selectedColor)
+      this.model.boxViewHandler.selectedColor =
+          widget.boxViewHandler.selectedColor;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: this._scaffoldKey,
@@ -131,10 +141,9 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
       backgroundColor: Colors.transparent,
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton:
-          model.isActionBarVisible && model.animationTarget == 1
-              ? EditorSaveFloatingButton(onTap: this.widget.onValidate)
-              : null,
+      floatingActionButton: widget.isToolsVisible && model.animationTarget == 1
+          ? EditorSaveFloatingButton(onTap: this.widget.onValidate)
+          : null,
       bottomNavigationBar: widget.isToolsVisible
           ? EditorActionBar(
               animation: this.controllers[0],
@@ -154,20 +163,23 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
     return Stack(
       children: [
         // the editor helper
-        GestureDetector(
-          child: widget.child,
-          onTap: presenter.onOutsideTap,
+        SizedBox.expand(
+          child: GestureDetector(
+            child: widget.child,
+            onTap: presenter.onOutsideTap,
+          ),
         ),
         // vertical editor toolbar
-        if(widget.isToolsVisible) EditorToolBar(
-          editableElementActions: model.editableElementActions,
-          globalActions: model.globalActions,
-          isBottomBarVisibleNotifier: model.isBottomVisible,
-          drawerAnimation: this.controllers[0],
-          iconsAnimation: this.controllers[1],
-          onActionTap: presenter.openPicker,
-          onGlobalActionTap: presenter.openGlobalPicker,
-        ),
+        if (widget.isToolsVisible)
+          EditorToolBar(
+            editableElementActions: model.editableElementActions,
+            globalActions: model.globalActions,
+            isBottomBarVisibleNotifier: model.isBottomVisible,
+            drawerAnimation: this.controllers[0],
+            iconsAnimation: this.controllers[1],
+            onActionTap: presenter.openPicker,
+            onGlobalActionTap: presenter.openGlobalPicker,
+          ),
       ],
     );
   }

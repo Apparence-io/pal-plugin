@@ -37,20 +37,20 @@ void main() {
     var pageResJson = PageEntityAdapter.PageEntityAdapter().toJson(existingPage);
     var pageablePageResJson = '{"content":[$pageResJson], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
     //var pageReqJson = jsonEncode({'name': args.config.route});
-    when(httpClientMock.get('editor/pages?route=${args.config.route}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
     // mock get min version request
     VersionEntity versionEntity = VersionEntity(id: 25, name: args.config.minVersion);
     var versionReqJson = VersionEntityAdapter.VersionEntityAdapter().toJson(versionEntity);
     var versionPageJson = '{"content":[$versionReqJson], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
-    when(httpClientMock.get('editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(versionPageJson, 200)));
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperResult..id = null);
-    when(httpClientMock.post('editor/pages/${existingPage.id}/helpers', body: anyNamed("body")))
+    when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: anyNamed("body")))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await creationCall();
-    var capturedCall = verify(httpClientMock.post('editor/pages/${existingPage.id}/helpers', body: captureAnyNamed("body"))).captured;
+    var capturedCall = verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: captureAnyNamed("body"))).captured;
     expect(capturedCall[0], equals(expectedHelperResultJson));
   }
 
@@ -60,27 +60,27 @@ void main() {
     var pageResJson = PageEntityAdapter.PageEntityAdapter().toJson(existingPage);
     var pageablePageResJson = '{"content":[], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
     var pageCreationReqJson = jsonEncode({'route': args.config.route});
-    when(httpClientMock.get('editor/pages?route=${args.config.route}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
-    when(httpClientMock.post('editor/pages', body: pageCreationReqJson)).thenAnswer((_) => Future.value(Response(pageResJson, 200)));
+    when(httpClientMock.post('pal-business/editor/pages', body: pageCreationReqJson)).thenAnswer((_) => Future.value(Response(pageResJson, 200)));
     // mock get min version request then create
     VersionEntity versionEntity = VersionEntity(id: 25, name: args.config.minVersion);
     var versionReqJson = VersionEntityAdapter.VersionEntityAdapter().toJson(versionEntity);
     var versionMinCreationReqJson = jsonEncode({'name': args.config.minVersion});
     var versionPageJson = '{"content":[], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
-    when(httpClientMock.get('editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(versionPageJson, 200)));
-    when(httpClientMock.post('editor/versions', body: versionMinCreationReqJson)).thenAnswer((_) => Future.value(Response(versionReqJson, 200)));
+    when(httpClientMock.post('pal-business/editor/versions', body: versionMinCreationReqJson)).thenAnswer((_) => Future.value(Response(versionReqJson, 200)));
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(HelperEntity.copy(expectedHelperResult)..id = null);
-    when(httpClientMock.post('editor/pages/${existingPage.id}/helpers', body: expectedHelperResultJson))
+    when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: expectedHelperResultJson))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await creationCall();
-    verify(httpClientMock.post('editor/pages/${existingPage.id}/helpers', body: expectedHelperResultJson)).called(1);
-    verify(httpClientMock.get('editor/pages?route=${args.config.route}&pageSize=1')).called(1);
-    verify(httpClientMock.post('editor/pages', body: pageCreationReqJson)).called(1);
-    verify(httpClientMock.get('editor/versions?versionName=${args.config.minVersion}&pageSize=1')).called(1);
-    verify(httpClientMock.post('editor/versions', body: versionMinCreationReqJson)).called(1);
+    verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: expectedHelperResultJson)).called(1);
+    verify(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1')).called(1);
+    verify(httpClientMock.post('pal-business/editor/pages', body: pageCreationReqJson)).called(1);
+    verify(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1')).called(1);
+    verify(httpClientMock.post('pal-business/editor/versions', body: versionMinCreationReqJson)).called(1);
   }
 
   _testUpdateHelper(dynamic args, HelperEntity expectedHelperResult, Function updateCall) async {
@@ -89,21 +89,21 @@ void main() {
     var pageResJson = PageEntityAdapter.PageEntityAdapter().toJson(existingPage);
     var pageablePageResJson = '{"content":[$pageResJson], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
     //var pageReqJson = jsonEncode({'name': args.config.route});
-    when(httpClientMock.get('editor/pages?route=${args.config.route}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
     // mock get min version request
     VersionEntity versionEntity = VersionEntity(id: 25, name: args.config.minVersion);
     var versionReqJson = VersionEntityAdapter.VersionEntityAdapter().toJson(versionEntity);
     var versionPageJson = '{"content":[$versionReqJson], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
-    when(httpClientMock.get('editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(versionPageJson, 200)));
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperResult..id = "JDLSKJDSD");
     args.config.id = expectedHelperResult.id;
-    when(httpClientMock.put('editor/pages/${existingPage.id}/helpers/${args.config.id}', body: expectedHelperResultJson))
+    when(httpClientMock.put('pal-business/editor/pages/${existingPage.id}/helpers/${args.config.id}', body: expectedHelperResultJson))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await updateCall();
-    verify(httpClientMock.put('editor/pages/${existingPage.id}/helpers/${args.config.id}', body: expectedHelperResultJson))
+    verify(httpClientMock.put('pal-business/editor/pages/${existingPage.id}/helpers/${args.config.id}', body: expectedHelperResultJson))
       .called(1);
   }
 

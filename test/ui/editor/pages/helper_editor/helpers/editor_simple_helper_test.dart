@@ -54,6 +54,7 @@ void main() {
 
     Future _beforeEach(WidgetTester tester) async {
       reset(helperEditorServiceMock);
+      presenter = null;
       var routeFactory = (settings) {
         switch (settings.name) {
           case '/':
@@ -79,12 +80,13 @@ void main() {
           HelperTheme.BLACK,
           editorHelperService: helperEditorServiceMock,
           palEditModeStateService: new PalEditModeStateServiceMock());
+      await tester.pumpAndSettle(Duration(milliseconds: 1000));
+
       var presenterFinder =
           find.byKey(ValueKey("palEditorSimpleHelperWidgetBuilder"));
       var page = presenterFinder.evaluate().first.widget as PresenterInherited<
           EditorSimpleHelperPresenter, SimpleHelperViewModel>;
       presenter = page.presenter;
-      await tester.pumpAndSettle(Duration(milliseconds: 1000));
     }
 
     // ------------------------------------------------
@@ -127,6 +129,20 @@ void main() {
     });
 
     testWidgets(
+        'text is clicked, toolbar is visible => click outside of it close the toolbar',
+        (WidgetTester tester) async {
+      await _beforeEach(tester);
+      final editableTextsFinder = find.byType(EditableTextField).at(0);
+      await tester.tap(editableTextsFinder);
+      await tester.pumpAndSettle(Duration(milliseconds: 200));
+
+      expect(
+        find.byKey(ValueKey('EditorToolBar_SpecificAction_Text')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets(
         'text is empty => cancel, validate buttons exists, validate button is disabled',
         (WidgetTester tester) async {
       await _beforeEach(tester);
@@ -147,9 +163,9 @@ void main() {
 
     Future _fillFields(WidgetTester tester, String firstField) async {
       // INIT TEXTFIELDS
-      presenter.viewModel.contentTextForm.text = firstField;
-      // await enterTextInTextForm(tester, 0, firstField);
-      // await tester.pump();
+      // presenter.viewModel.contentTextForm.text = firstField;
+      await enterTextInTextForm(tester, 0, firstField);
+      await tester.pump();
       // INIT TEXTFIELDS
     }
 
@@ -240,38 +256,11 @@ void main() {
     });
 
     testWidgets(
-        'text is clicked, toolbar is visible => click outside of it close the toolbar',
-        (WidgetTester tester) async {
-      await _beforeEach(tester);
-      // var simpleHelperDetailTextField =
-      //     find.byKey(ValueKey('palSimpleHelperDetailField'));
-      // await tester.tap(simpleHelperDetailTextField);
-      // await tester.pumpAndSettle();
-
-      // expect(find.byType(EditHelperToolbar), findsOneWidget);
-      // var closeButtonToolbar =
-      //     find.byKey(ValueKey('pal_EditHelperToolbar_Close'));
-      // await tester.tap(closeButtonToolbar);
-      // await tester.pumpAndSettle();
-      // expect(find.byType(EditHelperToolbar), findsNothing);
-
-      var editableTextsFinder = find.byType(EditableTextField).at(0);
-      await tester.tap(editableTextsFinder);
-      await tester.pumpAndSettle(Duration(milliseconds: 200));
-
-      expect(find.byType(EditorToolBar), findsOneWidget);
-      expect(
-        find.byKey(ValueKey('EditorToolBar_SpecificAction_Text')),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets(
         'title = "my helper tips lorem" => save call helperService.saveSimpleHelper',
         (WidgetTester tester) async {
       await _beforeEach(tester);
       await enterTextInTextForm(tester, 0, 'my helper tips lorem');
-      await tester.pumpAndSettle();
+      await tester.pump();
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
       var validateButton =
@@ -279,10 +268,13 @@ void main() {
       expect(validateButton.onTapCallback, isNotNull);
 
       validateButton.onTapCallback();
-      await tester.pump(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(milliseconds: 2000));
+      // await tester.pump(Duration(seconds: 1));
       verify(helperEditorServiceMock.saveSimpleHelper(any)).called(1);
-      await tester.pump(Duration(seconds: 2));
-      await tester.pump(Duration(milliseconds: 100));
+      await tester.pumpAndSettle(Duration(milliseconds: 2000));
+
+      // await tester.pump(Duration(seconds: 2));
+      // await tester.pump(Duration(milliseconds: 100));
     });
 
     testWidgets(
@@ -291,8 +283,9 @@ void main() {
       await _beforeEach(tester);
       when(helperEditorServiceMock.saveSimpleHelper(any))
           .thenThrow(new ArgumentError());
-      await enterTextInTextForm(tester, 0, 'my helper tips lorem');
+      await _fillFields(tester, 'my helper tips lorem');
       await tester.pumpAndSettle();
+      print(presenter.viewModel.contentTextForm.text);
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
       var validateButton =
@@ -306,6 +299,9 @@ void main() {
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
       expect(find.text('Error occured, please try again later'), findsNothing);
+      await tester.pump(Duration(seconds: 2));
+      await tester.pump(Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
     });
 
     test('HelperViewModel => transform to SimpleHelperViewModel ', () {

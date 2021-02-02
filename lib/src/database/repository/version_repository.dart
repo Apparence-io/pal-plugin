@@ -31,7 +31,7 @@ class VersionHttpRepository extends BaseHttpRepository
   }) {
     return this
         .httpClient
-        .get('editor/versions?versionName=$name&pageSize=$pageSize')
+        .get('pal-business/editor/versions?versionName=$name&pageSize=$pageSize')
         .then((res) => _versionEntityAdapter.parsePage(res.body));
   }
 
@@ -39,7 +39,7 @@ class VersionHttpRepository extends BaseHttpRepository
   Future<VersionEntity> getVersion({String name = ''}) {
     return this
         .httpClient
-        .get('editor/versions?versionName=$name&pageSize=1')
+        .get('pal-business/editor/versions?versionName=$name&pageSize=1')
         .then((res) {
       Pageable<VersionEntity> pages = _versionEntityAdapter.parsePage(res.body);
       return (pages.entities != null && pages.entities.length > 0)
@@ -53,7 +53,7 @@ class VersionHttpRepository extends BaseHttpRepository
   ) async {
     return this
         .httpClient
-        .post('editor/versions',
+        .post('pal-business/editor/versions',
             body: jsonEncode({
               'name': createVersion.name,
             }))

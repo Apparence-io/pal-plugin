@@ -123,10 +123,10 @@ class HelperFactory {
           SimpleHelperKeys.CONTENT_KEY,
           helper.helperTexts,
         ),
-        helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
-          SimpleHelperKeys.BACKGROUND_KEY,
-          helper.helperBoxes,
-        ),
+        // helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
+        //   SimpleHelperKeys.BACKGROUND_KEY,
+        //   helper.helperBoxes,
+        // ),
       ),
       onDismissed: (res) async {
         await _simpleHelperLayoutKey.currentState.reverseAnimations();

@@ -21,7 +21,7 @@ class EditorHelperRepository extends BaseHttpRepository {
       final String pageId, final HelperEntity createHelper) async {
     final payload = jsonEncode(createHelper);
     final Response response = await this.httpClient.post(
-          'editor/pages/$pageId/helpers',
+          'pal-business/editor/pages/$pageId/helpers',
           body: payload,
         );
     if (response == null || response.body == null)
@@ -35,7 +35,7 @@ class EditorHelperRepository extends BaseHttpRepository {
   ) async {
     final payload = jsonEncode(updatedHelper);
     final Response response = await this.httpClient.put(
-          'editor/pages/$pageId/helpers/${updatedHelper?.id}',
+          'pal-business/editor/pages/$pageId/helpers/${updatedHelper?.id}',
           body: payload);
     if (response == null || response.body == null)
       throw new UnknownHttpError('NO_RESULT');
@@ -46,7 +46,7 @@ class EditorHelperRepository extends BaseHttpRepository {
       String pageId, int page, int pageSize) async {
     final Response response = await this
         .httpClient
-        .get('editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
+        .get('pal-business/editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
     return this._adapter.parsePage(response.body);
   }
 
@@ -55,7 +55,7 @@ class EditorHelperRepository extends BaseHttpRepository {
     final Map<String, int> priority,
   ) async {
     await this.httpClient.patch(
-          'editor/pages/$pageId/helpers/priorities',
+          'pal-business/editor/pages/$pageId/helpers/priorities',
           body: jsonEncode(priority),
         );
   }
@@ -65,7 +65,7 @@ class EditorHelperRepository extends BaseHttpRepository {
     final String helperId,
   ) async {
     await this.httpClient.delete(
-          'editor/pages/$pageId/helpers/$helperId',
+          'pal-business/editor/pages/$pageId/helpers/$helperId',
         );
   }
 }

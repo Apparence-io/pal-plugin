@@ -20,7 +20,6 @@ main() {
             child: EditorToolboxPage(
               key: ValueKey('EditorToolBarTest'),
               currentEditableItemNotifier: currentEditableItemNotifier,
-              isToolsVisible: true,
               boxViewHandler: BoxViewHandler(
                   selectedColor: Colors.red, callback: (test) {}),
               child: Scaffold(

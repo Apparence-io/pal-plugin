@@ -49,7 +49,6 @@ main() {
               onFontPickerDone: _onFontPickerDone,
               onMediaPickerDone: _onMediaPickerDone,
               onTextColorPickerDone: _onTextColorPickerDone,
-              isToolsVisible: true,
               boxViewHandler: BoxViewHandler(
                 selectedColor: Colors.red,
                 callback: _onTextColorPickerDone,

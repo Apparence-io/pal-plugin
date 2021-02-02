@@ -67,7 +67,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   @override
   void afterViewInit() async {
     await scanElements();
-    if (viewModel.backgroundBox.key != null) {
+    if (viewModel.backgroundBox.id != null) {
       await this.onTapElement(viewModel.backgroundBox.key);
       await validateSelection();
     } else {
@@ -129,6 +129,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   updateBackgroundColor(Color newColor) {
     viewModel.backgroundBox.backgroundColor = newColor;
     this.refreshView();
+    this._updateValidState();
   }
 
   // save and cancel

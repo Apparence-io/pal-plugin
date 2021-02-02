@@ -153,7 +153,7 @@ void main() {
       final HttpClient httpClient = _HttpClientMock();
       final String content = new File("test/services/client/in_app_user/resources/in_app_user_anonymous.json").readAsStringSync();
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_create_body.json").readAsStringSync();
-      when(httpClient.post("pal-analytic/pal-business/client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
+      when(httpClient.post("pal-analytic/client/in-app-users", body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();

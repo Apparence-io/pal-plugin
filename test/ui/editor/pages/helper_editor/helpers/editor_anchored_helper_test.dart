@@ -659,6 +659,7 @@ void main() {
         ],
         helperBoxes: [
           HelperBoxEntity(
+            id: 0,
             key: "[<'text1'>]",
             backgroundColor: Colors.black.toHex(),
           )

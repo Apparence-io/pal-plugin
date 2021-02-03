@@ -142,8 +142,6 @@ class FullscreenHelperViewModel extends HelperViewModel {
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
-      minVersionCode: helperEntity?.versionMin,
-      maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
       boxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,

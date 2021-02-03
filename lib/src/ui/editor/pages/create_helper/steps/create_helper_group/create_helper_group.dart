@@ -103,6 +103,7 @@ class CreateHelperGroup extends StatelessWidget {
                 key: ValueKey('pal_CreateHelper_TextField_MaximumVersion'),
                 textInputType: TextInputType.numberWithOptions(decimal: true),
                 initialValue: maxVersionInitialValue,
+                hintText: "Max version number or empty for latest version",
                 onValueChanged: maxVersionChanged,
                 validator: maxVersionValidator,
                 isLoading: false,

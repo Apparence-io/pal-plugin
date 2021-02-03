@@ -10,8 +10,9 @@ class HelperGroupEntityAdapter extends GenericEntityAdapter<HelperGroupEntity> {
   HelperGroupEntity parseMap(Map<String, dynamic> map) {
     return HelperGroupEntity(
       id: map['id'],
+      name: map['name'],
       priority: map['priority'],
-      helpers: new HelperEntityAdapter().parseDynamicArray(map['helpers']),
+      helpers: map.containsKey('helpers') ? new HelperEntityAdapter().parseDynamicArray(map['helpers']) : null,
       page: map.containsKey('page') ? new PageEntityAdapter().parseMap(map['page']) : null,
     );
   }

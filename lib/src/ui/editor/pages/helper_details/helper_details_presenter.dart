@@ -18,10 +18,7 @@ class HelperDetailsPresenter extends Presenter<HelperDetailsModel, HelperDetails
   ) : super(viewModel, viewInterface) {
     this.viewModel.isDeleting = false;
     this.viewModel.isDeleteSuccess = false;
-
     this.viewModel.helperName = arguments?.helper?.name;
-    this.viewModel.helperMinVer = arguments?.helper?.versionMin;
-    this.viewModel.helperMaxVer = arguments?.helper?.versionMax;
     this.viewModel.helperTriggerType = arguments?.helper?.triggerType;
   }
 

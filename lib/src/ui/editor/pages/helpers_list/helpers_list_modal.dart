@@ -222,8 +222,6 @@ class _HelpersListModalState extends State<HelpersListModal>
         child: HelperTileWidget(
           name: anHelper?.name,
           trigger: getHelperTriggerTypeDescription(anHelper?.triggerType),
-          versionMin: anHelper?.versionMin,
-          versionMax: anHelper?.versionMax,
           isDisabled: false,
           type: getHelperTypeDescription(anHelper?.type),
           onTapCallback: () {

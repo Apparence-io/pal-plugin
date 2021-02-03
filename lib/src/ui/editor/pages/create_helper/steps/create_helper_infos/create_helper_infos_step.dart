@@ -71,7 +71,10 @@ class CreateHelperInfosStep extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 16),
             child: _buildPositionButton(context),
-          )
+          ),
+          Text("Group position default is last.",
+            style: TextStyle(fontSize: 10),
+          ),
         ],
       ),
     );

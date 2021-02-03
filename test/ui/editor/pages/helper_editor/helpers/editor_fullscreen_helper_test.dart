@@ -373,39 +373,37 @@ void main() {
           type: HelperType.HELPER_FULL_SCREEN,
           triggerType: HelperTriggerType.ON_SCREEN_VISIT,
           priority: 1,
-          versionMinId: 25,
-          versionMaxId: 25,
           helperTexts: [
-            HelperTextEntity(
-              value: "title text",
-              fontColor: "#CCCCCC",
-              fontWeight: "w100",
-              fontSize: 21,
-              fontFamily: "Montserrat",
-              key: FullscreenHelperKeys.TITLE_KEY,
-            ),
-            HelperTextEntity(
-              value: "description text",
-              fontColor: "#FFFFFF",
-              fontWeight: "w100",
-              fontSize: 18,
-              fontFamily: "Montserrat",
-              key: FullscreenHelperKeys.DESCRIPTION_KEY,
-            ),
-          ],
-          helperImages: [
-            HelperImageEntity(
-              url: null,
-              key: FullscreenHelperKeys.IMAGE_KEY,
-            )
-          ],
-          helperBoxes: [
-            HelperBoxEntity(
-              key: FullscreenHelperKeys.BACKGROUND_KEY,
-              backgroundColor: "#000000",
-            )
-          ],
-        );
+          HelperTextEntity(
+            value: "title text",
+            fontColor: "#CCCCCC",
+            fontWeight: "w100",
+            fontSize: 21,
+            fontFamily: "Montserrat",
+            key: FullscreenHelperKeys.TITLE_KEY,
+          ),
+          HelperTextEntity(
+            value: "description text",
+            fontColor: "#FFFFFF",
+            fontWeight: "w100",
+            fontSize: 18,
+            fontFamily: "Montserrat",
+            key: FullscreenHelperKeys.DESCRIPTION_KEY,
+          ),
+        ],
+        helperImages: [
+          HelperImageEntity(
+            url: null,
+            key: FullscreenHelperKeys.IMAGE_KEY,
+          )
+        ],
+        helperBoxes: [
+          HelperBoxEntity(
+            key: FullscreenHelperKeys.BACKGROUND_KEY,
+            backgroundColor: "#000000",
+          )
+        ],
+      );
 
     Future _beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);

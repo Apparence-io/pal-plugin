@@ -395,56 +395,52 @@ void main() {
             type: HelperType.UPDATE_HELPER,
             triggerType: HelperTriggerType.ON_SCREEN_VISIT,
             priority: 1,
-            versionMinId: 25,
-            versionMaxId: 25,
             helperTexts: [
-              HelperTextEntity(
-                value: "title",
-                fontColor: "#FF001100",
-                fontWeight: "w100",
-                fontSize: 17,
-                fontFamily: "Montserrat",
-                key: UpdatescreenHelperKeys.TITLE_KEY,
-              ),
-              HelperTextEntity(
-                value: "changelog 1",
-                fontColor: "#FF001100",
-                fontWeight: "w100",
-                fontSize: 17,
-                fontFamily: "Montserrat",
-                key: "${UpdatescreenHelperKeys.LINES_KEY}:0",
-              ),
-              HelperTextEntity(
-                value: "changelog 2",
-                fontColor: "#FF001100",
-                fontWeight: "w100",
-                fontSize: 17,
-                fontFamily: "Montserrat",
-                key: "${UpdatescreenHelperKeys.LINES_KEY}:1",
-              ),
-            ],
-            helperImages: [
-              HelperImageEntity(
-                url: "http://testurl.com",
-                key: FullscreenHelperKeys.IMAGE_KEY,
-              )
-            ],
-            helperBoxes: [
-              HelperBoxEntity(
-                key: FullscreenHelperKeys.BACKGROUND_KEY,
-                backgroundColor: "#FF001100",
-              )
-            ]);
+          HelperTextEntity(
+            value: "title",
+            fontColor: "#FF001100",
+            fontWeight: "w100",
+            fontSize: 17,
+            fontFamily: "Montserrat",
+            key: UpdatescreenHelperKeys.TITLE_KEY,
+          ),
+          HelperTextEntity(
+            value: "changelog 1",
+            fontColor: "#FF001100",
+            fontWeight: "w100",
+            fontSize: 17,
+            fontFamily: "Montserrat",
+            key: "${UpdatescreenHelperKeys.LINES_KEY}:0",
+          ),
+          HelperTextEntity(
+            value: "changelog 2",
+            fontColor: "#FF001100",
+            fontWeight: "w100",
+            fontSize: 17,
+            fontFamily: "Montserrat",
+            key: "${UpdatescreenHelperKeys.LINES_KEY}:1",
+          ),
+        ],
+        helperImages: [
+          HelperImageEntity(
+            url: "http://testurl.com",
+            key: FullscreenHelperKeys.IMAGE_KEY,
+          )
+        ],
+        helperBoxes: [
+          HelperBoxEntity(
+            key: FullscreenHelperKeys.BACKGROUND_KEY,
+            backgroundColor: "#FF001100",
+          )
+        ]
+      );
 
-    testWidgets(
-        'Valid helper entity, 2 changelog, 1 title => should create in edit mode all attributes',
-        (WidgetTester tester) async {
+    testWidgets('Valid helper entity, 2 changelog, 1 title => should create in edit mode all attributes', (WidgetTester tester) async {
       var entity = validUpdateHelperEntity();
       await beforeEach(tester, entity);
       expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
       expect(presenter.viewModel.changelogsTextsForm.length, 2);
-      entity.helperTexts.forEach(
-          (element) => expect(find.text(element.value), findsOneWidget));
+      entity.helperTexts.forEach((element) => expect(find.text(element.value), findsOneWidget));
     });
   });
 }

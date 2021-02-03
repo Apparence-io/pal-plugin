@@ -25,4 +25,21 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     }
   }
 
+  Future<HelperGroupEntity> create(String pageId, String name, int minVersionId, int maxVersionId) async {
+    var response = await httpClient.post('editor/pages/$pageId/groups',
+      body: {
+        "name": name,
+        "minVersionId": minVersionId,
+        "maxVersionId": maxVersionId,
+      }
+    );
+    if (response == null || response.body == null)
+      throw new UnknownHttpError("NO_RESULT");
+    try {
+      return _adapter.parse(response.body);
+    } catch (e) {
+      throw "UNPARSABLE RESPONSE $e";
+    }
+  }
+
 }

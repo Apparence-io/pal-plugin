@@ -485,9 +485,7 @@ void main() {
           Color(0xFFFFFFFF));
     });
 
-    testWidgets(
-        "step 2 click on save => call helper service saveAnchoredHelper",
-        (WidgetTester tester) async {
+    testWidgets("step 2 click on save => call helper service saveAnchoredHelper", (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
@@ -518,12 +516,15 @@ void main() {
       await tester.pump(Duration(seconds: 1));
       validateButton.onTapCallback();
       var args = CreateAnchoredHelper(
+          helperGroup: HelperGroupConfig(
+            id: "8209839023",
+            minVersion: "1.0.0",
+            maxVersion: "1.0.0"
+          ),
           config: CreateHelperConfig(
             name: 'helper name',
             triggerType: HelperTriggerType.ON_SCREEN_VISIT,
             priority: 1,
-            minVersion: "1.0.0",
-            maxVersion: "1.0.0",
             route: "widget.pageId",
             helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
           ),
@@ -621,8 +622,6 @@ void main() {
         type: HelperType.ANCHORED_OVERLAYED_HELPER,
         triggerType: HelperTriggerType.ON_SCREEN_VISIT,
         priority: 1,
-        versionMinId: 25,
-        versionMaxId: 25,
         helperTexts: [
           HelperTextEntity(
             value: "args.title.text",
@@ -671,8 +670,6 @@ void main() {
         type: HelperType.ANCHORED_OVERLAYED_HELPER,
         triggerType: HelperTriggerType.ON_SCREEN_VISIT,
         priority: 1,
-        versionMinId: 25,
-        versionMaxId: 25,
         helperTexts: [
           HelperTextEntity(
             value: "args.title.text",

@@ -18,8 +18,8 @@ main() {
       name: 'testName',
       triggerType: HelperTriggerType.ON_SCREEN_VISIT,
       type: HelperType.SIMPLE_HELPER,
-      versionMax: '2',
-      versionMin: '1',
+      // versionMax: '2', //FIXME
+      // versionMin: '1',
     );
 
     Future _initPage(

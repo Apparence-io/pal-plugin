@@ -24,10 +24,6 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
       creationDate: fields[1] as DateTime,
       lastUpdateDate: fields[2] as DateTime,
       priority: fields[4] as int,
-      versionMinId: fields[7] as int,
-      versionMin: fields[8] as String,
-      versionMaxId: fields[9] as int,
-      versionMax: fields[10] as String,
       helperBorders: (fields[11] as List)?.cast<HelperBorderEntity>(),
       helperImages: (fields[12] as List)?.cast<HelperImageEntity>(),
       helperTexts: (fields[13] as List)?.cast<HelperTextEntity>(),
@@ -38,7 +34,7 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
   @override
   void write(BinaryWriter writer, HelperEntity obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,14 +49,6 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
       ..write(obj.type)
       ..writeByte(6)
       ..write(obj.triggerType)
-      ..writeByte(7)
-      ..write(obj.versionMinId)
-      ..writeByte(8)
-      ..write(obj.versionMin)
-      ..writeByte(9)
-      ..write(obj.versionMaxId)
-      ..writeByte(10)
-      ..write(obj.versionMax)
       ..writeByte(11)
       ..write(obj.helperBorders)
       ..writeByte(12)

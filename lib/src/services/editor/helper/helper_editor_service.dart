@@ -3,6 +3,7 @@ import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/database/entity/pageable.dart';
 import 'package:pal/src/database/entity/version_entity.dart';
 import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
+import 'package:pal/src/database/repository/editor/helper_group_repository.dart';
 import 'package:pal/src/database/repository/page_repository.dart';
 import 'package:pal/src/database/repository/version_repository.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
@@ -13,13 +14,19 @@ import 'helper_editor_model_adapter.dart';
 abstract class EditorHelperService {
   
   factory EditorHelperService.build(EditorAppContext appContext) =>
-      _EditorHelperHttpService(appContext.helperRepository, appContext.pageRepository, appContext.versionRepository);
+      _EditorHelperHttpService(
+        appContext.helperRepository,
+        appContext.pageRepository,
+        appContext.versionRepository,
+        appContext.editorHelperGroupRepository
+      );
 
   factory EditorHelperService.fromDependencies(
       EditorHelperRepository _editorHelperRepository,
       VersionRepository _versionRepository,
-      PageRepository _pageRepository
-    ) => _EditorHelperHttpService(_editorHelperRepository, _pageRepository, _versionRepository);
+      PageRepository _pageRepository,
+      EditorHelperGroupRepository _editorHelperGroupRepository
+    ) => _EditorHelperHttpService(_editorHelperRepository, _pageRepository, _versionRepository, _editorHelperGroupRepository);
 
 
   Future<Pageable<HelperEntity>> getPage(final String route, final int page, final int pageSize);
@@ -53,24 +60,19 @@ abstract class EditorHelperService {
 class _EditorHelperHttpService implements EditorHelperService {
 
   final EditorHelperRepository _editorHelperRepository;
+  final EditorHelperGroupRepository _editorHelperGroupRepository;
   final VersionRepository _versionRepository;
   final PageRepository _pageRepository;
 
-  _EditorHelperHttpService(this._editorHelperRepository, this._pageRepository, this._versionRepository);
+  _EditorHelperHttpService(this._editorHelperRepository, this._pageRepository, this._versionRepository, this._editorHelperGroupRepository);
 
   @override
   Future<HelperEntity> saveSimpleHelper(final CreateSimpleHelper createArgs) async {
     var pageId = await _getOrCreatePageId(createArgs.config.route);
-    var minVersionId = await _getOrCreateVersionId(createArgs.config.minVersion);
-    int maxVersionId;
-    if(createArgs.config.minVersion == createArgs.config.maxVersion) {
-      maxVersionId = minVersionId;
-    } else if (createArgs.config.maxVersion != null) {
-      maxVersionId = await _getOrCreateVersionId(createArgs.config.maxVersion);
-    }
+    String groupId = createArgs.helperGroup.id ?? await _createGroupId(pageId, createArgs.helperGroup);
     return createArgs.config.id != null
-      ? _editorHelperRepository.updateHelper(pageId, HelperEditorAdapter.parseSimpleHelper(createArgs, minVersionId, maxVersionId))
-      : _editorHelperRepository.createHelper(pageId, HelperEditorAdapter.parseSimpleHelper(createArgs, minVersionId, maxVersionId));
+      ? _editorHelperRepository.updateHelper(pageId, groupId, HelperEditorAdapter.parseSimpleHelper(createArgs))
+      : _editorHelperRepository.createHelper(pageId, groupId, HelperEditorAdapter.parseSimpleHelper(createArgs));
   }
 
 
@@ -78,36 +80,28 @@ class _EditorHelperHttpService implements EditorHelperService {
   Future<HelperEntity> saveFullScreenHelper(CreateFullScreenHelper createArgs) async {
     if (createArgs.title == null || createArgs.description == null || createArgs.title.text.isEmpty)
       throw "TITLE_AND_DESCRIPTION_REQUIRED";
+    // create page group version
     var pageId = await _getOrCreatePageId(createArgs.config.route);
-    var minVersionId = await _getOrCreateVersionId(createArgs.config.minVersion);
-    int maxVersionId;
-    if(createArgs.config.minVersion == createArgs.config.maxVersion) {
-      maxVersionId = minVersionId;
-    } else if (createArgs.config.maxVersion != null) {
-      maxVersionId = await _getOrCreateVersionId(createArgs.config.maxVersion);
-    }
-    var helperEntity = HelperEditorAdapter.parseFullscreenHelper(createArgs, minVersionId, maxVersionId);
+    String groupId = createArgs.helperGroup.id ?? await _createGroupId(pageId, createArgs.helperGroup);
+    // create entity
+    var helperEntity = HelperEditorAdapter.parseFullscreenHelper(createArgs);
     helperEntity.helperTexts.removeWhere((element) => element.value == null || element.value.isEmpty);
     return createArgs.config.id != null
-      ? _editorHelperRepository.updateHelper(pageId, helperEntity)
-      : _editorHelperRepository.createHelper(pageId, helperEntity);
+      ? _editorHelperRepository.updateHelper(pageId, groupId, helperEntity)
+      : _editorHelperRepository.createHelper(pageId, groupId, helperEntity);
   }
 
   @override
   Future<HelperEntity> saveUpdateHelper(CreateUpdateHelper createArgs) async {
     var pageId = await _getOrCreatePageId(createArgs.config.route);
-    var minVersionId = await _getOrCreateVersionId(createArgs.config.minVersion);
-    int maxVersionId;
-    if(createArgs.config.minVersion == createArgs.config.maxVersion) {
-      maxVersionId = minVersionId;
-    } else if (createArgs.config.maxVersion != null) {
-      maxVersionId = await _getOrCreateVersionId(createArgs.config.maxVersion);
-    }
-    var helperEntity = HelperEditorAdapter.parseUpdateHelper(createArgs, minVersionId, maxVersionId);
+    // create page group version
+    String groupId = createArgs.helperGroup.id ?? await _createGroupId(pageId, createArgs.helperGroup);
+    // create entity
+    var helperEntity = HelperEditorAdapter.parseUpdateHelper(createArgs);
     helperEntity.helperTexts.removeWhere((element) => element.value == null || element.value.isEmpty);
     return createArgs.config.id != null
-      ? _editorHelperRepository.updateHelper(pageId, helperEntity)
-      : _editorHelperRepository.createHelper(pageId, helperEntity);
+      ? _editorHelperRepository.updateHelper(pageId, groupId, helperEntity)
+      : _editorHelperRepository.createHelper(pageId, groupId, helperEntity);
   }
 
   @override
@@ -116,17 +110,13 @@ class _EditorHelperHttpService implements EditorHelperService {
       throw "ANCHOR_KEY_MISSING";
     }
     var pageId = await _getOrCreatePageId(createArgs.config.route);
-    var minVersionId = await _getOrCreateVersionId(createArgs.config.minVersion);
-    int maxVersionId;
-    if(createArgs.config.minVersion == createArgs.config.maxVersion) {
-      maxVersionId = minVersionId;
-    } else if (createArgs.config.maxVersion != null) {
-      maxVersionId = await _getOrCreateVersionId(createArgs.config.maxVersion);
-    }
-    var helperEntity = HelperEditorAdapter.parseAnchoredHelper(createArgs, minVersionId, maxVersionId);
+    // create page group version
+    String groupId = createArgs.helperGroup.id ?? await _createGroupId(pageId, createArgs.helperGroup);
+    // create entity
+    var helperEntity = HelperEditorAdapter.parseAnchoredHelper(createArgs);
     return createArgs.config.id != null
-      ? _editorHelperRepository.updateHelper(pageId, helperEntity)
-      : _editorHelperRepository.createHelper(pageId, helperEntity);
+      ? _editorHelperRepository.updateHelper(pageId, groupId, helperEntity)
+      : _editorHelperRepository.createHelper(pageId, groupId, helperEntity);
   }
 
   @override
@@ -191,7 +181,20 @@ class _EditorHelperHttpService implements EditorHelperService {
     }
   }
 
-
+  Future<String> _createGroupId(String pageId, HelperGroupConfig helperGroupConfig) async {
+    if(helperGroupConfig.name.isEmpty)
+      throw "EMPTY_GROUP_NAME_NOT_ALLOWED";
+    var minVersionId = await _getOrCreateVersionId(helperGroupConfig.minVersion);
+    int maxVersionId;
+    if(helperGroupConfig.minVersion == helperGroupConfig.maxVersion) {
+      maxVersionId = minVersionId;
+    } else if (helperGroupConfig.maxVersion != null) {
+      maxVersionId = await _getOrCreateVersionId(helperGroupConfig.maxVersion);
+    }
+    return _editorHelperGroupRepository
+      .create(pageId, helperGroupConfig.name, minVersionId, maxVersionId)
+      .then((value) => value.id);
+  }
 
 }
 

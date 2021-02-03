@@ -15,8 +15,6 @@ class CreateHelperConfig {
   HelperTriggerType triggerType;
   HelperType helperType; //remove
   int priority;
-  String minVersion;
-  String maxVersion;
 
   CreateHelperConfig({
     this.id,
@@ -25,8 +23,6 @@ class CreateHelperConfig {
     @required this.triggerType,
     @required this.helperType,
     this.priority,
-    this.minVersion,
-    this.maxVersion,
   });
 
   factory CreateHelperConfig.from(String route, HelperViewModel viewModel)
@@ -37,8 +33,8 @@ class CreateHelperConfig {
       triggerType: viewModel?.helperGroup?.triggerType,
       helperType: viewModel?.helperType,
       priority: viewModel?.priority,
-      minVersion: viewModel?.helperGroup?.minVersionCode,
-      maxVersion: viewModel?.helperGroup?.maxVersionCode,
+      // minVersion: viewModel?.helperGroup?.minVersionCode,
+      // maxVersion: viewModel?.helperGroup?.maxVersionCode,
     );
 
   toJson() => {
@@ -48,9 +44,24 @@ class CreateHelperConfig {
     "triggerType": triggerType.toString(),
     "helperType": helperType.toString(),
     "priority": priority,
-    "minVersion": minVersion,
-    "maxVersion": maxVersion,
   }; 
+}
+
+///-------------------------------
+/// Helper group related to helper
+///-------------------------------
+class HelperGroupConfig {
+  String id;
+  String name;
+  String minVersion;
+  String maxVersion;
+
+  HelperGroupConfig({this.id, this.name, this.minVersion, this.maxVersion});
+
+  toJson() => {
+    "id": id,
+    "name": name,
+  };
 }
 
 ///-------------------------------
@@ -60,11 +71,13 @@ class CreateSimpleHelper {
   CreateHelperConfig config;
   HelperTextConfig titleText;
   HelperBoxConfig boxConfig;
+  HelperGroupConfig helperGroup;
 
   CreateSimpleHelper({
     @required this.config,
     @required this.titleText,
     @required this.boxConfig,
+    @required this.helperGroup,
   });
 }
 
@@ -76,6 +89,7 @@ class CreateFullScreenHelper {
   HelperTextConfig title, description, positivButton, negativButton;
   HelperMediaConfig mediaHeader;
   HelperBoxConfig bodyBox;
+  HelperGroupConfig helperGroup;
 
   CreateFullScreenHelper({
     @required this.config,
@@ -85,6 +99,7 @@ class CreateFullScreenHelper {
     this.negativButton,
     @required this.bodyBox,
     this.mediaHeader,
+    @required this.helperGroup
   });
 }
 
@@ -97,6 +112,7 @@ class CreateUpdateHelper {
   List<HelperTextConfig> lines;
   HelperBoxConfig bodyBox;
   HelperMediaConfig headerMedia;
+  HelperGroupConfig helperGroup;
 
   CreateUpdateHelper({
     @required this.config,
@@ -106,6 +122,7 @@ class CreateUpdateHelper {
     this.positivButton,
     this.negativButton,
     this.bodyBox,
+    this.helperGroup
   });
 }
 
@@ -116,13 +133,15 @@ class CreateAnchoredHelper {
   CreateHelperConfig config;
   HelperTextConfig title, description, positivButton, negativButton;
   HelperBoxConfig bodyBox;
+  HelperGroupConfig helperGroup;
 
   CreateAnchoredHelper({
-    this.config,
+    @required this.config,
     this.title,
     this.description,
     this.positivButton, this.negativButton,
-    this.bodyBox
+    this.bodyBox,
+    @required this.helperGroup
   });
 
   toJson() => {

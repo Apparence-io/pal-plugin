@@ -20,5 +20,8 @@ class HelperGroupEntity {
   @HiveField(3)
   PageEntity page;
 
-  HelperGroupEntity({this.id, this.priority, this.helpers, this.page});
+  @HiveField(4)
+  String name;
+
+  HelperGroupEntity({this.id, this.priority, this.helpers, this.page, this.name});
 }

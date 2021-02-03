@@ -140,8 +140,6 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       id: entity?.id,
       name: entity?.name,
       priority: entity.priority,
-      minVersionCode: entity.versionMin,
-      maxVersionCode: entity?.versionMax,
       helperTheme: null,
       triggerType: entity?.triggerType,
       // TODO : Finish factory for multiple boxes

@@ -29,18 +29,6 @@ class HelperEntity {
   @HiveField(6)
   HelperTriggerType triggerType;
 
-  @HiveField(7)
-  int versionMinId;
-
-  @HiveField(8)
-  String versionMin;
-
-  @HiveField(9)
-  int versionMaxId;
-
-  @HiveField(10)
-  String versionMax;
-
   @HiveField(11)
   List<HelperBorderEntity> helperBorders;
 
@@ -61,10 +49,6 @@ class HelperEntity {
       this.creationDate,
       this.lastUpdateDate,
       this.priority,
-      this.versionMinId,
-      this.versionMin,
-      this.versionMaxId,
-      this.versionMax,
       this.helperBorders,
       this.helperImages,
       this.helperTexts,
@@ -79,10 +63,6 @@ class HelperEntity {
       creationDate: from.creationDate,
       lastUpdateDate: from.lastUpdateDate,
       priority: from.priority,
-      versionMinId: from.versionMinId,
-      versionMin: from.versionMin,
-      versionMaxId: from.versionMaxId,
-      versionMax: from.versionMax,
       helperBorders: from.helperBorders != null ? [...from.helperBorders] : null,
       helperImages: from.helperImages != null ? [...from.helperImages] : null,
       helperTexts: from.helperTexts != null ? [...from.helperTexts] : null,
@@ -98,10 +78,6 @@ class HelperEntity {
         'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
         'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
         'priority': priority,
-        'versionMinId': versionMinId,
-        'versionMin': versionMin,
-        'versionMaxId': versionMaxId,
-        'versionMax': versionMax,
         'helperBorders': helperBorders,
         'helperImages': helperImages,
         'helperTexts': helperTexts,
@@ -119,10 +95,6 @@ class HelperEntity {
           priority == other.priority &&
           type == other.type &&
           triggerType == other.triggerType &&
-          versionMinId == other.versionMinId &&
-          versionMin == other.versionMin &&
-          versionMaxId == other.versionMaxId &&
-          versionMax == other.versionMax &&
           helperBorders == other.helperBorders &&
           helperImages == other.helperImages &&
           helperBoxes == other.helperBoxes &&
@@ -137,10 +109,6 @@ class HelperEntity {
       priority.hashCode ^
       type.hashCode ^
       triggerType.hashCode ^
-      versionMinId.hashCode ^
-      versionMin.hashCode ^
-      versionMaxId.hashCode ^
-      versionMax.hashCode ^
       helperBorders.hashCode ^
       helperImages.hashCode ^
       helperTexts.hashCode;

@@ -87,8 +87,6 @@ class SimpleHelperViewModel extends HelperViewModel {
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
-      minVersionCode: helperEntity?.versionMin,
-      maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
       // helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
       //   SimpleHelperKeys.BACKGROUND_KEY,

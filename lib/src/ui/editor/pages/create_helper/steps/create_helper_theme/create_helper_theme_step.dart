@@ -35,7 +35,7 @@ class CreateHelperThemeStep extends StatelessWidget {
         model.selectedHelperTheme = card.helperTheme;
       }
     }
-    model.isFormValid.value = isFormValid;
+    model.isFormValid?.value = isFormValid;
     presenter.refreshView();
   }
 }

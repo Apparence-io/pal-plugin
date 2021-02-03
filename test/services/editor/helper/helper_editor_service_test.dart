@@ -7,8 +7,6 @@ import 'package:pal/src/database/adapter/helper_entity_adapter.dart' as EntityAd
 import 'package:pal/src/database/adapter/page_entity_adapter.dart' as PageEntityAdapter;
 import 'package:pal/src/database/adapter/version_entity_adapter.dart' as VersionEntityAdapter;
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/database/entity/version_entity.dart';
 import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
@@ -18,7 +16,6 @@ import 'package:pal/src/database/repository/version_repository.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
-import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 import 'anchored_model_data.dart';
 import 'fullscreen_model_data.dart';

@@ -67,7 +67,6 @@ void main() {
 
     testWidgets('should select a card', (WidgetTester tester) async {
       await _before(tester);
-
       expect(find.byIcon(Icons.check), findsNothing);
       expect(find.byKey(ValueKey('pal_PreviewCard_Check_0')), findsNothing);
 

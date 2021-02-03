@@ -34,7 +34,7 @@ class CreateHelperTypeStep extends StatelessWidget {
       }
     }
     model.selectedHelperTheme = null;
-    model.isFormValid.value = isFormValid;
+    model.isFormValid?.value = isFormValid;
     presenter.refreshView();
   }
 }

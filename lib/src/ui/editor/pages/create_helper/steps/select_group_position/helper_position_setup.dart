@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_actionsbar/editor_actionsbar.dart';
-
 import '../../../../../../theme.dart';
 import '../../create_helper_viewmodel.dart';
 

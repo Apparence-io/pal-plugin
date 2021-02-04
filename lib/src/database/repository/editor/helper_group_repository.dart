@@ -15,7 +15,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }) : super(httpClient: httpClient);
 
   Future<List<HelperGroupEntity>> listHelperGroups({String routeName}) async {
-    var response =  await httpClient.get('editor/groups?routeName=$routeName');
+    var response =  await httpClient.get('pal-business/editor/groups?routeName=$routeName');
     if (response == null || response.body == null)
       throw new UnknownHttpError("NO_RESULT");
     try {
@@ -26,7 +26,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }
 
   Future<HelperGroupEntity> create(String pageId, String name, int minVersionId, int maxVersionId) async {
-    var response = await httpClient.post('editor/pages/$pageId/groups',
+    var response = await httpClient.post('pal-business/editor/pages/$pageId/groups',
       body: {
         "name": name,
         "minVersionId": minVersionId,

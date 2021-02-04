@@ -49,11 +49,9 @@ class UpdateHelperViewModel extends HelperViewModel {
     helperType: HelperType.UPDATE_HELPER,
     helperTheme: helperTheme,
   ) {
-    this.language = LanguageNotifier(
-      id: languageId ?? 1,
-    );
-    this.bodyBox = BoxNotifier(
-      id: helperBoxViewModel?.id,
+    this.backgroundBoxForm = EditableBoxFormData(
+      helperBoxViewModel?.id,
+      UpdatescreenHelperKeys.BACKGROUND_KEY,
       backgroundColor: helperBoxViewModel?.backgroundColor ?? Colors.blueAccent,
     );
     this.changelogsTextsForm = changelogsLabels ?? {};

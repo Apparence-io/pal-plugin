@@ -91,9 +91,9 @@ void main() {
     verify(httpClientMock.post('pal-business/editor/pages', body: pageCreationReqJson)).called(1);
     verify(httpClientMock.get('pal-business/editor/versions?versionName=${args.helperGroup.minVersion}&pageSize=1')).called(1);
     verify(httpClientMock.post('pal-business/editor/versions', body: versionMinCreationReqJson)).called(1);
-    var capturedGroupCreationCall =  verify(httpClientMock.post('editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body"))).captured;
+    var capturedGroupCreationCall =  verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body"))).captured;
     expect(capturedGroupCreationCall[0], equals(groupCreationReqJson));
-    var capturedHelperCreationCall =  verify(httpClientMock.post('editor/pages/${existingPage.id}/groups/89032803JS/helpers', body: captureAnyNamed("body"))).captured;
+    var capturedHelperCreationCall =  verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups/89032803JS/helpers', body: captureAnyNamed("body"))).captured;
     expect(capturedHelperCreationCall[0], equals(expectedHelperResultJson));
   }
 

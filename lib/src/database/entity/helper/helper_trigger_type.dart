@@ -5,16 +5,17 @@ part 'helper_trigger_type.g.dart';
 @HiveType(typeId: 11)
 enum HelperTriggerType {
   @HiveField(0)
-  ON_SCREEN_VISIT
+  ON_SCREEN_VISIT,
+
+  @HiveField(1)
+  ON_NEW_UPDATE,
 }
 
-HelperTriggerType getHelperTriggerType(final String value) {
-  return HelperTriggerType.values.firstWhere((element) => element.toString().split('.')[1] == value);
-}
+HelperTriggerType getHelperTriggerType(final String value) 
+  => HelperTriggerType.values.firstWhere((element) => element.toString().split('.')[1] == value);
 
-String helperTriggerTypeToString(final HelperTriggerType helperTriggerType) {
-  return helperTriggerType.toString().split('.')[1];
-}
+String helperTriggerTypeToString(final HelperTriggerType helperTriggerType) 
+  => helperTriggerType.toString().split('.')[1];
 
 String getHelperTriggerTypeDescription(final HelperTriggerType helperTriggerType) {
   String description;

@@ -45,8 +45,7 @@ abstract class HelpersListModalView {
 }
 
 class HelpersListModal extends StatefulWidget {
-  final GlobalKey<NavigatorState>
-      hostedAppNavigatorKey; //FIXME remove this from here
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
 
   final GlobalKey repaintBoundaryKey;
   final BuildContext bottomModalContext;

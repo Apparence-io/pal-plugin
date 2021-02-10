@@ -5,6 +5,7 @@ import 'package:pal/src/router.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
+import 'package:pal/src/ui/editor/pages/page_groups/page_group_list.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
@@ -81,7 +82,8 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
                           constraints.maxWidth,
                           constraints.maxHeight,
                         ),
-                        onTapCallback: () => _showHelpersListModal(context),
+                        // onTapCallback: () => _showHelpersListModal(context),
+                        onTapCallback: () => _showGroupsList(context),
                       ),
                     ],
                   ),
@@ -97,6 +99,15 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   _onShowBubbleStateChanged() {
     if (mounted)
       setState(() {});
+  }
+
+  _showGroupsList(BuildContext context) {
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      builder: (context) => PageGroupsListPage(),
+    );
   }
 
   _showHelpersListModal(BuildContext context) {

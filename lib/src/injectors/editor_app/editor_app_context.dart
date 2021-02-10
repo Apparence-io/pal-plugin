@@ -60,11 +60,12 @@ class HttpEditorAppContext implements  EditorAppContext {
 
   factory HttpEditorAppContext.create(
       {@required url, @required String token,})
-      => HttpEditorAppContext._private(
+      => HttpEditorAppContext.private(
         httpClient: url == null || token == null ? null : HttpClient.create(url, token),
       );
 
-  HttpEditorAppContext._private({
+  @visibleForTesting
+  HttpEditorAppContext.private({
     @required HttpClient httpClient,
   })  : assert(httpClient != null),
         this._editorHelperGroupRepository = EditorHelperGroupRepository(httpClient: httpClient),

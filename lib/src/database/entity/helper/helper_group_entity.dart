@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 
 import '../page_entity.dart';
 
@@ -23,5 +24,27 @@ class HelperGroupEntity {
   @HiveField(4)
   String name;
 
-  HelperGroupEntity({this.id, this.priority, this.helpers, this.page, this.name});
+  @HiveField(5)
+  HelperTriggerType triggerType;
+
+  @HiveField(6)
+  DateTime creationDate;
+
+  @HiveField(7)
+  String minVersion;
+
+  @HiveField(8)
+  String maxVersion;
+
+  HelperGroupEntity({
+    this.id, 
+    this.priority, 
+    this.helpers, 
+    this.page, 
+    this.name, 
+    this.triggerType, 
+    this.creationDate,
+    this.minVersion,
+    this.maxVersion
+  });
 }

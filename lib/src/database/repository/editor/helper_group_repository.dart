@@ -27,15 +27,20 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     ]''';
 
   Future<List<HelperGroupEntity>> listHelperGroups({String routeName}) async {
-      return _adapter.parseArray(_mock1);
-    // var response =  await httpClient.get('pal-business/editor/groups?routeName=$routeName');
-    // if (response == null || response.body == null)
-    //   throw new UnknownHttpError("NO_RESULT");
-    // try {
-    //   return _adapter.parseArray(response.body);
-    // } catch (e) {
-    //   throw "UNPARSABLE RESPONSE $e";
-    // }
+    // return _adapter.parseArray(_mock1);
+    var response;
+    try {
+      response =  await httpClient.get('pal-business/editor/groups?routeName=$routeName');
+      if (response == null || response.body == null)
+        throw new UnknownHttpError("NO_RESULT");
+    } catch (e) {
+      throw new UnknownHttpError("NETWORK ERROR $e");
+    }
+    try {
+      return _adapter.parseArray(response.body);
+    } catch (e) {
+      throw "UNPARSABLE RESPONSE $e";
+    }
   }
 
   Future<HelperGroupEntity> create(String pageId, String name, int minVersionId, int maxVersionId) async {

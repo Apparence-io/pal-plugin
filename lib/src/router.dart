@@ -9,11 +9,6 @@ import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
 
-void globalPop() {
-  Navigator.pop(palNavigatorGlobalKey.currentContext);
-  // return palNavigatorGlobalKey.currentState.pop();
-}
-
 Route<dynamic> route(RouteSettings settings) {
   print("root router... ${settings.name}");
   switch (settings.name) {
@@ -54,11 +49,6 @@ Route<dynamic> route(RouteSettings settings) {
           builder: (context) => MediaGalleryPage(
                 mediaId: args.mediaId,
               ));
-    // case '/editor/:id':
-    //   return MaterialPageRoute(builder: (context) => Text('A route with id'));
-    // case '/editor/:id/edit':
-    //   return MaterialPageRoute(
-    //       builder: (context) => Text('A route with id with edit'));
     default:
       throw 'unexpected Route';
   }

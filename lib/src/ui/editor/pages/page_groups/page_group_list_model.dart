@@ -8,6 +8,7 @@ class PageGroupsListViewModel extends MVVMModel {
 
   bool isLoading;
 
+  String errorMessage;
 }
 
 class GroupItemViewModel {

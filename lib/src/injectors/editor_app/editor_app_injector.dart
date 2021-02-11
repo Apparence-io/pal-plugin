@@ -38,6 +38,8 @@ class EditorInjector extends InheritedWidget {
 
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
 
+  final GlobalKey<NavigatorState> palNavigatorKey;
+
   EditorInjector({
     Key key,
     @required EditorAppContext appContext,
@@ -45,6 +47,7 @@ class EditorInjector extends InheritedWidget {
     @required Widget child,
     @required GlobalKey boundaryChildKey,
     this.hostedAppNavigatorKey,
+    this.palNavigatorKey
   })  : assert(child != null && appContext != null),
         this._pageEditorService = PageEditorService.build(boundaryChildKey, appContext.pageRepository),
         this._projectEditorService = ProjectEditorService.build(

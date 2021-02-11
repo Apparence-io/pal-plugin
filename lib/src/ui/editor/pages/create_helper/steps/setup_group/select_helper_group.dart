@@ -67,7 +67,7 @@ class HelperGroupItemLine extends StatelessWidget {
       onTap: () => onTapElement(value),
       selected: value.selected,
       selectedTileColor: PalTheme.of(context).colors.color4.withOpacity(.6),
-      title: Text(value.title,
+      title: Text(value?.title ?? "",
         style: TextStyle(
           fontSize: 16,
           color: PalTheme.of(context).colors.dark,

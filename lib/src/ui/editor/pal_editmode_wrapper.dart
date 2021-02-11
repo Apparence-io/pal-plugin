@@ -29,10 +29,8 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    palEditModeStateService =
-        EditorInjector.of(context).palEditModeStateService;
-    palEditModeStateService.showEditorBubble
-        .addListener(_onShowBubbleStateChanged);
+    palEditModeStateService = EditorInjector.of(context).palEditModeStateService;
+    palEditModeStateService.showEditorBubble.addListener(_onShowBubbleStateChanged);
   }
 
   @override

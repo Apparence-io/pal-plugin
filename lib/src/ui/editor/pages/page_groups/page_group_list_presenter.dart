@@ -25,12 +25,19 @@ class PageGroupsListPresenter extends Presenter<PageGroupsListViewModel, PageGro
   void onInit() async {
     viewModel.groups = Map();
     viewModel.isLoading = true;
+    viewModel.errorMessage = null;
     RouteSettings route = await navigatorObserver.routeSettings.first;
     // TODO show error if route name is empty
     // TODO show current page route path
     helperGroupService.getPageGroups(route.name)
-      // .catchError((err) => viewInterface.showLoadingError("Server error while loading this page data"))
+      .catchError((err) {
+        viewModel.errorMessage = "Server error while loading data...";
+        viewModel.isLoading = false;
+        refreshView();
+      })
       .then((groupsEntities) {
+        if(viewModel.errorMessage != null) 
+          return;
         if(viewModel.groups.isNotEmpty)
           viewModel.groups.clear();
         groupsEntities.forEach((element) {
@@ -44,8 +51,6 @@ class PageGroupsListPresenter extends Presenter<PageGroupsListViewModel, PageGro
               _formatVersion(element.minVersion, element.maxVersion)
             ));
         });
-      })
-      .then((value) {
         viewModel.isLoading = false;
         refreshView();
       });
@@ -55,7 +60,7 @@ class PageGroupsListPresenter extends Presenter<PageGroupsListViewModel, PageGro
 
   Future<void> onClickAddHelper() async {
     RouteSettings route = await navigatorObserver.routeSettings.first;
-    viewInterface.closePage();
+    await viewInterface.closePage();
     viewInterface.navigateCreateHelper(route.name);
   }
 

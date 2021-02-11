@@ -64,7 +64,7 @@ class PageGroupsListPage extends StatelessWidget {
               ],
             ),
           ),
-        ), //TODO
+        ),
     );
   }
 
@@ -99,6 +99,9 @@ class PageGroupsListPage extends StatelessWidget {
     );
 
   Widget _buildItemList(PageGroupsListPresenter presenter, PageGroupsListViewModel model) {
+    if(model.errorMessage != null) {
+      return Expanded(child: Center(child: Text(model.errorMessage, key: ValueKey("ErrorMessage"),)));
+    }
     return Expanded(
         child: ListView.builder(
         itemCount: model.groups.keys.length,
@@ -202,7 +205,7 @@ class _PageGroupsListView implements PageGroupsListView {
     HapticFeedback.selectionClick();
     // Display the helper creation view
     final shouldOpenEditor = await Navigator.pushNamed(
-      context,
+      EditorInjector.of(context).palNavigatorKey.currentContext,
       '/editor/new',
       arguments: CreateHelperPageArguments(
         EditorInjector.of(context).hostedAppNavigatorKey,

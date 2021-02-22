@@ -1,0 +1,64 @@
+stages:
+  - clean
+  - analyze
+  - test
+
+########
+# Cleans
+########
+clean:example:
+  stage: clean
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd example/
+    - flutter clean
+clean:main:
+  stage: clean
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd ../
+    - flutter clean
+
+##########
+# Analyzes
+##########
+analyze:example:
+  stage: analyze
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd example/
+    - flutter analyze
+analyze:main:
+  stage: analyze
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd ../
+    - flutter analyze
+
+#######
+# Tests
+#######
+test:example:
+  stage: test
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd example/
+    - flutter test test
+test:main:
+  stage: test
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd ../
+    - flutter test test

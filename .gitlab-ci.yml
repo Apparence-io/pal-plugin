@@ -51,7 +51,7 @@ test:example:
     - macos
   script:
     - cd example/
-    - flutter test test --coverage
+    - flutter test --coverage test
     - genhtml coverage/lcov.info --output=coverage
   artifacts:
     paths:
@@ -62,7 +62,7 @@ test:main:
     - apparence
     - macos
   script:
-    - flutter test test --coverage
+    - flutter test --coverage test
     - genhtml coverage/lcov.info --output=coverage
   artifacts:
     paths:

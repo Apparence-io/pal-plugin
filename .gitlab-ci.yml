@@ -1,3 +1,6 @@
+before_script:
+  - flutter pub get
+
 stages:
   - setup
   - clean
@@ -16,7 +19,6 @@ setup:
   script:
     - flutter channel stable
     - flutter upgrade
-    - flutter pub get
 
 ########
 # Cleans
@@ -36,6 +38,25 @@ clean:main:
     - macos
   script:
     - flutter clean
+
+########
+# Analyzes
+########
+analyze:example:
+  stage: analyze
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd example/
+    - flutter analyze
+analyze:main:
+  stage: analyze
+  tags:
+    - apparence
+    - macos
+  script:
+    - flutter analyze
 
 #######
 # Tests

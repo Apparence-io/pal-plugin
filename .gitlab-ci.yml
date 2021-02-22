@@ -44,21 +44,21 @@ setup:
 ########
 # Analyzes
 ########
-analyze:example:
-  stage: analyze
-  tags:
-    - apparence
-    - macos
-  script:
-    - cd example/
-    - flutter analyze
-analyze:main:
-  stage: analyze
-  tags:
-    - apparence
-    - macos
-  script:
-    - flutter analyze
+#analyze:example:
+#  stage: analyze
+#  tags:
+#    - apparence
+#    - macos
+#  script:
+#    - cd example/
+#    - flutter analyze
+#analyze:main:
+#  stage: analyze
+#  tags:
+#    - apparence
+#    - macos
+#  script:
+#    - flutter analyze
 
 #######
 # Tests

@@ -3,6 +3,7 @@ stages:
   - clean
   - analyze
   - test
+  - build
 
 ########
 # Setup
@@ -36,25 +37,6 @@ clean:main:
   script:
     - flutter clean
 
-##########
-# Analyzes
-##########
-#analyze:example:
-  #stage: analyze
-  #tags:
-    #- apparence
-    #- macos
-  #script:
-    #- cd example/
-    #- flutter analyze
-#analyze:main:
-  #stage: analyze
-  #tags:
-    #- apparence
-    #- macos
-  #script:
-    #- flutter analyze
-
 #######
 # Tests
 #######
@@ -73,3 +55,15 @@ test:main:
     - macos
   script:
     - flutter test test
+
+##########
+# Builds
+##########
+build:example:android:
+  stage: build
+  tags:
+    - apparence
+    - macos
+  script:
+    - cd example/
+    - flutter build apk --release -t lib/main.dart

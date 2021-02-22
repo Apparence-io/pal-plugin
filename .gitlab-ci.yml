@@ -51,14 +51,22 @@ test:example:
     - macos
   script:
     - cd example/
-    - flutter test test
+    - flutter test test --coverage
+    - genhtml coverage/lcov.info --output=coverage
+  artifacts:
+    paths:
+      - example/coverage/
 test:main:
   stage: test
   tags:
     - apparence
     - macos
   script:
-    - flutter test test
+    - flutter test test --coverage
+    - genhtml coverage/lcov.info --output=coverage
+  artifacts:
+    paths:
+      - coverage/
 
 ##########
 # Builds

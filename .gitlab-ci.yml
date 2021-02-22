@@ -1,9 +1,12 @@
 before_script:
   - flutter pub get
+  - cd example/
+  - flutter clean
+  - cd ../
+  - flutter clean
 
 stages:
   - setup
-  - clean
   - analyze
   - test
   - build
@@ -23,21 +26,21 @@ setup:
 ########
 # Cleans
 ########
-clean:example:
-  stage: clean
-  tags:
-    - apparence
-    - macos
-  script:
-    - cd example/
-    - flutter clean
-clean:main:
-  stage: clean
-  tags:
-    - apparence
-    - macos
-  script:
-    - flutter clean
+#clean:example:
+#  stage: clean
+#  tags:
+#    - apparence
+#    - macos
+#  script:
+#    - cd example/
+#    - flutter clean
+#clean:main:
+#  stage: clean
+#  tags:
+#    - apparence
+#    - macos
+#  script:
+#    - flutter clean
 
 ########
 # Analyzes
@@ -88,3 +91,6 @@ build:example:android:
   script:
     - cd example/
     - flutter build apk --release -t lib/main.dart
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/app-release.apk

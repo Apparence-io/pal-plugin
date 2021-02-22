@@ -81,4 +81,4 @@ build:example:android:
     - flutter build apk --release -t lib/main.dart
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - example/build/app/outputs/flutter-apk/app-release.apk

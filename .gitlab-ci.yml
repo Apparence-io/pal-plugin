@@ -23,25 +23,6 @@ setup:
     - flutter upgrade
 
 ########
-# Cleans
-########
-#clean:example:
-#  stage: clean
-#  tags:
-#    - apparence
-#    - macos
-#  script:
-#    - cd example/
-#    - flutter clean
-#clean:main:
-#  stage: clean
-#  tags:
-#    - apparence
-#    - macos
-#  script:
-#    - flutter clean
-
-########
 # Analyzes
 ########
 #analyze:example:

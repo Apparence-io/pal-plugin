@@ -1,9 +1,9 @@
 before_script:
-  - flutter pub get
   - cd example/
   - flutter clean
   - cd ../
   - flutter clean
+  - flutter pub get
 
 stages:
   - setup

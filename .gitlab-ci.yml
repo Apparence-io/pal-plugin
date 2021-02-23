@@ -52,6 +52,7 @@ test:example:
   script:
     - cd example/
     - flutter test --coverage test
+    - bash <(curl -s https://codecov.io/bash) -t 7a600e86-7222-4af2-aad5-10b945a4442b
     - genhtml coverage/lcov.info --output=coverage
   artifacts:
     paths:
@@ -63,6 +64,7 @@ test:main:
     - macos
   script:
     - flutter test --coverage test
+    - bash <(curl -s https://codecov.io/bash) -t 7a600e86-7222-4af2-aad5-10b945a4442b
     - genhtml coverage/lcov.info --output=coverage
   artifacts:
     paths:

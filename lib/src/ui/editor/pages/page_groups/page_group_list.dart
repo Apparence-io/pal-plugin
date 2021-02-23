@@ -120,12 +120,18 @@ class PageGroupsListPage extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: model.groups[model.groups.keys.elementAt(index)].length,
                   itemBuilder: (context2, itemIndex) {
-                    var item = model.groups[model.groups.keys.elementAt(index)][itemIndex]; 
-                    return PageGroupsListItem(
-                      title: item.title,
-                      subtitle: item.date,
-                      version: item.version,
-                      palTheme: PalTheme.of(context),
+                    GroupItemViewModel item = model.groups[model.groups.keys.elementAt(index)][itemIndex]; 
+                    return InkWell(
+                      onTap: (){
+                        Navigator.of(context).pushNamed('/editor/group/details',arguments: item.id);
+                      },
+                      child: PageGroupsListItem(
+                        key: ValueKey(item.id),
+                        title: item.title,
+                        subtitle: item.date,
+                        version: item.version,
+                        palTheme: PalTheme.of(context),
+                      ),
                     );
                   }
                 )

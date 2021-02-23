@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/ui/editor/pages/app_settings/app_settings.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
-import 'package:pal/src/ui/editor/pages/helper_details/helper_details_view.dart';
+import 'package:pal/src/ui/editor/pages/group_details/group_details.dart';
+// import 'package:pal/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
+import 'package:pal/src/ui/editor/pages/page_groups/page_group_list_model.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
-GlobalKey<NavigatorState> palNavigatorGlobalKey = new GlobalKey<NavigatorState>();
+import 'database/entity/helper/helper_group_entity.dart';
+
+GlobalKey<NavigatorState> palNavigatorGlobalKey =
+    new GlobalKey<NavigatorState>();
 
 Route<dynamic> route(RouteSettings settings) {
   print("root router... ${settings.name}");
@@ -24,11 +29,18 @@ Route<dynamic> route(RouteSettings settings) {
           hostedAppNavigatorKey: args.hostedAppNavigatorKey,
         ),
       );
-    case '/editor/helper':
-      HelperDetailsComponentArguments arguments = settings.arguments;
+    // case '/editor/helper':
+    //   HelperDetailsComponentArguments arguments = settings.arguments;
+    //   return MaterialPageRoute(
+    //     builder: (context) => HelperDetailsComponent(
+    //       arguments: arguments,
+    //     ),
+    //   );
+    case '/editor/group/details':
+      String arguments = settings.arguments;
       return MaterialPageRoute(
-        builder: (context) => HelperDetailsComponent(
-          arguments: arguments,
+        builder: (context) => GroupDetailsPage(
+          groupId: arguments,
         ),
       );
     case '/editor/new/font-family':
@@ -55,7 +67,9 @@ Route<dynamic> route(RouteSettings settings) {
 }
 
 //shows a page as overlay for our editor
-showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder, {OverlayKeys key}) {
+showOverlayed(
+    GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder,
+    {OverlayKeys key}) {
   OverlayEntry helperOverlay = OverlayEntry(
     opaque: false,
     builder: builder,
@@ -68,8 +82,9 @@ showOverlayed(GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder bui
 }
 
 showOverlayedInContext(WidgetBuilder builder, {OverlayKeys key}) {
-  if(Overlayed.of(palNavigatorGlobalKey.currentState.context).entries
-    .containsKey(key ?? OverlayKeys.EDITOR_OVERLAY_KEY)) {
+  if (Overlayed.of(palNavigatorGlobalKey.currentState.context)
+      .entries
+      .containsKey(key ?? OverlayKeys.EDITOR_OVERLAY_KEY)) {
     return;
   }
   OverlayEntry helperOverlay = OverlayEntry(
@@ -77,14 +92,15 @@ showOverlayedInContext(WidgetBuilder builder, {OverlayKeys key}) {
     builder: builder,
   );
   Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.putIfAbsent(
-    key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
-    () => helperOverlay,
-  );
+        key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
+        () => helperOverlay,
+      );
   palNavigatorGlobalKey.currentState.overlay.insert(helperOverlay);
 }
 
 closeOverlayed(OverlayKeys key) {
-  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries[key]
-    .remove();
+  Overlayed.of(palNavigatorGlobalKey.currentState.context)
+      .entries[key]
+      .remove();
   Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.remove(key);
 }

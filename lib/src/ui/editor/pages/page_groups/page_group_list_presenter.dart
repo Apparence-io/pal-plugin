@@ -48,7 +48,8 @@ class PageGroupsListPresenter extends Presenter<PageGroupsListViewModel, PageGro
             .add(GroupItemViewModel(
               element.name, 
               _formatDate(element.creationDate), 
-              _formatVersion(element.minVersion, element.maxVersion)
+              _formatVersion(element.minVersion, element.maxVersion),
+              element.id
             ));
         });
         viewModel.isLoading = false;

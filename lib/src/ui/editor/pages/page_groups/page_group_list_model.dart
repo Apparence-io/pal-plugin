@@ -12,9 +12,9 @@ class PageGroupsListViewModel extends MVVMModel {
 }
 
 class GroupItemViewModel {
-  final String title, date, version;
+  final String title, date, version, id;
 
-  GroupItemViewModel(this.title, this.date, this.version);
+  GroupItemViewModel(this.title, this.date, this.version, this.id);
 }
 
 

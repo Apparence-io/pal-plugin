@@ -5,6 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
+import 'package:pal/src/ui/editor/pages/group_details/group_details.dart';
 import 'package:pal/src/ui/editor/pages/page_groups/page_group_list.dart';
 import 'package:pal/src/ui/editor/pages/page_groups/widgets/create_helper_button.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
@@ -114,5 +115,23 @@ void main() {
     await tester.pump(Duration(seconds: 2));
     await tester.pump();
     expect(find.byType(CreateHelperPage), findsOneWidget);
+  });
+
+  testWidgets('on group click => navigate to group details with group id', (WidgetTester tester) async {
+    var helpersListJson = '''[
+      {"id":"JKLSDJDLS23", "priority":1, "name":"group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": null}
+    ]''';
+    when(httpClientMock.get('pal-business/editor/groups?routeName=myPage'))
+      .thenAnswer((_) => Future.value(Response(helpersListJson, 200)));
+    await _before(tester);
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    Finder listHelperItem = find.byKey(ValueKey('JKLSDJDLS23'));
+    await tester.tap(listHelperItem);
+    await tester.pump(Duration(seconds: 2));
+    await tester.pump();
+    expect(find.byType(GroupDetailsPage), findsOneWidget);
+
+    GroupDetailsPage widget = tester.widget(find.byType(GroupDetailsPage));
+    expect(widget.groupId,equals('JKLSDJDLS23'));
   });
 }

@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/database/adapter/helper_entity_adapter.dart'
+    as HelperEntityAdapter;
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 
 import '../base_repository.dart';
-import 'package:pal/src/database/adapter/helper_group_entity_adapter.dart' as EntityAdapter;
+import 'package:pal/src/database/adapter/helper_group_entity_adapter.dart'
+    as GroupEntityAdapter;
 
 class EditorHelperGroupRepository extends BaseHttpRepository {
-
-  final EntityAdapter.HelperGroupEntityAdapter _adapter = EntityAdapter
-    .HelperGroupEntityAdapter();
+  final GroupEntityAdapter.HelperGroupEntityAdapter _groupAdapter =
+      GroupEntityAdapter.HelperGroupEntityAdapter();
+  final HelperEntityAdapter.HelperEntityAdapter _helperAdapter =
+      HelperEntityAdapter.HelperEntityAdapter();
 
   EditorHelperGroupRepository({
     @required HttpClient httpClient,
   }) : super(httpClient: httpClient);
-
 
   var _mock1 = '''[
       {"id":"JKLSDJDLS23", "priority":1, "name":"Group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": null},
@@ -25,39 +29,84 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
       {"id":"JKLSDJDLS27", "priority":11, "name":"Group 09", "triggerType":"ON_NEW_UPDATE", "creationDate":"2020-01-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": "1.0.2"},
       {"id":"JKLSDJDLS28", "priority":6, "name":"Group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": "1.0.2"}
     ]''';
+  var _mock2 = '''[{
+        "id":"id1","name": "helper1","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 1},
+        {"id": "id2","name": "helper2","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 2},
+        {"id": "id2","name": "helper2","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 3}]''';
+  var _mock3 =
+      '''{"id":"JKLSDJDLS23", "priority":1, "name":"Group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": null}''';
 
   Future<List<HelperGroupEntity>> listHelperGroups({String routeName}) async {
-    // return _adapter.parseArray(_mock1);
+    return _groupAdapter.parseArray(_mock1);
+    // FIXME : De-comment
     var response;
     try {
-      response =  await httpClient.get('pal-business/editor/groups?routeName=$routeName');
+      response = await httpClient
+          .get('pal-business/editor/groups?routeName=$routeName');
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
       throw new UnknownHttpError("NETWORK ERROR $e");
     }
     try {
-      return _adapter.parseArray(response.body);
+      return _groupAdapter.parseArray(response.body);
     } catch (e) {
       throw "UNPARSABLE RESPONSE $e";
     }
   }
 
-  Future<HelperGroupEntity> create(String pageId, String name, int minVersionId, int maxVersionId) async {
-    var response = await httpClient.post('pal-business/editor/pages/$pageId/groups',
-      body: {
-        "name": name,
-        "minVersionId": minVersionId,
-        "maxVersionId": maxVersionId,
-      }
-    );
+  // TODO : Add pageId
+  Future<HelperGroupEntity> create(
+      String pageId, String name, int minVersionId, int maxVersionId) async {
+    var response = await httpClient
+        .post('pal-business/editor/pages/$pageId/groups', body: {
+      "name": name,
+      "minVersionId": minVersionId,
+      "maxVersionId": maxVersionId,
+    });
     if (response == null || response.body == null)
       throw new UnknownHttpError("NO_RESULT");
     try {
-      return _adapter.parse(response.body);
+      return _groupAdapter.parse(response.body);
     } catch (e) {
       throw "UNPARSABLE RESPONSE $e";
     }
   }
 
+  Future<List<HelperEntity>> listGroupHelpers(String groupId) async {
+    return _helperAdapter.parseArray(_mock2);
+    // FIXME : De-comment
+    var response;
+    try {
+      response =
+          await httpClient.get('pal-business/editor/groups/${groupId}/helpers');
+      if (response == null || response.body == null)
+        throw new UnknownHttpError("NO_RESULT");
+    } catch (e) {
+      throw new UnknownHttpError("NETWORK ERROR $e");
+    }
+    try {
+      return _helperAdapter.parseArray(response.body);
+    } catch (e) {
+      throw "UNPARSABLE RESPONSE $e";
+    }
+  }
+
+  Future<HelperGroupEntity> getGroupDetails(String groupId) async {
+    return _groupAdapter.parse(_mock3);
+    // FIXME : De-comment
+    var response;
+    try {
+      response = await httpClient.get('pal-business/editor/groups/${groupId}');
+      if (response == null || response.body == null)
+        throw new UnknownHttpError("NO_RESULT");
+    } catch (e) {
+      throw new UnknownHttpError("NETWORK ERROR $e");
+    }
+    try {
+      return _groupAdapter.parseMap(response.body);
+    } catch (e) {
+      throw "UNPARSABLE RESPONSE $e";
+    }
+  }
 }

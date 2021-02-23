@@ -26,6 +26,9 @@ class HelperTriggerTypeAdapter extends TypeAdapter<HelperTriggerType> {
       case HelperTriggerType.ON_SCREEN_VISIT:
         writer.writeByte(0);
         break;
+      case HelperTriggerType.ON_NEW_UPDATE:
+        writer.writeByte(1);
+        break;
     }
   }
 

@@ -86,7 +86,7 @@ main() {
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
       groupName(tester).controller.text = 'newTest';
-      component.getPageBuilder.presenter.onTriggerChange(HelperTriggerType.ON_NEW_UPDATE);
+      component.getPageBuilder.presenter.onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
       minVer(tester).controller.text = '1.0.2';
       maxVer(tester).controller.text = '1.0.3';
       await tester.pump();
@@ -114,7 +114,7 @@ main() {
       await _before(tester);
 
       groupName(tester).controller.text = 'newTest';
-      component.pagePresenter.onTriggerChange(HelperTriggerType.ON_NEW_UPDATE);
+      component.getPageBuilder.presenter.onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
       minVer(tester).controller.text = '1.0.2';
       maxVer(tester).controller.text = '1.0.3';
       await tester.pump();

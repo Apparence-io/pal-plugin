@@ -5,21 +5,30 @@ import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 
-enum PageStep{DETAILS,HELPERS}
+enum PageStep { DETAILS, HELPERS }
 
-class GroupDetailsModel extends MVVMModel {
+class GroupDetailsPageModel extends MVVMModel {
   final groupId;
 
   // GROUP INFO / GROUP HELPERS
   GroupModel groupModel;
-  ValueNotifier<List<HelperModel> > helpers;
-  // List<HelperModel> helpers;
+  ValueNotifier<List<HelperModel>> helpers;
+
+  // GROUP INFO CONTROLLERS & FORM KEY
+  TextEditingController groupNameController;
+  HelperTriggerType groupTriggerValue;
+  TextEditingController groupMinVerController;
+  TextEditingController groupMaxVerController;
+  final GlobalKey<FormState> formKey;
 
   // STATE ATTRIBUTES
   bool loading;
   PageStep page;
+  ValueNotifier<bool> canSave;
 
-  GroupDetailsModel(this.groupId);
+  bool locked;
+
+  GroupDetailsPageModel(this.groupId, this.formKey);
 }
 
 class GroupModel {

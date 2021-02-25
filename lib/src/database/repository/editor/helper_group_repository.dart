@@ -74,7 +74,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }
 
   Future<List<HelperEntity>> listGroupHelpers(String groupId) async {
-    return _helperAdapter.parseArray(_mock2);
+    return Future.delayed(Duration(seconds: 1),() => _helperAdapter.parseArray(_mock2));
     // FIXME : De-comment
     var response;
     try {
@@ -93,7 +93,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }
 
   Future<HelperGroupEntity> getGroupDetails(String groupId) async {
-    return _groupAdapter.parse(_mock3);
+    return Future.delayed(Duration(seconds:2),() => _groupAdapter.parse(_mock3));
     // FIXME : De-comment
     var response;
     try {

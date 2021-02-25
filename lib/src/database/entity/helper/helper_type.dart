@@ -27,6 +27,26 @@ String helperTypeToString(final HelperType helperType) {
   return helperType.toString().split('.')[1];
 }
 
+String helperTypeToAsset(final HelperType helperType) {
+  String asset;
+  switch (helperType) {
+    case HelperType.HELPER_FULL_SCREEN:
+      asset = 'helper_type_fullscreen.png';
+      break;
+    case HelperType.UPDATE_HELPER:
+      asset = 'helper_type_update.png';
+      break;
+    case HelperType.SIMPLE_HELPER:
+      asset = 'helper_type_simple.png';
+      break;
+    case HelperType.ANCHORED_OVERLAYED_HELPER:
+      asset = 'helper_type_anchored.png';
+      break;  
+    default:
+  }
+  return asset;
+}
+
 String getHelperTypeDescription(final HelperType helperType) {
   String description;
   switch (helperType) {

@@ -32,7 +32,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   var _mock2 = '''[{
         "id":"id1","name": "helper1","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 1},
         {"id": "id2","name": "helper2","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 2},
-        {"id": "id2","name": "helper2","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 3}]''';
+        {"id": "id2","name": "helper2","type": "SIMPLE_HELPER","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 3}]''';
   var _mock3 =
       '''{"id":"JKLSDJDLS23", "priority":1, "name":"Group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": null}''';
 

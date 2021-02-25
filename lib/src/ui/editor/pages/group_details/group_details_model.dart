@@ -25,6 +25,7 @@ class GroupDetailsPageModel extends MVVMModel {
   bool loading;
   PageStep page;
   ValueNotifier<bool> canSave;
+  PageController pageController;
 
   bool locked;
 
@@ -48,16 +49,20 @@ class GroupModel {
 }
 
 class HelperModel {
+  String helperId;
   String title;
   HelperType type;
   int priority;
   DateTime creationDate;
 
-  HelperModel({this.title, this.type, this.priority, this.creationDate});
+  HelperModel(
+      {this.title, this.type, this.priority, this.creationDate, this.helperId});
 
   static HelperModel from(HelperEntity entity) => HelperModel(
-      creationDate: entity.creationDate,
-      priority: entity.priority,
-      title: entity.name,
-      type: entity.type);
+        helperId: entity.id,
+        creationDate: entity.creationDate,
+        priority: entity.priority,
+        title: entity.name,
+        type: entity.type,
+      );
 }

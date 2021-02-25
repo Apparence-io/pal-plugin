@@ -23,10 +23,11 @@ class GroupDetailsPresenter
     // INIT
     // *STATE
     this.viewModel.loading = true;
-    this.viewModel.helpers = ValueNotifier(null);
-    this.viewModel.page = PageStep.DETAILS;
-    this.viewModel.canSave = ValueNotifier(false);
     this.viewModel.locked = false;
+    this.viewModel.helpers = ValueNotifier(null);
+    this.viewModel.canSave = ValueNotifier(false);
+    this.viewModel.page = PageStep.DETAILS;
+    this.viewModel.pageController = PageController();
 
     // *CONTROLLERS
     this.viewModel.groupMaxVerController = TextEditingController();
@@ -60,9 +61,7 @@ class GroupDetailsPresenter
 
   // SAVE NEW VALUES AND SEND TO SERVER
   void save() {
-    if(!this.viewModel.locked){
-
-    }
+    if (!this.viewModel.locked) {}
   }
 
   // CONTROLLERS SUBMIT CHECKS && VALIDATOR
@@ -106,16 +105,32 @@ class GroupDetailsPresenter
   // STATE CHANGES
   void goToHelpersList() {
     this.viewModel.page = PageStep.HELPERS;
+    this.viewModel.pageController.animateToPage(1,
+        curve: Curves.easeOut, duration: Duration(milliseconds: 250));
     this.refreshView();
   }
 
   void goToGroupDetails() {
     this.viewModel.page = PageStep.DETAILS;
+    this.viewModel.pageController.animateToPage(0,
+        curve: Curves.easeOut, duration: Duration(milliseconds: 250));
     this.refreshView();
   }
 
   void updateState() {
     this.viewModel.canSave.value = !this.viewModel.locked &&
         this.viewModel.formKey.currentState.validate();
+  }
+
+  void previewHelper(String id) {
+    // TODO :Preview Helper
+  }
+
+  void deleteHelper(String id) {
+    // TODO : Delete Helper
+  }
+
+  void editHelper(String id) {
+    // TODO : Edit Helper
   }
 }

@@ -43,8 +43,9 @@ class GroupDetailsPage extends StatelessWidget implements GroupDetailsView {
   ) =>
       Theme(
         data: PalTheme.of(context.buildContext).buildTheme().copyWith(
-            dividerTheme: DividerThemeData(color: Colors.transparent),
-            accentColor: PalTheme.of(context.buildContext).colors.color1),
+              dividerTheme: DividerThemeData(color: Colors.transparent),
+              accentColor: PalTheme.of(context.buildContext).colors.color1,
+            ),
         child: Scaffold(
           key: _scaffoldKey,
           // resizeToAvoidBottomInset: false,
@@ -91,7 +92,10 @@ class GroupDetailsPage extends StatelessWidget implements GroupDetailsView {
                       active: model.page == PageStep.HELPERS ? true : false,
                       onTap: model.page == PageStep.HELPERS
                           ? null
-                          : () => presenter.goToHelpersList(),
+                          : () {
+                              FocusScope.of(context.buildContext).unfocus();
+                              presenter.goToHelpersList();
+                            },
                     )
                   ],
                 ),
@@ -113,35 +117,26 @@ class GroupDetailsPage extends StatelessWidget implements GroupDetailsView {
           ),
           // ## APP BAR
 
-          body: AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),
-            transitionBuilder: (child, animation) => DualTransitionBuilder(
-              animation: animation,
-              forwardBuilder: (context, animation, child) => SlideTransition(
-                position: Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0))
-                    .chain(CurveTween(curve: Curves.easeInOut))
-                    .animate(animation),
-                child: child,
+          body: PageView(
+            controller: model.pageController,
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              Form(
+                key: model.formKey,
+                child: GroupDetailsInfo(
+                  presenter,
+                  model,
+                  key: ValueKey('GroupInfo'),
+                ),
               ),
-              reverseBuilder: (context, animation, child) => ScaleTransition(
-                  scale: Tween<double>(begin: 1, end: .8)
-                      .chain(CurveTween(curve: Curves.easeOutQuart))
-                      .animate(animation),
-                  child: child),
-              child: Material(color: Color(0xFFFAFEFF), child: child),
-            ),
-            child: model.page == PageStep.DETAILS
-                ? Form(
-                    key: model.formKey,
-                    child: GroupDetailsInfo(
-                      presenter,
-                      model,
-                      key: ValueKey('GroupInfo'),
-                    ),
-                  )
-                : GroupDetailsHelpersList(
-                    key: ValueKey('GroupHelpers'),
-                  ),
+              GroupDetailsHelpersList(
+                onPreview: presenter.previewHelper,
+                onDelete: presenter.deleteHelper,
+                onEdit: presenter.editHelper,
+                helpersList: model.helpers,
+                key: ValueKey('GroupHelpers'),
+              ),
+            ],
           ),
         ),
       );

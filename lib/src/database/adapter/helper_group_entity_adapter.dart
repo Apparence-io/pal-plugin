@@ -18,7 +18,7 @@ class HelperGroupEntityAdapter extends GenericEntityAdapter<HelperGroupEntity> {
       creationDate: DateTime.parse(map['creationDate']).toLocal(),
       minVersion: map['versionMin'],
       triggerType: helperTriggerType,
-      maxVersion:map.containsKey('versionMax') ? map['maxVersion'] : null,
+      maxVersion:map.containsKey('versionMax') ? map['versionMax'] : null,
       helpers: map.containsKey('helpers') ? new HelperEntityAdapter().parseDynamicArray(map['helpers']) : null,
       page: map.containsKey('page') ? new PageEntityAdapter().parseMap(map['page']) : null,
     );

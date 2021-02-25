@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/adapter/helper_entity_adapter.dart'
     as HelperEntityAdapter;
@@ -116,12 +118,12 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
       String type) async {
     var response;
     try {
-      response = await httpClient.put('pal-business/editor/groups/$id', body: {
+      response = await httpClient.put('pal-business/editor/groups/$id', body: jsonEncode({
         "versionMin": minVersionId,
         "versionMax": maxVersionId,
         "triggerType": type,
         "name": name
-      });
+      }));
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {

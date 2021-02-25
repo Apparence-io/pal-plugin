@@ -116,9 +116,10 @@ class GroupDetailsPage extends StatelessWidget
             actions: [
               PopupMenuButton(
                 itemBuilder: (context) =>
-                    [PopupMenuItem(child: Text('Delete'))],
+                    [PopupMenuItem(child: Text('Delete'),)],
                 icon: Icon(Icons.more_horiz),
                 offset: Offset(0, 24),
+                onSelected: (val) => presenter.deleteGroup(),
               )
             ],
             // *******MENU BUTTON

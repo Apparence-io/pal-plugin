@@ -75,7 +75,7 @@ class GroupDetailsPresenter
             ? this
                 .versionService
                 .getOrCreateVersionId(this.viewModel.groupMaxVerController.text)
-            : null,
+            : Future.value(null),
       ]).catchError((err) {
         this.viewInterface.showError();
       }).then((res) {
@@ -94,6 +94,13 @@ class GroupDetailsPresenter
           this.viewInterface.showSucess();
         });
       });
+    }
+  }
+
+  void deleteGroup() {
+    if (!this.viewModel.locked) {
+      this.viewModel.locked = true;
+      // TODO : Delete group
     }
   }
 
@@ -158,7 +165,7 @@ class GroupDetailsPresenter
   // HELPERS ACTIONS / PREVIEW / EDIT / DELETE
 
   void previewHelper(String id) {
-    // 
+    //
   }
 
   void deleteHelper(String id) {
@@ -166,6 +173,6 @@ class GroupDetailsPresenter
   }
 
   void editHelper(String id) {
-    // 
+    //
   }
 }

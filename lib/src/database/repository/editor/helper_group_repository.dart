@@ -36,13 +36,13 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   var _mock3 =
       '''{"id":"JKLSDJDLS23", "priority":1, "name":"Group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": null}''';
 
-  Future<List<HelperGroupEntity>> listHelperGroups({String routeName}) async {
-    return _groupAdapter.parseArray(_mock1);
+  Future<List<HelperGroupEntity>> listHelperGroups(String pageId) async {
+    // return _groupAdapter.parseArray(_mock1);
     // FIXME : De-comment
     var response;
     try {
       response = await httpClient
-          .get('pal-business/editor/groups?routeName=$routeName');
+          .get('pal-business/editor/pages/$pageId/groups');
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
@@ -74,12 +74,13 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }
 
   Future<List<HelperEntity>> listGroupHelpers(String groupId) async {
-    return Future.delayed(Duration(seconds: 1),() => _helperAdapter.parseArray(_mock2));
+    // return Future.delayed(
+    //     Duration(seconds: 1), () => _helperAdapter.parseArray(_mock2));
     // FIXME : De-comment
     var response;
     try {
       response =
-          await httpClient.get('pal-business/editor/groups/${groupId}/helpers');
+          await httpClient.get('pal-business/editor/groups/$groupId/helpers');
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
@@ -93,20 +94,39 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }
 
   Future<HelperGroupEntity> getGroupDetails(String groupId) async {
-    return Future.delayed(Duration(seconds:2),() => _groupAdapter.parse(_mock3));
+    // return Future.delayed(
+    //     Duration(seconds: 2), () => _groupAdapter.parse(_mock3));
     // FIXME : De-comment
     var response;
     try {
-      response = await httpClient.get('pal-business/editor/groups/${groupId}');
+      response = await httpClient.get('pal-business/editor/groups/$groupId');
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
       throw new UnknownHttpError("NETWORK ERROR $e");
     }
     try {
-      return _groupAdapter.parseMap(response.body);
+      return _groupAdapter.parse(response.body);
     } catch (e) {
       throw "UNPARSABLE RESPONSE $e";
     }
+  }
+
+  Future updateGroup(String id, int maxVersionId, int minVersionId, String name,
+      String type) async {
+    var response;
+    try {
+      response = await httpClient.put('pal-business/editor/groups/$id', body: {
+        "versionMin": minVersionId,
+        "versionMax": maxVersionId,
+        "triggerType": type,
+        "name": name
+      });
+      if (response == null || response.body == null)
+        throw new UnknownHttpError("NO_RESULT");
+    } catch (e) {
+      throw new UnknownHttpError("NETWORK ERROR $e");
+    }
+    return;
   }
 }

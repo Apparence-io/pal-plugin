@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/services/editor/groups/group_service.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/services/editor/versions/version_editor_service.dart';
 
 import 'group_details.dart';
 import 'group_details_model.dart';
@@ -10,10 +12,11 @@ import 'group_details_model.dart';
 class GroupDetailsPresenter
     extends Presenter<GroupDetailsPageModel, GroupDetailsView> {
   final EditorHelperGroupService groupService;
+  final VersionEditorService versionService;
 
   GroupDetailsPresenter(
       GroupDetailsPageModel viewModel, GroupDetailsView viewInterface,
-      {@required this.groupService})
+      {@required this.groupService, @required this.versionService})
       : super(viewModel, viewInterface);
 
   @override
@@ -61,7 +64,37 @@ class GroupDetailsPresenter
 
   // SAVE NEW VALUES AND SEND TO SERVER
   void save() {
-    if (!this.viewModel.locked) {}
+    if (!this.viewModel.locked) {
+      this.viewModel.locked = true;
+      this.updateState();
+      Future.wait([
+        this
+            .versionService
+            .getOrCreateVersionId(this.viewModel.groupMinVerController.text),
+        this.viewModel.groupMaxVerController.text.isNotEmpty
+            ? this
+                .versionService
+                .getOrCreateVersionId(this.viewModel.groupMaxVerController.text)
+            : null,
+      ]).catchError((err) {
+        this.viewInterface.showError();
+      }).then((res) {
+        HelperGroupUpdate updated = HelperGroupUpdate(
+          id: this.viewModel.groupId,
+          maxVersionId: res[1],
+          minVersionId: res[0],
+          name: this.viewModel.groupNameController.text,
+          type: this.viewModel.groupTriggerValue,
+        );
+        this.groupService.updateGroup(updated).catchError((err) {
+          this.viewInterface.showError();
+        }).then((res) {
+          this.viewModel.locked = false;
+          this.updateState();
+          this.viewInterface.showSucess();
+        });
+      });
+    }
   }
 
   // CONTROLLERS SUBMIT CHECKS && VALIDATOR
@@ -122,8 +155,10 @@ class GroupDetailsPresenter
         this.viewModel.formKey.currentState.validate();
   }
 
+  // HELPERS ACTIONS / PREVIEW / EDIT / DELETE
+
   void previewHelper(String id) {
-    // TODO :Preview Helper
+    // 
   }
 
   void deleteHelper(String id) {
@@ -131,6 +166,6 @@ class GroupDetailsPresenter
   }
 
   void editHelper(String id) {
-    // TODO : Edit Helper
+    // 
   }
 }

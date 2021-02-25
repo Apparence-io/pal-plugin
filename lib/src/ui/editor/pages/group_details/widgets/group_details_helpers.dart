@@ -103,12 +103,6 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
   }
 
   @override
-  void dispose() {
-    widget.expandedTile.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [

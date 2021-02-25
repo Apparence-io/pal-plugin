@@ -25,26 +25,26 @@ class CreateHelperConfig {
     this.priority,
   });
 
-  factory CreateHelperConfig.from(String route, HelperViewModel viewModel)
-    => CreateHelperConfig(
-      id: viewModel?.id,
-      route: route,
-      name: viewModel.name,
-      triggerType: viewModel?.helperGroup?.triggerType,
-      helperType: viewModel?.helperType,
-      priority: viewModel?.priority,
-      // minVersion: viewModel?.helperGroup?.minVersionCode,
-      // maxVersion: viewModel?.helperGroup?.maxVersionCode,
-    );
+  factory CreateHelperConfig.from(String route, HelperViewModel viewModel) =>
+      CreateHelperConfig(
+        id: viewModel?.id,
+        route: route,
+        name: viewModel.name,
+        triggerType: viewModel?.helperGroup?.triggerType,
+        helperType: viewModel?.helperType,
+        priority: viewModel?.priority,
+        // minVersion: viewModel?.helperGroup?.minVersionCode,
+        // maxVersion: viewModel?.helperGroup?.maxVersionCode,
+      );
 
   toJson() => {
-    "id": id,
-    "route": route,
-    "name": name,
-    "triggerType": triggerType.toString(),
-    "helperType": helperType.toString(),
-    "priority": priority,
-  }; 
+        "id": id,
+        "route": route,
+        "name": name,
+        "triggerType": triggerType.toString(),
+        "helperType": helperType.toString(),
+        "priority": priority,
+      };
 }
 
 ///-------------------------------
@@ -59,9 +59,20 @@ class HelperGroupConfig {
   HelperGroupConfig({this.id, this.name, this.minVersion, this.maxVersion});
 
   toJson() => {
-    "id": id,
-    "name": name,
-  };
+        "id": id,
+        "name": name,
+      };
+}
+
+class HelperGroupUpdate {
+  String id;
+  String name;
+  HelperTriggerType type;
+  int minVersionId;
+  int maxVersionId;
+
+  HelperGroupUpdate(
+      {this.id, this.name, this.type, this.minVersionId, this.maxVersionId});
 }
 
 ///-------------------------------
@@ -91,16 +102,15 @@ class CreateFullScreenHelper {
   HelperBoxConfig bodyBox;
   HelperGroupConfig helperGroup;
 
-  CreateFullScreenHelper({
-    @required this.config,
-    @required this.title,
-    @required this.description,
-    this.positivButton,
-    this.negativButton,
-    @required this.bodyBox,
-    this.mediaHeader,
-    @required this.helperGroup
-  });
+  CreateFullScreenHelper(
+      {@required this.config,
+      @required this.title,
+      @required this.description,
+      this.positivButton,
+      this.negativButton,
+      @required this.bodyBox,
+      this.mediaHeader,
+      @required this.helperGroup});
 }
 
 ///-------------------------------
@@ -114,16 +124,15 @@ class CreateUpdateHelper {
   HelperMediaConfig headerMedia;
   HelperGroupConfig helperGroup;
 
-  CreateUpdateHelper({
-    @required this.config,
-    @required this.title,
-    @required this.lines,
-    @required this.headerMedia,
-    this.positivButton,
-    this.negativButton,
-    this.bodyBox,
-    this.helperGroup
-  });
+  CreateUpdateHelper(
+      {@required this.config,
+      @required this.title,
+      @required this.lines,
+      @required this.headerMedia,
+      this.positivButton,
+      this.negativButton,
+      this.bodyBox,
+      this.helperGroup});
 }
 
 ///-------------------------------
@@ -135,23 +144,23 @@ class CreateAnchoredHelper {
   HelperBoxConfig bodyBox;
   HelperGroupConfig helperGroup;
 
-  CreateAnchoredHelper({
-    @required this.config,
-    this.title,
-    this.description,
-    this.positivButton, this.negativButton,
-    this.bodyBox,
-    @required this.helperGroup
-  });
+  CreateAnchoredHelper(
+      {@required this.config,
+      this.title,
+      this.description,
+      this.positivButton,
+      this.negativButton,
+      this.bodyBox,
+      @required this.helperGroup});
 
   toJson() => {
-    "config": jsonEncode(config),
-    "title": jsonEncode(title),
-    "description": jsonEncode(description),
-    "positivButton": jsonEncode(positivButton),
-    "negativButton": jsonEncode(negativButton),
-    "bodyBox": jsonEncode(bodyBox),
-  };
+        "config": jsonEncode(config),
+        "title": jsonEncode(title),
+        "description": jsonEncode(description),
+        "positivButton": jsonEncode(positivButton),
+        "negativButton": jsonEncode(negativButton),
+        "bodyBox": jsonEncode(bodyBox),
+      };
 }
 
 ///-------------------------------
@@ -175,13 +184,12 @@ class HelperTextConfig {
       @required this.fontSize});
 
   toJson() => {
-    "id": id,
-    "text": text,
-    "fontColor": fontColor,
-    "fontWeight": fontWeight,
-    "fontSize": fontSize
-  };
-
+        "id": id,
+        "text": text,
+        "fontColor": fontColor,
+        "fontWeight": fontWeight,
+        "fontSize": fontSize
+      };
 }
 
 class HelperMediaConfig {
@@ -206,9 +214,5 @@ class HelperBoxConfig {
     this.color,
   });
 
-  toJson() => {
-    "id":id,
-    "key":key,
-    "color":color
-  };
+  toJson() => {"id": id, "key": key, "color": color};
 }

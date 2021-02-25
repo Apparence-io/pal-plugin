@@ -24,7 +24,7 @@ class EditorHelperRepository extends BaseHttpRepository {
   ) async {
     final payload = jsonEncode(createHelper);
     final Response response = await this.httpClient.post(
-          'pal-business/editor/pages/$pageId/groups/$groupId/helpers',
+          'pal-business/editor/groups/$groupId/helpers',
           body: payload,
         );
     if (response == null || response.body == null)
@@ -39,7 +39,7 @@ class EditorHelperRepository extends BaseHttpRepository {
   ) async {
     final payload = jsonEncode(updatedHelper);
     final Response response = await this.httpClient.put(
-          'pal-business/editor/pages/$pageId/groups/$groupId/helpers/${updatedHelper?.id}',
+          'pal-business/editor/groups/$groupId/helpers/${updatedHelper?.id}',
           body: payload);
     if (response == null || response.body == null)
       throw new UnknownHttpError('NO_RESULT');

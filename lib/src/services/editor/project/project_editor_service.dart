@@ -54,8 +54,8 @@ class ProjectEditorHttpService implements ProjectEditorService {
     => this.projectRepository.getAppIcon();
 
   @override
-  Future<List<HelperGroupEntity>> getPageGroups(String routeName)
-    => editorHelperGroupRepository.listHelperGroups(routeName: routeName);
+  Future<List<HelperGroupEntity>> getPageGroups(String pageId)
+    => editorHelperGroupRepository.listHelperGroups(pageId);
 
   @override
   Future<List<HelperEntity>> getGroupHelpers(String groupId)

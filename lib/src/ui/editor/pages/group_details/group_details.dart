@@ -5,13 +5,20 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_helpers.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_infos.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_tabs.dart';
+import 'package:pal/src/ui/editor/widgets/snackbar_mixin.dart';
 
 import 'group_details_model.dart';
 import 'group_details_presenter.dart';
 
-class GroupDetailsView {}
+class GroupDetailsView {
+  void showError() {}
 
-class GroupDetailsPage extends StatelessWidget implements GroupDetailsView {
+  void showSucess() {}
+}
+
+class GroupDetailsPage extends StatelessWidget
+    with SnackbarMixin
+    implements GroupDetailsView {
   final String groupId;
 
   GroupDetailsPage({Key key, @required this.groupId}) : super(key: key);
@@ -30,7 +37,8 @@ class GroupDetailsPage extends StatelessWidget implements GroupDetailsView {
       key: ValueKey('GroupDetailsPage'),
       presenterBuilder: (context) => GroupDetailsPresenter(
           GroupDetailsPageModel(this.groupId, GlobalKey<FormState>()), this,
-          groupService: EditorInjector.of(context).helperGroupService),
+          groupService: EditorInjector.of(context).helperGroupService,
+          versionService: EditorInjector.of(context).versionEditorService),
       builder: (context, presenter, model) =>
           _buildPage(context, presenter, model),
     );
@@ -140,4 +148,14 @@ class GroupDetailsPage extends StatelessWidget implements GroupDetailsView {
           ),
         ),
       );
+
+  @override
+  void showError() {
+    showSnackbarMessage(_scaffoldKey, 'Erreur lors de la mise à jour.', false);
+  }
+
+  @override
+  void showSucess() {
+    showSnackbarMessage(_scaffoldKey, 'Group mis à jour avec sucèss.', true);
+  }
 }

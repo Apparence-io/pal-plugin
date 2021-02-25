@@ -5,6 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/ui/editor/pages/group_details/group_details.dart';
+import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_helpers.dart';
 
 class HttpClientMock extends Mock implements HttpClient {}
 

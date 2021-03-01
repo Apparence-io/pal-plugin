@@ -1,4 +1,8 @@
 before_script:
+  - export LC_ALL=fr_FR.UTF-8
+  - export LANG=fr_FR.UTF-8
+  - export PROJECT_VERSION=$(cider version)
+  - export CI_PUSH_REPO=`echo $CI_REPOSITORY_URL | perl -pe 's#.*@(.+?(\:\d+)?)/#git@\1:#'`
   - cd example/
   - flutter clean
   - cd ../
@@ -6,81 +10,64 @@ before_script:
   - flutter pub get
 
 stages:
-  - setup
-  - test
-  - build
+  - 🛠 Setup
+  - 🔮 Test
+
+variables:
+  APP_FOLDER: "flutter-test-ci"
+  UPLOADER: "/Users/apparence/dropbox-uploader/dropbox_uploader.sh"
+  UPLOADER_CONFIG: "/Users/apparence/dropbox-uploader/dropbox_uploader.cfg"
 
 ########
 # Setup
 ########
 setup:
-  stage: setup
+  stage: 🛠 Setup
   tags:
     - apparence
     - macos
+  except:
+    - tags
   script:
     - flutter channel stable
     - flutter upgrade
-
-########
-# Analyzes
-########
-#analyze:example:
-#  stage: analyze
-#  tags:
-#    - apparence
-#    - macos
-#  script:
-#    - cd example/
-#    - flutter analyze
-#analyze:main:
-#  stage: analyze
-#  tags:
-#    - apparence
-#    - macos
-#  script:
-#    - flutter analyze
+    - flutter clean
 
 #######
 # Tests
 #######
 test:example:
-  stage: test
+  stage: 🔮 Test
   tags:
     - apparence
     - macos
+  variables:
+    CODE_COV_TOKEN: "7a600e86-7222-4af2-aad5-10b945a4442b"
   script:
     - cd example/
     - flutter test --coverage test
-    - bash <(curl -s https://codecov.io/bash) -t 7a600e86-7222-4af2-aad5-10b945a4442b
+    - bash <(curl -s https://codecov.io/bash) -t "${CODE_COV_TOKEN}"
     - genhtml coverage/lcov.info --output=coverage
+    - zip -r coverage/coverage_report.zip coverage/
+    - sh "${UPLOADER}" -f "${UPLOADER_CONFIG}" mkdir "${APP_FOLDER}/${PROJECT_VERSION}/example/" &>/dev/null || echo "Target folder exists"
+    - sh "${UPLOADER}" -f "${UPLOADER_CONFIG}" upload "coverage/coverage_report.zip" "${APP_FOLDER}/${PROJECT_VERSION}/example/coverage_report.zip"
   artifacts:
     paths:
       - example/coverage/
 test:main:
-  stage: test
+  stage: 🔮 Test
   tags:
     - apparence
     - macos
+  variables:
+    CODE_COV_TOKEN: "7a600e86-7222-4af2-aad5-10b945a4442b"
   script:
     - flutter test --coverage test
-    - bash <(curl -s https://codecov.io/bash) -t 7a600e86-7222-4af2-aad5-10b945a4442b
+    - bash <(curl -s https://codecov.io/bash) -t "${CODE_COV_TOKEN}"
     - genhtml coverage/lcov.info --output=coverage
+    - zip -r coverage/coverage_report.zip coverage/
+    - sh "${UPLOADER}" -f "${UPLOADER_CONFIG}" mkdir "${APP_FOLDER}/${PROJECT_VERSION}/plugin/" &>/dev/null || echo "Target folder exists"
+    - sh "${UPLOADER}" -f "${UPLOADER_CONFIG}" upload "coverage/coverage_report.zip" "${APP_FOLDER}/${PROJECT_VERSION}/plugin/coverage_report.zip"
   artifacts:
     paths:
       - coverage/
-
-##########
-# Builds
-##########
-build:example:android:
-  stage: build
-  tags:
-    - apparence
-    - macos
-  script:
-    - cd example/
-    - flutter build apk --release -t lib/main.dart
-  artifacts:
-    paths:
-      - example/build/app/outputs/flutter-apk/app-release.apk

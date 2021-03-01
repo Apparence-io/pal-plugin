@@ -14,7 +14,7 @@ stages:
   - 🔮 Test
 
 variables:
-  APP_FOLDER: "flutter-test-ci"
+  APP_FOLDER: "pal"
   UPLOADER: "/Users/apparence/dropbox-uploader/dropbox_uploader.sh"
   UPLOADER_CONFIG: "/Users/apparence/dropbox-uploader/dropbox_uploader.cfg"
 

@@ -409,7 +409,7 @@ void main() {
       reset(helperEditorServiceMock);
       EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.edit(
         palEditModeStateService: PalEditModeStateServiceMock(),
-        helperEntity: helperEntity,
+        helperId: helperEntity.id,
         parameters: HelperEditorPageArguments(null, "pageId_IEPZE",
             helperMinVersion: "1.0.1", helperMaxVersion: null),
         helperService: helperEditorServiceMock,

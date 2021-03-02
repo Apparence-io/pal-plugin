@@ -28,7 +28,7 @@ class HelperDetailsPresenter extends Presenter<HelperDetailsModel, HelperDetails
     this.refreshView();
     try {
       await this.editorHelperService
-          .deleteHelper(arguments?.pageId, arguments?.helper?.id);
+          .deleteHelper(arguments?.helper?.id);
       this.viewModel.isDeleteSuccess = true;
       this.viewInterface.showMessage('Helper successfully deleted 😎', true);
       await Future.delayed(Duration(milliseconds: 2500));

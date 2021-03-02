@@ -19,6 +19,8 @@ class EditorSimpleHelperPresenter
 
   final HelperEditorPageArguments parameters;
 
+  bool editMode = false;
+
   EditorSimpleHelperPresenter(
       EditorSimpleHelperView viewInterface,
       SimpleHelperViewModel simpleHelperViewModel,
@@ -29,14 +31,34 @@ class EditorSimpleHelperPresenter
   @override
   void onInit() {
     super.onInit();
-    viewModel.canValidate = new ValueNotifier(false);
-    viewModel.currentSelectedEditableNotifier = ValueNotifier(null);
+
+    this.viewModel.loading = true;
+
+    if (this.viewModel.id != null) {
+      this.editMode = true;
+      this.editorHelperService.getHelper(this.viewModel.id).then((helper) {
+        this.viewModel = SimpleHelperViewModel.fromHelperEntity(helper);
+        viewModel.canValidate = ValueNotifier(false);
+        viewModel.currentSelectedEditableNotifier = ValueNotifier(null);
+        this
+            .viewModel
+            .currentSelectedEditableNotifier
+            .addListener(removeSelectedEditableItems);
+        this.viewModel.loading = false;
+        this.refreshView();
+      });
+    } else {
+      viewModel.canValidate = ValueNotifier(false);
+      viewModel.currentSelectedEditableNotifier = ValueNotifier(null);
+      this
+          .viewModel
+          .currentSelectedEditableNotifier
+          .addListener(removeSelectedEditableItems);
+      this.viewModel.loading = false;
+      this.refreshView();
+    }
 
     // Refresh UI to remove all selected items
-    this
-        .viewModel
-        .currentSelectedEditableNotifier
-        .addListener(removeSelectedEditableItems);
   }
 
   void removeSelectedEditableItems() {
@@ -74,12 +96,12 @@ class EditorSimpleHelperPresenter
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
       status.dispose();
-      viewInterface.closeEditor();
+      viewInterface.closeEditor(!this.editMode,!this.editMode);
     }
   }
 
   void onCancel() {
-    viewInterface.closeEditor();
+    viewInterface.closeEditor(!this.editMode,!this.editMode);
   }
 
   String validateDetailsTextField(String currentValue) {

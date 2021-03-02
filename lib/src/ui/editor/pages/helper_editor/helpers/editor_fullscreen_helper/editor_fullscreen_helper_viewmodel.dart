@@ -27,12 +27,16 @@ class FullscreenHelperViewModel extends HelperViewModel {
   EditableButtonFormData positivButtonForm;
   EditableButtonFormData negativButtonForm;
 
+  bool loading;
+
   FullscreenHelperViewModel({
     String id,
-    @required String name,
-    @required HelperTriggerType triggerType,
-    @required int priority,
-    @required HelperTheme helperTheme,
+    String name,
+    String groupId,
+    String groupName,
+    HelperTriggerType triggerType,
+    int priority,
+    HelperTheme helperTheme,
     String minVersionCode,
     String maxVersionCode,
     int versionMaxId,
@@ -49,6 +53,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
     name: name,
     priority: priority,
     helperGroup: HelperGroupModel(
+      id: groupId,
+      name: groupName,
       triggerType: triggerType,
       minVersionCode: minVersionCode,
       maxVersionCode: maxVersionCode,
@@ -122,6 +128,8 @@ class FullscreenHelperViewModel extends HelperViewModel {
       maxVersionCode: model.helperGroup?.maxVersionCode,
       triggerType: model.helperGroup?.triggerType,
       helperTheme: model.helperTheme,
+      groupId: model.helperGroup.id,
+      groupName: model.helperGroup.name
     );
     if (model is FullscreenHelperViewModel) {
       fullscreenHelper.backgroundBoxForm = model?.backgroundBoxForm;
@@ -144,7 +152,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       priority: helperEntity?.priority,
       helperTheme: null,
       boxViewModel: HelperSharedFactory.parseBoxBackground(
-        SimpleHelperKeys.BACKGROUND_KEY,
+        FullscreenHelperKeys.BACKGROUND_KEY,
         helperEntity?.helperBoxes,
       ),
       titleViewModel: HelperSharedFactory.parseTextLabel(

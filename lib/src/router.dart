@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pal/src/ui/editor/pages/app_settings/app_settings.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:pal/src/ui/editor/pages/group_details/group_details.dart';
+import 'package:pal/src/ui/editor/pages/group_details/group_details_model.dart';
 // import 'package:pal/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
@@ -29,18 +30,16 @@ Route<dynamic> route(RouteSettings settings) {
           hostedAppNavigatorKey: args.hostedAppNavigatorKey,
         ),
       );
-    // case '/editor/helper':
-    //   HelperDetailsComponentArguments arguments = settings.arguments;
-    //   return MaterialPageRoute(
-    //     builder: (context) => HelperDetailsComponent(
-    //       arguments: arguments,
-    //     ),
-    //   );
     case '/editor/group/details':
-      String arguments = settings.arguments;
-      return MaterialPageRoute(
-        builder: (context) => GroupDetailsPage(
-          groupId: arguments,
+      String groupId = (settings.arguments as Map)["id"];
+      String pageRoute = (settings.arguments as Map)["route"];
+      PageStep startPage = (settings.arguments as Map)["page"];
+      return PageRouteBuilder(
+        opaque: false,
+        pageBuilder: (context, a, b) => GroupDetailsPage(
+          groupId: groupId,
+          routeName: pageRoute,
+          page: startPage
         ),
       );
     case '/editor/new/font-family':
@@ -69,8 +68,9 @@ Route<dynamic> route(RouteSettings settings) {
 //shows a page as overlay for our editor
 showOverlayed(
     GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder,
-    {OverlayKeys key}) {
-  OverlayEntry helperOverlay = OverlayEntry(
+    {OverlayKeys key, Function onPop}) {
+  EditorOverlayEntry helperOverlay = EditorOverlayEntry(
+    onPop,
     opaque: false,
     builder: builder,
   );
@@ -81,13 +81,15 @@ showOverlayed(
   hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
 }
 
-showOverlayedInContext(WidgetBuilder builder, {OverlayKeys key}) {
+showOverlayedInContext(WidgetBuilder builder,
+    {OverlayKeys key, Function onPop}) {
   if (Overlayed.of(palNavigatorGlobalKey.currentState.context)
       .entries
       .containsKey(key ?? OverlayKeys.EDITOR_OVERLAY_KEY)) {
     return;
   }
-  OverlayEntry helperOverlay = OverlayEntry(
+  EditorOverlayEntry helperOverlay = EditorOverlayEntry(
+    onPop,
     opaque: false,
     builder: builder,
   );

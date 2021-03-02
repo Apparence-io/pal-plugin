@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/ui/editor/pages/group_details/group_details_model.dart';
 
-typedef void OnTileTap(String id);
+typedef void OnEdit(String id, HelperType type);
+typedef void OnPreview(String id);
+typedef void OnDelete(String id);
 
 class GroupDetailsHelpersList extends StatelessWidget {
   final ValueNotifier<List<HelperModel>> helpersList;
-  final OnTileTap onPreview;
-  final OnTileTap onEdit;
-  final OnTileTap onDelete;
+  final OnPreview onPreview;
+  final OnEdit onEdit;
+  final OnDelete onDelete;
 
   final ValueNotifier<int> expandedTile = ValueNotifier(null);
 
@@ -119,7 +121,8 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
               color: Color(0xFF90E0EF),
               icon: Icons.edit,
               text: 'Edit',
-              onTap: () => widget.onEdit(widget.model.helperId),
+              onTap: () =>
+                  widget.onEdit(widget.model.helperId, widget.model.type),
             ),
             _ActionWidget(
               color: Color(0xFFEB5160),

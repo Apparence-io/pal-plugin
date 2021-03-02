@@ -71,6 +71,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       context: context,
       presenterBuilder: (context) => CreateHelperPresenter(
         this,
+        this.pageId,
         routeObserver: routeObserver ?? EditorInjector.of(context).routeObserver,
         packageVersionReader: packageVersionReader ?? EditorInjector.of(context).packageVersionReader,
         projectEditorService: projectEditorService ?? EditorInjector.of(context).projectEditorService

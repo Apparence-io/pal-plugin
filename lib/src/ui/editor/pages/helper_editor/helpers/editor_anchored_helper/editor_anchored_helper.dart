@@ -34,7 +34,7 @@ abstract class EditorAnchoredFullscreenHelperView {
 
   void closeLoadingScreen();
 
-  Future closeEditor();
+  Future closeEditor(bool list, bool bubble);
 
   void showErrorMessage(String message);
 
@@ -83,18 +83,19 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
         ),
       );
 
-  factory EditorAnchoredFullscreenHelper.edit({
-        Key key,
-        HelperEditorPageArguments parameters,
-        EditorHelperService helperService,
-        PalEditModeStateService palEditModeStateService,
-        FinderService finderService,
-        bool isTestingMode,
-        @required HelperEntity helperEntity //FIXME should be an id and not entire entity
-      }) => EditorAnchoredFullscreenHelper._(
+  factory EditorAnchoredFullscreenHelper.edit(
+          {Key key,
+          HelperEditorPageArguments parameters,
+          EditorHelperService helperService,
+          PalEditModeStateService palEditModeStateService,
+          FinderService finderService,
+          bool isTestingMode,
+          @required String helperId}) =>
+      EditorAnchoredFullscreenHelper._(
           key: key,
           presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
-                AnchoredFullscreenHelperViewModel.fromEntity(helperEntity),
+                AnchoredFullscreenHelperViewModel.fromEntity(HelperEntity(
+                    id: helperId, helperTexts: [])),
                 _EditorAnchoredFullscreenHelperView(context,
                     EditorInjector.of(context).palEditModeStateService),
                 finderService ?? EditorInjector.of(context).finderService,
@@ -106,7 +107,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorAnchoredFullscreenPresenter,
-      AnchoredFullscreenHelperViewModel>()
+            AnchoredFullscreenHelperViewModel>()
         .build(
       context: context,
       key: ValueKey("EditorAnchoredFullscreenHelperPage"),
@@ -127,32 +128,37 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       },
       builder: (context, presenter, model) => Material(
         color: Colors.black.withOpacity(0.3),
-        child: EditorToolboxPage(
-          boxViewHandler: BoxViewHandler(
-              callback: presenter.updateBackgroundColor,
-              selectedColor: model.backgroundBox?.backgroundColor),
-          onValidate:
-              (model.canValidate?.value == true) ? presenter.onValidate : null,
-          onCloseEditor: presenter.onCancel,
-          currentEditableItemNotifier: model.currentEditableItemNotifier,
-          onTextPickerDone: presenter.onTextPickerDone,
-          onFontPickerDone: presenter.onFontPickerDone,
-          onMediaPickerDone: presenter.onMediaPickerDone,
-          onTextColorPickerDone: presenter.onTextColorPickerDone,
-          onPreview: presenter.onPreview,
-          isToolsVisible: model.anchorValidated,
-          child: Stack(
-            children: [
-              _createAnchoredWidget(model, context.animationsControllers[0],
-                  context.animationsControllers[1]),
-              _buildEditableTexts(presenter, model),
-              ..._createSelectableElements(presenter, model),
-              _buildRefreshButton(presenter),
-              _buildConfirmSelectionButton(
-                  context.buildContext, presenter, model),
-            ],
-          ),
-        ),
+        child: model.loading
+            ? Center(child: CircularProgressIndicator(value: null))
+            : EditorToolboxPage(
+                boxViewHandler: BoxViewHandler(
+                    callback: presenter.updateBackgroundColor,
+                    selectedColor: model.backgroundBox?.backgroundColor),
+                onValidate: (model.canValidate?.value == true)
+                    ? presenter.onValidate
+                    : null,
+                onCloseEditor: presenter.onCancel,
+                currentEditableItemNotifier: model.currentEditableItemNotifier,
+                onTextPickerDone: presenter.onTextPickerDone,
+                onFontPickerDone: presenter.onFontPickerDone,
+                onMediaPickerDone: presenter.onMediaPickerDone,
+                onTextColorPickerDone: presenter.onTextColorPickerDone,
+                onPreview: presenter.onPreview,
+                isToolsVisible: model.anchorValidated,
+                child: Stack(
+                  children: [
+                    _createAnchoredWidget(
+                        model,
+                        context.animationsControllers[0],
+                        context.animationsControllers[1]),
+                    _buildEditableTexts(presenter, model),
+                    ..._createSelectableElements(presenter, model),
+                    _buildRefreshButton(presenter),
+                    _buildConfirmSelectionButton(
+                        context.buildContext, presenter, model),
+                  ],
+                ),
+              ),
       ),
     );
   }

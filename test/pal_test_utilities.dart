@@ -90,7 +90,7 @@ Future pumpHelperWidget(
       case HelperType.SIMPLE_HELPER:
         builder = (context) => EditorSimpleHelperPage.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
             );
@@ -98,7 +98,7 @@ Future pumpHelperWidget(
       case HelperType.UPDATE_HELPER:
         builder = (context) => EditorUpdateHelperPage.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
               packageVersionReader: packageVersionReader,
@@ -107,7 +107,7 @@ Future pumpHelperWidget(
       case HelperType.HELPER_FULL_SCREEN:
         builder = (context) => EditorFullScreenHelperPage.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
             );
@@ -115,7 +115,7 @@ Future pumpHelperWidget(
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         builder = (context) => EditorAnchoredFullscreenHelper.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
               finderService: finderService,

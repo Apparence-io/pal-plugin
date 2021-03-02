@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/groups/group_service.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/editor/versions/version_editor_service.dart';
 
 import 'group_details.dart';
@@ -12,11 +14,14 @@ import 'group_details_model.dart';
 class GroupDetailsPresenter
     extends Presenter<GroupDetailsPageModel, GroupDetailsView> {
   final EditorHelperGroupService groupService;
+  final EditorHelperService helperService;
   final VersionEditorService versionService;
 
   GroupDetailsPresenter(
       GroupDetailsPageModel viewModel, GroupDetailsView viewInterface,
-      {@required this.groupService, @required this.versionService})
+      {this.helperService,
+      @required this.groupService,
+      @required this.versionService})
       : super(viewModel, viewInterface);
 
   @override
@@ -27,10 +32,12 @@ class GroupDetailsPresenter
     // *STATE
     this.viewModel.loading = true;
     this.viewModel.locked = false;
+    this.viewModel.editorMode = false;
     this.viewModel.helpers = ValueNotifier(null);
     this.viewModel.canSave = ValueNotifier(false);
-    this.viewModel.page = PageStep.DETAILS;
-    this.viewModel.pageController = PageController();
+    this.viewModel.page = this.viewModel.startPage ?? PageStep.DETAILS;
+    this.viewModel.pageController =
+        PageController(initialPage: this.viewModel.page.index);
 
     // *CONTROLLERS
     this.viewModel.groupMaxVerController = TextEditingController();
@@ -62,7 +69,7 @@ class GroupDetailsPresenter
     });
   }
 
-  // SAVE NEW VALUES AND SEND TO SERVER
+  // SERVER CALLS [SAVE,DELETE]
   void save() {
     if (!this.viewModel.locked) {
       this.viewModel.locked = true;
@@ -99,8 +106,11 @@ class GroupDetailsPresenter
 
   void deleteGroup() {
     if (!this.viewModel.locked) {
-      this.viewModel.locked = true;
-      // TODO : Delete group
+      this.viewModel.loading = true;
+      this.refreshView();
+      this.groupService.deleteGroup(this.viewModel.groupId).then((done) {
+        this.viewInterface.pop();
+      });
     }
   }
 
@@ -144,17 +154,21 @@ class GroupDetailsPresenter
 
   // STATE CHANGES
   void goToHelpersList() {
-    this.viewModel.page = PageStep.HELPERS;
-    this.viewModel.pageController.animateToPage(1,
-        curve: Curves.easeOut, duration: Duration(milliseconds: 250));
-    this.refreshView();
+    if (!this.viewModel.loading) {
+      this.viewModel.page = PageStep.HELPERS;
+      this.viewModel.pageController.animateToPage(1,
+          curve: Curves.easeOut, duration: Duration(milliseconds: 250));
+      this.refreshView();
+    }
   }
 
   void goToGroupDetails() {
-    this.viewModel.page = PageStep.DETAILS;
-    this.viewModel.pageController.animateToPage(0,
-        curve: Curves.easeOut, duration: Duration(milliseconds: 250));
-    this.refreshView();
+    if (!this.viewModel.loading) {
+      this.viewModel.page = PageStep.DETAILS;
+      this.viewModel.pageController.animateToPage(0,
+          curve: Curves.easeOut, duration: Duration(milliseconds: 250));
+      this.refreshView();
+    }
   }
 
   void updateState() {
@@ -165,14 +179,33 @@ class GroupDetailsPresenter
   // HELPERS ACTIONS / PREVIEW / EDIT / DELETE
 
   void previewHelper(String id) {
-    //
+    this.helperService.getHelper(id);
   }
 
   void deleteHelper(String id) {
-    // TODO : Delete Helper
+    this.viewModel.loading = true;
+    this.refreshView();
+    this.helperService.deleteHelper(id).then((done) {
+      this.viewModel.helpers.value = this
+          .viewModel
+          .helpers
+          .value
+          .where((helper) => helper.helperId != id)
+          .toList();
+      this.viewModel.loading = false;
+      this.refreshView();
+    });
   }
 
-  void editHelper(String id) {
-    //
+  void editHelper(String helperId, HelperType type) {
+    this.viewModel.editorMode = true;
+    this.refreshView();
+    this.viewInterface.showEditor(
+        this.viewModel.routeName, helperId, this.viewModel.groupId, type);
+  }
+
+  void onEditDone() {
+    this.viewModel.editorMode = false;
+    this.refreshView();
   }
 }

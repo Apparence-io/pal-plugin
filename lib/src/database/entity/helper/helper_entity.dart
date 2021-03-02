@@ -73,8 +73,7 @@ class HelperEntity {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'type': type.toString().split('.')[1],
-        'triggerType': triggerType.toString().split('.')[1],
+        'type': type?.toString()?.split('.')[1],
         'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
         'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
         'priority': priority,

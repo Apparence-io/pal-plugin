@@ -55,8 +55,9 @@ class HelperGroupConfig {
   String name;
   String minVersion;
   String maxVersion;
+  String triggerType;
 
-  HelperGroupConfig({this.id, this.name, this.minVersion, this.maxVersion});
+  HelperGroupConfig({this.id, this.name, this.minVersion, this.maxVersion, this.triggerType});
 
   toJson() => {
         "id": id,

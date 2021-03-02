@@ -23,6 +23,9 @@ class EditorUpdateHelperPresenter
   final GlobalKey titleKey;
   final GlobalKey thanksButtonKey;
 
+  // EDIT MODE
+  bool editMode = false;
+
   EditorUpdateHelperPresenter(
     EditorUpdateHelperView viewInterface,
     UpdateHelperViewModel updateHelperViewModel,
@@ -35,14 +38,32 @@ class EditorUpdateHelperPresenter
 
   @override
   void onInit() {
-    this.viewModel.canValidate = new ValueNotifier(false);
-    this.viewModel.isKeyboardVisible = false;
-    
+    this.viewModel.loading = false;
+    if (this.viewModel.id != null) {
+      this.editMode = true;
+      this.viewModel.loading = true;
+      this.editorHelperService.getHelper(this.viewModel.id).then((helper) {
+        this.viewModel = UpdateHelperViewModel.fromHelperEntity(helper);
+        this.viewModel.loading = false;
+        this.viewModel.canValidate = new ValueNotifier(false);
+        this.viewModel.isKeyboardVisible = false;
+        this
+            .viewModel
+            .currentEditableItemNotifier
+            .addListener(removeSelectedEditableItems);
+        this.refreshView();
+      });
+    } else {
+      this.viewModel.canValidate = new ValueNotifier(false);
+      this.viewModel.isKeyboardVisible = false;
+      this
+          .viewModel
+          .currentEditableItemNotifier
+          .addListener(removeSelectedEditableItems);
+      this.refreshView();
+    }
+
     // Refresh UI to remove all selected items
-    this
-        .viewModel
-        .currentEditableItemNotifier
-        .addListener(removeSelectedEditableItems);
   }
 
   @override
@@ -111,7 +132,7 @@ class EditorUpdateHelperPresenter
     this.refreshView();
   }
 
-  void onCancel() => viewInterface.closeEditor();
+  void onCancel() => viewInterface.closeEditor(!this.editMode, !editMode);
 
   Future<void> onValidate() async {
     ValueNotifier<SendingStatus> status =
@@ -130,7 +151,7 @@ class EditorUpdateHelperPresenter
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
       status.dispose();
-      viewInterface.closeEditor();
+      viewInterface.closeEditor(!this.editMode, !this.editMode);
     }
   }
 

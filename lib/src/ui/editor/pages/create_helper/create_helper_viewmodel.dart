@@ -7,7 +7,6 @@ import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 class CreateHelperModel extends MVVMModel {
-
   ValueNotifier<bool> isFormValid = ValueNotifier(false);
   List<String> stepsTitle;
   ValueNotifier<int> step;
@@ -32,7 +31,6 @@ class CreateHelperModel extends MVVMModel {
   // Step 3
   HelperTheme selectedHelperTheme;
 
-
   CreateHelperModel({
     this.selectedTriggerType,
     this.infosForm,
@@ -48,37 +46,39 @@ class CreateHelperModel extends MVVMModel {
   });
 
   HelperViewModel asHelperViewModel() => HelperViewModel(
-    helperType: selectedHelperType,
-    helperTheme: selectedHelperTheme,
-    name: helperNameController?.value?.text,
-    // priority: ,
-    helperGroup: HelperGroupModel(
-      id: selectedHelperGroup?.groupId,
-      name: selectedHelperGroup?.title,
-      triggerType: selectedTriggerType.key,
-      minVersionCode: selectedHelperGroup?.groupId != null ? minVersion : null,
-      maxVersionCode: selectedHelperGroup?.groupId != null ? maxVersion : null,
-    )
-  );
+        helperType: selectedHelperType,
+        helperTheme: selectedHelperTheme,
+        name: helperNameController?.value?.text,
+        // priority: ,
+        helperGroup: HelperGroupModel(
+          id: selectedHelperGroup?.groupId,
+          name: selectedHelperGroup?.title,
+          triggerType: selectedTriggerType.key,
+          minVersionCode: minVersion,
+          maxVersionCode: maxVersion,
+        ),
+      );
 
   selectHelperGroup(HelperGroupViewModel select) {
     this.helperGroups.forEach((element) => element.selected = false);
-    this.selectedHelperGroup = this.helperGroups
-      .firstWhere((element) => element == select)
-      ..selected = true;
+    this.selectedHelperGroup = this
+        .helperGroups
+        .firstWhere((element) => element == select)
+          ..selected = true;
   }
 }
 
-class HelperGroupViewModel extends ChangeNotifier implements ValueListenable<HelperGroupViewModel> {
+class HelperGroupViewModel extends ChangeNotifier
+    implements ValueListenable<HelperGroupViewModel> {
   bool _selected;
   String groupId;
   String title;
 
   HelperGroupViewModel({@required this.groupId, @required this.title})
-    : this._selected = false;
+      : this._selected = false;
 
   set selected(bool selected) {
-    if(this._selected != selected) {
+    if (this._selected != selected) {
       this._selected = selected;
       notifyListeners();
     }
@@ -91,10 +91,8 @@ class HelperGroupViewModel extends ChangeNotifier implements ValueListenable<Hel
 
   void refresh() => notifyListeners();
 
-  HelperGroupViewModel copy() => HelperGroupViewModel(
-    groupId: this.groupId,
-    title: this.title
-  );
+  HelperGroupViewModel copy() =>
+      HelperGroupViewModel(groupId: this.groupId, title: this.title);
 }
 
 class HelperSelectionViewModel {

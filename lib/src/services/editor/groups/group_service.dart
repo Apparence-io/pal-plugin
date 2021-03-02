@@ -17,6 +17,8 @@ abstract class EditorHelperGroupService {
   Future<HelperGroupEntity> getGroupDetails(String groupId);
 
   Future updateGroup(HelperGroupUpdate updated);
+
+  Future deleteGroup(String groupId) {}
 }
 
 class EditorHelperGroupHttpService implements EditorHelperGroupService {
@@ -43,5 +45,10 @@ class EditorHelperGroupHttpService implements EditorHelperGroupService {
         updated.minVersionId,
         updated.name,
         helperTriggerTypeToString(updated.type));
+  }
+
+  @override
+  Future deleteGroup(String groupId) {
+    return this._editorHelperGroupRepository.deleteGroup(groupId);
   }
 }

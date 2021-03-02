@@ -25,7 +25,7 @@ abstract class EditorSimpleHelperView {
 
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
 
-  Future closeEditor();
+  Future closeEditor(bool list, bool bubble);
 
   void closeLoadingScreen();
 
@@ -55,7 +55,6 @@ class EditorSimpleHelperPage extends StatelessWidget {
       this.palEditModeStateService})
       : super(key: key);
 
-  // TODO : Is it usefull ?! Rework ?
   factory EditorSimpleHelperPage.create(
           {Key key,
           HelperEditorPageArguments parameters,
@@ -76,15 +75,13 @@ class EditorSimpleHelperPage extends StatelessWidget {
           HelperEditorPageArguments parameters,
           EditorHelperService helperService,
           PalEditModeStateService palEditModeStateService,
-          @required
-              HelperEntity
-                  helperEntity //FIXME should be an id and not entire entity
-          }) =>
+          @required String helperId}) =>
       EditorSimpleHelperPage._(
         key: key,
         helperService: helperService,
         palEditModeStateService: palEditModeStateService,
-        baseviewModel: SimpleHelperViewModel.fromHelperEntity(helperEntity),
+        baseviewModel: SimpleHelperViewModel.fromHelperEntity(
+            HelperEntity(id: helperId, helperTexts: [])),
         arguments: parameters,
       );
 
@@ -118,79 +115,87 @@ class EditorSimpleHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
-      body: EditorToolboxPage(
-        // TODO : Helper background
-        // boxViewHandler: BoxViewHandler(
-        //     callback: presenter.updateBackgroundColor,
-        //     selectedColor: viewModel.bodyBox?.backgroundColor
-        //     ),
-        currentEditableItemNotifier: viewModel.currentSelectedEditableNotifier,
-        // PICKER CALLBACK
-        onTextPickerDone: presenter.onTextPickerDone,
-        onFontPickerDone: presenter.onFontPickerDone,
-        onTextColorPickerDone: presenter.onTextColorPickerDone,
-        // ACTION BAR FUNCTIONS
-        onValidate: (viewModel.canValidate?.value == true)
-            ? presenter.onValidate
-            : null,
-        onPreview: presenter.onPreview,
-        onCloseEditor: presenter.onCancel,
+      body: viewModel.loading
+          ? Center(child: CircularProgressIndicator(value: null))
+          : EditorToolboxPage(
+              // TODO : Helper background
+              // boxViewHandler: BoxViewHandler(
+              //     callback: presenter.updateBackgroundColor,
+              //     selectedColor: viewModel.bodyBox?.backgroundColor
+              //     ),
+              currentEditableItemNotifier:
+                  viewModel.currentSelectedEditableNotifier,
+              // PICKER CALLBACK
+              onTextPickerDone: presenter.onTextPickerDone,
+              onFontPickerDone: presenter.onFontPickerDone,
+              onTextColorPickerDone: presenter.onTextColorPickerDone,
+              // ACTION BAR FUNCTIONS
+              onValidate: (viewModel.canValidate?.value == true)
+                  ? presenter.onValidate
+                  : null,
+              onPreview: presenter.onPreview,
+              onCloseEditor: presenter.onCancel,
 
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Form(
-              key: formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // TODO: Blur background here
-                  SingleChildScrollView(
-                    child: Container(
-                      color: Colors.black38,
-                      height: constraints.maxHeight,
-                      width: constraints.maxWidth,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Container(),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    MediaQuery.of(context).padding.bottom + 55),
-                            child: Container(
-                              width: constraints.maxWidth * 0.8,
-                              decoration: BoxDecoration(
-                                color: PalTheme.of(context).colors.black,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(12),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Form(
+                    key: formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        // TODO: Blur background here
+                        SingleChildScrollView(
+                          child: Container(
+                            color: Colors.black38,
+                            height: constraints.maxHeight,
+                            width: constraints.maxWidth,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Container(),
                                 ),
-                              ),
-                              padding: EdgeInsets.all(15),
-                              child: EditableTextField(
-                                key: _textKey,
-                                data: viewModel.contentTextForm,
-                                onTap: presenter.onNewEditableSelect,
-                                isSelected: viewModel.contentTextForm?.key ==
-                                    viewModel.currentSelectedEditableNotifier
-                                        ?.value?.key,
-                                backgroundColor: PalTheme.of(context)
-                                    .colors
-                                    .black, // Currently we can't change background
-                              ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .padding
+                                              .bottom +
+                                          55),
+                                  child: Container(
+                                    width: constraints.maxWidth * 0.8,
+                                    decoration: BoxDecoration(
+                                      color: PalTheme.of(context).colors.black,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(12),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(15),
+                                    child: EditableTextField(
+                                      key: _textKey,
+                                      data: viewModel.contentTextForm,
+                                      onTap: presenter.onNewEditableSelect,
+                                      isSelected: viewModel
+                                              .contentTextForm?.key ==
+                                          viewModel
+                                              .currentSelectedEditableNotifier
+                                              ?.value
+                                              ?.key,
+                                      backgroundColor: PalTheme.of(context)
+                                          .colors
+                                          .black, // Currently we can't change background
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
+            ),
     );
   }
 }

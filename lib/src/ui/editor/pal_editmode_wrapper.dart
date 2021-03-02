@@ -4,7 +4,6 @@ import 'package:pal/src/pal_notifications.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
 import 'package:pal/src/ui/editor/pages/page_groups/page_group_list.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
@@ -29,8 +28,10 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    palEditModeStateService = EditorInjector.of(context).palEditModeStateService;
-    palEditModeStateService.showEditorBubble.addListener(_onShowBubbleStateChanged);
+    palEditModeStateService =
+        EditorInjector.of(context).palEditModeStateService;
+    palEditModeStateService.showEditorBubble
+        .addListener(_onShowBubbleStateChanged);
   }
 
   @override
@@ -53,40 +54,41 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
             debugShowCheckedModeBanner: false,
             onGenerateRoute: (RouteSettings settings) => route(settings),
             theme: PalTheme.of(context).buildTheme(),
-            home: LayoutBuilder(
-              builder: (context, constraints) {
-                return NotificationListener<PalGlobalNotification>(
-                  onNotification: (notification) {
-                    if (notification is ShowHelpersListNotification) {
-                      _showHelpersListModal(context);
-                    } else if (notification is ShowBubbleNotification) {
-                      palEditModeStateService.showEditorBubble.value = notification.isVisible;
-                    }
-                    return true;
-                  },
-                  child: Stack(
-                    key: ValueKey('pal_MainStack'),
-                    children: [
-                      // The app
-                      RepaintBoundary(
-                        key: _repaintBoundaryKey,
-                        child: widget.userApp,
-                      ),
-                      // Build the floating widget above the app
-                      BubbleOverlayButton(
-                        key: ValueKey('palBubbleOverlay'),
-                        visibility: palEditModeStateService.showEditorBubble,
-                        screenSize: Size(
-                          constraints.maxWidth,
-                          constraints.maxHeight,
-                        ),
-                        // onTapCallback: () => _showHelpersListModal(context),
-                        onTapCallback: () => _showGroupsList(context),
-                      ),
-                    ],
-                  ),
-                );
+            home: NotificationListener<PalGlobalNotification>(
+              onNotification: (notification) {
+                if (notification is ShowHelpersListNotification) {
+                  _showGroupsList(EditorInjector.of(context).hostedAppNavigatorKey.currentContext);
+                } else if (notification is ShowBubbleNotification) {
+                  palEditModeStateService.showEditorBubble.value =
+                      notification.isVisible;
+                }
+                return true;
               },
+              child: LayoutBuilder(
+                builder: (_context, constraints) => Stack(
+                  key: ValueKey('pal_MainStack'),
+                  children: [
+                    // The app
+                    RepaintBoundary(
+                      key: _repaintBoundaryKey,
+                      child: widget.userApp,
+                    ),
+                    // Build the floating widget above the app
+                    BubbleOverlayButton(
+                      key: ValueKey('palBubbleOverlay'),
+                      visibility: palEditModeStateService.showEditorBubble,
+                      screenSize: Size(
+                        constraints.maxWidth,
+                        constraints.maxHeight,
+                      ),
+                      onTapCallback: () {
+                        palEditModeStateService.showEditorBubble.value = false;
+                        return _showGroupsList(_context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -95,41 +97,15 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   }
 
   _onShowBubbleStateChanged() {
-    if (mounted)
-      setState(() {});
+    if (mounted) setState(() {});
   }
 
   _showGroupsList(BuildContext context) {
     showDialog(
-      context: context, 
+      context: context,
       barrierDismissible: false,
       barrierColor: Colors.transparent,
       builder: (context) => PageGroupsListPage(),
-    );
-  }
-
-  _showHelpersListModal(BuildContext context) {
-    BorderRadius borderRadius = BorderRadius.only(
-      topLeft: Radius.circular(25.0),
-      topRight: Radius.circular(25.0),
-    );
-
-    showModalBottomSheet(
-      context: context,
-      barrierColor: Colors.black26,
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius,
-      ),
-      builder: (BuildContext bottomSheetContext) {
-        return ClipRRect(
-          borderRadius: borderRadius,
-          child: HelpersListModal(
-            repaintBoundaryKey: _repaintBoundaryKey,
-            hostedAppNavigatorKey: widget.hostedAppNavigatorKey,
-            bottomModalContext: bottomSheetContext,
-          ),
-        );
-      },
     );
   }
 }

@@ -9,6 +9,7 @@ class PageGroupsListViewModel extends MVVMModel {
   bool isLoading;
 
   String errorMessage;
+  String route;
 }
 
 class GroupItemViewModel {

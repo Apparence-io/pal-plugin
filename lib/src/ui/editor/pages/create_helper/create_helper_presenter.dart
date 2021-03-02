@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
+import 'package:pal/src/services/editor/page/page_editor_service.dart';
 import 'package:pal/src/services/editor/project/project_editor_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
@@ -19,8 +20,10 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
 
   final ProjectEditorService projectEditorService;
 
+  final String pageId;
+
   CreateHelperPresenter(
-    CreateHelperView viewInterface, {
+    CreateHelperView viewInterface, this.pageId, {
     @required this.projectEditorService,
     @required this.routeObserver,
     @required this.packageVersionReader,
@@ -58,13 +61,12 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
     // viewModel.helperGroups = res;
     // return Future.value(viewModel.helperGroups);
 
-    var currentPageRoute = await this.routeObserver.routeSettings.first;
-    return projectEditorService.getPageGroups(currentPageRoute.name)
+    return projectEditorService.getPageGroups(this.pageId)
       .catchError((error) => print("error $error"))
       .then((groupsEntity) {
         List<HelperGroupViewModel> res = [];
         groupsEntity.forEach((element) => res.add(
-          HelperGroupViewModel(groupId: element.id, title: element.helpers?.first?.name))
+          HelperGroupViewModel(groupId: element.id, title: element.name))
         );
         viewModel.helperGroups = res;
         return viewModel.helperGroups;

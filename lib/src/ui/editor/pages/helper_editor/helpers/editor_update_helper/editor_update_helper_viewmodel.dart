@@ -22,12 +22,16 @@ class UpdateHelperViewModel extends HelperViewModel {
   EditableButtonFormData positivButtonForm;
   EditableTextFormData titleTextForm;
 
+  bool loading;
+
   UpdateHelperViewModel({
     String id,
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
     @required HelperTheme helperTheme,
+    String groupId,
+    String groupName,
     String minVersionCode,
     String maxVersionCode,
     int versionMaxId,
@@ -38,17 +42,19 @@ class UpdateHelperViewModel extends HelperViewModel {
     HelperTextViewModel titleLabel,
     HelperTextViewModel positivButtonLabel,
   }) : super(
-    id: id,
-    name: name,
-    priority: priority,
-    helperGroup: HelperGroupModel(
-      triggerType: triggerType,
-      minVersionCode: minVersionCode,
-      maxVersionCode: maxVersionCode,
-    ),
-    helperType: HelperType.UPDATE_HELPER,
-    helperTheme: helperTheme,
-  ) {
+          id: id,
+          name: name,
+          priority: priority,
+          helperGroup: HelperGroupModel(
+            id: groupId,
+            name: groupName,
+            triggerType: triggerType,
+            minVersionCode: minVersionCode,
+            maxVersionCode: maxVersionCode,
+          ),
+          helperType: HelperType.UPDATE_HELPER,
+          helperTheme: helperTheme,
+        ) {
     this.backgroundBoxForm = EditableBoxFormData(
       helperBoxViewModel?.id,
       UpdatescreenHelperKeys.BACKGROUND_KEY,
@@ -86,14 +92,15 @@ class UpdateHelperViewModel extends HelperViewModel {
 
   factory UpdateHelperViewModel.fromHelperViewModel(HelperViewModel model) {
     final updateHelper = UpdateHelperViewModel(
-      id: model.id,
-      name: model.name,
-      priority: model.priority,
-      helperTheme: model.helperTheme,
-      triggerType: model?.helperGroup?.triggerType,
-      minVersionCode: model?.helperGroup?.minVersionCode,
-      maxVersionCode: model?.helperGroup?.maxVersionCode,
-    );
+        id: model.id,
+        name: model.name,
+        priority: model.priority,
+        helperTheme: model.helperTheme,
+        triggerType: model?.helperGroup?.triggerType,
+        minVersionCode: model?.helperGroup?.minVersionCode,
+        maxVersionCode: model?.helperGroup?.maxVersionCode,
+        groupId: model.helperGroup?.id,
+        groupName: model.helperGroup?.name);
 
     if (model is UpdateHelperViewModel) {
       updateHelper.backgroundBoxForm = model?.backgroundBoxForm;

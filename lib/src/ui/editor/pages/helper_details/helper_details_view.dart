@@ -297,7 +297,7 @@ class HelperDetailsComponent extends StatelessWidget with SnackbarMixin implemen
 
   @override
   void launchHelperEditor(String routename) {
-    new EditorRouter(arguments.hostedAppNavigatorKey).editHelper(routename, arguments.helper);
+    // new EditorRouter(arguments.hostedAppNavigatorKey).editHelper(routename, arguments.helper.id,null);
     // Go back
     Navigator.of(_scaffoldKey.currentContext)
         .pop(HelperDetailsPopState.editorOpened);

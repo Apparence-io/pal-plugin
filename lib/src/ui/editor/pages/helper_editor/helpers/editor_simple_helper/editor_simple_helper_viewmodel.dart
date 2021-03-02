@@ -20,11 +20,15 @@ class SimpleHelperViewModel extends HelperViewModel {
   EditableTextFormData contentTextForm;
   ValueNotifier<EditableData> currentSelectedEditableNotifier;
 
+  bool loading;
+
   SimpleHelperViewModel({
     String id,
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
+    String groupId,
+    String groupName,
     String minVersionCode,
     String maxVersionCode,
     HelperTheme helperTheme,
@@ -37,6 +41,8 @@ class SimpleHelperViewModel extends HelperViewModel {
     name: name,
     priority: priority,
     helperGroup: HelperGroupModel(
+      id: groupId,
+      name: groupName,
       triggerType: triggerType,
       minVersionCode: minVersionCode,
       maxVersionCode: maxVersionCode,
@@ -71,6 +77,8 @@ class SimpleHelperViewModel extends HelperViewModel {
       triggerType: model.helperGroup?.triggerType,
       minVersionCode: model.helperGroup?.minVersionCode,
       maxVersionCode: model.helperGroup?.maxVersionCode,
+      groupId: model.helperGroup.id,
+      groupName: model.helperGroup.name
     );
 
     if (model is SimpleHelperViewModel) {

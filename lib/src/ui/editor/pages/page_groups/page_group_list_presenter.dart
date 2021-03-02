@@ -16,6 +16,9 @@ class PageGroupsListPresenter
   final PalNavigatorObserver navigatorObserver;
   final PageEditorService pageService;
 
+  // PAGE STATE
+  String pageId;
+
   PageGroupsListPresenter({
     EditorInjector editorInjector,
     PageGroupsListView viewInterface,
@@ -28,8 +31,10 @@ class PageGroupsListPresenter
   void onInit() async {
     viewModel.groups = Map();
     viewModel.isLoading = true;
+    this.refreshView();
     viewModel.errorMessage = null;
     RouteSettings route = await navigatorObserver.routeSettings.first;
+    this.viewModel.route = route.name;
     // TODO show error if route name is empty
     // TODO show current page route path
     this.pageService.getOrCreatePageId(route.name).catchError((err) {
@@ -37,6 +42,7 @@ class PageGroupsListPresenter
       viewModel.isLoading = false;
       refreshView();
     }).then((id) {
+      this.pageId = id;
       helperGroupService.getPageGroups(id).catchError((err) {
         viewModel.errorMessage = "Server error while loading data...";
         viewModel.isLoading = false;
@@ -60,12 +66,15 @@ class PageGroupsListPresenter
     });
   }
 
-  void onClickClose() => viewInterface.closePage();
+  void onClickClose() {
+    this.viewInterface.changeBubbleState(true);
+    viewInterface.closePage();
+  }
 
   Future<void> onClickAddHelper() async {
-    RouteSettings route = await navigatorObserver.routeSettings.first;
-    await viewInterface.closePage();
-    viewInterface.navigateCreateHelper(route.name);
+    if (!this.viewModel.isLoading) {
+      viewInterface.navigateCreateHelper(this.pageId);
+    }
   }
 
   String _formatDate(DateTime date) =>

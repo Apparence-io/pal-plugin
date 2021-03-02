@@ -37,9 +37,13 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
   /// true if user has validated the current anchor selection
   bool anchorValidated;
 
+  bool loading;
+
   AnchoredFullscreenHelperViewModel._(
       {String id,
       String name,
+      String groupId,
+      String groupName,
       HelperTriggerType triggerType,
       int priority,
       String minVersionCode,
@@ -103,6 +107,8 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
             priority: priority,
             helperTheme: helperTheme,
             helperGroup: HelperGroupModel(
+              id: groupId,
+              name: groupName,
               triggerType: triggerType,
               minVersionCode: minVersionCode,
               maxVersionCode: maxVersionCode,
@@ -132,6 +138,8 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       minVersionCode: model.helperGroup?.minVersionCode,
       maxVersionCode: model.helperGroup?.maxVersionCode,
       triggerType: model.helperGroup?.triggerType,
+      groupId: model.helperGroup.id,
+      groupName: model.helperGroup.name,
     );
   }
 
@@ -143,10 +151,12 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       helperTheme: null,
       triggerType: entity?.triggerType,
       // TODO : Finish factory for multiple boxes
-      backgroundBox: EditableBoxFormData(
-          entity.helperBoxes.first.id, entity.helperBoxes.first.key,
-          backgroundColor:
-              HexColor?.fromHex(entity.helperBoxes.first.backgroundColor)),
+      backgroundBox: entity.helperBoxes == null
+          ? null
+          : EditableBoxFormData(
+              entity.helperBoxes?.first?.id, entity.helperBoxes?.first?.key,
+              backgroundColor:
+                  HexColor?.fromHex(entity.helperBoxes.first.backgroundColor)),
       titleViewModel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
         entity?.helperTexts,

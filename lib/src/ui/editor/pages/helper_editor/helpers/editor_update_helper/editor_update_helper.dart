@@ -30,7 +30,7 @@ abstract class EditorUpdateHelperView {
   Future<void> scrollToBottomChangelogList();
   Future<GraphicEntity> pushToMediaGallery(final String mediaId);
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
-  Future closeEditor();
+  Future closeEditor(bool list, bool bubble);
   void closeLoadingScreen();
   Future showPreviewOfHelper(UpdateHelperViewModel model);
 }
@@ -83,15 +83,18 @@ class EditorUpdateHelperPage extends StatelessWidget {
           PalEditModeStateService palEditModeStateService,
           EditorHelperService helperService,
           PackageVersionReader packageVersionReader,
-          @required
-              HelperEntity
-                  helperEntity //FIXME should be an id and not entire entity
-          }) =>
+          @required String helperId}) =>
       EditorUpdateHelperPage._(
         key: key,
         helperService: helperService,
         palEditModeStateService: palEditModeStateService,
-        baseviewModel: UpdateHelperViewModel.fromHelperEntity(helperEntity),
+        baseviewModel: UpdateHelperViewModel.fromHelperEntity(HelperEntity(
+          id: helperId,
+          helperTexts: [],
+          helperBorders: [],
+          helperBoxes: [],
+          helperImages: [],
+        )),
         arguments: parameters,
         packageVersionReader: packageVersionReader,
       );
@@ -100,7 +103,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MVVMPageBuilder<EditorUpdateHelperPresenter, UpdateHelperViewModel>()
         .build(
-          key: ValueKey("pal_EditorUpdateHelperWidget_Builder"),
+      key: ValueKey("pal_EditorUpdateHelperWidget_Builder"),
       context: context,
       presenterBuilder: (context) {
         var presenter = EditorUpdateHelperPresenter(
@@ -132,40 +135,45 @@ class EditorUpdateHelperPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
-      body: EditorToolboxPage(
-        boxViewHandler: BoxViewHandler(
-          callback: presenter.updateBackgroundColor,
-          selectedColor: viewModel.backgroundBoxForm?.backgroundColor,
-        ),
-        onValidate: (viewModel.canValidate?.value == true)
-            ? presenter.onValidate
-            : null,
-        currentEditableItemNotifier: viewModel.currentEditableItemNotifier,
-        onTextPickerDone: presenter.onTextPickerDone,
-        onFontPickerDone: presenter.onFontPickerDone,
-        onMediaPickerDone: presenter.onMediaPickerDone,
-        onTextColorPickerDone: presenter.onTextColorPickerDone,
-        onCloseEditor: presenter.onCancel,
-        onPreview: presenter.onPreview,
-        child: Form(
-          key: formKey,
-          autovalidateMode: AutovalidateMode.always,
-          child: EditableBackground(
-            backgroundColor: viewModel.backgroundBoxForm?.backgroundColor,
-            widget: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: Container(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:
-                      _buildEditableContent(presenter, viewModel, context),
+      body: viewModel.loading
+          ? Center(
+              child: CircularProgressIndicator(value: null),
+            )
+          : EditorToolboxPage(
+              boxViewHandler: BoxViewHandler(
+                callback: presenter.updateBackgroundColor,
+                selectedColor: viewModel.backgroundBoxForm?.backgroundColor,
+              ),
+              onValidate: (viewModel.canValidate?.value == true)
+                  ? presenter.onValidate
+                  : null,
+              currentEditableItemNotifier:
+                  viewModel.currentEditableItemNotifier,
+              onTextPickerDone: presenter.onTextPickerDone,
+              onFontPickerDone: presenter.onFontPickerDone,
+              onMediaPickerDone: presenter.onMediaPickerDone,
+              onTextColorPickerDone: presenter.onTextColorPickerDone,
+              onCloseEditor: presenter.onCancel,
+              onPreview: presenter.onPreview,
+              child: Form(
+                key: formKey,
+                autovalidateMode: AutovalidateMode.always,
+                child: EditableBackground(
+                  backgroundColor: viewModel.backgroundBoxForm?.backgroundColor,
+                  widget: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Container(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: _buildEditableContent(
+                            presenter, viewModel, context),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -347,7 +355,8 @@ class _EditorUpdateHelperPage
       helperBoxViewModel:
           HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
-      thanksButtonLabel: HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
+      thanksButtonLabel:
+          HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
       changelogLabels: model.changelogsTextsForm.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),

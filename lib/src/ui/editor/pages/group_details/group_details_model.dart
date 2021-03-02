@@ -9,6 +9,8 @@ enum PageStep { DETAILS, HELPERS }
 
 class GroupDetailsPageModel extends MVVMModel {
   final groupId;
+  final routeName;
+  final startPage;
 
   // GROUP INFO / GROUP HELPERS
   GroupModel groupModel;
@@ -27,9 +29,11 @@ class GroupDetailsPageModel extends MVVMModel {
   ValueNotifier<bool> canSave;
   PageController pageController;
 
+  bool editorMode;
   bool locked;
 
-  GroupDetailsPageModel(this.groupId, this.formKey);
+
+  GroupDetailsPageModel(this.groupId, this.formKey, this.routeName, this.startPage);
 }
 
 class GroupModel {
@@ -37,6 +41,7 @@ class GroupModel {
   String name;
   String minVer;
   String maxVer;
+  String groupRoute;
 
   GroupModel({this.triggerType, this.name, this.minVer, this.maxVer});
 

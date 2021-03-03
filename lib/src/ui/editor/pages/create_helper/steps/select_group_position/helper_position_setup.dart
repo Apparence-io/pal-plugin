@@ -5,20 +5,17 @@ import '../../create_helper_viewmodel.dart';
 typedef OnValidate = void Function(List<GroupHelperViewModel> models);
 
 class HelperPositionPage extends StatefulWidget {
-
   final Future<List<GroupHelperViewModel>> helpersLoader;
   final OnValidate onValidate;
 
-  HelperPositionPage({
-    this.helpersLoader, this.onValidate, Key key
-  }) : super(key: key);
+  HelperPositionPage({this.helpersLoader, this.onValidate, Key key})
+      : super(key: key);
 
   @override
   _HelperPositionPageState createState() => _HelperPositionPageState();
 }
 
 class _HelperPositionPageState extends State<HelperPositionPage> {
-
   List<GroupHelperViewModel> reorderableList;
 
   _HelperPositionPageState();
@@ -31,10 +28,11 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
       body: FutureBuilder(
         future: widget.helpersLoader,
         builder: (context, snapshot) {
-          if(snapshot.connectionState != ConnectionState.done) {
-            return CircularProgressIndicator();
+          if (snapshot.connectionState != ConnectionState.done ||
+              !snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
           }
-          if(snapshot.hasData) {
+          if (snapshot.hasData) {
             reorderableList = snapshot.data;
           }
           return Stack(
@@ -44,14 +42,15 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                child: LayoutBuilder(builder: (context, constraints) => _buildReorderebleList(constraints)),
+                child: LayoutBuilder(
+                    builder: (context, constraints) =>
+                        _buildReorderebleList(constraints)),
               ),
               Positioned(
-                bottom: 8.0,
-                left: 16.0,
-                right: 16.0,
-                child: _buildValidateButton(context)
-              )
+                  bottom: 8.0,
+                  left: 16.0,
+                  right: 16.0,
+                  child: _buildValidateButton(context))
             ],
           );
         },
@@ -62,10 +61,12 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
   Widget _buildReorderebleList(BoxConstraints constraints) {
     return SizedBox(
       key: ValueKey("container_listreorder"),
-      height: constraints.maxHeight == double.infinity ? 500 : constraints.maxHeight,
+      height: constraints.maxHeight == double.infinity
+          ? 500
+          : constraints.maxHeight,
       child: ReorderableListView(
-        children: reorderableList
-          .map((element) => _buildItem(element)).toList(),
+        children:
+            reorderableList.map((element) => _buildItem(element)).toList(),
         onReorder: (oldIndex, newIndex) {
           setState(() {
             if (oldIndex < newIndex) {
@@ -81,11 +82,18 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
 
   Widget _buildItem(GroupHelperViewModel element) {
     return Column(
-      key: ValueKey(element != null ? element?.id : "NEW"),
+      key: ValueKey(element?.id),
       mainAxisSize: MainAxisSize.min,
       children: [
-        ListTile(title: Text(element.title)),
-        Divider()
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 1.0),
+          child: ListTile(
+            title: Text(element.title),
+            tileColor: element.id != "NEW_HELPER"
+                ? Colors.grey.withOpacity(.2)
+                : PalTheme.of(context).colors.color1.withOpacity(.2),
+          ),
+        ),
       ],
     );
   }
@@ -111,4 +119,3 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
     );
   }
 }
-

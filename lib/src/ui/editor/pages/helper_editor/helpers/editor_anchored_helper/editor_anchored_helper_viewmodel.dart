@@ -120,7 +120,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
           ?.firstWhere((element) => element.value.selected, orElse: () => null);
 
   /// the current selected element's key to show anchor
-  String get selectedAnchorKey => userPageElements.entries
+  String get selectedAnchorKey => backgroundBox.key ?? userPageElements.entries
       .firstWhere((element) => element.value.selected, orElse: () => null)
       ?.key;
 

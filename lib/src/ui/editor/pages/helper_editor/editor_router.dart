@@ -203,7 +203,13 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath>
                 builder: (context) => MediaGalleryPage(
                       mediaId: args.mediaId,
                     ));
-          
+          case '/editor/preview':
+            EditorPreviewArguments args = settings.arguments;
+            return PageRouteBuilder(
+              pageBuilder: (context, _, __) => EditorPreviewPage(
+                args: args,
+              ),
+            );
           default:
             return MaterialPageRoute(
               builder: (context) => child,

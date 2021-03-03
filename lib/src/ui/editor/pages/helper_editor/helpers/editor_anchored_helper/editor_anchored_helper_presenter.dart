@@ -47,20 +47,24 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       this.editMode = true;
       this.viewModel.loading = true;
       this.refreshView();
-      this.helperEditorService.getHelper(this.viewModel.id).then((helper) {
+      this
+          .helperEditorService
+          .getHelper(this.viewModel.id)
+          .then((helper) async {
         this.viewModel = AnchoredFullscreenHelperViewModel.fromEntity(helper);
         this.viewModel.loading = false;
-        this.viewModel.userPageElements = Map();
         this.viewModel.canValidate = new ValueNotifier(false);
-        this.scanElements();
         this
             .viewModel
             .currentEditableItemNotifier
             .addListener(removeSelectedEditableItems);
+        await this.scanElements();
+        await this.onTapElement(viewModel.backgroundBox.key);
+        await validateSelection();
       });
     } else {
       this.viewModel.userPageElements = Map();
-      this.viewModel.anchorValidated = null;
+      this.viewModel.anchorValidated = false;
       this.viewModel.canValidate = new ValueNotifier(false);
       this
           .viewModel
@@ -94,8 +98,9 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       await this.onTapElement(viewModel.backgroundBox.key);
       await validateSelection();
     } else {
-      viewInterface.showTutorial("First step",
-          "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
+      if (this.viewModel.id == null)
+        viewInterface.showTutorial("First step",
+            "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
     }
   }
 
@@ -176,14 +181,14 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       await Future.delayed(Duration(seconds: 2));
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
-      viewInterface.closeEditor(!this.editMode, !this.editMode);
+      viewInterface.closeEditor(!this.editMode, false);
       await Future.delayed(Duration(seconds: 1));
       status.dispose();
     }
   }
 
   onCancel() {
-    viewInterface.closeEditor(!this.editMode, !this.editMode);
+    viewInterface.closeEditor(!this.editMode, false);
   }
 
   // ----------------------------------

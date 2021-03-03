@@ -54,7 +54,7 @@ class EditorHelperRepository extends BaseHttpRepository {
 
   Future<List<HelperEntity>> getGroupHelpers(String groupId) async {
     final Response response =
-        await this.httpClient.get('editor/groups/$groupId/helpers');
+        await this.httpClient.get('pal-business/editor/groups/$groupId/helpers');
     return this._adapter.parseArray(response.body);
   }
 

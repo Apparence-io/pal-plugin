@@ -227,9 +227,12 @@ class _EditorSimpleHelperPage
     );
 
     EditorPreviewArguments arguments = EditorPreviewArguments(
-      (context) => Navigator.pop(context),
+      (_) {},
       preBuiltHelper: layout,
     );
+
+    // var navKey =
+    //     EditorInjector.of(context).hostedAppNavigatorKey;
     await Navigator.pushNamed(
       context,
       '/editor/preview',

@@ -96,12 +96,12 @@ class EditorSimpleHelperPresenter
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
       status.dispose();
-      viewInterface.closeEditor(!this.editMode,!this.editMode);
+      viewInterface.closeEditor(!this.editMode,false);
     }
   }
 
   void onCancel() {
-    viewInterface.closeEditor(!this.editMode,!this.editMode);
+    viewInterface.closeEditor(!this.editMode,false);
   }
 
   String validateDetailsTextField(String currentValue) {

@@ -132,7 +132,7 @@ class EditorUpdateHelperPresenter
     this.refreshView();
   }
 
-  void onCancel() => viewInterface.closeEditor(!this.editMode, !editMode);
+  void onCancel() => viewInterface.closeEditor(!this.editMode, false);
 
   Future<void> onValidate() async {
     ValueNotifier<SendingStatus> status =
@@ -151,7 +151,7 @@ class EditorUpdateHelperPresenter
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
       status.dispose();
-      viewInterface.closeEditor(!this.editMode, !this.editMode);
+      viewInterface.closeEditor(!this.editMode, false);
     }
   }
 

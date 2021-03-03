@@ -95,12 +95,12 @@ class EditorFullScreenHelperPresenter
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
       status.dispose();
-      viewInterface.closeEditor(!this.editMode, !this.editMode);
+      viewInterface.closeEditor(!this.editMode, false);
     }
   }
 
   onCancel() {
-    viewInterface.closeEditor(!this.editMode, !this.editMode);
+    viewInterface.closeEditor(!this.editMode,false);
   }
 
   //TODO move  to view

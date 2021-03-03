@@ -360,7 +360,8 @@ class _EditorAnchoredFullscreenHelperView
     );
 
     EditorPreviewArguments arguments = EditorPreviewArguments(
-      previewHelper: page,
+      (context) => Navigator.pop(context),
+      preBuiltHelper: page,
     );
     await Navigator.pushNamed(
       context,

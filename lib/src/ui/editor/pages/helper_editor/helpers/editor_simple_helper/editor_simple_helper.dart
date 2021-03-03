@@ -227,7 +227,8 @@ class _EditorSimpleHelperPage
     );
 
     EditorPreviewArguments arguments = EditorPreviewArguments(
-      previewHelper: layout,
+      (context) => Navigator.pop(context),
+      preBuiltHelper: layout,
     );
     await Navigator.pushNamed(
       context,

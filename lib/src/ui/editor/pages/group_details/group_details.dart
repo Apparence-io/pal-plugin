@@ -3,10 +3,12 @@ import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/pal_notifications.dart';
+import 'package:pal/src/router.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_helpers.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_infos.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_tabs.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_router.dart';
 import 'package:pal/src/ui/editor/widgets/snackbar_mixin.dart';
 
@@ -22,6 +24,8 @@ abstract class GroupDetailsView {
       String routeName, String helperId, String groupId, HelperType type);
 
   void pop();
+
+  void previewHelper(String id) {}
 }
 
 class GroupDetailsPage extends StatelessWidget
@@ -211,5 +215,27 @@ class GroupDetailsPage extends StatelessWidget
   @override
   void pop() {
     Navigator.pop(_scaffoldKey.currentContext);
+  }
+
+  @override
+  void previewHelper(String id) async {
+    Navigator.pop(_scaffoldKey.currentContext);
+    var navKey =
+        EditorInjector.of(this._scaffoldKey.currentContext).palNavigatorKey;
+    EditorPreviewArguments arguments = EditorPreviewArguments(
+        (context) => Navigator.of(context).pushReplacementNamed(
+              '/editor/group/details',
+              arguments: {
+                "id": groupId,
+                "route": this.routeName,
+                "page": PageStep.HELPERS
+              },
+            ),
+        helperId: id);
+    await Navigator.pushNamed(
+      navKey.currentContext,
+      '/editor/preview',
+      arguments: arguments,
+    );
   }
 }

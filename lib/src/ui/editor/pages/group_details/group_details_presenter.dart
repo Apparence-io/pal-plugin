@@ -179,7 +179,7 @@ class GroupDetailsPresenter
   // HELPERS ACTIONS / PREVIEW / EDIT / DELETE
 
   void previewHelper(String id) {
-    this.helperService.getHelper(id);
+    this.viewInterface.previewHelper(id);
   }
 
   void deleteHelper(String id) {

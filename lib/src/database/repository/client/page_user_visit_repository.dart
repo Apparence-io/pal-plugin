@@ -18,7 +18,10 @@ abstract class HelperGroupUserVisitRepository {
 
   Future<void> saveAll(List<HelperGroupUserVisitEntity> visits);
 
-  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId, HelperEntity helper});
+  Future<void> add(HelperGroupUserVisitEntity visit, {
+    bool isLast, bool feedback, String inAppUserId, HelperEntity helper,
+    String languageCode
+  });
 
   Future<void> clear();
 }
@@ -53,12 +56,21 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
   }
 
   @override
-  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId, HelperEntity helper}) async  {
-    // var url = 'pal-business/client/group/${visit.helperGroupId}/triggered';
-    var url = 'pal-analytic/users/{inAppUserId}/groups/${visit.helperGroupId}/helpers/${helper.id}';
-    var body = jsonEncode({'positiveFeedback': feedback});
-    await httpClient
-      .put(url, body: body, headers: {"inAppUserId": inAppUserId});
+  Future<void> add(HelperGroupUserVisitEntity visit, 
+    {
+      @required bool isLast, 
+      @required bool feedback, 
+      @required String inAppUserId, 
+      @required String languageCode, 
+      @required HelperEntity helper
+    }) async  {
+    var url = 'pal-analytic/users/$inAppUserId/groups/${visit.helperGroupId}/helpers/${helper.id}';
+    var body = jsonEncode({
+      'answer': feedback,
+      'isLast': isLast,
+      'language': languageCode
+    });
+    return httpClient.post(url, body: body, headers: {"inAppUserId": inAppUserId});
   }
 }
 
@@ -81,7 +93,8 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
   Future<void> clear() => _hiveBoxOpener().then((res) => res.clear());
 
   @override
-  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId, HelperEntity helper})
+  Future<void> add(HelperGroupUserVisitEntity visit, {
+    bool isLast, bool feedback, String inAppUserId, HelperEntity helper, String languageCode})
     => _hiveBoxOpener().then((res) => res.add(visit));
 
 }

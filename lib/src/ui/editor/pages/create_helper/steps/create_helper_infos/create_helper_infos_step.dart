@@ -99,7 +99,7 @@ class CreateHelperInfosStep extends StatelessWidget {
     model.triggerTypes.forEach((element) {
       dropdownArray.add(DropdownMenuItem<String>(
         value: element.key,
-        child: Text(element.description),
+        child: Text(element.description ?? ""),
       ));
     });
     return dropdownArray;

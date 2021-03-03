@@ -13,12 +13,14 @@ class HelperClientService {
     HelperGroupUserVisitRepository localVisitRepository,
     HelperGroupUserVisitRepository remoteVisitRepository,
     ClientSchemaRepository clientSchemaRepository,
-    ClientHelperRepository helperRemoteRepository
+    ClientHelperRepository helperRemoteRepository,
+    Locale userLocale,
   }) => _HelperClientService(
     clientSchemaRepository: clientSchemaRepository,
     helperRemoteRepository: helperRemoteRepository,
     localVisitRepository: localVisitRepository,
-    remoteVisitRepository: remoteVisitRepository
+    remoteVisitRepository: remoteVisitRepository,
+    userLocale: userLocale
   );
 
   Future<HelperGroupEntity> getPageNextHelper(final String route, final String inAppUserId) => throw "not implemented";
@@ -39,15 +41,19 @@ class _HelperClientService implements HelperClientService {
 
   final HelperGroupUserVisitRepository _localVisitRepository, _remoteVisitRepository; // ignore: unused_field
 
+  final Locale _userLocale;
+
   _HelperClientService({
     @required HelperGroupUserVisitRepository localVisitRepository,
     @required HelperGroupUserVisitRepository remoteVisitRepository,
     @required ClientSchemaRepository clientSchemaRepository,
-    @required ClientHelperRepository helperRemoteRepository
+    @required ClientHelperRepository helperRemoteRepository,
+    @required Locale userLocale,
   }) : this._clientSchemaRepository = clientSchemaRepository,
        this._localVisitRepository = localVisitRepository,
        this._remoteVisitRepository = remoteVisitRepository,
-       this._helperRemoteRepository = helperRemoteRepository;
+       this._helperRemoteRepository = helperRemoteRepository,
+       this._userLocale = userLocale;
 
   @override
   Future<HelperGroupEntity> getPageNextHelper(String route, String inAppUserId) async {
@@ -67,11 +73,20 @@ class _HelperClientService implements HelperClientService {
   @override
   Future onHelperTrigger(String pageId, HelperGroupEntity helperGroup, HelperEntity helper, String inAppUserId, bool positiveFeedback) async {
     try {
+      var helperIndex = helperGroup.helpers.indexWhere((element) => element.id == helper.id);
+      bool isLast = helperIndex == helperGroup.helpers.length - 1;
       var visit = HelperGroupUserVisitEntity(pageId: pageId, helperGroupId: helperGroup.id);
-      await _remoteVisitRepository.add(visit, feedback: positiveFeedback, inAppUserId: inAppUserId);
+      await _remoteVisitRepository.add(visit, 
+        isLast: isLast,
+        feedback: positiveFeedback, 
+        inAppUserId: inAppUserId,
+        helper: helper,
+        languageCode: _userLocale.languageCode
+      );
       await _localVisitRepository.add(visit); // we only store locally that he already visited
     } catch(err) {
-      print("error occured while sending visits");
+      print("error occured while sending visits ");
+      print(err);
     }
   }
 

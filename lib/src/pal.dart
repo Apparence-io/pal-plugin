@@ -142,21 +142,23 @@ class Pal extends StatelessWidget {
 
   Widget buildUserApp(Widget childApp) {
     return UserInjector(
-        routeObserver: navigatorObserver,
-        child: Builder(
-          builder: (context) {
-            HelperOrchestrator.getInstance(
-              helperClientService: UserInjector.of(context).helperService,
-              inAppUserClientService: UserInjector.of(context).inAppUserClientService,
-              helpersSynchronizer: UserInjector.of(context).helpersSynchronizerService,
-              routeObserver: navigatorObserver,
-              navigatorKey: navigatorKey
-            );
-            return Overlayed(child: childApp);
-          }
-        ),
-        appContext: UserAppContext.instance,
-      );
+      appContext: UserAppContext.instance,
+      routeObserver: navigatorObserver,
+      userLocale: Localizations.localeOf(navigatorKey.currentContext),
+      child: Builder(
+        builder: (context) {
+          HelperOrchestrator.getInstance(
+            helperClientService: UserInjector.of(context).helperService,
+            inAppUserClientService: UserInjector.of(context).inAppUserClientService,
+            helpersSynchronizer: UserInjector.of(context).helpersSynchronizerService,
+            routeObserver: navigatorObserver,
+            navigatorKey: navigatorKey
+          );
+          return Overlayed(child: childApp);
+        }
+      ),
+      
+    );
   }
 
 

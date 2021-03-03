@@ -26,18 +26,23 @@ class UserInjector extends InheritedWidget {
 
   final FinderService _finderService;
 
+  final Locale _userLocale;
+
   UserInjector({
     Key key,
     @required UserAppContext appContext,
     @required this.routeObserver,
     @required Widget child,
+    @required Locale userLocale
   }) : assert(child != null && appContext != null),
+        this._userLocale = userLocale,
         this._pageService = PageClientService.build(appContext.pageRepository),
         this._helperService = HelperClientService.build(
           clientSchemaRepository: appContext.localClientSchemaRepository,
           helperRemoteRepository: appContext.helperRepository,
           localVisitRepository: appContext.pageUserVisitLocalRepository,
-          remoteVisitRepository: appContext.pageUserVisitRemoteRepository
+          remoteVisitRepository: appContext.pageUserVisitRemoteRepository,
+          userLocale: userLocale
         ),
         this._helperSynchronizeService = new HelpersSynchronizer(
           schemaLocalRepository: appContext.localClientSchemaRepository,
@@ -70,4 +75,6 @@ class UserInjector extends InheritedWidget {
   HelpersSynchronizer get helpersSynchronizerService => this._helperSynchronizeService;
 
   FinderService get finderService => this._finderService;
+
+  Locale get userLocale => this._userLocale;
 }

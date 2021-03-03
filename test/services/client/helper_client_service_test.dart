@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
@@ -100,7 +101,8 @@ void main() {
         clientSchemaRepository: clientSchemaRepository,
         helperRemoteRepository: clientHelperRepository,
         localVisitRepository: localVisitRepository,
-        remoteVisitRepository: remoteVisitRepository
+        remoteVisitRepository: remoteVisitRepository,
+        userLocale: Locale('en')
       );
       var schema = SchemaEntity(
         projectId: "testprojectid",
@@ -128,14 +130,20 @@ void main() {
       var pageId = 'p1';
       var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
       var helperGroupId = helperGroup.id;
-      when(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
-        body: jsonEncode({ 'positiveFeedback': true }),
+      var url = 'pal-analytic/users/$inAppUserId/groups/$helperGroupId/helpers/${helperGroup.helpers[0].id}';
+      var expectedBody = jsonEncode({ 
+        'answer': true,
+        'isLast': true,
+        'language': 'en'
+      });
+      when(httpClientMock.post(url,
+        body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).thenAnswer((_) => Future.value());
 
       await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers[0], inAppUserId, true);
-      verify(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
-        body: jsonEncode({ 'positiveFeedback': true }),
+      verify(httpClientMock.post(url,
+        body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).called(1);
       var visits = await localVisitRepository.get(inAppUserId, null);
@@ -146,14 +154,20 @@ void main() {
       var pageId = 'p1';
       var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
       var helperGroupId = helperGroup.id;
-      when(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
-        body: jsonEncode({ 'positiveFeedback': true }),
+      var url = 'pal-analytic/users/$inAppUserId/groups/$helperGroupId/helpers/${helperGroup.helpers[0].id}';
+      var expectedBody = jsonEncode({ 
+        'answer': true,
+        'isLast': true,
+        'language': 'en'
+      });
+      when(httpClientMock.post(url,
+        body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).thenThrow((_) => throw "ERROR");
 
       await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers[0], inAppUserId, true);
-      verify(httpClientMock.put('pal-business/client/group/$helperGroupId/triggered',
-        body: jsonEncode({ 'positiveFeedback': true }),
+      verify(httpClientMock.post(url,
+        body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).called(1);
       var visits = await localVisitRepository.get(inAppUserId, null);

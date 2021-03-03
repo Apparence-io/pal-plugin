@@ -80,6 +80,9 @@ class HelperSharedFactory {
     final String key,
     final List<HelperImageEntity> helperImages,
   ) {
+    if(helperImages == null || helperImages.length == 0) {
+      return null;
+    }
     for (HelperImageEntity helperImage in helperImages) {
       if (key == helperImage?.key) {
         return HelperImageViewModel(
@@ -88,7 +91,6 @@ class HelperSharedFactory {
         );
       }
     }
-    return null;
   }
 
   static HelperBoxViewModel parseBoxBackground(

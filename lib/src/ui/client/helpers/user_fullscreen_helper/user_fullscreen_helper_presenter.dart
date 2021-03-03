@@ -20,7 +20,6 @@ class UserFullScreenHelperPresenter extends Presenter<UserFullScreenHelperModel,
     startAnimations();
   }
 
-
   startAnimations() async {
     this.viewModel.isReversedAnimations = false;
     // Fullscreen background opacity animation

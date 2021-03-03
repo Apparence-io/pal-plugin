@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
@@ -8,6 +9,9 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helper_factory.dart';
 
 import 'helpers_synchronizer.dart';
+
+
+typedef OnTriggeredHelper = Future Function(bool userPositivFeedback);
 
 /// this class is the main intelligence wether or not we are gonna show an helper to user.
 /// On each page visited we check if we have to show a new helper to user
@@ -82,7 +86,11 @@ class HelperOrchestrator {
       }
       final helperGroupToShow = await helperClientService.getPageNextHelper(route, inAppUser.id);
       if (helperGroupToShow != null && helperGroupToShow.helpers.isNotEmpty) {
-        showHelper(helperGroupToShow, inAppUser.id, helperGroupToShow.page.id);
+        showHelper(
+          helperGroupToShow.page.id, 
+          inAppUser.id, 
+          helperGroupToShow, 
+          0);
       }
     } catch (e) {
       // TODO log error to our server or crashlitycs...
@@ -100,28 +108,53 @@ class HelperOrchestrator {
   }
 
   @visibleForTesting
-  // for now we show only one helper from the group / next version will allow to show a group
-  showHelper(final HelperGroupEntity helperGroup, final String inAppUserId, final String pageId) {
-    OverlayEntry entry = OverlayEntry(
-      opaque: false,
-      builder: (context) => PalTheme(
-        theme: PalThemeData.light(),
-        child: HelperFactory.build(
-          helperGroup.helpers[0], 
-          onTrigger: (res) async {
-            await helperClientService.onHelperTrigger(pageId, helperGroup, inAppUserId, res);
-            this.popHelper();
-          },
-          onError: this.popHelper
-        ),
-    ));
-    var overlay = navigatorKey.currentState.overlay;
-    // If there is already an helper, remove it and show the next one (useful when we change page fastly)
-    if (this.overlay != null) {
-      this.overlay.remove();
-    }
-    overlay.insert(entry);
-    this.overlay = entry;
+  showHelper(
+    final String pageId,
+    final String userId,
+    final HelperGroupEntity helperGroupEntity,
+    final int helperIndex) {
+      var onTriggeredHelper = _buildTriggeredHelperAction(
+        pageId,
+        userId,
+        helperGroupEntity,
+        helperIndex);
+      OverlayEntry entry = OverlayEntry(
+        opaque: false,
+        builder: (context) => PalTheme(
+          theme: PalThemeData.light(),
+          child: HelperFactory.build(
+            helperGroupEntity.helpers[helperIndex], 
+            onTrigger: onTriggeredHelper,
+            onError: this.popHelper
+          ),
+      ));
+      var overlay = navigatorKey.currentState.overlay;
+      // If there is already an helper, remove it and show the next one (useful when we change page fastly)
+      if (this.overlay != null) {
+        this.overlay.remove();
+      }
+      overlay.insert(entry);
+      this.overlay = entry;
+  }
+
+  OnTriggeredHelper _buildTriggeredHelperAction(
+    String pageId,
+    String userId,
+    HelperGroupEntity helperGroupEntity,
+    int helperIndex,
+  ) {
+    return (positivAnswer) async {
+      await helperClientService.onHelperTrigger(
+        pageId, 
+        helperGroupEntity, 
+        helperGroupEntity.helpers[helperIndex], 
+        userId, 
+        positivAnswer);
+      this.popHelper();
+      if(positivAnswer && helperIndex < helperGroupEntity.helpers.length - 1 ) {
+        showHelper(pageId, userId, helperGroupEntity, helperIndex + 1);
+      }
+    };
   }
 
 }

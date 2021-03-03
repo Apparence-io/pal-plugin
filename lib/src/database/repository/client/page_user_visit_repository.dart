@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pal/src/database/adapter/helper_group_visit_entity_adapter.dart' as Adapter;
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/page_user_visit_entity.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 
@@ -17,7 +18,7 @@ abstract class HelperGroupUserVisitRepository {
 
   Future<void> saveAll(List<HelperGroupUserVisitEntity> visits);
 
-  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId});
+  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId, HelperEntity helper});
 
   Future<void> clear();
 }
@@ -51,10 +52,10 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
     throw UnimplementedError();
   }
 
-  // TODO: change URL
   @override
-  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId}) async  {
-    var url = 'pal-business/client/group/${visit.helperGroupId}/triggered';
+  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId, HelperEntity helper}) async  {
+    // var url = 'pal-business/client/group/${visit.helperGroupId}/triggered';
+    var url = 'pal-analytic/users/{inAppUserId}/groups/${visit.helperGroupId}/helpers/${helper.id}';
     var body = jsonEncode({'positiveFeedback': feedback});
     await httpClient
       .put(url, body: body, headers: {"inAppUserId": inAppUserId});
@@ -80,7 +81,7 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
   Future<void> clear() => _hiveBoxOpener().then((res) => res.clear());
 
   @override
-  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId})
+  Future<void> add(HelperGroupUserVisitEntity visit, {bool feedback, String inAppUserId, HelperEntity helper})
     => _hiveBoxOpener().then((res) => res.add(visit));
 
 }

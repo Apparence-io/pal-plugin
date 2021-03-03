@@ -19,22 +19,25 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
     return HelperGroupEntity(
       id: fields[0] as String,
       priority: fields[1] as int,
-      helpers: (fields[2] as List)?.cast<HelperEntity>(),
-      page: fields[3] as PageEntity,
+      helpers: (fields[3] as List)?.cast<HelperEntity>(),
+      page: fields[4] as PageEntity,
+      type: fields[2] as HelperTriggerType,
     );
   }
 
   @override
   void write(BinaryWriter writer, HelperGroupEntity obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.priority)
       ..writeByte(2)
-      ..write(obj.helpers)
+      ..write(obj.type)
       ..writeByte(3)
+      ..write(obj.helpers)
+      ..writeByte(4)
       ..write(obj.page);
   }
 

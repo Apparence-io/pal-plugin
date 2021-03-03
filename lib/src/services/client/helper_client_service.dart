@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/schema_entity.dart';
 import 'package:pal/src/database/entity/page_user_visit_entity.dart';
@@ -22,7 +23,12 @@ class HelperClientService {
 
   Future<HelperGroupEntity> getPageNextHelper(final String route, final String inAppUserId) => throw "not implemented";
 
-  Future onHelperTrigger(final String pageId, final HelperGroupEntity helperGroup, final String inAppUserId, final bool positiveFeedback) => throw "not implemented";
+  Future onHelperTrigger(
+    final String pageId, 
+    final HelperGroupEntity helperGroup, 
+    final HelperEntity helper, 
+    final String inAppUserId, 
+    final bool positiveFeedback) => throw "not implemented";
 }
 
 class _HelperClientService implements HelperClientService {
@@ -52,14 +58,14 @@ class _HelperClientService implements HelperClientService {
       .where((element) => userVisits.where((visit) => visit.helperGroupId == element.id).isEmpty)
       .toList();
     if(group.isNotEmpty) {
-      group.sort((a,b) => a.priority < b.priority ? -1 : 1);
-      return group.last;
+      group.sort();
+      return group.first;
     }
     return null;
   }
 
   @override
-  Future onHelperTrigger(String pageId, HelperGroupEntity helperGroup, String inAppUserId, bool positiveFeedback) async {
+  Future onHelperTrigger(String pageId, HelperGroupEntity helperGroup, HelperEntity helper, String inAppUserId, bool positiveFeedback) async {
     try {
       var visit = HelperGroupUserVisitEntity(pageId: pageId, helperGroupId: helperGroup.id);
       await _remoteVisitRepository.add(visit, feedback: positiveFeedback, inAppUserId: inAppUserId);

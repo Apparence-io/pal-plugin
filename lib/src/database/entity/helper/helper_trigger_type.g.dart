@@ -15,6 +15,8 @@ class HelperTriggerTypeAdapter extends TypeAdapter<HelperTriggerType> {
     switch (reader.readByte()) {
       case 0:
         return HelperTriggerType.ON_SCREEN_VISIT;
+      case 1:
+        return HelperTriggerType.ON_NEW_UPDATE;
       default:
         return null;
     }
@@ -25,6 +27,9 @@ class HelperTriggerTypeAdapter extends TypeAdapter<HelperTriggerType> {
     switch (obj) {
       case HelperTriggerType.ON_SCREEN_VISIT:
         writer.writeByte(0);
+        break;
+      case HelperTriggerType.ON_NEW_UPDATE:
+        writer.writeByte(1);
         break;
     }
   }

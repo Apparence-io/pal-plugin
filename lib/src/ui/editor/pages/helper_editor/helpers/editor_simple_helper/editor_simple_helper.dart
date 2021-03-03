@@ -115,7 +115,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
-      body: viewModel.loading
+      body: (viewModel.loading??false)
           ? Center(child: CircularProgressIndicator(value: null))
           : EditorToolboxPage(
               // TODO : Helper background

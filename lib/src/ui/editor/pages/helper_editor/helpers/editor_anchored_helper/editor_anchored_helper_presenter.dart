@@ -60,7 +60,9 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
             .addListener(removeSelectedEditableItems);
         await this.scanElements();
         await this.onTapElement(viewModel.backgroundBox.key);
-        await validateSelection();
+        if (this.viewModel.writeArea != null) {
+          await validateSelection();
+        }
       });
     } else {
       this.viewModel.userPageElements = Map();
@@ -70,7 +72,6 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
           .viewModel
           .currentEditableItemNotifier
           .addListener(removeSelectedEditableItems);
-      this.refreshView();
     }
 
     // Refresh UI to remove all selected items

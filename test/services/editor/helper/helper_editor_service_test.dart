@@ -46,13 +46,13 @@ void main() {
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperResult..id = null);
-    when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups/${args.helperGroup.id}/helpers', body: anyNamed("body")))
+    when(httpClientMock.post('pal-business/editor/groups/${args.helperGroup.id}/helpers', body: anyNamed("body")))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await creationCall();
     // group exists here and should not been called
-    verifyNever(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/group', body: captureAnyNamed("body")));
+    verifyNever(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body")));
     var capturedCall = verify(
-        httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups/${args.helperGroup.id}/helpers',
+        httpClientMock.post('pal-business/editor/groups/${args.helperGroup.id}/helpers',
         body: captureAnyNamed("body"))
     ).captured;
     expect(capturedCall[0], equals(expectedHelperResultJson));
@@ -70,7 +70,7 @@ void main() {
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
     when(httpClientMock.post('pal-business/editor/pages', body: pageCreationReqJson)).thenAnswer((_) => Future.value(Response(pageResJson, 200)));
     // mock create group
-    var groupCreationReqJson = {"name":"${args.helperGroup.name}", "minVersionId": 25, "maxVersionId": null};
+    var groupCreationReqJson = '{"name":"${args.helperGroup.name}","triggerType":null,"versionMinId":25,"versionMaxId":null}';
     var groupCreationResJson = '{"id":"89032803JS", "name":"${args.helperGroup.name}", "minVersionId": 25, "maxVersionId": null}';
     when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: anyNamed('body')))
       .thenAnswer((_) => Future.value(Response(groupCreationResJson, 200)));
@@ -84,7 +84,7 @@ void main() {
     when(httpClientMock.post('pal-business/editor/versions', body: versionMinCreationReqJson)).thenAnswer((_) => Future.value(Response(versionReqJson, 200)));
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperRequest);
-    when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups/89032803JS/helpers', body: anyNamed("body")))
+    when(httpClientMock.post('pal-business/editor/groups/89032803JS/helpers', body: anyNamed("body")))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await creationCall();
     verify(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1')).called(1);
@@ -93,7 +93,7 @@ void main() {
     verify(httpClientMock.post('pal-business/editor/versions', body: versionMinCreationReqJson)).called(1);
     var capturedGroupCreationCall =  verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body"))).captured;
     expect(capturedGroupCreationCall[0], equals(groupCreationReqJson));
-    var capturedHelperCreationCall =  verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups/89032803JS/helpers', body: captureAnyNamed("body"))).captured;
+    var capturedHelperCreationCall =  verify(httpClientMock.post('pal-business/editor/groups/89032803JS/helpers', body: captureAnyNamed("body"))).captured;
     expect(capturedHelperCreationCall[0], equals(expectedHelperResultJson));
   }
 
@@ -115,16 +115,16 @@ void main() {
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperResult..id = "JDLSKJDSD");
     args.config.id = expectedHelperResult.id;
-    when(httpClientMock.put('pal-business/editor/pages/${existingPage.id}/groups/${args.helperGroup.id}/helpers/${args.config.id}', body: anyNamed("body")))
+    when(httpClientMock.put('pal-business/editor/helpers/${args.config.id}', body: anyNamed("body")))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await updateCall();
     // group exists here and should not been called
     var capturedHelperCreation = verify(httpClientMock.put(
-      'pal-business/editor/pages/${existingPage.id}/groups/${args.helperGroup.id}/helpers/${args.config.id}',
+      'pal-business/editor/helpers/${args.config.id}',
       body: captureAnyNamed("body"))
     ).captured;
     expect(capturedHelperCreation[0], expectedHelperResultJson);
-    verifyNever(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/group', body: captureAnyNamed("body")));
+    verifyNever(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body")));
   }
 
   group('[EditorHelperService] - save simpleHelper', () {

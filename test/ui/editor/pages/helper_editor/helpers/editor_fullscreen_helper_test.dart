@@ -67,7 +67,7 @@ void main() {
             EditorPreviewArguments args = settings.arguments;
             return MaterialPageRoute(
               builder: (context) => EditorPreviewPage(
-                previewHelper: args.previewHelper,
+                args: args,
               ),
             );
         }
@@ -407,6 +407,7 @@ void main() {
 
     Future _beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);
+      when(helperEditorServiceMock.getHelper(any)).thenAnswer((_) => Future.value(helperEntity));
       EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.edit(
         palEditModeStateService: PalEditModeStateServiceMock(),
         helperId: helperEntity.id,

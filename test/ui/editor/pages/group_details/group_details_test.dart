@@ -3,9 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/ui/editor/pages/group_details/group_details.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_helpers.dart';
+
+import '../../../../pal_test_utilities.dart';
 
 class HttpClientMock extends Mock implements HttpClient {}
 
@@ -13,41 +16,59 @@ class HttpClientMock extends Mock implements HttpClient {}
 const mockGroup =
     '''{"id":"JKLSDJDLS28", "priority":6, "name":"group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": "1.0.2"}''';
 const mockHelpersList = '''[{
-        'id': id1,
-        'name': helper1,
-        'type': HELPER_FULL_SCREEN,
-        'creationDate': "2020-12-23T18:25:43.511Z",
-        'lastUpdateDate': "2020-12-23T18:25:43.511Z",
-        'priority': 1,
+        "id": "id1",
+        "name": "helper1",
+        "type": "HELPER_FULL_SCREEN",
+        "creationDate": "2020-12-23T18:25:43.511Z",
+        "lastUpdateDate": "2020-12-23T18:25:43.511Z",
+        "priority": 1
         },{
-        'id': id2,
-        'name': helper2,
-        'type': HELPER_FULL_SCREEN,
-        'creationDate': "2020-12-23T18:25:43.511Z",
-        'lastUpdateDate': "2020-12-23T18:25:43.511Z",
-        'priority': 2,
+        "id": "id2",
+        "name": "helper2",
+        "type": "HELPER_FULL_SCREEN",
+        "creationDate": "2020-12-23T18:25:43.511Z",
+        "lastUpdateDate": "2020-12-23T18:25:43.511Z",
+        "priority": 2
         },{
-        'id': id2,
-        'name': helper2,
-        'type': HELPER_FULL_SCREEN,
-        'creationDate': "2020-12-23T18:25:43.511Z",
-        'lastUpdateDate': "2020-12-23T18:25:43.511Z",
-        'priority': 3,
-        },]''';
+        "id": "id2",
+        "name": "helper2",
+        "type": "HELPER_FULL_SCREEN",
+        "creationDate": "2020-12-23T18:25:43.511Z",
+        "lastUpdateDate": "2020-12-23T18:25:43.511Z",
+        "priority": 3
+        }]''';
+
+const userApp = Scaffold(
+  body: Center(
+    child: Text('Testing'),
+  ),
+);
+
+var navKey = GlobalKey<NavigatorState>();
 
 main() {
   HttpClientMock httpMock = HttpClientMock();
   GroupDetailsPage component;
   group('Group Details Tests', () {
     Future _before(WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: GroupDetailsPage(
-            groupId: 'testid',
-          ),
-        ),
-      );
-      tester.pumpAndSettle();
+      EditorAppContext editorAppContext =
+          HttpEditorAppContext.private(httpClient: httpMock);
+      await initAppWithPal(tester, userApp, navKey,
+          editorAppContext: editorAppContext);
+
+      await tester.pumpAndSettle();
+
+      Navigator.push(
+          navKey.currentContext,
+          MaterialPageRoute(
+            builder: (context) => GroupDetailsPage(
+              groupId: 'testId',
+              routeName: '/',
+            ),
+          ));
+
+      await tester.pumpAndSettle();
+
       component = tester.widget(find.byType(GroupDetailsPage));
     }
 
@@ -62,10 +83,13 @@ main() {
 
     setUp(() {
       reset(httpMock);
-      when(httpMock.get('pal-business/groups/testId'))
+      when(httpMock.get('pal-business/editor/groups/testId'))
           .thenAnswer((_) => Future.value(Response(mockGroup, 200)));
 
-      when(httpMock.put('pal-business/groups/testId')).thenAnswer((_) =>
+      when(httpMock.get('pal-business/editor/groups/testId/helpers'))
+          .thenAnswer((_) => Future.value(Response(mockHelpersList, 200)));
+
+      when(httpMock.put('pal-business/editor/groups/testId')).thenAnswer((_) =>
           Future.delayed(Duration(seconds: 2), () => Response(mockGroup, 200)));
     });
 
@@ -87,7 +111,8 @@ main() {
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
       groupName(tester).controller.text = 'newTest';
-      component.getPageBuilder.presenter.onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
+      component.getPageBuilder.presenter
+          .onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
       minVer(tester).controller.text = '1.0.2';
       maxVer(tester).controller.text = '1.0.3';
       await tester.pump();
@@ -115,7 +140,8 @@ main() {
       await _before(tester);
 
       groupName(tester).controller.text = 'newTest';
-      component.getPageBuilder.presenter.onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
+      component.getPageBuilder.presenter
+          .onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
       minVer(tester).controller.text = '1.0.2';
       maxVer(tester).controller.text = '1.0.3';
       await tester.pump();

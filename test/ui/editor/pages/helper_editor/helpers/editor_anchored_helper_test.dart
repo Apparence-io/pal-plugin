@@ -2,20 +2,24 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/widgets/editor_action_item.dart';
@@ -23,6 +27,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_tutorial.dart';
 import 'package:pal/src/ui/editor/pages/helpers_list/helpers_list_modal.dart';
+import 'package:pal/src/ui/editor/pages/page_groups/page_group_list.dart';
 import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
@@ -34,6 +39,8 @@ class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
 class PalEditModeStateServiceMock extends Mock
     implements PalEditModeStateService {}
+
+class HttpClientMock extends Mock implements HttpClient {}
 
 void main() {
   _getAnchorFullscreenPainter() =>
@@ -80,7 +87,7 @@ void main() {
             EditorPreviewArguments args = settings.arguments;
             return MaterialPageRoute(
               builder: (context) => EditorPreviewPage(
-                previewHelper: args.previewHelper,
+                args: args,
               ),
             );
         }
@@ -193,7 +200,6 @@ void main() {
       await _passSecondStep(
           tester, firstField, secondField, thirdField, fourthField);
 
-
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
@@ -202,7 +208,6 @@ void main() {
       // await tester.pumpAndSettle();
       await tester.pump(Duration(seconds: 1));
       await tester.pump(Duration(seconds: 2));
-
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
@@ -229,7 +234,8 @@ void main() {
       Text positivText = tester.widget(positivFinder);
       expect(positivText.data, equals('positiv edit'));
 
-      expect(find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage")), findsOneWidget);
+      expect(find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage")),
+          findsOneWidget);
 
       (tester.widget(find.byKey(ValueKey("positiveFeedback"))) as RaisedButton)
           .onPressed();
@@ -330,11 +336,11 @@ void main() {
       await tester.pump();
       await tester.pump();
       // expect first element to be selected
-      expect(presenter.viewModel.selectedAnchorKey, contains("text1"));
+      expect(presenter.viewModel.selectedAnchorKey, contains("BACKGROUND_KEY"));
       // expect second element to be selected
       element2.onTap();
       await tester.pump(Duration(milliseconds: 100));
-      expect(presenter.viewModel.selectedAnchorKey, contains("text2"));
+      expect(presenter.viewModel.selectedAnchorKey, contains("BACKGROUND_KEY"));
     });
 
     testWidgets(
@@ -368,7 +374,7 @@ void main() {
       await beforeEach(tester);
       await closeFirstStepTutorial(tester);
       // action bar is not visible
-      expect(find.byType(EditorActionBar),findsNothing);
+      expect(find.byType(EditorActionBar), findsNothing);
       // tap on first element
       var elementsFinder = find.byKey(ValueKey("elementContainer"));
       var element1 = elementsFinder.evaluate().elementAt(1).widget as InkWell;
@@ -379,9 +385,10 @@ void main() {
       await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
       await tester.pump(Duration(milliseconds: 100));
 
-      await _passSecondStep(tester, "My helper title", "Describe your element here", "Ok, thanks!", "This is not helping");
+      await _passSecondStep(tester, "My helper title",
+          "Describe your element here", "Ok, thanks!", "This is not helping");
       expect(find.byKey(ValueKey("elementContainer")), findsNothing);
-      expect(find.byType(EditorActionBar),findsOneWidget);
+      expect(find.byType(EditorActionBar), findsOneWidget);
       // expect(_getActionBar().animation.value, equals(0));
       expect(find.byKey(ValueKey("validateSelectionBtn")), findsNothing);
       expect(presenter.viewModel.backgroundBox.backgroundColor.opacity, 1);
@@ -411,7 +418,7 @@ void main() {
       await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
       await tester.pump(Duration(milliseconds: 100));
       element2.onTap();
-      expect(presenter.viewModel.selectedAnchorKey, contains("text1"));
+      expect(presenter.viewModel.selectedAnchorKey, contains("BACKGROUND_KEY"));
     });
 
     testWidgets(
@@ -435,8 +442,8 @@ void main() {
       // await enterTextInTextForm(tester, 1, 'test description edited');
       // await enterTextInTextForm(tester, 2, 'negativ edit');
       // await enterTextInTextForm(tester, 3, 'positiv edit');
-      await _passSecondStep(tester, 'test title edited', 'test description edited',
-          'negativ edit', 'positiv edit');
+      await _passSecondStep(tester, 'test title edited',
+          'test description edited', 'negativ edit', 'positiv edit');
 
       await tester.pump();
       expect(presenter.viewModel.titleField.text, equals('test title edited'));
@@ -465,7 +472,8 @@ void main() {
       expect(presenter.viewModel.backgroundBox.backgroundColor,
           isNot(Color(0xFFFFFFFF)));
       // open color picker
-      var colorPickerButton = find.byKey(ValueKey('EditorToolBar_GlobalAction_BackgroundColor'));
+      var colorPickerButton =
+          find.byKey(ValueKey('EditorToolBar_GlobalAction_BackgroundColor'));
       await tester.tap(colorPickerButton);
       await tester.pump();
       expect(find.byType(ColorPickerDialog), findsOneWidget);
@@ -481,11 +489,13 @@ void main() {
       await tester.pump(Duration(milliseconds: 100));
 
       expect(_getAnchorFullscreenPainter().bgColor, Color(0xFFFFFFFF));
-      expect(presenter.viewModel.backgroundBox.backgroundColor,
-          Color(0xFFFFFFFF));
+      expect(
+          presenter.viewModel.backgroundBox.backgroundColor, Color(0xFFFFFFFF));
     });
 
-    testWidgets("step 2 click on save => call helper service saveAnchoredHelper", (WidgetTester tester) async {
+    testWidgets(
+        "step 2 click on save => call helper service saveAnchoredHelper",
+        (WidgetTester tester) async {
       // init pal + go to editor
       await tester.setIphone11Max();
       await beforeEach(tester);
@@ -505,7 +515,8 @@ void main() {
       // await enterTextInTextForm(tester, 1, 'test description');
       // await enterTextInTextForm(tester, 2, 'Not');
       // await enterTextInTextForm(tester, 3, 'Ok');
-      await _passSecondStep(tester, 'Today tip', 'test description', 'Not', 'Ok');
+      await _passSecondStep(
+          tester, 'Today tip', 'test description', 'Not', 'Ok');
       await tester.pump();
       // save anchor
       var validateFinder =
@@ -517,10 +528,7 @@ void main() {
       validateButton.onTapCallback();
       var args = CreateAnchoredHelper(
           helperGroup: HelperGroupConfig(
-            id: "8209839023",
-            minVersion: "1.0.0",
-            maxVersion: "1.0.0"
-          ),
+              id: "8209839023", minVersion: "1.0.0", maxVersion: "1.0.0"),
           config: CreateHelperConfig(
             name: 'helper name',
             triggerType: HelperTriggerType.ON_SCREEN_VISIT,
@@ -557,7 +565,7 @@ void main() {
             fontFamily: "cortana",
           ),
           bodyBox: HelperBoxConfig(
-            key: "[<'text1'>]",
+            key: "BACKGROUND_KEY",
             color: Colors.blueGrey.shade900.toHex(),
           ));
       await tester.pump(Duration(seconds: 2));
@@ -588,7 +596,7 @@ void main() {
       await tester.tap(cancelFinder);
       await tester.pumpAndSettle();
       expect(find.byType(EditorAnchoredFullscreenHelper), findsNothing);
-      expect(find.byType(HelpersListModal), findsOneWidget);
+      expect(find.byType(PageGroupsListPage), findsOneWidget);
     });
   });
 
@@ -597,7 +605,7 @@ void main() {
 
     EditorAnchoredFullscreenPresenter presenter;
 
-    HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
+    final HttpClientMock httpClientMock = HttpClientMock();
 
     Scaffold _myHomeTest = Scaffold(
       body: Column(
@@ -713,14 +721,19 @@ void main() {
 
     // init pal + go to editor
     Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
-      await initAppWithPal(tester, _myHomeTest, _navigatorKey);
+      when(httpClientMock.get('pal-business/editor/helpers/myhelperid'))
+          .thenAnswer(
+              (_) => Future.value(Response(jsonEncode(helperEntity), 200)));
+      EditorAppContext editorAppContext =
+          HttpEditorAppContext.private(httpClient: httpClientMock);
+      await initAppWithPal(tester, _myHomeTest, _navigatorKey,
+          editorAppContext: editorAppContext);
       await pumpHelperWidget(
           tester,
           _navigatorKey,
           HelperTriggerType.ON_SCREEN_VISIT,
           HelperType.ANCHORED_OVERLAYED_HELPER,
           HelperTheme.BLACK,
-          editorHelperService: helperEditorServiceMock,
           palEditModeStateService: new PalEditModeStateServiceMock(),
           helperEntity: helperEntity);
       await tester.pump(Duration(milliseconds: 100));
@@ -740,10 +753,11 @@ void main() {
       await beforeEach(tester, helperEntity);
       await tester.pump();
       await tester.pump();
+
       // expect to find only our helper type editor
       expect(find.byType(EditorAnchoredFullscreenHelper), findsOneWidget);
       // action bar is visible only on step 2
-      expect(find.byType(EditorActionBar), findsOneWidget);
+      expect(find.byType(EditorToolboxPage), findsOneWidget);
       expect(find.byType(EditorTutorialOverlay), findsNothing);
     });
 
@@ -766,8 +780,7 @@ void main() {
       await tester.pump();
       await tester.pump();
       helperEntity.helperTexts.forEach((element) {
-        dynamic textWidget =
-            find.text(element.value).evaluate().first.widget;
+        dynamic textWidget = find.text(element.value).evaluate().first.widget;
         expect(textWidget, isNotNull);
         expect((textWidget.style.color as Color).toHex(), element.fontColor);
         expect(textWidget.style.fontWeight,

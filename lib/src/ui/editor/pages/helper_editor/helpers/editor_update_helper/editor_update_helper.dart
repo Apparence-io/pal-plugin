@@ -135,7 +135,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
-      body: viewModel.loading
+      body: (viewModel.loading ?? true)
           ? Center(
               child: CircularProgressIndicator(value: null),
             )
@@ -197,8 +197,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // FIXME: This is a POC, Need to wrap all editable item to
-                    // gesture detector & change notifier value
                     EditableMedia(
                       key: ValueKey(
                           'pal_EditorUpdateHelperWidget_EditableMedia'),

@@ -66,6 +66,7 @@ void main() {
               projectEditorService: projectEditorService,
               routeObserver: routeObserverMock,
               packageVersionReader: packageVersionReader,
+              pageId: 'testPageId',
             ),
           ),
         ),
@@ -100,11 +101,11 @@ void main() {
 
     testWidgets('[step 1] 2 groups are available on page => click on one then call next goes to step 2', (WidgetTester tester) async {
       var helperGroupListJson = '''[
-          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
-          {"id":"jdlqsjdlq132", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
+          {"id":"jdlqsjdlq12","name":"introduction", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
+          {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get('pal-business/editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(httpClientMock.get('pal-business/editor/pages/testPageId/groups')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
@@ -124,11 +125,11 @@ void main() {
 
     testWidgets('[step 1] 2 groups are available on page, click on first, click on second => second only is selected', (WidgetTester tester) async {
       var helperGroupListJson = '''[
-          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
-          {"id":"jdlqsjdlq132", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
+          {"id":"jdlqsjdlq12","name":"introduction", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
+          {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get('pal-business/editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(httpClientMock.get('pal-business/editor/pages/testPageId/groups')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
@@ -153,11 +154,11 @@ void main() {
 
     testWidgets('[step 1] 2 groups available on page => can create a group', (WidgetTester tester) async {
       var helperGroupListJson = '''[
-          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
-          {"id":"jdlqsjdlq132", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
+          {"id":"jdlqsjdlq12","name":"introduction", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
+          {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get('pal-business/editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(httpClientMock.get('pal-business/editor/pages/testPageId/groups')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
@@ -176,7 +177,7 @@ void main() {
     testWidgets('[step 1] no groups available on page => click on create new group and create a group', (WidgetTester tester) async {
       var helperGroupListJson = '''[]''';
       var myNewHelperGroupName = 'My Helper Group Name';
-      when(httpClientMock.get('pal-business/editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(httpClientMock.get('pal-business/editor/pages/testPageId/groups')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump(Duration(seconds: 1));
       await tester.pump(Duration(seconds: 1));
@@ -208,7 +209,7 @@ void main() {
     testWidgets('[step 1] create a group with invalid min version, max version can be null => next button is disabled', (WidgetTester tester) async {
       var helperGroupListJson = '''[]''';
       var myNewHelperGroupName = 'My Helper Group Name';
-      when(httpClientMock.get('pal-business/editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(httpClientMock.get('pal-business/editor/pages/testPageId/groups')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump(Duration(seconds: 1));
       await tester.pump(Duration(seconds: 1));
@@ -236,7 +237,7 @@ void main() {
     testWidgets('[step 1] create a group with valid min version max version is null => next button is enabled', (WidgetTester tester) async {
       var helperGroupListJson = '''[]''';
       var myNewHelperGroupName = 'My Helper Group Name';
-      when(httpClientMock.get('pal-business/editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(httpClientMock.get('pal-business/editor/pages/testPageId/groups')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump(Duration(seconds: 1));
       await tester.pump(Duration(seconds: 1));
@@ -262,11 +263,11 @@ void main() {
 
     _initStep1(WidgetTester tester) async {
       var helperGroupListJson = '''[
-          {"id":"jdlqsjdlq12", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
-          {"id":"jdlqsjdlq132", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
+          {"id":"jdlqsjdlq12","name":"introduction", "priority": 0, "type": "ANCHORED_OVERLAYED_HELPER", "helpers": [{"name":"introduction"}, {"name":"shop button"}]},
+          {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get('pal-business/editor/groups?routeName=test')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(httpClientMock.get('pal-business/editor/pages/testPageId/groups')).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
@@ -288,7 +289,7 @@ void main() {
         {"id":"8290832095", "name":"my helper 3", "priority": 3},
         {"id":"8290832096", "name":"my helper 4", "priority": 4}
       ]''';
-      when(httpClientMock.get('editor/groups/$selectedGroupId/helpers'))
+      when(httpClientMock.get('pal-business/editor/groups/$selectedGroupId/helpers'))
         .thenAnswer((_) => Future.value(Response(groupHelperListJson, 200)));
       await _initStep1(tester);
       await tester.pump(Duration(seconds: 1));

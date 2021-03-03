@@ -66,7 +66,7 @@ void main() {
             return MaterialPageRoute(
               maintainState: true,
               builder: (context) => EditorPreviewPage(
-                previewHelper: args.previewHelper,
+                args: args,
               ),
             );
         }
@@ -202,10 +202,10 @@ void main() {
 
         Dismissible dis = tester.widget(toastFinder);
         dis.onDismissed(DismissDirection.endToStart);
-        await tester.pump(Duration(milliseconds: 1100));
         await tester.pump(Duration(milliseconds: 500));
         await tester.pump(Duration(milliseconds: 500));
-
+        await tester.pump(Duration(milliseconds: 500));
+        // await tester.pump(Duration(milliseconds: 1100));
         expect(find.byKey(ValueKey('editableActionBarPreviewButton')),
             findsOneWidget);
         expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
@@ -327,9 +327,12 @@ void main() {
           SimpleHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(simpleHelper.id, helperViewModel.id);
       expect(simpleHelper.name, helperViewModel.name);
-      expect(simpleHelper.helperGroup.minVersionCode, helperViewModel.helperGroup.minVersionCode);
-      expect(simpleHelper.helperGroup.maxVersionCode, helperViewModel.helperGroup.maxVersionCode);
-      expect(simpleHelper.helperGroup.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(simpleHelper.helperGroup.minVersionCode,
+          helperViewModel.helperGroup.minVersionCode);
+      expect(simpleHelper.helperGroup.maxVersionCode,
+          helperViewModel.helperGroup.maxVersionCode);
+      expect(simpleHelper.helperGroup.triggerType,
+          HelperTriggerType.ON_SCREEN_VISIT);
       expect(simpleHelper.helperTheme, HelperTheme.BLACK);
     });
   });

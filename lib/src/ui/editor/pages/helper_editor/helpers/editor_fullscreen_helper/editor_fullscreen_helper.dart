@@ -174,7 +174,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
-      body: model.loading
+      body: (model.loading??false)
           ? Center(child: CircularProgressIndicator(value: null))
           : EditorToolboxPage(
               boxViewHandler: BoxViewHandler(

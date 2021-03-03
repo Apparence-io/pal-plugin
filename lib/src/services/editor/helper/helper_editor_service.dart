@@ -90,6 +90,7 @@ class _EditorHelperHttpService implements EditorHelperService {
 
   @override
   Future<HelperEntity> getHelper(String helperId) {
+    print(helperId);
     return this._editorHelperRepository.getHelper(helperId);
   }
 

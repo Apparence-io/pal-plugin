@@ -71,7 +71,7 @@ void main() {
             EditorPreviewArguments args = settings.arguments;
             return MaterialPageRoute(
               builder: (context) => EditorPreviewPage(
-                previewHelper: args.previewHelper,
+                args: args,
               ),
             );
         }
@@ -156,12 +156,11 @@ void main() {
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
       previewButton.onTap();
-      await tester.pumpAndSettle();
 
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 1100));
-      await tester.pump(Duration(milliseconds: 5000));
-      await tester.pump(Duration(milliseconds: 700));
-      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 6000));
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
       Finder titleFinder =
@@ -187,12 +186,11 @@ void main() {
                   ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised')))
               as RaisedButton)
           .onPressed();
-      await tester.pumpAndSettle();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
-      await tester.pump(Duration(milliseconds: 5000));
       await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 6000));
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
@@ -339,8 +337,10 @@ void main() {
       var helper = UpdateHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(helper.id, helperViewModel.id);
       expect(helper.name, helperViewModel.name);
-      expect(helper.helperGroup.minVersionCode, helperViewModel.helperGroup.minVersionCode);
-      expect(helper.helperGroup.maxVersionCode, helperViewModel.helperGroup.maxVersionCode);
+      expect(helper.helperGroup.minVersionCode,
+          helperViewModel.helperGroup.minVersionCode);
+      expect(helper.helperGroup.maxVersionCode,
+          helperViewModel.helperGroup.maxVersionCode);
       expect(helper.helperGroup.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
       expect(helper.helperTheme, HelperTheme.BLACK);
     });
@@ -373,6 +373,8 @@ void main() {
     // init pal + go to editor
     Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);
+      when(helperEditorServiceMock.getHelper(any))
+          .thenAnswer((_) => Future.value(helperEntity));
       await initAppWithPal(tester, _myHomeTest, _navigatorKey);
       await pumpHelperWidget(
           tester,
@@ -390,56 +392,60 @@ void main() {
     }
 
     HelperEntity validUpdateHelperEntity() => HelperEntity(
+            id: 'myUpdateHelper',
             name: "my helper entity",
             type: HelperType.UPDATE_HELPER,
             triggerType: HelperTriggerType.ON_SCREEN_VISIT,
             priority: 1,
             helperTexts: [
-          HelperTextEntity(
-            value: "title",
-            fontColor: "#FF001100",
-            fontWeight: "w100",
-            fontSize: 17,
-            fontFamily: "Montserrat",
-            key: UpdatescreenHelperKeys.TITLE_KEY,
-          ),
-          HelperTextEntity(
-            value: "changelog 1",
-            fontColor: "#FF001100",
-            fontWeight: "w100",
-            fontSize: 17,
-            fontFamily: "Montserrat",
-            key: "${UpdatescreenHelperKeys.LINES_KEY}:0",
-          ),
-          HelperTextEntity(
-            value: "changelog 2",
-            fontColor: "#FF001100",
-            fontWeight: "w100",
-            fontSize: 17,
-            fontFamily: "Montserrat",
-            key: "${UpdatescreenHelperKeys.LINES_KEY}:1",
-          ),
-        ],
-        helperImages: [
-          HelperImageEntity(
-            url: "http://testurl.com",
-            key: FullscreenHelperKeys.IMAGE_KEY,
-          )
-        ],
-        helperBoxes: [
-          HelperBoxEntity(
-            key: FullscreenHelperKeys.BACKGROUND_KEY,
-            backgroundColor: "#FF001100",
-          )
-        ]
-      );
+              HelperTextEntity(
+                value: "title",
+                fontColor: "#FF001100",
+                fontWeight: "w100",
+                fontSize: 17,
+                fontFamily: "Montserrat",
+                key: UpdatescreenHelperKeys.TITLE_KEY,
+              ),
+              HelperTextEntity(
+                value: "changelog 1",
+                fontColor: "#FF001100",
+                fontWeight: "w100",
+                fontSize: 17,
+                fontFamily: "Montserrat",
+                key: "${UpdatescreenHelperKeys.LINES_KEY}:0",
+              ),
+              HelperTextEntity(
+                value: "changelog 2",
+                fontColor: "#FF001100",
+                fontWeight: "w100",
+                fontSize: 17,
+                fontFamily: "Montserrat",
+                key: "${UpdatescreenHelperKeys.LINES_KEY}:1",
+              ),
+            ],
+            helperImages: [
+              HelperImageEntity(
+                url: "http://testurl.com",
+                key: FullscreenHelperKeys.IMAGE_KEY,
+              )
+            ],
+            helperBoxes: [
+              HelperBoxEntity(
+                key: FullscreenHelperKeys.BACKGROUND_KEY,
+                backgroundColor: "#FF001100",
+              )
+            ]);
 
-    testWidgets('Valid helper entity, 2 changelog, 1 title => should create in edit mode all attributes', (WidgetTester tester) async {
+    testWidgets(
+        'Valid helper entity, 2 changelog, 1 title => should create in edit mode all attributes',
+        (WidgetTester tester) async {
       var entity = validUpdateHelperEntity();
       await beforeEach(tester, entity);
       expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
       expect(presenter.viewModel.changelogsTextsForm.length, 2);
-      entity.helperTexts.forEach((element) => expect(find.text(element.value), findsOneWidget));
+      await tester.pump(Duration(milliseconds: 500));
+      entity.helperTexts.forEach(
+          (element) => expect(find.text(element.value), findsOneWidget));
     });
   });
 }

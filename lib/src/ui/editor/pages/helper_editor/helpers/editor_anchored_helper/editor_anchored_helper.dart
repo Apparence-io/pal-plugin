@@ -128,7 +128,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       },
       builder: (context, presenter, model) => Material(
         color: Colors.black.withOpacity(0.3),
-        child: model.loading
+        child: (model.loading ?? true)
             ? Center(child: CircularProgressIndicator(value: null))
             : EditorToolboxPage(
                 boxViewHandler: BoxViewHandler(

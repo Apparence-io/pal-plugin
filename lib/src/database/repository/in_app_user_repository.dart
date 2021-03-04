@@ -26,7 +26,7 @@ class InAppUserRepository extends BaseHttpRepository {
 
   Future<InAppUserEntity> update(final InAppUserEntity inAppUser) async {
     final Response response = await this.httpClient.put(
-        "pal-analytic/client/in-app-users/${inAppUser.id}",
+        "pal-analytic/in-app-users/${inAppUser.id}",
         body: InAppUserEntityAdapter().toJson(inAppUser));
     return InAppUserEntityAdapter().parse(response.body);
   }

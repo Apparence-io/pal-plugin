@@ -69,10 +69,7 @@ void main() {
       const appVersion = "1.0.0";
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get('pal-business/client/visited-user-groups', headers: {
-        'appVersion': appVersion,
-        'inAppUserId': userId
-      })).thenAnswer((_) => Future.value(Response('[]', 200)));
+      when(mockHttpClient.get('pal-analytic/users/$userId/groups')).thenAnswer((_) => Future.value(Response('[]', 200)));
 
       expect(await schemaLocalRepository.get(appVersion: appVersion), isNull);
       await synchronizer.sync(userId);
@@ -89,10 +86,7 @@ void main() {
       when(packageVersionReader.version).thenReturn(appVersion);
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(schemaRemoteRepository.get(schemaVersion: 1, appVersion: appVersion)).thenAnswer((_) => Future.value(lastRemoteSchema));
-      when(mockHttpClient.get('pal-business/client/visited-user-groups', headers: {
-        'appVersion': appVersion,
-        'inAppUserId': userId
-      })).thenAnswer((_) => Future.value(Response('[]', 200)));
+      when(mockHttpClient.get('pal-analytic/users/$userId/groups')).thenAnswer((_) => Future.value(Response('[]', 200)));
       //first sync on null version
       await synchronizer.sync(userId);
       var localSchema = await schemaLocalRepository.get();
@@ -116,17 +110,11 @@ void main() {
         ]''';
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get('pal-business/client/visited-user-groups', headers: {
-        'appVersion': appVersion,
-        'inAppUserId': userId
-      })).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
+      when(mockHttpClient.get('pal-analytic/users/$userId/groups')).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
       expect(await pageUserVisitLocalRepository.get(userId, appVersion), isEmpty);
 
       await synchronizer.sync(userId);
-      verify(mockHttpClient.get('pal-business/client/visited-user-groups', headers: {
-        'appVersion': appVersion,
-        'inAppUserId': userId
-      })).called(1);
+      verify(mockHttpClient.get('pal-analytic/users/$userId/groups')).called(1);
       var savedVisits = await pageUserVisitLocalRepository.get(userId, appVersion);
       expect(savedVisits, isNotEmpty);
       expect(savedVisits.length, equals(5));
@@ -138,19 +126,13 @@ void main() {
       var visitedUserGroupsJson = '''[]''';
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get('pal-business/client/visited-user-groups', headers: {
-        'appVersion': appVersion,
-        'inAppUserId': userId
-      })).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
+      when(mockHttpClient.get('pal-analytic/users/$userId/groups')).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
 
       await synchronizer.sync(userId);
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(null));
       await synchronizer.sync(userId);
       // visits api is not called again because we gonne store them locally
-      verify(mockHttpClient.get('pal-business/client/visited-user-groups', headers: {
-          'appVersion': appVersion,
-          'inAppUserId': userId
-        })).called(1);
+      verify(mockHttpClient.get('pal-analytic/users/$userId/groups')).called(1);
     });
 
   });

@@ -7,7 +7,6 @@ import 'package:pal/src/services/finder/finder_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
 
 import '../../helper_editor_factory.dart';
@@ -26,6 +25,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
 
   final HelperEditorPageArguments parameters;
 
+  bool editMode;
+
   EditorAnchoredFullscreenPresenter(
       AnchoredFullscreenHelperViewModel viewModel,
       EditorAnchoredFullscreenHelperView viewInterface,
@@ -39,14 +40,41 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
 
   @override
   void onInit() {
-    this.viewModel.userPageElements = Map();
-    this.viewModel.canValidate = new ValueNotifier(false);
+    this.editMode = false;
+    this.viewModel.loading = false;
+
+    if (this.viewModel.id != null) {
+      this.editMode = true;
+      this.viewModel.loading = true;
+      this.refreshView();
+      this
+          .helperEditorService
+          .getHelper(this.viewModel.id)
+          .then((helper) async {
+        this.viewModel = AnchoredFullscreenHelperViewModel.fromEntity(helper);
+        this.viewModel.loading = false;
+        this.viewModel.canValidate = new ValueNotifier(false);
+        this
+            .viewModel
+            .currentEditableItemNotifier
+            .addListener(removeSelectedEditableItems);
+        await this.scanElements();
+        await this.onTapElement(viewModel.backgroundBox.key);
+        if (this.viewModel.writeArea != null) {
+          await validateSelection();
+        }
+      });
+    } else {
+      this.viewModel.userPageElements = Map();
+      this.viewModel.anchorValidated = false;
+      this.viewModel.canValidate = new ValueNotifier(false);
+      this
+          .viewModel
+          .currentEditableItemNotifier
+          .addListener(removeSelectedEditableItems);
+    }
 
     // Refresh UI to remove all selected items
-    this
-        .viewModel
-        .currentEditableItemNotifier
-        .addListener(removeSelectedEditableItems);
   }
 
   // @override
@@ -71,15 +99,17 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       await this.onTapElement(viewModel.backgroundBox.key);
       await validateSelection();
     } else {
-      viewInterface.showTutorial("First step",
-          "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
+      if (this.viewModel.id == null)
+        viewInterface.showTutorial("First step",
+            "Select the widget you want to explain on the overlayed page.\r\n\r\nNote: if you don't have your widget selectable, just add a key on it.");
     }
   }
 
   Future resetSelection() async {
     await scanElements();
     viewModel.anchorValidated = false;
-    viewModel.backgroundBox.backgroundColor = viewModel.backgroundBox.backgroundColor.withOpacity(0.3);
+    viewModel.backgroundBox.backgroundColor =
+        viewModel.backgroundBox.backgroundColor.withOpacity(0.3);
   }
 
   // this methods scan elements on the user page we want to add an helper
@@ -118,8 +148,11 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
     if (viewModel.selectedAnchorKey == null) {
       return;
     }
-    if(viewModel.backgroundBox.id == null){viewModel.backgroundBox.backgroundColor = Colors.blueGrey.shade900;}else{
-      viewModel.backgroundBox.backgroundColor = viewModel.backgroundBox.backgroundColor.withOpacity(1);
+    if (viewModel.backgroundBox.id == null) {
+      viewModel.backgroundBox.backgroundColor = Colors.blueGrey.shade900;
+    } else {
+      viewModel.backgroundBox.backgroundColor =
+          viewModel.backgroundBox.backgroundColor.withOpacity(1);
     }
     viewModel.anchorValidated = true;
     refreshView();
@@ -149,14 +182,14 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       await Future.delayed(Duration(seconds: 2));
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
-      viewInterface.closeEditor();
+      viewInterface.closeEditor(!this.editMode, false);
       await Future.delayed(Duration(seconds: 1));
       status.dispose();
     }
   }
 
   onCancel() {
-    viewInterface.closeEditor();
+    viewInterface.closeEditor(!this.editMode, false);
   }
 
   // ----------------------------------

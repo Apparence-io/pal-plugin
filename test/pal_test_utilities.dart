@@ -40,10 +40,10 @@ Future initAppWithPal(
     editorModeEnabled: editorModeEnabled,
     childApp: new MaterialApp(
       onGenerateRoute: routeFactory ??
-          (_) => MaterialPageRoute(builder: (ctx) {
-                context = ctx;
-                return userApp;
-              }),
+          (_) => MaterialPageRoute(settings: RouteSettings(name: "myPage"), builder: (ctx) {
+            context = ctx;
+            return userApp;
+          }),
       navigatorKey: navigatorKey,
       navigatorObservers: [PalNavigatorObserver.instance()],
     ),
@@ -73,12 +73,14 @@ Future pumpHelperWidget(
   );
   var templateViewModel = HelperViewModel(
     name: "helper name",
-    triggerType: triggerType,
     helperType: type,
     helperTheme: theme,
     priority: 1,
-    maxVersionCode: "1.0.0",
-    minVersionCode: "1.0.0",
+    helperGroup: HelperGroupModel(
+      triggerType: triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
+      minVersionCode: "0.0.0",
+      maxVersionCode: "1.0.1",
+    ),
   );
   // CREATE AN EDITOR FACTORY
   // var _elementFinder = ElementFinder(navigatorKey.currentContext);
@@ -88,7 +90,7 @@ Future pumpHelperWidget(
       case HelperType.SIMPLE_HELPER:
         builder = (context) => EditorSimpleHelperPage.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
             );
@@ -96,7 +98,7 @@ Future pumpHelperWidget(
       case HelperType.UPDATE_HELPER:
         builder = (context) => EditorUpdateHelperPage.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
               packageVersionReader: packageVersionReader,
@@ -105,7 +107,7 @@ Future pumpHelperWidget(
       case HelperType.HELPER_FULL_SCREEN:
         builder = (context) => EditorFullScreenHelperPage.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
             );
@@ -113,7 +115,7 @@ Future pumpHelperWidget(
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         builder = (context) => EditorAnchoredFullscreenHelper.edit(
               parameters: args,
-              helperEntity: helperEntity,
+              helperId: helperEntity.id,
               palEditModeStateService: palEditModeStateService,
               helperService: editorHelperService,
               finderService: finderService,

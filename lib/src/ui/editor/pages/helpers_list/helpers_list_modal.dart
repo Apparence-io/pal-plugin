@@ -45,8 +45,7 @@ abstract class HelpersListModalView {
 }
 
 class HelpersListModal extends StatefulWidget {
-  final GlobalKey<NavigatorState>
-      hostedAppNavigatorKey; //FIXME remove this from here
+  final GlobalKey<NavigatorState> hostedAppNavigatorKey; //FIXME remove this from here
 
   final GlobalKey repaintBoundaryKey;
   final BuildContext bottomModalContext;
@@ -222,8 +221,6 @@ class _HelpersListModalState extends State<HelpersListModal>
         child: HelperTileWidget(
           name: anHelper?.name,
           trigger: getHelperTriggerTypeDescription(anHelper?.triggerType),
-          versionMin: anHelper?.versionMin,
-          versionMax: anHelper?.versionMax,
           isDisabled: false,
           type: getHelperTypeDescription(anHelper?.type),
           onTapCallback: () {

@@ -6,13 +6,13 @@ import 'helper_editor_models.dart';
 
 class HelperEditorAdapter {
   
-  static HelperEntity parseSimpleHelper(CreateSimpleHelper args, int minVersionId, int maxVersionId)
-    => _parseConfig(args.config, HelperType.SIMPLE_HELPER, minVersionId, maxVersionId)
+  static HelperEntity parseSimpleHelper(CreateSimpleHelper args)
+    => _parseConfig(args.config, HelperType.SIMPLE_HELPER)
         ..helperTexts = [_parseHelperText(SimpleHelperKeys.CONTENT_KEY, args.titleText)]
         ..helperBoxes = args.boxConfig?.color != null ? [_parseHelperBox(SimpleHelperKeys.BACKGROUND_KEY, args.boxConfig)] : [];
   
-  static HelperEntity parseFullscreenHelper(CreateFullScreenHelper args, int minVersionId, int maxVersionId)
-    => _parseConfig(args.config, HelperType.HELPER_FULL_SCREEN, minVersionId, maxVersionId)
+  static HelperEntity parseFullscreenHelper(CreateFullScreenHelper args)
+    => _parseConfig(args.config, HelperType.HELPER_FULL_SCREEN)
       ..helperImages = args.mediaHeader?.url != null && args.mediaHeader.url.isNotEmpty ?
         [_parseHelperImage(FullscreenHelperKeys.IMAGE_KEY, args.mediaHeader)]:[]
       ..helperTexts = [
@@ -23,8 +23,8 @@ class HelperEditorAdapter {
       ]
       ..helperBoxes =  [_parseHelperBox(FullscreenHelperKeys.BACKGROUND_KEY, args.bodyBox)];
 
-  static HelperEntity parseUpdateHelper(CreateUpdateHelper args, int minVersionId, int maxVersionId)
-    => _parseConfig(args.config, HelperType.UPDATE_HELPER,  minVersionId, maxVersionId)
+  static HelperEntity parseUpdateHelper(CreateUpdateHelper args)
+    => _parseConfig(args.config, HelperType.UPDATE_HELPER)
       ..helperTexts = [
         _parseHelperText(UpdatescreenHelperKeys.TITLE_KEY, args.title),
         _parseHelperText(UpdatescreenHelperKeys.POSITIV_KEY, args.positivButton),
@@ -38,8 +38,8 @@ class HelperEditorAdapter {
         [_parseHelperImage(UpdatescreenHelperKeys.IMAGE_KEY, args.headerMedia)]:[];
 
 
-  static HelperEntity parseAnchoredHelper(CreateAnchoredHelper args, int minVersionId, int maxVersionId)
-    => _parseConfig(args.config, HelperType.ANCHORED_OVERLAYED_HELPER, minVersionId, maxVersionId)
+  static HelperEntity parseAnchoredHelper(CreateAnchoredHelper args)
+    => _parseConfig(args.config, HelperType.ANCHORED_OVERLAYED_HELPER)
       ..helperTexts = [
         _parseHelperText(AnchoredscreenHelperKeys.TITLE_KEY, args.title),
         _parseHelperText(AnchoredscreenHelperKeys.DESCRIPTION_KEY, args.description),
@@ -59,7 +59,7 @@ class HelperEditorAdapter {
       );
   }
 
-  static HelperTextEntity _parseHelperText(String key, HelperTextConfig textConfig, ) {
+  static HelperTextEntity _parseHelperText(String key, HelperTextConfig textConfig) {
     return HelperTextEntity(
         id: textConfig?.id,
         fontColor: textConfig?.fontColor,
@@ -71,15 +71,13 @@ class HelperEditorAdapter {
       );
   } 
   
-  static HelperEntity _parseConfig(CreateHelperConfig config, HelperType type, int minVersionId, int maxVersionId)
+  static HelperEntity _parseConfig(CreateHelperConfig config, HelperType type)
     => HelperEntity(
       id: config.id,
       name: config.name,
       type: type,
       triggerType: config.triggerType,
       priority: config.priority,
-      versionMinId: minVersionId,
-      versionMaxId: maxVersionId,
     );
 
   static HelperImageEntity _parseHelperImage(String key, HelperMediaConfig mediaConfig) 

@@ -3,7 +3,6 @@ import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 class HelperEditorPageArguments {
-
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
 
   final String pageId;
@@ -23,16 +22,13 @@ class HelperEditorPageArguments {
   });
 }
 
-
 mixin EditorNavigationMixin {
-
   BuildContext context;
   PalEditModeStateService palEditModeStateService;
 
-  Future closeEditor() async {
+  Future closeEditor(bool showList, bool showBubble) async {
     Overlayed.removeOverlay(context, OverlayKeys.EDITOR_OVERLAY_KEY);
-    palEditModeStateService.showBubble(context, true);
-    palEditModeStateService.showHelpersList(context);
+    if (showBubble) palEditModeStateService.showBubble(context, showBubble);
+    if (showList) palEditModeStateService.showHelpersList(context);
   }
 }
-

@@ -7,17 +7,20 @@ import 'package:pal/src/database/adapter/helper_entity_adapter.dart' as EntityAd
 import 'package:pal/src/database/adapter/page_entity_adapter.dart' as PageEntityAdapter;
 import 'package:pal/src/database/adapter/version_entity_adapter.dart' as VersionEntityAdapter;
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/database/entity/version_entity.dart';
 import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
+import 'package:pal/src/database/repository/editor/helper_group_repository.dart';
 import 'package:pal/src/database/repository/page_repository.dart';
 import 'package:pal/src/database/repository/version_repository.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
-import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+
+import 'anchored_model_data.dart';
+import 'fullscreen_model_data.dart';
+import 'simple_model_data.dart';
+import 'update_model_data.dart';
 
 class HttpClientMock extends Mock implements HttpClient {}
 
@@ -28,10 +31,12 @@ void main() {
   EditorHelperService editorHelperService = EditorHelperService.fromDependencies(
     EditorHelperRepository(httpClient: httpClientMock),
     VersionHttpRepository(httpClient: httpClientMock),
-    PageRepository(httpClient: httpClientMock)
+    PageRepository(httpClient: httpClientMock),
+    EditorHelperGroupRepository(httpClient: httpClientMock)
   );
 
   _testCreateHelper(dynamic args, HelperEntity expectedHelperResult, Function creationCall) async {
+    assert(args.helperGroup.id != null, "a group id must be provided");
     // mock get page request
     PageEntity existingPage = PageEntity(id: "IUEZOUEA", creationDate: DateTime.now(), lastUpdateDate: DateTime.now(), route: args.config.route);
     var pageResJson = PageEntityAdapter.PageEntityAdapter().toJson(existingPage);
@@ -39,22 +44,23 @@ void main() {
     //var pageReqJson = jsonEncode({'name': args.config.route});
     when(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
-    // mock get min version request
-    VersionEntity versionEntity = VersionEntity(id: 25, name: args.config.minVersion);
-    var versionReqJson = VersionEntityAdapter.VersionEntityAdapter().toJson(versionEntity);
-    var versionPageJson = '{"content":[$versionReqJson], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
-    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
-      .thenAnswer((_) => Future.value(Response(versionPageJson, 200)));
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperResult..id = null);
-    when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: anyNamed("body")))
+    when(httpClientMock.post('pal-business/editor/groups/${args.helperGroup.id}/helpers', body: anyNamed("body")))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await creationCall();
-    var capturedCall = verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: captureAnyNamed("body"))).captured;
+    // group exists here and should not been called
+    verifyNever(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body")));
+    var capturedCall = verify(
+        httpClientMock.post('pal-business/editor/groups/${args.helperGroup.id}/helpers',
+        body: captureAnyNamed("body"))
+    ).captured;
     expect(capturedCall[0], equals(expectedHelperResultJson));
   }
 
-  _testCreateHelperWithVersionAndPage(dynamic args, HelperEntity expectedHelperResult, Function creationCall) async {
+  _testCreateHelperWithGroupAndVersionAndPage(dynamic args, HelperEntity expectedHelperRequest, Function creationCall) async {
+    assert(args.helperGroup.id == null, "no group id must be provided ${args.helperGroup.id}");
+    assert(args.helperGroup.name != null, "a group name must be provided");
     // mock get page request then create page
     PageEntity existingPage = PageEntity(id: "IUEZOUEA", creationDate: DateTime.now(), lastUpdateDate: DateTime.now(), route: args.config.route);
     var pageResJson = PageEntityAdapter.PageEntityAdapter().toJson(existingPage);
@@ -63,27 +69,36 @@ void main() {
     when(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
     when(httpClientMock.post('pal-business/editor/pages', body: pageCreationReqJson)).thenAnswer((_) => Future.value(Response(pageResJson, 200)));
+    // mock create group
+    var groupCreationReqJson = '{"name":"${args.helperGroup.name}","triggerType":null,"versionMinId":25,"versionMaxId":null}';
+    var groupCreationResJson = '{"id":"89032803JS", "name":"${args.helperGroup.name}", "minVersionId": 25, "maxVersionId": null}';
+    when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: anyNamed('body')))
+      .thenAnswer((_) => Future.value(Response(groupCreationResJson, 200)));
     // mock get min version request then create
-    VersionEntity versionEntity = VersionEntity(id: 25, name: args.config.minVersion);
+    VersionEntity versionEntity = VersionEntity(id: 25, name: args.helperGroup.minVersion);
     var versionReqJson = VersionEntityAdapter.VersionEntityAdapter().toJson(versionEntity);
-    var versionMinCreationReqJson = jsonEncode({'name': args.config.minVersion});
+    var versionMinCreationReqJson = jsonEncode({'name': args.helperGroup.minVersion});
     var versionPageJson = '{"content":[], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
-    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.helperGroup.minVersion}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(versionPageJson, 200)));
     when(httpClientMock.post('pal-business/editor/versions', body: versionMinCreationReqJson)).thenAnswer((_) => Future.value(Response(versionReqJson, 200)));
     // mock save helper
-    var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(HelperEntity.copy(expectedHelperResult)..id = null);
-    when(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: expectedHelperResultJson))
+    var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperRequest);
+    when(httpClientMock.post('pal-business/editor/groups/89032803JS/helpers', body: anyNamed("body")))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await creationCall();
-    verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/helpers', body: expectedHelperResultJson)).called(1);
     verify(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1')).called(1);
     verify(httpClientMock.post('pal-business/editor/pages', body: pageCreationReqJson)).called(1);
-    verify(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1')).called(1);
+    verify(httpClientMock.get('pal-business/editor/versions?versionName=${args.helperGroup.minVersion}&pageSize=1')).called(1);
     verify(httpClientMock.post('pal-business/editor/versions', body: versionMinCreationReqJson)).called(1);
+    var capturedGroupCreationCall =  verify(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body"))).captured;
+    expect(capturedGroupCreationCall[0], equals(groupCreationReqJson));
+    var capturedHelperCreationCall =  verify(httpClientMock.post('pal-business/editor/groups/89032803JS/helpers', body: captureAnyNamed("body"))).captured;
+    expect(capturedHelperCreationCall[0], equals(expectedHelperResultJson));
   }
 
   _testUpdateHelper(dynamic args, HelperEntity expectedHelperResult, Function updateCall) async {
+    assert(args.helperGroup.id != null, "a group id must be provided");
     // mock get page request
     PageEntity existingPage = PageEntity(id: "IUEZOUEA", creationDate: DateTime.now(), lastUpdateDate: DateTime.now(), route: args.config.route);
     var pageResJson = PageEntityAdapter.PageEntityAdapter().toJson(existingPage);
@@ -92,377 +107,138 @@ void main() {
     when(httpClientMock.get('pal-business/editor/pages?route=${args.config.route}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(pageablePageResJson, 200)));
     // mock get min version request
-    VersionEntity versionEntity = VersionEntity(id: 25, name: args.config.minVersion);
+    VersionEntity versionEntity = VersionEntity(id: 25, name: args.helperGroup.minVersion);
     var versionReqJson = VersionEntityAdapter.VersionEntityAdapter().toJson(versionEntity);
     var versionPageJson = '{"content":[$versionReqJson], "numberOfElements":1, "first":true, "last": true, "totalPages":1, "totalElements":1, "pageable": { "offset":1, "pageNumber":1, "pageSize":1 }}';
-    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.config.minVersion}&pageSize=1'))
+    when(httpClientMock.get('pal-business/editor/versions?versionName=${args.helperGroup.minVersion}&pageSize=1'))
       .thenAnswer((_) => Future.value(Response(versionPageJson, 200)));
     // mock save helper
     var expectedHelperResultJson = EntityAdapter.HelperEntityAdapter().toJson(expectedHelperResult..id = "JDLSKJDSD");
     args.config.id = expectedHelperResult.id;
-    when(httpClientMock.put('pal-business/editor/pages/${existingPage.id}/helpers/${args.config.id}', body: expectedHelperResultJson))
+    when(httpClientMock.put('pal-business/editor/helpers/${args.config.id}', body: anyNamed("body")))
       .thenAnswer((_) => Future.value(Response(expectedHelperResultJson, 200)));
     await updateCall();
-    verify(httpClientMock.put('pal-business/editor/pages/${existingPage.id}/helpers/${args.config.id}', body: expectedHelperResultJson))
-      .called(1);
+    // group exists here and should not been called
+    var capturedHelperCreation = verify(httpClientMock.put(
+      'pal-business/editor/helpers/${args.config.id}',
+      body: captureAnyNamed("body"))
+    ).captured;
+    expect(capturedHelperCreation[0], expectedHelperResultJson);
+    verifyNever(httpClientMock.post('pal-business/editor/pages/${existingPage.id}/groups', body: captureAnyNamed("body")));
   }
 
   group('[EditorHelperService] - save simpleHelper', () {
 
-    var args = CreateSimpleHelper(
-      boxConfig: HelperBoxConfig(color: '#FFF'),
-      titleText: HelperTextConfig(
-        text: "Today tips is now this lorem ipsum lorem ipsum...",
-        fontColor: "#CCC",
-        fontWeight: "w100",
-        fontSize: 21,
-        fontFamily: "cortana",
-      ),
-      config: CreateHelperConfig(
-        name: 'my helper name',
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-        priority: 1,
-        minVersion: "1.0.0",
-        maxVersion: "1.0.0",
-        route: "myPageRoute",
-        helperType: HelperType.SIMPLE_HELPER,
-      ),
-    );
-
-    HelperEntity expectedHelperResult = HelperEntity(
-      id: "JDLSKJDSD",
-      name: 'my helper name',
-      type: HelperType.SIMPLE_HELPER,
-      triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-      priority: 1,
-      versionMinId: 25,
-      versionMaxId: 25,
-      helperTexts: [
-        HelperTextEntity(
-          fontColor: "#CCC",
-          fontWeight: "w100",
-          fontSize: 21,
-          value: "Today tips is now this lorem ipsum lorem ipsum...",
-          fontFamily: "cortana",
-          key: SimpleHelperKeys.CONTENT_KEY,
-        )
-      ],
-      helperBoxes: [
-        HelperBoxEntity(
-          backgroundColor: "#FFF",
-          key: SimpleHelperKeys.BACKGROUND_KEY,
-        )
-      ]);
-
     setUp(() => reset(httpClientMock));
 
-    test('page = "route", version = "1.0.1", helper not exists => page exists, version exists, helper saved', () async {
+    test('page = "route", version = "1.0.1", group exists, helper not exists => page exists, version exists, groups exists, new helper created', () async {
+      var args = genSimpleHelperData();
+      HelperEntity expectedHelperResult = genExpectedSimpleEntity(args);
       await _testCreateHelper(args, expectedHelperResult, () => editorHelperService.saveSimpleHelper(args));
     });
 
-    test('page = "route", version min and max = "1.0.1", helper not exists => page is created, version is created, new helper saved', () async {
-      await _testCreateHelperWithVersionAndPage(args, expectedHelperResult, () => editorHelperService.saveSimpleHelper(args));
+    test('page = "route", version min and max = "1.0.1", group not exists, version min/max not exists, helper not exists => group is created, page is created, versions are created, new helper created', () async {
+      var argsWithNewGroup = genSimpleHelperData(
+        groupConfig: HelperGroupConfig(
+          name: "my helper group 01",
+          minVersion: "1.0.0",
+          maxVersion: null)
+      );
+      HelperEntity expectedHelperResult = genExpectedSimpleEntity(argsWithNewGroup);
+      await _testCreateHelperWithGroupAndVersionAndPage(argsWithNewGroup, expectedHelperResult, () => editorHelperService.saveSimpleHelper(argsWithNewGroup));
     });
 
-    test('page = "route", version = "1.0.1", helper exists => page exists, version exists, helper updated', () async {
+    test('page = "route", version = "1.0.1", group exists, helper exists => helper updated', () async {
+      var args = genSimpleHelperData();
+      HelperEntity expectedHelperResult = genExpectedSimpleEntity(args);
       await _testUpdateHelper(args, expectedHelperResult, () => editorHelperService.saveSimpleHelper(args));
     });
 
   });
 
   group('[EditorHelperService] - save fullScreenHelper', () {
-      // the args of our service creation method
-      var args = CreateFullScreenHelper(
-        config: CreateHelperConfig(
-          name: 'my helper name',
-          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-          priority: 1,
+
+    setUp(() => reset(httpClientMock));
+
+    test('page = "route", version = "1.0.1", helper not exists => page exists, version exists, helper saved', () async {
+      var args = genFullscreenModel();
+      HelperEntity expectedHelperResult = genExpectedFullscreenEntity(args);
+      await _testCreateHelper(args, expectedHelperResult, () => editorHelperService.saveFullScreenHelper(args));
+    });
+
+    test('page = "route", version min = "1.0.1", group not exists, version min/max not exists, helper not exists => group is created, page is created, versions are created, new helper created', () async {
+      var args = genFullscreenModel(
+        groupConfig: HelperGroupConfig(
+          name: "my helper group 01",
           minVersion: "1.0.0",
-          maxVersion: "1.0.0",
-          route: "myPageRoute",
-          helperType: HelperType.HELPER_FULL_SCREEN,
-        ),
-        title: HelperTextConfig(
-            text: "Today tips is now this lorem ipsum lorem ipsum...",
-            fontColor: "#CCC",
-            fontWeight: "w100",
-            fontSize: 21,
-            fontFamily: "cortana"),
-        description: HelperTextConfig(
-            text: "Description lorem ipsum...",
-            fontColor: "#CCC2",
-            fontWeight: "w400",
-            fontSize: 14,
-            fontFamily: "cortanaBis"),
-        bodyBox: HelperBoxConfig(
-          color: '#CCF',
-        ),
-        mediaHeader: HelperMediaConfig(url: "http://image.png/"),
-      );
+          maxVersion: null,
+        ));
+      HelperEntity expectedHelperResult = genExpectedFullscreenEntity(args);
+      await _testCreateHelperWithGroupAndVersionAndPage(args, expectedHelperResult, () => editorHelperService.saveFullScreenHelper(args));
+    });
 
-      HelperEntity expectedHelperResult = HelperEntity(
-        id: "JDLSKJDSD",
-        name: args.config.name,
-        type: HelperType.HELPER_FULL_SCREEN,
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-        priority: 1,
-        versionMinId: 25,
-        versionMaxId: 25,
-        helperTexts: [
-          HelperTextEntity(
-            value: args.title.text,
-            fontColor: args.title.fontColor,
-            fontWeight: args.title.fontWeight,
-            fontSize: args.title.fontSize,
-            fontFamily: args.title.fontFamily,
-            key: FullscreenHelperKeys.TITLE_KEY,
-          ),
-          HelperTextEntity(
-            value: args.description.text,
-            fontColor: args.description.fontColor,
-            fontWeight: args.description.fontWeight,
-            fontSize: args.description.fontSize,
-            fontFamily: args.description.fontFamily,
-            key: FullscreenHelperKeys.DESCRIPTION_KEY,
-          ),
-        ],
-        helperImages: [
-          HelperImageEntity(
-            url: args.mediaHeader.url,
-            key: FullscreenHelperKeys.IMAGE_KEY,
-          )
-        ],
-        helperBoxes: [
-          HelperBoxEntity(
-            key: FullscreenHelperKeys.BACKGROUND_KEY,
-            backgroundColor: args.bodyBox.color,
-          )
-        ],
-      );
-
-      setUp(() => reset(httpClientMock));
-
-      test('page = "route", version = "1.0.1", helper not exists => page exists, version exists, helper saved', () async {
-        await _testCreateHelper(args, expectedHelperResult, () => editorHelperService.saveFullScreenHelper(args));
-      });
-
-      test('page = "route", version min and max = "1.0.1", helper not exists => page is created, version is created, new helper saved', () async {
-        await _testCreateHelperWithVersionAndPage(args, expectedHelperResult, () => editorHelperService.saveFullScreenHelper(args));
-      });
-
-      test('page = "route", version = "1.0.1", helper exists => page exists, version exists, helper updated', () async {
-        await _testUpdateHelper(args, expectedHelperResult, () => editorHelperService.saveFullScreenHelper(args));
-      });
+    test('page = "route", version = "1.0.1", helper exists => page exists, version exists, helper updated', () async {
+      var args = genFullscreenModel();
+      HelperEntity expectedHelperResult = genExpectedFullscreenEntity(args);
+      await _testUpdateHelper(args, expectedHelperResult, () => editorHelperService.saveFullScreenHelper(args));
+    });
 
   });
 
   group('[EditorHelperService] - save updateScreenHelper', () {
 
-    var args = CreateUpdateHelper(
-      config: CreateHelperConfig(
-        name: 'my helper name 2',
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-        priority: 1,
-        minVersion: "1.0.0",
-        maxVersion: "1.0.0",
-        route: "myPageRoute",
-        helperType: HelperType.UPDATE_HELPER,
-      ),
-      title: HelperTextConfig(
-        text: "Today tips is now this lorem ipsum lorem ipsum...",
-        fontColor: "#CCC",
-        fontWeight: "w100",
-        fontSize: 21,
-        fontFamily: "cortana",
-      ),
-      lines: [
-        HelperTextConfig(
-          text: "Line 1",
-          fontColor: "#CCC2",
-          fontWeight: "w100E",
-          fontSize: 212,
-          fontFamily: "cortana2",
-        ),
-        HelperTextConfig(
-          text: "Line 2",
-          fontColor: "#CCC2",
-          fontWeight: "w100E",
-          fontSize: 212,
-          fontFamily: "cortana2",
-        )
-      ],
-      bodyBox: HelperBoxConfig(color: '#CCF'),
-      headerMedia: HelperMediaConfig(url: 'url'),
-    );
-
-    // what our service should create
-    HelperEntity expectedHelperResult = HelperEntity(
-        name: args.config.name,
-        type: HelperType.UPDATE_HELPER,
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-        priority: 1,
-        versionMinId: 25,
-        versionMaxId: 25,
-        helperTexts: [
-          HelperTextEntity(
-            value: args.title.text,
-            fontColor: args.title.fontColor,
-            fontWeight: args.title.fontWeight,
-            fontSize: args.title.fontSize,
-            fontFamily: args.title.fontFamily,
-            key: UpdatescreenHelperKeys.TITLE_KEY,
-          ),
-          HelperTextEntity(
-            value: args.lines[0].text,
-            fontColor: args.lines[0].fontColor,
-            fontWeight: args.lines[0].fontWeight,
-            fontSize: args.lines[0].fontSize,
-            fontFamily: args.lines[0].fontFamily,
-            key: "${UpdatescreenHelperKeys.LINES_KEY}:0",
-          ),
-          HelperTextEntity(
-            value: args.lines[1].text,
-            fontColor: args.lines[1].fontColor,
-            fontWeight: args.lines[1].fontWeight,
-            fontSize: args.lines[1].fontSize,
-            fontFamily: args.lines[1].fontFamily,
-            key: "${UpdatescreenHelperKeys.LINES_KEY}:1",
-          ),
-        ],
-        helperImages: [
-          HelperImageEntity(
-            url: args.headerMedia.url,
-            key: FullscreenHelperKeys.IMAGE_KEY,
-          )
-        ],
-        helperBoxes: [
-          HelperBoxEntity(
-            key: FullscreenHelperKeys.BACKGROUND_KEY,
-            backgroundColor: args.bodyBox.color,
-          )
-        ]);
-
     setUp(() => reset(httpClientMock));
 
     test('page = "route", version = "1.0.1", helper not exists => page exists, version exists, helper saved', () async {
+      var args = genUpdateModelData();
+      HelperEntity expectedHelperResult = genExpectedUpdateEntity(args);
       await _testCreateHelper(args, expectedHelperResult, () => editorHelperService.saveUpdateHelper(args));
     });
 
     test('page = "route", version min and max = "1.0.1", helper not exists => page is created, version is created, new helper saved', () async {
-      await _testCreateHelperWithVersionAndPage(args, expectedHelperResult, () => editorHelperService.saveUpdateHelper(args));
+      var argsWithNewGroup = genUpdateModelData(
+        groupConfig: HelperGroupConfig(
+          name: "my helper group 01",
+          minVersion: "1.0.0",
+          maxVersion: null,
+        ));
+      HelperEntity expectedHelperResult = genExpectedUpdateEntity(argsWithNewGroup);
+      await _testCreateHelperWithGroupAndVersionAndPage(argsWithNewGroup, expectedHelperResult, () => editorHelperService.saveUpdateHelper(argsWithNewGroup));
     });
 
     test('page = "route", version = "1.0.1", helper exists => page exists, version exists, helper updated', () async {
+      var args = genUpdateModelData();
+      HelperEntity expectedHelperResult = genExpectedUpdateEntity(args);
       await _testUpdateHelper(args, expectedHelperResult, () => editorHelperService.saveUpdateHelper(args));
     });
 
   });
 
   group('[EditorHelperService] - save anchoredHelper', () {
-    var args = CreateAnchoredHelper(
-      config: CreateHelperConfig(
-        name: 'my helper name 2',
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-        priority: 1,
-        minVersion: "1.0.0",
-        maxVersion: "1.0.0",
-        route: "myPageRoute",
-        helperType: HelperType.UPDATE_HELPER,
-      ),
-      title: HelperTextConfig(
-        text: "Today tips is now this lorem ipsum lorem ipsum...",
-        fontColor: "#CCC",
-        fontWeight: "w100",
-        fontSize: 21,
-        fontFamily: "cortana",
-      ),
-      description: HelperTextConfig(
-        text: "Today description is now this lorem ipsum lorem ipsum...",
-        fontColor: "#CCC",
-        fontWeight: "w100",
-        fontSize: 16,
-        fontFamily: "cortana",
-      ),
-      positivButton: HelperTextConfig(
-        text: "Ok, thanks",
-        fontColor: "#CCC",
-        fontWeight: "w100",
-        fontSize: 16,
-        fontFamily: "cortana",
-      ),
-      negativButton: HelperTextConfig(
-        text: "Not helping",
-        fontColor: "#CCC",
-        fontWeight: "w100",
-        fontSize: 16,
-        fontFamily: "cortana",
-      ),
-      bodyBox: HelperBoxConfig(
-        key: 'KEY_WIDGET_KEY',
-        color: '#000',
-      )
-    );
-
-    HelperEntity expectedHelperResult = HelperEntity(
-      name: args.config.name,
-      type: HelperType.ANCHORED_OVERLAYED_HELPER,
-      triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-      priority: 1,
-      versionMinId: 25,
-      versionMaxId: 25,
-      helperTexts: [
-        HelperTextEntity(
-          value: args.title.text,
-          fontColor: args.title.fontColor,
-          fontWeight: args.title.fontWeight,
-          fontSize: args.title.fontSize,
-          fontFamily: args.title.fontFamily,
-          key: AnchoredscreenHelperKeys.TITLE_KEY,
-        ),
-        HelperTextEntity(
-          value: args.description.text,
-          fontColor: args.description.fontColor,
-          fontWeight: args.description.fontWeight,
-          fontSize: args.description.fontSize,
-          fontFamily: args.description.fontFamily,
-          key: AnchoredscreenHelperKeys.DESCRIPTION_KEY,
-        ),
-        HelperTextEntity(
-          value: args.positivButton.text,
-          fontColor: args.positivButton.fontColor,
-          fontWeight: args.positivButton.fontWeight,
-          fontSize: args.positivButton.fontSize,
-          fontFamily: args.positivButton.fontFamily,
-          key: AnchoredscreenHelperKeys.POSITIV_KEY,
-        ),
-        HelperTextEntity(
-          value: args.negativButton.text,
-          fontColor: args.negativButton.fontColor,
-          fontWeight: args.negativButton.fontWeight,
-          fontSize: args.negativButton.fontSize,
-          fontFamily: args.negativButton.fontFamily,
-          key: AnchoredscreenHelperKeys.NEGATIV_KEY,
-        ),
-      ],
-      helperBoxes: [
-        HelperBoxEntity(
-          key: args.bodyBox.key,
-          backgroundColor: args.bodyBox.color,
-        )
-      ]
-    );
 
     setUp(() => reset(httpClientMock));
 
     test('page = "route", version = "1.0.1", helper not exists => page exists, version exists, helper saved', () async {
+      var args = generateAnchoredHelperData();
+      HelperEntity expectedHelperResult = genExpectedHelperEntity(args);
       await _testCreateHelper(args, expectedHelperResult, () => editorHelperService.saveAnchoredWidget(args));
     });
 
     test('page = "route", version min and max = "1.0.1", helper not exists => page is created, version is created, new helper saved', () async {
-      await _testCreateHelperWithVersionAndPage(args, expectedHelperResult, () => editorHelperService.saveAnchoredWidget(args));
+      var argsWithNewGroup = generateAnchoredHelperData(
+        helperGroupConfig: HelperGroupConfig(
+          name: "my helper group 01",
+          minVersion: "1.0.0",
+          maxVersion: null,
+        )
+      );
+      HelperEntity expectedHelperResult = genExpectedHelperEntity(argsWithNewGroup);
+      await _testCreateHelperWithGroupAndVersionAndPage(argsWithNewGroup, expectedHelperResult, () => editorHelperService.saveAnchoredWidget(argsWithNewGroup));
     });
 
     test('page = "route", version = "1.0.1", helper exists => page exists, version exists, helper updated', () async {
+      var args = generateAnchoredHelperData();
+      HelperEntity expectedHelperResult = genExpectedHelperEntity(args);
       await _testUpdateHelper(args, expectedHelperResult, () => editorHelperService.saveAnchoredWidget(args));
     });
 

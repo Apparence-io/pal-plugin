@@ -27,12 +27,16 @@ class FullscreenHelperViewModel extends HelperViewModel {
   EditableButtonFormData positivButtonForm;
   EditableButtonFormData negativButtonForm;
 
+  bool loading;
+
   FullscreenHelperViewModel({
     String id,
-    @required String name,
-    @required HelperTriggerType triggerType,
-    @required int priority,
-    @required HelperTheme helperTheme,
+    String name,
+    String groupId,
+    String groupName,
+    HelperTriggerType triggerType,
+    int priority,
+    HelperTheme helperTheme,
     String minVersionCode,
     String maxVersionCode,
     int versionMaxId,
@@ -47,10 +51,14 @@ class FullscreenHelperViewModel extends HelperViewModel {
   }) : super(
     id: id,
     name: name,
-    triggerType: triggerType,
     priority: priority,
-    minVersionCode: minVersionCode,
-    maxVersionCode: maxVersionCode,
+    helperGroup: HelperGroupModel(
+      id: groupId,
+      name: groupName,
+      triggerType: triggerType,
+      minVersionCode: minVersionCode,
+      maxVersionCode: maxVersionCode,
+    ),
     helperTheme: helperTheme,
     helperType: HelperType.HELPER_FULL_SCREEN,
   ) {
@@ -115,11 +123,13 @@ class FullscreenHelperViewModel extends HelperViewModel {
     final fullscreenHelper = FullscreenHelperViewModel(
       id: model.id,
       name: model.name,
-      triggerType: model.triggerType,
       priority: model.priority,
-      maxVersionCode: model.maxVersionCode,
-      minVersionCode: model.minVersionCode,
+      minVersionCode: model.helperGroup?.minVersionCode,
+      maxVersionCode: model.helperGroup?.maxVersionCode,
+      triggerType: model.helperGroup?.triggerType,
       helperTheme: model.helperTheme,
+      groupId: model.helperGroup.id,
+      groupName: model.helperGroup.name
     );
     if (model is FullscreenHelperViewModel) {
       fullscreenHelper.backgroundBoxForm = model?.backgroundBoxForm;
@@ -140,11 +150,9 @@ class FullscreenHelperViewModel extends HelperViewModel {
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
-      minVersionCode: helperEntity?.versionMin,
-      maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
       boxViewModel: HelperSharedFactory.parseBoxBackground(
-        SimpleHelperKeys.BACKGROUND_KEY,
+        FullscreenHelperKeys.BACKGROUND_KEY,
         helperEntity?.helperBoxes,
       ),
       titleViewModel: HelperSharedFactory.parseTextLabel(

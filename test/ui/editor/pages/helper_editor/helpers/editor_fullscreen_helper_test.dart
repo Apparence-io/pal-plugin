@@ -67,7 +67,7 @@ void main() {
             EditorPreviewArguments args = settings.arguments;
             return MaterialPageRoute(
               builder: (context) => EditorPreviewPage(
-                previewHelper: args.previewHelper,
+                args: args,
               ),
             );
         }
@@ -342,20 +342,22 @@ void main() {
       HelperViewModel helperViewModel = HelperViewModel(
         id: "testid",
         name: "test",
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
         helperType: HelperType.HELPER_FULL_SCREEN,
         helperTheme: HelperTheme.BLACK,
         priority: 1,
-        minVersionCode: "0.0.0",
-        maxVersionCode: "1.0.1",
+        helperGroup: HelperGroupModel(
+          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+          minVersionCode: "0.0.0",
+          maxVersionCode: "1.0.1",
+        ),
       );
       var helper =
           FullscreenHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(helper.id, helperViewModel.id);
       expect(helper.name, helperViewModel.name);
-      expect(helper.minVersionCode, helperViewModel.minVersionCode);
-      expect(helper.maxVersionCode, helperViewModel.maxVersionCode);
-      expect(helper.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(helper.helperGroup.minVersionCode, helperViewModel.helperGroup.minVersionCode);
+      expect(helper.helperGroup.maxVersionCode, helperViewModel.helperGroup.maxVersionCode);
+      expect(helper.helperGroup.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
       expect(helper.helperTheme, HelperTheme.BLACK);
     });
   });
@@ -371,45 +373,44 @@ void main() {
           type: HelperType.HELPER_FULL_SCREEN,
           triggerType: HelperTriggerType.ON_SCREEN_VISIT,
           priority: 1,
-          versionMinId: 25,
-          versionMaxId: 25,
           helperTexts: [
-            HelperTextEntity(
-              value: "title text",
-              fontColor: "#CCCCCC",
-              fontWeight: "w100",
-              fontSize: 21,
-              fontFamily: "Montserrat",
-              key: FullscreenHelperKeys.TITLE_KEY,
-            ),
-            HelperTextEntity(
-              value: "description text",
-              fontColor: "#FFFFFF",
-              fontWeight: "w100",
-              fontSize: 18,
-              fontFamily: "Montserrat",
-              key: FullscreenHelperKeys.DESCRIPTION_KEY,
-            ),
-          ],
-          helperImages: [
-            HelperImageEntity(
-              url: null,
-              key: FullscreenHelperKeys.IMAGE_KEY,
-            )
-          ],
-          helperBoxes: [
-            HelperBoxEntity(
-              key: FullscreenHelperKeys.BACKGROUND_KEY,
-              backgroundColor: "#000000",
-            )
-          ],
-        );
+          HelperTextEntity(
+            value: "title text",
+            fontColor: "#CCCCCC",
+            fontWeight: "w100",
+            fontSize: 21,
+            fontFamily: "Montserrat",
+            key: FullscreenHelperKeys.TITLE_KEY,
+          ),
+          HelperTextEntity(
+            value: "description text",
+            fontColor: "#FFFFFF",
+            fontWeight: "w100",
+            fontSize: 18,
+            fontFamily: "Montserrat",
+            key: FullscreenHelperKeys.DESCRIPTION_KEY,
+          ),
+        ],
+        helperImages: [
+          HelperImageEntity(
+            url: null,
+            key: FullscreenHelperKeys.IMAGE_KEY,
+          )
+        ],
+        helperBoxes: [
+          HelperBoxEntity(
+            key: FullscreenHelperKeys.BACKGROUND_KEY,
+            backgroundColor: "#000000",
+          )
+        ],
+      );
 
     Future _beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);
+      when(helperEditorServiceMock.getHelper(any)).thenAnswer((_) => Future.value(helperEntity));
       EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.edit(
         palEditModeStateService: PalEditModeStateServiceMock(),
-        helperEntity: helperEntity,
+        helperId: helperEntity.id,
         parameters: HelperEditorPageArguments(null, "pageId_IEPZE",
             helperMinVersion: "1.0.1", helperMaxVersion: null),
         helperService: helperEditorServiceMock,

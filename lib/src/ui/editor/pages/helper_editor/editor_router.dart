@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/group_details/group_details_model.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/editor_toolbox.dart';
@@ -30,7 +31,7 @@ class EditorRouter {
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
       currentPageRoute,
-      helperMinVersion: model.minVersionController?.value?.text,
+      helperMinVersion: model.minVersion,
     );
     WidgetBuilder builder;
     switch (model.selectedHelperType) {
@@ -72,20 +73,21 @@ class EditorRouter {
     showOverlayed(hostedAppNavigatorKey, builder);
   }
 
-  Future editHelper(
-      final String currentPageRoute, final HelperEntity helperEntity) async {
+  Future editHelper(final String currentPageRoute, final String helperId,
+      final HelperType type, final String groupId,
+      {BuildContext con}) async {
     // var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
       currentPageRoute,
     );
     WidgetBuilder builder;
-    switch (helperEntity.type) {
+    switch (type) {
       case HelperType.SIMPLE_HELPER:
         builder = (context) => InnerEditorRouter(
               child: EditorSimpleHelperPage.edit(
                 parameters: args,
-                helperEntity: helperEntity,
+                helperId: helperId,
               ),
             );
         break;
@@ -93,7 +95,7 @@ class EditorRouter {
         builder = (context) => InnerEditorRouter(
               child: EditorUpdateHelperPage.edit(
                 parameters: args,
-                helperEntity: helperEntity,
+                helperId: helperId,
               ),
             );
         break;
@@ -101,7 +103,7 @@ class EditorRouter {
         builder = (context) => InnerEditorRouter(
               child: EditorFullScreenHelperPage.edit(
                 parameters: args,
-                helperEntity: helperEntity,
+                helperId: helperId,
               ),
             );
         break;
@@ -109,14 +111,25 @@ class EditorRouter {
         builder = (context) => InnerEditorRouter(
               child: EditorAnchoredFullscreenHelper.edit(
                 parameters: args,
-                helperEntity: helperEntity,
+                helperId: helperId,
               ),
             );
         break;
       default:
         throw 'HELPER TYPE NOT HANDLED';
     }
-    showOverlayed(hostedAppNavigatorKey, builder);
+    return showOverlayed(
+      hostedAppNavigatorKey,
+      builder,
+      onPop: () => Navigator.of(con).pushNamed(
+        '/editor/group/details',
+        arguments: {
+          "id": groupId,
+          "route": currentPageRoute,
+          "page": PageStep.HELPERS
+        },
+      ),
+    );
   }
 }
 
@@ -192,10 +205,9 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath>
                     ));
           case '/editor/preview':
             EditorPreviewArguments args = settings.arguments;
-            return MaterialPageRoute(
-              maintainState: true,
-              builder: (context) => EditorPreviewPage(
-                previewHelper: args.previewHelper,
+            return PageRouteBuilder(
+              pageBuilder: (context, _, __) => EditorPreviewPage(
+                args: args,
               ),
             );
           default:

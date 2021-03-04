@@ -18,7 +18,6 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/widgets/editor_action_item.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/color_picker/color_picker.dart';
 import 'package:pal/src/ui/editor/widgets/bubble_overlay.dart';
-import 'package:pal/src/ui/editor/widgets/edit_helper_toolbar.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import '../../../../../pal_test_utilities.dart';
@@ -72,7 +71,7 @@ void main() {
             EditorPreviewArguments args = settings.arguments;
             return MaterialPageRoute(
               builder: (context) => EditorPreviewPage(
-                previewHelper: args.previewHelper,
+                args: args,
               ),
             );
         }
@@ -157,12 +156,11 @@ void main() {
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
       previewButton.onTap();
-      await tester.pumpAndSettle();
 
+      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 1100));
-      await tester.pump(Duration(milliseconds: 5000));
-      await tester.pump(Duration(milliseconds: 700));
-      await tester.pump(Duration(milliseconds: 700));
+      await tester.pump(Duration(milliseconds: 6000));
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
       Finder titleFinder =
@@ -188,12 +186,11 @@ void main() {
                   ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised')))
               as RaisedButton)
           .onPressed();
-      await tester.pumpAndSettle();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
-      await tester.pump(Duration(milliseconds: 5000));
       await tester.pump(Duration(milliseconds: 1100));
+      await tester.pump(Duration(milliseconds: 6000));
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
@@ -328,19 +325,23 @@ void main() {
       HelperViewModel helperViewModel = HelperViewModel(
         id: "testid",
         name: "test",
-        triggerType: HelperTriggerType.ON_SCREEN_VISIT,
         helperType: HelperType.UPDATE_HELPER,
         helperTheme: HelperTheme.BLACK,
         priority: 1,
-        minVersionCode: "0.0.0",
-        maxVersionCode: "1.0.1",
+        helperGroup: HelperGroupModel(
+          triggerType: HelperTriggerType.ON_SCREEN_VISIT,
+          minVersionCode: "0.0.0",
+          maxVersionCode: "1.0.1",
+        ),
       );
       var helper = UpdateHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(helper.id, helperViewModel.id);
       expect(helper.name, helperViewModel.name);
-      expect(helper.minVersionCode, helperViewModel.minVersionCode);
-      expect(helper.maxVersionCode, helperViewModel.maxVersionCode);
-      expect(helper.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(helper.helperGroup.minVersionCode,
+          helperViewModel.helperGroup.minVersionCode);
+      expect(helper.helperGroup.maxVersionCode,
+          helperViewModel.helperGroup.maxVersionCode);
+      expect(helper.helperGroup.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
       expect(helper.helperTheme, HelperTheme.BLACK);
     });
   });
@@ -372,6 +373,8 @@ void main() {
     // init pal + go to editor
     Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);
+      when(helperEditorServiceMock.getHelper(any))
+          .thenAnswer((_) => Future.value(helperEntity));
       await initAppWithPal(tester, _myHomeTest, _navigatorKey);
       await pumpHelperWidget(
           tester,
@@ -389,12 +392,11 @@ void main() {
     }
 
     HelperEntity validUpdateHelperEntity() => HelperEntity(
+            id: 'myUpdateHelper',
             name: "my helper entity",
             type: HelperType.UPDATE_HELPER,
             triggerType: HelperTriggerType.ON_SCREEN_VISIT,
             priority: 1,
-            versionMinId: 25,
-            versionMaxId: 25,
             helperTexts: [
               HelperTextEntity(
                 value: "title",
@@ -441,6 +443,7 @@ void main() {
       await beforeEach(tester, entity);
       expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
       expect(presenter.viewModel.changelogsTextsForm.length, 2);
+      await tester.pump(Duration(milliseconds: 500));
       entity.helperTexts.forEach(
           (element) => expect(find.text(element.value), findsOneWidget));
     });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
+import 'package:pal/src/services/editor/groups/group_service.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/editor/page/page_editor_service.dart';
 import 'package:pal/src/services/editor/project/app_icon_grabber_delegate.dart';
@@ -14,6 +15,8 @@ import 'package:pal/src/services/pal/pal_state_service.dart';
 class EditorInjector extends InheritedWidget {
 
   final EditorHelperService _helperService;
+
+  final EditorHelperGroupService _helperGroupService;
 
   final PageEditorService _pageEditorService;
 
@@ -35,6 +38,8 @@ class EditorInjector extends InheritedWidget {
 
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
 
+  final GlobalKey<NavigatorState> palNavigatorKey;
+
   EditorInjector({
     Key key,
     @required EditorAppContext appContext,
@@ -42,10 +47,16 @@ class EditorInjector extends InheritedWidget {
     @required Widget child,
     @required GlobalKey boundaryChildKey,
     this.hostedAppNavigatorKey,
+    this.palNavigatorKey
   })  : assert(child != null && appContext != null),
         this._pageEditorService = PageEditorService.build(boundaryChildKey, appContext.pageRepository),
-        this._projectEditorService = ProjectEditorService.build(appContext.projectRepository),
+        this._projectEditorService = ProjectEditorService.build(
+          appContext.projectRepository,
+          appContext.editorHelperGroupRepository,
+          appContext.helperRepository
+        ),
         this._helperService = EditorHelperService.build(appContext),
+        this._helperGroupService = EditorHelperGroupService.build(appContext),
         this._finderService = FinderService(observer: routeObserver),
         this._projectGalleryEditorService = ProjectGalleryEditorService.build(
             projectGalleryRepository: appContext.projectGalleryRepository),
@@ -67,8 +78,7 @@ class EditorInjector extends InheritedWidget {
 
   PageEditorService get pageEditorService => this._pageEditorService;
 
-  PalEditModeStateService get palEditModeStateService =>
-      this._palEditModeStateService;
+  PalEditModeStateService get palEditModeStateService => this._palEditModeStateService;
 
   FinderService get finderService => this._finderService;
 
@@ -76,10 +86,11 @@ class EditorInjector extends InheritedWidget {
 
   VersionEditorService get versionEditorService => this._versionEditorService;
 
-  AppIconGrabberDelegate get appIconGrabberDelegate =>
-      this._appIconGrabberDelegate;
+  AppIconGrabberDelegate get appIconGrabberDelegate => this._appIconGrabberDelegate;
 
   PackageVersionReader get packageVersionReader => this._packageVersionReader;
 
   ProjectGalleryEditorService get projectGalleryRepository => this._projectGalleryEditorService;
+
+  EditorHelperGroupService get helperGroupService => this._helperGroupService;
 }

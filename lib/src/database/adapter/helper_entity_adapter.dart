@@ -6,8 +6,8 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
   @override
   HelperEntity parseMap(Map<String, dynamic> map) {
-    final HelperType helperType = getHelperType(map['type']);
-    final HelperTriggerType helperTriggerType = getHelperTriggerType(map['triggerType']);
+    final HelperType helperType = map.containsKey('type') ? getHelperType(map['type']) : null;
+    final HelperTriggerType helperTriggerType = map.containsKey('triggerType') ? getHelperTriggerType(map['triggerType']) : null;
     return HelperEntity(
       id: map['id'],
       name: map['name'],
@@ -16,10 +16,6 @@ class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
       creationDate: map['creationDate'] != null ? DateTime.parse(map['creationDate']).toLocal() : null,
       lastUpdateDate: map['lastUpdateDate'] != null ? DateTime.parse(map['lastUpdateDate']).toLocal() : null,
       priority: map['priority'],
-      versionMinId: map['versionMinId'],
-      versionMin: map['versionMin'],
-      versionMaxId: map['versionMaxId'],
-      versionMax: map['versionMax'],
       helperBorders: map.containsKey('helperBorders') && map['helperBorders'] != null
         ? new HelperBorderEntityAdapter().parseDynamicArray(map['helperBorders']) : null,
       helperImages: map.containsKey('helperImages') && map['helperImages'] != null

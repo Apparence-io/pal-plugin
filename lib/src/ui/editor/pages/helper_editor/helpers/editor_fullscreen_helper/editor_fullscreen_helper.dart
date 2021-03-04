@@ -32,7 +32,7 @@ abstract class EditorFullScreenHelperView {
 
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
 
-  Future closeEditor();
+  Future closeEditor(bool list, bool bubble);
 
   void closeLoadingScreen();
 
@@ -89,7 +89,8 @@ class EditorFullScreenHelper
     );
 
     EditorPreviewArguments arguments = EditorPreviewArguments(
-      previewHelper: page,
+      (context) => Navigator.pop(context),
+      preBuiltHelper: page,
     );
     await Navigator.pushNamed(
       context,
@@ -137,10 +138,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
           HelperEditorPageArguments parameters,
           EditorHelperService helperService,
           PalEditModeStateService palEditModeStateService,
-          @required
-              HelperEntity
-                  helperEntity //FIXME should be an id and not entire entity
-          }) =>
+          @required String helperId}) =>
       EditorFullScreenHelperPage._(
         key: key,
         presenterBuilder: (context) => EditorFullScreenHelperPresenter(
@@ -148,7 +146,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                 context,
                 palEditModeStateService ??
                     EditorInjector.of(context).palEditModeStateService),
-            FullscreenHelperViewModel.fromHelperEntity(helperEntity),
+            FullscreenHelperViewModel(id: helperId),
             helperService ?? EditorInjector.of(context).helperService,
             parameters),
       );
@@ -176,102 +174,105 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: true,
-      body: EditorToolboxPage(
-        boxViewHandler: BoxViewHandler(
-            callback: presenter.updateBackgroundColor,
-            selectedColor: model.backgroundBoxForm?.backgroundColor),
-        onTextPickerDone: presenter.onTextPickerDone,
-        onFontPickerDone: presenter.onFontPickerDone,
-        onMediaPickerDone: presenter.onMediaPickerDone,
-        onTextColorPickerDone: presenter.onTextColorPickerDone,
-        currentEditableItemNotifier: model.currentEditableItemNotifier,
-        onValidate:
-            (model.canValidate?.value == true) ? presenter.onValidate : null,
-        onPreview: presenter.onPreview,
-        onCloseEditor: presenter.onCancel,
-        child: AnimatedOpacity(
-          duration: Duration(milliseconds: 500),
-          curve: Curves.fastOutSlowIn,
-          opacity: model.helperOpacity ?? 1.0,
-          child: Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: EditableBackground(
-              backgroundColor: model.backgroundBoxForm.backgroundColor,
-              widget: Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SafeArea(
-                    bottom: false,
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.only(top: 25.0, bottom: 50.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          EditableMedia(
-                            size: 150.0,
-                            data: model.headerMediaForm,
-                            onTap: presenter.onNewEditableSelect,
-                            backgroundColor:
-                                model.backgroundBoxForm?.backgroundColor,
-                            isSelected:
-                                model.currentEditableItemNotifier?.value?.key ==
-                                    model.headerMediaForm.key,
+      body: (model.loading??false)
+          ? Center(child: CircularProgressIndicator(value: null))
+          : EditorToolboxPage(
+              boxViewHandler: BoxViewHandler(
+                  callback: presenter.updateBackgroundColor,
+                  selectedColor: model.backgroundBoxForm?.backgroundColor),
+              onTextPickerDone: presenter.onTextPickerDone,
+              onFontPickerDone: presenter.onFontPickerDone,
+              onMediaPickerDone: presenter.onMediaPickerDone,
+              onTextColorPickerDone: presenter.onTextColorPickerDone,
+              currentEditableItemNotifier: model.currentEditableItemNotifier,
+              onValidate: (model.canValidate?.value == true)
+                  ? presenter.onValidate
+                  : null,
+              onPreview: presenter.onPreview,
+              onCloseEditor: presenter.onCancel,
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: 500),
+                curve: Curves.fastOutSlowIn,
+                opacity: model.helperOpacity ?? 1.0,
+                child: Form(
+                  key: formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: EditableBackground(
+                    backgroundColor: model.backgroundBoxForm.backgroundColor,
+                    widget: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: SafeArea(
+                          bottom: false,
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.only(top: 25.0, bottom: 50.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                EditableMedia(
+                                  size: 150.0,
+                                  data: model.headerMediaForm,
+                                  onTap: presenter.onNewEditableSelect,
+                                  backgroundColor:
+                                      model.backgroundBoxForm?.backgroundColor,
+                                  isSelected: model.currentEditableItemNotifier
+                                          ?.value?.key ==
+                                      model.headerMediaForm.key,
+                                ),
+                                SizedBox(height: 24),
+                                EditableTextField(
+                                  data: model.titleTextForm,
+                                  onTap: presenter.onNewEditableSelect,
+                                  backgroundColor:
+                                      model.backgroundBoxForm?.backgroundColor,
+                                  isSelected: model.currentEditableItemNotifier
+                                          ?.value?.key ==
+                                      model.titleTextForm.key,
+                                ),
+                                SizedBox(height: 24),
+                                EditableTextField(
+                                  data: model.descriptionTextForm,
+                                  onTap: presenter.onNewEditableSelect,
+                                  backgroundColor:
+                                      model.backgroundBoxForm?.backgroundColor,
+                                  isSelected: model.currentEditableItemNotifier
+                                          ?.value?.key ==
+                                      model.descriptionTextForm.key,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 40.0),
+                                ),
+                                EditableButton(
+                                  data: model.positivButtonForm,
+                                  onTap: presenter.onNewEditableSelect,
+                                  isSelected: model.currentEditableItemNotifier
+                                          ?.value?.key ==
+                                      model.positivButtonForm.key,
+                                  backgroundColor:
+                                      model.backgroundBoxForm?.backgroundColor,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 12.0),
+                                ),
+                                EditableButton(
+                                  data: model.negativButtonForm,
+                                  onTap: presenter.onNewEditableSelect,
+                                  isSelected: model.currentEditableItemNotifier
+                                          ?.value?.key ==
+                                      model.negativButtonForm.key,
+                                  backgroundColor:
+                                      model.backgroundBoxForm?.backgroundColor,
+                                )
+                              ],
+                            ),
                           ),
-                          SizedBox(height: 24),
-                          EditableTextField(
-                            data: model.titleTextForm,
-                            onTap: presenter.onNewEditableSelect,
-                            backgroundColor:
-                                model.backgroundBoxForm?.backgroundColor,
-                            isSelected:
-                                model.currentEditableItemNotifier?.value?.key ==
-                                    model.titleTextForm.key,
-                          ),
-                          SizedBox(height: 24),
-                          EditableTextField(
-                            data: model.descriptionTextForm,
-                            onTap: presenter.onNewEditableSelect,
-                            backgroundColor:
-                                model.backgroundBoxForm?.backgroundColor,
-                            isSelected:
-                                model.currentEditableItemNotifier?.value?.key ==
-                                    model.descriptionTextForm.key,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 40.0),
-                          ),
-                          EditableButton(
-                            data: model.positivButtonForm,
-                            onTap: presenter.onNewEditableSelect,
-                            isSelected:
-                                model.currentEditableItemNotifier?.value?.key ==
-                                    model.positivButtonForm.key,
-                            backgroundColor:
-                                model.backgroundBoxForm?.backgroundColor,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 12.0),
-                          ),
-                          EditableButton(
-                            data: model.negativButtonForm,
-                            onTap: presenter.onNewEditableSelect,
-                            isSelected:
-                                model.currentEditableItemNotifier?.value?.key ==
-                                    model.negativButtonForm.key,
-                            backgroundColor:
-                                model.backgroundBoxForm?.backgroundColor,
-                          )
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -20,6 +20,8 @@ class EditorFullScreenHelperPresenter
 
   final HelperEditorPageArguments parameters;
 
+  bool editMode;
+
   EditorFullScreenHelperPresenter(
     EditorFullScreenHelperView viewInterface,
     FullscreenHelperViewModel viewModel,
@@ -30,16 +32,43 @@ class EditorFullScreenHelperPresenter
   @override
   void onInit() {
     super.onInit();
-    this.viewModel.helperOpacity = 1;
-    this.viewModel.canValidate = new ValueNotifier(false);
+    this.editMode = false;
+      this.viewModel.loading = false;
+
+    if (this.viewModel.id != null) {
+      this.editMode = true;
+      this.viewModel.loading = true;
+      this.editorHelperService.getHelper(this.viewModel.id).then((helper) {
+        this.viewModel = FullscreenHelperViewModel.fromHelperEntity(helper);
+        this.viewModel.helperOpacity = 1;
+        this.viewModel.canValidate = new ValueNotifier(false);
+        this.viewModel.loading = false;
+        this
+            .viewModel
+            .currentEditableItemNotifier
+            .addListener(removeSelectedEditableItems);
+        this.refreshView();
+      });
+    } else {
+      this.viewModel.helperOpacity = 1;
+      this.viewModel.canValidate = new ValueNotifier(false);
+      this.viewModel.loading = false;
+      this
+          .viewModel
+          .currentEditableItemNotifier
+          .addListener(removeSelectedEditableItems);
+      this.refreshView();
+    }
 
     // Refresh UI to remove all selected items
-    this.viewModel.currentEditableItemNotifier.addListener(removeSelectedEditableItems);
   }
 
   @override
   Future onDestroy() async {
-    this.viewModel.currentEditableItemNotifier.removeListener(removeSelectedEditableItems);
+    this
+        .viewModel
+        .currentEditableItemNotifier
+        .removeListener(removeSelectedEditableItems);
   }
 
   void removeSelectedEditableItems() {
@@ -66,12 +95,12 @@ class EditorFullScreenHelperPresenter
       viewInterface.closeLoadingScreen();
       await Future.delayed(Duration(milliseconds: 100));
       status.dispose();
-      viewInterface.closeEditor();
+      viewInterface.closeEditor(!this.editMode, false);
     }
   }
 
   onCancel() {
-    viewInterface.closeEditor();
+    viewInterface.closeEditor(!this.editMode,false);
   }
 
   //TODO move  to view

@@ -21,13 +21,13 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
       priority: fields[1] as int,
       helpers: (fields[2] as List)?.cast<HelperEntity>(),
       page: fields[3] as PageEntity,
-    );
+    )..name = fields[4] as String;
   }
 
   @override
   void write(BinaryWriter writer, HelperGroupEntity obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +35,9 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
       ..writeByte(2)
       ..write(obj.helpers)
       ..writeByte(3)
-      ..write(obj.page);
+      ..write(obj.page)
+      ..writeByte(4)
+      ..write(obj.name);
   }
 
   @override

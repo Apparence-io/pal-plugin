@@ -9,8 +9,7 @@ enum OverlayKeys {
 /// You can call Overlayed.removeOverlay(context, key) just
 /// as you do with navigator
 class Overlayed extends InheritedWidget {
-
-  final Map<OverlayKeys, OverlayEntry> entries = new Map();
+  final Map<OverlayKeys, EditorOverlayEntry> entries = new Map();
 
   Overlayed({
     Key key,
@@ -18,15 +17,24 @@ class Overlayed extends InheritedWidget {
   })  : assert(child != null),
         super(key: key, child: child);
 
-  static Overlayed of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<Overlayed>();
+  static Overlayed of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<Overlayed>();
 
   static void removeOverlay(BuildContext context, OverlayKeys key) {
     var instance = context.dependOnInheritedWidgetOfExactType<Overlayed>();
+    instance?.entries[key]?.popFunction?.call();
     instance?.entries[key]?.remove();
     instance?.entries?.remove(key);
   }
 
   @override
   bool updateShouldNotify(Overlayed old) => false;
+}
 
+class EditorOverlayEntry extends OverlayEntry {
+  final Function popFunction;
+
+  EditorOverlayEntry(this.popFunction, {bool maintainState = false, bool opaque = false,
+      Widget Function(BuildContext) builder})
+      : super(builder: builder, maintainState: maintainState, opaque: opaque);
 }

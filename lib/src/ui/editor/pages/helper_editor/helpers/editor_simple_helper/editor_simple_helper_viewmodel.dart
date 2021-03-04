@@ -20,11 +20,15 @@ class SimpleHelperViewModel extends HelperViewModel {
   EditableTextFormData contentTextForm;
   ValueNotifier<EditableData> currentSelectedEditableNotifier;
 
+  bool loading;
+
   SimpleHelperViewModel({
     String id,
     @required String name,
     @required HelperTriggerType triggerType,
     @required int priority,
+    String groupId,
+    String groupName,
     String minVersionCode,
     String maxVersionCode,
     HelperTheme helperTheme,
@@ -35,10 +39,14 @@ class SimpleHelperViewModel extends HelperViewModel {
   }) : super(
     id: id,
     name: name,
-    triggerType: triggerType,
     priority: priority,
-    minVersionCode: minVersionCode,
-    maxVersionCode: maxVersionCode,
+    helperGroup: HelperGroupModel(
+      id: groupId,
+      name: groupName,
+      triggerType: triggerType,
+      minVersionCode: minVersionCode,
+      maxVersionCode: maxVersionCode,
+    ),
     helperType: HelperType.SIMPLE_HELPER,
     helperTheme: helperTheme,
   ) {
@@ -64,11 +72,13 @@ class SimpleHelperViewModel extends HelperViewModel {
     final simpleHelper = SimpleHelperViewModel(
       id: model?.id,
       name: model.name,
-      triggerType: model.triggerType,
       priority: model.priority,
-      minVersionCode: model.minVersionCode,
-      maxVersionCode: model.maxVersionCode,
       helperTheme: model.helperTheme,
+      triggerType: model.helperGroup?.triggerType,
+      minVersionCode: model.helperGroup?.minVersionCode,
+      maxVersionCode: model.helperGroup?.maxVersionCode,
+      groupId: model.helperGroup.id,
+      groupName: model.helperGroup.name
     );
 
     if (model is SimpleHelperViewModel) {
@@ -85,8 +95,6 @@ class SimpleHelperViewModel extends HelperViewModel {
       name: helperEntity?.name,
       triggerType: helperEntity?.triggerType,
       priority: helperEntity?.priority,
-      minVersionCode: helperEntity?.versionMin,
-      maxVersionCode: helperEntity?.versionMax,
       helperTheme: null,
       // helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
       //   SimpleHelperKeys.BACKGROUND_KEY,

@@ -43,24 +43,19 @@ main() {
               id: '1',
               name: 'aName 1',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-              versionMin: '1.0.1',
               type: HelperType.SIMPLE_HELPER,
-              versionMax: '2.0.0',
             ),
             HelperEntity(
               id: '2',
               name: 'aName 2',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
               type: HelperType.HELPER_FULL_SCREEN,
-              versionMin: '1.0.2',
             ),
             HelperEntity(
               id: '3',
               name: 'aName 3',
               triggerType: HelperTriggerType.ON_SCREEN_VISIT,
-              versionMin: '1.8.2',
               type: HelperType.UPDATE_HELPER,
-              versionMax: '2.3.0',
             ),
           ],
         ),
@@ -105,21 +100,22 @@ main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
+    //FIXME versions are now on group
     testWidgets('should display helpers', (tester) async {
       await before(tester);
       await tester.pumpAndSettle();
 
       expect(find.text('aName 1'), findsOneWidget);
-      expect(find.text('1.0.1 '), findsOneWidget);
-      expect(find.text(' 2.0.0'), findsOneWidget);
+      // expect(find.text('1.0.1 '), findsOneWidget);
+      // expect(find.text(' 2.0.0'), findsOneWidget);
 
       expect(find.text('aName 2'), findsOneWidget);
-      expect(find.text('1.0.2 '), findsOneWidget);
-      expect(find.text(' last'), findsOneWidget);
+      // expect(find.text('1.0.2 '), findsOneWidget);
+      // expect(find.text(' last'), findsOneWidget);
 
       expect(find.text('aName 3'), findsOneWidget);
-      expect(find.text('1.8.2 '), findsOneWidget);
-      expect(find.text(' 2.3.0'), findsOneWidget);
+      // expect(find.text('1.8.2 '), findsOneWidget);
+      // expect(find.text(' 2.3.0'), findsOneWidget);
 
       expect(find.text('Overlayed bottom'),
           findsNWidgets(1));

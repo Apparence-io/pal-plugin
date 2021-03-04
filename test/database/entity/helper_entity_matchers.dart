@@ -26,11 +26,7 @@ class HelperEntityMatcher extends Matcher {
           expected.name == actual.name &&
           expected.priority == actual.priority &&
           expected.type == actual.type &&
-          expected.triggerType == actual.triggerType &&
-          expected.versionMinId == actual.versionMinId &&
-          expected.versionMin == actual.versionMin &&
-          expected.versionMaxId == actual.versionMaxId &&
-          expected.versionMax == actual.versionMax;
+          expected.triggerType == actual.triggerType;
     }
     return false;
   }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/services/editor/project/project_editor_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_group/create_helper_group.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/setup_group/select_helper_group.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_router.dart';
@@ -13,6 +16,7 @@ import 'package:pal/src/ui/editor/widgets/nested_navigator.dart';
 import 'package:pal/src/ui/editor/widgets/progress_widget/progress_bar_widget.dart';
 
 import '../../../../pal_navigator_observer.dart';
+import 'steps/select_group_position/helper_position_setup.dart';
 
 class CreateHelperPageArguments {
   final GlobalKey<NavigatorState> hostedAppNavigatorKey;
@@ -28,11 +32,13 @@ abstract class CreateHelperView {
 
   void launchHelperEditor(final String pageRoute, final CreateHelperModel model);
 
-  void changeStep(GlobalKey<NavigatorState> nestedNavigationKey, int index);
+  void changeStep(int index);
 
-  void popStep(GlobalKey<NavigatorState> nestedNavigationKey);
+  void popStep();
 
-  void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter);
+  void showNewHelperGroupForm();
+
+  void showGroupHelpersPositions(Future<List<GroupHelperViewModel>> loadGroupHelpers, OnValidate onValidate);
 }
 
 class CreateHelperPage extends StatelessWidget implements CreateHelperView {
@@ -41,15 +47,19 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   final PalRouteObserver routeObserver;
   final String pageId;
   final PackageVersionReader packageVersionReader;
+  final ProjectEditorService projectEditorService;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<NavigatorState> _nestedNavigationKey = GlobalKey<NavigatorState>();
+
 
   CreateHelperPage({
     Key key,
     this.hostedAppNavigatorKey,
     this.packageVersionReader,
     this.pageId,
-    this.routeObserver
+    this.routeObserver,
+    this.projectEditorService
   });
 
   final _mvvmPageBuilder = MVVMPageBuilder<CreateHelperPresenter, CreateHelperModel>();
@@ -57,14 +67,14 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
-      key: UniqueKey(),
+      key: ValueKey("createHelperPresenter"),
       context: context,
       presenterBuilder: (context) => CreateHelperPresenter(
         this,
-        routeObserver: routeObserver
-          ?? EditorInjector.of(context).routeObserver,
-        packageVersionReader: packageVersionReader
-          ?? EditorInjector.of(context).packageVersionReader,
+        this.pageId,
+        routeObserver: routeObserver ?? EditorInjector.of(context).routeObserver,
+        packageVersionReader: packageVersionReader ?? EditorInjector.of(context).packageVersionReader,
+        projectEditorService: projectEditorService ?? EditorInjector.of(context).projectEditorService
       ),
       builder: (context, presenter, model)
         => Scaffold(
@@ -100,7 +110,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
             Padding(
               padding: const EdgeInsets.only(
                 top: 23.0,
-                bottom: 17.0,
+                bottom: 24.0,
                 left: 16.0,
                 right: 16.0,
               ),
@@ -108,22 +118,43 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
             ),
             Expanded(
               child: NestedNavigator(
-                navigationKey: model.nestedNavigationKey,
-                initialRoute: 'create/infos',
+                navigationKey: _nestedNavigationKey,
+                initialRoute: 'create/helper_group',
                 onWillPop: presenter.decrementStep,
                 routes: {
+                  'create/new_helper_group': (context) => CreateHelperGroup(
+                    triggerTypes: model.triggerTypes,
+                    defaultTriggerType: model.triggerTypes.first,
+                    helperNameValidator: presenter.checkHelperGroupName,
+                    onTriggerValueSelected: presenter.selectHelperGroupTrigger,
+                    onChangedNameText: presenter.onChangedHelperGroupName,
+                    triggerTypeValidator: null,
+                    minVersionChanged: presenter.setMinAppVersion,
+                    maxVersionChanged: presenter.setMaxAppVersion,
+                    minVersionInitialValue: model.minVersion,
+                    maxVersionInitialValue: model.maxVersion,
+                    onFormChanged: presenter.groupCreationFormChanged,
+                    minVersionValidator: presenter.checkValidVersion,
+                    maxVersionValidator: presenter.checkMaxValidVersion,
+                  ),
+                  'create/helper_group': (context) => SelectHelperGroupPage(
+                      helperGroupLoader: presenter.loadHelperGroup,
+                      onTapAdd: presenter.onTapAddNewGroup,
+                      onTapElement: presenter.onTapHelperGroupSelection,
+                    ),
                   'create/infos': (context) => CreateHelperInfosStep(
-                        model: model,
-                        presenter: presenter,
-                      ),
+                      model: model,
+                      presenter: presenter,
+                      onTapChangePosition: presenter.onTapChangePosition,
+                    ),
                   'create/type': (context) => CreateHelperTypeStep(
-                        model: model,
-                        presenter: presenter,
-                      ),
+                      model: model,
+                      presenter: presenter,
+                    ),
                   'create/theme': (context) => CreateHelperThemeStep(
-                        model: model,
-                        presenter: presenter,
-                      ),
+                      model: model,
+                      presenter: presenter,
+                    ),
                 },
               ),
             ),
@@ -160,7 +191,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
         ),
         SizedBox(height: 15.0),
         ProgressBarWidget(
-          nbSteps: 3,
+          nbSteps: 4,
           step: model.step,
         ),
       ],
@@ -172,19 +203,22 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     final CreateHelperModel model,
     final CreateHelperPresenter presenter,
   ) {
-    return RaisedButton(
-      key: ValueKey('palCreateHelperNextButton'),
-      disabledColor: PalTheme.of(context).colors.color4,
-      child: Text(
-        'Next',
-        style: TextStyle(
-          color: Colors.white,
+    return ValueListenableBuilder<bool>(
+      valueListenable: model.isFormValid,
+      builder: (context, value, child) => RaisedButton(
+        key: ValueKey('palCreateHelperNextButton'),
+        disabledColor: PalTheme.of(context).colors.color4,
+        child: Text(
+          'Next',
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
-      ),
-      color: PalTheme.of(context).colors.color1,
-      onPressed: (model.isFormValid) ? presenter.incrementStep : null,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+        color: PalTheme.of(context).colors.color1,
+        onPressed: (value) ? presenter.incrementStep : null,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
       ),
     );
   }
@@ -197,45 +231,31 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   }
 
   @override
-  void changeStep(GlobalKey<NavigatorState> nestedNavigationKey, int index) {
-    String routeName;
-    switch (index) {
-      case 0:
-        routeName = 'infos';
-        break;
-      case 1:
-        routeName = 'type';
-        break;
-      case 2:
-        routeName = 'theme';
-        break;
-      default:
-    }
-
-    Navigator.of(nestedNavigationKey.currentContext)
-        .pushNamed('create/$routeName');
+  void changeStep(int index) {
+    const routeNames = [
+      "helper_group",
+      "infos",
+      "type",
+      "theme",
+    ];
+    Navigator.of(_nestedNavigationKey.currentContext).pushNamed('create/${routeNames[index]}');
   }
 
-  @override
-  void popStep(GlobalKey<NavigatorState> nestedNavigationKey) {
-    Navigator.of(nestedNavigationKey.currentContext).pop();
-  }
+  void showNewHelperGroupForm()
+    => Navigator.of(_nestedNavigationKey.currentContext).pushNamed('create/new_helper_group');
 
   @override
-  void checkSteps(CreateHelperModel model, CreateHelperPresenter presenter) {
-    switch (model.step.value) {
-      case 0:
-        model.isFormValid = model.infosForm.currentState.validate();
-        break;
-      case 1:
-        model.isFormValid = model.selectedHelperType != null;
-        break;
-      case 2:
-        model.isFormValid = model.selectedHelperType != null;
-        break;
-      default:
-    }
+  void popStep()
+    => Navigator.of(_nestedNavigationKey.currentContext).pop();
 
-    presenter.refreshView();
+  @override
+  void showGroupHelpersPositions(Future<List<GroupHelperViewModel>> loadGroupHelpers, OnValidate onValidate) {
+   Navigator.of( _scaffoldKey.currentContext).push(new MaterialPageRoute(
+      settings: RouteSettings(name: "helper_group_position"),
+      builder: (context) => HelperPositionPage(
+            helpersLoader: loadGroupHelpers,
+            onValidate: onValidate,
+          ))
+    );
   }
 }

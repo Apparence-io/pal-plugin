@@ -37,9 +37,13 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
   /// true if user has validated the current anchor selection
   bool anchorValidated;
 
+  bool loading;
+
   AnchoredFullscreenHelperViewModel._(
       {String id,
       String name,
+      String groupId,
+      String groupName,
       HelperTriggerType triggerType,
       int priority,
       String minVersionCode,
@@ -101,10 +105,14 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
             helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
             name: name,
             priority: priority,
-            minVersionCode: minVersionCode,
-            maxVersionCode: maxVersionCode,
             helperTheme: helperTheme,
-            triggerType: triggerType);
+            helperGroup: HelperGroupModel(
+              id: groupId,
+              name: groupName,
+              triggerType: triggerType,
+              minVersionCode: minVersionCode,
+              maxVersionCode: maxVersionCode,
+            ));
 
   /// the current selected element to show anchor
   MapEntry<String, WidgetElementModel> get selectedAnchor =>
@@ -112,7 +120,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
           ?.firstWhere((element) => element.value.selected, orElse: () => null);
 
   /// the current selected element's key to show anchor
-  String get selectedAnchorKey => userPageElements.entries
+  String get selectedAnchorKey => backgroundBox.key ?? userPageElements.entries
       .firstWhere((element) => element.value.selected, orElse: () => null)
       ?.key;
 
@@ -126,10 +134,12 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       id: model.id,
       name: model.name,
       priority: model.priority,
-      minVersionCode: model.minVersionCode,
-      maxVersionCode: model.maxVersionCode,
       helperTheme: model.helperTheme,
-      triggerType: model.triggerType,
+      minVersionCode: model.helperGroup?.minVersionCode,
+      maxVersionCode: model.helperGroup?.maxVersionCode,
+      triggerType: model.helperGroup?.triggerType,
+      groupId: model.helperGroup.id,
+      groupName: model.helperGroup.name,
     );
   }
 
@@ -138,15 +148,15 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       id: entity?.id,
       name: entity?.name,
       priority: entity.priority,
-      minVersionCode: entity.versionMin,
-      maxVersionCode: entity?.versionMax,
       helperTheme: null,
       triggerType: entity?.triggerType,
       // TODO : Finish factory for multiple boxes
-      backgroundBox: EditableBoxFormData(
-          entity.helperBoxes.first.id, entity.helperBoxes.first.key,
-          backgroundColor:
-              HexColor?.fromHex(entity.helperBoxes.first.backgroundColor)),
+      backgroundBox: entity.helperBoxes == null
+          ? null
+          : EditableBoxFormData(
+              entity.helperBoxes?.first?.id, entity.helperBoxes?.first?.key,
+              backgroundColor:
+                  HexColor?.fromHex(entity.helperBoxes.first.backgroundColor)),
       titleViewModel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
         entity?.helperTexts,

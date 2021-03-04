@@ -6,8 +6,8 @@ class PageEntityAdapter extends GenericEntityAdapter<PageEntity> {
   PageEntity parseMap(Map<String, dynamic> map) {
     return PageEntity(
       id: map['id'],
-      creationDate: DateTime.parse(map['creationDate']).toLocal(),
-      lastUpdateDate: DateTime.parse(map['lastUpdateDate']).toLocal(),
+      creationDate: map['creationDate'] != null ? DateTime.parse(map['creationDate']).toLocal() : null,
+      lastUpdateDate: map['lastUpdateDate'] != null ? DateTime.parse(map['lastUpdateDate']).toLocal() : null,
       route: map['route'],
     );
   }

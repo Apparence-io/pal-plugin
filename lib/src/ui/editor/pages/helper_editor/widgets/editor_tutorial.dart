@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// TODO: IS IT USEFULL ?!
 
 class EditorTutorialOverlay extends StatefulWidget {
   final String title;

@@ -11,8 +11,6 @@ var validAnchoredHelperEntity = HelperEntity(
       type: HelperType.ANCHORED_OVERLAYED_HELPER,
       triggerType: HelperTriggerType.ON_SCREEN_VISIT,
       priority: 1,
-      versionMinId: 25,
-      versionMaxId: 25,
       helperTexts: [
         HelperTextEntity(
           value: "args.title.text",
@@ -61,8 +59,6 @@ var helperEntityKeyNotFound = HelperEntity(
   type: HelperType.ANCHORED_OVERLAYED_HELPER,
   triggerType: HelperTriggerType.ON_SCREEN_VISIT,
   priority: 1,
-  versionMinId: 25,
-  versionMaxId: 25,
   helperTexts: [
     HelperTextEntity(
       value: "args.title.text",

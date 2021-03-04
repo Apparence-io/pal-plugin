@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
+import 'package:pal/src/database/repository/editor/helper_group_repository.dart';
 import 'package:pal/src/database/repository/page_repository.dart';
 import 'package:pal/src/database/repository/project_gallery_repository.dart';
 import 'package:pal/src/database/repository/project_repository.dart';
@@ -37,6 +38,8 @@ class EditorAppContext {
   ProjectRepository get projectRepository => throw "not implemented";
 
   ProjectGalleryRepository get projectGalleryRepository => throw "not implemented";
+
+  EditorHelperGroupRepository get editorHelperGroupRepository => throw "not implemented";
 }
 
 /// [EditorAppContext] inherited class to provide some context to all childs
@@ -53,15 +56,19 @@ class HttpEditorAppContext implements  EditorAppContext {
 
   final ProjectGalleryRepository _projectGalleryRepository;
 
+  final EditorHelperGroupRepository _editorHelperGroupRepository;
+
   factory HttpEditorAppContext.create(
       {@required url, @required String token,})
-      => HttpEditorAppContext._private(
+      => HttpEditorAppContext.private(
         httpClient: url == null || token == null ? null : HttpClient.create(url, token),
       );
 
-  HttpEditorAppContext._private({
+  @visibleForTesting
+  HttpEditorAppContext.private({
     @required HttpClient httpClient,
   })  : assert(httpClient != null),
+        this._editorHelperGroupRepository = EditorHelperGroupRepository(httpClient: httpClient),
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._projectRepository = ProjectRepository(httpClient: httpClient),
         this._editorHelperRepository = EditorHelperRepository(httpClient: httpClient),
@@ -77,5 +84,7 @@ class HttpEditorAppContext implements  EditorAppContext {
   ProjectRepository get projectRepository => _projectRepository;
 
   ProjectGalleryRepository get projectGalleryRepository => _projectGalleryRepository;
+
+  EditorHelperGroupRepository get editorHelperGroupRepository => _editorHelperGroupRepository;
 
 }

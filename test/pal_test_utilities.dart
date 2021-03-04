@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/pal.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
@@ -27,11 +28,15 @@ const Duration kLongPressTimeout = Duration(milliseconds: 500);
 const Duration kPressTimeout = Duration(milliseconds: 100);
 
 Future initAppWithPal(
-    WidgetTester tester, Widget userApp, GlobalKey<NavigatorState> navigatorKey,
-    {RouteFactory routeFactory,
-    bool editorModeEnabled = true,
-    EditorAppContext editorAppContext,
-    UserAppContext userAppContext}) async {
+    WidgetTester tester, 
+    Widget userApp, 
+    GlobalKey<NavigatorState> navigatorKey,
+    { 
+      RouteFactory routeFactory,
+      bool editorModeEnabled = true,
+      EditorAppContext editorAppContext,
+      UserAppContext userAppContext
+    }) async {
   BuildContext context; // ignore: unused_local_variable
   if (editorAppContext != null) EditorAppContext.create(editorAppContext);
   if (userAppContext != null) UserAppContext.create(userAppContext);
@@ -49,6 +54,7 @@ Future initAppWithPal(
     ),
   );
   await tester.pumpWidget(app);
+  print(navigatorKey);
 }
 
 /// use this to show an helper editor for each type
@@ -181,6 +187,13 @@ Future<void> longPressDrag(
   await drag.up();
 }
 
+// ***************** MVVM UTILITIES ***************** \\
+
+T getPresenter<T extends Presenter, M extends MVVMModel>() {
+  var presenterFinder = find.byType(T);
+  expect(presenterFinder, findsOneWidget);
+  return (presenterFinder.evaluate().first.widget as PresenterInherited<T, M>).presenter;
+}
 // ***************** TEXT FIELD UTILITIES ***************** \\
 
 Future enterTextInTextForm(

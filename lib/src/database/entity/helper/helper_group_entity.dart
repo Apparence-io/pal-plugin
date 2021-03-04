@@ -1,13 +1,17 @@
+
 import 'package:hive/hive.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 import '../page_entity.dart';
+import 'helper_trigger_type.dart';
 
 part 'helper_group_entity.g.dart';
 
 @HiveType(typeId: 2)
-class HelperGroupEntity {
+class HelperGroupEntity with Comparable<HelperGroupEntity> {
 
   @HiveField(0)
   String id;
@@ -47,4 +51,24 @@ class HelperGroupEntity {
     this.minVersion,
     this.maxVersion
   });
+
+  @override
+  int compareTo(HelperGroupEntity other) {
+    if(other.triggerType == this.triggerType) {
+      return other.priority < this.priority ? 1 : -1;
+    }
+    return other.triggerType.typePriority < this.triggerType.typePriority ? 1 : -1;
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HelperGroupEntity &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          priority == other.priority &&
+          triggerType == other.triggerType;
+
+  @override
+  int get hashCode => id.hashCode ^ priority.hashCode ^ triggerType.hashCode;
 }

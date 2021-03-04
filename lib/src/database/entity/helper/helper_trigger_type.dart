@@ -18,6 +18,29 @@ HelperTriggerType getHelperTriggerType(final String value) =>
 String helperTriggerTypeToString(final HelperTriggerType helperTriggerType) =>
     helperTriggerType.toString().split('.')[1];
 
+extension HelperTriggerTypeExt on HelperTriggerType {
+  String get description {
+    switch (this) {
+      case HelperTriggerType.ON_SCREEN_VISIT:
+        return 'On screen visit';
+      default:
+        return 'Type not handled';
+    }
+  }
+
+  int get typePriority {
+    switch (this) {
+      case HelperTriggerType.ON_SCREEN_VISIT:
+        return 1;
+      case HelperTriggerType.ON_NEW_UPDATE:
+        return 2;
+      default:
+        return 100;
+    }
+  }
+}
+
+// FIXME replace by extension
 String getHelperTriggerTypeDescription(
     final HelperTriggerType helperTriggerType) {
   String description;

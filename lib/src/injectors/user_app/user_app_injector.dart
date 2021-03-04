@@ -5,13 +5,13 @@ import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/page_client_service.dart';
 import 'package:pal/src/in_app_user_manager.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
+import 'package:pal/src/services/locale_service/locale_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/ui/client/helpers_synchronizer.dart';
 
 import '../../pal_navigator_observer.dart';
 
 class UserInjector extends InheritedWidget {
-
   final PageClientService _pageService;
 
   final HelperClientService _helperService;
@@ -26,28 +26,34 @@ class UserInjector extends InheritedWidget {
 
   final FinderService _finderService;
 
-  UserInjector({
-    Key key,
-    @required UserAppContext appContext,
-    @required this.routeObserver,
-    @required Widget child,
-  }) : assert(child != null && appContext != null),
+  final LocaleService _userLocale;
+
+  UserInjector(
+      {Key key,
+      @required UserAppContext appContext,
+      @required this.routeObserver,
+      @required Widget child,
+      @required LocaleService userLocale})
+      : assert(child != null && appContext != null),
+        this._userLocale = userLocale,
         this._pageService = PageClientService.build(appContext.pageRepository),
         this._helperService = HelperClientService.build(
-          clientSchemaRepository: appContext.localClientSchemaRepository,
-          helperRemoteRepository: appContext.helperRepository,
-          localVisitRepository: appContext.pageUserVisitLocalRepository,
-          remoteVisitRepository: appContext.pageUserVisitRemoteRepository
-        ),
+            clientSchemaRepository: appContext.localClientSchemaRepository,
+            helperRemoteRepository: appContext.helperRepository,
+            localVisitRepository: appContext.pageUserVisitLocalRepository,
+            remoteVisitRepository: appContext.pageUserVisitRemoteRepository,
+            userLocale: userLocale),
         this._helperSynchronizeService = new HelpersSynchronizer(
           schemaLocalRepository: appContext.localClientSchemaRepository,
           schemaRemoteRepository: appContext.remoteClientSchemaRepository,
           pageUserVisitLocalRepository: appContext.pageUserVisitLocalRepository,
-          pageUserVisitRemoteRepository: appContext.pageUserVisitRemoteRepository,
+          pageUserVisitRemoteRepository:
+              appContext.pageUserVisitRemoteRepository,
           packageVersionReader: PackageVersionReader(),
         ),
         this._packageVersionReader = PackageVersionReader(),
-        this._clientInAppUserService = InAppUserClientService.build(appContext.inAppUserRepository),
+        this._clientInAppUserService =
+            InAppUserClientService.build(appContext.inAppUserRepository),
         this._finderService = FinderService(observer: routeObserver),
         super(key: key, child: child) {
     setInAppUserManagerService(this.inAppUserClientService);
@@ -65,9 +71,13 @@ class UserInjector extends InheritedWidget {
 
   PackageVersionReader get packageVersionReader => this._packageVersionReader;
 
-  InAppUserClientService get inAppUserClientService => this._clientInAppUserService;
+  InAppUserClientService get inAppUserClientService =>
+      this._clientInAppUserService;
 
-  HelpersSynchronizer get helpersSynchronizerService => this._helperSynchronizeService;
+  HelpersSynchronizer get helpersSynchronizerService =>
+      this._helperSynchronizeService;
 
   FinderService get finderService => this._finderService;
+
+  LocaleService get userLocale => this._userLocale;
 }

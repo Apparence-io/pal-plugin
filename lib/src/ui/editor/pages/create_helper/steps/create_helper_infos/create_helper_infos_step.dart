@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
+import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
 import 'package:pal/src/ui/editor/widgets/labeled_form.dart';
 import 'package:pal/src/ui/editor/widgets/bordered_text_field.dart';
 
@@ -78,6 +79,22 @@ class CreateHelperInfosStep extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _onTriggerTypeChanged(HelperTriggerTypeDisplay newValue) {
+    model.selectedTriggerType = newValue;
+    presenter.refreshView();
+  }
+
+  List<DropdownMenuItem<HelperTriggerTypeDisplay>> _buildDropdownArray() {
+    List<DropdownMenuItem<HelperTriggerTypeDisplay>> dropdownArray = [];
+    model.triggerTypes.forEach((element) {
+      dropdownArray.add(DropdownMenuItem<HelperTriggerTypeDisplay>(
+        value: element,
+        child: Text(element.description ?? ""),
+      ));
+    });
+    return dropdownArray;
   }
 
   // Check fields

@@ -35,6 +35,7 @@ void main() {
   Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
     await initAppWithPal(tester, _myHomeTest, _navigatorKey,
         editorModeEnabled: false);
+        await tester.pumpAndSettle();
     showOverlayed(
         _navigatorKey,
         (context) => PalTheme(

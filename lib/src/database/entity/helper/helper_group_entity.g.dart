@@ -19,9 +19,10 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
     return HelperGroupEntity(
       id: fields[0] as String,
       priority: fields[1] as int,
-      helpers: (fields[2] as List)?.cast<HelperEntity>(),
-      page: fields[3] as PageEntity,
-    )..name = fields[4] as String;
+      helpers: (fields[3] as List)?.cast<HelperEntity>(),
+      page: fields[4] as PageEntity,
+      triggerType: fields[2] as HelperTriggerType,
+    );
   }
 
   @override
@@ -33,11 +34,11 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
       ..writeByte(1)
       ..write(obj.priority)
       ..writeByte(2)
-      ..write(obj.helpers)
+      ..write(obj.triggerType)
       ..writeByte(3)
-      ..write(obj.page)
+      ..write(obj.helpers)
       ..writeByte(4)
-      ..write(obj.name);
+      ..write(obj.page);
   }
 
   @override

@@ -2,8 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
@@ -11,9 +14,15 @@ import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:pal/src/services/client/page_client_service.dart';
 import 'package:pal/src/ui/client/helper_orchestrator.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_presenter.dart';
+import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/client/helpers_synchronizer.dart';
+import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
+import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 import '../../pal_test_utilities.dart';
+import 'helper_mocks.dart';
 
 
 class HelperClientServiceMock extends Mock implements HelperClientService {}
@@ -153,6 +162,168 @@ void main() {
       await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
       expect(orchestrator.overlay, isNot(isList));
     });
+
+    testWidgets('''
+      navigate to page test1,
+      group has 3 helpers, show first helper then answer positive feedback 
+      => show second helper
+      ''', (WidgetTester tester) async {
+      final routeObserver = PalNavigatorObserver.instance();
+      MockHelperEntityBuilder mockHelperBuilder = MockFullscreenHelperEntityBuilder();
+      var helperGroup = HelperGroupEntity(
+        id: "g1",
+        priority: 1,
+        page: PageEntity(id: 'p1', route: 'test1'),
+        helpers: [
+          mockHelperBuilder.create("1", title: "TITLEKEY_1"),
+          mockHelperBuilder.create("2", title: "TITLEKEY_2"),
+          mockHelperBuilder.create("3", title: "TITLEKEY_3"),
+        ]
+      );
+      when(inAppUserClientService.getOrCreate())
+        .thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
+      when(helperClientServiceMock
+        .getPageNextHelper("/test1", "db6b01e1-b649-4a17-949a-9ab320601001"))
+        .thenAnswer((_) => Future.value(helperGroup));
+      var orchestrator = HelperOrchestrator.create(
+        helperClientService: helperClientServiceMock,
+        inAppUserClientService: inAppUserClientService,
+        routeObserver: routeObserver,
+        navigatorKey: navigatorKey,
+        helpersSynchronizer: helperSynchronizer,
+      );
+      await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
+      // call in manually as route observer not working in tests
+      await orchestrator.onChangePage("/test1");
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(orchestrator.overlay, isNotNull);
+      expect(find.byType(UserFullScreenHelperPage), findsOneWidget);
+      expect(find.text("TITLEKEY_1"), findsOneWidget);
+      // push positiv button that will dismiss then show next helper
+      await tester.tap(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      // next helper should be visible
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(orchestrator.overlay, isNotNull);
+      expect(find.byType(UserFullScreenHelperPage), findsOneWidget);
+      expect(find.text("TITLEKEY_2"), findsOneWidget);
+    });    
+
+
+    testWidgets('''
+      navigate to page test1,
+      group has 3 helpers, show first helper then answer negative feedback 
+      => do NOT show second helper
+      ''', (WidgetTester tester) async {
+      final routeObserver = PalNavigatorObserver.instance();
+      MockHelperEntityBuilder mockHelperBuilder = MockFullscreenHelperEntityBuilder();
+      var helperGroup = HelperGroupEntity(
+        id: "g1",
+        priority: 1,
+        page: PageEntity(id: 'p1', route: 'test1'),
+        helpers: [
+          mockHelperBuilder.create("1", title: "TITLEKEY_1"),
+          mockHelperBuilder.create("2", title: "TITLEKEY_2"),
+          mockHelperBuilder.create("3", title: "TITLEKEY_3"),
+        ]
+      );
+      when(inAppUserClientService.getOrCreate())
+        .thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
+      when(helperClientServiceMock
+        .getPageNextHelper("/test1", "db6b01e1-b649-4a17-949a-9ab320601001"))
+        .thenAnswer((_) => Future.value(helperGroup));
+      var orchestrator = HelperOrchestrator.create(
+        helperClientService: helperClientServiceMock,
+        inAppUserClientService: inAppUserClientService,
+        routeObserver: routeObserver,
+        navigatorKey: navigatorKey,
+        helpersSynchronizer: helperSynchronizer,
+      );
+      await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
+      // call in manually as route observer not working in tests
+      await orchestrator.onChangePage("/test1");
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(orchestrator.overlay, isNotNull);
+      expect(find.byType(UserFullScreenHelperPage), findsOneWidget);
+      expect(find.text("TITLEKEY_1"), findsOneWidget);
+      // push positiv button that will dismiss then show next helper
+      await tester.tap(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton')));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      // next helper should be NOT be visible
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(find.text("TITLEKEY_2"), findsNothing);
+    });    
+
+
+    testWidgets('''
+      navigate to page test1,
+      group has 3 helpers, show first helper then answer positive feedback,
+      show second helper then answer positive feedback,
+      show last helper then answer positive feedback,
+      => helper is dismissed, nothing more to do
+      ''', (WidgetTester tester) async {
+      final routeObserver = PalNavigatorObserver.instance();
+      MockHelperEntityBuilder mockHelperBuilder = MockFullscreenHelperEntityBuilder();
+      var helperGroup = HelperGroupEntity(
+        id: "g1",
+        priority: 1,
+        page: PageEntity(id: 'p1', route: 'test1'),
+        helpers: [
+          mockHelperBuilder.create("1", title: "TITLEKEY_1"),
+          mockHelperBuilder.create("2", title: "TITLEKEY_2"),
+          mockHelperBuilder.create("3", title: "TITLEKEY_3"),
+        ]
+      );
+      when(inAppUserClientService.getOrCreate())
+        .thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
+      when(helperClientServiceMock
+        .getPageNextHelper("/test1", "db6b01e1-b649-4a17-949a-9ab320601001"))
+        .thenAnswer((_) => Future.value(helperGroup));
+      var orchestrator = HelperOrchestrator.create(
+        helperClientService: helperClientServiceMock,
+        inAppUserClientService: inAppUserClientService,
+        routeObserver: routeObserver,
+        navigatorKey: navigatorKey,
+        helpersSynchronizer: helperSynchronizer,
+      );
+      await initAppWithPal(tester, null, navigatorKey, editorModeEnabled: false, routeFactory: route);
+      // call in manually as route observer not working in tests
+      await orchestrator.onChangePage("/test1");
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(orchestrator.overlay, isNotNull);
+      expect(find.byType(UserFullScreenHelperPage), findsOneWidget);
+      expect(find.text("TITLEKEY_1"), findsOneWidget);
+      // push positiv button that will dismiss then show next helper
+      await tester.tap(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      // second helper should be visible then click next 
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(find.text("TITLEKEY_2"), findsOneWidget);
+      await tester.tap(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      // last helper should be visible then click next 
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      expect(find.text("TITLEKEY_3"), findsOneWidget);
+      await tester.tap(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 1));
+      // no more overlay 
+      expect(orchestrator.overlay, isNull); 
+    });    
+
+
+
 
   });
 }

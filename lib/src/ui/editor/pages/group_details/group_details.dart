@@ -68,12 +68,7 @@ class GroupDetailsPage extends StatelessWidget
   ) =>
       WillPopScope(
         onWillPop: () async {
-          Navigator.pop(context.buildContext);
-          EditorInjector.of(context.buildContext)
-              .palEditModeStateService
-              .showHelpersList(EditorInjector.of(context.buildContext)
-                  .hostedAppNavigatorKey
-                  .currentContext);
+          this.pop();
           return true;
         },
         child: Theme(
@@ -180,6 +175,7 @@ class GroupDetailsPage extends StatelessWidget
                   onDelete: presenter.deleteHelper,
                   onEdit: presenter.editHelper,
                   helpersList: model.helpers,
+                  loading: model.loading,
                   key: ValueKey('GroupHelpers'),
                 ),
               ],
@@ -216,6 +212,11 @@ class GroupDetailsPage extends StatelessWidget
   @override
   void pop() {
     Navigator.pop(_scaffoldKey.currentContext);
+    EditorInjector.of(_scaffoldKey.currentContext)
+        .palEditModeStateService
+        .showHelpersList(EditorInjector.of(_scaffoldKey.currentContext)
+            .hostedAppNavigatorKey
+            .currentContext);
   }
 
   @override

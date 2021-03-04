@@ -29,7 +29,6 @@ class HelpersSynchronizer {
       schemaVersion: currentSchema?.schemaVersion,
       appVersion: currentVersion,
       language: languageCode
-      // language:
     );
     debugPrint(" current schema version ${currentSchema?.schemaVersion}");
     if(currentSchema == null) {

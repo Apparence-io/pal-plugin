@@ -10,13 +10,24 @@ class InAppUserRepository extends BaseHttpRepository {
       : super(httpClient: httpClient);
 
   Future<InAppUserEntity> create(final InAppUserEntity inAppUser) async {
-    final Response response =
-        await this.httpClient.post("pal-analytic/client/in-app-users", body: InAppUserEntityAdapter().toJson(inAppUser));
-    return InAppUserEntityAdapter().parse(response.body);
+    try {
+      final Response response = await this
+          .httpClient
+          .post("pal-analytic/in-app-users",
+              body: InAppUserEntityAdapter().toJson(inAppUser))
+          .catchError(
+        (err) {
+          print(err);
+        },
+      );
+      return InAppUserEntityAdapter().parse(response.body);
+    } catch (e) {}
   }
 
   Future<InAppUserEntity> update(final InAppUserEntity inAppUser) async {
-    final Response response = await this.httpClient.put("pal-analytic/client/in-app-users/${inAppUser.id}", body: InAppUserEntityAdapter().toJson(inAppUser));
+    final Response response = await this.httpClient.put(
+        "pal-analytic/client/in-app-users/${inAppUser.id}",
+        body: InAppUserEntityAdapter().toJson(inAppUser));
     return InAppUserEntityAdapter().parse(response.body);
   }
 }

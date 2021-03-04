@@ -6,8 +6,7 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 part 'helper_entity.g.dart';
 
 @HiveType(typeId: 3)
-class HelperEntity {
-
+class HelperEntity with Comparable<HelperEntity> {
   @HiveField(0)
   String id;
 
@@ -63,7 +62,8 @@ class HelperEntity {
       creationDate: from.creationDate,
       lastUpdateDate: from.lastUpdateDate,
       priority: from.priority,
-      helperBorders: from.helperBorders != null ? [...from.helperBorders] : null,
+      helperBorders:
+          from.helperBorders != null ? [...from.helperBorders] : null,
       helperImages: from.helperImages != null ? [...from.helperImages] : null,
       helperTexts: from.helperTexts != null ? [...from.helperTexts] : null,
       helperBoxes: from.helperBoxes != null ? [...from.helperBoxes] : null,
@@ -74,8 +74,10 @@ class HelperEntity {
         'id': id,
         'name': name,
         'type': type?.toString()?.split('.')[1],
-        'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
-        'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
+        'creationDate':
+            creationDate != null ? creationDate.toIso8601String() : null,
+        'lastUpdateDate':
+            lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
         'priority': priority,
         'helperBorders': helperBorders,
         'helperImages': helperImages,
@@ -100,6 +102,13 @@ class HelperEntity {
           helperTexts == other.helperTexts;
 
   @override
+  int compareTo(HelperEntity other) {
+    return other.priority < this.priority
+        ? 1
+        : -1;
+  }
+
+  @override
   int get hashCode =>
       id.hashCode ^
       creationDate.hashCode ^
@@ -115,7 +124,6 @@ class HelperEntity {
 
 @HiveType(typeId: 4)
 class HelperBorderEntity {
-
   @HiveField(0)
   int id;
 
@@ -142,12 +150,12 @@ class HelperBorderEntity {
       };
 
   HelperBorderEntity copy() => HelperBorderEntity(
-    id: id,
-    color: color,
-    key: key,
-    style: style,
-    width: width,
-  );
+        id: id,
+        color: color,
+        key: key,
+        style: style,
+        width: width,
+      );
 
   @override
   bool operator ==(Object other) =>
@@ -170,7 +178,6 @@ class HelperBorderEntity {
 
 @HiveType(typeId: 5)
 class HelperImageEntity {
-
   @HiveField(0)
   int id;
 
@@ -188,11 +195,7 @@ class HelperImageEntity {
 
   HelperImageEntity({this.id, this.key, @required this.url});
 
-  HelperImageEntity copy() => HelperImageEntity(
-      id: id,
-      key: key,
-      url: url
-  );
+  HelperImageEntity copy() => HelperImageEntity(id: id, key: key, url: url);
 
   @override
   bool operator ==(Object other) =>
@@ -208,7 +211,6 @@ class HelperImageEntity {
 
 @HiveType(typeId: 6)
 class HelperTextEntity {
-
   @HiveField(0)
   int id;
 
@@ -251,14 +253,13 @@ class HelperTextEntity {
       };
 
   HelperTextEntity copy() => HelperTextEntity(
-    id: id,
-    fontColor: fontColor,
-    fontFamily: fontFamily,
-    fontWeight: fontWeight,
-    key: key,
-    value: value,
-    fontSize: fontSize
-  );
+      id: id,
+      fontColor: fontColor,
+      fontFamily: fontFamily,
+      fontWeight: fontWeight,
+      key: key,
+      value: value,
+      fontSize: fontSize);
 
   @override
   bool operator ==(Object other) =>
@@ -307,10 +308,7 @@ class HelperBoxEntity {
       };
 
   HelperBoxEntity copy() => HelperBoxEntity(
-    id: this.id,
-    backgroundColor: this.backgroundColor,
-    key: this.key
-  );
+      id: this.id, backgroundColor: this.backgroundColor, key: this.key);
 
   @override
   bool operator ==(Object other) =>

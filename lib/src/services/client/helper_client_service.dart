@@ -66,7 +66,7 @@ class _HelperClientService implements HelperClientService {
       .toList();
     if(group.isNotEmpty) {
       group.sort();
-      return group.first;
+      return group.first..helpers.sort();
     }
     return null;
   }

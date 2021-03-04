@@ -7,10 +7,14 @@ typedef void OnPreview(String id);
 typedef void OnDelete(String id);
 
 class GroupDetailsHelpersList extends StatelessWidget {
+  // CORE ATTRIBUTES
   final ValueNotifier<List<HelperModel>> helpersList;
   final OnPreview onPreview;
   final OnEdit onEdit;
   final OnDelete onDelete;
+
+  // STATE
+  final bool loading;
 
   final ValueNotifier<int> expandedTile = ValueNotifier(null);
 
@@ -20,6 +24,7 @@ class GroupDetailsHelpersList extends StatelessWidget {
     @required this.onPreview,
     @required this.onEdit,
     @required this.onDelete,
+    this.loading = false,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,7 @@ class GroupDetailsHelpersList extends StatelessWidget {
             )),
           );
         } else {
-          return value == null || value.length == 0
+          return value == null || value.length == 0 || loading
               ? Center(
                   child: Text('No helpers found.'),
                 )

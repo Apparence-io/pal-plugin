@@ -34,22 +34,26 @@ class GroupDetailsHelpersList extends StatelessWidget {
             )),
           );
         } else {
-          return ListView.separated(
-            itemBuilder: (context, index) {
-              return GroupDetailsHelperTile(
-                model: value[index],
-                index: ++index,
-                onDelete: this.onDelete,
-                onEdit: this.onEdit,
-                onPreview: this.onPreview,
-                expandedTile: this.expandedTile,
-              );
-            },
-            separatorBuilder: (context, index) => Divider(
-              height: 1,
-            ),
-            itemCount: value.length,
-          );
+          return value == null || value.length == 0
+              ? Center(
+                  child: Text('No helpers found.'),
+                )
+              : ListView.separated(
+                  itemBuilder: (context, index) {
+                    return GroupDetailsHelperTile(
+                      model: value[index],
+                      index: ++index,
+                      onDelete: this.onDelete,
+                      onEdit: this.onEdit,
+                      onPreview: this.onPreview,
+                      expandedTile: this.expandedTile,
+                    );
+                  },
+                  separatorBuilder: (context, index) => Divider(
+                    height: 1,
+                  ),
+                  itemCount: value.length,
+                );
         }
       },
     );
@@ -112,12 +116,14 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             _ActionWidget(
+              key: ValueKey('PreviewHelperButton${widget.model.helperId}'),
               color: Color(0xFF3EB4D9),
               icon: Icons.play_arrow,
               text: 'Preview',
               onTap: () => widget.onPreview(widget.model.helperId),
             ),
             _ActionWidget(
+              key: ValueKey('EditHelperButton${widget.model.helperId}'),
               color: Color(0xFF90E0EF),
               icon: Icons.edit,
               text: 'Edit',
@@ -125,6 +131,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
                   widget.onEdit(widget.model.helperId, widget.model.type),
             ),
             _ActionWidget(
+              key: ValueKey('DeleteHelperButton${widget.model.helperId}'),
               color: Color(0xFFEB5160),
               icon: Icons.delete,
               text: 'Delete',

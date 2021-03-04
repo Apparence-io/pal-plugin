@@ -93,12 +93,14 @@ class GroupDetailsPresenter
           name: this.viewModel.groupNameController.text,
           type: this.viewModel.groupTriggerValue,
         );
-        this.groupService.updateGroup(updated).catchError((err) {
-          this.viewInterface.showError();
-        }).then((res) {
+        this.groupService.updateGroup(updated).then((res) {
           this.viewModel.locked = false;
           this.updateState();
           this.viewInterface.showSucess();
+        }).catchError((err) {
+          this.viewModel.locked = false;
+          this.updateState();
+          this.viewInterface.showError();
         });
       });
     }
@@ -110,6 +112,10 @@ class GroupDetailsPresenter
       this.refreshView();
       this.groupService.deleteGroup(this.viewModel.groupId).then((done) {
         this.viewInterface.pop();
+      }).catchError((err) {
+        this.viewModel.loading = false;
+        this.refreshView();
+        this.viewInterface.showError();
       });
     }
   }
@@ -194,6 +200,10 @@ class GroupDetailsPresenter
           .toList();
       this.viewModel.loading = false;
       this.refreshView();
+    }).catchError((err) {
+      this.viewModel.loading = false;
+      this.refreshView();
+      this.viewInterface.showError();
     });
   }
 

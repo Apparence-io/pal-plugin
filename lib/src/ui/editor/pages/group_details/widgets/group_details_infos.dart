@@ -38,6 +38,7 @@ class GroupDetailsInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DetailsTextField(
+                      key: ValueKey('GroupNameField'),
                       label: 'Group name',
                       hint: 'Name',
                       validator: presenter.validateName,
@@ -48,6 +49,7 @@ class GroupDetailsInfo extends StatelessWidget {
                       height: 16,
                     ),
                     DetailsSelectField(
+                      key: ValueKey('TriggerTypeField'),
                       label: 'Trigger type',
                       initialValue: model.groupTriggerValue,
                       newTriggerCallBack: presenter.onNewTrigger,
@@ -56,6 +58,7 @@ class GroupDetailsInfo extends StatelessWidget {
                       height: 16,
                     ),
                     DetailsTextField(
+                      key: ValueKey('MinVersionField'),
                       label: 'Minimum version',
                       validator: presenter.validateVersion,
                       hint: 'Choose a minimum version',
@@ -66,6 +69,7 @@ class GroupDetailsInfo extends StatelessWidget {
                       height: 16,
                     ),
                     DetailsTextField(
+                      key: ValueKey('MaxVersionField'),
                       label: 'Maximum version',
                       validator: (val) {
                         if (val.isEmpty) return null;
@@ -86,7 +90,7 @@ class GroupDetailsInfo extends StatelessWidget {
               child: ValueListenableBuilder(
                 valueListenable: model.canSave,
                 builder: (context, value, child) => RaisedButton(
-                    key: ValueKey('SaveButton'),
+                    key: ValueKey('saveButton'),
                     color: PalTheme.of(context).colors.color1,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),

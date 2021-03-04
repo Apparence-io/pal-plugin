@@ -23,7 +23,7 @@ class CreateHelperModel extends MVVMModel {
   GlobalKey<FormState> infosForm;
   bool isAppVersionLoading;
   TextEditingController helperNameController;
-  List<GroupHelperViewModel> currentGroupHelpersList;
+  int selectedRank;
 
   // Step 2
   HelperType selectedHelperType;
@@ -49,7 +49,7 @@ class CreateHelperModel extends MVVMModel {
         helperType: selectedHelperType,
         helperTheme: selectedHelperTheme,
         name: helperNameController?.value?.text,
-        // priority: ,
+        priority: selectedRank,
         helperGroup: HelperGroupModel(
           id: selectedHelperGroup?.groupId,
           name: selectedHelperGroup?.title,

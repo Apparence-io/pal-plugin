@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
-import 'package:pal/src/pal_notifications.dart';
-import 'package:pal/src/router.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_helpers.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_infos.dart';
@@ -128,6 +126,7 @@ class GroupDetailsPage extends StatelessWidget
                         width: 24,
                       ),
                       GroupDetailsTabWidget(
+                        key: ValueKey('HelpersList'),
                         label: 'Helpers',
                         active: model.page == PageStep.HELPERS ? true : false,
                         onTap: model.page == PageStep.HELPERS
@@ -147,8 +146,10 @@ class GroupDetailsPage extends StatelessWidget
               // *****MENU BUTTON
               actions: [
                 PopupMenuButton(
+                  key: ValueKey('MenuButton'),
                   itemBuilder: (context) => [
                     PopupMenuItem(
+                      key: ValueKey('DeleteGroupButton'),
                       child: Text('Delete'),
                       value: '',
                     )

@@ -18,7 +18,7 @@ abstract class EditorHelperGroupService {
 
   Future updateGroup(HelperGroupUpdate updated);
 
-  Future deleteGroup(String groupId) {}
+  Future deleteGroup(String groupId);
 }
 
 class EditorHelperGroupHttpService implements EditorHelperGroupService {

@@ -17,7 +17,7 @@ class HelperViewModel extends MVVMModel {
     this.id,
     @required this.name,
     @required this.helperType,
-    this.priority,
+    @required this.priority,
     this.helperTheme,
     this.helperGroup
   });

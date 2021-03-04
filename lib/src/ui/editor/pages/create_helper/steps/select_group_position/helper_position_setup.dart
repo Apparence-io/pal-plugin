@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../theme.dart';
 import '../../create_helper_viewmodel.dart';
 
-typedef OnValidate = void Function(List<GroupHelperViewModel> models);
+typedef OnValidate = void Function(int models);
 
 class HelperPositionPage extends StatefulWidget {
   final Future<List<GroupHelperViewModel>> helpersLoader;
@@ -17,6 +17,7 @@ class HelperPositionPage extends StatefulWidget {
 
 class _HelperPositionPageState extends State<HelperPositionPage> {
   List<GroupHelperViewModel> reorderableList;
+  int selectedRank;
 
   _HelperPositionPageState();
 
@@ -74,6 +75,7 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
             }
             var element = reorderableList.removeAt(oldIndex);
             reorderableList.insert(newIndex, element);
+            this.selectedRank = newIndex;
           });
         },
       ),
@@ -110,7 +112,7 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
       ),
       color: PalTheme.of(context).colors.color1,
       onPressed: () {
-        widget.onValidate(this.reorderableList);
+        widget.onValidate(this.selectedRank);
         Navigator.of(context).pop();
       },
       shape: RoundedRectangleBorder(

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
+import 'package:pal/pal.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/ui/editor/pages/group_details/group_details.dart';
 import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_helpers.dart';
+import 'package:pal/src/ui/editor/pages/group_details/widgets/group_details_infos.dart';
 
 import '../../../../pal_test_utilities.dart';
 
@@ -14,7 +16,7 @@ class HttpClientMock extends Mock implements HttpClient {}
 
 // MOCK DATA
 const mockGroup =
-    '''{"id":"JKLSDJDLS28", "priority":6, "name":"group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": "1.0.2"}''';
+    '''{"id":"JKLSDJDLS28", "priority":6, "name":"group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"}''';
 const mockHelpersList = '''[{
         "id": "id1",
         "name": "helper1",
@@ -37,6 +39,10 @@ const mockHelpersList = '''[{
         "lastUpdateDate": "2020-12-23T18:25:43.511Z",
         "priority": 3
         }]''';
+String maxVersionEntity =
+    '''{"content":[{"id":42,"name":"1.0.3"}],"pageable":{"offset":null,"pageNumber":null,"pageSize":null}}''';
+String minVersionEntity =
+    '''{"content":[{"id":666,"name":"1.0.2"}],"pageable":{"offset":null,"pageNumber":null,"pageSize":null}}''';
 
 const userApp = Scaffold(
   body: Center(
@@ -72,25 +78,39 @@ main() {
       component = tester.widget(find.byType(GroupDetailsPage));
     }
 
-    TextFormField groupName(WidgetTester tester) =>
+    DetailsTextField groupName(WidgetTester tester) =>
         tester.widget(find.byKey(ValueKey('GroupNameField')));
-    DropdownButton triggerType(WidgetTester tester) =>
+    DetailsSelectField triggerType(WidgetTester tester) =>
         tester.widget(find.byKey(ValueKey('TriggerTypeField')));
-    TextFormField minVer(WidgetTester tester) =>
+    DetailsTextField minVer(WidgetTester tester) =>
         tester.widget(find.byKey(ValueKey('MinVersionField')));
-    TextFormField maxVer(WidgetTester tester) =>
+    DetailsTextField maxVer(WidgetTester tester) =>
         tester.widget(find.byKey(ValueKey('MaxVersionField')));
 
     setUp(() {
       reset(httpMock);
+      // GROUP DETAILS MOCK
       when(httpMock.get('pal-business/editor/groups/testId'))
           .thenAnswer((_) => Future.value(Response(mockGroup, 200)));
 
       when(httpMock.get('pal-business/editor/groups/testId/helpers'))
           .thenAnswer((_) => Future.value(Response(mockHelpersList, 200)));
+      // GROUP DETAILS MOCK
 
-      when(httpMock.put('pal-business/editor/groups/testId')).thenAnswer((_) =>
-          Future.delayed(Duration(seconds: 2), () => Response(mockGroup, 200)));
+      when(httpMock.put('pal-business/editor/groups/testId',
+              body: anyNamed('body')))
+          .thenAnswer((_) => Future.delayed(
+              Duration(seconds: 2), () => Response(mockGroup, 200)));
+
+      // VERSIONS MOCKS
+      when(httpMock
+              .get('pal-business/editor/versions?versionName=1.0.2&pageSize=1'))
+          .thenAnswer((_) => Future.value(Response(minVersionEntity, 200)));
+
+      when(httpMock
+              .get('pal-business/editor/versions?versionName=1.0.3&pageSize=1'))
+          .thenAnswer((_) => Future.value(Response(maxVersionEntity, 200)));
+      // VERSIONS MOCKS
     });
 
     testWidgets('should create => init is called with right values',
@@ -99,7 +119,8 @@ main() {
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
       expect(groupName(tester).controller.text, equals('group 06'));
-      expect(triggerType(tester).value, equals('ON_SCREEN_VISIT'));
+      expect(helperTriggerTypeToString(triggerType(tester).initialValue),
+          equals('ON_SCREEN_VISIT'));
       expect(minVer(tester).controller.text, equals('1.0.1'));
       expect(maxVer(tester).controller.text, equals('1.0.2'));
     });
@@ -117,25 +138,32 @@ main() {
       maxVer(tester).controller.text = '1.0.3';
       await tester.pump();
 
-      await tester.tap(tester.widget(find.byKey(ValueKey("saveButton"))));
-      await tester.pump(Duration(seconds: 1));
+      await tester.tap(find.byKey(ValueKey("saveButton")));
+      await tester.pump();
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      verify(httpMock.put('pal-buisness/groups/testId', body: {
-        "name": "newTest",
-        "triggerType": "ON_NEW_UPDATE",
-        "minVersion": "1.0.2",
-        "maxVersion": "1.0.3"
-      })).called(1);
+      expect(component.getPageBuilder.presenter.viewModel.locked, equals(true));
 
-      await tester.pump(Duration(seconds: 1));
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      await tester.pump(Duration(seconds: 2));
+
+      expect(
+        verify(httpMock.put(
+          'pal-business/editor/groups/testId',
+          body: captureAnyNamed('body'),
+        )).captured.first,
+        equals(
+            '{"versionMin":666,"versionMax":42,"triggerType":"ON_NEW_UPDATE","name":"newTest"}'),
+      );
+
+      await tester.pumpAndSettle();
+      expect(
+          component.getPageBuilder.presenter.viewModel.locked, equals(false));
     });
 
     testWidgets(
         'On save button click (error) => should make server \'save\' request',
         (tester) async {
-      when(httpMock.put('pal-business/groups/testId'))
+      when(httpMock.put('pal-business/editor/groups/testId',
+              body: anyNamed('body')))
           .thenThrow(InternalHttpError);
       await _before(tester);
 
@@ -146,13 +174,15 @@ main() {
       maxVer(tester).controller.text = '1.0.3';
       await tester.pump();
 
-      await tester.tap(tester.widget(find.byKey(ValueKey("saveButton"))));
-      await tester.pump(Duration(milliseconds: 500));
+      await tester.tap(find.byKey(ValueKey("saveButton")));
+      await tester.pump();
 
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(
+          component.getPageBuilder.presenter.viewModel.locked, equals(false));
+      await tester.pumpAndSettle(Duration(milliseconds: 200));
       SnackBar snackBar = tester.widget(find.byType(SnackBar));
-      expect(snackBar, findsOneWidget);
-      expect(snackBar.backgroundColor, equals(Colors.red));
+      expect(snackBar, isNotNull);
+      expect(snackBar.backgroundColor, equals(Colors.redAccent));
       await tester.pumpAndSettle();
     });
 
@@ -193,13 +223,13 @@ main() {
       await tester.drag(helper, Offset(-100, 0));
       await tester.pump();
 
-      Finder deleteButton = find.byKey(ValueKey('DeleteHelperButton'));
+      Finder deleteButton = find.byKey(ValueKey('DeleteHelperButtonid1'));
       await tester.tap(deleteButton);
       await tester.pump();
 
-      verify(httpMock.delete('pal-business/groups/testId/helpers/id1'))
-          .called(1);
+      verify(httpMock.delete('pal-business/editor/helpers/id1')).called(1);
 
+      await tester.pumpAndSettle();
       Finder helpers = find.byType(GroupDetailsHelperTile);
       expect(helpers.evaluate().length, equals(2));
     });
@@ -211,7 +241,7 @@ main() {
           Future.delayed(
               Duration(seconds: 2), () => Response(mockHelpersList, 200)));
 
-      when(httpMock.delete('pal-business/groups/testId/helpers/id1'))
+      when(httpMock.delete('pal-business/editor/helpers/id1'))
           .thenThrow(InternalHttpError);
       await _before(tester);
 
@@ -221,99 +251,98 @@ main() {
       await tester.drag(helper, Offset(-100, 0));
       await tester.pump();
 
-      Finder deleteButton = find.byKey(ValueKey('DeleteHelperButton'));
+      Finder deleteButton = find.byKey(ValueKey('DeleteHelperButtonid1'));
       await tester.tap(deleteButton);
       await tester.pump();
 
-      verify(httpMock.delete('pal-business/groups/testId/helpers/id1'))
-          .called(1);
+      verify(httpMock.delete('pal-business/editor/helpers/id1')).called(1);
 
+      await tester.pumpAndSettle(Duration(milliseconds: 200));
       SnackBar snackBar = tester.widget(find.byType(SnackBar));
-      expect(snackBar, findsOneWidget);
-      expect(snackBar.backgroundColor, equals(Colors.red));
+      expect(snackBar, isNotNull);
+      expect(snackBar.backgroundColor, equals(Colors.redAccent));
       await tester.pumpAndSettle();
     });
 
-    testWidgets('On Helper preview click => Should show preview page',
-        (tester) async {
-      when(httpMock.put('pal-business/groups/testId/helpers')).thenAnswer((_) =>
-          Future.delayed(
-              Duration(seconds: 2), () => Response(mockHelpersList, 200)));
+    // testWidgets('On Helper preview click => Should show preview page',
+    //     (tester) async {
+    //   when(httpMock.put('pal-business/groups/testId/helpers')).thenAnswer((_) =>
+    //       Future.delayed(
+    //           Duration(seconds: 2), () => Response(mockHelpersList, 200)));
 
-      await _before(tester);
+    //   await _before(tester);
 
-      await _goToHelpersList(tester);
+    //   await _goToHelpersList(tester);
 
-      Finder helper = find.byType(GroupDetailsHelperTile).first;
-      await tester.drag(helper, Offset(-100, 0));
-      await tester.pump();
+    //   Finder helper = find.byType(GroupDetailsHelperTile).first;
+    //   await tester.drag(helper, Offset(-100, 0));
+    //   await tester.pump();
 
-      Finder previewButton = find.byKey(ValueKey('PreviewHelperButton'));
-      await tester.tap(previewButton);
-      await tester.pumpAndSettle();
+    //   Finder previewButton = find.byKey(ValueKey('PreviewHelperButton'));
+    //   await tester.tap(previewButton);
+    //   await tester.pumpAndSettle();
 
-      // TODO : Expect transition
-    });
+    //   // TODO : Expect transition
+    // });
 
-    testWidgets('On Helper edit click => Should show edit page',
-        (tester) async {
-      when(httpMock.put('pal-business/groups/testId/helpers')).thenAnswer((_) =>
-          Future.delayed(
-              Duration(seconds: 2), () => Response(mockHelpersList, 200)));
+    // testWidgets('On Helper edit click => Should show edit page',
+    //     (tester) async {
+    //   when(httpMock.put('pal-business/groups/testId/helpers')).thenAnswer((_) =>
+    //       Future.delayed(
+    //           Duration(seconds: 2), () => Response(mockHelpersList, 200)));
+    //   await _before(tester);
 
-      await _before(tester);
+    //   await _goToHelpersList(tester);
 
-      await _goToHelpersList(tester);
+    //   Finder helper = find.byType(GroupDetailsHelperTile).first;
+    //   await tester.drag(helper, Offset(-100, 0));
+    //   await tester.pump();
 
-      Finder helper = find.byType(GroupDetailsHelperTile).first;
-      await tester.drag(helper, Offset(-100, 0));
-      await tester.pump();
+    //   Finder editButton = find.byKey(ValueKey('EditHelperButtonid1'));
+    //   await tester.tap(editButton);
+    //   await tester.pump();
 
-      Finder editButton = find.byKey(ValueKey('EditHelperButton'));
-      await tester.tap(editButton);
-      await tester.pumpAndSettle();
-
-      // TODO : Expect transition
-    });
+    //   print('done');
+    // });
 
     testWidgets(
         'On Group menu click (sucess) => Should show delete button and delete the group',
         (tester) async {
-      when(httpMock.delete('pal-business/groups/testId'))
+      when(httpMock.delete('pal-business/editor/groups/testId'))
           .thenAnswer((_) => Future.value(Response('true', 200)));
       await _before(tester);
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
       Finder menuButton = find.byKey(ValueKey('MenuButton'));
       await tester.tap(menuButton);
-      await tester.pump();
+      await tester.pumpAndSettle(Duration(milliseconds: 250));
 
       Finder deleteGroup = find.byKey(ValueKey('DeleteGroupButton'));
       await tester.tap(deleteGroup);
-      await tester.pump();
+      await tester.pump(Duration(milliseconds: 250));
 
-      verify(httpMock.delete('pal-business/groups/testId')).called(1);
+      verify(httpMock.delete('pal-business/editor/groups/testId')).called(1);
     });
 
     testWidgets(
         'On Group menu click (error) => Should show delete button and show error message',
         (tester) async {
-      when(httpMock.delete('pal-business/groups/testId'))
+      when(httpMock.delete('pal-business/editor/groups/testId'))
           .thenThrow(InternalHttpError);
       await _before(tester);
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
       Finder menuButton = find.byKey(ValueKey('MenuButton'));
       await tester.tap(menuButton);
-      await tester.pump();
+      await tester.pumpAndSettle(Duration(milliseconds: 250));
 
       Finder deleteGroup = find.byKey(ValueKey('DeleteGroupButton'));
       await tester.tap(deleteGroup);
-      await tester.pump();
+      await tester.pump(Duration(milliseconds: 250));
 
       SnackBar snackBar = tester.widget(find.byType(SnackBar));
-      expect(snackBar, findsOneWidget);
-      expect(snackBar.backgroundColor, equals(Colors.red));
+      expect(snackBar, isNotNull);
+      expect(snackBar.backgroundColor, equals(Colors.redAccent));
       await tester.pumpAndSettle();
     });
   });

@@ -173,8 +173,8 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
     }
   }
 
-  void onGroupReorder(List<GroupHelperViewModel> reorderedList) {
-    viewModel.currentGroupHelpersList = reorderedList;
+  void onGroupReorder(int selectedRank) {
+    viewModel.selectedRank = selectedRank;
   }
 
   void onTapChangePosition() {

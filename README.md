@@ -30,6 +30,20 @@ No code editor for all your app screens directly in your app:
 * 🎛 Select your helper type.
 * 🎨 Select and customize your theme.
 
+## ✨	Latest Feature : Groups
+>### *No time to lose*
+Starting version **0.1.1**, all ***Helpers*** will be sorted in **Groups**.
+
+ - No more tedious back-n-forth-helper-spaming-navigation.
+ - Page guide tours are now a thing. Show your ***Helpers*** one after another.
+
+ >### *Better then ever*
+Our helper editor got a complete *UI overhaul*, with a brand new ***Toolbox*** ✨
+
+ - More intuitive text fields.
+ - All of your tools in one place.
+ - A better / maintainable code base, for future updates and features.
+
 ## 👀&nbsp; Preview
 <p align="left">
   <img src="https://i.postimg.cc/jSR94N7Q/presentation.gif" width="250" alt="camerawesome_example1" />

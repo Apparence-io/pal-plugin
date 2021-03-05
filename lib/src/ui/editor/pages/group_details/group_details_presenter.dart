@@ -100,7 +100,7 @@ class GroupDetailsPresenter
           this.viewModel.loading = false;
           this.viewModel.locked = false;
           this.refreshView();
-          this.viewInterface.showSucess();
+          this.viewInterface.showSucess('Group updated.');
         }).catchError((err) {
           this.viewModel.loading = false;
           this.viewModel.locked = false;
@@ -203,6 +203,7 @@ class GroupDetailsPresenter
           .where((helper) => helper.helperId != id)
           .toList();
       this.viewModel.loading = false;
+      this.viewInterface.showSucess('Helper deleted.');
       this.refreshView();
     }).catchError((err) {
       this.viewModel.loading = false;

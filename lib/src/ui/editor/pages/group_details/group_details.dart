@@ -16,7 +16,7 @@ import 'group_details_presenter.dart';
 abstract class GroupDetailsView {
   void showError();
 
-  void showSucess();
+  void showSucess(String text);
 
   void showEditor(
       String routeName, String helperId, String groupId, HelperType type);
@@ -171,6 +171,7 @@ class GroupDetailsPage extends StatelessWidget
                   ),
                 ),
                 GroupDetailsHelpersList(
+                  loading: model.loading,
                   onPreview: presenter.previewHelper,
                   onDelete: presenter.deleteHelper,
                   onEdit: presenter.editHelper,
@@ -189,8 +190,8 @@ class GroupDetailsPage extends StatelessWidget
   }
 
   @override
-  void showSucess() {
-    showSnackbarMessage(_scaffoldKey, 'Group mis à jour avec sucèss.', true);
+  void showSucess(String text) {
+    showSnackbarMessage(_scaffoldKey, text, true);
   }
 
   @override

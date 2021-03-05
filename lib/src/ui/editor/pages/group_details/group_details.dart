@@ -175,7 +175,6 @@ class GroupDetailsPage extends StatelessWidget
                   onDelete: presenter.deleteHelper,
                   onEdit: presenter.editHelper,
                   helpersList: model.helpers,
-                  loading: model.loading,
                   key: ValueKey('GroupHelpers'),
                 ),
               ],

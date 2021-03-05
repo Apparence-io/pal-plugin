@@ -72,7 +72,8 @@ class GroupDetailsPresenter
   void save() {
     if (!this.viewModel.locked) {
       this.viewModel.locked = true;
-      this.updateState();
+      this.viewModel.loading = true;
+      this.refreshView();
       Future.wait([
         this
             .versionService
@@ -83,6 +84,9 @@ class GroupDetailsPresenter
                 .getOrCreateVersionId(this.viewModel.groupMaxVerController.text)
             : Future.value(null),
       ]).catchError((err) {
+        this.viewModel.loading = false;
+        this.viewModel.locked = false;
+        this.refreshView();
         this.viewInterface.showError();
       }).then((res) {
         HelperGroupUpdate updated = HelperGroupUpdate(
@@ -93,12 +97,14 @@ class GroupDetailsPresenter
           type: this.viewModel.groupTriggerValue,
         );
         this.groupService.updateGroup(updated).then((res) {
+          this.viewModel.loading = false;
           this.viewModel.locked = false;
-          this.updateState();
+          this.refreshView();
           this.viewInterface.showSucess();
         }).catchError((err) {
+          this.viewModel.loading = false;
           this.viewModel.locked = false;
-          this.updateState();
+          this.refreshView();
           this.viewInterface.showError();
         });
       });
@@ -134,13 +140,12 @@ class GroupDetailsPresenter
   }
 
   void onMaxVerSubmit(String val) {
-    if (val.isNotEmpty && val != this.viewModel.groupModel.maxVer)
-      this.updateState();
+    if (val != this.viewModel.groupModel.maxVer) this.updateState();
   }
 
   String validateVersion(String val) {
     if (val.contains(new RegExp(
-        r'^(?<version>(?<major>0|[1-9][0-9]*)\.(?<minor>0|[1-9][0-9]*)\.(?<patch>0|[1-9][0-9]*))((\+|\-).+)?$'))) {
+        r'^(?<version>(?<major>0|[1-9][0-9]*)\.(?<minor>0|[1-9][0-9]*)\.(?<patch>0|[1-9][0-9]*))$'))) {
       this.viewModel.locked = false;
       return null;
     }

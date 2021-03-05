@@ -62,6 +62,7 @@ class GroupDetailsInfo extends StatelessWidget {
                       label: 'Minimum version',
                       validator: presenter.validateVersion,
                       hint: 'Choose a minimum version',
+                      keyboardType: TextInputType.number,
                       controller: model.groupMinVerController,
                       onFieldSubmitted: presenter.onMinVerSubmit,
                     ),
@@ -76,6 +77,7 @@ class GroupDetailsInfo extends StatelessWidget {
                         return presenter.validateVersion(val);
                       },
                       hint: 'Default set to latest',
+                      keyboardType: TextInputType.number,
                       controller: model.groupMaxVerController,
                       onFieldSubmitted: presenter.onMaxVerSubmit,
                     ),
@@ -89,11 +91,15 @@ class GroupDetailsInfo extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: ValueListenableBuilder(
                 valueListenable: model.canSave,
-                builder: (context, value, child) => RaisedButton(
+                builder: (context, value, child) => ElevatedButton(
                     key: ValueKey('saveButton'),
-                    color: PalTheme.of(context).colors.color1,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => PalTheme.of(context).colors.color1),
+                      shape: MaterialStateProperty.resolveWith((states) =>
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                    ),
                     onPressed: value ? presenter.save : null,
                     child: child),
                 child: Text(
@@ -118,6 +124,7 @@ class GroupDetailsInfo extends StatelessWidget {
 
 class DetailsTextField extends StatelessWidget {
   final String label, hint;
+  final TextInputType keyboardType;
   final TextEditingController controller;
   final String Function(String) validator;
   final Function(String) onFieldSubmitted;
@@ -128,7 +135,8 @@ class DetailsTextField extends StatelessWidget {
       this.controller,
       this.hint,
       this.onFieldSubmitted,
-      this.validator})
+      this.validator,
+      this.keyboardType = TextInputType.text})
       : super(key: key);
 
   @override
@@ -136,6 +144,7 @@ class DetailsTextField extends StatelessWidget {
     return LabeledForm(
       label: this.label,
       widget: BorderedTextField(
+        textInputType: this.keyboardType,
         autovalidate: true,
         validator: this.validator,
         onFieldSubmitted: this.onFieldSubmitted,

@@ -57,6 +57,9 @@ class VersionHttpRepository extends BaseHttpRepository
             body: jsonEncode({
               'name': createVersion.name,
             }))
-        .then((res) => _versionEntityAdapter.parse(res.body));
+        .then((res) => _versionEntityAdapter.parse(res.body))
+        .catchError((onError){
+          throw 'ERROR WHILE CREATING VERSION';
+        });
   }
 }

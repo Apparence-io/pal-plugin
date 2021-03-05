@@ -140,6 +140,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
     viewModel.userPageElements[key].selected = true;
     var element = await finderService.searchChildElement(key);
     viewModel.writeArea = await finderService.getLargestAvailableSpace(element);
+    this.viewModel.backgroundBox.key = key;
     refreshView();
     refreshAnimations();
   }

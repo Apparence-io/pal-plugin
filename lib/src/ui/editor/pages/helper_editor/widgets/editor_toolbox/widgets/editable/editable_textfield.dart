@@ -30,12 +30,16 @@ class EditableTextField extends StatelessWidget {
       _googleCustomFont(this.data?.fontFamily),
     );
 
-    Color _borderColor = this.backgroundColor.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    Color _borderColor = this.backgroundColor.computeLuminance() > 0.5
+        ? Colors.black
+        : Colors.white;
     return BouncingWidget(
       onTap: () => this.onTap?.call(this.data),
       child: DottedBorder(
         dashPattern: [6, 3],
-        color: this.isSelected ? _borderColor.withAlpha(200) : _borderColor.withAlpha(80),
+        color: this.isSelected
+            ? _borderColor.withAlpha(200)
+            : _borderColor.withAlpha(80),
         strokeWidth: this.isSelected ? 3.0 : 1.0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -43,6 +47,8 @@ class EditableTextField extends StatelessWidget {
             key: UniqueKey(),
             initialValue: this.data?.text,
             enabled: false,
+            maxLines: 2,
+            minLines: 1,
             textAlign: TextAlign.center,
             decoration: InputDecoration(
               border: InputBorder.none,

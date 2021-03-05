@@ -73,9 +73,11 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
             if (oldIndex < newIndex) {
               newIndex -= 1;
             }
-            var element = reorderableList.removeAt(oldIndex);
-            reorderableList.insert(newIndex, element);
-            this.selectedRank = newIndex;
+            if (reorderableList[oldIndex].id == "NEW_HELPER") {
+              var element = reorderableList.removeAt(oldIndex);
+              reorderableList.insert(newIndex, element);
+              this.selectedRank = newIndex;
+            }
           });
         },
       ),
@@ -83,20 +85,15 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
   }
 
   Widget _buildItem(GroupHelperViewModel element) {
-    return Column(
+    return Padding(
       key: ValueKey(element?.id),
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 1.0),
-          child: ListTile(
-            title: Text(element.title),
-            tileColor: element.id != "NEW_HELPER"
-                ? Colors.grey.withOpacity(.2)
-                : PalTheme.of(context).colors.color1.withOpacity(.2),
-          ),
-        ),
-      ],
+      padding: const EdgeInsets.symmetric(vertical: 1.0),
+      child: ListTile(
+        title: Text(element.title),
+        tileColor: element.id != "NEW_HELPER"
+            ? Colors.grey.withOpacity(.2)
+            : PalTheme.of(context).colors.color1.withOpacity(.2),
+      ),
     );
   }
 

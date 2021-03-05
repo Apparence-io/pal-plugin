@@ -13,9 +13,6 @@ class GroupDetailsHelpersList extends StatelessWidget {
   final OnEdit onEdit;
   final OnDelete onDelete;
 
-  // STATE
-  final bool loading;
-
   final ValueNotifier<int> expandedTile = ValueNotifier(null);
 
   GroupDetailsHelpersList({
@@ -24,7 +21,6 @@ class GroupDetailsHelpersList extends StatelessWidget {
     @required this.onPreview,
     @required this.onEdit,
     @required this.onDelete,
-    this.loading = false,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class GroupDetailsHelpersList extends StatelessWidget {
             )),
           );
         } else {
-          return value == null || value.length == 0 || loading
+          return value == null || value.length == 0
               ? Center(
                   child: Text('No helpers found.'),
                 )
@@ -119,120 +115,124 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            _ActionWidget(
-              key: ValueKey('PreviewHelperButton${widget.model.helperId}'),
-              color: Color(0xFF3EB4D9),
-              icon: Icons.play_arrow,
-              text: 'Preview',
-              onTap: () => widget.onPreview(widget.model.helperId),
-            ),
-            _ActionWidget(
-              key: ValueKey('EditHelperButton${widget.model.helperId}'),
-              color: Color(0xFF90E0EF),
-              icon: Icons.edit,
-              text: 'Edit',
-              onTap: () =>
-                  widget.onEdit(widget.model.helperId, widget.model.type),
-            ),
-            _ActionWidget(
-              key: ValueKey('DeleteHelperButton${widget.model.helperId}'),
-              color: Color(0xFFEB5160),
-              icon: Icons.delete,
-              text: 'Delete',
-              onTap: () => this.setState(() {
-                widget.onDelete(widget.model.helperId).catchError((onError) {
-                  this.setState(() {
-                    this.deleting = false;
-                  });
-                });
-              }),
-            ),
-          ],
-        ),
-        GestureDetector(
-          onHorizontalDragUpdate: (details) {
-            this.controller.value = this.controller.value + details.delta.dx;
-          },
-          onHorizontalDragEnd: (details) {
-            if (details.primaryVelocity > 0 ||
-                this.controller.value > animationLowerBound / 2) {
-              this.controller.animateTo(0,
-                  curve: Curves.easeOutBack,
-                  duration: Duration(milliseconds: 250));
-            } else {
-              this.controller.animateTo(this.controller.lowerBound,
-                  curve: Curves.easeOutBack,
-                  duration: Duration(milliseconds: 250));
-              widget.expandedTile.value = widget.index;
-            }
-          },
-          child: SizedBox(
-            height: containerHeight + 1,
-            child: AnimatedBuilder(
-              animation: this.controller,
-              builder: (context, child) => Card(
-                margin: EdgeInsets.only(right: -this.controller.value),
-                elevation: 8,
-                shape: Border(),
-                child: child,
+    return Opacity(
+      opacity: this.deleting ? .5 : 1,
+      child: Stack(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              _ActionWidget(
+                key: ValueKey('PreviewHelperButton${widget.model.helperId}'),
+                color: Color(0xFF3EB4D9),
+                icon: Icons.play_arrow,
+                text: 'Preview',
+                onTap: () => widget.onPreview(widget.model.helperId),
               ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      "packages/pal/assets/images/create_helper/types/${helperTypeToAsset(widget.model.type)}",
-                      height: containerHeight,
-                    ),
-                    VerticalDivider(
-                      width: 40,
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.model.title,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14),
-                          ),
-                          Divider(
-                            height: 4,
-                          ),
-                          Text(
-                            getHelperTypeDescription(widget.model.type),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w200, fontSize: 10),
-                          ),
-                          Divider(
-                            height: 16,
-                          ),
-                          Text(
-                            'Created on ${widget.model.creationDate.day} / ${widget.model.creationDate.month} / ${widget.model.creationDate.year}',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w100, fontSize: 6),
-                          )
-                        ],
+              _ActionWidget(
+                key: ValueKey('EditHelperButton${widget.model.helperId}'),
+                color: Color(0xFF90E0EF),
+                icon: Icons.edit,
+                text: 'Edit',
+                onTap: () =>
+                    widget.onEdit(widget.model.helperId, widget.model.type),
+              ),
+              _ActionWidget(
+                key: ValueKey('DeleteHelperButton${widget.model.helperId}'),
+                color: Color(0xFFEB5160),
+                icon: Icons.delete,
+                text: 'Delete',
+                onTap: () => this.setState(() {
+                  this.deleting = true;
+                  widget.onDelete(widget.model.helperId).catchError((onError) {
+                    this.setState(() {
+                      this.deleting = true;
+                    });
+                  });
+                }),
+              ),
+            ],
+          ),
+          GestureDetector(
+            onHorizontalDragUpdate: (details) {
+              this.controller.value = this.controller.value + details.delta.dx;
+            },
+            onHorizontalDragEnd: (details) {
+              if (details.primaryVelocity > 0 ||
+                  this.controller.value > animationLowerBound / 2) {
+                this.controller.animateTo(0,
+                    curve: Curves.easeOutBack,
+                    duration: Duration(milliseconds: 250));
+              } else {
+                this.controller.animateTo(this.controller.lowerBound,
+                    curve: Curves.easeOutBack,
+                    duration: Duration(milliseconds: 250));
+                widget.expandedTile.value = widget.index;
+              }
+            },
+            child: SizedBox(
+              height: containerHeight + 1,
+              child: AnimatedBuilder(
+                animation: this.controller,
+                builder: (context, child) => Card(
+                  margin: EdgeInsets.only(right: -this.controller.value),
+                  elevation: 8,
+                  shape: Border(),
+                  child: child,
+                ),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "packages/pal/assets/images/create_helper/types/${helperTypeToAsset(widget.model.type)}",
+                        height: containerHeight,
                       ),
-                    ),
-                    Text(widget.index.toString())
-                  ],
+                      VerticalDivider(
+                        width: 40,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.model.title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            Divider(
+                              height: 4,
+                            ),
+                            Text(
+                              getHelperTypeDescription(widget.model.type),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w200, fontSize: 10),
+                            ),
+                            Divider(
+                              height: 16,
+                            ),
+                            Text(
+                              'Created on ${widget.model.creationDate.day} / ${widget.model.creationDate.month} / ${widget.model.creationDate.year}',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w100, fontSize: 6),
+                            )
+                          ],
+                        ),
+                      ),
+                      Text(widget.index.toString())
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

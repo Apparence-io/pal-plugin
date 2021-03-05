@@ -121,8 +121,8 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     try {
       response = await httpClient.put('pal-business/editor/groups/$id',
           body: jsonEncode({
-            "versionMin": minVersionId,
-            "versionMax": maxVersionId,
+            "versionMinId": minVersionId,
+            "versionMaxId": maxVersionId,
             "triggerType": type,
             "name": name
           }));

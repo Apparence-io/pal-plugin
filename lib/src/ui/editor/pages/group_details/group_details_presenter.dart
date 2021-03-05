@@ -209,7 +209,6 @@ class GroupDetailsPresenter
       this.viewModel.loading = false;
       this.refreshView();
       this.viewInterface.showError();
-      throw 'Error deleting helper';
     });
   }
 

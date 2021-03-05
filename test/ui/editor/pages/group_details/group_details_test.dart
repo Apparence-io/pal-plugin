@@ -138,9 +138,9 @@ main() {
       await tester.pump();
 
       await tester.tap(find.byKey(ValueKey("saveButton")));
-      await tester.pump();
+      await tester.pump(Duration(milliseconds: 100));
 
-      expect(component.getPageBuilder.presenter.viewModel.locked, equals(true));
+      expect(component.getPageBuilder.presenter.viewModel.loading, equals(true));
 
       await tester.pump(Duration(seconds: 2));
 
@@ -150,12 +150,12 @@ main() {
           body: captureAnyNamed('body'),
         )).captured.first,
         equals(
-            '{"versionMin":666,"versionMax":42,"triggerType":"ON_NEW_UPDATE","name":"newTest"}'),
+            '{"versionMinId":666,"versionMaxId":42,"triggerType":"ON_NEW_UPDATE","name":"newTest"}'),
       );
 
       await tester.pumpAndSettle();
       expect(
-          component.getPageBuilder.presenter.viewModel.locked, equals(false));
+          component.getPageBuilder.presenter.viewModel.loading, equals(false));
     });
 
     testWidgets(

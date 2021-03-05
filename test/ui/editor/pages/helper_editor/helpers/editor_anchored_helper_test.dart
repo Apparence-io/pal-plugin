@@ -330,11 +330,11 @@ void main() {
       await tester.pump();
       await tester.pump();
       // expect first element to be selected
-      expect(presenter.viewModel.selectedAnchorKey, contains("BACKGROUND_KEY"));
+      expect(presenter.viewModel.selectedAnchorKey, contains("[<\'text1\'>]"));
       // expect second element to be selected
       element2.onTap();
       await tester.pump(Duration(milliseconds: 100));
-      expect(presenter.viewModel.selectedAnchorKey, contains("BACKGROUND_KEY"));
+      expect(presenter.viewModel.selectedAnchorKey, contains("[<\'text2\'>]"));
     });
 
     testWidgets(
@@ -412,7 +412,7 @@ void main() {
       await tester.tap(find.byKey(ValueKey("validateSelectionBtn")));
       await tester.pump(Duration(milliseconds: 100));
       element2.onTap();
-      expect(presenter.viewModel.selectedAnchorKey, contains("BACKGROUND_KEY"));
+      expect(presenter.viewModel.selectedAnchorKey, contains("[<\'text1\'>]"));
     });
 
     testWidgets(
@@ -559,7 +559,7 @@ void main() {
             fontFamily: "cortana",
           ),
           bodyBox: HelperBoxConfig(
-            key: "BACKGROUND_KEY",
+            key: "[<\'text1\'>]",
             color: Colors.blueGrey.shade900.toHex(),
           ));
       await tester.pump(Duration(seconds: 2));

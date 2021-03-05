@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
-import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
@@ -78,6 +77,8 @@ class EditorFullScreenHelper
       helperBoxViewModel:
           HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+      descriptionLabel:
+          HelperSharedFactory.parseTextNotifier(model.descriptionTextForm),
       headerImageViewModel:
           HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
       negativLabel:
@@ -173,8 +174,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: true,
-      body: (model.loading??false)
+      body: (model.loading ?? false)
           ? Center(child: CircularProgressIndicator(value: null))
           : EditorToolboxPage(
               boxViewHandler: BoxViewHandler(

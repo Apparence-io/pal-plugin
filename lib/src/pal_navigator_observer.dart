@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PalRouteObserver {

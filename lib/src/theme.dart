@@ -114,12 +114,12 @@ class PalThemeData {
 
     const Color dark = Color(0xFF000767);
     const Color blue = Color(0xFF3681bd); // ignore: unused_local_variable
-    const Color lightBlue = Color(0xFF53bbdc);// ignore: unused_local_variable
-    const Color cyan = Color(0xFFa1e3f1);// ignore: unused_local_variable
+    const Color lightBlue = Color(0xFF53bbdc); // ignore: unused_local_variable
+    const Color cyan = Color(0xFFa1e3f1); // ignore: unused_local_variable
     const Color aqua = Color(0xFF90E0EF);
-    const Color red = Color(0xFFe7636a);// ignore: unused_local_variable
-    const Color black = Color(0xFF292931);// ignore: unused_local_variable
-    const Color green = Color(0xFF1abc9c);// ignore: unused_local_variable
+    const Color red = Color(0xFFe7636a); // ignore: unused_local_variable
+    const Color black = Color(0xFF292931); // ignore: unused_local_variable
+    const Color green = Color(0xFF1abc9c); // ignore: unused_local_variable
 
     return base.copyWith(
       accentColor: dark,
@@ -146,7 +146,7 @@ class PalThemeData {
           backgroundColor: aqua, foregroundColor: dark),
       scaffoldBackgroundColor: Colors.white,
       cardColor: Colors.white,
-      textSelectionColor: Colors.white,
+      textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.white),
       backgroundColor: Colors.white,
       textTheme: GoogleFonts.montserratTextTheme().apply(
         bodyColor: dark,

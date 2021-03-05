@@ -179,7 +179,7 @@ void main() {
           .byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0'));
       expect(changelogFinder, findsOneWidget);
       RichText changeLogText = tester.widget(changelogFinder);
-      expect((changeLogText.text.children.last as TextSpan).text,
+      expect(((changeLogText.text as TextSpan).children.last as TextSpan).text,
           equals('test changelog edited'));
 
       (tester.widget(find.byKey(
@@ -267,7 +267,6 @@ void main() {
           find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote'));
       await tester.tap(addChangelogButtonFinder);
       await tester.pumpAndSettle(Duration(milliseconds: 500));
-      var editableFinder = find.byType(TextField);
       await enterTextInTextForm(tester, 1, 'Lorem ipsum');
       await enterTextInTextForm(tester, 1, 'Lorem ipsum changelog');
 

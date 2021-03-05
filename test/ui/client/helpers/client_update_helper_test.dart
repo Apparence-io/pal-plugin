@@ -166,10 +166,10 @@ void main() {
           tester.element(richText3Finder).widget as RichText;
 
       // FIXME: Impossible to use children without using the deprecated one
-      final textSpan0 = richText0Widget.text.children.last as TextSpan;
-      final textSpan1 = richText1Widget.text.children.last as TextSpan;
-      final textSpan2 = richText2Widget.text.children.last as TextSpan;
-      final textSpan3 = richText3Widget.text.children.last as TextSpan;
+      final textSpan0 = ((richText0Widget.text as TextSpan).children.last as TextSpan);
+      final textSpan1 = ((richText1Widget.text as TextSpan).children.last as TextSpan);
+      final textSpan2 = ((richText2Widget.text as TextSpan).children.last as TextSpan);
+      final textSpan3 = ((richText3Widget.text as TextSpan).children.last as TextSpan);
 
       expect(textSpan0.style.color, Colors.white);
       expect(textSpan0.style.fontSize, 14.0);

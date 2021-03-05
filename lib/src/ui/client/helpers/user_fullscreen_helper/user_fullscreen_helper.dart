@@ -25,10 +25,9 @@ abstract class UserFullScreenHelperView {
 class UserFullScreenHelperPage extends StatelessWidget
     implements UserFullScreenHelperView {
 
-      // TODO: Create description field !!!!
-
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
+  final HelperTextViewModel descriptionLabel;
   final HelperButtonViewModel positivLabel;
   final HelperButtonViewModel negativLabel;
   final HelperImageViewModel headerImageViewModel;
@@ -39,6 +38,7 @@ class UserFullScreenHelperPage extends StatelessWidget
     Key key,
     @required this.helperBoxViewModel,
     @required this.titleLabel,
+    @required this.descriptionLabel,
     @required this.onPositivButtonTap,
     @required this.onNegativButtonTap,
     this.headerImageViewModel,
@@ -46,6 +46,7 @@ class UserFullScreenHelperPage extends StatelessWidget
     this.negativLabel,
   })  : assert(helperBoxViewModel != null),
         assert(titleLabel != null),
+        assert(descriptionLabel != null),
         assert(onPositivButtonTap != null),
         assert(onNegativButtonTap != null);
 
@@ -67,7 +68,7 @@ class UserFullScreenHelperPage extends StatelessWidget
               milliseconds: 1100,
             ),
           ),
-          // Title
+          // Title / Description
           AnimationController(
             vsync: tickerProvider,
             duration: Duration(
@@ -110,7 +111,8 @@ class UserFullScreenHelperPage extends StatelessWidget
         }
       },
       presenterBuilder: (context) => UserFullScreenHelperPresenter(this),
-      builder: (context, presenter, model) => _buildPage(context, presenter, model),
+      builder: (context, presenter, model) =>
+          _buildPage(context, presenter, model),
     );
   }
 
@@ -135,7 +137,8 @@ class UserFullScreenHelperPage extends StatelessWidget
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (headerImageViewModel?.url != null && headerImageViewModel.url.length > 0)
+                  if (headerImageViewModel?.url != null &&
+                      headerImageViewModel.url.length > 0)
                     Flexible(
                       key: ValueKey('pal_UserFullScreenHelperPage_Media'),
                       flex: 3,
@@ -177,8 +180,7 @@ class UserFullScreenHelperPage extends StatelessWidget
           placeholder: (context, url) =>
               Center(child: CircularProgressIndicator()),
           errorWidget: (BuildContext context, String url, dynamic error) {
-            return Image.asset(
-                'packages/pal/assets/images/create_helper.png');
+            return Image.asset('packages/pal/assets/images/create_helper.png');
           },
         ),
       ),
@@ -190,15 +192,32 @@ class UserFullScreenHelperPage extends StatelessWidget
     return AnimatedTranslateWidget(
       animationController: context.animationsControllers[1],
       widget: SingleChildScrollView(
-        child: Text(
-          titleLabel?.text ?? 'Title',
-          key: ValueKey('pal_UserFullScreenHelperPage_Title'),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: titleLabel?.fontColor ?? Colors.white,
-            fontSize: titleLabel?.fontSize ?? 60.0,
-            fontWeight: titleLabel?.fontWeight,
-          ).merge(GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat')),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              titleLabel?.text ?? 'Title',
+              key: ValueKey('pal_UserFullScreenHelperPage_Title'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: titleLabel?.fontColor ?? Colors.white,
+                fontSize: titleLabel?.fontSize ?? 60.0,
+                fontWeight: titleLabel?.fontWeight,
+              ).merge(
+                  GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat')),
+            ),
+            Text(
+              descriptionLabel?.text ?? '',
+              key: ValueKey('pal_UserFullScreenHelperPage_Description'),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: descriptionLabel?.fontColor ?? Colors.white,
+                fontSize: descriptionLabel?.fontSize ?? 60.0,
+                fontWeight: descriptionLabel?.fontWeight,
+              ).merge(GoogleFonts.getFont(
+                  descriptionLabel?.fontFamily ?? 'Montserrat')),
+            )
+          ],
         ),
       ),
     );
@@ -230,7 +249,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                   positivLabel?.text ?? 'Ok, thanks !',
                   textAlign: TextAlign.center,
                   key: ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
+                      'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
                   style: TextStyle(
                     color: positivLabel?.fontColor ?? Colors.white,
                     fontSize: positivLabel?.fontSize ?? 23.0,
@@ -247,7 +266,8 @@ class UserFullScreenHelperPage extends StatelessWidget
           SizedBox(
             width: double.infinity,
             child: RaisedButton(
-              key: ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
+              key: ValueKey(
+                  'pal_UserFullScreenHelperPage_Feedback_NegativButton'),
               onPressed: () {
                 HapticFeedback.selectionClick();
                 presenter.onNegativButtonCallback();
@@ -262,7 +282,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                   negativLabel?.text ?? 'This is not helping',
                   textAlign: TextAlign.center,
                   key: ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_NegativLabel'),
+                      'pal_UserFullScreenHelperPage_Feedback_NegativLabel'),
                   style: TextStyle(
                     color: negativLabel?.fontColor ?? Colors.white,
                     fontSize: negativLabel?.fontSize ?? 13.0,

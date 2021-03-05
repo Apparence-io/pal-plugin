@@ -26,7 +26,7 @@ abstract class GenericEntityAdapter<T> {
   }
 
   List<T> parseDynamicArray(List<dynamic> lst) {
-    List<T> result = List();
+    List<T> result = [];
     lst.forEach((key) => result.add(parseMap(key)));
     return result;
   }

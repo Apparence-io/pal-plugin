@@ -25,7 +25,7 @@ class ElementFinder {
 
   // List all pages from this context
   List<PageElement> scanPages() {
-    var pages = List<PageElement>();
+    var pages = [];
     context.visitChildElements((element) => _scanPageChildElement(element, pages));
     return pages;
   }

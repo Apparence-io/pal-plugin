@@ -47,7 +47,7 @@ void main() {
         onValidatePicker: () => Navigator.of(context).pop(),
         actualTextStyle: new TextStyle(fontSize: 20),
         fontFamilyKey: 'Montserrat',
-        onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) {},
+        onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) => Future.value(),
       );
       await _beforeEach(tester, widgetBuilder);
       await tester.pump(Duration(seconds: 2));
@@ -64,6 +64,7 @@ void main() {
         fontFamilyKey: 'Montserrat',
         onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) {
           selectedFontSize = newTextStyle.fontSize;
+          return Future.value();
         },
       );
       await _beforeEach(tester, widgetBuilder);
@@ -88,6 +89,7 @@ void main() {
         fontFamilyKey: 'Montserrat',
         onFontModified: (TextStyle newTextStyle, FontKeys fontKeys) {
           selectedFontSize = newTextStyle.fontSize;
+          return Future.value();
         },
       );
       await _beforeEach(tester, widgetBuilder);

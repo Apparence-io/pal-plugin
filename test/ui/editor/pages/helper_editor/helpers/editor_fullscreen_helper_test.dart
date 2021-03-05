@@ -119,17 +119,6 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    Future _fillFields(WidgetTester tester, String firstField,
-        String secondField, String thirdField) async {
-      // INIT TEXTFIELDS
-      await enterTextInTextForm(tester, 0, firstField);
-      await enterTextInTextForm(tester, 1, 'Description');
-      // await enterTextInTextForm(tester, 0, secondField, button: true);
-      await enterTextInTextForm(tester, 1, thirdField, button: true);
-      await tester.pump();
-      // INIT TEXTFIELDS
-    }
-
     testWidgets(
         'on preview press  => show fullscreen client preview & cancel with positiv button',
         (WidgetTester tester) async {
@@ -363,7 +352,6 @@ void main() {
   });
 
   group('[Editor] Fullscreen helper - update mode', () {
-    EditorFullScreenHelperPresenter presenter;
 
     HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
 
@@ -420,11 +408,6 @@ void main() {
         child: MaterialApp(home: Overlayed(child: editor)),
       ));
       await tester.pumpAndSettle(Duration(milliseconds: 1000));
-      var presenterFinder =
-          find.byKey(ValueKey("palEditorFullscreenHelperWidgetBuilder"));
-      var page = presenterFinder.evaluate().first.widget as PresenterInherited<
-          EditorFullScreenHelperPresenter, FullscreenHelperViewModel>;
-      presenter = page.presenter;
     }
 
     testWidgets('valid fullscreen helper entity => fill all text in editor',

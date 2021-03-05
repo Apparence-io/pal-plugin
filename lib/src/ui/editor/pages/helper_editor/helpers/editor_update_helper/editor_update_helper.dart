@@ -133,7 +133,6 @@ class EditorUpdateHelperPage extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: true,
       backgroundColor: Colors.transparent,
       body: (viewModel.loading ?? true)
           ? Center(

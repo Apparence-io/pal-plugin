@@ -30,7 +30,7 @@ class SelectHelperGroupPage extends StatelessWidget {
           child: FutureBuilder<List<HelperGroupViewModel>>(
             future: helperGroupLoader(),
             builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.done
-              ? !snapshot.hasData || snapshot.data.length == 0 ? _buildEmptyList() : _buildItems(snapshot.data)
+              ? (!snapshot.hasData || snapshot.data.length == 0) ? _buildEmptyList() : _buildItems(snapshot.data)
               : _buildLoading(),
           ),
         ),

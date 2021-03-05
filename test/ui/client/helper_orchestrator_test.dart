@@ -2,11 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
-import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'package:pal/src/database/entity/page_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
@@ -15,11 +12,7 @@ import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.d
 import 'package:pal/src/services/client/page_client_service.dart';
 import 'package:pal/src/ui/client/helper_orchestrator.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
-import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_presenter.dart';
-import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/client/helpers_synchronizer.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helpers/editor_anchored_helper/editor_anchored_helper_presenter.dart';
-import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 import '../../pal_test_utilities.dart';
 import 'helper_mocks.dart';

@@ -45,7 +45,6 @@ void main() {
       await tester.pumpWidget(app);
       var palFinder = find.byType(Pal).first;
       var editorAppContextFinder = find.byType(EditorInjector);
-      var userAppContextFinder = find.byType(UserInjector);
       expect(palFinder, findsOneWidget);
       expect(editorAppContextFinder, findsNothing);
       // expect(userAppContextFinder, findsOneWidget);

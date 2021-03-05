@@ -9,7 +9,6 @@ import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/theme.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/editor_router.dart';
 import 'package:pal/src/ui/editor/widgets/snackbar_mixin.dart';
 
 import 'helper_details_model.dart';

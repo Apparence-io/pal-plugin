@@ -7,13 +7,15 @@ class SnackbarMixin {
     if (_scaffoldKey?.currentContext == null) {
       return;
     }
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(_scaffoldKey.currentContext).showSnackBar(
       SnackBar(
         content: Row(
           children: <Widget>[
             success
                 ? Icon(Icons.check, color: Colors.lightGreenAccent)
-                : Icon(Icons.warning, color: PalTheme.of(_scaffoldKey.currentContext).colors.light),
+                : Icon(Icons.warning,
+                    color:
+                        PalTheme.of(_scaffoldKey.currentContext).colors.light),
             Flexible(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
@@ -26,7 +28,9 @@ class SnackbarMixin {
             ),
           ],
         ),
-        backgroundColor: success ? PalTheme.of(_scaffoldKey.currentContext).colors.dark : Colors.redAccent,
+        backgroundColor: success
+            ? PalTheme.of(_scaffoldKey.currentContext).colors.dark
+            : Colors.redAccent,
         duration: Duration(milliseconds: 1500),
       ),
     );

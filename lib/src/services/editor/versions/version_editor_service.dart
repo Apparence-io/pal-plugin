@@ -4,11 +4,10 @@ import 'package:pal/src/database/repository/version_repository.dart';
 import 'package:pal/src/services/package_version.dart';
 
 abstract class VersionEditorService {
-
-  factory VersionEditorService.build({
-    @required VersionRepository versionRepository,
-    @required PackageVersionReader packageVersionReader
-  }) => VersionEditorHttpService(versionRepository, packageVersionReader);
+  factory VersionEditorService.build(
+          {@required VersionRepository versionRepository,
+          @required PackageVersionReader packageVersionReader}) =>
+      VersionEditorHttpService(versionRepository, packageVersionReader);
 
   Future<VersionEntity> getCurrentVersion() => throw "not implemented yet";
 
@@ -16,9 +15,11 @@ abstract class VersionEditorService {
 
   Future<VersionEntity> getVersion(String name) => throw "not implemented yet";
 
-  Future<VersionEntity> createVersion(VersionEntity version) => throw "not implemented yet";
+  Future<VersionEntity> createVersion(VersionEntity version) =>
+      throw "not implemented yet";
 
-  Future<int> getOrCreateVersionId(String versionName) => throw "not implemented yet";
+  Future<int> getOrCreateVersionId(String versionName) =>
+      throw "not implemented yet";
 }
 
 class VersionEditorHttpService implements VersionEditorService {
@@ -37,8 +38,9 @@ class VersionEditorHttpService implements VersionEditorService {
 
   @override
   Future<List<VersionEntity>> getAll() {
-    return versionRepository.getVersions(pageSize: 1000).then((res) =>
-        res.numberOfElements > 0 ? res.entities : List<VersionEntity>());
+    return versionRepository
+        .getVersions(pageSize: 1000)
+        .then((res) => res.numberOfElements > 0 ? res.entities : []);
   }
 
   @override

@@ -38,8 +38,6 @@ class _HelperClientService implements HelperClientService {
 
   final ClientSchemaRepository _clientSchemaRepository;
 
-  final ClientHelperRepository _helperRemoteRepository;
-
   final HelperGroupUserVisitRepository _localVisitRepository, _remoteVisitRepository; // ignore: unused_field
 
   final LocaleService _userLocale;
@@ -53,7 +51,6 @@ class _HelperClientService implements HelperClientService {
   }) : this._clientSchemaRepository = clientSchemaRepository,
        this._localVisitRepository = localVisitRepository,
        this._remoteVisitRepository = remoteVisitRepository,
-       this._helperRemoteRepository = helperRemoteRepository,
        this._userLocale = userLocale;
 
   @override

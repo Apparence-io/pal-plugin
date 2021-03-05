@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pal/pal.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
@@ -263,47 +262,6 @@ main() {
       expect(snackBar.backgroundColor, equals(Colors.redAccent));
       await tester.pumpAndSettle();
     });
-
-    // testWidgets('On Helper preview click => Should show preview page',
-    //     (tester) async {
-    //   when(httpMock.put('pal-business/groups/testId/helpers')).thenAnswer((_) =>
-    //       Future.delayed(
-    //           Duration(seconds: 2), () => Response(mockHelpersList, 200)));
-
-    //   await _before(tester);
-
-    //   await _goToHelpersList(tester);
-
-    //   Finder helper = find.byType(GroupDetailsHelperTile).first;
-    //   await tester.drag(helper, Offset(-100, 0));
-    //   await tester.pump();
-
-    //   Finder previewButton = find.byKey(ValueKey('PreviewHelperButton'));
-    //   await tester.tap(previewButton);
-    //   await tester.pumpAndSettle();
-
-    //   // TODO : Expect transition
-    // });
-
-    // testWidgets('On Helper edit click => Should show edit page',
-    //     (tester) async {
-    //   when(httpMock.put('pal-business/groups/testId/helpers')).thenAnswer((_) =>
-    //       Future.delayed(
-    //           Duration(seconds: 2), () => Response(mockHelpersList, 200)));
-    //   await _before(tester);
-
-    //   await _goToHelpersList(tester);
-
-    //   Finder helper = find.byType(GroupDetailsHelperTile).first;
-    //   await tester.drag(helper, Offset(-100, 0));
-    //   await tester.pump();
-
-    //   Finder editButton = find.byKey(ValueKey('EditHelperButtonid1'));
-    //   await tester.tap(editButton);
-    //   await tester.pump();
-
-    //   print('done');
-    // });
 
     testWidgets(
         'On Group menu click (sucess) => Should show delete button and delete the group',

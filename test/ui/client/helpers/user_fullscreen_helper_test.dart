@@ -6,16 +6,22 @@ import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_presenter.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
+
 void main() {
   UserFullScreenHelperPresenter presenter; // ignore: unused_local_variable
 
   group('[Client] Fullscreen helper', () {
     UserFullScreenHelperPage userFullScreenHelperPage =
-    UserFullScreenHelperPage(
+        UserFullScreenHelperPage(
       helperBoxViewModel:
-      HelperBoxViewModel(backgroundColor: Colors.blueAccent),
+          HelperBoxViewModel(backgroundColor: Colors.blueAccent),
       titleLabel: HelperTextViewModel(
         text: 'A simple test',
+        fontSize: 60.0,
+        fontColor: Colors.white,
+      ),
+      descriptionLabel: HelperTextViewModel(
+        text: 'A description test',
         fontSize: 60.0,
         fontColor: Colors.white,
       ),
@@ -55,80 +61,82 @@ void main() {
       await tester.pump(Duration(milliseconds: 700));
 
       final presenterFinder =
-      find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
+          find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
       final page = presenterFinder.evaluate().first.widget
-      as PresenterInherited<UserFullScreenHelperPresenter,
-        UserFullScreenHelperModel>;
+          as PresenterInherited<UserFullScreenHelperPresenter,
+              UserFullScreenHelperModel>;
       presenter = page.presenter;
     }
 
     testWidgets('should crash when no box was provided',
         (WidgetTester tester) async {
-        bool hasThrow = false;
-        try {
-          UserFullScreenHelperPage helperWidget = UserFullScreenHelperPage(); // ignore: missing_required_param
-          var app = new MediaQuery(
+      bool hasThrow = false;
+      try {
+        UserFullScreenHelperPage helperWidget =
+            UserFullScreenHelperPage(); // ignore: missing_required_param
+        var app = new MediaQuery(
             data: MediaQueryData(), child: MaterialApp(home: helperWidget));
-          await tester.pumpWidget(app);
-        } catch (e) {
-          hasThrow = true;
-          expect(e.toString().contains("'helperBoxViewModel != null': is not true"),
+        await tester.pumpWidget(app);
+      } catch (e) {
+        hasThrow = true;
+        expect(
+            e.toString().contains("'helperBoxViewModel != null': is not true"),
             isTrue);
-        }
-        expect(hasThrow, isTrue);
-      });
+      }
+      expect(hasThrow, isTrue);
+    });
 
     testWidgets('should crash when no title label was provided',
         (WidgetTester tester) async {
-        bool hasThrow = false;
-        try {
-          // ignore: missing_required_param
-          UserFullScreenHelperPage helperWidget = UserFullScreenHelperPage(
-            helperBoxViewModel: HelperBoxViewModel(
-              backgroundColor: Colors.black,
-            ),
-            positivLabel: HelperButtonViewModel(
-              text: 'test',
-              fontColor: Colors.white,
-              fontSize: 23.0,
-            ),
-            negativLabel: HelperButtonViewModel(
-              text: 'test',
-              fontColor: Colors.white,
-              fontSize: 23.0,
-            ),
-            onNegativButtonTap: () {},
-            onPositivButtonTap: () {},
-          );
-          var app = new MediaQuery(
+      bool hasThrow = false;
+      try {
+        // ignore: missing_required_param
+        UserFullScreenHelperPage helperWidget = UserFullScreenHelperPage(
+          helperBoxViewModel: HelperBoxViewModel(
+            backgroundColor: Colors.black,
+          ),
+          positivLabel: HelperButtonViewModel(
+            text: 'test',
+            fontColor: Colors.white,
+            fontSize: 23.0,
+          ),
+          negativLabel: HelperButtonViewModel(
+            text: 'test',
+            fontColor: Colors.white,
+            fontSize: 23.0,
+          ),
+          onNegativButtonTap: () {},
+          onPositivButtonTap: () {},
+        );
+        var app = new MediaQuery(
             data: MediaQueryData(), child: MaterialApp(home: helperWidget));
-          await tester.pumpWidget(app);
-          await tester.pumpAndSettle(Duration(seconds: 1));
-        } catch (e) {
-          hasThrow = true;
-        }
-        expect(hasThrow, isTrue);
-      });
+        await tester.pumpWidget(app);
+        await tester.pumpAndSettle(Duration(seconds: 1));
+      } catch (e) {
+        hasThrow = true;
+      }
+      expect(hasThrow, isTrue);
+    });
 
     testWidgets('should have valid UI', (WidgetTester tester) async {
       await _beforeEach(tester);
 
       expect(
-        find.byKey(ValueKey('pal_UserFullScreenHelperPage')), findsOneWidget);
+          find.byKey(ValueKey('pal_UserFullScreenHelperPage')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Media')),
-        findsOneWidget);
+          findsOneWidget);
       expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title')),
-        findsOneWidget);
+          findsOneWidget);
       expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback')),
-        findsOneWidget);
+          findsOneWidget);
       expect(
-        find.byKey(
-          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')),
-        findsOneWidget);
+          find.byKey(
+              ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')),
+          findsOneWidget);
       expect(
-        find.byKey(
-          ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton')),
-        findsOneWidget);
+          find.byKey(
+              ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton')),
+          findsOneWidget);
     });
 
     testWidgets('should have valid data', (WidgetTester tester) async {
@@ -143,7 +151,7 @@ void main() {
       await _beforeEach(tester);
       await tester.pump(Duration(milliseconds: 1000));
       final positivButton = find.byKey(
-        ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
       await tester.tap(positivButton);
       await tester.pump(Duration(milliseconds: 100));
       await tester.pump(Duration(milliseconds: 200));
@@ -155,7 +163,7 @@ void main() {
       await _beforeEach(tester);
       await tester.pump(Duration(milliseconds: 1000));
       final negativButton = find.byKey(
-        ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'));
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'));
       await tester.tap(negativButton);
       await tester.pump(Duration(milliseconds: 100));
       await tester.pump(Duration(milliseconds: 200));
@@ -164,4 +172,3 @@ void main() {
     });
   });
 }
-

@@ -66,7 +66,12 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
                       ? 'Please enter valid color'
                       : null,
                   onValueChanged: (String newValue) {
-                    Color newColor = HexColor.fromHex(newValue);
+                    Color newColor;
+                    try {
+                      newColor = HexColor.fromHex(newValue);
+                    } catch (e) {
+                      
+                    }
 
                     if (newColor != null) {
                       setState(() {

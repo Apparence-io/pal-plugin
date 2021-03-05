@@ -10,7 +10,6 @@ import 'package:pal/src/services/editor/versions/version_editor_service.dart';
 import 'group_details.dart';
 import 'group_details_model.dart';
 
-// TODO : Send Server requests
 class GroupDetailsPresenter
     extends Presenter<GroupDetailsPageModel, GroupDetailsView> {
   final EditorHelperGroupService groupService;
@@ -188,10 +187,10 @@ class GroupDetailsPresenter
     this.viewInterface.previewHelper(id);
   }
 
-  void deleteHelper(String id) {
+  Future deleteHelper(String id) {
     this.viewModel.loading = true;
     this.refreshView();
-    this.helperService.deleteHelper(id).then((done) {
+    return this.helperService.deleteHelper(id).then((done) {
       this.viewModel.helpers.value = this
           .viewModel
           .helpers
@@ -204,6 +203,7 @@ class GroupDetailsPresenter
       this.viewModel.loading = false;
       this.refreshView();
       this.viewInterface.showError();
+      throw 'Error deleting helper';
     });
   }
 

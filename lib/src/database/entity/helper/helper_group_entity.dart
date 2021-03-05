@@ -2,8 +2,6 @@
 import 'package:hive/hive.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
-import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 import '../page_entity.dart';
 import 'helper_trigger_type.dart';

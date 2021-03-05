@@ -103,9 +103,11 @@ class HelperEntity with Comparable<HelperEntity> {
 
   @override
   int compareTo(HelperEntity other) {
-    return other.priority < this.priority
-        ? 1
-        : -1;
+    return other != null && this != null
+        ? other.priority < this.priority
+            ? 1
+            : -1
+        : 0;
   }
 
   @override

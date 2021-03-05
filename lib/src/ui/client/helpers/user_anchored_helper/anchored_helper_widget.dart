@@ -335,8 +335,6 @@ class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
 
   final Animation<double> _stroke1Animation, _stroke2Animation;
 
-  Animation<double> get _progress => this.listenable;
-
   AnimatedAnchoredFullscreenCircle(
     {@required this.currentPos,
       @required this.padding,

@@ -53,7 +53,7 @@ void main() {
     });
 
     SchemaEntity _mockSchema(int schemaVersion) {
-      List<HelperEntity> remoteHelperList = new List();
+      List<HelperEntity> remoteHelperList = [];
       for(var i = 0; i < 10; i++) {
         remoteHelperList.add(HelperEntity(id: i.toString()));
       }

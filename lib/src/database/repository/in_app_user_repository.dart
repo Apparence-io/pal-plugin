@@ -17,11 +17,13 @@ class InAppUserRepository extends BaseHttpRepository {
               body: InAppUserEntityAdapter().toJson(inAppUser))
           .catchError(
         (err) {
-          print(err);
+          return null;
         },
       );
       return InAppUserEntityAdapter().parse(response.body);
-    } catch (e) {}
+    } catch (e) {
+      throw InternalHttpError('ERROR WHILE CREATING InAppUser');
+    }
   }
 
   Future<InAppUserEntity> update(final InAppUserEntity inAppUser) async {

@@ -13,7 +13,8 @@ import 'helpers/user_anchored_helper/anchored_helper_widget.dart';
 
 class HelperFactory {
   static Widget build(final HelperEntity helper,
-      {final Function(bool positiveFeedBack) onTrigger, final Function onError}) {
+      {final Function(bool positiveFeedBack) onTrigger,
+      final Function onError}) {
     switch (helper.type) {
       case HelperType.HELPER_FULL_SCREEN:
         return _createHelperFullScreen(helper, onTrigger);
@@ -34,6 +35,10 @@ class HelperFactory {
     return UserFullScreenHelperPage(
       titleLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
+        helper.helperTexts,
+      ),
+      descriptionLabel: HelperSharedFactory.parseTextLabel(
+        FullscreenHelperKeys.DESCRIPTION_KEY,
         helper.helperTexts,
       ),
       headerImageViewModel: HelperSharedFactory.parseImageUrl(
@@ -135,7 +140,8 @@ class HelperFactory {
     );
   }
 
-  static Widget _createUpdateHelper(final HelperEntity helper, final Function onTrigger) {
+  static Widget _createUpdateHelper(
+      final HelperEntity helper, final Function onTrigger) {
     return UserUpdateHelperPage(
       onPositivButtonTap: () {
         onTrigger(true);
@@ -163,28 +169,29 @@ class HelperFactory {
     );
   }
 
-  static Widget _createAnchoredHelper(final HelperEntity helper, final Function onTrigger, final Function onError) {
+  static Widget _createAnchoredHelper(final HelperEntity helper,
+      final Function onTrigger, final Function onError) {
     return AnchoredHelper.fromEntity(
-      titleLabel:  HelperSharedFactory.parseTextLabel(
+      titleLabel: HelperSharedFactory.parseTextLabel(
         AnchoredscreenHelperKeys.TITLE_KEY,
         helper.helperTexts,
       ),
-      descriptionLabel:  HelperSharedFactory.parseTextLabel(
+      descriptionLabel: HelperSharedFactory.parseTextLabel(
         AnchoredscreenHelperKeys.DESCRIPTION_KEY,
         helper.helperTexts,
       ),
-      // TODO: Create ID for box
       helperBoxViewModel: HelperBoxViewModel(
-        backgroundColor: HexColor.fromHex(helper.helperBoxes.first.backgroundColor),
+        backgroundColor:
+            HexColor.fromHex(helper.helperBoxes.first.backgroundColor),
         id: helper.helperBoxes.first.id,
       ),
       // TODO: Create on back correct way to save id
       anchorKey: helper.helperBoxes.first.key,
-      positivButtonLabel:  HelperSharedFactory.parseButtonLabel(
+      positivButtonLabel: HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.POSITIV_KEY,
         helper.helperTexts,
       ),
-      negativButtonLabel:  HelperSharedFactory.parseButtonLabel(
+      negativButtonLabel: HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts,
       ),

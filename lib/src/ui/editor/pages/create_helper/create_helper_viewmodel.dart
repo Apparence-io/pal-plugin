@@ -63,7 +63,7 @@ class CreateHelperModel extends MVVMModel {
     this.helperGroups.forEach((element) => element.selected = false);
     this.selectedHelperGroup = this
         .helperGroups
-        .firstWhere((element) => element == select)
+        .firstWhere((element) => element.title == select.title)
           ..selected = true;
   }
 }

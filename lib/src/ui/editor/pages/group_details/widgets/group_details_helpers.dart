@@ -4,7 +4,7 @@ import 'package:pal/src/ui/editor/pages/group_details/group_details_model.dart';
 
 typedef void OnEdit(String id, HelperType type);
 typedef void OnPreview(String id);
-typedef void OnDelete(String id);
+typedef Future OnDelete(String id);
 
 class GroupDetailsHelpersList extends StatelessWidget {
   // CORE ATTRIBUTES
@@ -72,9 +72,9 @@ const double containerHeight = 85;
 const double animationLowerBound = -actionWidth * 3;
 
 class GroupDetailsHelperTile extends StatefulWidget {
-  final Function onPreview;
-  final Function onEdit;
-  final Function onDelete;
+  final OnPreview onPreview;
+  final OnEdit onEdit;
+  final OnDelete onDelete;
 
   final HelperModel model;
 
@@ -99,10 +99,14 @@ class GroupDetailsHelperTile extends StatefulWidget {
 class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
     with SingleTickerProviderStateMixin {
   AnimationController controller;
+  bool deleting;
 
   @override
   void initState() {
     super.initState();
+
+    this.deleting = false;
+
     this.controller = AnimationController(
         vsync: this, value: 0, lowerBound: animationLowerBound, upperBound: 0);
 
@@ -140,7 +144,13 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
               color: Color(0xFFEB5160),
               icon: Icons.delete,
               text: 'Delete',
-              onTap: () => widget.onDelete(widget.model.helperId),
+              onTap: () => this.setState(() {
+                widget.onDelete(widget.model.helperId).catchError((onError) {
+                  this.setState(() {
+                    this.deleting = false;
+                  });
+                });
+              }),
             ),
           ],
         ),

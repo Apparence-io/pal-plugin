@@ -99,6 +99,10 @@ class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
         FullscreenHelperKeys.TITLE_KEY,
         helperEntity?.helperTexts,
       ),
+      descriptionLabel: HelperSharedFactory.parseTextLabel(
+        FullscreenHelperKeys.DESCRIPTION_KEY,
+        helperEntity?.helperTexts,
+      ),
       headerImageViewModel: HelperSharedFactory.parseImageUrl(
         FullscreenHelperKeys.IMAGE_KEY,
         helperEntity?.helperImages,

@@ -18,6 +18,8 @@ abstract class PageGroupsListView {
   Future<bool> navigateCreateHelper(final String pageId);
 
   void changeBubbleState(bool state);
+
+  Future openAppSettingsPage();
 }
 
 class PageGroupsListPage extends StatelessWidget {
@@ -46,13 +48,14 @@ class PageGroupsListPage extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: _buildHeader(context.buildContext),
+                  child: _buildHeader(context.buildContext, presenter),
                 ),
                 SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text("List of available helper groups on this page",
-                      style: _descrTextStyle(PalTheme.of(context.buildContext))),
+                      style:
+                          _descrTextStyle(PalTheme.of(context.buildContext))),
                 ),
                 SizedBox(height: 12),
                 Padding(
@@ -63,13 +66,13 @@ class PageGroupsListPage extends StatelessWidget {
                 ),
                 model.isLoading ?? true
                     ? Expanded(
-                        child:
-                            Center(child: CircularProgressIndicator(value: null)))
+                        child: Center(
+                            child: CircularProgressIndicator(value: null)))
                     : _buildItemList(presenter, model),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: _buildCloseButton(
-                      PalTheme.of(context.buildContext), presenter.onClickClose),
+                  child: _buildCloseButton(PalTheme.of(context.buildContext),
+                      presenter.onClickClose),
                 )
               ],
             ),
@@ -79,7 +82,9 @@ class PageGroupsListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) => Row(
+  Widget _buildHeader(
+          BuildContext context, PageGroupsListPresenter presenter) =>
+      Row(
         children: [
           Image.asset(
             'packages/pal/assets/images/logo.png',
@@ -103,7 +108,7 @@ class PageGroupsListPage extends StatelessWidget {
           _buildCircleButton(
             'pal_HelpersListModal_Settings',
             Icon(Icons.settings, size: 24),
-            null,
+            presenter.onClickSettings,
           ),
         ],
       );
@@ -245,10 +250,17 @@ class _PageGroupsListView implements PageGroupsListView {
 
   @override
   void changeBubbleState(bool state) {
-    EditorInjector.of(context)
-        .palEditModeStateService
-        .showBubble(EditorInjector.of(context)
-        .hostedAppNavigatorKey.currentContext, state);
+    EditorInjector.of(context).palEditModeStateService.showBubble(
+        EditorInjector.of(context).hostedAppNavigatorKey.currentContext, state);
     Navigator.pop(context);
+  }
+
+  @override
+  Future openAppSettingsPage() {
+    HapticFeedback.selectionClick();
+    return Navigator.pushNamed(
+      context,
+      '/settings',
+    );
   }
 }

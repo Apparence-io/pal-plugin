@@ -27,7 +27,7 @@ void main() {
     testWidgets('GET, returning code 200 => sends request with token on correct url', (WidgetTester tester) async {
       await tester.runAsync(() async {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
-            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => new List())), 200))
+            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.get('test');
         expect(true, res != null);
@@ -42,7 +42,7 @@ void main() {
     testWidgets('POST, returning code 200 => sends request with token on correct url', (WidgetTester tester) async {
       await tester.runAsync(() async {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
-            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => new List())), 200))
+            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.post('test');
         expect(true, res != null);
@@ -57,7 +57,7 @@ void main() {
     testWidgets('PUT, returning code 200 => sends request with token on correct url', (WidgetTester tester) async {
       await tester.runAsync(() async {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
-            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => new List())), 200))
+            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.put('test');
         expect(true, res != null);
@@ -72,7 +72,7 @@ void main() {
     testWidgets('DELETE, returning code 200 => sends request with token on correct url', (WidgetTester tester) async {
       await tester.runAsync(() async {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
-            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => new List())), 200))
+            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.delete('test');
         expect(true, res != null);
@@ -87,7 +87,7 @@ void main() {
     testWidgets('http 500 should throw InternalHttpError', (WidgetTester tester) async {
       await tester.runAsync(() async {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
-            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => new List())), 500))
+            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 500))
         );
         try {
           await httpClient.get('test');
@@ -101,7 +101,7 @@ void main() {
     testWidgets('http 400 should throw UnreacheableHttpError', (WidgetTester tester) async {
       await tester.runAsync(() async {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
-            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => new List())), 400))
+            () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => [])), 400))
         );
         try {
           await httpClient.get('test');

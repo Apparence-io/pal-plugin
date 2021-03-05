@@ -52,7 +52,7 @@ class PageGroupsListPresenter
         if (viewModel.groups.isNotEmpty) viewModel.groups.clear();
         groupsEntities.forEach((element) {
           if (!viewModel.groups.containsKey(element.triggerType)) {
-            viewModel.groups.putIfAbsent(element.triggerType, () => List());
+            viewModel.groups.putIfAbsent(element.triggerType, () => []);
           }
           viewModel.groups[element.triggerType].add(GroupItemViewModel(
               element.name,
@@ -82,4 +82,8 @@ class PageGroupsListPresenter
 
   String _formatVersion(String minVersion, String maxVersion) =>
       "$minVersion - ${maxVersion ?? 'last'}";
+
+  Future onClickSettings() {
+    return this.viewInterface.openAppSettingsPage();
+  }
 }

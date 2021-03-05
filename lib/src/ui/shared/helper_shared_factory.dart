@@ -14,7 +14,7 @@ class SimpleHelperKeys {
 
 class FullscreenHelperKeys {
   static const TITLE_KEY = "TITLE_KEY"; // mandatory
-  static const DESCRIPTION_KEY = "DESCRIPTION_KEY"; //TODO for next release
+  static const DESCRIPTION_KEY = "DESCRIPTION_KEY";
   static const POSITIV_KEY = "POSITIV_KEY"; // not mandatory
   static const NEGATIV_KEY = "NEGATIV_KEY"; // not mandatory
   static const IMAGE_KEY = "IMAGE_KEY"; // not mandatory
@@ -80,7 +80,7 @@ class HelperSharedFactory {
     final String key,
     final List<HelperImageEntity> helperImages,
   ) {
-    if(helperImages == null || helperImages.length == 0) {
+    if (helperImages == null || helperImages.length == 0) {
       return null;
     }
     for (HelperImageEntity helperImage in helperImages) {
@@ -91,6 +91,7 @@ class HelperSharedFactory {
         );
       }
     }
+    return null;
   }
 
   static HelperBoxViewModel parseBoxBackground(
@@ -149,9 +150,7 @@ class HelperSharedFactory {
 
   // ************ HELPER PREVIEW UTILS
 
-  static HelperTextViewModel parseTextNotifier(
-    EditableTextFormData notifier
-  ) {
+  static HelperTextViewModel parseTextNotifier(EditableTextFormData notifier) {
     return HelperTextViewModel(
       text: notifier.text,
       fontColor: notifier.fontColor,
@@ -162,8 +161,7 @@ class HelperSharedFactory {
   }
 
   static HelperButtonViewModel parseButtonNotifier(
-    EditableButtonFormData notifier
-  ) {
+      EditableButtonFormData notifier) {
     return HelperButtonViewModel(
       text: notifier.text,
       fontColor: notifier.fontColor,
@@ -173,20 +171,16 @@ class HelperSharedFactory {
     );
   }
 
-  static HelperBoxViewModel parseBoxNotifier(
-    EditableBoxFormData notifier
-  ){
+  static HelperBoxViewModel parseBoxNotifier(EditableBoxFormData notifier) {
     return HelperBoxViewModel(
       backgroundColor: notifier.backgroundColor,
     );
   }
 
   static HelperImageViewModel parseMediaNotifier(
-    EditableMediaFormData notifier
-  ){
+      EditableMediaFormData notifier) {
     return HelperImageViewModel(
       url: notifier.url,
     );
   }
-
 }

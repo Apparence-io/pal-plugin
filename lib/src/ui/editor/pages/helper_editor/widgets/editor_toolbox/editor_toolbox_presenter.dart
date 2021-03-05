@@ -108,7 +108,6 @@ class EditorToolboxPresenter {
 
   void openPicker(ToolBarActionButton toolBarActionButton) async {
     switch (toolBarActionButton) {
-      // TODO: Séparer les couleurs de Font/Background/Border
       case ToolBarActionButton.color:
         EditableTextData editableFormField =
             this.currentEditableItemNotifier?.value;

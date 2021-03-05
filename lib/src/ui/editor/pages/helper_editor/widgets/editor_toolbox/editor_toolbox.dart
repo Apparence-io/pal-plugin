@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
-import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_action_bar/editor_action_bar.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editor_save_floating_button.dart';

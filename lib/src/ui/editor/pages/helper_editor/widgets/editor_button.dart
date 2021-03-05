@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
-// TODO: IS IT USEFULL ?!
-
 class EditorButton extends StatelessWidget {
   final Function onPressed;
   final double size;

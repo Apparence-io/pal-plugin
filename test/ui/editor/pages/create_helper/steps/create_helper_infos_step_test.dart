@@ -6,7 +6,6 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step.dart';
-import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/create_helper_infos_step_model.dart';
 
 class _CreateHelperPresenterMock extends Mock implements CreateHelperPresenter {
 }

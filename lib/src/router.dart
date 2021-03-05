@@ -3,14 +3,10 @@ import 'package:pal/src/ui/editor/pages/app_settings/app_settings.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
 import 'package:pal/src/ui/editor/pages/group_details/group_details.dart';
 import 'package:pal/src/ui/editor/pages/group_details/group_details_model.dart';
-// import 'package:pal/src/ui/editor/pages/helper_details/helper_details_view.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
-import 'package:pal/src/ui/editor/pages/page_groups/page_group_list_model.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
-
-import 'database/entity/helper/helper_group_entity.dart';
 import 'ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 
 GlobalKey<NavigatorState> palNavigatorGlobalKey =

@@ -3,9 +3,11 @@ class AppVersion {
   final int minor;
   final int patch;
 
-  AppVersion._(this.major, this.minor, this.patch);
+  AppVersion._(this.major, this.minor, this.patch, );
 
   factory AppVersion.fromString(String version) {
+    if(version == null || version == "latest") 
+      return new AppVersion._(-1, -1, -1);
     var parsed = version.split(".");
     if(parsed.length > 3 || parsed.length < 3)
       throw "Version should be in the form of MAJOR.MINOR.patch ";
@@ -16,11 +18,13 @@ class AppVersion {
     );
   }
 
-  isLowerOrEqual(AppVersion other) => major < other.major 
-      || major == other.major && minor <= other.minor; 
+  bool get isInfinite => major == -1 && minor == -1 && patch == -1;
 
-  isLower(AppVersion other) => major < other.major 
-      || major == other.major && minor < other.minor;     
+  isLowerOrEqual(AppVersion other) => (other.isInfinite) || 
+    (major < other.major || (major == other.major && minor <= other.minor)); // WHAT HAPPEN IF version is null ; latest ? 
+
+  isLower(AppVersion other) => (other.isInfinite) || 
+    (major < other.major || major == other.major && minor < other.minor);     
 
   bool isEqual(AppVersion other) 
     => major == other.major && minor == other.minor;

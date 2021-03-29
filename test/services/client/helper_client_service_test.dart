@@ -77,6 +77,10 @@ void main() {
           HelperGroupEntity(id: "g9", triggerType: HelperTriggerType.ON_NEW_UPDATE, priority: 1, 
             minVersion: "0.1.0", maxVersion: "2.0.0",
             page: PageEntity(id: 'p5', route: 'route5'), helpers: [HelperEntity(id: "5")]),  
+          // route 6
+          HelperGroupEntity(id: "g10", triggerType: HelperTriggerType.ON_NEW_UPDATE, priority: 1, 
+            minVersion: "0.1.0", maxVersion: null,
+            page: PageEntity(id: 'p6', route: 'route6'), helpers: [HelperEntity(id: "5")]),    
         ],
         schemaVersion: 1
       );
@@ -139,6 +143,15 @@ void main() {
          => returns null, user is new do not show new update message ''', () async {
       var nextHelperGroup = await helperClientService.getPageNextHelper('route5', inAppUserId, AppVersion.fromString('0.1.0'));
       expect(nextHelperGroup, isNull);
+    });
+
+    test('''current page = route6, 
+          first ON_NEW_UPDATE id g10 min version = 0.1.0 max is null
+          user app version = 0.5.0
+         => returns group g10''', () async {
+      var nextHelperGroup = await helperClientService.getPageNextHelper('route6', inAppUserId, AppVersion.fromString('0.5.0'));
+      expect(nextHelperGroup, isNotNull);
+      expect(nextHelperGroup.id, equals("g10"));
     });
 
     test('route not exists, return null', () async {

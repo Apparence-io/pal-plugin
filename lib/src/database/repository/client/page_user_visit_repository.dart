@@ -19,7 +19,10 @@ abstract class HelperGroupUserVisitRepository {
   Future<void> saveAll(List<HelperGroupUserVisitEntity> visits);
 
   Future<void> add(HelperGroupUserVisitEntity visit, {
-    bool isLast, bool feedback, String inAppUserId, HelperEntity helper,
+    bool isLast, 
+    bool feedback, 
+    String inAppUserId, 
+    HelperEntity helper,
     String languageCode
   });
 
@@ -91,7 +94,11 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
 
   @override
   Future<void> add(HelperGroupUserVisitEntity visit, {
-    bool isLast, bool feedback, String inAppUserId, HelperEntity helper, String languageCode})
-    => _hiveBoxOpener().then((res) => res.add(visit));
+    bool isLast, 
+    bool feedback, 
+    String inAppUserId, 
+    HelperEntity helper, 
+    String languageCode,  
+  }) => _hiveBoxOpener().then((res) => res.add(visit));
 
 }

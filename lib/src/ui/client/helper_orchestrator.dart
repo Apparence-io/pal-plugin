@@ -4,6 +4,7 @@ import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'package:pal/src/pal_navigator_observer.dart';
 import 'package:pal/src/services/client/helper_client_service.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
+import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helper_factory.dart';
 
@@ -29,6 +30,8 @@ class HelperOrchestrator {
 
   final HelpersSynchronizer helpersSynchronizer;
 
+  final PackageVersionReader packageVersionReader;
+
   OverlayEntry overlay;
 
   bool hasSync;
@@ -39,9 +42,17 @@ class HelperOrchestrator {
     HelperClientService helperClientService,
     InAppUserClientService inAppUserClientService,
     HelpersSynchronizer helpersSynchronizer,
+    PackageVersionReader packageVersionReader,
   }) {
     if (_instance == null) {
-      _instance = HelperOrchestrator._(routeObserver, helperClientService, inAppUserClientService, navigatorKey, helpersSynchronizer);
+      _instance = HelperOrchestrator._(
+        routeObserver, 
+        helperClientService, 
+        inAppUserClientService, 
+        navigatorKey, 
+        helpersSynchronizer,
+        packageVersionReader
+      );
     }
     return _instance;
   }
@@ -53,15 +64,29 @@ class HelperOrchestrator {
     HelperClientService helperClientService,
     InAppUserClientService inAppUserClientService,
     HelpersSynchronizer helpersSynchronizer,
+    @required PackageVersionReader packageVersionReader,
   }) {
-    _instance = HelperOrchestrator._(routeObserver, helperClientService, inAppUserClientService, navigatorKey, helpersSynchronizer);
+    _instance = HelperOrchestrator._(
+      routeObserver, 
+      helperClientService, 
+      inAppUserClientService, 
+      navigatorKey, 
+      helpersSynchronizer,
+      packageVersionReader
+    );
     return _instance;
   }
 
-  HelperOrchestrator._(this.routeObserver, this.helperClientService, this.inAppUserClientService, this.navigatorKey, this.helpersSynchronizer)
-      : assert(routeObserver != null),
-        assert(helperClientService != null),
-        assert(inAppUserClientService != null) {
+  HelperOrchestrator._(
+    this.routeObserver, 
+    this.helperClientService, 
+    this.inAppUserClientService, 
+    this.navigatorKey, 
+    this.helpersSynchronizer, 
+    this.packageVersionReader
+  ): assert(routeObserver != null),
+     assert(helperClientService != null),
+     assert(inAppUserClientService != null) {
     this.hasSync = false;
     this.routeObserver.routeSettings.listen((RouteSettings newRoute) async {
       if (newRoute == null || newRoute.name == null) {
@@ -83,7 +108,12 @@ class HelperOrchestrator {
         await this.helpersSynchronizer.sync(inAppUser.id, languageCode: lang);
         this.hasSync = true;
       }
-      final helperGroupToShow = await helperClientService.getPageNextHelper(route, inAppUser.id);
+      var test = packageVersionReader.appVersion;
+      final helperGroupToShow = await helperClientService.getPageNextHelper(
+        route, 
+        inAppUser.id, 
+        packageVersionReader.appVersion
+      );
       if (helperGroupToShow != null && helperGroupToShow.helpers.isNotEmpty) {
         showHelper(
           helperGroupToShow.page.id, 
@@ -143,12 +173,14 @@ class HelperOrchestrator {
     int helperIndex,
   ) {
     return (positivAnswer) async {
+      final appversion = packageVersionReader.version;
       await helperClientService.onHelperTrigger(
         pageId, 
         helperGroupEntity, 
         helperGroupEntity.helpers[helperIndex], 
         userId, 
-        positivAnswer);
+        positivAnswer,
+        appversion);
       this.popHelper();
       if(positivAnswer && helperIndex < helperGroupEntity.helpers.length - 1 ) {
         showHelper(pageId, userId, helperGroupEntity, helperIndex + 1);

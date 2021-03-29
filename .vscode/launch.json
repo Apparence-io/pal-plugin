@@ -5,13 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Flutter",
+      "name": "staging",
       "program": "example/lib/main.dart",
       "request": "launch",
       "type": "dart",
       "args": [
         "--dart-define",
-        "SERVER_URL=http://217.182.88.6:8050"
+        "SERVER_URL=https://staging.pal-plugin.tech/api"
+      ]
+    },
+    {
+      "name": "production",
+      "program": "example/lib/main.dart",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define",
+        "SERVER_URL=https://app.pal-plugin.tech/api"
       ]
     },
     // {

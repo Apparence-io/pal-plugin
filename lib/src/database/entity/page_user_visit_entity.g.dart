@@ -20,17 +20,23 @@ class HelperGroupUserVisitEntityAdapter
     return HelperGroupUserVisitEntity(
       pageId: fields[0] as String,
       helperGroupId: fields[1] as String,
+      visitDate: fields[2] as DateTime,
+      visitVersion: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, HelperGroupUserVisitEntity obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.pageId)
       ..writeByte(1)
-      ..write(obj.helperGroupId);
+      ..write(obj.helperGroupId)
+      ..writeByte(2)
+      ..write(obj.visitDate)
+      ..writeByte(3)
+      ..write(obj.visitVersion);
   }
 
   @override

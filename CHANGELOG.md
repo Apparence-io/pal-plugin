@@ -1,3 +1,8 @@
+## [1.0.0] - 2021/01/04
+- (NEW) create tour guide, chain helpers 
+- (NEW) show tour guide anywhere
+- (NEW) editor toolbar reworked
+
 ## [0.1.1] - 2021/20/01
 - You can use now a builder method to defer your app building within (Pal is now usable with GetX for example)
 - introducing PalEvents to fire new events within your code catchable by Pal

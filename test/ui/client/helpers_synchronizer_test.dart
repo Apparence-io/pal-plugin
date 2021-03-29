@@ -102,11 +102,11 @@ void main() {
       var currentSchema = _mockSchema(1);
       const appVersion = "1.0.0";
       var visitedUserGroupsJson = '''[
-          {"pageId":"390289032", "helperGroupId": "AN1782187"},
-          {"pageId":"390289032", "helperGroupId": "AN1782186"},
-          {"pageId":"390289032", "helperGroupId": "AN1782185"},
-          {"pageId":"390289032", "helperGroupId": "AN1782184"},
-          {"pageId":"390289032", "helperGroupId": "AN1782183"}
+          {"pageId":"390289032", "helperGroupId": "AN1782187", "time": "2020-10-01T06:00:00Z", "version":"1.0.0"},
+          {"pageId":"390289032", "helperGroupId": "AN1782186", "time": "2020-10-01T06:00:00Z", "version":"1.0.0"},
+          {"pageId":"390289032", "helperGroupId": "AN1782185", "time": "2020-10-01T06:00:00Z", "version":"1.0.0"},
+          {"pageId":"390289032", "helperGroupId": "AN1782184", "time": "2020-10-01T06:00:00Z", "version":"1.0.0"},
+          {"pageId":"390289032", "helperGroupId": "AN1782183", "time": "2020-10-01T06:00:00Z", "version":"1.0.0"}
         ]''';
       when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
       when(packageVersionReader.version).thenReturn(appVersion);

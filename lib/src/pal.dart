@@ -16,7 +16,7 @@ import 'router.dart';
 
 // our production server address
 const String PAL_SERVER_URL = const String.fromEnvironment("SERVER_URL",
-    defaultValue: "http://217.182.88.6:9040");
+    defaultValue: "https://app.pal-plugin.tech/api");
 
 /// defer your app building to (used for GetX or other plugins)
 typedef ChildAppBuilder = Widget Function(BuildContext context);
@@ -158,11 +158,10 @@ class Pal extends StatelessWidget {
       child: Builder(builder: (context) {
         HelperOrchestrator.getInstance(
             helperClientService: UserInjector.of(context).helperService,
-            inAppUserClientService:
-                UserInjector.of(context).inAppUserClientService,
-            helpersSynchronizer:
-                UserInjector.of(context).helpersSynchronizerService,
+            inAppUserClientService: UserInjector.of(context).inAppUserClientService,
+            helpersSynchronizer: UserInjector.of(context).helpersSynchronizerService,
             routeObserver: navigatorObserver,
+            packageVersionReader: UserInjector.of(context).packageVersionReader,
             navigatorKey: navigatorKey);
         return Overlayed(child: childApp);
       }),

@@ -19,26 +19,38 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
     return HelperGroupEntity(
       id: fields[0] as String,
       priority: fields[1] as int,
-      helpers: (fields[3] as List)?.cast<HelperEntity>(),
-      page: fields[4] as PageEntity,
-      triggerType: fields[2] as HelperTriggerType,
+      helpers: (fields[2] as List)?.cast<HelperEntity>(),
+      page: fields[3] as PageEntity,
+      name: fields[4] as String,
+      triggerType: fields[5] as HelperTriggerType,
+      creationDate: fields[6] as DateTime,
+      minVersion: fields[7] as String,
+      maxVersion: fields[8] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, HelperGroupEntity obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.priority)
       ..writeByte(2)
-      ..write(obj.triggerType)
-      ..writeByte(3)
       ..write(obj.helpers)
+      ..writeByte(3)
+      ..write(obj.page)
       ..writeByte(4)
-      ..write(obj.page);
+      ..write(obj.name)
+      ..writeByte(5)
+      ..write(obj.triggerType)
+      ..writeByte(6)
+      ..write(obj.creationDate)
+      ..writeByte(7)
+      ..write(obj.minVersion)
+      ..writeByte(8)
+      ..write(obj.maxVersion);
   }
 
   @override

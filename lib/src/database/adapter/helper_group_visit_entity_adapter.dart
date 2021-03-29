@@ -8,6 +8,8 @@ class HelperGroupUserVisitEntityAdapter extends GenericEntityAdapter<HelperGroup
     return HelperGroupUserVisitEntity(
       helperGroupId: map["helperGroupId"],
       pageId: map["pageId"],
+      visitDate: DateTime.parse(map['time']).toLocal() ,
+      visitVersion: map["version"],
     );
   }
 }

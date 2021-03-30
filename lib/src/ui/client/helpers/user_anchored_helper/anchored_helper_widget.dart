@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
 import 'package:pal/src/services/finder/finder_service.dart';
-import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 
@@ -214,12 +213,22 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                               _buildAnimItem(
                                 opacityAnim: btnOpacityAnimation,
                                 sizeAnim: btnSizeAnimation,
-                                child: _buildNegativFeedback()),
+                                child: _buildEditableBordered(
+                                  widget.negativButtonLabel,
+                                  ValueKey('pal_AnchoredHelperNegativFeedbackLabel'),
+                                  ValueKey("negativeFeedback"),
+                                )
+                              ),
                               SizedBox(width: 16),
                               _buildAnimItem(
                                 opacityAnim: btnOpacityAnimation,
                                 sizeAnim: btnSizeAnimation,
-                                child: _buildPositivFeedback()),
+                                child: _buildEditableBordered(
+                                    widget.positivButtonLabel,
+                                    ValueKey('pal_AnchoredHelperPositivFeedbackLabel'),
+                                    ValueKey("positiveFeedback")
+                                )
+                              ),
                             ])
                         ],
                       ),
@@ -243,67 +252,54 @@ class _AnchoredHelperState extends State<AnchoredHelper>
     : Container();
 
   Widget _buildText(HelperTextViewModel text, Key key) => Text(
-        text.text,
-        key: key,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: text.fontSize,
-          fontWeight: text.fontWeight,
-          color: text.fontColor,
-        ).merge(
-          GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
-        ),
-      );
-
-  Widget _buildButton(HelperButtonViewModel text, Key key) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
-        child: Text(
-          text.text,
-          key: key,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: text.fontSize,
-            fontWeight: text.fontWeight,
-            color: text.fontColor,
-          ).merge(
-          GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
-        ),
-        ),
-      );
-
-  Widget _buildNegativFeedback() {
-    return RaisedButton(
-      key: ValueKey("negativeFeedback"),
-      color: PalTheme.of(context).colors.accent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+      text.text,
+      key: key,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: text.fontSize,
+        fontWeight: text.fontWeight,
+        color: text.fontColor,
+      ).merge(
+        GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
       ),
+    );
+
+  Widget _buildEditableBordered(HelperButtonViewModel model, Key textKey, Key buttonKey) {
+    final textStyle = TextStyle(
+        fontSize: model.fontSize,
+        fontWeight: model.fontWeight,
+        color: model?.fontColor ?? Colors.white,
+      ).merge(GoogleFonts.getFont(model?.fontFamily ?? 'Montserrat'));
+    final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
+      primary: model.fontColor ?? Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
+      minimumSize: Size(88, 36),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      textStyle: textStyle
+    ).copyWith(
+      side: MaterialStateProperty.resolveWith<BorderSide>(
+        (Set<MaterialState> states) => BorderSide(
+          color: model !=null && model.fontColor != null ? model.fontColor : Colors.white, 
+          width: 1,
+        ),
+      ),
+    );
+    return OutlinedButton(
+      key: buttonKey,
       onPressed: () async {
         HapticFeedback.selectionClick();
         await fadeAnimController.reverse();
         widget.onNegativButtonTap();
       },
-      child: _buildButton(widget.negativButtonLabel,
-          ValueKey('pal_AnchoredHelperNegativFeedbackLabel')),
-      // onTap: this.widget.onTrigger,
-    );
-  }
-
-  Widget _buildPositivFeedback() {
-    return RaisedButton(
-      key: ValueKey("positiveFeedback"),
-      color: PalTheme.of(context).colors.green,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
+      style: outlineButtonStyle,
+      child: Text(
+        model.text, 
+        key: textKey,
+        style: textStyle,
+        textAlign: TextAlign.center,
       ),
-      onPressed: () async {
-        HapticFeedback.selectionClick();
-        await fadeAnimController.reverse();
-        widget.onPositivButtonTap();
-      },
-      child: _buildButton(widget.positivButtonLabel,
-          ValueKey('pal_AnchoredHelperPositivFeedbackLabel')),
-      // onTap: this.widget.onTrigger,
     );
   }
 

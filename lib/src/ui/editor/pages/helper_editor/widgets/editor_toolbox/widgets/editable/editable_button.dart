@@ -10,39 +10,43 @@ class EditableButton extends StatelessWidget {
   final Function(EditableData) onTap;
   final bool isSelected;
   final Color backgroundColor;
-
+  final bool outline;
+  
   const EditableButton({
     Key key,
     @required this.data,
     this.onTap,
     this.isSelected = false,
-    @required this.backgroundColor,
+    this.backgroundColor,
+    this.outline = false,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final textStyle = TextStyle(
+  TextStyle googleCustomFont(String fontFamily) => 
+    (fontFamily != null && fontFamily.length > 0)
+        ? GoogleFonts.getFont(fontFamily)
+        : null;
+
+  TextStyle get textStyle => TextStyle(
       fontFamily: this.data?.fontFamily,
       fontWeight: FontWeightMapper.toFontWeight(this.data?.fontWeight),
       fontSize: this.data?.fontSize?.toDouble(),
       color: this.data?.text != null
           ? this.data?.fontColor
           : this.data?.fontColor?.withAlpha(120),
-    ).merge(
-      _googleCustomFont(this.data?.fontFamily),
-    );
-
-    Color _borderColor = this.backgroundColor.computeLuminance() > 0.5
+    ).merge(googleCustomFont(this.data?.fontFamily));
+  
+  Color get borderColor => this.backgroundColor.computeLuminance() > 0.5
         ? Colors.black
         : Colors.white;
 
-    return BouncingWidget(
+  @override
+  Widget build(BuildContext context) => BouncingWidget(
       onTap: () => this.onTap?.call(this.data),
       child: DottedBorder(
         dashPattern: [6, 3],
         color: this.isSelected
-            ? _borderColor.withAlpha(200)
-            : _borderColor.withAlpha(80),
+            ? borderColor.withAlpha(200)
+            : borderColor.withAlpha(80),
         strokeWidth: this.isSelected ? 3.0 : 1.0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -50,31 +54,47 @@ class EditableButton extends StatelessWidget {
             ignoring: true,
             child: SizedBox(
               width: double.infinity,
-              child: RaisedButton(
-                onPressed: () {},
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                color: this.data?.backgroundColor,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 13.0),
-                  child: Text(
-                    this.data?.text ?? 'Edit me!',
-                    style: textStyle,
-                    textAlign: TextAlign.center,
+              child: outline 
+                ? _buildEditableBordered(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Text(data?.text ?? 'Edit me!', style: textStyle, textAlign: TextAlign.center),
+                  ),
+                )
+                : _buildEditableBordered(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    child: Text(data?.text ?? 'Edit me!', style: textStyle, textAlign: TextAlign.center),
                   ),
                 ),
-              ),
             ),
           ),
         ),
       ),
     );
+
+  _buildEditableBordered({Widget child}) {
+    final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
+      primary: borderColor ?? Colors.white,
+      minimumSize: Size(88, 36),
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+      ),
+      textStyle: textStyle
+    ).copyWith(
+      side: MaterialStateProperty.resolveWith<BorderSide>(
+        (Set<MaterialState> states) => BorderSide(
+          color: borderColor ?? Colors.white, width: 1,
+        ),
+      ),
+    );
+    return OutlinedButton(
+      onPressed: () {},
+      style: outlineButtonStyle,
+      child: child,
+    );
   }
 
-  TextStyle _googleCustomFont(String fontFamily) {
-    return (fontFamily != null && fontFamily.length > 0)
-        ? GoogleFonts.getFont(fontFamily)
-        : null;
-  }
+  
 }

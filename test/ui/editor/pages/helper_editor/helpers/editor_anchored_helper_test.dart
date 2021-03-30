@@ -231,7 +231,7 @@ void main() {
       expect(find.byKey(ValueKey("EditorAnchoredFullscreenHelperPage")),
           findsOneWidget);
 
-      (tester.widget(find.byKey(ValueKey("positiveFeedback"))) as RaisedButton)
+      (tester.widget(find.byKey(ValueKey("positiveFeedback"))) as OutlinedButton)
           .onPressed();
 
       await tester.pump(Duration(milliseconds: 1000));
@@ -287,7 +287,7 @@ void main() {
       Text positivText = tester.widget(positivFinder);
       expect(positivText.data, equals('positiv edit'));
 
-      (tester.widget(find.byKey(ValueKey("negativeFeedback"))) as RaisedButton)
+      (tester.widget(find.byKey(ValueKey("negativeFeedback"))) as OutlinedButton)
           .onPressed();
       await tester.pump(Duration(milliseconds: 1000));
       await tester.pump(Duration(milliseconds: 2000));
@@ -608,7 +608,7 @@ void main() {
           Text("text2", key: ValueKey("text2")),
           Padding(
             padding: EdgeInsets.only(top: 32),
-            child: FlatButton(
+            child: TextButton(
               key: ValueKey("MFlatButton"),
               child: Text("tapme"),
               onPressed: () => print("impressed!"),
@@ -776,7 +776,8 @@ void main() {
       helperEntity.helperTexts.forEach((element) {
         dynamic textWidget = find.text(element.value).evaluate().first.widget;
         expect(textWidget, isNotNull);
-        expect((textWidget.style.color as Color).toHex(), element.fontColor);
+        var textColor = textWidget.style.color as Color;
+        expect(textColor.toHex(), element.fontColor);
         expect(textWidget.style.fontWeight,
             FontWeightMapper.toFontWeight(element.fontWeight));
         expect(textWidget.style.fontFamily, contains(element.fontFamily));

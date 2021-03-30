@@ -73,18 +73,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
           .currentEditableItemNotifier
           .addListener(removeSelectedEditableItems);
     }
-
-    // Refresh UI to remove all selected items
   }
-
-  // @override
-  // Future onDestroy() async {
-  //   this
-  //       .viewModel
-  //       .currentEditableItemNotifier
-  //       .removeListener(removeSelectedEditableItems);
-  //   this.viewModel.canValidate.dispose();
-  // }
 
   void removeSelectedEditableItems() {
     if (this.viewModel.currentEditableItemNotifier?.value == null) {

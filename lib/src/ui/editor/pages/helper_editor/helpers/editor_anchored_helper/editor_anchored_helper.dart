@@ -214,10 +214,17 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
     return Positioned(
       top: 32,
       right: 16,
-      child: FlatButton.icon(
+      child: TextButton.icon(
         key: ValueKey("refreshButton"),
         onPressed: presenter.resetSelection,
-        color: Colors.black,
+        style: TextButton.styleFrom(
+          primary: Colors.black87,
+          minimumSize: Size(88, 36),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(2.0)),
+          ),
+        ),
         icon: Icon(
           Icons.refresh,
           color: Colors.white,
@@ -272,6 +279,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                   Flexible(
                     child: EditableButton(
                       data: model.negativBtnField,
+                      outline: true,
                       onTap: presenter.onNewEditableSelect,
                       backgroundColor: model.backgroundBox?.backgroundColor,
                       isSelected:
@@ -297,6 +305,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       ),
     );
   }
+
+  
 }
 
 class _EditorAnchoredFullscreenHelperView

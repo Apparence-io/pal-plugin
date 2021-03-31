@@ -68,7 +68,6 @@ class EditableTextField extends StatelessWidget {
   }
 
   // TODO : move to extension
-
   TextStyle _googleCustomFont(String fontFamily) {
     return (fontFamily != null && fontFamily.length > 0)
         ? GoogleFonts.getFont(fontFamily)

@@ -185,7 +185,6 @@ class HelperFactory {
             HexColor.fromHex(helper.helperBoxes.first.backgroundColor),
         id: helper.helperBoxes.first.id,
       ),
-      // TODO: Create on back correct way to save id
       anchorKey: helper.helperBoxes.first.key,
       positivButtonLabel: HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.POSITIV_KEY,

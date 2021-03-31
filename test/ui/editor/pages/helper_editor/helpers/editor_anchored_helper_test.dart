@@ -715,7 +715,7 @@ void main() {
 
     // init pal + go to editor
     Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
-      when(httpClientMock.get('pal-business/editor/helpers/myhelperid'))
+      when(httpClientMock.get(Uri.parse('pal-business/editor/helpers/myhelperid')))
           .thenAnswer(
               (_) => Future.value(Response(jsonEncode(helperEntity), 200)));
       EditorAppContext editorAppContext =

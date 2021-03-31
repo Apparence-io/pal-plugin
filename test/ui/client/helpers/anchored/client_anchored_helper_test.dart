@@ -49,13 +49,11 @@ void main() {
                   AnchoredscreenHelperKeys.DESCRIPTION_KEY,
                   helperEntity.helperTexts,
                 ),
-                // TODO: Create ID for box
                 helperBoxViewModel: HelperBoxViewModel(
                   backgroundColor: HexColor.fromHex(
                       helperEntity.helperBoxes.first.backgroundColor),
                   id: helperEntity.helperBoxes.first.id,
                 ),
-                // TODO: Create on back correct way to save id
                 anchorKey: helperEntity.helperBoxes.first.key,
                 positivButtonLabel: HelperSharedFactory.parseButtonLabel(
                   AnchoredscreenHelperKeys.POSITIV_KEY,

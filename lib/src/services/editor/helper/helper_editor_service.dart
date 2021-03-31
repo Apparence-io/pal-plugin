@@ -57,7 +57,7 @@ abstract class EditorHelperService {
       final String pageId, final Map<String, int> priority);
 
   /// Delete an helper, we won't let your recover it.
-  /// For stats we keep it in our database / TODO make a force arg to remove it completely
+  /// For stats we keep it in our database 
   Future<void> deleteHelper(String helperId);
 }
 

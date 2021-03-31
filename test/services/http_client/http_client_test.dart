@@ -29,7 +29,7 @@ void main() {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
-        var res = await httpClient.get('test');
+        var res = await httpClient.get(Uri.parse('test'));
         expect(true, res != null);
         expect(res.statusCode, 200);
 
@@ -44,7 +44,7 @@ void main() {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
-        var res = await httpClient.post('test');
+        var res = await httpClient.post(Uri.parse('test'));
         expect(true, res != null);
         expect(res.statusCode, 200);
 
@@ -59,7 +59,7 @@ void main() {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
-        var res = await httpClient.put('test');
+        var res = await httpClient.put(Uri.parse('test'));
         expect(true, res != null);
         expect(res.statusCode, 200);
 
@@ -74,7 +74,7 @@ void main() {
         when(httpMockClient.send(any)).thenAnswer((_) => new Future<http.StreamedResponse>(
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
-        var res = await httpClient.delete('test');
+        var res = await httpClient.delete(Uri.parse('test'));
         expect(true, res != null);
         expect(res.statusCode, 200);
 
@@ -90,7 +90,7 @@ void main() {
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 500))
         );
         try {
-          await httpClient.get('test');
+          await httpClient.get(Uri.parse('test'));
           expect(false, true);
         } catch(e) {
           expect(e is InternalHttpError, equals(true), reason: 'e is InternalHttpError');
@@ -104,7 +104,7 @@ void main() {
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() => [])), 400))
         );
         try {
-          await httpClient.get('test');
+          await httpClient.get(Uri.parse('test'));
           expect(false, true);
         } catch(e) {
           expect(e is UnreachableHttpError, isTrue, reason: 'e is UnreachableHttpError');

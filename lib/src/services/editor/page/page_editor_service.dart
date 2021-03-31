@@ -33,7 +33,6 @@ class _PageEditorHttpService implements PageEditorService {
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List data = byteData.buffer.asUint8List();
       List<int> dataList = data.toList();
-
       print(dataList);
       // TODO: Send with repository using multipart image
     } catch (e) {

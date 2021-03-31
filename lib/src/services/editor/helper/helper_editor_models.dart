@@ -207,7 +207,6 @@ class HelperBoxConfig {
   int id;
   String key;
   String color;
-  // TODO: Missing params ?
 
   HelperBoxConfig({
     this.id,

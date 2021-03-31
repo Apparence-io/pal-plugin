@@ -203,13 +203,13 @@ void main() {
         'isLast': true,
         'language': 'en'
       });
-      when(httpClientMock.post(url,
+      when(httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).thenAnswer((_) => Future.value());
 
       await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers[0], inAppUserId, true, '1.0.0');
-      verify(httpClientMock.post(url,
+      verify(httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).called(1);
@@ -229,13 +229,13 @@ void main() {
         'isLast': true,
         'language': 'en'
       });
-      when(httpClientMock.post(url,
+      when(httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).thenThrow((_) => throw "ERROR");
 
       await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers[0], inAppUserId, true, '1.0.0');
-      verify(httpClientMock.post(url,
+      verify(httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).called(1);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper.dart';
@@ -18,8 +17,6 @@ class HttpClientMock extends Mock implements HttpClient {}
 void main() {
   String pageEntity =
       '''{"content":[{"id":"testId","route":"myPage"}],"pageable":{"offset":null,"pageNumber":null,"pageSize":null}}''';
-//  jsonEncode(
-//       Pageable(entities: [PageEntity(id: 'testId', route: 'myPage')]));
 
   final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -58,7 +55,7 @@ void main() {
     var helpersListJson = '''[
 
     ]''';
-    when(httpClientMock.get('pal-business/editor/groups?routeName=myPage'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/groups?routeName=myPage')))
         .thenAnswer((_) => Future.value(Response(helpersListJson, 200)));
     await _before(tester);
     await tester.pump(Duration(seconds: 2));
@@ -77,21 +74,21 @@ void main() {
       {"id":"JKLSDJDLS28", "priority":6, "name":"group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": "1.0.2"}
     ]''';
     when(httpClientMock
-            .get('pal-business/editor/pages?route=myPage&pageSize=1'))
+            .get(Uri.parse('pal-business/editor/pages?route=myPage&pageSize=1')))
         .thenAnswer((_) => Future.value(Response(pageEntity, 200)));
-    when(httpClientMock.get('pal-business/editor/pages/testId/groups'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testId/groups')))
         .thenAnswer((_) => Future.value(Response(helpersListJson, 200)));
     await _before(tester);
     await tester.pump(Duration(seconds: 2));
     expect(find.byType(PageGroupsListPage), findsOneWidget);
-    verify(httpClientMock.get('pal-business/editor/pages/testId/groups'))
+    verify(httpClientMock.get(Uri.parse('pal-business/editor/pages/testId/groups')))
         .called(1);
     // expect(find.byType(PageGroupsListItem), findsNWidgets(6));
   });
 
   testWidgets('loading with error => shut silently with a message',
       (WidgetTester tester) async {
-    when(httpClientMock.get('pal-business/editor/pages/testId/groups'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testId/groups')))
         .thenThrow(Response('', 500));
     await _before(tester);
     await tester.pump(Duration(seconds: 2));
@@ -106,7 +103,7 @@ void main() {
     var helpersListJson = '''[
       {"id":"JKLSDJDLS23", "priority":1, "name":"group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": null}
     ]''';
-    when(httpClientMock.get('pal-business/editor/pages/testId/groups'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testId/groups')))
         .thenAnswer((_) => Future.value(Response(helpersListJson, 200)));
     await _before(tester);
     await tester.pump(Duration(seconds: 2));
@@ -120,7 +117,7 @@ void main() {
     var helpersListJson = '''[
       {"id":"JKLSDJDLS23", "priority":1, "name":"group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": null}
     ]''';
-    when(httpClientMock.get('pal-business/editor/pages/testId/groups'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testId/groups')))
         .thenAnswer((_) => Future.value(Response(helpersListJson, 200)));
     await _before(tester);
     await tester.pump(Duration(seconds: 2));
@@ -144,13 +141,13 @@ void main() {
     var groupHelpers = '''[]''';
     var groupDetails = '''{"id":"JKLSDJDLS23"}''';
     when(httpClientMock
-            .get('pal-business/editor/pages?route=myPage&pageSize=1'))
+            .get(Uri.parse('pal-business/editor/pages?route=myPage&pageSize=1')))
         .thenAnswer((_) => Future.value(Response(pageEntity, 200)));
-    when(httpClientMock.get('pal-business/editor/groups/JKLSDJDLS23'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/groups/JKLSDJDLS23')))
         .thenAnswer((_) => Future.value(Response(groupDetails, 200)));
-    when(httpClientMock.get('pal-business/editor/pages/testId/groups'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testId/groups')))
         .thenAnswer((_) => Future.value(Response(helpersListJson, 200)));
-    when(httpClientMock.get('pal-business/editor/groups/JKLSDJDLS23/helpers'))
+    when(httpClientMock.get(Uri.parse('pal-business/editor/groups/JKLSDJDLS23/helpers')))
         .thenAnswer((_) => Future.value(Response(groupHelpers, 200)));
     await _before(tester);
     await tester.pumpAndSettle(Duration(seconds: 2));

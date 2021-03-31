@@ -141,7 +141,7 @@ You can manually specify events within your code so we can use them to let you c
 | appToken | ```String``` | the app token created from the [**admin**](http://demo.pal-plugin.tech) | ✅ | |
 
 
-## 🙋‍♂️🙋‍♀️&nbsp; Questions
+## 🙋‍♂️🙋‍♀️ Questions
 
 > *Why I'm getting an error PageCreationException: EMPTY_ROUTE_PROVIDED when creating a new helper?*
 

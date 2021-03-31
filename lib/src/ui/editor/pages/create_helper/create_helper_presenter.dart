@@ -49,16 +49,6 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   ////////////////////////////////////////////////////////////////
 
   Future<List<HelperGroupViewModel>> loadHelperGroup() async {
-    // if(viewModel.helperGroups != null) {
-    //   return viewModel.helperGroups;
-    // }
-    // var res = [
-    //   HelperGroupViewModel(groupId: "test1", title: "Introduction mock"),
-    //   HelperGroupViewModel(groupId: "test2", title: "Second group mock"),
-    // ];
-    // viewModel.helperGroups = res;
-    // return Future.value(viewModel.helperGroups);
-
     return projectEditorService.getPageGroups(this.pageId)
       .catchError((error) {
         print("error $error");

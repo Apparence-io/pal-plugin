@@ -113,8 +113,7 @@ class PageGroupsListPage extends StatelessWidget {
         ],
       );
 
-  Widget _buildItemList(
-      PageGroupsListPresenter presenter, PageGroupsListViewModel model) {
+  Widget _buildItemList(PageGroupsListPresenter presenter, PageGroupsListViewModel model) {
     if (model.errorMessage != null) {
       return Expanded(
           child: Center(
@@ -122,6 +121,11 @@ class PageGroupsListPage extends StatelessWidget {
         model.errorMessage,
         key: ValueKey("ErrorMessage"),
       )));
+    }
+    if(model.groups.isEmpty) {
+      return Expanded(
+        child: Center(child: Text("You haven't created anything on this page yet")),
+      );
     }
     return Expanded(
       child: ListView.builder(

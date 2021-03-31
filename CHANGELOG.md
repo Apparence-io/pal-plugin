@@ -4,6 +4,7 @@ Our helper editor got a complete *UI overhaul*, with a brand new ***Toolbox*** â
  - All of your tools in one place.
  - A better / maintainable code base, for future updates and features.
 - (NEW) create tour guide, chain helpers 
+- (NEW) On new update trigger 
 - (NEW) show tour guide anywhere
 - (NEW) editor toolbar reworked
 

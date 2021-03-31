@@ -67,7 +67,7 @@ class ProjectRepository extends BaseHttpRepository {
 
   Future<AppIconEntity> getAppIcon() async {
     final Response response =
-        await this.httpClient.get('pal-business/editor/app-icon');
+        await this.httpClient.get(Uri.parse('pal-business/editor/app-icon'));
     return this._adapter.parse(response.body);
   }
 }

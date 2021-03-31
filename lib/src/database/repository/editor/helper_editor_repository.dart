@@ -22,7 +22,7 @@ class EditorHelperRepository extends BaseHttpRepository {
       final HelperEntity createHelper) async {
     final payload = jsonEncode(createHelper);
     final Response response = await this.httpClient.post(
-          'pal-business/editor/groups/$groupId/helpers',
+          Uri.parse('pal-business/editor/groups/$groupId/helpers'),
           body: payload,
         );
     if (response == null || response.body == null)
@@ -36,7 +36,7 @@ class EditorHelperRepository extends BaseHttpRepository {
   ) async {
     final payload = jsonEncode(updatedHelper);
     final Response response = await this.httpClient.put(
-        'pal-business/editor/helpers/${updatedHelper?.id}',
+        Uri.parse('pal-business/editor/helpers/${updatedHelper?.id}'),
         body: payload);
     if (response == null || response.body == null)
       throw new UnknownHttpError('NO_RESULT');
@@ -48,13 +48,13 @@ class EditorHelperRepository extends BaseHttpRepository {
   Future<Pageable<HelperEntity>> getPage(
       String pageId, int page, int pageSize) async {
     final Response response = await this.httpClient.get(
-        'pal-business/editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
+        Uri.parse('pal-business/editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize'));
     return this._adapter.parsePage(response.body);
   }
 
   Future<List<HelperEntity>> getGroupHelpers(String groupId) async {
     final Response response =
-        await this.httpClient.get('pal-business/editor/groups/$groupId/helpers');
+        await this.httpClient.get(Uri.parse('pal-business/editor/groups/$groupId/helpers'));
     return this._adapter.parseArray(response.body);
   }
 
@@ -63,22 +63,22 @@ class EditorHelperRepository extends BaseHttpRepository {
     final Map<String, int> priority,
   ) async {
     await this.httpClient.patch(
-          'pal-business/editor/pages/$pageId/helpers/priorities',
-          body: jsonEncode(priority),
-        );
+        Uri.parse('pal-business/editor/pages/$pageId/helpers/priorities'),
+        body: jsonEncode(priority),
+      );
   }
 
   Future<void> deleteHelper(
     final String helperId,
   ) async {
     await this.httpClient.delete(
-          'pal-business/editor/helpers/$helperId',
-        );
+        Uri.parse('pal-business/editor/helpers/$helperId'),
+      );
   }
 
   Future<HelperEntity> getHelper(String helperId) async {
     Response res =
-        await this.httpClient.get('pal-business/editor/helpers/$helperId');
+        await this.httpClient.get(Uri.parse('pal-business/editor/helpers/$helperId'));
     return this._adapter.parse(res.body);
   }
 }

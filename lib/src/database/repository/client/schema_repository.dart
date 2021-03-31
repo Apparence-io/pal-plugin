@@ -31,7 +31,7 @@ class ClientSchemaRemoteRepository extends BaseHttpRepository implements ClientS
   Future<SchemaEntity> get({int schemaVersion, String language, @required String appVersion}) async {
     final Response response = await this
       .httpClient
-      .get('pal-business/client/schema', headers: {
+      .get(Uri.parse('pal-business/client/schema'), headers: {
         'appVersion': appVersion,
         'languageCode': language,
         'schemaVersion': schemaVersion?.toString() ?? '0'

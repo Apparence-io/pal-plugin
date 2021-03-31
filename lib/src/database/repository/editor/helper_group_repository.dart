@@ -21,30 +21,11 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     @required HttpClient httpClient,
   }) : super(httpClient: httpClient);
 
-  // var _mock1 = '''[
-  //     {"id":"JKLSDJDLS23", "priority":1, "name":"Group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": null},
-  //     {"id":"JKLSDJDLS24", "priority":2, "name":"Group 02", "triggerType":"ON_NEW_UPDATE", "creationDate":"2020-14-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": null},
-  //     {"id":"JKLSDJDLS25", "priority":3, "name":"Group 03", "triggerType":"ON_NEW_UPDATE", "creationDate":"2020-05-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"},
-  //     {"id":"JKLSDJDLS26", "priority":4, "name":"Group 04", "triggerType":"ON_NEW_UPDATE", "creationDate":"2020-06-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"},
-  //     {"id":"JKLSDJDLS27", "priority":5, "name":"Group 05", "triggerType":"ON_NEW_UPDATE", "creationDate":"2020-01-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"},
-  //     {"id":"JKLSDJDLS27", "priority":10, "name":"Group 08", "triggerType":"ON_NEW_UPDATE", "creationDate":"2020-01-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"},
-  //     {"id":"JKLSDJDLS27", "priority":11, "name":"Group 09", "triggerType":"ON_NEW_UPDATE", "creationDate":"2020-01-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"},
-  //     {"id":"JKLSDJDLS28", "priority":6, "name":"Group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"}
-  //   ]''';
-  // var _mock2 = '''[{
-  //       "id":"id1","name": "helper1","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 1},
-  //       {"id": "id2","name": "helper2","type": "HELPER_FULL_SCREEN","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 2},
-  //       {"id": "id2","name": "helper2","type": "SIMPLE_HELPER","creationDate": "2020-12-23T18:25:43.511Z","lastUpdateDate": "2020-12-23T18:25:43.511Z","priority": 3}]''';
-  // var _mock3 =
-  //     '''{"id":"JKLSDJDLS23", "priority":1, "name":"Group 01", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-04-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": null}''';
-
   Future<List<HelperGroupEntity>> listHelperGroups(String pageId) async {
-    // return _groupAdapter.parseArray(_mock1);
-    // FIXME : De-comment
     var response;
     try {
       response =
-          await httpClient.get('pal-business/editor/pages/$pageId/groups');
+          await httpClient.get(Uri.parse('pal-business/editor/pages/$pageId/groups'));
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
@@ -66,7 +47,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
       "versionMaxId": maxVersionId,
     });
     var response = await httpClient
-        .post('pal-business/editor/pages/$pageId/groups', body: payload);
+        .post(Uri.parse('pal-business/editor/pages/$pageId/groups'), body: payload);
     if (response == null || response.body == null)
       throw new UnknownHttpError("NO_RESULT");
     try {
@@ -77,13 +58,10 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }
 
   Future<List<HelperEntity>> listGroupHelpers(String groupId) async {
-    // return Future.delayed(
-    // Duration(seconds: 1), () => _helperAdapter.parseArray(_mock2));
-    // FIXME : De-comment
     var response;
     try {
       response =
-          await httpClient.get('pal-business/editor/groups/$groupId/helpers');
+          await httpClient.get(Uri.parse('pal-business/editor/groups/$groupId/helpers'));
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
@@ -97,12 +75,9 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   }
 
   Future<HelperGroupEntity> getGroupDetails(String groupId) async {
-    // return Future.delayed(
-    // Duration(seconds: 2), () => _groupAdapter.parse(_mock3));
-    // FIXME : De-comment
     var response;
     try {
-      response = await httpClient.get('pal-business/editor/groups/$groupId');
+      response = await httpClient.get(Uri.parse('pal-business/editor/groups/$groupId'));
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
@@ -119,7 +94,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
       String type) async {
     var response;
     try {
-      response = await httpClient.put('pal-business/editor/groups/$id',
+      response = await httpClient.put(Uri.parse('pal-business/editor/groups/$id'),
           body: jsonEncode({
             "versionMinId": minVersionId,
             "versionMaxId": maxVersionId,
@@ -136,7 +111,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
 
   Future deleteGroup(String groupId) async {
     try {
-      return await httpClient.delete('pal-business/editor/groups/$groupId');
+      return await httpClient.delete(Uri.parse('pal-business/editor/groups/$groupId'));
     } catch (e) {
       throw new UnknownHttpError("NETWORK ERROR $e");
     }

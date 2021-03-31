@@ -22,14 +22,14 @@ class ClientHelperRepository extends BaseHttpRepository {
       final String pageId, final int page, final int pageSize) async {
     final Response response = await this
         .httpClient
-        .get('pal-business/editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize');
+        .get(Uri.parse('pal-business/editor/pages/$pageId/helpers?page=$page&pageSize=$pageSize'));
     return this._adapter.parsePage(response.body);
   }
 
   Future<List<HelperEntity>> getClientHelpers(
       final String pageId, String version, String inAppUserId) async {
     final Response response = await this.httpClient.get(
-        'pal-business/client/pages/$pageId/helpers',
+        Uri.parse('pal-business/client/pages/$pageId/helpers'),
         headers: {"version": version, "inAppUserId": inAppUserId});
     return this._adapter.parseArray(response.body);
   }

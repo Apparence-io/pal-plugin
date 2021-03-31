@@ -18,7 +18,8 @@ class PageRepository extends BaseHttpRepository {
   Future<PageEntity> createPage(
     final PageEntity createPage,
   ) async {
-    final Response response = await this.httpClient.post('pal-business/editor/pages',
+    final Response response = await httpClient
+      .post(Uri.parse('pal-business/editor/pages'),
         body: jsonEncode({
           'route': createPage.route,
         }));
@@ -26,14 +27,14 @@ class PageRepository extends BaseHttpRepository {
   }
 
   Future<Pageable<PageEntity>> getPages() async {
-    final Response response = await this.httpClient.get('pal-business/editor/pages');
-    return this._adapter.parsePage(response.body);
+    final Response response = await httpClient.get(Uri.parse('pal-business/editor/pages'));
+    return _adapter.parsePage(response.body);
   }
 
   Future<PageEntity> getPage(final String route) {
     return this
         .httpClient
-        .get('pal-business/editor/pages?route=$route&pageSize=1')
+        .get(Uri.parse('pal-business/editor/pages?route=$route&pageSize=1'))
         .then((res) {
       Pageable<PageEntity> pages = _adapter.parsePage(res.body);
       return (pages.entities != null && pages.entities.length > 0)
@@ -44,7 +45,7 @@ class PageRepository extends BaseHttpRepository {
 
   Future<Pageable<PageEntity>> getClientPage(final String route) async {
     final Response response =
-        await this.httpClient.get('pal-business/client/pages?route=$route');
+        await this.httpClient.get(Uri.parse('pal-business/client/pages?route=$route'));
     return this._adapter.parsePage(response.body);
   }
 }

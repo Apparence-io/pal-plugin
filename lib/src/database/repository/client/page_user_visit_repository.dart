@@ -41,7 +41,7 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
   Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion) async {
     final Response response = await this
       .httpClient
-      .get('pal-analytic/users/$userId/groups');
+      .get(Uri.parse('pal-analytic/users/$userId/groups'));
     return _adapter.parseArray(response.body);
   }
 
@@ -64,7 +64,7 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
       @required String languageCode, 
       @required HelperEntity helper
     }) async  {
-    var url = 'pal-analytic/users/$inAppUserId/groups/${visit.helperGroupId}/helpers/${helper.id}';
+    var url = Uri.parse('pal-analytic/users/$inAppUserId/groups/${visit.helperGroupId}/helpers/${helper.id}');
     var body = jsonEncode({
       'answer': feedback,
       'isLast': isLast,

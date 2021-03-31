@@ -29,7 +29,7 @@ class ProjectGalleryHttpRepository extends BaseHttpRepository
   ) async {
     final Response response = await this
         .httpClient
-        .get('pal-business/editor/graphics?page=$page&pageSize=$pageSize');
+        .get(Uri.parse('pal-business/editor/graphics?page=$page&pageSize=$pageSize'));
     return this._adapter.parsePage(response.body);
   }
 }

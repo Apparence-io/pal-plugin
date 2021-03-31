@@ -13,7 +13,7 @@ class InAppUserRepository extends BaseHttpRepository {
     try {
       final Response response = await this
           .httpClient
-          .post("pal-analytic/in-app-users",
+          .post(Uri.parse("pal-analytic/in-app-users"),
               body: InAppUserEntityAdapter().toJson(inAppUser))
           .catchError(
         (err) {
@@ -28,7 +28,7 @@ class InAppUserRepository extends BaseHttpRepository {
 
   Future<InAppUserEntity> update(final InAppUserEntity inAppUser) async {
     final Response response = await this.httpClient.put(
-        "pal-analytic/in-app-users/${inAppUser.id}",
+        Uri.parse("pal-analytic/in-app-users/${inAppUser.id}"),
         body: InAppUserEntityAdapter().toJson(inAppUser));
     return InAppUserEntityAdapter().parse(response.body);
   }

@@ -47,7 +47,7 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       throw UnreachableHttpError('Http ${response.statusCode} error, network or bad gateway : ${response?.request?.url}',
           code: errorCode);
     } else if (response.statusCode >= 500 && response.statusCode < 600) {
-      print("... ==> 500 error ");
+      debugPrint("... ==> 500 error ");
       throw InternalHttpError(
           'Http 500 error, internal error ${response.toString()}');
     } else {
@@ -61,10 +61,9 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       final body,
       final Encoding encoding}) async {
     headers = _initHeader(headers);
-
     return this._checkResponse(
       await super.post(
-        '${this._baseUrl}/$url',
+        Uri.parse('${this._baseUrl}/$url'),
         headers: headers,
         body: body,
         encoding: encoding,
@@ -73,11 +72,18 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   }
 
   @override
-  Future<Response> delete(final url,
-      {final Map<String, String> headers}) async {
+  Future<Response> delete(
+    final Uri url, 
+    { final Map<String, String> headers,
+      final body,
+      final Encoding encoding
+    }
+  ) async {
     return this._checkResponse(
-        await super.delete('${this._baseUrl}/$url', headers: headers));
+        await super.delete(Uri.parse('${this._baseUrl}/$url'), headers: headers));
   }
+
+
 
   @override
   Future<Response> put(final url,
@@ -85,9 +91,11 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       final body,
       final Encoding encoding}) async {
     headers = _initHeader(headers);
-
-    return this._checkResponse(await super.put('${this._baseUrl}/$url',
-        headers: headers, body: body, encoding: encoding));
+    var res = await super.put(Uri.parse('${this._baseUrl}/$url'),
+      headers: headers, 
+      body: body, 
+      encoding: encoding);
+    return this._checkResponse(res);
   }
 
   @override
@@ -96,8 +104,7 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       final body,
       final Encoding encoding}) async {
     headers = _initHeader(headers);
-
-    return this._checkResponse(await super.patch('${this._baseUrl}/$url',
+    return this._checkResponse(await super.patch(Uri.parse('${this._baseUrl}/$url'),
         headers: headers, body: body, encoding: encoding));
   }
 
@@ -113,7 +120,7 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   @override
   Future<Response> get(final url, {final Map<String, String> headers}) async {
     return this._checkResponse(
-        await super.get('${this._baseUrl}/$url', headers: headers));
+        await super.get(Uri.parse('${this._baseUrl}/$url'), headers: headers));
   }
 
   Future<http.StreamedResponse> multipartImage(url,

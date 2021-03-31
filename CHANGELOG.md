@@ -1,4 +1,8 @@
 ## [1.0.0] - 2021/01/04
+Our helper editor got a complete *UI overhaul*, with a brand new ***Toolbox*** ✨
+ - More intuitive text fields.
+ - All of your tools in one place.
+ - A better / maintainable code base, for future updates and features.
 - (NEW) create tour guide, chain helpers 
 - (NEW) show tour guide anywhere
 - (NEW) editor toolbar reworked

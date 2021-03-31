@@ -1,84 +1,64 @@
 <p align="center">
 	<a href="https://apparence.io/">
-		<img src="https://back.apparence.io/media/110/pal-logo.jpeg" width="200px" alt="pal logo">
+		<img src="https://back.apparence.io/media/110/pal-logo.jpeg" width="150px" alt="pal logo">
 	</a>
 </p>
 <p align="center">
-    <img src="https://img.shields.io/badge/status-beta-brightgreen"/>
     <img src="https://app.bitrise.io/app/83910b8783f1bf6a/status.svg?token=AZYUldjPs6PnJjBYlBfXCg&branch=master"/>
     <a href="https://codecov.io/gl/apparence:pal/pal-flutter">
       <img src="https://codecov.io/gl/apparence:pal/pal-flutter/branch/master/graph/badge.svg?token=VSU0MWER5H"/>
     </a>
-    <a href="http://doc.pal-plugin.tech/">
+    <a href="https://doc.pal-plugin.tech/">
       <img src="https://img.shields.io/static/v1?label=documentation&message=visit&color=orange"/>
     </a>
-    <a href="http://pal-plugin.tech/">
+    <a href="https://pal-plugin.tech/">
       <img src="https://img.shields.io/static/v1?label=website&message=visit&color=purple"/>
     </a>
 </p>
 
-# Pal - The Flutter onboarding editor (beta)
+# Pal - Flutter onboarding and messages plugin 
+- Create guide tours for new users<br/>
+- Ask questions and get feedbacks from your users<br/>
+- Inform about what’s new in your update<br/>
+- Improve your onboardings and app experience using analytics<br/>
 
-Pal is the onboarding editor dedicated to Flutter apps 📱.
+**[🎥  Pal introduction in video](https://www.youtube.com/watch?v=RIeeTG928Rc)**
 
-**[Pal introduction in video](https://www.youtube.com/watch?v=RIeeTG928Rc)**
-
-**What does it mean ?**
-
-No code editor for all your app screens directly in your app:
-* 🏄‍♂️ Go to a screen where you want to add helper.
-* 🎛 Select your helper type.
-* 🎨 Select and customize your theme.
-
-## ✨	Latest Feature : Groups
->### *No time to lose*
-Starting version **0.1.1**, all ***Helpers*** will be sorted in **Groups**.
-
- - No more tedious back-n-forth-helper-spaming-navigation.
- - Page guide tours are now a thing. Show your ***Helpers*** one after another.
-
- >### *Better then ever*
-Our helper editor got a complete *UI overhaul*, with a brand new ***Toolbox*** ✨
-
- - More intuitive text fields.
- - All of your tools in one place.
- - A better / maintainable code base, for future updates and features.
-
-## 👀&nbsp; Preview
-<p align="left">
-  <img src="https://i.postimg.cc/jSR94N7Q/presentation.gif" width="250" alt="camerawesome_example1" />
+<p align="center">
+<img src="https://i.postimg.cc/TwHGZ0r6/anchored.gif" width="150" alt="flutter anchored onboarding screen" />
 </p>
 
-## 🧐&nbsp; How it works ?
+## 📱 How it works ?
+##### No code editor for all your app screens directly in your app
+* Go to a screen where you want to add helper.
+* Select your helper type.
+* Select and customize your theme.
 
-Pal is splitted in two modes:
- * **Editor**, *used to create & manage helpers*.
- * **Client**, *all created helpers was displayed here*.
+##### Pal is splitted in two modes
+* **Editor**, *create & manage helpers*.
+* **Client**, *all created helpers are displayed here*.
 
-**Editor mode flow**
-1. 🚣‍♂️ Navigate to the screen you want to show your helper.
-2. 🚧 Create the helper you want.
-3. 🚀 Publish !
+##### **Editor mode flow**<br/>
+1. Navigate to the screen you want to show your helper.
+2. Choose how it should trigger (on first visit, on new update...)
+3. Create the helper you want with all texts, colors, fonts...
+4. Publish!
 
-**Client mode flow**
-
-1. 📲 Fetch all onboarding on application start.
-2. 🎛 Trigger an onboarding each time we detect anything that you configured for.
-3. 🙈 Don't show an helper again if user has already seen it.
+##### **Client mode flow**
+1. Fetch all onboarding on application start.
+2. Trigger an onboarding each time we detect anything that you configured for.
+3. Don't show an helper again if user has already seen it.
 
 That's it !
 
 ## 🚀&nbsp; Getting started
-
-* Create an **administration** account [**here**](http://demo.pal-plugin.tech).
-
-* Create a **new project** in your dashboard.
-
-* Get your **token** & **save** it for later.
+* Create an **administration** account [**here**](https://app.pal-plugin.tech).<br/>
+* Create a **new project** in your dashboard.<br/>
+* Get your **token** & **save** it for later.<br/>
 
 <img src="https://i.postimg.cc/YC2nWH5d/token.png" alt="token" />
 
-
+### Install on your flutter application now 
 * Add **Pal** dependency
 ```yaml
 dependencies:
@@ -135,7 +115,7 @@ class GetXMyApp extends StatelessWidget {
 }
 ```
 
-## Configure Events
+## 🔥 Configure Events
 You can manually specify events within your code so we can use them to let you configure hints with editor.
 
 #### Push a page
@@ -160,47 +140,6 @@ You can manually specify events within your code so we can use them to let you c
 | textDirection | ```TextDirection``` | text direction of your application | | ```TextDirection.ltr``` |
 | appToken | ```String``` | the app token created from the [**admin**](http://demo.pal-plugin.tech) | ✅ | |
 
-## 🎥&nbsp; Gallery
-
-### 😎&nbsp; Client mode
-
-<img src="https://i.postimg.cc/6qNz5JVL/helpers-client.gif" width="150" alt="helpers_client" />
-
-*Some of helpers displayed in the client app*
-
-### 🚧&nbsp; Editor mode
-
-#### 💡&nbsp; Helpers creation
-
-<div style="float:left; padding-right:8px">
-<img src="https://i.postimg.cc/gkjLXtMv/box.gif" width="150" alt="helper_box" />
-
-*Simple box helper*
-</div>
-
-<div style="float:left; padding-right:8px">
-<img src="https://i.postimg.cc/NjhGsdZG/update.gif" width="150" alt="helper_update" />
-
-*Update helper*
-</div>
-
-<div style="float:left; padding-right:8px">
-<img src="https://i.postimg.cc/TwHGZ0r6/anchored.gif" width="150" alt="helper_anchored" />
-
-*Anchored helper*
-</div>
-
-<div>
-<img src="https://i.postimg.cc/mgh34gfW/fullscreen.gif" width="150" alt="helper_full_screen" />
-
-*FullScreen helper*
-</div>
-
-### 🎨&nbsp; Edit mode
-
-<img src="https://i.postimg.cc/rpfLrjZr/edit.gif" width="150" alt="helper_edit" />
-
-*Edit an helper*
 
 ## 🙋‍♂️🙋‍♀️&nbsp; Questions
 
@@ -221,6 +160,21 @@ Navigator.push(
 );
 ```
 
+<br/>
+
+> *Why don't I see all my items as selectable when I create an anchored helper?* 
+
+To detect any widget and get it back in your application we needs you to add a key on every widget you want to be selectable.
+For exemple to detect a container :
+```dart
+...
+Container(
+  key: ValueKey("myContainerKey"),
+  ...
+)
+```
+
+
 
 ## 📣&nbsp; Author
 <img src="https://en.apparence.io/assets/images/logo.svg" width="64" />
@@ -230,7 +184,6 @@ Navigator.push(
 
 ## ✨&nbsp; More
 
-[📑 Full documentation](http://doc.pal-plugin.tech)
+[📑 Full documentation](https://doc.pal-plugin.tech)
 
-[🌍 Official website](http://pal-plugin.tech)
-
+[🌍 Official website](https://pal-plugin.tech)

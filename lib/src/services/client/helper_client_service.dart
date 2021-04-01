@@ -75,10 +75,10 @@ class _HelperClientService implements HelperClientService {
       .toList();
     if(group.isNotEmpty) {
       group.sort();
-      var firstVisit = userVisits.first;
+      var firstVisit = userVisits.isNotEmpty ? userVisits.first : null;
+      var firstVisitVersion = userVisits.isNotEmpty ? AppVersion.fromString(firstVisit?.visitVersion) : null;
       int i = -1;
       HelperGroupEntity selectedGroup;
-      var firstVisitVersion = AppVersion.fromString(firstVisit.visitVersion);
       while(i < group.length - 1 && selectedGroup == null) {
         i++;
         if(group[i].triggerType == HelperTriggerType.ON_NEW_UPDATE 

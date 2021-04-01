@@ -47,7 +47,7 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       throw UnreachableHttpError('Http ${response.statusCode} error, network or bad gateway : ${response?.request?.url}',
           code: errorCode);
     } else if (response.statusCode >= 500 && response.statusCode < 600) {
-      debugPrint("... ==> 500 error ");
+      debugPrint("... ==> 500 error ${response.body}");
       throw InternalHttpError(
           'Http 500 error, internal error ${response.toString()}');
     } else {
@@ -82,8 +82,6 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
     return this._checkResponse(
         await super.delete(Uri.parse('${this._baseUrl}/$url'), headers: headers));
   }
-
-
 
   @override
   Future<Response> put(final url,

@@ -108,7 +108,6 @@ class HelperOrchestrator {
         await this.helpersSynchronizer.sync(inAppUser.id, languageCode: lang);
         this.hasSync = true;
       }
-      var test = packageVersionReader.appVersion;
       final helperGroupToShow = await helperClientService.getPageNextHelper(
         route, 
         inAppUser.id, 

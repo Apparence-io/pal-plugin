@@ -15,7 +15,7 @@ class HttpClientMock extends Mock implements HttpClient {}
 
 // MOCK DATA
 const mockGroup =
-    '''{"id":"JKLSDJDLS28", "priority":6, "name":"group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "versionMin":"1.0.1", "versionMax": "1.0.2"}''';
+    '''{"id":"JKLSDJDLS28", "priority":6, "name":"group 06", "triggerType":"ON_SCREEN_VISIT", "creationDate":"2020-12-23T18:25:43.511Z", "minVersion":"1.0.1", "maxVersion": "1.0.2"}''';
 const mockHelpersList = '''[{
         "id": "id1",
         "name": "helper1",
@@ -118,8 +118,7 @@ main() {
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
       expect(groupName(tester).controller.text, equals('group 06'));
-      expect(helperTriggerTypeToString(triggerType(tester).initialValue),
-          equals('ON_SCREEN_VISIT'));
+      expect(helperTriggerTypeToString(triggerType(tester).initialValue), equals('ON_SCREEN_VISIT'));
       expect(minVer(tester).controller.text, equals('1.0.1'));
       expect(maxVer(tester).controller.text, equals('1.0.2'));
     });

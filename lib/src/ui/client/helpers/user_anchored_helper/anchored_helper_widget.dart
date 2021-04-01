@@ -217,6 +217,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                                   widget.negativButtonLabel,
                                   ValueKey('pal_AnchoredHelperNegativFeedbackLabel'),
                                   ValueKey("negativeFeedback"),
+                                  widget.onNegativButtonTap
                                 )
                               ),
                               SizedBox(width: 16),
@@ -226,7 +227,8 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                                 child: _buildEditableBordered(
                                     widget.positivButtonLabel,
                                     ValueKey('pal_AnchoredHelperPositivFeedbackLabel'),
-                                    ValueKey("positiveFeedback")
+                                    ValueKey("positiveFeedback"),
+                                    widget.onPositivButtonTap
                                 )
                               ),
                             ])
@@ -264,7 +266,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
       ),
     );
 
-  Widget _buildEditableBordered(HelperButtonViewModel model, Key textKey, Key buttonKey) {
+  Widget _buildEditableBordered(HelperButtonViewModel model, Key textKey, Key buttonKey, Function onTap) {
     final textStyle = TextStyle(
         fontSize: model.fontSize,
         fontWeight: model.fontWeight,
@@ -291,7 +293,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
       onPressed: () async {
         HapticFeedback.selectionClick();
         await fadeAnimController.reverse();
-        widget.onNegativButtonTap();
+        onTap();
       },
       style: outlineButtonStyle,
       child: Text(

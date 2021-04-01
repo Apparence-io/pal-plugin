@@ -9,7 +9,5 @@ class LocaleService {
   Locale get locale =>
       defaultLocale ?? Localizations.localeOf(hostedKey.currentContext);
 
-  String get languageCode =>
-      defaultLocale.languageCode ??
-      Localizations.localeOf(hostedKey.currentContext).languageCode;
+  String get languageCode => locale.languageCode;
 }

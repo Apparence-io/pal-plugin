@@ -194,17 +194,9 @@ class HelperFactory {
         AnchoredscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts,
       ),
-      // final Color bgColor;
-      // final String anchorKey;
       onPositivButtonTap: () => onTrigger(true),
       onNegativButtonTap: () => onTrigger(false),
       onError: onError,
     );
-    // return AnchoredHelper.fromEntity(
-    //   helperEntity: helper,
-    //   onPositivButtonTap: () => onTrigger(true),
-    //   onNegativButtonTap: () => onTrigger(false),
-    //   onError: onError,
-    // );
   }
 }

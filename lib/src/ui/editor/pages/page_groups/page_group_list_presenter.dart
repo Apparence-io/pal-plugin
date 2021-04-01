@@ -35,7 +35,6 @@ class PageGroupsListPresenter
     viewModel.errorMessage = null;
     RouteSettings route = await navigatorObserver.routeSettings.first;
     this.viewModel.route = route.name;
-    // TODO show error if route name is empty
     // TODO show current page route path
     this.pageService.getOrCreatePageId(route.name).catchError((err) {
       viewModel.errorMessage = "Server error while loading data...";

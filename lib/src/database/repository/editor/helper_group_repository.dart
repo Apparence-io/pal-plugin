@@ -24,8 +24,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   Future<List<HelperGroupEntity>> listHelperGroups(String pageId) async {
     var response;
     try {
-      response =
-          await httpClient.get(Uri.parse('pal-business/editor/pages/$pageId/groups'));
+      response = await httpClient.get(Uri.parse('pal-business/editor/pages/$pageId/groups'));
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {

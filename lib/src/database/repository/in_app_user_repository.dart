@@ -22,7 +22,7 @@ class InAppUserRepository extends BaseHttpRepository {
       );
       return InAppUserEntityAdapter().parse(response.body);
     } catch (e) {
-      throw InternalHttpError('ERROR WHILE CREATING InAppUser');
+      throw InternalHttpError('ERROR WHILE CREATING InAppUser $e');
     }
   }
 

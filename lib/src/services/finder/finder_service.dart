@@ -18,10 +18,12 @@ class FinderService {
     if(WidgetsBinding.instance.hasScheduledFrame) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         ElementModel res = ElementFinder(currentRoute.subtreeContext).searchChildElement(key);
+        print("res => ${res.key}");
         completer.complete(res);
       });
     } else {
       ElementModel res = ElementFinder(currentRoute.subtreeContext).searchChildElement(key);
+      print("res => ${res.key}");
       completer.complete(res);
     }
     return completer.future;

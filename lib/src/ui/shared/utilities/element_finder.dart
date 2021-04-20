@@ -32,11 +32,10 @@ class ElementFinder {
 
   // this method scan all child recursively to find a widget having a key == searchedKey
   ElementModel searchChildElement(String key) {
-    ElementModel result = ElementModel.empty();
-    context.visitChildElements((element) => _searchChildElement(element, key, result));
-    if(result.element != null) {
-      return _createElementModel(context.findRenderObject(), result.element);
-    }
+    ElementModel result;
+    context.visitChildElements((element) => result = _searchChildElement(context.findRenderObject(), element, key));
+    if(result == null)
+     return ElementModel.empty();
     return result;
   }
 
@@ -77,14 +76,24 @@ class ElementFinder {
   // -----------------------------------------------------------
   // private
   // -----------------------------------------------------------
-  _searchChildElement(Element element, String key, ElementModel result, {int n = 0}) {
-    if(result.element == null && element.widget.key != null && element.widget.key.toString().contains(key)) {
-      result.element = element;
-    }
-    if(result.element != null) {
-      return;
-    }
-    element.visitChildElements((visitor) => _searchChildElement(visitor, key, result, n: n + 1));
+  
+  // ERROR
+  ElementModel _searchChildElement(RenderObject parentObject, Element element, String key, {int n = 0}) {
+    if(element.widget.key != null 
+      && element.widget.key.toString().contains(key)) {
+      try {
+        // if render element has bounds lets take it
+        var res =  _createElementModel(parentObject, element); 
+        return res;
+      } catch(_) {}
+    } 
+    ElementModel result;
+    element.visitChildElements((visitor) {
+      var res = _searchChildElement(parentObject, visitor, key, n: n + 1);
+      if(res != null)
+        result = res;
+    });
+    return result;
   }
 
   // omits elements with key starting with anything other than [<
@@ -97,18 +106,23 @@ class ElementFinder {
       for(int i = 0; i<n ; i++) {
         pre.write(" ");
       }
-      print("$pre ${element?.widget.runtimeType}  $n => $nbChilds ");
+      debugPrint("$pre ${element?.widget.runtimeType}  $n => $nbChilds ");
     }
     if(element.widget.key != null && omitChildsOf !=null && element.widget.key.toString() == omitChildsOf.toString()) {
       return;
     }
     if(element.widget.key != null && element.widget.key.toString().startsWith("[<") && !results.containsKey(element.widget.key.toString())) {
       if(debugMode) {
-        print("  added ${element?.widget?.key.toString()} : $n");
+        debugPrint("  added ${element?.widget?.key.toString()} : $n");
       }
-      var model = _createElementModel(parentObject, element);
-      if(results.values.firstWhere((element) => element.bounds == model.bounds && element.offset == model.offset, orElse: () => null) == null) {
-        results.putIfAbsent(element.widget.key.toString(), () => model);
+      try {
+        var model = _createElementModel(parentObject, element);
+        if(results.values.firstWhere((element) => element.bounds == model.bounds && element.offset == model.offset, orElse: () => null) == null) {
+          results.putIfAbsent(element.widget.key.toString(), () => model);
+        }
+      } catch (e) {
+        debugPrint("  error while getting element bounds:");
+        debugPrint("$e");
       }
     }
     element.visitChildElements((visitor) =>  _scanChildElement(parentObject, visitor, results, n: n + 1, omitChildsOf: omitChildsOf, debugMode: debugMode));
@@ -125,7 +139,7 @@ class ElementFinder {
 
   ElementModel _createElementModel(RenderObject parentObject, Element element) {
     var renderObject = element.findRenderObject();
-    var bounds = element.findRenderObject().paintBounds;
+    var bounds = renderObject.paintBounds;
     var translation = renderObject.getTransformTo(parentObject).getTranslation();
     var offset = Offset(translation.x, translation.y);
     return ElementModel(

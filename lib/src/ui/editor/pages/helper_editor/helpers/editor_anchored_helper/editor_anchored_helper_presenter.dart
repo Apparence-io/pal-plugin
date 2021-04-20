@@ -8,6 +8,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_overlay.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/font_editor_viewmodel.dart';
+import 'package:pal/src/ui/shared/utilities/element_finder.dart';
 
 import '../../helper_editor_factory.dart';
 import 'editor_anchored_helper.dart';
@@ -16,8 +17,7 @@ import 'editor_anchored_helper_viewmodel.dart';
 // this is the key used in our editor to inject all widgets in
 const EDITOR_PARENT_NODE_KEY = "EditorPage";
 
-class EditorAnchoredFullscreenPresenter extends Presenter<
-    AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
+class EditorAnchoredFullscreenPresenter extends Presenter<AnchoredFullscreenHelperViewModel, EditorAnchoredFullscreenHelperView> {
   final FinderService finderService;
   final bool isTestingMode;
 
@@ -27,13 +27,10 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
 
   bool editMode;
 
-  EditorAnchoredFullscreenPresenter(
-      AnchoredFullscreenHelperViewModel viewModel,
-      EditorAnchoredFullscreenHelperView viewInterface,
-      this.finderService,
-      this.isTestingMode,
-      this.helperEditorService,
-      this.parameters)
+  Map<String, ElementModel> scannedElements;
+
+  EditorAnchoredFullscreenPresenter(AnchoredFullscreenHelperViewModel viewModel, EditorAnchoredFullscreenHelperView viewInterface, this.finderService,
+      this.isTestingMode, this.helperEditorService, this.parameters)
       : super(viewModel, viewInterface) {
     assert(finderService != null, 'A finder service must be provided');
   }
@@ -47,17 +44,11 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       this.editMode = true;
       this.viewModel.loading = true;
       this.refreshView();
-      this
-          .helperEditorService
-          .getHelper(this.viewModel.id)
-          .then((helper) async {
+      this.helperEditorService.getHelper(this.viewModel.id).then((helper) async {
         this.viewModel = AnchoredFullscreenHelperViewModel.fromEntity(helper);
         this.viewModel.loading = false;
         this.viewModel.canValidate = new ValueNotifier(false);
-        this
-            .viewModel
-            .currentEditableItemNotifier
-            .addListener(removeSelectedEditableItems);
+        this.viewModel.currentEditableItemNotifier.addListener(removeSelectedEditableItems);
         await this.scanElements();
         await this.onTapElement(viewModel.backgroundBox.key);
         if (this.viewModel.writeArea != null) {
@@ -68,10 +59,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       this.viewModel.userPageElements = Map();
       this.viewModel.anchorValidated = false;
       this.viewModel.canValidate = new ValueNotifier(false);
-      this
-          .viewModel
-          .currentEditableItemNotifier
-          .addListener(removeSelectedEditableItems);
+      this.viewModel.currentEditableItemNotifier.addListener(removeSelectedEditableItems);
     }
   }
 
@@ -97,8 +85,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   Future resetSelection() async {
     await scanElements();
     viewModel.anchorValidated = false;
-    viewModel.backgroundBox.backgroundColor =
-        viewModel.backgroundBox.backgroundColor.withOpacity(0.3);
+    viewModel.backgroundBox.backgroundColor = viewModel.backgroundBox.backgroundColor.withOpacity(0.3);
   }
 
   // this methods scan elements on the user page we want to add an helper
@@ -106,8 +93,8 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   Future scanElements() async {
     var elements = await finderService.scan();
     // var bounds = elementFinder.scan(omitChildsOf: ValueKey(EDITOR_PARENT_NODE_KEY));
-    viewModel.userPageElements = elements.map((key, value) =>
-        new MapEntry(key, new WidgetElementModel(value.bounds, value.offset)));
+    this.scannedElements = elements;
+    viewModel.userPageElements = elements.map((key, value) => new MapEntry(key, new WidgetElementModel(value.bounds, value.offset)));
     refreshView();
   }
 
@@ -118,16 +105,13 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
       previouslySelected.value.selected = false;
     }
     if (!viewModel.userPageElements.containsKey(key)) {
-      debugPrint(
-          "key cannot be found : ${viewModel.userPageElements.keys.length} keys found");
-      viewModel.userPageElements.keys
-          .forEach((element) => debugPrint("=> $element"));
-      viewInterface.showErrorMessage(
-          "Key cannot be found on page. Did you remove this element?");
+      debugPrint("key cannot be found : ${viewModel.userPageElements.keys.length} keys found");
+      viewModel.userPageElements.keys.forEach((element) => debugPrint("=> $element"));
+      viewInterface.showErrorMessage("Key cannot be found on page. Did you remove this element?");
       return;
     }
     viewModel.userPageElements[key].selected = true;
-    var element = await finderService.searchChildElement(key);
+    var element = this.scannedElements[key];
     viewModel.writeArea = await finderService.getLargestAvailableSpace(element);
     this.viewModel.backgroundBox.key = key;
     refreshView();
@@ -141,8 +125,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
     if (viewModel.backgroundBox.id == null) {
       viewModel.backgroundBox.backgroundColor = Colors.blueGrey.shade900;
     } else {
-      viewModel.backgroundBox.backgroundColor =
-          viewModel.backgroundBox.backgroundColor.withOpacity(1);
+      viewModel.backgroundBox.backgroundColor = viewModel.backgroundBox.backgroundColor.withOpacity(1);
     }
     viewModel.anchorValidated = true;
     refreshView();
@@ -156,14 +139,12 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
 
   // save and cancel
   Future onValidate() async {
-    ValueNotifier<SendingStatus> status =
-        new ValueNotifier(SendingStatus.SENDING);
+    ValueNotifier<SendingStatus> status = new ValueNotifier(SendingStatus.SENDING);
     final config = CreateHelperConfig.from(parameters.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
-      await helperEditorService.saveAnchoredWidget(
-          EditorEntityFactory.buildAnchoredScreenArgs(config, viewModel));
+      await helperEditorService.saveAnchoredWidget(EditorEntityFactory.buildAnchoredScreenArgs(config, viewModel));
       status.value = SendingStatus.SENT;
     } catch (error) {
       print("error occured $error");
@@ -191,26 +172,21 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
     this.refreshView();
   }
 
-  bool isValid() =>
-      viewModel.titleField.text.isNotEmpty &&
-      viewModel.descriptionField.text.isNotEmpty;
+  bool isValid() => viewModel.titleField.text.isNotEmpty && viewModel.descriptionField.text.isNotEmpty;
 
   onPreview() {
-    this.viewInterface.showPreviewOfHelper(
-        this.viewModel, this.finderService, this.isTestingMode);
+    this.viewInterface.showPreviewOfHelper(this.viewModel, this.finderService, this.isTestingMode);
   }
 
   onTextPickerDone(String newVal) {
-    EditableTextData formData =
-        this.viewModel.currentEditableItemNotifier.value;
+    EditableTextData formData = this.viewModel.currentEditableItemNotifier.value;
     formData.text = newVal;
     this.refreshView();
     this._updateValidState();
   }
 
   onFontPickerDone(EditedFontModel newVal) {
-    EditableTextData formData =
-        this.viewModel.currentEditableItemNotifier.value;
+    EditableTextData formData = this.viewModel.currentEditableItemNotifier.value;
     formData.fontSize = newVal.size.toInt();
     formData.fontFamily = newVal.fontKeys.fontFamilyNameKey;
     formData.fontWeight = newVal.fontKeys.fontWeightNameKey;
@@ -220,8 +196,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   }
 
   onMediaPickerDone(GraphicEntity newVal) {
-    EditableMediaFormData formData =
-        this.viewModel.currentEditableItemNotifier.value;
+    EditableMediaFormData formData = this.viewModel.currentEditableItemNotifier.value;
     formData.url = newVal.url;
     formData.uuid = newVal.id;
     this.refreshView();
@@ -229,8 +204,7 @@ class EditorAnchoredFullscreenPresenter extends Presenter<
   }
 
   onTextColorPickerDone(Color newVal) {
-    EditableTextData formData =
-        this.viewModel.currentEditableItemNotifier.value;
+    EditableTextData formData = this.viewModel.currentEditableItemNotifier.value;
     formData.fontColor = newVal;
     this.refreshView();
     this._updateValidState();

@@ -1,4 +1,7 @@
-## [1.0.0] - 2021/04/31
+## [1.0.0+1] - 2021/04/20
+- Fix anchored helper selection within a Flex element 
+
+## [1.0.0] - 2021/03/31
 Our helper editor got a complete *UI overhaul*, with a brand new ***Toolbox*** ✨
  - More intuitive text fields.
  - All of your tools in one place.

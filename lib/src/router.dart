@@ -13,7 +13,6 @@ GlobalKey<NavigatorState> palNavigatorGlobalKey =
     new GlobalKey<NavigatorState>();
 
 Route<dynamic> route(RouteSettings settings) {
-  print("root router... ${settings.name}");
   switch (settings.name) {
     case '/settings':
       return MaterialPageRoute(

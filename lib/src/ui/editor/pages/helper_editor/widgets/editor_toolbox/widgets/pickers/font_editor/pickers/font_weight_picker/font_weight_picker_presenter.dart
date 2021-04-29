@@ -6,7 +6,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 class FontWeightPickerPresenter
     extends Presenter<FontWeightPickerModel, FontWeightPickerView> {
 
-  final FontWeightPickerArguments arguments;
+  final FontWeightPickerArguments? arguments;
 
   FontWeightPickerPresenter(
     FontWeightPickerView viewInterface,
@@ -16,7 +16,7 @@ class FontWeightPickerPresenter
   @override
   void onInit() {
     this.viewModel.fontWeights = FontWeightMapper.map;
-    this.viewModel.selectedFontWeightKey = arguments.fontWeightName;
+    this.viewModel.selectedFontWeightKey = arguments!.fontWeightName;
     // print(this.viewModel.selectedFontWeightKey);
   }
 }

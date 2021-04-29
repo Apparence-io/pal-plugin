@@ -8,7 +8,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 
 main() {
   group('Editor ToolBar tests', () {
-    ValueNotifier<EditableData> currentEditableItemNotifier =
+    ValueNotifier<EditableData?> currentEditableItemNotifier =
         ValueNotifier(null);
 
     Future _beforeEach(WidgetTester tester) async {

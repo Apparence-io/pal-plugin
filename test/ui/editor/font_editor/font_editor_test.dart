@@ -36,7 +36,7 @@ void main() {
       );
       await tester.pumpWidget(app);
       showDialog(
-        context: testNavigatorKey.currentContext,
+        context: testNavigatorKey.currentContext!,
         builder: widgetBuilder
       );
     }
@@ -56,7 +56,7 @@ void main() {
     });
 
     testWidgets('font size = 20, tap on middle of slider, validate => onFontModified returns a size = 45', (WidgetTester tester) async {
-      double selectedFontSize = 20;
+      double? selectedFontSize = 20;
       var widgetBuilder = (context) => FontEditorDialogPage(
         onCancelPicker: () => Navigator.of(context).pop(),
         onValidatePicker: () => Navigator.of(context).pop(),
@@ -81,7 +81,7 @@ void main() {
     });
 
     testWidgets('font size = 20, tap on middle of slider, cancel => selectedFontSize = 20', (WidgetTester tester) async {
-      double selectedFontSize = 20;
+      double? selectedFontSize = 20;
       var widgetBuilder = (context) => FontEditorDialogPage(
         onCancelPicker: () => Navigator.of(context).pop(),
         onValidatePicker: () => Navigator.of(context).pop(),

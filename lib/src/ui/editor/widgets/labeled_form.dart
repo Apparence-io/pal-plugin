@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
 class LabeledForm extends StatelessWidget {
-  final String label;
+  final String? label;
   final Widget widget;
 
   const LabeledForm({
-    Key key,
-    @required this.label,
-    @required this.widget,
+    Key? key,
+    required this.label,
+    required this.widget,
   }) : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class LabeledForm extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 5.0),
           child: Text(
-            label,
+            label!,
             style: TextStyle(
               fontSize: 10.0,
               fontWeight: FontWeight.bold,

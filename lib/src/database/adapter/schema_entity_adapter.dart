@@ -6,9 +6,9 @@ import 'generic_adapter.dart';
 class SchemaEntityAdapter extends GenericEntityAdapter<SchemaEntity> {
 
   @override
-  SchemaEntity parseMap(Map<String, dynamic> map) {
+  SchemaEntity parseMap(Map<String, dynamic>? map) {
     return SchemaEntity(
-      projectId: map['projectId'],
+      projectId: map!['projectId'],
       groups: new HelperGroupEntityAdapter().parseDynamicArray(map['groups']),
       schemaVersion: map['schemaVersion'],
     );

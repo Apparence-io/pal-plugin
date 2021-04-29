@@ -25,9 +25,9 @@ import 'editor_fullscreen_helper_presenter.dart';
 import 'editor_fullscreen_helper_viewmodel.dart';
 
 abstract class EditorFullScreenHelperView {
-  Future<GraphicEntity> pushToMediaGallery(final String mediaId);
+  Future<GraphicEntity?> pushToMediaGallery(final String? mediaId);
 
-  TextStyle googleCustomFont(String fontFamily);
+  TextStyle? googleCustomFont(String fontFamily);
 
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
 
@@ -41,11 +41,11 @@ abstract class EditorFullScreenHelperView {
 class EditorFullScreenHelper
     with EditorSendingOverlayMixin, EditorNavigationMixin
     implements EditorFullScreenHelperView {
-  BuildContext context;
+  BuildContext? context;
 
   final PalEditModeStateService palEditModeStateService;
 
-  EditorSendingOverlay sendingOverlay;
+  EditorSendingOverlay? sendingOverlay;
 
   EditorFullScreenHelper(this.context, this.palEditModeStateService) {
     overlayContext = context;
@@ -54,18 +54,18 @@ class EditorFullScreenHelper
   void closeColorPickerDialog() => closeOverlayed(OverlayKeys.PAGE_OVERLAY_KEY);
 
   @override
-  Future<GraphicEntity> pushToMediaGallery(final String mediaId) async {
-    final media = await Navigator.of(context).pushNamed(
+  Future<GraphicEntity?> pushToMediaGallery(final String? mediaId) async {
+    final media = await Navigator.of(context!).pushNamed(
       '/editor/media-gallery',
       arguments: MediaGalleryPageArguments(
         mediaId,
       ),
-    ) as GraphicEntity;
+    ) as GraphicEntity?;
     return media;
   }
 
   @override
-  TextStyle googleCustomFont(String fontFamily) {
+  TextStyle? googleCustomFont(String fontFamily) {
     return (fontFamily != null && fontFamily.length > 0)
         ? GoogleFonts.getFont(fontFamily)
         : null;
@@ -75,18 +75,18 @@ class EditorFullScreenHelper
   Future showPreviewOfHelper(FullscreenHelperViewModel model) async {
     UserFullScreenHelperPage page = UserFullScreenHelperPage(
       helperBoxViewModel:
-          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
-      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm!),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm!),
       descriptionLabel:
-          HelperSharedFactory.parseTextNotifier(model.descriptionTextForm),
+          HelperSharedFactory.parseTextNotifier(model.descriptionTextForm!),
       headerImageViewModel:
-          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
+          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm!),
       negativLabel:
-          HelperSharedFactory.parseButtonNotifier(model.negativButtonForm),
+          HelperSharedFactory.parseButtonNotifier(model.negativButtonForm!),
       positivLabel:
-          HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
-      onNegativButtonTap: () => Navigator.pop(context),
-      onPositivButtonTap: () => Navigator.pop(context),
+          HelperSharedFactory.parseButtonNotifier(model.positivButtonForm!),
+      onNegativButtonTap: () => Navigator.pop(context!),
+      onPositivButtonTap: () => Navigator.pop(context!),
     );
 
     EditorPreviewArguments arguments = EditorPreviewArguments(
@@ -94,7 +94,7 @@ class EditorFullScreenHelper
       preBuiltHelper: page,
     );
     await Navigator.pushNamed(
-      context,
+      context!,
       '/editor/preview',
       arguments: arguments,
     );
@@ -112,43 +112,43 @@ class EditorFullScreenHelperPage extends StatelessWidget {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   EditorFullScreenHelperPage._({
-    Key key,
-    @required this.presenterBuilder,
+    Key? key,
+    required this.presenterBuilder,
   }) : super(key: key);
 
   factory EditorFullScreenHelperPage.create(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          EditorHelperService helperService,
-          PalEditModeStateService palEditModeStateService,
-          @required HelperViewModel helperViewModel}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          EditorHelperService? helperService,
+          PalEditModeStateService? palEditModeStateService,
+          required HelperViewModel helperViewModel}) =>
       EditorFullScreenHelperPage._(
         key: key,
         presenterBuilder: (context) => EditorFullScreenHelperPresenter(
             new EditorFullScreenHelper(
                 context,
                 palEditModeStateService ??
-                    EditorInjector.of(context).palEditModeStateService),
+                    EditorInjector.of(context)!.palEditModeStateService),
             FullscreenHelperViewModel.fromHelperViewModel(helperViewModel),
-            helperService ?? EditorInjector.of(context).helperService,
+            helperService ?? EditorInjector.of(context)!.helperService,
             parameters),
       );
 
   factory EditorFullScreenHelperPage.edit(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          EditorHelperService helperService,
-          PalEditModeStateService palEditModeStateService,
-          @required String helperId}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          EditorHelperService? helperService,
+          PalEditModeStateService? palEditModeStateService,
+          required String? helperId}) =>
       EditorFullScreenHelperPage._(
         key: key,
         presenterBuilder: (context) => EditorFullScreenHelperPresenter(
             new EditorFullScreenHelper(
                 context,
                 palEditModeStateService ??
-                    EditorInjector.of(context).palEditModeStateService),
+                    EditorInjector.of(context)!.palEditModeStateService),
             FullscreenHelperViewModel(id: helperId),
-            helperService ?? EditorInjector.of(context).helperService,
+            helperService ?? EditorInjector.of(context)!.helperService,
             parameters),
       );
 
@@ -162,7 +162,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
       context: context,
       presenterBuilder: presenterBuilder,
       builder: (context, presenter, model) =>
-          _buildPage(context.buildContext, presenter, model),
+          _buildPage(context.buildContext, presenter as EditorFullScreenHelperPresenter, model as FullscreenHelperViewModel),
     );
   }
 
@@ -198,7 +198,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                   key: formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: EditableBackground(
-                    backgroundColor: model.backgroundBoxForm.backgroundColor,
+                    backgroundColor: model.backgroundBoxForm!.backgroundColor,
                     widget: Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -217,7 +217,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                       model.backgroundBoxForm?.backgroundColor,
                                   isSelected: model.currentEditableItemNotifier
                                           ?.value?.key ==
-                                      model.headerMediaForm.key,
+                                      model.headerMediaForm!.key,
                                 ),
                                 SizedBox(height: 24),
                                 EditableTextField(
@@ -227,7 +227,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                       model.backgroundBoxForm?.backgroundColor,
                                   isSelected: model.currentEditableItemNotifier
                                           ?.value?.key ==
-                                      model.titleTextForm.key,
+                                      model.titleTextForm!.key,
                                 ),
                                 SizedBox(height: 24),
                                 EditableTextField(
@@ -237,7 +237,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                       model.backgroundBoxForm?.backgroundColor,
                                   isSelected: model.currentEditableItemNotifier
                                           ?.value?.key ==
-                                      model.descriptionTextForm.key,
+                                      model.descriptionTextForm!.key,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 40.0),
@@ -247,7 +247,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   onTap: presenter.onNewEditableSelect,
                                   isSelected: model.currentEditableItemNotifier
                                           ?.value?.key ==
-                                      model.positivButtonForm.key,
+                                      model.positivButtonForm!.key,
                                   backgroundColor:
                                       model.backgroundBoxForm?.backgroundColor,
                                 ),
@@ -259,7 +259,7 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                                   onTap: presenter.onNewEditableSelect,
                                   isSelected: model.currentEditableItemNotifier
                                           ?.value?.key ==
-                                      model.negativButtonForm.key,
+                                      model.negativButtonForm!.key,
                                   backgroundColor:
                                       model.backgroundBoxForm?.backgroundColor,
                                 )

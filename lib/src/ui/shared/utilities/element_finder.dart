@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 
 /// This class helps you find element within your app
@@ -6,15 +7,15 @@ import 'package:flutter/material.dart';
 class ElementFinder {
 
   // Prefer use the navigatorContext to get full context tree
-  final BuildContext context;
+  final BuildContext? context;
 
   ElementFinder(this.context);
 
   // this method scan all child recursively to get all widget bounds we could select for an helper
-  Map<String, ElementModel> scan({Key omitChildsOf, bool debugMode = false}) {
+  Map<String, ElementModel> scan({Key? omitChildsOf, bool debugMode = false}) {
     Map<String, ElementModel> results = Map<String, ElementModel>();
-    context.visitChildElements((element) => _scanChildElement(
-        context.findRenderObject(),
+    context!.visitChildElements((element) => _scanChildElement(
+        context!.findRenderObject(),
         element,
         results,
         omitChildsOf: omitChildsOf,
@@ -26,14 +27,14 @@ class ElementFinder {
   // List all pages from this context
   List<PageElement> scanPages() {
     var pages = [];
-    context.visitChildElements((element) => _scanPageChildElement(element, pages));
-    return pages;
+    context!.visitChildElements((element) => _scanPageChildElement(element, pages as List<PageElement>));
+    return pages as List<PageElement>;
   }
 
   // this method scan all child recursively to find a widget having a key == searchedKey
-  ElementModel searchChildElement(String key) {
-    ElementModel result;
-    context.visitChildElements((element) => result = _searchChildElement(context.findRenderObject(), element, key));
+  ElementModel? searchChildElement(String? key) {
+    ElementModel? result;
+    context!.visitChildElements((element) => result = _searchChildElement(context!.findRenderObject(), element, key));
     if(result == null)
      return ElementModel.empty();
     return result;
@@ -42,13 +43,13 @@ class ElementFinder {
   /// This functions search for the maximum rect available space
   /// We use it for example to find the most available space to write a text in our anchored helper
   Rect getLargestAvailableSpace(ElementModel elementModel) {
-    var parentObject = context.findRenderObject();
-    var element = elementModel.element;
-    var translation = element.renderObject.getTransformTo(parentObject).getTranslation();
+    var parentObject = context!.findRenderObject()!;
+    var element = elementModel.element!;
+    var translation = element.renderObject!.getTransformTo(parentObject).getTranslation();
     var objectX = translation.x;
-    var objectEndX = objectX + element.size.width;
+    var objectEndX = objectX + element.size!.width;
     var objectY = translation.y;
-    var objectEndY = objectY + element.size.height;
+    var objectEndY = objectY + element.size!.height;
     var layerRect = parentObject.paintBounds;
 
     Rect availableHSpace;
@@ -78,16 +79,16 @@ class ElementFinder {
   // -----------------------------------------------------------
   
   // ERROR
-  ElementModel _searchChildElement(RenderObject parentObject, Element element, String key, {int n = 0}) {
+  ElementModel? _searchChildElement(RenderObject? parentObject, Element element, String? key, {int n = 0}) {
     if(element.widget.key != null 
-      && element.widget.key.toString().contains(key)) {
+      && element.widget.key.toString().contains(key!)) {
       try {
         // if render element has bounds lets take it
         var res =  _createElementModel(parentObject, element); 
         return res;
       } catch(_) {}
     } 
-    ElementModel result;
+    ElementModel? result;
     element.visitChildElements((visitor) {
       var res = _searchChildElement(parentObject, visitor, key, n: n + 1);
       if(res != null)
@@ -99,25 +100,25 @@ class ElementFinder {
   // omits elements with key starting with anything other than [<
   // flutter makes key with "[<_myKey_>]" for our keys
   // scan all elements in the current page tree and add their bounds to the results map
-  _scanChildElement(RenderObject parentObject, Element element, Map<String, ElementModel> results, {int n = 0, Key omitChildsOf, bool debugMode = true}) {
+  _scanChildElement(RenderObject? parentObject, Element element, Map<String, ElementModel> results, {int n = 0, Key? omitChildsOf, bool debugMode = true}) {
     if(debugMode) {
       var nbChilds = element.debugDescribeChildren().length;
       var pre = StringBuffer();
       for(int i = 0; i<n ; i++) {
         pre.write(" ");
       }
-      debugPrint("$pre ${element?.widget.runtimeType}  $n => $nbChilds ");
+      debugPrint("$pre ${element.widget.runtimeType}  $n => $nbChilds ");
     }
     if(element.widget.key != null && omitChildsOf !=null && element.widget.key.toString() == omitChildsOf.toString()) {
       return;
     }
     if(element.widget.key != null && element.widget.key.toString().startsWith("[<") && !results.containsKey(element.widget.key.toString())) {
       if(debugMode) {
-        debugPrint("  added ${element?.widget?.key.toString()} : $n");
+        debugPrint("  added ${element.widget.key.toString()} : $n");
       }
       try {
         var model = _createElementModel(parentObject, element);
-        if(results.values.firstWhere((element) => element.bounds == model.bounds && element.offset == model.offset, orElse: () => null) == null) {
+        if(results.values.firstWhereOrNull((element) => element.bounds == model.bounds && element.offset == model.offset) == null) {
           results.putIfAbsent(element.widget.key.toString(), () => model);
         }
       } catch (e) {
@@ -137,8 +138,8 @@ class ElementFinder {
     }
   }
 
-  ElementModel _createElementModel(RenderObject parentObject, Element element) {
-    var renderObject = element.findRenderObject();
+  ElementModel _createElementModel(RenderObject? parentObject, Element element) {
+    var renderObject = element.findRenderObject()!;
     var bounds = renderObject.paintBounds;
     var translation = renderObject.getTransformTo(parentObject).getTranslation();
     var offset = Offset(translation.x, translation.y);
@@ -161,18 +162,18 @@ class PageElement {
 
 class ElementModel {
 
-  String key;
+  String? key;
 
-  Rect bounds;
+  Rect? bounds;
 
-  Offset offset;
+  Offset? offset;
 
-  Element element;
+  Element? element;
 
   Type runtimeType;
 
   ElementModel(this.key, this.bounds, this.offset, this.runtimeType, {this.element});
 
-  factory ElementModel.empty() => ElementModel(null, null, null, null);
+  factory ElementModel.empty() => ElementModel(null, null, null, ElementModel);
 }
 

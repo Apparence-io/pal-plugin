@@ -17,10 +17,10 @@ class PageEntityAdapter extends TypeAdapter<PageEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PageEntity(
-      id: fields[0] as String,
-      creationDate: fields[1] as DateTime,
-      lastUpdateDate: fields[2] as DateTime,
-      route: fields[3] as String,
+      id: fields[0] as String?,
+      creationDate: fields[1] as DateTime?,
+      lastUpdateDate: fields[2] as DateTime?,
+      route: fields[3] as String?,
     );
   }
 

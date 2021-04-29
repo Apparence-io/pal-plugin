@@ -3,49 +3,46 @@ import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/
 import 'package:pal/src/ui/editor/widgets/bordered_text_field.dart';
 import 'package:pal/src/ui/editor/widgets/labeled_form.dart';
 
-typedef HelperNameValidator = String Function(String value);
 
-typedef TriggerTypeValidator = String Function(HelperTriggerTypeDisplay value);
-
-typedef VersionValidator = String Function(String value);
+typedef TriggerTypeValidator = String Function(HelperTriggerTypeDisplay? value);
 
 typedef OnVersionChanged = void Function(String value);
 
 typedef OnFormChanged = void Function(bool state);
 
-typedef OnTriggerValueSelected = void Function(HelperTriggerTypeDisplay triggerType);
+typedef OnTriggerValueSelected = void Function(HelperTriggerTypeDisplay? triggerType);
 
 typedef OnChangedText = void Function(String value);
 
 class CreateHelperGroup extends StatelessWidget {
 
-  final HelperNameValidator helperNameValidator;
-  final TriggerTypeValidator triggerTypeValidator;
+  final TextFieldValidator helperNameValidator;
+  final TriggerTypeValidator? triggerTypeValidator;
   final OnTriggerValueSelected onTriggerValueSelected;
   final HelperTriggerTypeDisplay defaultTriggerType;
-  final List<HelperTriggerTypeDisplay> triggerTypes;
+  final List<HelperTriggerTypeDisplay>? triggerTypes;
   final OnChangedText onChangedNameText;
   final OnFormChanged onFormChanged;
-  final VersionValidator minVersionValidator, maxVersionValidator;
-  final String minVersionInitialValue, maxVersionInitialValue;
+  final TextFieldValidator minVersionValidator, maxVersionValidator;
+  final String? minVersionInitialValue, maxVersionInitialValue;
   final OnVersionChanged minVersionChanged, maxVersionChanged;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   CreateHelperGroup({
-    @required this.helperNameValidator,
-    @required this.onFormChanged,
-    @required this.triggerTypeValidator,
-    @required this.onTriggerValueSelected,
-    @required this.defaultTriggerType,
-    @required this.triggerTypes,
-    @required this.onChangedNameText,
-    @required this.minVersionValidator,
-    @required this.maxVersionValidator,
-    @required this.minVersionInitialValue,
-    @required this.maxVersionInitialValue,
-    @required this.minVersionChanged,
-    @required this.maxVersionChanged
+    required this.helperNameValidator,
+    required this.onFormChanged,
+    required this.triggerTypeValidator,
+    required this.onTriggerValueSelected,
+    required this.defaultTriggerType,
+    required this.triggerTypes,
+    required this.onChangedNameText,
+    required this.minVersionValidator,
+    required this.maxVersionValidator,
+    required this.minVersionInitialValue,
+    required this.maxVersionInitialValue,
+    required this.minVersionChanged,
+    required this.maxVersionChanged
   });
 
   @override
@@ -54,7 +51,7 @@ class CreateHelperGroup extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
-        onChanged: () => onFormChanged(_formKey.currentState.validate()),
+        onChanged: () => onFormChanged(_formKey.currentState!.validate()),
         child: ListView(
           children: [
             LabeledForm(
@@ -74,10 +71,10 @@ class CreateHelperGroup extends StatelessWidget {
                 key: ValueKey('pal_CreateHelperGroup_Dropdown_Type'),
                 validator: triggerTypeValidator,
                 value: defaultTriggerType,
-                items: triggerTypes.map(
+                items: triggerTypes!.map(
                   (element) =>  DropdownMenuItem<HelperTriggerTypeDisplay>(
                     value: element,
-                    child: Text(element.description),
+                    child: Text(element.description!),
                   )
                 ).toList(),
                 onChanged: onTriggerValueSelected,

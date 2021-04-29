@@ -5,6 +5,7 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/theme.dart';
@@ -20,7 +21,8 @@ import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 import '../../../../../pal_test_utilities.dart';
-import 'package:mockito/mockito.dart';
+// import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
@@ -28,8 +30,13 @@ class PalEditModeStateServiceMock extends Mock
     implements PalEditModeStateService {}
 
 void main() {
+
+  setUpAll(() {
+    registerFallbackValue(CreateFullScreenHelper.empty());
+  });
+
   group('[Editor] Fullscreen helper - creation mode', () {
-    EditorFullScreenHelperPresenter presenter;
+    EditorFullScreenHelperPresenter? presenter;
 
     final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -64,7 +71,7 @@ void main() {
               builder: (context) => _overlayedApplicationPage,
             );
           case '/editor/preview':
-            EditorPreviewArguments args = settings.arguments;
+            EditorPreviewArguments? args = settings.arguments;
             return MaterialPageRoute(
               builder: (context) => EditorPreviewPage(
                 args: args,
@@ -98,7 +105,7 @@ void main() {
       await _beforeEach(tester);
       expect(find.byType(EditorFullScreenHelperPage), findsOneWidget);
       expect(presenter, isNotNull);
-      expect(presenter.editorHelperService, isNotNull);
+      expect(presenter!.editorHelperService, isNotNull);
     });
 
     testWidgets('on text press  => button is disabled',
@@ -129,11 +136,11 @@ void main() {
       final String thirdField = 'negativ edit';
 
       EditorFullScreenHelperPage page = tester.widget(find.byType(EditorFullScreenHelperPage));
-      EditorFullScreenHelperPresenter presenter = page.builder.presenter;
+      EditorFullScreenHelperPresenter presenter = page.builder.presenter as EditorFullScreenHelperPresenter;
 
-      presenter.viewModel.titleTextForm.text = firstField;
-      presenter.viewModel.positivButtonForm.text = secondField;
-      presenter.viewModel.negativButtonForm.text = thirdField;
+      presenter.viewModel.titleTextForm!.text = firstField;
+      presenter.viewModel.positivButtonForm!.text = secondField;
+      presenter.viewModel.negativButtonForm!.text = thirdField;
 
       // await _fillFields(tester, firstField, secondField, thirdField);
 
@@ -141,7 +148,7 @@ void main() {
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
-      previewButton.onTap();
+      previewButton.onTap!();
 
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pump(Duration(milliseconds: 700));
@@ -170,7 +177,7 @@ void main() {
       (tester.widget(find.byKey(ValueKey(
                   'pal_UserFullScreenHelperPage_Feedback_PositivButton')))
               as RaisedButton)
-          .onPressed();
+          .onPressed!();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
@@ -190,17 +197,17 @@ void main() {
       final String thirdField = 'negativ edit';
 
       EditorFullScreenHelperPage page = tester.widget(find.byType(EditorFullScreenHelperPage));
-      EditorFullScreenHelperPresenter presenter = page.builder.presenter;
+      EditorFullScreenHelperPresenter presenter = page.builder.presenter as EditorFullScreenHelperPresenter;
 
-      presenter.viewModel.titleTextForm.text = firstField;
-      presenter.viewModel.positivButtonForm.text = secondField;
-      presenter.viewModel.negativButtonForm.text = thirdField;
+      presenter.viewModel.titleTextForm!.text = firstField;
+      presenter.viewModel.positivButtonForm!.text = secondField;
+      presenter.viewModel.negativButtonForm!.text = thirdField;
 
       final previewButtonFinder =
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
-      previewButton.onTap();
+      previewButton.onTap!();
 
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pump(Duration(milliseconds: 700));
@@ -229,7 +236,7 @@ void main() {
       (tester.widget(find.byKey(ValueKey(
                   'pal_UserFullScreenHelperPage_Feedback_NegativButton')))
               as RaisedButton)
-          .onPressed();
+          .onPressed!();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
@@ -244,31 +251,26 @@ void main() {
         '=> save call helperService.saveFullscreen',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      var validateFinder =
-          find.byKey(ValueKey('editableActionBarValidateButton'));
-      var validateButton =
-          validateFinder.evaluate().first.widget as CircleIconButton;
+      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
+      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
 
       expect(validateButton.onTapCallback, isNull);
-      await enterTextInTextForm(
-          tester, 0, 'test title');
-      await enterTextInTextForm(
-          tester, 1, 'test description');
+      await enterTextInTextForm(tester, 0, 'test title');
+      await enterTextInTextForm(tester, 1, 'test description');
 
-      validateButton =
-          validateFinder.evaluate().first.widget as CircleIconButton;
+      validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       await tester.pumpAndSettle();
-      expect(presenter.viewModel.titleTextForm.text, equals('test title'));
-      expect(presenter.viewModel.descriptionTextForm.text,
+      expect(presenter!.viewModel.titleTextForm!.text, equals('test title'));
+      expect(presenter!.viewModel.descriptionTextForm!.text,
           equals('test description'));
       expect(
-          presenter.viewModel.positivButtonForm.text, equals('Ok, thanks !'));
-      expect(presenter.viewModel.negativButtonForm.text,
+          presenter!.viewModel.positivButtonForm!.text, equals('Ok, thanks !'));
+      expect(presenter!.viewModel.negativButtonForm!.text,
           equals('This is not helping'));
       expect(validateButton.onTapCallback, isNotNull);
-      validateButton.onTapCallback();
+      validateButton.onTapCallback!();
       await tester.pump(Duration(seconds: 1));
-      verify(helperEditorServiceMock.saveFullScreenHelper(any)).called(1);
+      verify(() => helperEditorServiceMock.saveFullScreenHelper(any())).called(1);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
     });
@@ -277,7 +279,7 @@ void main() {
         'save call helperService.saveFullscreen with error => shows error overlay',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      when(helperEditorServiceMock.saveFullScreenHelper(any))
+      when(() => helperEditorServiceMock.saveFullScreenHelper(any()))
           .thenThrow(ArgumentError());
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
@@ -290,10 +292,9 @@ void main() {
       var validateButton =
           validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNotNull);
-      validateButton.onTapCallback();
+      validateButton.onTapCallback!();
       await tester.pump(Duration(seconds: 1));
-      expect(
-          find.text('Error occured, please try again later'), findsOneWidget);
+      expect(find.text('Error occured, please try again later'), findsOneWidget);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
     });
@@ -303,7 +304,7 @@ void main() {
         (WidgetTester tester) async {
       await _beforeEach(tester);
       expect(
-        presenter.viewModel.backgroundBoxForm.backgroundColor,
+        presenter!.viewModel.backgroundBoxForm!.backgroundColor,
         Colors.blueAccent,
       );
       var colorPickerButton = find.byKey(
@@ -322,7 +323,7 @@ void main() {
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
       expect(
-        presenter.viewModel.backgroundBoxForm.backgroundColor,
+        presenter!.viewModel.backgroundBoxForm!.backgroundColor,
         Color(0xFFFFFFFF),
       );
     });
@@ -344,9 +345,9 @@ void main() {
           FullscreenHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(helper.id, helperViewModel.id);
       expect(helper.name, helperViewModel.name);
-      expect(helper.helperGroup.minVersionCode, helperViewModel.helperGroup.minVersionCode);
-      expect(helper.helperGroup.maxVersionCode, helperViewModel.helperGroup.maxVersionCode);
-      expect(helper.helperGroup.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(helper.helperGroup!.minVersionCode, helperViewModel.helperGroup!.minVersionCode);
+      expect(helper.helperGroup!.maxVersionCode, helperViewModel.helperGroup!.maxVersionCode);
+      expect(helper.helperGroup!.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
       expect(helper.helperTheme, HelperTheme.BLACK);
     });
   });
@@ -395,7 +396,7 @@ void main() {
 
     Future _beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);
-      when(helperEditorServiceMock.getHelper(any)).thenAnswer((_) => Future.value(helperEntity));
+      when(() => helperEditorServiceMock.getHelper(any())).thenAnswer((_) => Future.value(helperEntity));
       EditorFullScreenHelperPage editor = EditorFullScreenHelperPage.edit(
         palEditModeStateService: PalEditModeStateServiceMock(),
         helperId: helperEntity.id,
@@ -414,8 +415,8 @@ void main() {
         (WidgetTester tester) async {
       var entity = validFullscreenHelperEntity();
       await _beforeEach(tester, entity);
-      entity.helperTexts.forEach(
-          (element) => expect(find.text(element.value), findsOneWidget));
+      entity.helperTexts!.forEach(
+          (element) => expect(find.text(element.value!), findsOneWidget));
     });
   });
 }

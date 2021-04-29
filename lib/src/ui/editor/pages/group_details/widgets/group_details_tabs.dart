@@ -3,25 +3,25 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
 class GroupDetailsTabWidget extends StatelessWidget {
-  final String label;
+  final String? label;
   final bool active;
-  final Function onTap;
+  final Function? onTap;
 
   const GroupDetailsTabWidget(
-      {Key key, this.label, this.active = false, this.onTap})
+      {Key? key, this.label, this.active = false, this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: this.onTap,
+      onTap: this.onTap as void Function()?,
       child: CustomPaint(
         painter: TabCustomBorder(this.active),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text(this.label),
+              Text(this.label!),
             ],
           ),
         ),

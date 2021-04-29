@@ -16,14 +16,14 @@ typedef OnValidatePicker = void Function();
 typedef OnFontModified = Future Function(TextStyle, FontKeys);
 
 abstract class FontEditorDialogView {
-  Future<String> openFontFamilyPicker(
+  Future<String?> openFontFamilyPicker(
     BuildContext context,
-    FontKeys fontKeys,
+    FontKeys? fontKeys,
   );
 
-  Future<MapEntry<String, FontWeight>> openFontWeightPicker(
+  Future<MapEntry<String, FontWeight>?> openFontWeightPicker(
     BuildContext context,
-    FontKeys fontKeys,
+    FontKeys? fontKeys,
   );
 
   TextStyle defaultTextFieldPreviewColor();
@@ -31,19 +31,19 @@ abstract class FontEditorDialogView {
 
 class FontEditorDialogPage extends StatelessWidget
     implements FontEditorDialogView {
-  final OnCancelPicker onCancelPicker;
+  final OnCancelPicker? onCancelPicker;
 
-  final OnValidatePicker onValidatePicker;
+  final OnValidatePicker? onValidatePicker;
 
   final TextStyle actualTextStyle;
 
-  final String fontFamilyKey;
+  final String? fontFamilyKey;
 
-  final OnFontModified onFontModified;
+  final OnFontModified? onFontModified;
 
   FontEditorDialogPage({
-    Key key,
-    @required TextStyle actualTextStyle,
+    Key? key,
+    required TextStyle actualTextStyle,
     this.fontFamilyKey,
     this.onCancelPicker,
     this.onFontModified,
@@ -114,7 +114,7 @@ class FontEditorDialogPage extends StatelessWidget
                       FontListTile(
                         key: ValueKey('pal_FontEditorDialog_List_FontFamily'),
                         title: 'Font family',
-                        subTitle: model.fontKeys.fontFamilyNameKey,
+                        subTitle: model.fontKeys!.fontFamilyNameKey,
                         onTap: () async {
                           HapticFeedback.selectionClick();
                           presenter.changeFontFamily(context);
@@ -123,7 +123,7 @@ class FontEditorDialogPage extends StatelessWidget
                       FontListTile(
                         key: ValueKey('pal_FontEditorDialog_List_FontWeight'),
                         title: 'Font weight',
-                        subTitle: model.fontKeys.fontWeightNameKey,
+                        subTitle: model.fontKeys!.fontWeightNameKey,
                         onTap: () async {
                           HapticFeedback.selectionClick();
                           presenter.changeFontWeight(context);
@@ -163,7 +163,7 @@ class FontEditorDialogPage extends StatelessWidget
           Navigator.pop(
               context,
               EditedFontModel(
-                  model.fontKeys, model.modifiedTextStyle.fontSize));
+                  model.fontKeys, model.modifiedTextStyle!.fontSize));
           // onValidatePicker();
           // if (onFontModified != null) {
           //   await onFontModified(
@@ -177,33 +177,33 @@ class FontEditorDialogPage extends StatelessWidget
   }
 
   @override
-  Future<String> openFontFamilyPicker(
+  Future<String?> openFontFamilyPicker(
     BuildContext context,
-    FontKeys fontKeys,
+    FontKeys? fontKeys,
   ) async {
     return await Navigator.pushNamed(
       context,
       '/editor/new/font-family',
       arguments: FontFamilyPickerArguments(
-        fontFamilyName: fontKeys.fontFamilyNameKey,
+        fontFamilyName: fontKeys!.fontFamilyNameKey,
         fontWeightName: fontKeys.fontWeightNameKey,
       ),
-    ) as String;
+    ) as String?;
   }
 
   @override
-  Future<MapEntry<String, FontWeight>> openFontWeightPicker(
+  Future<MapEntry<String, FontWeight>?> openFontWeightPicker(
     BuildContext context,
-    FontKeys fontKeys,
+    FontKeys? fontKeys,
   ) async {
     return await Navigator.pushNamed(
       context,
       '/editor/new/font-weight',
       arguments: FontWeightPickerArguments(
-        fontFamilyName: fontKeys.fontFamilyNameKey,
+        fontFamilyName: fontKeys!.fontFamilyNameKey,
         fontWeightName: fontKeys.fontWeightNameKey,
       ),
-    ) as MapEntry<String, FontWeight>;
+    ) as MapEntry<String, FontWeight>?;
   }
 
   @override

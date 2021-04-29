@@ -4,19 +4,19 @@ import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 class EditorActionItem extends StatelessWidget {
   final Icon icon;
   final String text;
-  final Function onTap;
+  final Function? onTap;
 
   EditorActionItem({
-    Key key,
-    @required this.icon,
-    @required this.text,
+    Key? key,
+    required this.icon,
+    required this.text,
     this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BouncingWidget(
-      onTap: this.onTap,
+      onTap: this.onTap as void Function()?,
       child: Container(
         color: Colors.transparent,
         child: ConstrainedBox(

@@ -6,16 +6,16 @@ part 'page_entity.g.dart';
 class PageEntity {
 
   @HiveField(0)
-  String id;
+  String? id;
 
   @HiveField(1)
-  DateTime creationDate;
+  DateTime? creationDate;
 
   @HiveField(2)
-  DateTime lastUpdateDate;
+  DateTime? lastUpdateDate;
 
   @HiveField(3)
-  String route;
+  String? route;
 
   PageEntity({
     this.id,
@@ -26,8 +26,8 @@ class PageEntity {
 
   Map<String, dynamic> toJson() => {
     'id': id ?? "",
-    'creationDate': creationDate != null ? creationDate.toIso8601String() : null,
-    'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
+    'creationDate': creationDate != null ? creationDate!.toIso8601String() : null,
+    'lastUpdateDate': lastUpdateDate != null ? lastUpdateDate!.toIso8601String() : null,
     'route': route
   };
 }

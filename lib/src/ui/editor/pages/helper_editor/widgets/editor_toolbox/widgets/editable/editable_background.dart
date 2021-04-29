@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class EditableBackground extends StatelessWidget {
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final Widget widget;
-  final bool isSelected;
+  final bool? isSelected;
 
   const EditableBackground({
-    Key key,
-    @required this.backgroundColor,
-    @required this.widget,
+    Key? key,
+    required this.backgroundColor,
+    required this.widget,
     this.isSelected,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color _borderColor = this.backgroundColor.computeLuminance() > 0.5
+    Color _borderColor = this.backgroundColor!.computeLuminance() > 0.5
         ? Colors.black
         : Colors.white;
 

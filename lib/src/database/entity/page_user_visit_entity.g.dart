@@ -18,10 +18,10 @@ class HelperGroupUserVisitEntityAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HelperGroupUserVisitEntity(
-      pageId: fields[0] as String,
-      helperGroupId: fields[1] as String,
-      visitDate: fields[2] as DateTime,
-      visitVersion: fields[3] as String,
+      pageId: fields[0] as String?,
+      helperGroupId: fields[1] as String?,
+      visitDate: fields[2] as DateTime?,
+      visitVersion: fields[3] as String?,
     );
   }
 

@@ -12,8 +12,8 @@ import 'package:pal/src/extensions/color_extension.dart';
 
 class EditorViewModelFactory {
   @deprecated
-  static HelperViewModel transform(HelperViewModel model) {
-    switch (model?.helperType) {
+  static HelperViewModel? transform(HelperViewModel model) {
+    switch (model.helperType) {
       case HelperType.HELPER_FULL_SCREEN:
         return FullscreenHelperViewModel.fromHelperViewModel(model);
       case HelperType.SIMPLE_HELPER:
@@ -27,8 +27,8 @@ class EditorViewModelFactory {
     }
   }
 
-  static HelperViewModel build(HelperEntity helperEntity) {
-    switch (helperEntity?.type) {
+  static HelperViewModel? build(HelperEntity helperEntity) {
+    switch (helperEntity.type) {
       case HelperType.HELPER_FULL_SCREEN:
         return FullscreenHelperViewModel.fromHelperEntity(helperEntity);
       case HelperType.SIMPLE_HELPER:
@@ -89,11 +89,11 @@ class EditorEntityFactory {
             fontFamily: model.negativButtonForm?.fontFamily,
           ),
           helperGroup: HelperGroupConfig(
-            id: model.helperGroup.id,
-            name: model.helperGroup.name,
-            maxVersion: model.helperGroup.maxVersionCode,
-            minVersion: model.helperGroup.minVersionCode,
-            triggerType:model.helperGroup.triggerType ==null ? null :  helperTriggerTypeToString(model.helperGroup.triggerType),
+            id: model.helperGroup!.id,
+            name: model.helperGroup!.name,
+            maxVersion: model.helperGroup!.maxVersionCode,
+            minVersion: model.helperGroup!.minVersionCode,
+            triggerType:model.helperGroup!.triggerType ==null ? null :  helperTriggerTypeToString(model.helperGroup!.triggerType),
           ));
 
   static CreateSimpleHelper buildSimpleArgs(
@@ -112,24 +112,24 @@ class EditorEntityFactory {
             fontFamily: model.contentTextForm?.fontFamily,
           ),
           helperGroup: HelperGroupConfig(
-              id: model.helperGroup.id,
-              name: model.helperGroup.name,
-              minVersion: model.helperGroup.minVersionCode,
-              maxVersion: model.helperGroup.maxVersionCode,
-              triggerType:model.helperGroup.triggerType ==null ? null :  helperTriggerTypeToString(model.helperGroup.triggerType)));
+              id: model.helperGroup!.id,
+              name: model.helperGroup!.name,
+              minVersion: model.helperGroup!.minVersionCode,
+              maxVersion: model.helperGroup!.maxVersionCode,
+              triggerType:model.helperGroup!.triggerType ==null ? null :  helperTriggerTypeToString(model.helperGroup!.triggerType)));
 
   static CreateUpdateHelper buildUpdateArgs(
       CreateHelperConfig config, UpdateHelperViewModel model) {
     List<HelperTextConfig> lines = [];
-    for (var changelogNote in model.changelogsTextsForm.entries) {
+    for (var changelogNote in model.changelogsTextsForm!.entries) {
       lines.add(
         HelperTextConfig(
-          id: changelogNote?.value?.id,
-          text: changelogNote?.value?.text,
-          fontColor: changelogNote?.value?.fontColor?.toHex(),
-          fontWeight: changelogNote?.value?.fontWeight,
-          fontSize: changelogNote?.value?.fontSize,
-          fontFamily: changelogNote?.value?.fontFamily,
+          id: changelogNote.value.id,
+          text: changelogNote.value.text,
+          fontColor: changelogNote.value.fontColor?.toHex(),
+          fontWeight: changelogNote.value.fontWeight,
+          fontSize: changelogNote.value.fontSize,
+          fontFamily: changelogNote.value.fontFamily,
         ),
       );
     }
@@ -161,11 +161,11 @@ class EditorEntityFactory {
           fontFamily: model.positivButtonForm?.fontFamily,
         ),
         helperGroup: HelperGroupConfig(
-          id: model.helperGroup.id,
-          name: model.helperGroup.name,
-          maxVersion: model.helperGroup.maxVersionCode,
-          minVersion: model.helperGroup.minVersionCode,
-          triggerType:model.helperGroup.triggerType ==null ? null :  helperTriggerTypeToString(model.helperGroup.triggerType),
+          id: model.helperGroup!.id,
+          name: model.helperGroup!.name,
+          maxVersion: model.helperGroup!.maxVersionCode,
+          minVersion: model.helperGroup!.minVersionCode,
+          triggerType:model.helperGroup!.triggerType ==null ? null :  helperTriggerTypeToString(model.helperGroup!.triggerType),
         ));
   }
 
@@ -174,47 +174,47 @@ class EditorEntityFactory {
       CreateAnchoredHelper(
           config: config,
           title: HelperTextConfig(
-            id: model.titleField?.id,
-            text: model.titleField?.text,
-            fontColor: model.titleField?.fontColor?.toHex(),
-            fontWeight: model.titleField?.fontWeight,
-            fontSize: model.titleField?.fontSize,
-            fontFamily: model.titleField?.fontFamily,
+            id: model.titleField.id,
+            text: model.titleField.text,
+            fontColor: model.titleField.fontColor?.toHex(),
+            fontWeight: model.titleField.fontWeight,
+            fontSize: model.titleField.fontSize,
+            fontFamily: model.titleField.fontFamily,
           ),
           description: HelperTextConfig(
-            id: model.descriptionField?.id,
-            text: model.descriptionField?.text,
-            fontColor: model.descriptionField?.fontColor?.toHex(),
-            fontWeight: model.descriptionField?.fontWeight,
-            fontSize: model.descriptionField?.fontSize,
-            fontFamily: model.descriptionField?.fontFamily,
+            id: model.descriptionField.id,
+            text: model.descriptionField.text,
+            fontColor: model.descriptionField.fontColor?.toHex(),
+            fontWeight: model.descriptionField.fontWeight,
+            fontSize: model.descriptionField.fontSize,
+            fontFamily: model.descriptionField.fontFamily,
           ),
           positivButton: HelperTextConfig(
-            id: model.positivBtnField?.id,
-            text: model.positivBtnField?.text,
-            fontColor: model.positivBtnField?.fontColor?.toHex(),
-            fontWeight: model.positivBtnField?.fontWeight,
-            fontSize: model.positivBtnField?.fontSize,
-            fontFamily: model.positivBtnField?.fontFamily,
+            id: model.positivBtnField.id,
+            text: model.positivBtnField.text,
+            fontColor: model.positivBtnField.fontColor?.toHex(),
+            fontWeight: model.positivBtnField.fontWeight,
+            fontSize: model.positivBtnField.fontSize,
+            fontFamily: model.positivBtnField.fontFamily,
           ),
           negativButton: HelperTextConfig(
-            id: model.negativBtnField?.id,
-            text: model.negativBtnField?.text,
-            fontColor: model.negativBtnField?.fontColor?.toHex(),
-            fontWeight: model.negativBtnField?.fontWeight,
-            fontSize: model.negativBtnField?.fontSize,
-            fontFamily: model.negativBtnField?.fontFamily,
+            id: model.negativBtnField.id,
+            text: model.negativBtnField.text,
+            fontColor: model.negativBtnField.fontColor?.toHex(),
+            fontWeight: model.negativBtnField.fontWeight,
+            fontSize: model.negativBtnField.fontSize,
+            fontFamily: model.negativBtnField.fontFamily,
           ),
           bodyBox: HelperBoxConfig(
             id: model.backgroundBox.id,
             key: model.selectedAnchorKey,
-            color: model.backgroundBox?.backgroundColor?.toHex(),
+            color: model.backgroundBox.backgroundColor?.toHex(),
           ),
           helperGroup: HelperGroupConfig(
-            id: model.helperGroup.id,
-            name: model.helperGroup.name,
-            maxVersion: model.helperGroup.maxVersionCode,
-            minVersion: model.helperGroup.minVersionCode,
-            triggerType: model.helperGroup.triggerType ==null ? null : helperTriggerTypeToString(model.helperGroup.triggerType),
+            id: model.helperGroup!.id,
+            name: model.helperGroup!.name,
+            maxVersion: model.helperGroup!.maxVersionCode,
+            minVersion: model.helperGroup!.minVersionCode,
+            triggerType: model.helperGroup!.triggerType ==null ? null : helperTriggerTypeToString(model.helperGroup!.triggerType),
           ));
 }

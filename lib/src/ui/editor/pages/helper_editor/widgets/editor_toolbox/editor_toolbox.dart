@@ -15,11 +15,11 @@ import 'editor_toolbox_presenter.dart';
 import 'editor_toolbox_viewmodel.dart';
 
 abstract class EditorToolboxView {
-  Future<String> openTextPicker(String currentText);
-  Future<EditedFontModel> openFontPicker(
-      String family, int size, String weight);
-  Future<Color> openColorPicker(Color selectedColor);
-  Future<GraphicEntity> openMediaPicker(String mediaId);
+  Future<String?> openTextPicker(String? currentText);
+  Future<EditedFontModel?> openFontPicker(
+      String? family, int? size, String? weight);
+  Future<Color?> openColorPicker(Color? selectedColor);
+  Future<GraphicEntity?> openMediaPicker(String? mediaId);
 
   void refreshAnimations() {}
 
@@ -30,27 +30,27 @@ class EditorToolboxPage extends StatefulWidget {
   /// the editor helper
   final Widget child;
   // Save button function
-  final Function onValidate;
-  final Function onPreview;
-  final Function onCloseEditor;
-  final BoxViewHandler boxViewHandler;
+  final Function? onValidate;
+  final Function? onPreview;
+  final Function? onCloseEditor;
+  final BoxViewHandler? boxViewHandler;
 
   // Pickers
-  final Function(String) onTextPickerDone;
-  final Function(Color) onTextColorPickerDone;
-  final Function(EditedFontModel) onFontPickerDone;
-  final Function(dynamic) onBorderPickerDone;
-  final Function(GraphicEntity) onMediaPickerDone;
+  final Function(String)? onTextPickerDone;
+  final Function(Color)? onTextColorPickerDone;
+  final Function(EditedFontModel)? onFontPickerDone;
+  final Function(dynamic)? onBorderPickerDone;
+  final Function(GraphicEntity)? onMediaPickerDone;
 
-  final ValueNotifier<EditableData> currentEditableItemNotifier;
-  final GlobalKey scaffoldKey;
+  final ValueNotifier<EditableData?>? currentEditableItemNotifier;
+  final GlobalKey? scaffoldKey;
 
   final bool isToolsVisible;
 
   EditorToolboxPage({
-    Key key,
-    @required this.child,
-    @required this.currentEditableItemNotifier,
+    Key? key,
+    required this.child,
+    required this.currentEditableItemNotifier,
     this.scaffoldKey,
     this.onValidate,
     this.onBorderPickerDone,
@@ -73,10 +73,10 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
     implements EditorToolboxView {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  List<AnimationController> controllers;
+  late List<AnimationController> controllers;
 
-  EditorToolboxModel model;
-  EditorToolboxPresenter presenter;
+  EditorToolboxModel? model;
+  late EditorToolboxPresenter presenter;
 
   _EditorToolboxPageState();
 
@@ -123,10 +123,10 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
 
   @override
   void didUpdateWidget(covariant EditorToolboxPage oldWidget) {
-    if (model.boxViewHandler != null &&(oldWidget.boxViewHandler.selectedColor !=
-        widget.boxViewHandler.selectedColor))
-      this.model.boxViewHandler.selectedColor =
-          widget.boxViewHandler.selectedColor;
+    if (model!.boxViewHandler != null &&(oldWidget.boxViewHandler!.selectedColor !=
+        widget.boxViewHandler!.selectedColor))
+      this.model!.boxViewHandler!.selectedColor =
+          widget.boxViewHandler!.selectedColor;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -140,14 +140,14 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
       backgroundColor: Colors.transparent,
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: widget.isToolsVisible && model.animationTarget == 1
+      floatingActionButton: widget.isToolsVisible && model!.animationTarget == 1
           ? EditorSaveFloatingButton(onTap: this.widget.onValidate)
           : null,
       bottomNavigationBar: widget.isToolsVisible
           ? EditorActionBar(
               animation: this.controllers[0],
               iconsColor: Colors.white,
-              onPreview: widget.onPreview,
+              onPreview: widget.onPreview as dynamic Function()?,
               onCancel: () => this.widget.onCloseEditor?.call(),
             )
           : null,
@@ -157,7 +157,7 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   Widget _buildPage(
     final BuildContext context,
     final EditorToolboxPresenter presenter,
-    final EditorToolboxModel model,
+    final EditorToolboxModel? model,
   ) {
     return Stack(
       children: [
@@ -171,7 +171,7 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
         // vertical editor toolbar
         if (widget.isToolsVisible)
           EditorToolBar(
-            editableElementActions: model.editableElementActions,
+            editableElementActions: model!.editableElementActions,
             globalActions: model.globalActions,
             isBottomBarVisibleNotifier: model.isBottomVisible,
             drawerAnimation: this.controllers[0],
@@ -184,9 +184,9 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   }
 
   @override
-  Future<Color> openColorPicker(Color selectedColor) async {
+  Future<Color?> openColorPicker(Color? selectedColor) async {
     return await showDialog(
-      context: _scaffoldKey.currentContext,
+      context: _scaffoldKey.currentContext!,
       builder: (context) => ColorPickerDialog(
         placeholderColor: selectedColor,
       ),
@@ -194,13 +194,13 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   }
 
   @override
-  Future<EditedFontModel> openFontPicker(
-      String family, int size, String weight) async {
+  Future<EditedFontModel?> openFontPicker(
+      String? family, int? size, String? weight) async {
     TextStyle style = TextStyle(
-        fontSize: size.toDouble(),
+        fontSize: size!.toDouble(),
         fontWeight: FontWeightMapper.toFontWeight(weight));
     return await showDialog(
-      context: _scaffoldKey.currentContext,
+      context: _scaffoldKey.currentContext!,
       builder: (context) => FontEditorDialogPage(
         actualTextStyle: style,
         fontFamilyKey: family,
@@ -209,38 +209,38 @@ class _EditorToolboxPageState extends State<EditorToolboxPage>
   }
 
   @override
-  Future<String> openTextPicker(String currentText) async {
+  Future<String?> openTextPicker(String? currentText) async {
     return await showDialog(
-      context: _scaffoldKey.currentContext,
-      builder: (context) => EditableTextDialog(currentText),
+      context: _scaffoldKey.currentContext!,
+      builder: (context) => EditableTextDialog(currentText!),
     );
   }
 
   @override
-  Future<GraphicEntity> openMediaPicker(String currentMediaId) async {
-    GraphicEntity graphicEntity =
-        await Navigator.of(_scaffoldKey.currentContext).pushNamed(
+  Future<GraphicEntity?> openMediaPicker(String? currentMediaId) async {
+    GraphicEntity? graphicEntity =
+        await Navigator.of(_scaffoldKey.currentContext!).pushNamed(
       '/editor/media-gallery',
       arguments: MediaGalleryPageArguments(
         currentMediaId,
       ),
-    ) as GraphicEntity;
+    ) as GraphicEntity?;
 
     return graphicEntity;
   }
 
   @override
   void refreshAnimations() {
-    if (model.animateActionBar) {
+    if (model!.animateActionBar) {
       this
           .controllers[0]
-          .animateTo(model.animationTarget, curve: Curves.easeOut);
-      model.animateActionBar = false;
+          .animateTo(model!.animationTarget!, curve: Curves.easeOut);
+      model!.animateActionBar = false;
     }
-    if (model.animateIcons) {
+    if (model!.animateIcons!) {
       this.controllers[1].value = 0;
       this.controllers[1].animateTo(1, curve: Curves.elasticOut);
-      model.animateIcons = false;
+      model!.animateIcons = false;
     }
     this.refresh();
   }

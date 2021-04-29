@@ -12,9 +12,9 @@ import 'helpers/simple_helper/widget/simple_helper_layout.dart';
 import 'helpers/user_anchored_helper/anchored_helper_widget.dart';
 
 class HelperFactory {
-  static Widget build(final HelperEntity helper,
-      {final Function(bool positiveFeedBack) onTrigger,
-      final Function onError}) {
+  static Widget? build(final HelperEntity helper,
+      {final Function(bool positiveFeedBack)? onTrigger,
+      final Function? onError}) {
     switch (helper.type) {
       case HelperType.HELPER_FULL_SCREEN:
         return _createHelperFullScreen(helper, onTrigger);
@@ -24,41 +24,42 @@ class HelperFactory {
         return _createUpdateHelper(helper, onTrigger);
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         return _createAnchoredHelper(helper, onTrigger, onError);
+      case null:  
+        return null;
     }
-    return null;
   }
 
   static Widget _createHelperFullScreen(
     final HelperEntity helper,
-    final Function onTrigger,
+    final Function? onTrigger,
   ) {
     return UserFullScreenHelperPage(
       titleLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
-        helper.helperTexts,
-      ),
+        helper.helperTexts!,
+      )!,
       descriptionLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.DESCRIPTION_KEY,
-        helper.helperTexts,
-      ),
+        helper.helperTexts!,
+      )!,
       headerImageViewModel: HelperSharedFactory.parseImageUrl(
         FullscreenHelperKeys.IMAGE_KEY,
         helper.helperImages,
       ),
       helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         FullscreenHelperKeys.BACKGROUND_KEY,
-        helper.helperBoxes,
-      ),
+        helper.helperBoxes!,
+      )!,
       positivLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.POSITIV_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
       negativLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
-      onPositivButtonTap: () => onTrigger(true),
-      onNegativButtonTap: () => onTrigger(false),
+      onPositivButtonTap: () => onTrigger!(true),
+      onNegativButtonTap: () => onTrigger!(false),
     );
   }
 
@@ -118,7 +119,7 @@ class HelperFactory {
 
   static Widget _createSimpleHelper(
     final HelperEntity helper,
-    final Function onTrigger,
+    final Function? onTrigger,
   ) {
     GlobalKey<SimpleHelperLayoutState> _simpleHelperLayoutKey = GlobalKey();
     return SimpleHelperLayout(
@@ -126,41 +127,41 @@ class HelperFactory {
       toaster: SimpleHelperPage(
         descriptionLabel: HelperSharedFactory.parseTextLabel(
           SimpleHelperKeys.CONTENT_KEY,
-          helper.helperTexts,
-        ),
+          helper.helperTexts!,
+        )!,
         // helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         //   SimpleHelperKeys.BACKGROUND_KEY,
         //   helper.helperBoxes,
         // ),
       ),
       onDismissed: (res) async {
-        await _simpleHelperLayoutKey.currentState.reverseAnimations();
-        onTrigger(res == DismissDirection.startToEnd);
+        await _simpleHelperLayoutKey.currentState!.reverseAnimations();
+        onTrigger!(res == DismissDirection.startToEnd);
       },
     );
   }
 
   static Widget _createUpdateHelper(
-      final HelperEntity helper, final Function onTrigger) {
+      final HelperEntity helper, final Function? onTrigger) {
     return UserUpdateHelperPage(
       onPositivButtonTap: () {
-        onTrigger(true);
+        onTrigger!(true);
       },
       helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         UpdatescreenHelperKeys.BACKGROUND_KEY,
-        helper.helperBoxes,
-      ),
+        helper.helperBoxes!,
+      )!,
       thanksButtonLabel: HelperSharedFactory.parseButtonLabel(
         UpdatescreenHelperKeys.POSITIV_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
       titleLabel: HelperSharedFactory.parseTextLabel(
         UpdatescreenHelperKeys.TITLE_KEY,
-        helper.helperTexts,
-      ),
+        helper.helperTexts!,
+      )!,
       changelogLabels: HelperSharedFactory.parseTextsLabel(
         UpdatescreenHelperKeys.LINES_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
       helperImageViewModel: HelperSharedFactory.parseImageUrl(
         UpdatescreenHelperKeys.IMAGE_KEY,
@@ -170,32 +171,32 @@ class HelperFactory {
   }
 
   static Widget _createAnchoredHelper(final HelperEntity helper,
-      final Function onTrigger, final Function onError) {
+      final Function? onTrigger, final Function? onError) {
     return AnchoredHelper.fromEntity(
       titleLabel: HelperSharedFactory.parseTextLabel(
         AnchoredscreenHelperKeys.TITLE_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
       descriptionLabel: HelperSharedFactory.parseTextLabel(
         AnchoredscreenHelperKeys.DESCRIPTION_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
       helperBoxViewModel: HelperBoxViewModel(
         backgroundColor:
-            HexColor.fromHex(helper.helperBoxes.first.backgroundColor),
-        id: helper.helperBoxes.first.id,
+            HexColor.fromHex(helper.helperBoxes!.first.backgroundColor!),
+        id: helper.helperBoxes!.first.id,
       ),
-      anchorKey: helper.helperBoxes.first.key,
+      anchorKey: helper.helperBoxes!.first.key,
       positivButtonLabel: HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.POSITIV_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
       negativButtonLabel: HelperSharedFactory.parseButtonLabel(
         AnchoredscreenHelperKeys.NEGATIV_KEY,
-        helper.helperTexts,
+        helper.helperTexts!,
       ),
-      onPositivButtonTap: () => onTrigger(true),
-      onNegativButtonTap: () => onTrigger(false),
+      onPositivButtonTap: () => onTrigger!(true),
+      onNegativButtonTap: () => onTrigger!(false),
       onError: onError,
     );
   }

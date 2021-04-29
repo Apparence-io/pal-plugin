@@ -38,87 +38,87 @@ class AnchoredscreenHelperKeys {
 }
 
 class HelperSharedFactory {
-  static HelperTextViewModel parseTextLabel(
+  static HelperTextViewModel? parseTextLabel(
     final String key,
     final List<HelperTextEntity> helperTexts,
   ) {
     for (HelperTextEntity helperText in helperTexts) {
-      if (key == helperText?.key) {
+      if (key == helperText.key) {
         return HelperTextViewModel(
-          id: helperText?.id,
-          text: helperText?.value,
-          fontColor: HexColor.fromHex(helperText?.fontColor),
-          fontSize: helperText?.fontSize?.toDouble(),
-          fontFamily: helperText?.fontFamily,
-          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+          id: helperText.id,
+          text: helperText.value,
+          fontColor: HexColor.fromHex(helperText.fontColor!),
+          fontSize: helperText.fontSize?.toDouble(),
+          fontFamily: helperText.fontFamily,
+          fontWeight: FontWeightMapper.toFontWeight(helperText.fontWeight),
         );
       }
     }
     return null;
   }
 
-  static HelperButtonViewModel parseButtonLabel(
+  static HelperButtonViewModel? parseButtonLabel(
     final String key,
     final List<HelperTextEntity> helperTexts,
   ) {
     for (HelperTextEntity helperText in helperTexts) {
-      if (key == helperText?.key) {
+      if (key == helperText.key) {
         return HelperButtonViewModel(
-          id: helperText?.id,
-          text: helperText?.value,
-          fontColor: HexColor.fromHex(helperText?.fontColor),
-          fontSize: helperText?.fontSize?.toDouble(),
-          fontFamily: helperText?.fontFamily,
-          fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+          id: helperText.id,
+          text: helperText.value,
+          fontColor: HexColor.fromHex(helperText.fontColor!),
+          fontSize: helperText.fontSize?.toDouble(),
+          fontFamily: helperText.fontFamily,
+          fontWeight: FontWeightMapper.toFontWeight(helperText.fontWeight),
         );
       }
     }
     return null;
   }
 
-  static HelperImageViewModel parseImageUrl(
+  static HelperImageViewModel? parseImageUrl(
     final String key,
-    final List<HelperImageEntity> helperImages,
+    final List<HelperImageEntity>? helperImages,
   ) {
     if (helperImages == null || helperImages.length == 0) {
       return null;
     }
     for (HelperImageEntity helperImage in helperImages) {
-      if (key == helperImage?.key) {
+      if (key == helperImage.key) {
         return HelperImageViewModel(
-          id: helperImage?.id,
-          url: helperImage?.url,
+          id: helperImage.id,
+          url: helperImage.url,
         );
       }
     }
     return null;
   }
 
-  static HelperBoxViewModel parseBoxBackground(
+  static HelperBoxViewModel? parseBoxBackground(
     final String key,
     final List<HelperBoxEntity> helperBoxes,
   ) {
     for (HelperBoxEntity helperBox in helperBoxes) {
-      if (key == helperBox?.key) {
+      if (key == helperBox.key) {
         return HelperBoxViewModel(
-            id: helperBox?.id,
-            backgroundColor: HexColor.fromHex(helperBox?.backgroundColor));
+            id: helperBox.id,
+            backgroundColor: HexColor.fromHex(helperBox.backgroundColor!));
       }
     }
     return null;
   }
 
-  static HelperBorderViewModel parseBorder(
+  static HelperBorderViewModel? parseBorder(
     final String key,
     final List<HelperBorderEntity> helperBorders,
   ) {
     for (HelperBorderEntity helperBorder in helperBorders) {
-      if (key == helperBorder?.key) {
+      if (key == helperBorder.key) {
         return HelperBorderViewModel(
-          id: helperBorder?.id,
-          style: helperBorder?.style,
-          color: HexColor.fromHex(helperBorder?.color),
-          width: helperBorder?.width,
+          id: helperBorder.id,
+          style: helperBorder.style,
+          color: HexColor.fromHex(helperBorder.color!),
+          width: helperBorder.width,
         );
       }
     }
@@ -132,15 +132,15 @@ class HelperSharedFactory {
     // TODO: Reorganize array from back ?
     List<HelperTextViewModel> customLabels = [];
     for (HelperTextEntity helperText in helperTexts) {
-      if (helperText.key.startsWith(key)) {
+      if (helperText.key!.startsWith(key)) {
         customLabels.add(
           HelperTextViewModel(
-            id: helperText?.id ?? helperTexts.indexOf(helperText),
-            text: helperText?.value,
-            fontColor: HexColor.fromHex(helperText?.fontColor),
-            fontSize: helperText?.fontSize?.toDouble(),
-            fontFamily: helperText?.fontFamily,
-            fontWeight: FontWeightMapper.toFontWeight(helperText?.fontWeight),
+            id: helperText.id ?? helperTexts.indexOf(helperText),
+            text: helperText.value,
+            fontColor: HexColor.fromHex(helperText.fontColor!),
+            fontSize: helperText.fontSize?.toDouble(),
+            fontFamily: helperText.fontFamily,
+            fontWeight: FontWeightMapper.toFontWeight(helperText.fontWeight),
           ),
         );
       }

@@ -10,7 +10,7 @@ void main() {
 
     final _navigatorKey = GlobalKey<NavigatorState>();
 
-    FinderService finderService;
+    FinderService? finderService;
 
     _createPage(int n) {
       return Scaffold(
@@ -43,35 +43,35 @@ void main() {
       };
       await initAppWithPal(tester, null, _navigatorKey, routeFactory: routeFactory);
       // go to page 2
-      Navigator.of(_navigatorKey.currentContext).pushNamed("/page1");
+      Navigator.of(_navigatorKey.currentContext!).pushNamed("/page1");
       await tester.pumpAndSettle(Duration(milliseconds: 500));
       expect(find.byKey(ValueKey("p0Text1")), findsNothing);
       expect(find.byKey(ValueKey("p1Text1")), findsOneWidget);
-      finderService = EditorInjector.of(_navigatorKey.currentContext).finderService;
+      finderService = EditorInjector.of(_navigatorKey.currentContext!)!.finderService;
       expect(finderService, isNotNull);
     }
 
     testWidgets('only current page items should be available', (WidgetTester tester) async {
       await _before(tester);
-      var element = await finderService.searchChildElement("p0Text1");
+      var element = await finderService!.searchChildElement("p0Text1");
       expect(element.element, isNull);
-      var element2 = await finderService.searchChildElement("p1Text1");
+      var element2 = await finderService!.searchChildElement("p1Text1");
       expect(element2.element, isNotNull);
     });
 
     testWidgets('after pop, we find only p0Text', (WidgetTester tester) async {
       await _before(tester);
-      Navigator.of(_navigatorKey.currentContext).pop();
+      Navigator.of(_navigatorKey.currentContext!).pop();
       await tester.pumpAndSettle(Duration(milliseconds: 500));
-      var element = await finderService.searchChildElement("p0Text1");
+      var element = await finderService!.searchChildElement("p0Text1");
       expect(element.element, isNotNull);
-      var element2 = await finderService.searchChildElement("p1Text1");
+      var element2 = await finderService!.searchChildElement("p1Text1");
       expect(element2.element, isNull);
     });
 
     testWidgets('scan should find only page1 items', (WidgetTester tester) async {
       await _before(tester);
-      var element = await finderService.scan();
+      var element = await finderService!.scan();
       expect(element.keys.contains("[<'p0Text1'>]"), isFalse);
       expect(element.keys.contains("[<'p0Text2'>]"), isFalse);
       expect(element.keys.contains("[<'p0Text3'>]"), isFalse);

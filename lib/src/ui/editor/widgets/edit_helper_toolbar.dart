@@ -4,7 +4,7 @@ import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 class ToolbarAction {
   final Key key;
-  final Function onTap;
+  final Function? onTap;
   final IconData icon;
 
   ToolbarAction(
@@ -15,18 +15,18 @@ class ToolbarAction {
 }
 
 class EditHelperToolbar extends StatelessWidget {
-  final Function onChangeTextFont;
-  final Function onChangeTextColor;
-  final Function onChangeBorder;
-  final Function onCloseTap;
+  final Function? onChangeTextFont;
+  final Function? onChangeTextColor;
+  final Function? onChangeBorder;
+  final Function? onCloseTap;
   final num bottomPadding;
-  final List<ToolbarAction> extraActions;
+  final List<ToolbarAction>? extraActions;
 
   final _toolbarHeight = 40.0;
   final _iconsRadius = 25.0;
 
   const EditHelperToolbar({
-    Key key,
+    Key? key,
     this.onChangeTextFont,
     this.onChangeTextColor,
     this.onChangeBorder,
@@ -36,11 +36,11 @@ class EditHelperToolbar extends StatelessWidget {
   }) : super(key: key);
 
   factory EditHelperToolbar.text({
-    Key key,
-    Function onChangeTextFont,
-    Function onChangeTextColor,
-    Function onClose,
-    List<ToolbarAction> extraActions,
+    Key? key,
+    Function? onChangeTextFont,
+    Function? onChangeTextColor,
+    Function? onClose,
+    List<ToolbarAction>? extraActions,
     num bottomPadding = 8.0,
   }) {
     return EditHelperToolbar(
@@ -53,11 +53,11 @@ class EditHelperToolbar extends StatelessWidget {
   }
 
   factory EditHelperToolbar.border({
-    Key key,
-    Function onChangeTextFont,
-    Function onChangeTextColor,
-    Function onChangeBorder,
-    Function onClose,
+    Key? key,
+    Function? onChangeTextFont,
+    Function? onChangeTextColor,
+    Function? onChangeBorder,
+    Function? onClose,
     num bottomPadding = 8.0,
   }) {
     return EditHelperToolbar(
@@ -77,11 +77,11 @@ class EditHelperToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: bottomPadding),
+      padding: EdgeInsets.only(bottom: bottomPadding as double),
       child: Container(
         key: ValueKey('pal_EditHelperToolbar'),
         height: _toolbarHeight,
-        color: PalTheme.of(context).toolbarBackgroundColor,
+        color: PalTheme.of(context)!.toolbarBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6.0),
           child: Row(
@@ -116,7 +116,7 @@ class EditHelperToolbar extends StatelessWidget {
                           size: _iconsRadius,
                         ),
                       ),
-                      if (extraActions != null && extraActions.length > 0)
+                      if (extraActions != null && extraActions!.length > 0)
                         Wrap(
                           spacing: 4.0,
                           runSpacing: 4.0,
@@ -147,7 +147,7 @@ class EditHelperToolbar extends StatelessWidget {
 
   List<Widget> _buildExtraActions() {
     List<Widget> children = [];
-    for (final ToolbarAction action in extraActions) {
+    for (final ToolbarAction action in extraActions!) {
       children.add(
         CircleIconButton(
           key: action.key,

@@ -14,14 +14,14 @@ class HelpersSynchronizer {
   final PackageVersionReader packageVersionReader;
 
   HelpersSynchronizer({
-    @required this.pageUserVisitRemoteRepository,
-    @required this.pageUserVisitLocalRepository,
-    @required this.schemaRemoteRepository,
-    @required this.schemaLocalRepository,
-    @required this.packageVersionReader,
+    required this.pageUserVisitRemoteRepository,
+    required this.pageUserVisitLocalRepository,
+    required this.schemaRemoteRepository,
+    required this.schemaLocalRepository,
+    required this.packageVersionReader,
   });
 
-  Future<void> sync(String inAppUserId, {String languageCode}) async {
+  Future<void> sync(String? inAppUserId, {String? languageCode}) async {
     debugPrint("...sync database start");
     String currentVersion = packageVersionReader.version;
     var currentSchema = await schemaLocalRepository.get(appVersion: currentVersion);
@@ -38,8 +38,8 @@ class HelpersSynchronizer {
       await pageUserVisitLocalRepository.saveAll(visits);
     }
     if(lastSchemaVersion != null) {
-      debugPrint(" remote schema version ${lastSchemaVersion?.schemaVersion}");
-      debugPrint("${lastSchemaVersion?.groups?.length ?? 0} groups saved");
+      debugPrint(" remote schema version ${lastSchemaVersion.schemaVersion}");
+      debugPrint("${lastSchemaVersion.groups?.length ?? 0} groups saved");
       await schemaLocalRepository.save(lastSchemaVersion);
     }
     debugPrint("...sync database end");

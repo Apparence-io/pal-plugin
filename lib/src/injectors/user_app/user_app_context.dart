@@ -11,9 +11,9 @@ import 'package:pal/src/services/http_client/base_client.dart';
 
 class UserAppContext {
 
-  static UserAppContext _instance;
+  static UserAppContext? _instance;
 
-  static init({@required url, @required String token}) {
+  static init({required url, required String token}) {
     if(_instance == null) {
       _instance = HttpUserAppContext.create(url: url, token: token);
     }
@@ -24,7 +24,7 @@ class UserAppContext {
     _instance = userAppContext;
   }
 
-  static UserAppContext get instance {
+  static UserAppContext? get instance {
     if(_instance == null) {
       throw "init needs to be called";
     }
@@ -65,17 +65,16 @@ class HttpUserAppContext implements UserAppContext {
 
   final ClientSchemaRepository _clientSchemaLocalRepository, _clientSchemaRemoteRepository;
 
-  factory HttpUserAppContext.create({@required url, @required String token})
+  factory HttpUserAppContext.create({required url, required String token})
     => HttpUserAppContext._private(
       hiveClient: HiveClient(),
-      httpClient: url == null || token == null ? null : HttpClient.create(url, token)
+      httpClient: HttpClient.create(url, token)
     );
 
   HttpUserAppContext._private({
-    @required HiveClient hiveClient,
-    @required HttpClient httpClient,
-  }) : assert(httpClient != null),
-      this._pageUserVisitRemoteRepository = HelperGroupUserVisitHttpRepository(httpClient: httpClient),
+    required HiveClient hiveClient,
+    required HttpClient httpClient,
+  }) : this._pageUserVisitRemoteRepository = HelperGroupUserVisitHttpRepository(httpClient: httpClient),
       this._pageUserVisitLocalRepository = HelperGroupUserVisitLocalRepository(hiveBoxOpener: hiveClient.openVisitsBox),
       this._clientSchemaLocalRepository = ClientSchemaLocalRepository(hiveBoxOpener: hiveClient.openSchemaBox),
       this._clientSchemaRemoteRepository = ClientSchemaRemoteRepository(httpClient: httpClient),

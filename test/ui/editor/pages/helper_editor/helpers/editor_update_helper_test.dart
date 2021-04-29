@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
@@ -30,15 +31,20 @@ class PalEditModeStateServiceMock extends Mock
 class PackageVersionReaderMock extends Mock implements PackageVersionReader {}
 
 void main() {
+
+  setUpAll(() {
+    registerFallbackValue(CreateUpdateHelper.empty());
+  });
+
   group('[Editor] create - Update helper', () {
     var packageVersionReaderService = PackageVersionReaderMock();
 
-    when(packageVersionReaderService.init()).thenAnswer((_) => Future.value());
-    when(packageVersionReaderService.version).thenReturn('0.0.1');
+    when(() => packageVersionReaderService.init()).thenAnswer((_) => Future.value());
+    when(() => packageVersionReaderService.version).thenReturn('0.0.1');
 
     final _navigatorKey = GlobalKey<NavigatorState>();
 
-    EditorUpdateHelperPresenter presenter;
+    late EditorUpdateHelperPresenter presenter;
 
     EditorHelperService helperEditorServiceMock = HelperEditorServiceMock();
 
@@ -68,7 +74,7 @@ void main() {
               builder: (context) => _myHomeTest,
             );
           case '/editor/preview':
-            EditorPreviewArguments args = settings.arguments;
+            EditorPreviewArguments? args = settings.arguments;
             return MaterialPageRoute(
               builder: (context) => EditorPreviewPage(
                 args: args,
@@ -134,7 +140,7 @@ void main() {
       (tester.widget(
                   find.byKey(ValueKey('pal_EditorUpdateHelperWidget_AddNote')))
               as CircleIconButton)
-          .onTapCallback();
+          .onTapCallback!();
       // await tester.tap(addChangelogButtonFinder);
       await tester.pumpAndSettle(Duration(milliseconds: 500));
       await enterTextInTextForm(tester, 1, thirdField);
@@ -155,7 +161,7 @@ void main() {
           find.byKey(ValueKey('editableActionBarPreviewButton'));
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
-      previewButton.onTap();
+      previewButton.onTap!();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
@@ -179,13 +185,13 @@ void main() {
           .byKey(ValueKey('pal_UserUpdateHelperWidget_ReleaseNotes_List_0'));
       expect(changelogFinder, findsOneWidget);
       RichText changeLogText = tester.widget(changelogFinder);
-      expect(((changeLogText.text as TextSpan).children.last as TextSpan).text,
+      expect(((changeLogText.text as TextSpan).children!.last as TextSpan).text,
           equals('test changelog edited'));
 
       (tester.widget(find.byKey(
                   ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised')))
               as RaisedButton)
-          .onPressed();
+          .onPressed!();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
@@ -238,8 +244,8 @@ void main() {
       var validateButton =
           validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNotNull);
-      expect(presenter.viewModel.titleTextForm.text, 'Lorem ipsum');
-      expect(presenter.viewModel.changelogsTextsForm['0'].text,
+      expect(presenter.viewModel.titleTextForm!.text, 'Lorem ipsum');
+      expect(presenter.viewModel.changelogsTextsForm!['0']!.text,
           'Lorem ipsum changelog');
       await tester.pump(Duration(milliseconds: 100));
     });
@@ -274,9 +280,9 @@ void main() {
           find.byKey(ValueKey('editableActionBarValidateButton'));
       var validateButton =
           validateFinder.evaluate().first.widget as CircleIconButton;
-      validateButton.onTapCallback();
+      validateButton.onTapCallback!();
       await tester.pump(Duration(seconds: 1));
-      verify(helperEditorServiceMock.saveUpdateHelper(any)).called(1);
+      verify(() => helperEditorServiceMock.saveUpdateHelper(any())).called(1);
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
     });
@@ -285,7 +291,7 @@ void main() {
         (WidgetTester tester) async {
       await beforeEach(tester);
       expect(
-        presenter.viewModel.backgroundBoxForm.backgroundColor,
+        presenter.viewModel.backgroundBoxForm!.backgroundColor,
         Colors.blueAccent,
       );
 
@@ -305,7 +311,7 @@ void main() {
       await tester.tap(validateColorButton);
       await tester.pumpAndSettle();
 
-      expect(presenter.viewModel.backgroundBoxForm.backgroundColor,
+      expect(presenter.viewModel.backgroundBoxForm!.backgroundColor,
           Color(0xFFFFFFFF));
     });
 
@@ -336,11 +342,11 @@ void main() {
       var helper = UpdateHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(helper.id, helperViewModel.id);
       expect(helper.name, helperViewModel.name);
-      expect(helper.helperGroup.minVersionCode,
-          helperViewModel.helperGroup.minVersionCode);
-      expect(helper.helperGroup.maxVersionCode,
-          helperViewModel.helperGroup.maxVersionCode);
-      expect(helper.helperGroup.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
+      expect(helper.helperGroup!.minVersionCode,
+          helperViewModel.helperGroup!.minVersionCode);
+      expect(helper.helperGroup!.maxVersionCode,
+          helperViewModel.helperGroup!.maxVersionCode);
+      expect(helper.helperGroup!.triggerType, HelperTriggerType.ON_SCREEN_VISIT);
       expect(helper.helperTheme, HelperTheme.BLACK);
     });
   });
@@ -348,7 +354,7 @@ void main() {
   group('[Editor] update -  Update helper', () {
     final _navigatorKey = GlobalKey<NavigatorState>();
 
-    EditorUpdateHelperPresenter presenter;
+    late EditorUpdateHelperPresenter presenter;
 
     EditorHelperService helperEditorServiceMock = HelperEditorServiceMock();
 
@@ -372,7 +378,7 @@ void main() {
     // init pal + go to editor
     Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
       reset(helperEditorServiceMock);
-      when(helperEditorServiceMock.getHelper(any))
+      when(() => helperEditorServiceMock.getHelper(any()))
           .thenAnswer((_) => Future.value(helperEntity));
       await initAppWithPal(tester, _myHomeTest, _navigatorKey);
       await pumpHelperWidget(
@@ -441,10 +447,10 @@ void main() {
       var entity = validUpdateHelperEntity();
       await beforeEach(tester, entity);
       expect(find.byType(EditorUpdateHelperPage), findsOneWidget);
-      expect(presenter.viewModel.changelogsTextsForm.length, 2);
+      expect(presenter.viewModel.changelogsTextsForm!.length, 2);
       await tester.pump(Duration(milliseconds: 500));
-      entity.helperTexts.forEach(
-          (element) => expect(find.text(element.value), findsOneWidget));
+      entity.helperTexts!.forEach(
+          (element) => expect(find.text(element.value!), findsOneWidget));
     });
   });
 }

@@ -7,29 +7,29 @@ import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/
 import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.dart';
 
 class CreateHelperModel extends MVVMModel {
-  ValueNotifier<bool> isFormValid = ValueNotifier(false);
-  List<String> stepsTitle;
-  ValueNotifier<int> step;
+  ValueNotifier<bool>? isFormValid = ValueNotifier(false);
+  List<String>? stepsTitle;
+  ValueNotifier<int>? step;
 
   // Step 0
-  List<HelperGroupViewModel> helperGroups;
-  HelperGroupViewModel selectedHelperGroup;
-  List<HelperTriggerTypeDisplay> triggerTypes;
-  HelperTriggerTypeDisplay selectedTriggerType;
-  String appVersion, minVersion, maxVersion;
-  bool helperGroupCreationState;
+  late List<HelperGroupViewModel> helperGroups;
+  HelperGroupViewModel? selectedHelperGroup;
+  List<HelperTriggerTypeDisplay>? triggerTypes;
+  HelperTriggerTypeDisplay? selectedTriggerType;
+  String? appVersion, minVersion, maxVersion;
+  bool? helperGroupCreationState;
 
   // Step 1
-  GlobalKey<FormState> infosForm;
-  bool isAppVersionLoading;
-  TextEditingController helperNameController;
-  int selectedRank;
+  GlobalKey<FormState>? infosForm;
+  bool? isAppVersionLoading;
+  TextEditingController? helperNameController;
+  int? selectedRank;
 
   // Step 2
-  HelperType selectedHelperType;
+  HelperType? selectedHelperType;
 
   // Step 3
-  HelperTheme selectedHelperTheme;
+  HelperTheme? selectedHelperTheme;
 
   CreateHelperModel({
     this.selectedTriggerType,
@@ -48,12 +48,12 @@ class CreateHelperModel extends MVVMModel {
   HelperViewModel asHelperViewModel() => HelperViewModel(
         helperType: selectedHelperType,
         helperTheme: selectedHelperTheme,
-        name: helperNameController?.value?.text,
+        name: helperNameController?.value.text,
         priority: selectedRank,
         helperGroup: HelperGroupModel(
           id: selectedHelperGroup?.groupId,
           name: selectedHelperGroup?.title,
-          triggerType: selectedTriggerType.key,
+          triggerType: selectedTriggerType!.key,
           minVersionCode: minVersion,
           maxVersionCode: maxVersion,
         ),
@@ -71,10 +71,10 @@ class CreateHelperModel extends MVVMModel {
 class HelperGroupViewModel extends ChangeNotifier
     implements ValueListenable<HelperGroupViewModel> {
   bool _selected;
-  String groupId;
-  String title;
+  String? groupId;
+  String? title;
 
-  HelperGroupViewModel({@required this.groupId, @required this.title})
+  HelperGroupViewModel({required this.groupId, required this.title})
       : this._selected = false;
 
   set selected(bool selected) {
@@ -97,12 +97,12 @@ class HelperGroupViewModel extends ChangeNotifier
 
 class HelperSelectionViewModel {
   String id, title;
-  HelperSelectionViewModel({@required this.id, @required this.title});
+  HelperSelectionViewModel({required this.id, required this.title});
 }
 
 class GroupHelperViewModel {
-  String id;
-  String title;
+  String? id;
+  String? title;
 
   GroupHelperViewModel({this.id, this.title});
 }

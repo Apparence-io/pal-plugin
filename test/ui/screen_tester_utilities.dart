@@ -16,7 +16,7 @@ class ScreenSize {
 }
 
 
-List<ScreenSize> devicesScreenConfigs;
+List<ScreenSize>? devicesScreenConfigs;
 
 extension ScreenSizeManager on WidgetTester {
 

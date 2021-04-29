@@ -13,11 +13,11 @@ import 'package:pal/src/services/locale_service/locale_service.dart';
 class HelperClientService {
 
   factory HelperClientService.build({
-    HelperGroupUserVisitRepository localVisitRepository,
-    HelperGroupUserVisitRepository remoteVisitRepository,
-    ClientSchemaRepository clientSchemaRepository,
-    ClientHelperRepository helperRemoteRepository,
-    LocaleService userLocale,
+    required HelperGroupUserVisitRepository localVisitRepository,
+    required HelperGroupUserVisitRepository remoteVisitRepository,
+    required ClientSchemaRepository clientSchemaRepository,
+    required ClientHelperRepository helperRemoteRepository,
+    required LocaleService userLocale,
   }) => _HelperClientService(
     clientSchemaRepository: clientSchemaRepository,
     helperRemoteRepository: helperRemoteRepository,
@@ -26,49 +26,51 @@ class HelperClientService {
     userLocale: userLocale
   );
 
-  Future<HelperGroupEntity> getPageNextHelper(
-    final String route, 
-    final String inAppUserId, 
+  Future<HelperGroupEntity?> getPageNextHelper(
+    final String? route, 
+    final String? inAppUserId, 
     final AppVersion appVersion) => throw "not implemented";
 
   Future onHelperTrigger(
-    final String pageId, 
+    final String? pageId, 
     final HelperGroupEntity helperGroup, 
     final HelperEntity helper, 
-    final String inAppUserId, 
+    final String? inAppUserId, 
     final bool positiveFeedback,
     final String inAppVersion) => throw "not implemented";
 }
 
 class _HelperClientService implements HelperClientService {
 
-  final ClientSchemaRepository _clientSchemaRepository;
+  late final ClientSchemaRepository _clientSchemaRepository;
 
-  final HelperGroupUserVisitRepository _localVisitRepository, _remoteVisitRepository; // ignore: unused_field
+  late final HelperGroupUserVisitRepository _localVisitRepository, _remoteVisitRepository; // ignore: unused_field
 
-  final LocaleService _userLocale;
+  late final LocaleService _userLocale;
 
   _HelperClientService({
-    @required HelperGroupUserVisitRepository localVisitRepository,
-    @required HelperGroupUserVisitRepository remoteVisitRepository,
-    @required ClientSchemaRepository clientSchemaRepository,
-    @required ClientHelperRepository helperRemoteRepository,
-    @required LocaleService userLocale,
+    required HelperGroupUserVisitRepository localVisitRepository,
+    required HelperGroupUserVisitRepository remoteVisitRepository,
+    required ClientSchemaRepository clientSchemaRepository,
+    required ClientHelperRepository helperRemoteRepository,
+    required LocaleService userLocale,
   }) : this._clientSchemaRepository = clientSchemaRepository,
        this._localVisitRepository = localVisitRepository,
        this._remoteVisitRepository = remoteVisitRepository,
        this._userLocale = userLocale;
 
   @override
-  Future<HelperGroupEntity> getPageNextHelper(
-    String route, 
-    String inAppUserId, 
+  Future<HelperGroupEntity?> getPageNextHelper(
+    String? route, 
+    String? inAppUserId, 
     AppVersion inAppVersion
   ) async {
-    SchemaEntity currentSchema = await _clientSchemaRepository.get();
+    SchemaEntity? currentSchema = await _clientSchemaRepository.get();
+    if(currentSchema == null)
+      return null;
     List<HelperGroupUserVisitEntity> userVisits = await _localVisitRepository.get(inAppUserId, null);
-    List<HelperGroupEntity> group = currentSchema.groups
-      .where((element) => element.page.route == route)
+    List<HelperGroupEntity> group = currentSchema.groups!
+      .where((element) => element.page!.route == route)
       .where((element) => inAppVersion.isGreaterOrEqual(AppVersion.fromString(element.minVersion)))
       .where((element) => inAppVersion.isLowerOrEqual(AppVersion.fromString(element.maxVersion)))
       .where((element) => userVisits.where((visit) => visit.helperGroupId == element.id).isEmpty)
@@ -78,34 +80,34 @@ class _HelperClientService implements HelperClientService {
       var firstVisit = userVisits.isNotEmpty ? userVisits.first : null;
       var firstVisitVersion = userVisits.isNotEmpty ? AppVersion.fromString(firstVisit?.visitVersion) : null;
       int i = -1;
-      HelperGroupEntity selectedGroup;
+      HelperGroupEntity? selectedGroup;
       while(i < group.length - 1 && selectedGroup == null) {
         i++;
         if(group[i].triggerType == HelperTriggerType.ON_NEW_UPDATE 
-          && (firstVisit == null || firstVisitVersion.isLower(inAppVersion))) {
+          && (firstVisit == null || firstVisitVersion!.isLower(inAppVersion))) {
           selectedGroup = group[i];
         } else if (group[i].triggerType == HelperTriggerType.ON_SCREEN_VISIT) {
           selectedGroup = group[i];
         }
       } 
       if(selectedGroup!=null)
-        return selectedGroup..helpers.sort();
+        return selectedGroup..helpers!.sort();
     }
     return null;
   }
 
   @override
   Future onHelperTrigger(
-    String pageId, 
+    String? pageId, 
     HelperGroupEntity helperGroup, 
     HelperEntity helper, 
-    String inAppUserId, 
+    String? inAppUserId, 
     bool positiveFeedback, 
     String inAppVersion
   ) async {
     try {
-      var helperIndex = helperGroup.helpers.indexWhere((element) => element.id == helper.id);
-      bool isLast = helperIndex == helperGroup.helpers.length - 1;
+      var helperIndex = helperGroup.helpers!.indexWhere((element) => element.id == helper.id);
+      bool isLast = helperIndex == helperGroup.helpers!.length - 1;
       var visit = HelperGroupUserVisitEntity(
         pageId: pageId, 
         helperGroupId: helperGroup.id,
@@ -116,14 +118,20 @@ class _HelperClientService implements HelperClientService {
         visit, 
         isLast: isLast,
         feedback: positiveFeedback, 
-        inAppUserId: inAppUserId,
+        inAppUserId: inAppUserId!,
         helper: helper,
         languageCode: _userLocale.languageCode,
-
       );
-      await _localVisitRepository.add(visit); // we only store locally that he already visited
-    } catch(err) {
-      print("error occured while sending visits ");
+      await _localVisitRepository.add(
+        visit,
+        isLast: isLast,
+        feedback: positiveFeedback, 
+        inAppUserId: inAppUserId,
+        helper: helper,
+        languageCode: _userLocale.languageCode
+      ); // we only store locally that he already visited
+    } catch(err,stack) {
+      print("error occured while sending visits $err => $stack");
       print(err);
     }
   }

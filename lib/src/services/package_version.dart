@@ -3,7 +3,7 @@ import 'package:pal/src/services/client/versions/version.dart';
 
 class PackageVersionReader {
 
-  PackageInfo info;
+  late PackageInfo info;
 
   PackageVersionReader() {
     init();

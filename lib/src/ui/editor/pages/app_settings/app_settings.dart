@@ -26,9 +26,9 @@ abstract class AppSettingsView {
 class AppSettingsPage extends StatelessWidget
     with SnackbarMixin
     implements AppSettingsView {
-  final AppIconGrabberDelegate appIconGrabberDelegate;
-  final PackageVersionReader packageVersionReader;
-  final ProjectEditorService projectEditorService;
+  final AppIconGrabberDelegate? appIconGrabberDelegate;
+  final PackageVersionReader? packageVersionReader;
+  final ProjectEditorService? projectEditorService;
   final bool testMode;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -36,7 +36,7 @@ class AppSettingsPage extends StatelessWidget
   final double _logoSize = 120.0;
 
   AppSettingsPage({
-    Key key,
+    Key? key,
     this.appIconGrabberDelegate,
     this.packageVersionReader,
     this.projectEditorService,
@@ -54,11 +54,11 @@ class AppSettingsPage extends StatelessWidget
       presenterBuilder: (context) => AppSettingsPresenter(
         this,
         packageVersionReader: packageVersionReader ??
-            EditorInjector.of(context).packageVersionReader,
+            EditorInjector.of(context)!.packageVersionReader,
         projectEditorService: projectEditorService ??
-            EditorInjector.of(context).projectEditorService,
+            EditorInjector.of(context)!.projectEditorService,
         appIconGrabberDelegate: appIconGrabberDelegate ??
-            EditorInjector.of(context).appIconGrabberDelegate,
+            EditorInjector.of(context)!.appIconGrabberDelegate,
       ),
       singleAnimControllerBuilder: (tickerProvider) {
         return AnimationController(
@@ -69,8 +69,8 @@ class AppSettingsPage extends StatelessWidget
         );
       },
       animListener: (context, presenter, model) {
-        if (model.appIconAnimation) {
-          context.animationController
+        if (model.appIconAnimation!) {
+          context.animationController!
               .forward()
               .then((value) => presenter.onAppIconAnimationEnd());
         }
@@ -100,12 +100,12 @@ class AppSettingsPage extends StatelessWidget
       alignment: Alignment.topCenter,
       child: Padding(
         padding: EdgeInsets.only(
-          top: (model.headerSize.height / 2) +
-              ((model.headerSize.height - _logoSize) / 2),
+          top: (model.headerSize!.height / 2) +
+              ((model.headerSize!.height - _logoSize) / 2),
         ),
         child: AnimatedAppIcon(
           radius: _logoSize / 2,
-          animationController: context.animationController,
+          animationController: context.animationController!,
           onTap: presenter.refreshAppIcon,
           isSendingAppIcon: model.isSendingAppIcon,
           testMode: testMode,
@@ -121,7 +121,7 @@ class AppSettingsPage extends StatelessWidget
     return Container(
       key: _headerKey,
       decoration: BoxDecoration(
-        gradient: PalTheme.of(context).settingsSilverGradient,
+        gradient: PalTheme.of(context)!.settingsSilverGradient,
       ),
     );
   }
@@ -142,7 +142,7 @@ class AppSettingsPage extends StatelessWidget
             ),
             Expanded(
               flex: 25,
-              child: model.isLoadingAppInfo
+              child: model.isLoadingAppInfo!
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
@@ -210,16 +210,16 @@ class AppSettingsPage extends StatelessWidget
                 child: Text(
                   'Beta account member',
                   style: TextStyle(
-                    color: PalTheme.of(context).colors.color1,
+                    color: PalTheme.of(context)!.colors.color1,
                   ),
                 ),
               ),
               borderSide: BorderSide(
-                color: PalTheme.of(context).colors.color1,
+                color: PalTheme.of(context)!.colors.color1!,
               ),
               shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  color: PalTheme.of(context).colors.color1,
+                  color: PalTheme.of(context)!.colors.color1!,
                   width: 3,
                   style: BorderStyle.solid,
                 ),
@@ -240,7 +240,7 @@ class AppSettingsPage extends StatelessWidget
 
   @override
   getHeaderSize() {
-    RenderBox _headerRenderBox = _headerKey.currentContext.findRenderObject();
+    RenderBox _headerRenderBox = _headerKey.currentContext!.findRenderObject() as RenderBox;
     return _headerRenderBox.size;
   }
 

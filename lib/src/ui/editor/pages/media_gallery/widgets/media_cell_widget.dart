@@ -6,14 +6,14 @@ import 'package:pal/src/theme.dart';
 
 class MediaCellWidget extends StatefulWidget {
   final String id;
-  final String url;
+  final String? url;
   final bool isSelected;
-  final Function() onTap;
+  final Function()? onTap;
 
   MediaCellWidget({
-    Key key,
-    @required this.id,
-    @required this.url,
+    Key? key,
+    required this.id,
+    required this.url,
     this.isSelected = false,
     this.onTap,
   }) : super(key: key);
@@ -24,8 +24,8 @@ class MediaCellWidget extends StatefulWidget {
 
 class _MediaCellWidgetState extends State<MediaCellWidget>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  double _scale;
+  AnimationController? _animationController;
+  late double _scale;
   Duration _duration = Duration(milliseconds: 100);
 
   @override
@@ -49,7 +49,7 @@ class _MediaCellWidgetState extends State<MediaCellWidget>
 
   @override
   Widget build(BuildContext context) {
-    _scale = 1 - _animationController.value;
+    _scale = 1 - _animationController!.value;
 
     return GestureDetector(
       key: ValueKey('pal_MediaCellWidget_${widget.id}'),
@@ -61,16 +61,16 @@ class _MediaCellWidgetState extends State<MediaCellWidget>
         child: Stack(
           children: [
             CachedNetworkImage(
-              imageUrl: widget.url,
+              imageUrl: widget.url!,
               placeholder: (context, url) => Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
             ),
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(image: CachedNetworkImageProvider(widget.url),
+                image: DecorationImage(image: CachedNetworkImageProvider(widget.url!),
                 fit: BoxFit.cover),
                 border: Border.all(
-                  color: PalTheme.of(context).colors.color1,
+                  color: PalTheme.of(context)!.colors.color1!,
                   width: 6.0,
                   style: (widget.isSelected)
                       ? BorderStyle.solid
@@ -95,7 +95,7 @@ class _MediaCellWidgetState extends State<MediaCellWidget>
           borderRadius: BorderRadius.only(
             bottomLeft: const Radius.circular(10.0),
           ),
-          color: PalTheme.of(context).colors.color1,
+          color: PalTheme.of(context)!.colors.color1,
         ),
         child: Center(
           child: Icon(
@@ -110,18 +110,18 @@ class _MediaCellWidgetState extends State<MediaCellWidget>
   }
 
   _onTapDown(TapDownDetails details) {
-    _animationController.forward();
+    _animationController!.forward();
     HapticFeedback.selectionClick();
   }
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(_duration, () {
-      _animationController.reverse();
+      _animationController!.reverse();
     });
-    widget.onTap();
+    widget.onTap!();
   }
 
   _onTapCancel() {
-    _animationController.reverse();
+    _animationController!.reverse();
   }
 }

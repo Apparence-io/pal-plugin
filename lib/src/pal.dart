@@ -24,16 +24,16 @@ typedef ChildAppBuilder = Widget Function(BuildContext context);
 // Pal top widget
 class Pal extends StatelessWidget {
   /// application child to display Pal over it.
-  final MaterialApp childApp;
+  final MaterialApp? childApp;
 
   /// build application child dynamically to display Pal over it. (used for GetX or other plugins)
-  final ChildAppBuilder childAppBuilder;
+  final ChildAppBuilder? childAppBuilder;
 
   /// reference to the Navigator state of the child app
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
   /// used to manage state of current page
-  final PalNavigatorObserver navigatorObserver;
+  final PalNavigatorObserver? navigatorObserver;
 
   /// disable or enable the editor mode.
   final bool editorModeEnabled;
@@ -45,10 +45,10 @@ class Pal extends StatelessWidget {
   final String appToken;
 
   Pal({
-    Key key,
-    this.childApp,
+    Key? key,
+    required MaterialApp this.childApp,
     this.childAppBuilder,
-    @required this.appToken,
+    required this.appToken,
     this.editorModeEnabled = true,
     this.textDirection = TextDirection.ltr,
   })  : assert(childApp != null, 'Pal must embed a client application'),
@@ -57,8 +57,8 @@ class Pal extends StatelessWidget {
         assert(
             childApp.navigatorKey != null, 'Pal navigatorKey must not be null'),
         navigatorKey = childApp.navigatorKey,
-        navigatorObserver = childApp.navigatorObservers
-            .firstWhere((element) => element is PalNavigatorObserver),
+        navigatorObserver = childApp.navigatorObservers!
+            .firstWhere((element) => element is PalNavigatorObserver) as PalNavigatorObserver?,
         super(key: key) {
     assert(navigatorObserver != null,
         'your app navigatorObservers must contain PalNavigatorObserver like this: navigatorObservers: [PalNavigatorObserver.instance()]');
@@ -66,12 +66,12 @@ class Pal extends StatelessWidget {
   }
 
   Pal._({
-    Key key,
+    Key? key,
     this.childApp,
     this.childAppBuilder,
     this.navigatorKey,
     this.navigatorObserver,
-    @required this.appToken,
+    required this.appToken,
     this.editorModeEnabled = true,
     this.textDirection = TextDirection.ltr,
   }) : super(key: key) {
@@ -84,10 +84,10 @@ class Pal extends StatelessWidget {
   ///   - onGenerateRoute: routes,
   ///   - navigatorObservers: [PalNavigatorObserver.instance()],
   factory Pal.fromAppBuilder(
-          {@required ChildAppBuilder childAppBuilder,
-          @required String appToken,
-          @required bool editorModeEnabled,
-          @required GlobalKey<NavigatorState> navigatorKey}) =>
+          {required ChildAppBuilder childAppBuilder,
+          required String appToken,
+          required bool editorModeEnabled,
+          required GlobalKey<NavigatorState> navigatorKey}) =>
       Pal._(
         childAppBuilder: childAppBuilder,
         appToken: appToken,
@@ -97,12 +97,12 @@ class Pal extends StatelessWidget {
       );
 
   Pal.fromRouterApp({
-    Key key,
+    Key? key,
     this.childApp,
     this.childAppBuilder,
-    @required this.appToken,
+    required this.appToken,
     this.editorModeEnabled = true,
-    this.navigatorKey,
+    required GlobalKey<NavigatorState> this.navigatorKey,
     this.textDirection = TextDirection.ltr,
   })  : assert(childApp != null || childAppBuilder != null,
             'Pal must embed a client application'),
@@ -131,13 +131,13 @@ class Pal extends StatelessWidget {
       textDirection: textDirection,
       child: (editorModeEnabled)
           ? buildEditorApp(
-              childApp == null ? childAppBuilder(context) : childApp)
+              childApp == null ? childAppBuilder!(context) : childApp)
           : buildUserApp(
-              childApp == null ? childAppBuilder(context) : childApp),
+              childApp == null ? childAppBuilder!(context) : childApp),
     );
   }
 
-  Widget buildEditorApp(Widget childApp) {
+  Widget buildEditorApp(Widget? childApp) {
     return EditorInjector(
         routeObserver: navigatorObserver,
         hostedAppNavigatorKey: navigatorKey,
@@ -147,23 +147,23 @@ class Pal extends StatelessWidget {
           hostedAppNavigatorKey: navigatorKey,
         ),
         boundaryChildKey: navigatorKey,
-        appContext: EditorAppContext.instance);
+        appContext: EditorAppContext.instance!);
   }
 
-  Widget buildUserApp(Widget childApp) {
+  Widget buildUserApp(Widget? childApp) {
     return UserInjector(
-      appContext: UserAppContext.instance,
+      appContext: UserAppContext.instance!,
       routeObserver: navigatorObserver,
       userLocale: LocaleService(hostedKey: navigatorKey),
       child: Builder(builder: (context) {
         HelperOrchestrator.getInstance(
-            helperClientService: UserInjector.of(context).helperService,
-            inAppUserClientService: UserInjector.of(context).inAppUserClientService,
-            helpersSynchronizer: UserInjector.of(context).helpersSynchronizerService,
+            helperClientService: UserInjector.of(context)!.helperService,
+            inAppUserClientService: UserInjector.of(context)!.inAppUserClientService,
+            helpersSynchronizer: UserInjector.of(context)!.helpersSynchronizerService,
             routeObserver: navigatorObserver,
-            packageVersionReader: UserInjector.of(context).packageVersionReader,
+            packageVersionReader: UserInjector.of(context)!.packageVersionReader,
             navigatorKey: navigatorKey);
-        return Overlayed(child: childApp);
+        return Overlayed(child: childApp!);
       }),
     );
   }

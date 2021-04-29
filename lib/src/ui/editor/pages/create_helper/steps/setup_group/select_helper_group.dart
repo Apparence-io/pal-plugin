@@ -12,11 +12,11 @@ typedef OnTapHelperGroup = void Function(HelperGroupViewModel tapedElement);
 /// ---------------------------------------------------------
 class SelectHelperGroupPage extends StatelessWidget {
 
-  final HelperGroupLoader helperGroupLoader;
+  final HelperGroupLoader? helperGroupLoader;
 
-  final Function onTapAdd;
+  final Function? onTapAdd;
   
-  final OnTapHelperGroup onTapElement;
+  final OnTapHelperGroup? onTapElement;
 
   SelectHelperGroupPage({this.helperGroupLoader, this.onTapAdd, this.onTapElement});
 
@@ -28,9 +28,9 @@ class SelectHelperGroupPage extends StatelessWidget {
         _AddGroupButton(onTapAdd: onTapAdd),
         Expanded(
           child: FutureBuilder<List<HelperGroupViewModel>>(
-            future: helperGroupLoader(),
+            future: helperGroupLoader!(),
             builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.done
-              ? (!snapshot.hasData || snapshot.data.length == 0) ? _buildEmptyList() : _buildItems(snapshot.data)
+              ? (!snapshot.hasData || snapshot.data!.length == 0) ? _buildEmptyList() : _buildItems(snapshot.data!)
               : _buildLoading(),
           ),
         ),
@@ -56,21 +56,21 @@ class HelperGroupItemLine extends StatelessWidget {
 
   final HelperGroupViewModel model;
   
-  final OnTapHelperGroup onTapElement;
+  final OnTapHelperGroup? onTapElement;
   
   HelperGroupItemLine(this.model, this.onTapElement);
 
   @override
   Widget build(BuildContext context) => ValueListenableBuilder(
     valueListenable: model,
-    builder: (ctx, value, child) => ListTile(
-      onTap: () => onTapElement(value),
+    builder: (ctx, dynamic value, child) => ListTile(
+      onTap: () => onTapElement!(value),
       selected: value.selected,
-      selectedTileColor: PalTheme.of(context).colors.color4,
+      selectedTileColor: PalTheme.of(context)!.colors.color4,
       title: Text(value?.title ?? "",
         style: TextStyle(
           fontSize: 16,
-          color: PalTheme.of(context).colors.dark,
+          color: PalTheme.of(context)!.colors.dark,
           fontFamily: 'Montserrat',
           fontWeight: FontWeight.w500
         ),
@@ -86,27 +86,27 @@ class HelperGroupItemLine extends StatelessWidget {
 /// ---------------------------------------------------------
 class _AddGroupButton extends StatelessWidget {
 
-  final Function onTapAdd;
+  final Function? onTapAdd;
   
-  _AddGroupButton({@required this.onTapAdd});
+  _AddGroupButton({required this.onTapAdd});
 
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap: this.onTapAdd,
+    onTap: this.onTapAdd as void Function()?,
     child: Container(
-      color: PalTheme.of(context).colors.color3,
+      color: PalTheme.of(context)!.colors.color3,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
         child: Row(
           children: [
-            Icon(Icons.add, color: PalTheme.of(context).colors.light),
+            Icon(Icons.add, color: PalTheme.of(context)!.colors.light),
             SizedBox(width: 8),
             Text("Create new group",
               style: TextStyle(
                 fontSize: 18,
                 fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w500,
-                color: PalTheme.of(context).colors.light))
+                color: PalTheme.of(context)!.colors.light))
           ],
         ),
       ),

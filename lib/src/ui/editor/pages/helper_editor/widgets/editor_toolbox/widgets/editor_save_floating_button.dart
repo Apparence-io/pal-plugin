@@ -3,10 +3,10 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 class EditorSaveFloatingButton extends StatelessWidget {
-  final Function onTap;
+  final Function? onTap;
 
   const EditorSaveFloatingButton({
-    Key key,
+    Key? key,
     this.onTap,
   }) : super(key: key);
 
@@ -16,7 +16,7 @@ class EditorSaveFloatingButton extends StatelessWidget {
 
     return CircleIconButton(
       key: ValueKey('editableActionBarValidateButton'),
-      backgroundColor: PalTheme.of(context).colors.color2,
+      backgroundColor: PalTheme.of(context)!.colors.color2,
       radius: 40.0,
       borderSide: BorderSide(
         color: Colors.white,

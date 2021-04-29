@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/router.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
@@ -8,7 +9,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
-import '../../../../../lib/src/extensions/color_extension.dart';
+
 import '../../../../pal_test_utilities.dart';
 import './data.dart';
 
@@ -43,32 +44,32 @@ void main() {
               child: AnchoredHelper.fromEntity(
                 titleLabel: HelperSharedFactory.parseTextLabel(
                   AnchoredscreenHelperKeys.TITLE_KEY,
-                  helperEntity.helperTexts,
+                  helperEntity.helperTexts!,
                 ),
                 descriptionLabel: HelperSharedFactory.parseTextLabel(
                   AnchoredscreenHelperKeys.DESCRIPTION_KEY,
-                  helperEntity.helperTexts,
+                  helperEntity.helperTexts!,
                 ),
                 helperBoxViewModel: HelperBoxViewModel(
                   backgroundColor: HexColor.fromHex(
-                      helperEntity.helperBoxes.first.backgroundColor),
-                  id: helperEntity.helperBoxes.first.id,
+                      helperEntity.helperBoxes!.first.backgroundColor!),
+                  id: helperEntity.helperBoxes!.first.id,
                 ),
-                anchorKey: helperEntity.helperBoxes.first.key,
+                anchorKey: helperEntity.helperBoxes!.first.key,
                 positivButtonLabel: HelperSharedFactory.parseButtonLabel(
                   AnchoredscreenHelperKeys.POSITIV_KEY,
-                  helperEntity.helperTexts,
+                  helperEntity.helperTexts!,
                 ),
                 negativButtonLabel: HelperSharedFactory.parseButtonLabel(
                   AnchoredscreenHelperKeys.NEGATIV_KEY,
-                  helperEntity.helperTexts,
+                  helperEntity.helperTexts!,
                 ),
                 onError: () {
                   var key = OverlayKeys.PAGE_OVERLAY_KEY;
-                  Overlayed.of(_navigatorKey.currentState.context)
-                      .entries[key]
+                  Overlayed.of(_navigatorKey.currentState!.context)!
+                      .entries[key]!
                       .remove();
-                  Overlayed.of(_navigatorKey.currentState.context)
+                  Overlayed.of(_navigatorKey.currentState!.context)!
                       .entries
                       .remove(key);
                 },
@@ -84,15 +85,15 @@ void main() {
         (WidgetTester tester) async {
       await beforeEach(tester, validAnchoredHelperEntity);
       expect(find.byType(AnchoredHelper), findsOneWidget);
-      validAnchoredHelperEntity.helperTexts.forEach((element) {
+      validAnchoredHelperEntity.helperTexts!.forEach((element) {
         var textWidget =
-            find.text(element.value).evaluate().first.widget as Text;
+            find.text(element.value!).evaluate().first.widget as Text;
         expect(textWidget, isNotNull);
-        expect(textWidget.style.color.toHex(), element.fontColor);
-        expect(textWidget.style.fontWeight,
+        expect(textWidget.style!.color!.toHex(), element.fontColor);
+        expect(textWidget.style!.fontWeight,
             FontWeightMapper.toFontWeight(element.fontWeight));
-        expect(textWidget.style.fontFamily, contains(element.fontFamily));
-        expect(textWidget.style.fontSize, element.fontSize);
+        expect(textWidget.style!.fontFamily, contains(element.fontFamily));
+        expect(textWidget.style!.fontSize, element.fontSize);
       });
       await tester.pump();
     });

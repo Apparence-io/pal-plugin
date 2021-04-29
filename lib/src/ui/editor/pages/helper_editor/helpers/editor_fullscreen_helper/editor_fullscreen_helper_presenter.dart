@@ -18,9 +18,9 @@ class EditorFullScreenHelperPresenter
     extends Presenter<FullscreenHelperViewModel, EditorFullScreenHelperView> {
   final EditorHelperService editorHelperService;
 
-  final HelperEditorPageArguments parameters;
+  final HelperEditorPageArguments? parameters;
 
-  bool editMode;
+  late bool editMode;
 
   EditorFullScreenHelperPresenter(
     EditorFullScreenHelperView viewInterface,
@@ -45,7 +45,7 @@ class EditorFullScreenHelperPresenter
         this.viewModel.loading = false;
         this
             .viewModel
-            .currentEditableItemNotifier
+            .currentEditableItemNotifier!
             .addListener(removeSelectedEditableItems);
         this.refreshView();
       });
@@ -55,7 +55,7 @@ class EditorFullScreenHelperPresenter
       this.viewModel.loading = false;
       this
           .viewModel
-          .currentEditableItemNotifier
+          .currentEditableItemNotifier!
           .addListener(removeSelectedEditableItems);
       this.refreshView();
     }
@@ -67,7 +67,7 @@ class EditorFullScreenHelperPresenter
   Future onDestroy() async {
     this
         .viewModel
-        .currentEditableItemNotifier
+        .currentEditableItemNotifier!
         .removeListener(removeSelectedEditableItems);
   }
 
@@ -80,7 +80,7 @@ class EditorFullScreenHelperPresenter
   Future onValidate() async {
     ValueNotifier<SendingStatus> status =
         new ValueNotifier(SendingStatus.SENDING);
-    final config = CreateHelperConfig.from(parameters.pageId, viewModel);
+    final config = CreateHelperConfig.from(parameters!.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
@@ -104,10 +104,10 @@ class EditorFullScreenHelperPresenter
   }
 
   //TODO move  to view
-  TextStyle googleCustomFont(String fontFamily) =>
+  TextStyle? googleCustomFont(String fontFamily) =>
       this.viewInterface.googleCustomFont(fontFamily);
 
-  String validateTitleTextField(String currentValue) {
+  String? validateTitleTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';
     }
@@ -118,7 +118,7 @@ class EditorFullScreenHelperPresenter
   }
 
   updateBackgroundColor(Color aColor) {
-    viewModel.backgroundBoxForm.backgroundColor = aColor;
+    viewModel.backgroundBoxForm!.backgroundColor = aColor;
     // this.viewInterface.closeColorPickerDialog();
     this._updateValidState();
     this.refreshView();
@@ -139,15 +139,15 @@ class EditorFullScreenHelperPresenter
   // ----------------------------------
 
   _updateValidState() {
-    viewModel.canValidate.value = isValid();
+    viewModel.canValidate!.value = isValid();
     this.refreshView();
   }
 
   bool isValid() =>
-      viewModel.positivButtonForm.text.isNotEmpty &&
-      viewModel.negativButtonForm.text.isNotEmpty &&
-      viewModel.titleTextForm.text.isNotEmpty &&
-      viewModel.descriptionTextForm.text.isNotEmpty;
+      viewModel.positivButtonForm!.text!.isNotEmpty &&
+      viewModel.negativButtonForm!.text!.isNotEmpty &&
+      viewModel.titleTextForm!.text!.isNotEmpty &&
+      viewModel.descriptionTextForm!.text!.isNotEmpty;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);
@@ -155,7 +155,7 @@ class EditorFullScreenHelperPresenter
 
   onTextPickerDone(String newVal) {
     EditableTextData formData =
-        this.viewModel.currentEditableItemNotifier.value;
+        this.viewModel.currentEditableItemNotifier!.value as EditableTextData;
     formData.text = newVal;
     this.refreshView();
     this._updateValidState();
@@ -163,10 +163,10 @@ class EditorFullScreenHelperPresenter
 
   onFontPickerDone(EditedFontModel newVal) {
     EditableTextData formData =
-        this.viewModel.currentEditableItemNotifier.value;
-    formData.fontSize = newVal.size.toInt();
-    formData.fontFamily = newVal.fontKeys.fontFamilyNameKey;
-    formData.fontWeight = newVal.fontKeys.fontWeightNameKey;
+        this.viewModel.currentEditableItemNotifier!.value as EditableTextData;
+    formData.fontSize = newVal.size!.toInt();
+    formData.fontFamily = newVal.fontKeys!.fontFamilyNameKey;
+    formData.fontWeight = newVal.fontKeys!.fontWeightNameKey;
 
     this.refreshView();
     this._updateValidState();
@@ -174,23 +174,23 @@ class EditorFullScreenHelperPresenter
 
   onMediaPickerDone(GraphicEntity newVal) {
     EditableMediaFormData formData =
-        this.viewModel.currentEditableItemNotifier.value;
+        this.viewModel.currentEditableItemNotifier!.value as EditableMediaFormData;
     formData.url = newVal.url;
     formData.uuid = newVal.id;
     this.refreshView();
     this._updateValidState();
   }
 
-  onTextColorPickerDone(Color newVal) {
+  onTextColorPickerDone(Color? newVal) {
     EditableTextData formData =
-        this.viewModel.currentEditableItemNotifier.value;
+        this.viewModel.currentEditableItemNotifier!.value as EditableTextData;
     formData.fontColor = newVal;
     this.refreshView();
     this._updateValidState();
   }
 
-  onNewEditableSelect(EditableData editedData) {
-    this.viewModel.currentEditableItemNotifier.value = editedData;
+  onNewEditableSelect(EditableData? editedData) {
+    this.viewModel.currentEditableItemNotifier!.value = editedData;
     this.refreshView();
   }
 }

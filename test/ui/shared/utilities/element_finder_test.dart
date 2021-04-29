@@ -16,7 +16,7 @@ void main() {
     );
 
     testWidgets('search a widget by key and find location + size', (WidgetTester tester) async {
-      BuildContext _context;
+      BuildContext? _context;
       var app = new MediaQuery(data: MediaQueryData(),
         child: MaterialApp(home: Builder(
           builder: (context) {
@@ -27,13 +27,13 @@ void main() {
       );
       await tester.pumpWidget(app);
       ElementFinder finder =  ElementFinder(_context);
-      var result = finder.searchChildElement("container");
+      var result = finder.searchChildElement("container")!;
       expect(result, isNotNull);
-      expect(result.bounds.size, equals(Size(150, 50)));
+      expect(result.bounds!.size, equals(Size(150, 50)));
     });
 
     testWidgets('scan widgets finds all with their rect', (WidgetTester tester) async {
-      BuildContext _context;
+      BuildContext? _context;
       var app = new MediaQuery(data: MediaQueryData(),
         child: MaterialApp(home: Builder(
           builder: (context) {

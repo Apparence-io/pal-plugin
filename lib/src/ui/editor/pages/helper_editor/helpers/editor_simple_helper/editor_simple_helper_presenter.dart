@@ -17,7 +17,7 @@ class EditorSimpleHelperPresenter
     extends Presenter<SimpleHelperViewModel, EditorSimpleHelperView> {
   final EditorHelperService editorHelperService;
 
-  final HelperEditorPageArguments parameters;
+  final HelperEditorPageArguments? parameters;
 
   bool editMode = false;
 
@@ -42,7 +42,7 @@ class EditorSimpleHelperPresenter
         viewModel.currentSelectedEditableNotifier = ValueNotifier(null);
         this
             .viewModel
-            .currentSelectedEditableNotifier
+            .currentSelectedEditableNotifier!
             .addListener(removeSelectedEditableItems);
         this.viewModel.loading = false;
         this.refreshView();
@@ -52,7 +52,7 @@ class EditorSimpleHelperPresenter
       viewModel.currentSelectedEditableNotifier = ValueNotifier(null);
       this
           .viewModel
-          .currentSelectedEditableNotifier
+          .currentSelectedEditableNotifier!
           .addListener(removeSelectedEditableItems);
       this.viewModel.loading = false;
       this.refreshView();
@@ -81,7 +81,7 @@ class EditorSimpleHelperPresenter
   Future onValidate() async {
     ValueNotifier<SendingStatus> status =
         new ValueNotifier(SendingStatus.SENDING);
-    final config = CreateHelperConfig.from(parameters.pageId, viewModel);
+    final config = CreateHelperConfig.from(parameters!.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
@@ -104,7 +104,7 @@ class EditorSimpleHelperPresenter
     viewInterface.closeEditor(!this.editMode,false);
   }
 
-  String validateDetailsTextField(String currentValue) {
+  String? validateDetailsTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';
     }
@@ -125,37 +125,37 @@ class EditorSimpleHelperPresenter
   }
 
   onFontPickerDone(EditedFontModel newFont) {
-    this.viewModel.contentTextForm.fontFamily =
-        newFont.fontKeys.fontFamilyNameKey;
-    this.viewModel.contentTextForm.fontWeight =
-        newFont.fontKeys.fontWeightNameKey;
-    this.viewModel.contentTextForm.fontSize = newFont.size.toInt();
+    this.viewModel.contentTextForm!.fontFamily =
+        newFont.fontKeys!.fontFamilyNameKey;
+    this.viewModel.contentTextForm!.fontWeight =
+        newFont.fontKeys!.fontWeightNameKey;
+    this.viewModel.contentTextForm!.fontSize = newFont.size!.toInt();
     this._updateValidState();
   }
 
   onTextPickerDone(String newVal) {
-    this.viewModel.contentTextForm.text = newVal;
+    this.viewModel.contentTextForm!.text = newVal;
     this._updateValidState();
   }
 
   onTextColorPickerDone(Color newColor) {
-    this.viewModel.contentTextForm.fontColor = newColor;
+    this.viewModel.contentTextForm!.fontColor = newColor;
     this._updateValidState();
   }
 
-  onNewEditableSelect(EditableData editedData) {
-    this.viewModel.currentSelectedEditableNotifier.value = editedData;
+  onNewEditableSelect(EditableData? editedData) {
+    this.viewModel.currentSelectedEditableNotifier!.value = editedData;
     this.refreshView();
   }
 
-  bool isValid() => viewModel.contentTextForm.text.isNotEmpty;
+  bool isValid() => viewModel.contentTextForm!.text!.isNotEmpty;
 
   // ----------------------------------
   // PRIVATES
   // ----------------------------------
 
   _updateValidState() {
-    viewModel.canValidate.value = isValid();
+    viewModel.canValidate!.value = isValid();
     this.refreshView();
   }
 }

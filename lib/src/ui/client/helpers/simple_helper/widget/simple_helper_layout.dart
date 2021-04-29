@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
 
 class SimpleHelperLayout extends StatefulWidget {
-  final SimpleHelperPage toaster;
-  final DismissDirectionCallback onDismissed;
+  final SimpleHelperPage? toaster;
+  final DismissDirectionCallback? onDismissed;
 
-  SimpleHelperLayout({this.toaster, this.onDismissed, Key key})
+  SimpleHelperLayout({this.toaster, this.onDismissed, Key? key})
       : super(key: key);
 
   @override
@@ -118,7 +118,7 @@ class SimpleHelperLayoutState extends State<SimpleHelperLayout>
       shadowColor: Colors.transparent,
       child: Dismissible(
         key: ValueKey("toaster"),
-        child: widget.toaster,
+        child: widget.toaster!,
         onDismissed: (DismissDirection direction) {
           if (widget.onDismissed != null) {
             switch (direction) {
@@ -131,7 +131,7 @@ class SimpleHelperLayoutState extends State<SimpleHelperLayout>
               default:
             }
 
-            widget.onDismissed(direction);
+            widget.onDismissed!(direction);
           }
         },
       ),

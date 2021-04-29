@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker_loader.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker_viewmodel.dart';
 
-class FontFamilyPickerLoaderMock extends Mock
-    implements FontFamilyPickerLoader {}
+class FontFamilyPickerLoaderMock extends Mock implements FontFamilyPickerLoader {}
 
 void main() {
   group('Font family picker', () {
@@ -85,7 +84,7 @@ Future _beforeEach(
     fonts: fonts,
     originalFonts: List.from(fonts),
   );
-  when(loader.load()).thenAnswer((realInvocation) => Future.value(viewModel));
+  when(() => loader.load()).thenAnswer((realInvocation) => Future.value(viewModel));
 
   final component = FontFamilyPickerPage(
     loader: loader,
@@ -101,7 +100,7 @@ Future _beforeEach(
         theme: PalThemeData.light(),
         child: Builder(
           builder: (context) => MaterialApp(
-            theme: PalTheme.of(context).buildTheme(),
+            theme: PalTheme.of(context)!.buildTheme(),
             home: component,
           ),
         ),

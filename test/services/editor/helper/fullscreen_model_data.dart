@@ -4,7 +4,7 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
-genFullscreenModel({HelperGroupConfig groupConfig})
+genFullscreenModel({HelperGroupConfig? groupConfig})
   => CreateFullScreenHelper(
     helperGroup: groupConfig ?? HelperGroupConfig(
       id: "3872983729JJF"
@@ -43,25 +43,25 @@ genExpectedFullscreenEntity(CreateFullScreenHelper args)
     priority: 1,
     helperTexts: [
       HelperTextEntity(
-        value: args.title.text,
-        fontColor: args.title.fontColor,
-        fontWeight: args.title.fontWeight,
-        fontSize: args.title.fontSize,
-        fontFamily: args.title.fontFamily,
+        value: args.title!.text,
+        fontColor: args.title!.fontColor,
+        fontWeight: args.title!.fontWeight,
+        fontSize: args.title!.fontSize,
+        fontFamily: args.title!.fontFamily,
         key: FullscreenHelperKeys.TITLE_KEY,
       ),
       HelperTextEntity(
-        value: args.description.text,
-        fontColor: args.description.fontColor,
-        fontWeight: args.description.fontWeight,
-        fontSize: args.description.fontSize,
-        fontFamily: args.description.fontFamily,
+        value: args.description!.text,
+        fontColor: args.description!.fontColor,
+        fontWeight: args.description!.fontWeight,
+        fontSize: args.description!.fontSize,
+        fontFamily: args.description!.fontFamily,
         key: FullscreenHelperKeys.DESCRIPTION_KEY,
       ),
     ],
     helperImages: [
       HelperImageEntity(
-        url: args.mediaHeader.url,
+        url: args.mediaHeader!.url,
         key: FullscreenHelperKeys.IMAGE_KEY,
       )
     ],

@@ -17,11 +17,11 @@ import 'editor_update_helper_viewmodel.dart';
 class EditorUpdateHelperPresenter
     extends Presenter<UpdateHelperViewModel, EditorUpdateHelperView> {
   final EditorHelperService editorHelperService;
-  final HelperEditorPageArguments parameters;
+  final HelperEditorPageArguments? parameters;
   final StreamController<bool> editableTextFieldController;
 
-  final GlobalKey titleKey;
-  final GlobalKey thanksButtonKey;
+  final GlobalKey? titleKey;
+  final GlobalKey? thanksButtonKey;
 
   // EDIT MODE
   bool editMode = false;
@@ -49,7 +49,7 @@ class EditorUpdateHelperPresenter
         this.viewModel.isKeyboardVisible = false;
         this
             .viewModel
-            .currentEditableItemNotifier
+            .currentEditableItemNotifier!
             .addListener(removeSelectedEditableItems);
         this.refreshView();
       });
@@ -58,7 +58,7 @@ class EditorUpdateHelperPresenter
       this.viewModel.isKeyboardVisible = false;
       this
           .viewModel
-          .currentEditableItemNotifier
+          .currentEditableItemNotifier!
           .addListener(removeSelectedEditableItems);
       this.refreshView();
     }
@@ -70,7 +70,7 @@ class EditorUpdateHelperPresenter
   void onDestroy() {
     this
         .viewModel
-        .currentEditableItemNotifier
+        .currentEditableItemNotifier!
         .removeListener(removeSelectedEditableItems);
   }
 
@@ -86,38 +86,38 @@ class EditorUpdateHelperPresenter
   }
 
   onTextPickerDone(String newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+    (this.viewModel.currentEditableItemNotifier!.value as EditableTextData)
         .text = newVal;
     this.refreshView();
     this._updateValidState();
   }
 
   onFontPickerDone(EditedFontModel newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
-        .fontFamily = newVal.fontKeys.fontFamilyNameKey;
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
-        .fontSize = newVal.size.toInt();
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
-        .fontWeight = newVal.fontKeys.fontWeightNameKey;
+    (this.viewModel.currentEditableItemNotifier!.value as EditableTextData)
+        .fontFamily = newVal.fontKeys!.fontFamilyNameKey;
+    (this.viewModel.currentEditableItemNotifier!.value as EditableTextData)
+        .fontSize = newVal.size!.toInt();
+    (this.viewModel.currentEditableItemNotifier!.value as EditableTextData)
+        .fontWeight = newVal.fontKeys!.fontWeightNameKey;
     this.refreshView();
   }
 
   onMediaPickerDone(GraphicEntity newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData)
+    (this.viewModel.currentEditableItemNotifier!.value as EditableMediaFormData)
         .url = newVal.url;
-    (this.viewModel.currentEditableItemNotifier.value as EditableMediaFormData)
+    (this.viewModel.currentEditableItemNotifier!.value as EditableMediaFormData)
         .uuid = newVal.id;
     this.refreshView();
   }
 
   onTextColorPickerDone(Color newVal) {
-    (this.viewModel.currentEditableItemNotifier.value as EditableTextData)
+    (this.viewModel.currentEditableItemNotifier!.value as EditableTextData)
         .fontColor = newVal;
     this.refreshView();
   }
 
-  onNewEditableSelect(EditableData editedData) {
-    this.viewModel.currentEditableItemNotifier.value = editedData;
+  onNewEditableSelect(EditableData? editedData) {
+    this.viewModel.currentEditableItemNotifier!.value = editedData;
     this.refreshView();
   }
 
@@ -137,7 +137,7 @@ class EditorUpdateHelperPresenter
   Future<void> onValidate() async {
     ValueNotifier<SendingStatus> status =
         new ValueNotifier(SendingStatus.SENDING);
-    final config = CreateHelperConfig.from(parameters.pageId, viewModel);
+    final config = CreateHelperConfig.from(parameters!.pageId, viewModel);
     try {
       await viewInterface.showLoadingScreen(status);
       await Future.delayed(Duration(seconds: 1));
@@ -156,7 +156,7 @@ class EditorUpdateHelperPresenter
   }
 
   updateBackgroundColor(Color aColor) {
-    viewModel.backgroundBoxForm.backgroundColor = aColor;
+    viewModel.backgroundBoxForm!.backgroundColor = aColor;
     this._updateValidState();
     this.refreshView();
   }
@@ -172,7 +172,7 @@ class EditorUpdateHelperPresenter
     this.refreshView();
   }
 
-  String validateTitleTextField(String currentValue) {
+  String? validateTitleTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';
     }
@@ -182,7 +182,7 @@ class EditorUpdateHelperPresenter
     return null;
   }
 
-  String validateChangelogTextField(String currentValue) {
+  String? validateChangelogTextField(String currentValue) {
     if (currentValue.length <= 0) {
       return 'Please enter some text';
     }
@@ -197,12 +197,12 @@ class EditorUpdateHelperPresenter
   // ----------------------------------
 
   _updateValidState() {
-    viewModel.canValidate.value = isValid();
+    viewModel.canValidate!.value = isValid();
   }
 
   bool isValid() =>
-      viewModel.titleTextForm.text.isNotEmpty &&
-      viewModel.changelogsTextsForm.length > 0;
+      viewModel.titleTextForm!.text!.isNotEmpty &&
+      viewModel.changelogsTextsForm!.length > 0;
 
   onPreview() {
     this.viewInterface.showPreviewOfHelper(this.viewModel);

@@ -3,13 +3,13 @@ import 'package:pal/src/theme.dart';
 
 class FontListTile extends StatelessWidget {
   final String title;
-  final String subTitle;
-  final Function onTap;
+  final String? subTitle;
+  final Function? onTap;
 
   const FontListTile({
-    Key key,
-    @required this.title,
-    @required this.subTitle,
+    Key? key,
+    required this.title,
+    required this.subTitle,
     this.onTap,
   }) : super(key: key);
 
@@ -18,17 +18,17 @@ class FontListTile extends StatelessWidget {
     return ListTile(
       title: Text(title),
       subtitle: Text(
-        subTitle,
+        subTitle!,
         style: TextStyle(
-          color: PalTheme.of(context).colors.dark.withAlpha(140),
+          color: PalTheme.of(context)!.colors.dark!.withAlpha(140),
         ),
       ),
       trailing: Icon(
         Icons.arrow_forward_ios,
         size: 15,
-        color: PalTheme.of(context).colors.dark,
+        color: PalTheme.of(context)!.colors.dark,
       ),
-      onTap: onTap,
+      onTap: onTap as void Function()?,
     );
   }
 }

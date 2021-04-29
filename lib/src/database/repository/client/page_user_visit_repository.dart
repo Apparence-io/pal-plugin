@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pal/src/database/adapter/helper_group_visit_entity_adapter.dart' as Adapter;
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
@@ -14,16 +13,16 @@ import '../base_repository.dart';
 
 abstract class HelperGroupUserVisitRepository {
 
-  Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion);
+  Future<List<HelperGroupUserVisitEntity>> get(String? userId, String? minAppVersion);
 
   Future<void> saveAll(List<HelperGroupUserVisitEntity> visits);
 
   Future<void> add(HelperGroupUserVisitEntity visit, {
-    bool isLast, 
-    bool feedback, 
-    String inAppUserId, 
-    HelperEntity helper,
-    String languageCode
+    required bool isLast, 
+    required bool feedback, 
+    required String inAppUserId, 
+    required String languageCode, 
+    required HelperEntity helper
   });
 
   Future<void> clear();
@@ -34,11 +33,11 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
 
   Adapter.HelperGroupUserVisitEntityAdapter _adapter = Adapter.HelperGroupUserVisitEntityAdapter();
 
-  HelperGroupUserVisitHttpRepository({@required HttpClient httpClient})
+  HelperGroupUserVisitHttpRepository({required HttpClient httpClient})
     : super(httpClient: httpClient);
 
 
-  Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion) async {
+  Future<List<HelperGroupUserVisitEntity>> get(String? userId, String? minAppVersion) async {
     final Response response = await this
       .httpClient
       .get(Uri.parse('pal-analytic/users/$userId/groups'));
@@ -58,11 +57,11 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
   @override
   Future<void> add(HelperGroupUserVisitEntity visit, 
     {
-      @required bool isLast, 
-      @required bool feedback, 
-      @required String inAppUserId, 
-      @required String languageCode, 
-      @required HelperEntity helper
+      required bool isLast, 
+      required bool feedback, 
+      required String inAppUserId, 
+      required String languageCode, 
+      required HelperEntity helper
     }) async  {
     var url = Uri.parse('pal-analytic/users/$inAppUserId/groups/${visit.helperGroupId}/helpers/${helper.id}');
     var body = jsonEncode({
@@ -70,7 +69,8 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
       'isLast': isLast,
       'language': languageCode
     });
-    return httpClient.post(url, body: body, headers: {"inAppUserId": inAppUserId});
+    var res = await httpClient.post(url, body: body, headers: {"inAppUserId": inAppUserId});
+    print("test");
   }
 }
 
@@ -79,10 +79,10 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
 
   LocalDbOpener<HelperGroupUserVisitEntity> _hiveBoxOpener;
 
-  HelperGroupUserVisitLocalRepository({@required LocalDbOpener<HelperGroupUserVisitEntity> hiveBoxOpener})
+  HelperGroupUserVisitLocalRepository({required LocalDbOpener<HelperGroupUserVisitEntity> hiveBoxOpener})
     : _hiveBoxOpener = hiveBoxOpener;
 
-  Future<List<HelperGroupUserVisitEntity>> get(String userId, String minAppVersion)
+  Future<List<HelperGroupUserVisitEntity>> get(String? userId, String? minAppVersion)
     => _hiveBoxOpener().then((res) => res.values.toList());
 
   @override
@@ -94,11 +94,11 @@ class HelperGroupUserVisitLocalRepository implements HelperGroupUserVisitReposit
 
   @override
   Future<void> add(HelperGroupUserVisitEntity visit, {
-    bool isLast, 
-    bool feedback, 
-    String inAppUserId, 
-    HelperEntity helper, 
-    String languageCode,  
+    bool? isLast, 
+    bool? feedback, 
+    String? inAppUserId, 
+    HelperEntity? helper, 
+    String? languageCode,  
   }) => _hiveBoxOpener().then((res) => res.add(visit));
 
 }

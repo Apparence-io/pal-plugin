@@ -15,7 +15,7 @@ import 'widgets/create_helper_button.dart';
 abstract class PageGroupsListView {
   Future closePage();
 
-  Future<bool> navigateCreateHelper(final String pageId);
+  Future<bool?> navigateCreateHelper(final String? pageId);
 
   void changeBubbleState(bool state);
 
@@ -30,7 +30,7 @@ class PageGroupsListPage extends StatelessWidget {
     return MVVMPage<PageGroupsListPresenter, PageGroupsListViewModel>(
       key: ValueKey('presenter'),
       presenter: PageGroupsListPresenter(
-        editorInjector: EditorInjector.of(context),
+        editorInjector: EditorInjector.of(context)!,
         viewInterface: _viewInterface..context = context,
         navigatorObserver: PalNavigatorObserver.instance(),
       ),
@@ -55,7 +55,7 @@ class PageGroupsListPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text("List of available helper groups on this page",
                       style:
-                          _descrTextStyle(PalTheme.of(context.buildContext))),
+                          _descrTextStyle(PalTheme.of(context.buildContext)!)),
                 ),
                 SizedBox(height: 12),
                 Padding(
@@ -71,7 +71,7 @@ class PageGroupsListPage extends StatelessWidget {
                     : _buildItemList(presenter, model),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: _buildCloseButton(PalTheme.of(context.buildContext),
+                  child: _buildCloseButton(PalTheme.of(context.buildContext)!,
                       presenter.onClickClose),
                 )
               ],
@@ -97,11 +97,11 @@ class PageGroupsListPage extends StatelessWidget {
                 TextSpan(
                     text: 'PAL',
                     style: TextStyle(
-                        fontSize: 26, color: PalTheme.of(context).colors.dark)),
+                        fontSize: 26, color: PalTheme.of(context)!.colors.dark)),
                 TextSpan(
                     text: '\nEDITOR',
                     style: TextStyle(
-                        fontSize: 10, color: PalTheme.of(context).colors.dark)),
+                        fontSize: 10, color: PalTheme.of(context)!.colors.dark)),
               ]),
             ),
           ),
@@ -118,7 +118,7 @@ class PageGroupsListPage extends StatelessWidget {
       return Expanded(
           child: Center(
               child: Text(
-        model.errorMessage,
+        model.errorMessage!,
         key: ValueKey("ErrorMessage"),
       )));
     }
@@ -136,8 +136,8 @@ class PageGroupsListPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 24),
-                    Text(model.groups.keys.elementAt(index).toText(),
-                        style: _triggerTypetextStyle(PalTheme.of(context))),
+                    Text(model.groups.keys.elementAt(index).toText()!,
+                        style: _triggerTypetextStyle(PalTheme.of(context)!)),
                     SizedBox(height: 8),
                     ListView.separated(
                         physics: const NeverScrollableScrollPhysics(),
@@ -145,10 +145,10 @@ class PageGroupsListPage extends StatelessWidget {
                             SizedBox(height: 8),
                         shrinkWrap: true,
                         itemCount: model
-                            .groups[model.groups.keys.elementAt(index)].length,
+                            .groups[model.groups.keys.elementAt(index)]!.length,
                         itemBuilder: (context2, itemIndex) {
                           GroupItemViewModel item =
-                              model.groups[model.groups.keys.elementAt(index)]
+                              model.groups[model.groups.keys.elementAt(index)]!
                                   [itemIndex];
                           return InkWell(
                             onTap: () {
@@ -183,7 +183,7 @@ class PageGroupsListPage extends StatelessWidget {
       child: FloatingActionButton(
         heroTag: key,
         key: ValueKey(key),
-        onPressed: callback,
+        onPressed: callback as void Function()?,
         child: icon,
         shape: CircleBorder(),
       ),
@@ -201,8 +201,8 @@ class PageGroupsListPage extends StatelessWidget {
               color: palThemeData.colors.dark,
             ),
           ),
-          onPressed: onClose,
-          borderSide: BorderSide(color: palThemeData.colors.dark, width: 1),
+          onPressed: onClose as void Function()?,
+          borderSide: BorderSide(color: palThemeData.colors.dark!, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
@@ -223,39 +223,39 @@ class PageGroupsListPage extends StatelessWidget {
 }
 
 class _PageGroupsListView implements PageGroupsListView {
-  BuildContext context;
+  late BuildContext context;
   GlobalKey<PartialOverlayedPageState> overlayedPageState = GlobalKey();
 
   @override
   Future closePage() async {
     HapticFeedback.selectionClick();
-    await overlayedPageState.currentState.closePage();
+    await overlayedPageState.currentState!.closePage();
     Navigator.of(context).pop();
   }
 
   @override
-  Future<bool> navigateCreateHelper(final String pageId) async {
+  Future<bool?> navigateCreateHelper(final String? pageId) async {
     HapticFeedback.selectionClick();
     // Display the helper creation view
     final shouldOpenEditor = await Navigator.pushNamed(
-      EditorInjector.of(context).palNavigatorKey.currentContext,
+      EditorInjector.of(context)!.palNavigatorKey!.currentContext!,
       '/editor/new',
       arguments: CreateHelperPageArguments(
-        EditorInjector.of(context).hostedAppNavigatorKey,
+        EditorInjector.of(context)!.hostedAppNavigatorKey,
         pageId,
       ),
     );
-    if (shouldOpenEditor != null && shouldOpenEditor) {
+    if (shouldOpenEditor != null && shouldOpenEditor as bool) {
       // Dismiss the bottom modal when next was tapped
       Navigator.pop(context);
     }
-    return shouldOpenEditor;
+    return shouldOpenEditor as Future<bool?>;
   }
 
   @override
   void changeBubbleState(bool state) {
-    EditorInjector.of(context).palEditModeStateService.showBubble(
-        EditorInjector.of(context).hostedAppNavigatorKey.currentContext, state);
+    EditorInjector.of(context)!.palEditModeStateService.showBubble(
+        EditorInjector.of(context)!.hostedAppNavigatorKey!.currentContext, state);
     Navigator.pop(context);
   }
 

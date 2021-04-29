@@ -4,16 +4,16 @@ import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 class PageGroupsListViewModel extends MVVMModel {
 
   // list of groups per trigger type
-  Map<HelperTriggerType, List<GroupItemViewModel>> groups;
+  late Map<HelperTriggerType?, List<GroupItemViewModel>> groups;
 
-  bool isLoading;
+  bool? isLoading;
 
-  String errorMessage;
-  String route;
+  String? errorMessage;
+  String? route;
 }
 
 class GroupItemViewModel {
-  final String title, date, version, id;
+  final String? title, date, version, id;
 
   GroupItemViewModel(this.title, this.date, this.version, this.id);
 }
@@ -25,6 +25,6 @@ const HelperTriggerTypeStrings = {
   // "RANDOM_TIPS":"Random tips",
 };
 
-extension HelperTriggerTypeText on HelperTriggerType {
-  String toText() => HelperTriggerTypeStrings[this];
+extension HelperTriggerTypeText on HelperTriggerType? {
+  String? toText() => HelperTriggerTypeStrings[this!];
 }

@@ -14,14 +14,14 @@ class CreateHelperInfosStep extends StatelessWidget {
 
   final CreateHelperPresenter presenter;
 
-  final Function() onFormChanged;
+  final Function()? onFormChanged;
 
-  final Function onTapChangePosition;
+  final Function? onTapChangePosition;
 
   const CreateHelperInfosStep({
-    Key key,
-    @required this.model,
-    @required this.presenter,
+    Key? key,
+    required this.model,
+    required this.presenter,
     this.onFormChanged,
     this.onTapChangePosition
   }) : super(key: key);
@@ -44,8 +44,8 @@ class CreateHelperInfosStep extends StatelessWidget {
   }
 
   void _checkFormValid() {
-    if (!model.isAppVersionLoading) {
-      model.isFormValid?.value = model.infosForm.currentState.validate();
+    if (!model.isAppVersionLoading!) {
+      model.isFormValid?.value = model.infosForm!.currentState!.validate();
       presenter.refreshView();
     }
   }
@@ -80,8 +80,8 @@ class CreateHelperInfosStep extends StatelessWidget {
     );
   }
   // Check fields
-  String _checkHelperName(String value) {
-    if (value.isEmpty) {
+  String? _checkHelperName(String? value) {
+    if (value == null || value.isEmpty) {
       return 'Please enter a name';
     } else if (value.length >= 45) {
       return 'Maximum 45 character allowed';
@@ -94,15 +94,15 @@ class CreateHelperInfosStep extends StatelessWidget {
       width: double.infinity,
       child: OutlineButton(
         key: ValueKey('palHelperPositionNextButton'),
-        borderSide: BorderSide(color: PalTheme.of(context).colors.dark),
+        borderSide: BorderSide(color: PalTheme.of(context)!.colors.dark!),
         child: Text(
           'Change position in group',
           style: TextStyle(
-            color: PalTheme.of(context).colors.dark,
+            color: PalTheme.of(context)!.colors.dark,
           ),
         ),
-        color: PalTheme.of(context).colors.dark,
-        onPressed: onTapChangePosition,
+        color: PalTheme.of(context)!.colors.dark,
+        onPressed: onTapChangePosition as void Function()?,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0,),
         ),

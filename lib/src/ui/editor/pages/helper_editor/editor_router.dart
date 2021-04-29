@@ -18,13 +18,13 @@ import 'helpers/editor_update_helper/editor_update_helper.dart';
 /// we don't use a navigator push as we use the overlay feature for
 /// reaching the overlayed page elements (@see anchoredHelper)
 class EditorRouter {
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+  final GlobalKey<NavigatorState>? hostedAppNavigatorKey;
 
   EditorRouter(this.hostedAppNavigatorKey);
 
   /// Open editor page as an overlay
   Future createHelper(
-      final String currentPageRoute, final CreateHelperModel model) async {
+      final String? currentPageRoute, final CreateHelperModel model) async {
     // var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
@@ -68,12 +68,12 @@ class EditorRouter {
       default:
         throw 'HELPER TYPE NOT HANDLED';
     }
-    showOverlayed(hostedAppNavigatorKey, builder);
+    showOverlayed(hostedAppNavigatorKey!, builder);
   }
 
-  Future editHelper(final String currentPageRoute, final String helperId,
-      final HelperType type, final String groupId,
-      {BuildContext con}) async {
+  Future editHelper(final String? currentPageRoute, final String helperId,
+      final HelperType type, final String? groupId,
+      {BuildContext? con}) async {
     // var elementFinder = ElementFinder(hostedAppNavigatorKey.currentContext);
     HelperEditorPageArguments args = HelperEditorPageArguments(
       hostedAppNavigatorKey,
@@ -117,9 +117,9 @@ class EditorRouter {
         throw 'HELPER TYPE NOT HANDLED';
     }
     return showOverlayed(
-      hostedAppNavigatorKey,
+      hostedAppNavigatorKey!,
       builder,
-      onPop: () => Navigator.of(con).pushNamed(
+      onPop: () => Navigator.of(con!).pushNamed(
         '/editor/group/details',
         arguments: {
           "id": groupId,
@@ -136,7 +136,7 @@ class EditorRouter {
 class InnerEditorRouter extends StatefulWidget {
   final Widget child;
 
-  InnerEditorRouter({@required this.child});
+  InnerEditorRouter({required this.child});
 
   @override
   _InnerEditorRouterState createState() => _InnerEditorRouterState();
@@ -145,7 +145,7 @@ class InnerEditorRouter extends StatefulWidget {
 class _InnerEditorRouterState extends State<InnerEditorRouter> {
   final GlobalKey<NavigatorState> innerEditorNavKey =
       GlobalKey<NavigatorState>();
-  InnerEditorRouterDelegate _routerDelegate;
+  late InnerEditorRouterDelegate _routerDelegate;
 
   void initState() {
     super.initState();
@@ -170,9 +170,9 @@ abstract class InnerEditorRoutePath {}
 
 class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
-  final GlobalKey<NavigatorState> innerEditorNavKey;
+  final GlobalKey<NavigatorState>? innerEditorNavKey;
 
-  Widget child;
+  Widget? child;
 
   InnerEditorRouterDelegate({this.child, this.innerEditorNavKey});
 
@@ -184,25 +184,25 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath>
         // TODO: Remove unused font family et font weight
         switch (settings.name) {
           case '/editor/new/font-family':
-            FontFamilyPickerArguments args = settings.arguments;
+            FontFamilyPickerArguments? args = settings.arguments as FontFamilyPickerArguments?;
             return MaterialPageRoute(
                 builder: (context) => FontFamilyPickerPage(
                       arguments: args,
                     ));
           case '/editor/new/font-weight':
-            FontWeightPickerArguments args = settings.arguments;
+            FontWeightPickerArguments? args = settings.arguments as FontWeightPickerArguments?;
             return MaterialPageRoute(
                 builder: (context) => FontWeightPickerPage(
                       arguments: args,
                     ));
           case '/editor/media-gallery':
-            MediaGalleryPageArguments args = settings.arguments;
+            MediaGalleryPageArguments? args = settings.arguments as MediaGalleryPageArguments?;
             return MaterialPageRoute(
                 builder: (context) => MediaGalleryPage(
-                      mediaId: args.mediaId,
+                      mediaId: args!.mediaId,
                     ));
           case '/editor/preview':
-            EditorPreviewArguments args = settings.arguments;
+            EditorPreviewArguments? args = settings.arguments as EditorPreviewArguments?;
             return PageRouteBuilder(
               pageBuilder: (context, _, __) => EditorPreviewPage(
                 args: args,
@@ -210,7 +210,7 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath>
             );
           default:
             return MaterialPageRoute(
-              builder: (context) => child,
+              builder: (context) => child!,
               maintainState: true,
             );
         }
@@ -223,7 +223,7 @@ class InnerEditorRouterDelegate extends RouterDelegate<InnerEditorRoutePath>
   }
 
   @override
-  GlobalKey<NavigatorState> get navigatorKey => innerEditorNavKey;
+  GlobalKey<NavigatorState>? get navigatorKey => innerEditorNavKey;
 
   @override
   Future<void> setNewRoutePath(InnerEditorRoutePath configuration) {

@@ -17,15 +17,15 @@ class HelperGroupEntityAdapter extends TypeAdapter<HelperGroupEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HelperGroupEntity(
-      id: fields[0] as String,
-      priority: fields[1] as int,
-      helpers: (fields[2] as List)?.cast<HelperEntity>(),
-      page: fields[3] as PageEntity,
-      name: fields[4] as String,
-      triggerType: fields[5] as HelperTriggerType,
-      creationDate: fields[6] as DateTime,
-      minVersion: fields[7] as String,
-      maxVersion: fields[8] as String,
+      id: fields[0] as String?,
+      priority: fields[1] as int?,
+      helpers: (fields[2] as List?)?.cast<HelperEntity>(),
+      page: fields[3] as PageEntity?,
+      name: fields[4] as String?,
+      triggerType: fields[5] as HelperTriggerType?,
+      creationDate: fields[6] as DateTime?,
+      minVersion: fields[7] as String?,
+      maxVersion: fields[8] as String?,
     );
   }
 

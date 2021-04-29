@@ -94,7 +94,7 @@ void main() {
       //second sync should send version 1 and get a new version
       await synchronizer.sync(userId);
       localSchema = await schemaLocalRepository.get();
-      expect(localSchema.schemaVersion, equals(lastRemoteSchema.schemaVersion));
+      expect(localSchema!.schemaVersion, equals(lastRemoteSchema.schemaVersion));
       expect(localSchema, equals(lastRemoteSchema));
     });
 

@@ -1,13 +1,13 @@
 class Pageable<T> {
-  int pageNumber;
-  int offset;
-  int pageSize;
-  int totalPages;
-  int totalElements;
-  int numberOfElements;
-  bool last;
-  bool first;
-  List<T> entities;
+  int? pageNumber;
+  int? offset;
+  int? pageSize;
+  int? totalPages;
+  int? totalElements;
+  int? numberOfElements;
+  bool? last;
+  bool? first;
+  List<T>? entities;
 
   Pageable({
     this.pageNumber,

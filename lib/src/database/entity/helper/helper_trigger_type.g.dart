@@ -18,7 +18,7 @@ class HelperTriggerTypeAdapter extends TypeAdapter<HelperTriggerType> {
       case 1:
         return HelperTriggerType.ON_NEW_UPDATE;
       default:
-        return null;
+        return HelperTriggerType.ON_SCREEN_VISIT;
     }
   }
 

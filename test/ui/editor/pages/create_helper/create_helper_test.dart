@@ -41,7 +41,7 @@ void main() {
 
   ProjectEditorService projectEditorService;
 
-  CreateHelperPresenter presenter;
+  CreateHelperPresenter? presenter;
 
   getPresenter() {
     var presenterFinder = find.byKey(ValueKey("createHelperPresenter"));
@@ -61,7 +61,7 @@ void main() {
         theme: PalThemeData.light(),
         child: Builder(
           builder: (context) => MaterialApp(
-            theme: PalTheme.of(context).buildTheme(),
+            theme: PalTheme.of(context)!.buildTheme(),
             home: CreateHelperPage(
               projectEditorService: projectEditorService,
               routeObserver: routeObserverMock,
@@ -120,7 +120,7 @@ void main() {
       await tester.tap(find.text("Next"));
       await tester.pump();
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
     });
 
     testWidgets('[step 1] 2 groups are available on page, click on first, click on second => second only is selected', (WidgetTester tester) async {
@@ -147,7 +147,7 @@ void main() {
       expect(find.byType(HelperGroupItemLine), findsNWidgets(2));
       var lineWidget1 = find.byType(HelperGroupItemLine).evaluate().first.widget as HelperGroupItemLine;
       var lineWidget2 = find.byType(HelperGroupItemLine).evaluate().elementAt(1).widget as HelperGroupItemLine;
-      expect(presenter.viewModel.selectedHelperGroup.groupId, "jdlqsjdlq12");
+      expect(presenter!.viewModel.selectedHelperGroup!.groupId, "jdlqsjdlq12");
       expect(lineWidget1.model.selected, isTrue);
       expect(lineWidget2.model.selected, isFalse);
     });
@@ -191,20 +191,20 @@ void main() {
       // create a group
       expect(find.byType(CreateHelperGroup), findsOneWidget);
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelperGroup_TextField_Name')), myNewHelperGroupName);
-      expect(presenter.viewModel.selectedHelperGroup.title, equals(myNewHelperGroupName));
-      expect(presenter.viewModel.minVersion, equals("1.0.0"));
+      expect(presenter!.viewModel.selectedHelperGroup!.title, equals(myNewHelperGroupName));
+      expect(presenter!.viewModel.minVersion, equals("1.0.0"));
       expect(find.text("1.0.0"), findsOneWidget);
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MinimumVersion')), "1.1.0");
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MaximumVersion')), "1.2.0");
-      expect(presenter.viewModel.minVersion, equals("1.1.0"));
-      expect(presenter.viewModel.maxVersion, equals("1.2.0"));
+      expect(presenter!.viewModel.minVersion, equals("1.1.0"));
+      expect(presenter!.viewModel.maxVersion, equals("1.2.0"));
       // go next step
       await tester.pump();
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isTrue);
       await tester.tap(find.text("Next"));
       await tester.pump();
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
     });
 
@@ -231,7 +231,7 @@ void main() {
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
       // enter 0.0.0-test min version => invalid
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MinimumVersion')), "0.0.0-test");
-      expect(presenter.viewModel.minVersion, equals("0.0.0-test"));
+      expect(presenter!.viewModel.minVersion, equals("0.0.0-test"));
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
@@ -255,7 +255,7 @@ void main() {
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelperGroup_TextField_Name')), myNewHelperGroupName);
       // enter 1.0.0 min version => valid
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MinimumVersion')), "1.0.0");
-      expect(presenter.viewModel.minVersion, equals("1.0.0"));
+      expect(presenter!.viewModel.minVersion, equals("1.0.0"));
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isTrue);
@@ -283,7 +283,7 @@ void main() {
       await tester.tap(find.text("Next"));
       await tester.pump();
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
     }
 
     testWidgets('[step 2] an existing group is selected, click on helper position => show group helpers list, by default our helper is last', (WidgetTester tester) async {
@@ -300,7 +300,7 @@ void main() {
       await tester.pump(Duration(seconds: 1));
       await tester.pump(Duration(seconds: 1));
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
       expect(find.byKey(ValueKey("pal_CreateHelper_TextField_Name")), findsOneWidget);
       expect(find.byKey(ValueKey("palHelperPositionNextButton")), findsOneWidget);
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_Name')), 'my helper test');

@@ -6,7 +6,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_sending_ove
 void main() {
   group('EditorSendingOverlay', () {
 
-    var appContext;
+    late var appContext;
 
     Widget myApp = PalTheme(
       theme: PalThemeData.light(),

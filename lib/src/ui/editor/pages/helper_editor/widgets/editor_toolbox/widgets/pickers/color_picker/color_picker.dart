@@ -6,10 +6,10 @@ import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/ui/editor/widgets/bordered_text_field.dart';
 
 class ColorPickerDialog extends StatefulWidget {
-  final Color placeholderColor;
+  final Color? placeholderColor;
 
   const ColorPickerDialog({
-    Key key,
+    Key? key,
     this.placeholderColor,
   }) : super(key: key);
 
@@ -20,8 +20,8 @@ class ColorPickerDialog extends StatefulWidget {
 class _ColorPickerDialogState extends State<ColorPickerDialog> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final _hexColorController = TextEditingController();
-  Color _selectedColor;
-  bool _isFormValid = false;
+  Color? _selectedColor;
+  bool? _isFormValid = false;
 
   @override
   void initState() {
@@ -42,13 +42,13 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             onChanged: () {
               setState(() {
-                _isFormValid = _formKey?.currentState?.validate();
+                _isFormValid = _formKey.currentState?.validate();
               });
             },
             child: Column(
               children: [
                 ColorPicker(
-                  pickerColor: _selectedColor,
+                  pickerColor: _selectedColor!,
                   onColorChanged: (Color selectedColor) {
                     _selectedColor = selectedColor;
                     _hexColorController.text =
@@ -62,11 +62,11 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
                   controller: _hexColorController,
                   autovalidate: true,
                   hintText: '#FF4287F5',
-                  validator: (String value) => (!HexColor.isHexColor(value))
+                  validator: (String? value) => !HexColor.isHexColor(value)
                       ? 'Please enter valid color'
                       : null,
                   onValueChanged: (String newValue) {
-                    Color newColor;
+                    Color? newColor;
                     try {
                       newColor = HexColor.fromHex(newValue);
                     } catch (e) {
@@ -102,7 +102,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            onPressed: _isFormValid
+            onPressed: _isFormValid!
                 ? () {
                     HapticFeedback.selectionClick();
                     Navigator.pop(context, _selectedColor);

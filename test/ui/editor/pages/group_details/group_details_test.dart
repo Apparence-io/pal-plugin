@@ -53,7 +53,7 @@ var navKey = GlobalKey<NavigatorState>();
 
 main() {
   HttpClientMock httpMock = HttpClientMock();
-  GroupDetailsPage component;
+  late GroupDetailsPage component;
   group('Group Details Tests', () {
     Future _before(WidgetTester tester) async {
       EditorAppContext editorAppContext =
@@ -64,7 +64,7 @@ main() {
       await tester.pumpAndSettle();
 
       Navigator.push(
-          navKey.currentContext,
+          navKey.currentContext!,
           MaterialPageRoute(
             builder: (context) => GroupDetailsPage(
               groupId: 'testId',
@@ -117,10 +117,10 @@ main() {
       await _before(tester);
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
-      expect(groupName(tester).controller.text, equals('group 06'));
+      expect(groupName(tester).controller!.text, equals('group 06'));
       expect(helperTriggerTypeToString(triggerType(tester).initialValue), equals('ON_SCREEN_VISIT'));
-      expect(minVer(tester).controller.text, equals('1.0.1'));
-      expect(maxVer(tester).controller.text, equals('1.0.2'));
+      expect(minVer(tester).controller!.text, equals('1.0.1'));
+      expect(maxVer(tester).controller!.text, equals('1.0.2'));
     });
 
     testWidgets(
@@ -129,11 +129,11 @@ main() {
       await _before(tester);
       expect(find.byType(GroupDetailsPage), findsOneWidget);
 
-      groupName(tester).controller.text = 'newTest';
+      groupName(tester).controller!.text = 'newTest';
       component.getPageBuilder.presenter
           .onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
-      minVer(tester).controller.text = '1.0.2';
-      maxVer(tester).controller.text = '1.0.3';
+      minVer(tester).controller!.text = '1.0.2';
+      maxVer(tester).controller!.text = '1.0.3';
       await tester.pump();
 
       await tester.tap(find.byKey(ValueKey("saveButton")));
@@ -165,11 +165,11 @@ main() {
           .thenThrow(InternalHttpError);
       await _before(tester);
 
-      groupName(tester).controller.text = 'newTest';
+      groupName(tester).controller!.text = 'newTest';
       component.getPageBuilder.presenter
           .onNewTrigger(HelperTriggerType.ON_NEW_UPDATE);
-      minVer(tester).controller.text = '1.0.2';
-      maxVer(tester).controller.text = '1.0.3';
+      minVer(tester).controller!.text = '1.0.2';
+      maxVer(tester).controller!.text = '1.0.3';
       await tester.pump();
 
       await tester.tap(find.byKey(ValueKey("saveButton")));

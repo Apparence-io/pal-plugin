@@ -6,13 +6,13 @@ import 'package:pal/src/ui/editor/pages/create_helper/widgets/preview_card_swipe
 import 'package:pal/src/ui/editor/pages/create_helper/widgets/preview_card_swiper/preview_card.dart';
 
 class PreviewCardSwiperWidget extends StatefulWidget {
-  final List<PreviewCard> cards;
-  final String note;
-  final Function(int) onCardSelected;
+  final List<PreviewCard>? cards;
+  final String? note;
+  final Function(int)? onCardSelected;
 
   PreviewCardSwiperWidget({
-    Key key,
-    @required this.cards,
+    Key? key,
+    required this.cards,
     this.note,
     this.onCardSelected,
   }) : super(key: key);
@@ -24,7 +24,7 @@ class PreviewCardSwiperWidget extends StatefulWidget {
 
 class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
     with SingleTickerProviderStateMixin {
-  PageController _controller;
+  PageController? _controller;
   int _currentpage = 0;
 
   @override
@@ -38,7 +38,7 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
 
   @override
   dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
 
@@ -49,10 +49,10 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
       children: [
         if (widget.note != null)
           Text(
-            widget.note,
+            widget.note!,
             style: TextStyle(
               fontWeight: FontWeight.w300,
-              color: PalTheme.of(context).colors.color1,
+              color: PalTheme.of(context)!.colors.color1,
               fontSize: 10,
             ),
           ),
@@ -63,7 +63,7 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
                 PageView.builder(
                   key: ValueKey('pal_PreviewCardSwiperWidget_PageView'),
                   controller: _controller,
-                  itemCount: widget.cards.length,
+                  itemCount: widget.cards!.length,
                   onPageChanged: _onPageViewChange,
                   itemBuilder: (BuildContext context, int index) {
                     return _buildPreviewCard(
@@ -78,7 +78,7 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
                   right: 0,
                   child: DotIndicatorsWidget(
                     activePage: _currentpage,
-                    pagesCount: widget.cards.length,
+                    pagesCount: widget.cards!.length,
                   ),
                 ),
               ],
@@ -100,7 +100,7 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
     BuildContext context,
     int index,
   ) {
-    PreviewCard cardData = widget.cards[index];
+    PreviewCard cardData = widget.cards![index];
 
     return Padding(
       padding: EdgeInsets.only(
@@ -119,17 +119,16 @@ class _PreviewCardSwiperWidgetState extends State<PreviewCardSwiperWidget>
 
   void _onCardTap(int index) {
     int i = 0;
-    for (PreviewCard cardData in widget.cards) {
+    for (PreviewCard cardData in widget.cards!) {
       if (index == i++) {
         cardData.isSelected = !cardData.isSelected;
       } else {
         cardData.isSelected = false;
       }
     }
-    this.setState(() {});
-
+    setState(() {});
     if (widget.onCardSelected != null) {
-      widget.onCardSelected(index);
+      widget.onCardSelected!(index);
     }
   }
 }

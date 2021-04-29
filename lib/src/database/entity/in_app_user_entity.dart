@@ -1,8 +1,8 @@
 class InAppUserEntity {
-  String id;
-  String inAppId;
-  bool disabledHelpers;
-  bool anonymous;
+  String? id;
+  String? inAppId;
+  bool? disabledHelpers;
+  bool? anonymous;
 
   InAppUserEntity(
       {this.id, this.inAppId, this.disabledHelpers, this.anonymous});

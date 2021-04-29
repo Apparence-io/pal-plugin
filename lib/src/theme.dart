@@ -32,21 +32,21 @@ class _PalThemeLightColors {
 }
 
 class _PalThemeColors {
-  final Color dark;
+  final Color? dark;
 
-  final Color black;
+  final Color? black;
 
-  final Color green;
+  final Color? green;
 
-  final Color color1, color2, color3, color4, color5;
+  final Color? color1, color2, color3, color4, color5;
 
-  final Color accent;
+  final Color? accent;
 
-  final Color light;
+  final Color? light;
 
-  final Gradient bottomNavEditorGradient;
+  final Gradient? bottomNavEditorGradient;
 
-  final Gradient settingsSilverGradient;
+  final Gradient? settingsSilverGradient;
 
   const _PalThemeColors._({
     this.dark,
@@ -82,17 +82,17 @@ class _PalThemeColors {
 /// use this to let all app get our custom theme from context
 /// we have more colors than pure material
 class PalTheme extends InheritedWidget {
-  final PalThemeData theme;
+  final PalThemeData? theme;
 
   PalTheme({
     this.theme,
-    Key key,
-    @required Widget child,
+    Key? key,
+    required Widget child,
   })  : assert(child != null),
         super(key: key, child: child);
 
-  static PalThemeData of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<PalTheme>().theme;
+  static PalThemeData? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<PalTheme>()!.theme;
 
   @override
   bool updateShouldNotify(PalTheme old) {
@@ -101,7 +101,7 @@ class PalTheme extends InheritedWidget {
 }
 
 class PalThemeData {
-  _PalThemeColors colors;
+  late _PalThemeColors colors;
 
   PalThemeData._(_PalThemeColors colors) {
     this.colors = colors;
@@ -135,10 +135,10 @@ class PalThemeData {
       inputDecorationTheme: InputDecorationTheme(
         labelStyle: TextStyle(color: colors.color1),
         helperStyle: TextStyle(color: colors.color1),
-        hintStyle: TextStyle(color: colors.dark.withAlpha(60)),
+        hintStyle: TextStyle(color: colors.dark!.withAlpha(60)),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: colors.color1,
+            color: colors.color1!,
           ),
         ),
       ),
@@ -155,17 +155,17 @@ class PalThemeData {
     );
   }
 
-  Gradient get bottomNavEditorGradient => colors.bottomNavEditorGradient;
+  Gradient? get bottomNavEditorGradient => colors.bottomNavEditorGradient;
 
-  Gradient get settingsSilverGradient => colors.settingsSilverGradient;
+  Gradient? get settingsSilverGradient => colors.settingsSilverGradient;
 
-  Color get highlightColor => colors.color4;
+  Color? get highlightColor => colors.color4;
 
-  Color get toolbarBackgroundColor => colors.color5;
+  Color? get toolbarBackgroundColor => colors.color5;
 
-  Color get floatingBubbleBackgroundColor => colors.color1;
+  Color? get floatingBubbleBackgroundColor => colors.color1;
 
-  Color get simpleHelperBackgroundColor => colors.black;
+  Color? get simpleHelperBackgroundColor => colors.black;
 
   Color get simpleHelperFontColor => Color(0xFFFAFEFF);
 }

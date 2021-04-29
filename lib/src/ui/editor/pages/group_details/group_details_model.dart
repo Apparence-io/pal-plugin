@@ -13,35 +13,35 @@ class GroupDetailsPageModel extends MVVMModel {
   final startPage;
 
   // GROUP INFO / GROUP HELPERS
-  GroupModel groupModel;
-  ValueNotifier<List<HelperModel>> helpers;
+  late GroupModel groupModel;
+  ValueNotifier<List<HelperModel>?>? helpers;
 
   // GROUP INFO CONTROLLERS & FORM KEY
-  TextEditingController groupNameController;
-  HelperTriggerType groupTriggerValue;
-  TextEditingController groupMinVerController;
-  TextEditingController groupMaxVerController;
+  TextEditingController? groupNameController;
+  HelperTriggerType? groupTriggerValue;
+  TextEditingController? groupMinVerController;
+  TextEditingController? groupMaxVerController;
   final GlobalKey<FormState> formKey;
 
   // STATE ATTRIBUTES
-  bool loading;
-  PageStep page;
-  ValueNotifier<bool> canSave;
-  PageController pageController;
+  bool? loading;
+  PageStep? page;
+  late ValueNotifier<bool> canSave;
+  PageController? pageController;
 
-  bool editorMode;
-  bool locked;
+  bool? editorMode;
+  bool? locked;
 
 
   GroupDetailsPageModel(this.groupId, this.formKey, this.routeName, this.startPage);
 }
 
 class GroupModel {
-  HelperTriggerType triggerType;
-  String name;
-  String minVer;
-  String maxVer;
-  String groupRoute;
+  HelperTriggerType? triggerType;
+  String? name;
+  String? minVer;
+  String? maxVer;
+  String? groupRoute;
 
   GroupModel({this.triggerType, this.name, this.minVer, this.maxVer});
 
@@ -54,11 +54,11 @@ class GroupModel {
 }
 
 class HelperModel {
-  String helperId;
-  String title;
-  HelperType type;
-  int priority;
-  DateTime creationDate;
+  String? helperId;
+  String? title;
+  HelperType? type;
+  int? priority;
+  DateTime? creationDate;
 
   HelperModel(
       {this.title, this.type, this.priority, this.creationDate, this.helperId});

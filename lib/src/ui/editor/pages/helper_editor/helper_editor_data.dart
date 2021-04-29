@@ -3,52 +3,47 @@ import 'package:flutter/widgets.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
 
 abstract class EditableData {
-  int id;
-  String key;
-  bool isSelected;
+  int? id;
+  String? key;
+  bool? isSelected;
 
   EditableData(this.id, this.key);
 }
 
 abstract class EditableTextData extends EditableData {
-  String text;
-  String fontFamily;
-  String fontWeight;
-  Color fontColor;
-  int fontSize;
+  String? text;
+  String? fontFamily;
+  String? fontWeight;
+  Color? fontColor;
+  int? fontSize;
 
-  EditableTextData(int id, String key,
-      {@required String text,
-      @required Color fontColor,
-      String fontFamily,
-      String fontWeight,
-      @required int fontSize,
-      String hintText})
-      : super(id, key) {
-    this.text = text;
-    this.fontColor = fontColor;
-    this.fontFamily = fontFamily ?? 'Montserrat';
-    this.fontWeight =
-        fontWeight ?? FontWeightMapper.toFontKey(FontWeight.normal);
-    this.fontSize = fontSize ?? 14;
+  EditableTextData(int? id, String key,
+      { required this.text,
+        required this.fontColor,
+        String? fontFamily = 'Montserrat',
+        String? fontWeight,
+        required this.fontSize,
+        String? hintText
+    }) : super(id, key) {
+    this.fontWeight ??= FontWeightMapper.toFontKey(FontWeight.normal);
   }
 }
 
 class EditableButtonFormData extends EditableTextData {
-  Color borderColor;
-  Color backgroundColor;
+  Color? borderColor;
+  Color? backgroundColor;
 
   EditableButtonFormData(
-    int id,
+    int? id,
     String key, {
-    @required String text,
-    @required Color fontColor,
-    String fontFamily,
-    String fontWeight,
-    Color backgroundColor,
-    Color borderColor,
-    @required int fontSize,
-    String hintText,
+    required String text,
+    required Color fontColor,
+    String? fontFamily,
+    String? fontWeight,
+    Color? backgroundColor,
+    Color? borderColor,
+    required int fontSize,
+    String? hintText,
   }) : super(
           id,
           key,
@@ -66,14 +61,14 @@ class EditableButtonFormData extends EditableTextData {
 
 class EditableTextFormData extends EditableTextData {
   EditableTextFormData(
-    int id,
+    int? id,
     String key, {
-    @required String text,
-    @required Color fontColor,
-    String fontFamily,
-    String fontWeight,
-    @required int fontSize,
-    String hintText,
+    required String text,
+    required Color fontColor,
+    String? fontFamily,
+    String? fontWeight,
+    required int fontSize,
+    String? hintText,
   }) : super(
           id,
           key,
@@ -87,14 +82,14 @@ class EditableTextFormData extends EditableTextData {
 }
 
 class EditableMediaFormData extends EditableData {
-  String uuid;
-  String url;
+  String? uuid;
+  String? url;
 
   EditableMediaFormData(
-    int id,
+    int? id,
     String key, {
-    String url,
-    String uuid,
+    String? url,
+    String? uuid,
   }) : super(id, key) {
     this.uuid = uuid;
     this.url = url;
@@ -112,21 +107,21 @@ class EditableMediaFormData extends EditableData {
 // }
 
 class EditableBoxFormData extends EditableData {
-  Color backgroundColor;
+  Color? backgroundColor;
 
   EditableBoxFormData(
-    int id,
-    String key, {
-    Color backgroundColor,
+    int? id,
+    String? key, {
+    Color? backgroundColor,
   }) : super(id, key) {
     this.backgroundColor = backgroundColor ?? Colors.blueAccent;
   }
 }
 
 class EditableBorderFormData extends EditableData {
-  Color color;
-  String style;
-  double width;
+  Color? color;
+  String? style;
+  double? width;
   EditableBorderFormData(int id, String key, {this.color, this.style})
       : super(id, key);
 }

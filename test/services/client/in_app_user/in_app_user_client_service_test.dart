@@ -73,11 +73,11 @@ void main() {
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
-      final InAppUserEntity inAppUserEntity = await inAppUserClientService.onConnect("test");
-      assert(inAppUserEntity.id == "db6b01e1-b649-4a17-949a-9ab320601001");
-      assert(inAppUserEntity.inAppId == "test");
-      assert(inAppUserEntity.disabledHelpers == false);
-      assert(inAppUserEntity.anonymous == false);
+      final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onConnect("test");
+      assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
+      assert(inAppUserEntity!.inAppId == "test");
+      assert(inAppUserEntity!.disabledHelpers == false);
+      assert(inAppUserEntity!.anonymous == false);
     });
 
     test('Test on connect => anonymous', () async {
@@ -100,11 +100,11 @@ void main() {
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
-      final InAppUserEntity inAppUserEntity = await inAppUserClientService.onConnect("test");
-      assert(inAppUserEntity.id == "db6b01e1-b649-4a17-949a-9ab320601001");
-      assert(inAppUserEntity.inAppId == "test");
-      assert(inAppUserEntity.disabledHelpers == false);
-      assert(inAppUserEntity.anonymous == false);
+      final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onConnect("test");
+      assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
+      assert(inAppUserEntity!.inAppId == "test");
+      assert(inAppUserEntity!.disabledHelpers == false);
+      assert(inAppUserEntity!.anonymous == false);
     });
 
 
@@ -117,7 +117,7 @@ void main() {
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
-      final InAppUserEntity inAppUserEntity = await inAppUserClientService.update(true);
+      final InAppUserEntity? inAppUserEntity = await inAppUserClientService.update(true);
       assert(inAppUserEntity == null);
     });
 
@@ -141,11 +141,11 @@ void main() {
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
-      final InAppUserEntity inAppUserEntity = await inAppUserClientService.update(false);
-      assert(inAppUserEntity.id == "db6b01e1-b649-4a17-949a-9ab320601001");
-      assert(inAppUserEntity.inAppId == "test");
-      assert(inAppUserEntity.disabledHelpers == false);
-      assert(inAppUserEntity.anonymous == false);
+      final InAppUserEntity? inAppUserEntity = await inAppUserClientService.update(false);
+      assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
+      assert(inAppUserEntity!.inAppId == "test");
+      assert(inAppUserEntity!.disabledHelpers == false);
+      assert(inAppUserEntity!.anonymous == false);
     });
 
     test('Test disconnected => not anonymous user', () async {
@@ -168,11 +168,11 @@ void main() {
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
-      final InAppUserEntity inAppUserEntity = await inAppUserClientService.onDisconnect();
-      assert(inAppUserEntity.id == "db6b01e1-b649-4a17-949a-9ab320601001");
-      assert(inAppUserEntity.inAppId == null);
-      assert(inAppUserEntity.disabledHelpers == false);
-      assert(inAppUserEntity.anonymous == true);
+      final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onDisconnect();
+      assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
+      assert(inAppUserEntity!.inAppId == null);
+      assert(inAppUserEntity!.disabledHelpers == false);
+      assert(inAppUserEntity!.anonymous == true);
     });
 
     test('Test disconnected => anonymous user', () async {
@@ -191,11 +191,11 @@ void main() {
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
-      final InAppUserEntity inAppUserEntity = await inAppUserClientService.onDisconnect();
-      assert(inAppUserEntity.id == "db6b01e1-b649-4a17-949a-9ab320601001");
-      assert(inAppUserEntity.inAppId == "test");
-      assert(inAppUserEntity.disabledHelpers == false);
-      assert(inAppUserEntity.anonymous == true);
+      final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onDisconnect();
+      assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
+      assert(inAppUserEntity!.inAppId == "test");
+      assert(inAppUserEntity!.disabledHelpers == false);
+      assert(inAppUserEntity!.anonymous == true);
     });
   });
 }

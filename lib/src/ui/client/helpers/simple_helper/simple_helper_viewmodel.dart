@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:mvvm_builder/mvvm_builder.dart';
 
 class SimpleHelperModel extends MVVMModel {
-  bool thumbAnimation;
-  bool boxTransitionAnimation;
-  bool shakeAnimation;
-  Timer shakeAnimationTimer;
+  late bool thumbAnimation;
+  late bool boxTransitionAnimation;
+  late bool shakeAnimation;
+  Timer? shakeAnimationTimer;
 }

@@ -18,23 +18,23 @@ enum ToolBarGlobalActionButton {
 }
 
 class EditorToolBar extends StatelessWidget {
-  final AnimationController drawerAnimation;
-  final AnimationController iconsAnimation;
+  final AnimationController? drawerAnimation;
+  final AnimationController? iconsAnimation;
   final bool isTesting;
 
-  final List<ToolBarGlobalActionButton> globalActions;
-  final List<ToolBarActionButton> editableElementActions;
+  final List<ToolBarGlobalActionButton>? globalActions;
+  final List<ToolBarActionButton>? editableElementActions;
 
-  final ValueNotifier<bool> isBottomBarVisibleNotifier;
+  final ValueNotifier<bool>? isBottomBarVisibleNotifier;
 
-  final Function(ToolBarActionButton) onActionTap;
-  final Function(ToolBarGlobalActionButton) onGlobalActionTap;
+  final Function(ToolBarActionButton)? onActionTap;
+  final Function(ToolBarGlobalActionButton)? onGlobalActionTap;
 
   const EditorToolBar({
-    Key key,
-    @required this.globalActions,
-    @required this.editableElementActions,
-    @required this.isBottomBarVisibleNotifier,
+    Key? key,
+    required this.globalActions,
+    required this.editableElementActions,
+    required this.isBottomBarVisibleNotifier,
     this.drawerAnimation,
     this.iconsAnimation,
     this.onActionTap,
@@ -45,13 +45,13 @@ class EditorToolBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: this.drawerAnimation,
+      animation: this.drawerAnimation!,
       builder: (context, child) => Positioned(
         bottom: (MediaQuery.of(context).padding.bottom + 10) -
             ((MediaQuery.of(context).padding.bottom - 10) *
-                drawerAnimation.value), // * this.drawerAnimation.value,
+                drawerAnimation!.value), // * this.drawerAnimation.value,
         right: 30.0,
-        child: child,
+        child: child!,
       ),
       child: Wrap(
         direction: Axis.vertical,
@@ -62,7 +62,7 @@ class EditorToolBar extends StatelessWidget {
           // TODO: Create it in parent, then factor to create widget
           ..._buildSpecificItemActions(context),
           if (this.editableElementActions != null &&
-              this.editableElementActions.length > 0)
+              this.editableElementActions!.length > 0)
             SizedBox(
               width: 20,
               child: Divider(
@@ -71,7 +71,7 @@ class EditorToolBar extends StatelessWidget {
               ),
             ),
           ..._buildGlobalActions(context),
-          if (this.globalActions != null && this.globalActions.length > 0)
+          if (this.globalActions != null && this.globalActions!.length > 0)
             SizedBox(
               width: 20,
               child: Divider(
@@ -82,20 +82,20 @@ class EditorToolBar extends StatelessWidget {
 
           // /!\ BOTTOM DRAWER ICON /!\
           AnimatedBuilder(
-            animation: this.drawerAnimation,
+            animation: this.drawerAnimation!,
             builder: (context, child) => Transform.rotate(
-                angle: -1.5708 * (cos(pi / 2 * this.drawerAnimation.value)),
+                angle: -1.5708 * (cos(pi / 2 * this.drawerAnimation!.value)),
                 child: child),
             child: CircleIconButton.animatedIcon(
               key: ValueKey('EditorToolBar_Menu'),
               animatedIcon: AnimatedIcon(
                   icon: AnimatedIcons.arrow_menu,
                   color: Colors.white,
-                  progress: this.drawerAnimation),
-              backgroundColor: PalTheme.of(context).colors.black,
+                  progress: this.drawerAnimation!),
+              backgroundColor: PalTheme.of(context)!.colors.black,
               onTapCallback: () {
-                this.isBottomBarVisibleNotifier.value =
-                    !this.isBottomBarVisibleNotifier.value;
+                this.isBottomBarVisibleNotifier!.value =
+                    !this.isBottomBarVisibleNotifier!.value;
               },
             ),
           ),
@@ -106,7 +106,7 @@ class EditorToolBar extends StatelessWidget {
 
   List<Widget> _buildSpecificItemActions(BuildContext context) {
     List<Widget> actions = [];
-    for (final elementAction in this.editableElementActions) {
+    for (final elementAction in this.editableElementActions!) {
       IconData iconData;
       Key key;
       switch (elementAction) {
@@ -139,18 +139,18 @@ class EditorToolBar extends StatelessWidget {
       }
 
       Widget globalActionToAdd = AnimatedBuilder(
-        animation: this.iconsAnimation,
+        animation: this.iconsAnimation!,
         builder: (context, child) =>
-            Transform.scale(scale: this.iconsAnimation.value, child: child),
+            Transform.scale(scale: this.iconsAnimation!.value, child: child),
         child: CircleIconButton(
           key: key,
           icon: Icon(
             iconData,
             color: Colors.white,
           ),
-          backgroundColor: PalTheme.of(context).colors.dark,
+          backgroundColor: PalTheme.of(context)!.colors.dark,
           onTapCallback: () {
-            this.onActionTap(elementAction);
+            this.onActionTap!(elementAction);
           },
         ),
       );
@@ -162,7 +162,7 @@ class EditorToolBar extends StatelessWidget {
 
   List<Widget> _buildGlobalActions(BuildContext context) {
     List<Widget> actions = [];
-    for (final globalAction in this.globalActions) {
+    for (final globalAction in this.globalActions!) {
       IconData iconData;
       Key key;
       switch (globalAction) {
@@ -179,10 +179,10 @@ class EditorToolBar extends StatelessWidget {
         key: key,
         icon: Icon(
           iconData,
-          color: PalTheme.of(context).colors.dark,
+          color: PalTheme.of(context)!.colors.dark,
         ),
-        backgroundColor: PalTheme.of(context).colors.light,
-        onTapCallback: () => this.onGlobalActionTap(globalAction),
+        backgroundColor: PalTheme.of(context)!.colors.light,
+        onTapCallback: () => this.onGlobalActionTap!(globalAction),
       );
       actions.add(globalActionToAdd);
     }

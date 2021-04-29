@@ -4,10 +4,10 @@ import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 class EditorButton extends StatelessWidget {
-  final Function onPressed;
-  final double size;
-  final Icon icon;
-  final Color bgColor, iconColor;
+  final Function? onPressed;
+  final double? size;
+  final Icon? icon;
+  final Color? bgColor, iconColor;
   final bool bordered;
   final bool isEnabled;
 
@@ -19,11 +19,11 @@ class EditorButton extends StatelessWidget {
     this.iconColor,
     this.bordered = false,
     this.isEnabled = true,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   factory EditorButton.validate(PalThemeData theme, Function onPressed,
-          {Key key, bool isEnabled = true}) =>
+          {Key? key, bool isEnabled = true}) =>
       EditorButton(
         onPressed: onPressed,
         size: 52,
@@ -34,7 +34,7 @@ class EditorButton extends StatelessWidget {
       );
 
   factory EditorButton.cancel(PalThemeData theme, Function onPressed,
-          {Key key, bool isEnabled = true}) =>
+          {Key? key, bool isEnabled = true}) =>
       EditorButton(
         onPressed: onPressed,
         size: 40,
@@ -45,7 +45,7 @@ class EditorButton extends StatelessWidget {
       );
 
   factory EditorButton.editMode(PalThemeData theme, Function onPressed,
-          {Key key, bool isEnabled = true}) =>
+          {Key? key, bool isEnabled = true}) =>
       EditorButton(
         onPressed: onPressed,
         size: 52,
@@ -60,7 +60,7 @@ class EditorButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleIconButton(
       icon: icon,
-      radius: size / 2,
+      radius: size! / 2,
       backgroundColor: bgColor,
       onTapCallback: (onPressed != null && this.isEnabled) ? onPressed : null,
     );

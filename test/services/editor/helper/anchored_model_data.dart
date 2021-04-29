@@ -4,7 +4,7 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
-generateAnchoredHelperData({HelperGroupConfig helperGroupConfig})
+generateAnchoredHelperData({HelperGroupConfig? helperGroupConfig})
   => CreateAnchoredHelper(
     helperGroup: helperGroupConfig ?? HelperGroupConfig(
       id: "3872983729JJF"
@@ -58,42 +58,42 @@ genExpectedHelperEntity(CreateAnchoredHelper args)
     priority: 1,
     helperTexts: [
       HelperTextEntity(
-        value: args.title.text,
-        fontColor: args.title.fontColor,
-        fontWeight: args.title.fontWeight,
-        fontSize: args.title.fontSize,
-        fontFamily: args.title.fontFamily,
+        value: args.title!.text,
+        fontColor: args.title!.fontColor,
+        fontWeight: args.title!.fontWeight,
+        fontSize: args.title!.fontSize,
+        fontFamily: args.title!.fontFamily,
         key: AnchoredscreenHelperKeys.TITLE_KEY,
       ),
       HelperTextEntity(
-        value: args.description.text,
-        fontColor: args.description.fontColor,
-        fontWeight: args.description.fontWeight,
-        fontSize: args.description.fontSize,
-        fontFamily: args.description.fontFamily,
+        value: args.description!.text,
+        fontColor: args.description!.fontColor,
+        fontWeight: args.description!.fontWeight,
+        fontSize: args.description!.fontSize,
+        fontFamily: args.description!.fontFamily,
         key: AnchoredscreenHelperKeys.DESCRIPTION_KEY,
       ),
       HelperTextEntity(
-        value: args.positivButton.text,
-        fontColor: args.positivButton.fontColor,
-        fontWeight: args.positivButton.fontWeight,
-        fontSize: args.positivButton.fontSize,
-        fontFamily: args.positivButton.fontFamily,
+        value: args.positivButton!.text,
+        fontColor: args.positivButton!.fontColor,
+        fontWeight: args.positivButton!.fontWeight,
+        fontSize: args.positivButton!.fontSize,
+        fontFamily: args.positivButton!.fontFamily,
         key: AnchoredscreenHelperKeys.POSITIV_KEY,
       ),
       HelperTextEntity(
-        value: args.negativButton.text,
-        fontColor: args.negativButton.fontColor,
-        fontWeight: args.negativButton.fontWeight,
-        fontSize: args.negativButton.fontSize,
-        fontFamily: args.negativButton.fontFamily,
+        value: args.negativButton!.text,
+        fontColor: args.negativButton!.fontColor,
+        fontWeight: args.negativButton!.fontWeight,
+        fontSize: args.negativButton!.fontSize,
+        fontFamily: args.negativButton!.fontFamily,
         key: AnchoredscreenHelperKeys.NEGATIV_KEY,
       ),
     ],
     helperBoxes: [
       HelperBoxEntity(
-        key: args.bodyBox.key,
-        backgroundColor: args.bodyBox.color,
+        key: args.bodyBox!.key,
+        backgroundColor: args.bodyBox!.color,
       )
     ]
   );

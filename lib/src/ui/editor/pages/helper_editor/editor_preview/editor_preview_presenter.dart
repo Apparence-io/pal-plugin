@@ -14,8 +14,8 @@ class EditorPreviewPresenter
 
   EditorPreviewPresenter(
     EditorPreviewView viewInterface, {
-    @required this.helperService,
-    @required EditorPreviewArguments args,
+    required this.helperService,
+    required EditorPreviewArguments args,
   }) : super(
             EditorPreviewModel(
                 args.helperId, args.onDismiss, args.preBuiltHelper),
@@ -38,28 +38,25 @@ class EditorPreviewPresenter
     }
   }
 
-  Widget getHelper() {
+  Widget? getHelper() {
     if (this.viewModel.preBuiltHelper != null)
       return this.viewModel.preBuiltHelper;
     // PARSING AND CREATING HELPER ENTITY
-    switch (this.viewModel.helperEntity.type) {
+    switch (this.viewModel.helperEntity!.type) {
       case HelperType.HELPER_FULL_SCREEN:
         return this.viewInterface.buildFullscreen(
-            this.viewModel.helperEntity, this.viewModel.onDismiss);
+            this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
       case HelperType.SIMPLE_HELPER:
         return this
             .viewInterface
-            .buildSimple(this.viewModel.helperEntity, this.viewModel.onDismiss);
-        break;
+            .buildSimple(this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
       case HelperType.ANCHORED_OVERLAYED_HELPER:
         return this.viewInterface.buildAnchored(
-            this.viewModel.helperEntity, this.viewModel.onDismiss);
-        break;
+            this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
       case HelperType.UPDATE_HELPER:
         return this
             .viewInterface
-            .buildUpdate(this.viewModel.helperEntity, this.viewModel.onDismiss);
-        break;
+            .buildUpdate(this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
       default:
         return null;
     }

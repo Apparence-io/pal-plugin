@@ -3,14 +3,14 @@ import 'package:flutter/services.dart';
 
 class BouncingWidget extends StatefulWidget {
   final Widget child;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Duration duration;
   final bool vibrationEnabled;
 
   BouncingWidget({
-    Key key,
-    @required this.child,
-    @required this.onTap,
+    Key? key,
+    required this.child,
+    required this.onTap,
     this.vibrationEnabled = true,
     this.duration = const Duration(milliseconds: 100),
   }) : super(key: key);
@@ -21,8 +21,8 @@ class BouncingWidget extends StatefulWidget {
 
 class _BouncingWidgetState extends State<BouncingWidget>
     with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  double _scale;
+  AnimationController? _controller;
+  late double _scale;
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _BouncingWidgetState extends State<BouncingWidget>
 
   @override
   Widget build(BuildContext context) {
-    _scale = 1 - _controller.value;
+    _scale = 1 - _controller!.value;
 
     return IgnorePointer(
       ignoring: widget.onTap == null,
@@ -69,17 +69,17 @@ class _BouncingWidgetState extends State<BouncingWidget>
     if (widget.vibrationEnabled) {
       HapticFeedback.selectionClick();
     }
-    _controller?.forward?.call();
+    _controller?.forward.call();
   }
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(widget.duration, () {
-      _controller?.reverse?.call();
+      _controller?.reverse.call();
     });
     widget.onTap?.call();
   } 
 
   _onTapCancel() {
-    _controller?.reverse?.call();
+    _controller?.reverse.call();
   }
 }

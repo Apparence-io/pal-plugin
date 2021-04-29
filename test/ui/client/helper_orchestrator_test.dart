@@ -85,7 +85,7 @@ void main() {
     testWidgets('call helperService to get what needs to be shown on each route', (WidgetTester tester) async {
       final routeObserver = PalNavigatorObserver.instance();
       when(inAppUserClientService.getOrCreate()).thenAnswer((_) => Future.value(InAppUserEntity(id: "db6b01e1-b649-4a17-949a-9ab320601001", disabledHelpers: false, anonymous: true)));
-      when(helperClientServiceMock.getPageNextHelper(any, any, any)).thenAnswer((_) => Future.value());
+      when(helperClientServiceMock.getPageNextHelper(any, any, any!)).thenAnswer((_) => Future.value());
 
       var orchestrator = HelperOrchestrator.create(
         helperClientService: helperClientServiceMock,

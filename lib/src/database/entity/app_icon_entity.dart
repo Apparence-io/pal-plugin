@@ -1,6 +1,6 @@
 class AppIconEntity {
-  String id;
-  String url;
+  String? id;
+  String? url;
 
   AppIconEntity({
     this.id,

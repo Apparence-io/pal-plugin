@@ -10,7 +10,7 @@ class InAppUserManager {
 
   static InAppUserManager _instance = InAppUserManager._();
 
-  InAppUserClientService _inAppUserClientService;
+  InAppUserClientService? _inAppUserClientService;
 
   InAppUserManager._();
 
@@ -20,7 +20,7 @@ class InAppUserManager {
       if (this._inAppUserClientService == null) { // TODO change with config
         return true;
       }
-      await this._inAppUserClientService.onConnect(inAppUserId);
+      await this._inAppUserClientService!.onConnect(inAppUserId);
       return true;
     } catch (e){
       return false;
@@ -33,7 +33,7 @@ class InAppUserManager {
       if (this._inAppUserClientService == null) { // TODO change with config
         return true;
       }
-      await this._inAppUserClientService.onDisconnect();
+      await this._inAppUserClientService!.onDisconnect();
       return true;
     } catch (e){
       return false;

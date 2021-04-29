@@ -9,12 +9,12 @@ import 'editor_toolbox.dart';
 
 class EditorToolboxPresenter {
   final EditorToolboxModel viewModel;
-  final ValueNotifier<EditableData> currentEditableItemNotifier;
+  final ValueNotifier<EditableData?>? currentEditableItemNotifier;
   final EditorToolboxView viewInterface;
-  final Function onTextColorPickerDone;
-  final Function onFontPickerDone;
-  final Function onMediaPickerDone;
-  final Function onTextPickerDone;
+  final Function? onTextColorPickerDone;
+  final Function? onFontPickerDone;
+  final Function? onMediaPickerDone;
+  final Function? onTextPickerDone;
 
   EditorToolboxPresenter(
       this.viewModel, this.currentEditableItemNotifier, this.viewInterface,
@@ -43,9 +43,9 @@ class EditorToolboxPresenter {
     this.viewModel.isBottomVisible = ValueNotifier<bool>(true);
 
     // BOTTOM ANIMATION
-    this.viewModel.isBottomVisible.addListener(animateActionBar);
+    this.viewModel.isBottomVisible!.addListener(animateActionBar);
 
-    if(this.currentEditableItemNotifier != null)this.currentEditableItemNotifier.addListener(() {
+    if(this.currentEditableItemNotifier != null)this.currentEditableItemNotifier!.addListener(() {
       this.displayEditableItemActions();
     });
 
@@ -53,7 +53,7 @@ class EditorToolboxPresenter {
   }
 
   dispose() {
-    this.viewModel.isBottomVisible.removeListener(animateActionBar);
+    this.viewModel.isBottomVisible!.removeListener(animateActionBar);
   }
 
   void animateActionBar() {
@@ -62,13 +62,13 @@ class EditorToolboxPresenter {
     // this.viewInterface.refresh();
     // this.refreshView();
     this.viewModel.animationTarget =
-        this.viewModel.isBottomVisible.value ? 1 : 0;
+        this.viewModel.isBottomVisible!.value ? 1 : 0;
     this.viewInterface.refresh();
 
   }
 
   void displayEditableItemActions() {
-    switch (this.currentEditableItemNotifier.value?.runtimeType) {
+    switch (this.currentEditableItemNotifier!.value?.runtimeType) {
       case EditableButtonFormData:
         this.viewModel.editableElementActions = [
           ToolBarActionButton.text,
@@ -91,16 +91,16 @@ class EditorToolboxPresenter {
       default:
     }
     this.viewModel.animateIcons = true;
-    if (this.currentEditableItemNotifier.value != null)
+    if (this.currentEditableItemNotifier!.value != null)
       this.viewInterface.refreshAnimations();
   }
 
   void onOutsideTap() {
     this.viewModel.editableElementActions = [];
-    this.currentEditableItemNotifier.value = null;
+    this.currentEditableItemNotifier!.value = null;
 
     // Hide bottom bar & toolbar here
-    this.viewModel.isBottomVisible.value = false;
+    this.viewModel.isBottomVisible!.value = false;
 
     this.viewInterface.refresh();
   }
@@ -109,41 +109,41 @@ class EditorToolboxPresenter {
     switch (toolBarActionButton) {
       case ToolBarActionButton.color:
         EditableTextData editableFormField =
-            this.currentEditableItemNotifier?.value;
-        Color newColor = await this
+            this.currentEditableItemNotifier?.value as EditableTextData;
+        Color? newColor = await this
             .viewInterface
             .openColorPicker(editableFormField.fontColor);
         if (newColor != null) {
-          this.onTextColorPickerDone(newColor);
+          this.onTextColorPickerDone!(newColor);
         }
         break;
       case ToolBarActionButton.font:
         EditableTextData editableFormField =
-            this.currentEditableItemNotifier?.value;
-        EditedFontModel newFont = await this.viewInterface.openFontPicker(
+            this.currentEditableItemNotifier?.value as EditableTextData;
+        EditedFontModel? newFont = await this.viewInterface.openFontPicker(
             editableFormField.fontFamily,
             editableFormField.fontSize,
             editableFormField.fontWeight);
         if (newFont != null) {
-          this.onFontPickerDone(newFont);
+          this.onFontPickerDone!(newFont);
         }
         break;
       case ToolBarActionButton.media:
-        EditableMediaFormData mediaNotifier =
-            this.currentEditableItemNotifier?.value;
-        GraphicEntity newGraphicEntity =
+        EditableMediaFormData? mediaNotifier =
+            this.currentEditableItemNotifier?.value as EditableMediaFormData?;
+        GraphicEntity? newGraphicEntity =
             await this.viewInterface.openMediaPicker(mediaNotifier?.uuid);
         if (newGraphicEntity != null) {
-          this.onMediaPickerDone(newGraphicEntity);
+          this.onMediaPickerDone!(newGraphicEntity);
         }
         break;
       case ToolBarActionButton.text:
         EditableTextData editableFormField =
-            this.currentEditableItemNotifier?.value;
-        String newText =
+            this.currentEditableItemNotifier?.value as EditableTextData;
+        String? newText =
             await this.viewInterface.openTextPicker(editableFormField.text);
         if (newText != null) {
-          this.onTextPickerDone(newText);
+          this.onTextPickerDone!(newText);
         }
         break;
       default:
@@ -154,12 +154,12 @@ class EditorToolboxPresenter {
       ToolBarGlobalActionButton toolBarGlobalActionButton) async {
     switch (toolBarGlobalActionButton) {
       case ToolBarGlobalActionButton.backgroundColor:
-        Color newColor = await this
+        Color? newColor = await this
             .viewInterface
             .openColorPicker(this.viewModel.boxViewHandler?.selectedColor);
         if (newColor != null) {
-          this.viewModel.boxViewHandler.selectedColor = newColor;
-          this.viewModel.boxViewHandler.callback(newColor);
+          this.viewModel.boxViewHandler!.selectedColor = newColor;
+          this.viewModel.boxViewHandler!.callback!(newColor);
         }
         break;
       default:

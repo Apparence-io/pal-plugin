@@ -14,17 +14,17 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
 
   final PackageVersionReader packageVersionReader;
 
-  final PalRouteObserver routeObserver;
+  final PalRouteObserver? routeObserver;
 
   final ProjectEditorService projectEditorService;
 
-  final String pageId;
+  final String? pageId;
 
   CreateHelperPresenter(
     CreateHelperView viewInterface, this.pageId, {
-    @required this.projectEditorService,
-    @required this.routeObserver,
-    @required this.packageVersionReader,
+    required this.projectEditorService,
+    required this.routeObserver,
+    required this.packageVersionReader,
   }) : super(CreateHelperModel(), viewInterface);
 
   @override
@@ -78,8 +78,8 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   // STEP 1 - create new helper group
   ////////////////////////////////////////////////////////////////
 
-  String checkHelperGroupName(String value) {
-    if (value.isEmpty) {
+  String? checkHelperGroupName(String? value) {
+    if (value == null || value.isEmpty) {
       return 'Please enter a name';
     } else if (value.length >= 45) {
       return 'Maximum 45 character allowed';
@@ -88,15 +88,15 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   }
 
   void onChangedHelperGroupName(String value) {
-    this.viewModel.selectedHelperGroup.title = value;
+    this.viewModel.selectedHelperGroup!.title = value;
     checkValidStep();
   }
 
-  void selectHelperGroupTrigger(HelperTriggerTypeDisplay triggerType) {
+  void selectHelperGroupTrigger(HelperTriggerTypeDisplay? triggerType) {
     this.viewModel.selectedTriggerType = triggerType;
   }
 
-  String checkValidVersion(String value) {
+  String? checkValidVersion(String? value) {
     final String pattern = r'^\d+(\.\d+){0,2}$';
     final RegExp regExp = new RegExp(pattern);
     if (value == null || value.isEmpty) {
@@ -109,7 +109,7 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
     }
   }
 
-  String checkMaxValidVersion(String value) {
+  String? checkMaxValidVersion(String? value) {
     final String pattern = r'^\d+(\.\d+){0,2}$';
     final RegExp regExp = new RegExp(pattern);
     if (value == null || value.isEmpty) {
@@ -140,31 +140,21 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   ////////////////////////////////////////////////////////////////
 
   Future<List<GroupHelperViewModel>> loadGroupHelpers() async {
-    // MOCK
-    // var res = [
-    //   GroupHelperViewModel(id: "3802832", title: "my helper 1"),
-    //   GroupHelperViewModel(id: "3802833", title: "my helper 2"),
-    //   GroupHelperViewModel(id: "3802834", title: "my helper 3"),
-    //   GroupHelperViewModel(id: "3802835", title: "my helper 4"),
-    //   GroupHelperViewModel(id: "3802836", title: "my helper 5"),
-    // ];
-    // return res;
-
-    if(viewModel.selectedHelperGroup == null || viewModel.selectedHelperGroup.groupId == null) {
+    if(viewModel.selectedHelperGroup == null || viewModel.selectedHelperGroup!.groupId == null) {
       return [];
     }
     // put our new helper in the list and highlight it
     try {
-      var helpers = await projectEditorService.getGroupHelpers(viewModel.selectedHelperGroup.groupId);
+      var helpers = await projectEditorService.getGroupHelpers(viewModel.selectedHelperGroup!.groupId);
       return helpers.map((e) => GroupHelperViewModel(id: e.id, title: e.name))
         .toList()
-        ..add(GroupHelperViewModel(id: "NEW_HELPER", title: viewModel?.helperNameController?.text ?? "My new helper"));
+        ..add(GroupHelperViewModel(id: "NEW_HELPER", title: viewModel.helperNameController?.text ?? "My new helper"));
     } catch(e) {
       return Future.error("error while parsing helpers");
     }
   }
 
-  void onGroupReorder(int selectedRank) {
+  void onGroupReorder(int? selectedRank) {
     viewModel.selectedRank = selectedRank;
   }
 
@@ -184,7 +174,7 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
     // Trigger type dropdown
     this.viewModel.triggerTypes = [];
     HelperTriggerType.values.forEach((HelperTriggerType type) {
-      this.viewModel.triggerTypes.add(
+      this.viewModel.triggerTypes!.add(
             HelperTriggerTypeDisplay(
               key: type,
               description: getHelperTriggerTypeDescription(type),
@@ -223,47 +213,47 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   }
 
   incrementStep() async {
-    if (this.viewModel.step.value >= this.viewModel.stepsTitle.length - 1) {
-      var currentPageRoute = await this.routeObserver.routeSettings.first;
+    if (this.viewModel.step!.value >= this.viewModel.stepsTitle!.length - 1) {
+      var currentPageRoute = await this.routeObserver!.routeSettings.first;
       this.viewInterface.launchHelperEditor(currentPageRoute.name, viewModel);
       return;
     }
-    viewModel.step.value++;
-    viewInterface.changeStep(viewModel.step.value);
+    viewModel.step!.value++;
+    viewInterface.changeStep(viewModel.step!.value);
     checkValidStep();
     refreshView();
   }
 
   decrementStep() {
-    if (this.viewModel.step.value <= 0) {
+    if (this.viewModel.step!.value <= 0) {
       return;
     }
-    this.viewModel.step.value--;
+    this.viewModel.step!.value--;
     this.checkValidStep();
     this.refreshView();
   }
 
   void checkValidStep() {
-    switch (this.viewModel.step.value) {
+    switch (this.viewModel.step!.value) {
       case 0:
-        this.viewModel.isFormValid.value = this.viewModel.selectedHelperGroup != null
-          && this.viewModel.selectedHelperGroup.title.isNotEmpty
-          && (this.viewModel.selectedHelperGroup.groupId != null
+        this.viewModel.isFormValid!.value = this.viewModel.selectedHelperGroup != null
+          && this.viewModel.selectedHelperGroup!.title!.isNotEmpty
+          && (this.viewModel.selectedHelperGroup!.groupId != null
             || (checkValidVersion(viewModel.minVersion) == null
               && checkMaxValidVersion(viewModel.maxVersion) == null)
           );
         break;
       case 1:
-        this.viewModel.isFormValid.value = viewModel.infosForm != null
-          && this.viewModel.infosForm.currentState != null
-            ? this.viewModel.infosForm.currentState.validate()
+        this.viewModel.isFormValid!.value = viewModel.infosForm != null
+          && this.viewModel.infosForm!.currentState != null
+            ? this.viewModel.infosForm!.currentState!.validate()
             : false;
         break;
       case 2:
-        this.viewModel.isFormValid.value = this.viewModel.selectedHelperType != null;
+        this.viewModel.isFormValid!.value = this.viewModel.selectedHelperType != null;
         break;
       case 3:
-        this.viewModel.isFormValid.value = this.viewModel.selectedHelperTheme != null;
+        this.viewModel.isFormValid!.value = this.viewModel.selectedHelperTheme != null;
         break;
       default:
     }

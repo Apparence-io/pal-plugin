@@ -6,12 +6,12 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_viewmodel.dart';
 
 class FontWeightPickerArguments {
-  String fontFamilyName;
-  String fontWeightName;
+  String? fontFamilyName;
+  String? fontWeightName;
 
   FontWeightPickerArguments({
-    @required this.fontFamilyName,
-    @required this.fontWeightName,
+    required this.fontFamilyName,
+    required this.fontWeightName,
   });
 }
 
@@ -20,11 +20,11 @@ abstract class FontWeightPickerView {}
 /// Use this picker with FontEditor dialog only
 class FontWeightPickerPage extends StatelessWidget
     implements FontWeightPickerView {
-  final FontWeightPickerArguments arguments;
+  final FontWeightPickerArguments? arguments;
 
   FontWeightPickerPage({
-    Key key,
-    @required this.arguments,
+    Key? key,
+    required this.arguments,
   });
 
   final _mvvmPageBuilder =
@@ -59,12 +59,12 @@ class FontWeightPickerPage extends StatelessWidget
     return ListView.builder(
       key: ValueKey('pal_FontWeightPicker_ListView'),
       shrinkWrap: true,
-      itemCount: model.fontWeights.length,
+      itemCount: model.fontWeights!.length,
       itemBuilder: (context, index) {
-        final map = model.fontWeights.entries.elementAt(index);
+        final map = model.fontWeights!.entries.elementAt(index);
 
         TextStyle originalFontStyle =
-            GoogleFonts.getFont(arguments.fontFamilyName);
+            GoogleFonts.getFont(arguments!.fontFamilyName!);
         TextStyle modifiedFontStyle = originalFontStyle.merge(
           TextStyle(
             fontSize: 23.0,
@@ -82,7 +82,7 @@ class FontWeightPickerPage extends StatelessWidget
               ? Icon(
                   Icons.check,
                   key: ValueKey('pal_FontWeightPicker_ListView_ListTile_Check$index'),
-                  color: PalTheme.of(context).colors.dark,
+                  color: PalTheme.of(context)!.colors.dark,
                 )
               : null,
           onTap: () {

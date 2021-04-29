@@ -8,27 +8,27 @@ typedef Future OnDelete(String id);
 
 class GroupDetailsHelpersList extends StatelessWidget {
   // CORE ATTRIBUTES
-  final ValueNotifier<List<HelperModel>> helpersList;
+  final ValueNotifier<List<HelperModel>?>? helpersList;
   final OnPreview onPreview;
   final OnEdit onEdit;
   final OnDelete onDelete;
 
-  final bool loading;
+  final bool? loading;
 
-  final ValueNotifier<int> expandedTile = ValueNotifier(null);
+  final ValueNotifier<int?> expandedTile = ValueNotifier(null);
 
   GroupDetailsHelpersList({
-    Key key,
+    Key? key,
     this.helpersList,
-    @required this.onPreview,
-    @required this.onEdit,
-    @required this.onDelete,
-    @required this.loading,
+    required this.onPreview,
+    required this.onEdit,
+    required this.onDelete,
+    required this.loading,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<List<HelperModel>>(
-      valueListenable: this.helpersList,
+    return ValueListenableBuilder<List<HelperModel>?>(
+      valueListenable: this.helpersList!,
       builder: (context, value, child) {
         if (value == null) {
           return Container(
@@ -38,12 +38,12 @@ class GroupDetailsHelpersList extends StatelessWidget {
             )),
           );
         } else {
-          return value == null || value.length == 0
+          return value.length == 0
               ? Center(
                   child: Text('No helpers found.'),
                 )
               : Opacity(
-                  opacity: this.loading ? .5 : 1,
+                  opacity: this.loading! ? .5 : 1,
                   child: ListView.separated(
                     itemBuilder: (context, index) {
                       return GroupDetailsHelperTile(
@@ -80,16 +80,16 @@ class GroupDetailsHelperTile extends StatefulWidget {
 
   final HelperModel model;
 
-  final int index;
+  final int? index;
 
-  final ValueNotifier<int> expandedTile;
+  final ValueNotifier<int?>? expandedTile;
 
   const GroupDetailsHelperTile(
-      {Key key,
-      this.onPreview,
-      this.onEdit,
-      this.onDelete,
-      this.model,
+      {Key? key,
+      required this.onPreview,
+      required this.onEdit,
+      required this.onDelete,
+      required this.model,
       this.index,
       this.expandedTile})
       : super(key: key);
@@ -100,7 +100,7 @@ class GroupDetailsHelperTile extends StatefulWidget {
 
 class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
     with SingleTickerProviderStateMixin {
-  AnimationController controller;
+  late AnimationController controller;
 
   @override
   void initState() {
@@ -109,8 +109,8 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
     this.controller = AnimationController(
         vsync: this, value: 0, lowerBound: animationLowerBound, upperBound: 0);
 
-    widget.expandedTile.addListener(() {
-      if (widget.expandedTile.value != widget.index)
+    widget.expandedTile!.addListener(() {
+      if (widget.expandedTile!.value != widget.index)
         this.controller.animateTo(0,
             curve: Curves.easeOut, duration: Duration(milliseconds: 250));
     });
@@ -128,7 +128,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
               color: Color(0xFF3EB4D9),
               icon: Icons.play_arrow,
               text: 'Preview',
-              onTap: () => widget.onPreview(widget.model.helperId),
+              onTap: () => widget.onPreview(widget.model.helperId!),
             ),
             _ActionWidget(
               key: ValueKey('EditHelperButton${widget.model.helperId}'),
@@ -136,14 +136,14 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
               icon: Icons.edit,
               text: 'Edit',
               onTap: () =>
-                  widget.onEdit(widget.model.helperId, widget.model.type),
+                  widget.onEdit(widget.model.helperId!, widget.model.type!),
             ),
             _ActionWidget(
                 key: ValueKey('DeleteHelperButton${widget.model.helperId}'),
                 color: Color(0xFFEB5160),
                 icon: Icons.delete,
                 text: 'Delete',
-                onTap: () => widget.onDelete(widget.model.helperId)),
+                onTap: () => widget.onDelete(widget.model.helperId!)),
           ],
         ),
         GestureDetector(
@@ -151,7 +151,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
             this.controller.value = this.controller.value + details.delta.dx;
           },
           onHorizontalDragEnd: (details) {
-            if (details.primaryVelocity > 0 ||
+            if (details.primaryVelocity! > 0 ||
                 this.controller.value > animationLowerBound / 2) {
               this.controller.animateTo(0,
                   curve: Curves.easeOutBack,
@@ -160,7 +160,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
               this.controller.animateTo(this.controller.lowerBound,
                   curve: Curves.easeOutBack,
                   duration: Duration(milliseconds: 250));
-              widget.expandedTile.value = widget.index;
+              widget.expandedTile!.value = widget.index;
             }
           },
           child: SizedBox(
@@ -191,7 +191,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.model.title,
+                            widget.model.title!,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 14),
@@ -200,7 +200,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
                             height: 4,
                           ),
                           Text(
-                            getHelperTypeDescription(widget.model.type),
+                            getHelperTypeDescription(widget.model.type)!,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w200, fontSize: 10),
@@ -209,7 +209,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
                             height: 16,
                           ),
                           Text(
-                            'Created on ${widget.model.creationDate.day} / ${widget.model.creationDate.month} / ${widget.model.creationDate.year}',
+                            'Created on ${widget.model.creationDate!.day} / ${widget.model.creationDate!.month} / ${widget.model.creationDate!.year}',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w100, fontSize: 6),
@@ -230,12 +230,12 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
 }
 
 class _ActionWidget extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  final Color color;
-  final Function onTap;
+  final IconData? icon;
+  final String? text;
+  final Color? color;
+  final Function? onTap;
 
-  const _ActionWidget({Key key, this.icon, this.text, this.color, this.onTap})
+  const _ActionWidget({Key? key, this.icon, this.text, this.color, this.onTap})
       : super(key: key);
 
   @override
@@ -247,7 +247,7 @@ class _ActionWidget extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: this.onTap,
+          onTap: this.onTap as void Function()?,
           splashColor: Colors.black,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -260,7 +260,7 @@ class _ActionWidget extends StatelessWidget {
                 height: 14,
               ),
               Text(
-                this.text,
+                this.text!,
                 style: TextStyle(fontSize: 10),
               ),
             ],

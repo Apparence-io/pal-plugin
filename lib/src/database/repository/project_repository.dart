@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:pal/src/database/adapter/app_icon_entity.dart';
 import 'package:pal/src/database/entity/app_icon_entity.dart';
@@ -11,7 +10,7 @@ import 'package:pal/src/services/http_client/base_client.dart';
 class ProjectRepository extends BaseHttpRepository {
   final AppIconEntityAdapter _adapter = AppIconEntityAdapter();
 
-  ProjectRepository({@required HttpClient httpClient})
+  ProjectRepository({required HttpClient httpClient})
       : super(httpClient: httpClient);
 
   Future<AppIconEntity> createAppIcon(
@@ -40,7 +39,7 @@ class ProjectRepository extends BaseHttpRepository {
   }
 
   Future<AppIconEntity> updateAppIcon(
-    String appIconId,
+    String? appIconId,
     Uint8List imageData,
     String imageType,
   ) async {

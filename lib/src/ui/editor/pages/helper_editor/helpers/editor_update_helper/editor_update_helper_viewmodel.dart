@@ -11,36 +11,36 @@ import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 class UpdateHelperViewModel extends HelperViewModel {
   // form validation boolean
-  ValueNotifier<bool> canValidate;
-  bool isKeyboardVisible;
+  ValueNotifier<bool>? canValidate;
+  bool? isKeyboardVisible;
   // LanguageNotifier language;
 
-  ValueNotifier<EditableData> currentEditableItemNotifier;
-  EditableBoxFormData backgroundBoxForm;
-  Map<String, EditableTextFormData> changelogsTextsForm;
-  EditableMediaFormData headerMediaForm;
-  EditableButtonFormData positivButtonForm;
-  EditableTextFormData titleTextForm;
+  ValueNotifier<EditableData?>? currentEditableItemNotifier;
+  EditableBoxFormData? backgroundBoxForm;
+  Map<String, EditableTextFormData>? changelogsTextsForm;
+  EditableMediaFormData? headerMediaForm;
+  EditableButtonFormData? positivButtonForm;
+  EditableTextFormData? titleTextForm;
 
-  bool loading;
+  bool? loading;
 
   UpdateHelperViewModel({
-    String id,
-    @required String name,
-    @required HelperTriggerType triggerType,
-    @required int priority,
-    @required HelperTheme helperTheme,
-    String groupId,
-    String groupName,
-    String minVersionCode,
-    String maxVersionCode,
-    int versionMaxId,
-    int languageId,
-    HelperBoxViewModel helperBoxViewModel,
-    Map<String, EditableTextFormData> changelogsLabels,
-    HelperImageViewModel helperImageViewModel,
-    HelperTextViewModel titleLabel,
-    HelperTextViewModel positivButtonLabel,
+    String? id,
+    required String? name,
+    required HelperTriggerType? triggerType,
+    required int? priority,
+    required HelperTheme? helperTheme,
+    String? groupId,
+    String? groupName,
+    String? minVersionCode,
+    String? maxVersionCode,
+    int? versionMaxId,
+    int? languageId,
+    HelperBoxViewModel? helperBoxViewModel,
+    Map<String, EditableTextFormData>? changelogsLabels,
+    HelperImageViewModel? helperImageViewModel,
+    HelperTextViewModel? titleLabel,
+    HelperTextViewModel? positivButtonLabel,
   }) : super(
           id: id,
           name: name,
@@ -87,7 +87,7 @@ class UpdateHelperViewModel extends HelperViewModel {
       fontFamily: titleLabel?.fontFamily,
       hintText: 'Enter your title here...',
     );
-    this.currentEditableItemNotifier = ValueNotifier<EditableData>(null);
+    this.currentEditableItemNotifier = ValueNotifier<EditableData?>(null);
   }
 
   factory UpdateHelperViewModel.fromHelperViewModel(HelperViewModel model) {
@@ -96,19 +96,19 @@ class UpdateHelperViewModel extends HelperViewModel {
         name: model.name,
         priority: model.priority,
         helperTheme: model.helperTheme,
-        triggerType: model?.helperGroup?.triggerType,
-        minVersionCode: model?.helperGroup?.minVersionCode,
-        maxVersionCode: model?.helperGroup?.maxVersionCode,
+        triggerType: model.helperGroup?.triggerType,
+        minVersionCode: model.helperGroup?.minVersionCode,
+        maxVersionCode: model.helperGroup?.maxVersionCode,
         groupId: model.helperGroup?.id,
         groupName: model.helperGroup?.name);
 
     if (model is UpdateHelperViewModel) {
-      updateHelper.backgroundBoxForm = model?.backgroundBoxForm;
+      updateHelper.backgroundBoxForm = model.backgroundBoxForm;
       // updateHelper.language = model?.language;
-      updateHelper.titleTextForm = model?.titleTextForm;
-      updateHelper.positivButtonForm = model?.positivButtonForm;
-      updateHelper.changelogsTextsForm = model?.changelogsTextsForm;
-      updateHelper.headerMediaForm = model?.headerMediaForm;
+      updateHelper.titleTextForm = model.titleTextForm;
+      updateHelper.positivButtonForm = model.positivButtonForm;
+      updateHelper.changelogsTextsForm = model.changelogsTextsForm;
+      updateHelper.headerMediaForm = model.headerMediaForm;
     }
 
     return updateHelper;
@@ -118,7 +118,7 @@ class UpdateHelperViewModel extends HelperViewModel {
     Map<String, EditableTextFormData> changelogsMap = {};
     List<HelperTextViewModel> changelogs = HelperSharedFactory.parseTextsLabel(
       UpdatescreenHelperKeys.LINES_KEY,
-      helperEntity?.helperTexts,
+      helperEntity.helperTexts!,
     );
 
     if (changelogs != null && changelogs.length > 0) {
@@ -127,38 +127,38 @@ class UpdateHelperViewModel extends HelperViewModel {
         changelogsMap.putIfAbsent(
           'template_${changelog.id.toString()}',
           () => EditableTextFormData(
-            changelog?.id,
+            changelog.id,
             '${UpdatescreenHelperKeys.LINES_KEY}_${index++}',
-            text: changelog?.text ?? '',
-            fontColor: changelog?.fontColor ?? Colors.white,
-            fontSize: changelog?.fontSize?.toInt() ?? 18,
-            fontFamily: changelog?.fontFamily,
-            fontWeight: FontWeightMapper.toFontKey(changelog?.fontWeight),
+            text: changelog.text ?? '',
+            fontColor: changelog.fontColor ?? Colors.white,
+            fontSize: changelog.fontSize?.toInt() ?? 18,
+            fontFamily: changelog.fontFamily,
+            fontWeight: FontWeightMapper.toFontKey(changelog.fontWeight),
           ),
         );
       }
     }
     return UpdateHelperViewModel(
-      id: helperEntity?.id,
-      name: helperEntity?.name,
-      triggerType: helperEntity?.triggerType,
-      priority: helperEntity?.priority,
+      id: helperEntity.id,
+      name: helperEntity.name,
+      triggerType: helperEntity.triggerType,
+      priority: helperEntity.priority,
       helperTheme: null,
       helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,
-        helperEntity?.helperBoxes,
+        helperEntity.helperBoxes!,
       ),
       titleLabel: HelperSharedFactory.parseTextLabel(
         UpdatescreenHelperKeys.TITLE_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       positivButtonLabel: HelperSharedFactory.parseTextLabel(
         UpdatescreenHelperKeys.POSITIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       helperImageViewModel: HelperSharedFactory.parseImageUrl(
         UpdatescreenHelperKeys.IMAGE_KEY,
-        helperEntity?.helperImages,
+        helperEntity.helperImages,
       ),
       changelogsLabels: changelogsMap,
       // TODO: Add changelog edit
@@ -166,12 +166,12 @@ class UpdateHelperViewModel extends HelperViewModel {
   }
 
   String addChangelog() {
-    String textFieldId = changelogsTextsForm.length.toString();
-    this.changelogsTextsForm.putIfAbsent(
+    String textFieldId = changelogsTextsForm!.length.toString();
+    this.changelogsTextsForm!.putIfAbsent(
           textFieldId,
           () => EditableTextFormData(
             null,
-            '${UpdatescreenHelperKeys.LINES_KEY}_${changelogsTextsForm.length}',
+            '${UpdatescreenHelperKeys.LINES_KEY}_${changelogsTextsForm!.length}',
             text: '',
             fontSize: 18,
             fontColor: Colors.white,
@@ -182,7 +182,7 @@ class UpdateHelperViewModel extends HelperViewModel {
 
   List<dynamic> get fields => [
         titleTextForm,
-        ...changelogsTextsForm.values,
+        ...changelogsTextsForm!.values,
         positivButtonForm,
       ];
 }

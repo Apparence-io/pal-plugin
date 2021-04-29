@@ -11,10 +11,10 @@ class ClientHelperRepository extends BaseHttpRepository {
 
   final EntityAdapter.HelperEntityAdapter _adapter = EntityAdapter.HelperEntityAdapter();
 
-  ClientHelperRepository({@required HttpClient httpClient})
+  ClientHelperRepository({required HttpClient httpClient})
       : super(httpClient: httpClient);
 
-  Future<List<HelperEntity>> getAllHelpers({final int version}) {
+  Future<List<HelperEntity>> getAllHelpers({final int? version}) {
     throw "not implemented yet";
   }
 

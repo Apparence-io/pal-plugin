@@ -7,7 +7,7 @@ class HelperEntityMatcher extends Matcher {
 
   final bool testId;
 
-  const HelperEntityMatcher({@required this.expected, this.testId = true}) : assert(expected != null);
+  const HelperEntityMatcher({required this.expected, this.testId = true}) : assert(expected != null);
 
   @override
   bool matches(dynamic actual, Map<dynamic, dynamic> matchState) {
@@ -32,17 +32,17 @@ class HelperEntityMatcher extends Matcher {
   }
 
   bool checkTexts(HelperEntity other, Map<dynamic, dynamic> matchState) {
-    print("first helper has ${expected.helperTexts.length} texts");
-    print("second helper has ${other.helperTexts.length} texts");
+    print("first helper has ${expected.helperTexts!.length} texts");
+    print("second helper has ${other.helperTexts!.length} texts");
     if(other.helperTexts == null && expected.helperTexts == null)
       return true;
-    if(other.helperTexts.length != expected.helperTexts.length) {
+    if(other.helperTexts!.length != expected.helperTexts!.length) {
       matchState.putIfAbsent("helperBoxes", () => "not same number of items");
       return false;
     }
-    for(int i = 0; i < other.helperTexts.length; i++) {
-      HelperTextEntity second = expected.helperTexts.elementAt(i);
-      HelperTextEntity first = other.helperTexts.elementAt(i);
+    for(int i = 0; i < other.helperTexts!.length; i++) {
+      HelperTextEntity second = expected.helperTexts!.elementAt(i);
+      HelperTextEntity first = other.helperTexts!.elementAt(i);
       print("[compare] '${first.value}' with '${second.value}' =>> ${first.value == second.value}");
       if(testId && first.id != second.id) {
         print("   ... not same id");
@@ -68,11 +68,11 @@ class HelperEntityMatcher extends Matcher {
   bool checkBoxes(HelperEntity other, Map<dynamic, dynamic> matchState) {
     if(other.helperBoxes == null && expected.helperBoxes == null)
       return true;
-    if(other.helperBoxes.length != expected.helperBoxes.length)
+    if(other.helperBoxes!.length != expected.helperBoxes!.length)
       return false;
-    for(int i = 0; i< other.helperBoxes.length; i++) {
-      HelperBoxEntity second = expected.helperBoxes.elementAt(i);
-      HelperBoxEntity first = other.helperBoxes.elementAt(i);
+    for(int i = 0; i< other.helperBoxes!.length; i++) {
+      HelperBoxEntity second = expected.helperBoxes!.elementAt(i);
+      HelperBoxEntity first = other.helperBoxes!.elementAt(i);
       if(testId && first.id != second.id) {
         return false;
       }

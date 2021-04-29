@@ -10,12 +10,12 @@ class BubbleOverlayButton extends StatefulWidget {
 
   final Size screenSize;
 
-  final Function onTapCallback;
+  final Function? onTapCallback;
 
   const BubbleOverlayButton({
-    Key key,
-    @required this.screenSize,
-    @required this.visibility,
+    Key? key,
+    required this.screenSize,
+    required this.visibility,
     this.height = 64.0,
     this.width = 64.0,
     this.onTapCallback,
@@ -27,9 +27,9 @@ class BubbleOverlayButton extends StatefulWidget {
 
 class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
     with SingleTickerProviderStateMixin {
-  Offset _position;
-  AnimationController _animationController;
-  double _scale;
+  Offset? _position;
+  AnimationController? _animationController;
+  late double _scale;
   Duration _duration = Duration(milliseconds: 100);
 
   @override
@@ -65,13 +65,13 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
 
   @override
   Widget build(BuildContext context) {
-    _scale = 1 - _animationController.value;
+    _scale = 1 - _animationController!.value;
     if (_position != null) {
       return Visibility(
         visible: widget.visibility.value,
         child: Positioned(
-          left: _position.dx,
-          top: _position.dy,
+          left: _position!.dx,
+          top: _position!.dy,
           child: GestureDetector(
             onPanUpdate: (details) {
               setState(() {
@@ -92,22 +92,22 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
   }
 
   _onTapDown(TapDownDetails details) {
-    _animationController.forward();
+    _animationController!.forward();
   }
 
   _onTapUp(TapUpDetails details) {
     Future.delayed(_duration, () {
-      _animationController.reverse();
+      _animationController!.reverse();
     });
 
     HapticFeedback.selectionClick();
     if (widget.onTapCallback != null) {
-      widget.onTapCallback();
+      widget.onTapCallback!();
     }
   }
 
   _onTapCancel() {
-    _animationController.reverse();
+    _animationController!.reverse();
   }
 
   Widget _buildBubble() {
@@ -121,7 +121,7 @@ class _BubbleOverlayButtonState extends State<BubbleOverlayButton>
         child: Transform.scale(
           scale: _scale,
           child: CircleImageButton(
-            backgroundColor: PalTheme.of(context).floatingBubbleBackgroundColor,
+            backgroundColor: PalTheme.of(context)!.floatingBubbleBackgroundColor,
             radius: widget.width / 2,
             shadow: BoxShadow(
               color: Colors.black.withOpacity(0.15),

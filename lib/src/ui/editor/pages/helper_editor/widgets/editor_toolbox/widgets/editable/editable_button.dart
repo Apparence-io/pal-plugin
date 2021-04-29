@@ -6,22 +6,22 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 class EditableButton extends StatelessWidget {
-  final EditableButtonFormData data;
-  final Function(EditableData) onTap;
+  final EditableButtonFormData? data;
+  final Function(EditableData?)? onTap;
   final bool isSelected;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final bool outline;
   
   const EditableButton({
-    Key key,
-    @required this.data,
+    Key? key,
+    required this.data,
     this.onTap,
     this.isSelected = false,
     this.backgroundColor,
     this.outline = false,
   }) : super(key: key);
 
-  TextStyle googleCustomFont(String fontFamily) => 
+  TextStyle? googleCustomFont(String? fontFamily) => 
     (fontFamily != null && fontFamily.length > 0)
         ? GoogleFonts.getFont(fontFamily)
         : null;
@@ -35,7 +35,7 @@ class EditableButton extends StatelessWidget {
           : this.data?.fontColor?.withAlpha(120),
     ).merge(googleCustomFont(this.data?.fontFamily));
   
-  Color get borderColor => this.backgroundColor.computeLuminance() > 0.5
+  Color get borderColor => this.backgroundColor!.computeLuminance() > 0.5
         ? Colors.black
         : Colors.white;
 
@@ -73,9 +73,9 @@ class EditableButton extends StatelessWidget {
       ),
     );
 
-  _buildEditableBordered({Widget child}) {
+  _buildEditableBordered({required Widget child}) {
     final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
-      primary: borderColor ?? Colors.white,
+      primary: borderColor,
       minimumSize: Size(88, 36),
       padding: EdgeInsets.symmetric(horizontal: 16),
       shape: const RoundedRectangleBorder(
@@ -85,7 +85,8 @@ class EditableButton extends StatelessWidget {
     ).copyWith(
       side: MaterialStateProperty.resolveWith<BorderSide>(
         (Set<MaterialState> states) => BorderSide(
-          color: borderColor ?? Colors.white, width: 1,
+          color: borderColor, 
+          width: 1,
         ),
       ),
     );

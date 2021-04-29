@@ -48,7 +48,7 @@ void main() {
         editorAppContext: editorAppContext);
     var bubble = find.byType(BubbleOverlayButton);
     var bubbleWidget = bubble.evaluate().first.widget as BubbleOverlayButton;
-    bubbleWidget.onTapCallback();
+    bubbleWidget.onTapCallback!();
   }
 
   testWidgets('should create page correctly', (WidgetTester tester) async {
@@ -127,7 +127,7 @@ void main() {
         .evaluate()
         .first
         .widget as CreateHelperButton;
-    await createHelperButton.onTap();
+    await createHelperButton.onTap!();
     await tester.pump(Duration(seconds: 2));
     await tester.pump();
     expect(find.byType(CreateHelperPage), findsOneWidget);

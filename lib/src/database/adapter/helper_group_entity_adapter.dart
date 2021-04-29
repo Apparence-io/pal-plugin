@@ -8,8 +8,8 @@ import 'generic_adapter.dart';
 class HelperGroupEntityAdapter extends GenericEntityAdapter<HelperGroupEntity> {
 
   @override
-  HelperGroupEntity parseMap(Map<String, dynamic> map) {
-    final HelperTriggerType helperTriggerType = map.containsKey('triggerType') 
+  HelperGroupEntity parseMap(Map<String, dynamic>? map) {
+    final HelperTriggerType? helperTriggerType = map!.containsKey('triggerType') 
       ? getHelperTriggerType(map['triggerType']) : null;
     return HelperGroupEntity(
       id: map['id'],

@@ -16,7 +16,7 @@ class GroupDetailsInfo extends StatelessWidget {
   const GroupDetailsInfo(
     this.presenter,
     this.model, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class GroupDetailsInfo extends StatelessWidget {
         children: [
           Expanded(
             child: Opacity(
-              opacity: model.loading ? .2 : 1,
+              opacity: model.loading! ? .2 : 1,
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(24),
                 child: Column(
@@ -73,7 +73,7 @@ class GroupDetailsInfo extends StatelessWidget {
                       key: ValueKey('MaxVersionField'),
                       label: 'Maximum version',
                       validator: (val) {
-                        if (val.isEmpty) return null;
+                        if (val == null || val.isEmpty) return null;
                         return presenter.validateVersion(val);
                       },
                       hint: 'Default set to latest',
@@ -86,16 +86,16 @@ class GroupDetailsInfo extends StatelessWidget {
               ),
             ),
           ),
-          if (!model.loading)
+          if (!model.loading!)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: ValueListenableBuilder(
                 valueListenable: model.canSave,
-                builder: (context, value, child) => ElevatedButton(
+                builder: (context, dynamic value, child) => ElevatedButton(
                     key: ValueKey('saveButton'),
                     style: ButtonStyle(
                       backgroundColor: MaterialStateColor.resolveWith(
-                          (states) => PalTheme.of(context).colors.color1),
+                          (states) => PalTheme.of(context)!.colors.color1!),
                       shape: MaterialStateProperty.resolveWith((states) =>
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8))),
@@ -111,7 +111,7 @@ class GroupDetailsInfo extends StatelessWidget {
           Divider(
             height: 8,
           ),
-          if (model.loading)
+          if (model.loading!)
             LinearProgressIndicator(
               value: null,
               minHeight: 5,
@@ -123,14 +123,14 @@ class GroupDetailsInfo extends StatelessWidget {
 }
 
 class DetailsTextField extends StatelessWidget {
-  final String label, hint;
+  final String? label, hint;
   final TextInputType keyboardType;
-  final TextEditingController controller;
-  final String Function(String) validator;
-  final Function(String) onFieldSubmitted;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final Function(String)? onFieldSubmitted;
 
   const DetailsTextField(
-      {Key key,
+      {Key? key,
       this.label,
       this.controller,
       this.hint,
@@ -157,15 +157,15 @@ class DetailsTextField extends StatelessWidget {
 }
 
 class DetailsSelectField extends StatelessWidget {
-  final String label;
-  final HelperTriggerType initialValue;
-  final Function(HelperTriggerType newTrigger) newTriggerCallBack;
+  final String? label;
+  final HelperTriggerType? initialValue;
+  final Function(HelperTriggerType? newTrigger) newTriggerCallBack;
 
   const DetailsSelectField(
-      {Key key,
+      {Key? key,
       this.label,
-      @required this.newTriggerCallBack,
-      @required this.initialValue})
+      required this.newTriggerCallBack,
+      required this.initialValue})
       : super(key: key);
 
   @override
@@ -177,7 +177,7 @@ class DetailsSelectField extends StatelessWidget {
         items: HelperTriggerType.values
             .map((element) => DropdownMenuItem<HelperTriggerType>(
                   value: element,
-                  child: Text(getHelperTriggerTypeDescription(element)),
+                  child: Text(getHelperTriggerTypeDescription(element)!),
                 ))
             .toList(),
         onChanged: (val) {

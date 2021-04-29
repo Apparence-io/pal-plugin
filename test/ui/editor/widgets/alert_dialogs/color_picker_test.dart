@@ -14,7 +14,7 @@ void main() {
           theme: PalThemeData.light(),
           child: Builder(
             builder: (context) => MaterialApp(
-              theme: PalTheme.of(context).buildTheme(),
+              theme: PalTheme.of(context)!.buildTheme(),
               home: colorPickerDialog,
             ),
           ),

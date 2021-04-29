@@ -6,7 +6,7 @@ import 'package:pal/src/database/repository/base_repository.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 
 class InAppUserRepository extends BaseHttpRepository {
-  InAppUserRepository({@required HttpClient httpClient})
+  InAppUserRepository({required HttpClient httpClient})
       : super(httpClient: httpClient);
 
   Future<InAppUserEntity> create(final InAppUserEntity inAppUser) async {
@@ -14,12 +14,7 @@ class InAppUserRepository extends BaseHttpRepository {
       final Response response = await this
           .httpClient
           .post(Uri.parse("pal-analytic/in-app-users"),
-              body: InAppUserEntityAdapter().toJson(inAppUser))
-          .catchError(
-        (err) {
-          return null;
-        },
-      );
+              body: InAppUserEntityAdapter().toJson(inAppUser));
       return InAppUserEntityAdapter().parse(response.body);
     } catch (e) {
       throw InternalHttpError('ERROR WHILE CREATING InAppUser $e');

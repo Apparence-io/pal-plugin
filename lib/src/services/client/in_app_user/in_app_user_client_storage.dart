@@ -5,7 +5,7 @@ import 'package:pal/src/services/local_storage/local_storage_manager.dart';
 class InAppUserStorageClientManager {
   final StorageManager _localStorageManager;
   final InAppUserEntityAdapter _adapter;
-  InAppUserEntity _inAppUser;
+  InAppUserEntity? _inAppUser;
 
   factory InAppUserStorageClientManager.build() =>
       InAppUserStorageClientManager._private(
@@ -19,15 +19,15 @@ class InAppUserStorageClientManager {
     await this._localStorageManager.store(this._adapter.toJson(inAppUser));
   }
 
-  Future<InAppUserEntity> readInAppUser() {
+  Future<InAppUserEntity?> readInAppUser() {
     if (this._inAppUser != null) {
       return Future.value(this._inAppUser);
     }
     return this._localStorageManager.read().then((res) {
-      if (res != null && res.length > 0) {
+      if (res.length > 0) {
         try {
           this._inAppUser = this._adapter.parse(res);
-          return this._inAppUser;
+          return this._inAppUser!;
         } catch (e) {
           return null;
         }
@@ -36,9 +36,9 @@ class InAppUserStorageClientManager {
     });
   }
 
-  Future<InAppUserEntity> clearInAppUser() async {
+  Future<InAppUserEntity?> clearInAppUser() async {
     await this._localStorageManager.deleteFile();
-    InAppUserEntity deletedInAppUser = this._inAppUser;
+    InAppUserEntity? deletedInAppUser = this._inAppUser;
     this._inAppUser = null;
     return deletedInAppUser;
   }

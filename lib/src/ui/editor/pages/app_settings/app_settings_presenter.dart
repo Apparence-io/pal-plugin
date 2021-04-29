@@ -16,9 +16,9 @@ class AppSettingsPresenter
 
   AppSettingsPresenter(
     AppSettingsView viewInterface, {
-    @required this.packageVersionReader,
-    @required this.projectEditorService,
-    @required this.appIconGrabberDelegate,
+    required this.packageVersionReader,
+    required this.projectEditorService,
+    required this.appIconGrabberDelegate,
   }) : super(AppSettingsModel(), viewInterface);
 
   @override
@@ -31,7 +31,7 @@ class AppSettingsPresenter
     this.readAppInfo();
     startAnimation();
 
-    WidgetsBinding.instance.addPostFrameCallback(afterLayout);
+    WidgetsBinding.instance!.addPostFrameCallback(afterLayout);
   }
 
   afterLayout(Duration duration) {
@@ -90,7 +90,7 @@ class AppSettingsPresenter
     });
   }
 
-  void _updateAppIcon(Uint8List appIcon, String appIconId) {
+  void _updateAppIcon(Uint8List appIcon, String? appIconId) {
     this
         .projectEditorService
         .updateAppIcon(appIconId, appIcon, "png")

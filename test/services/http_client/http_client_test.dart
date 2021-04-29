@@ -2,16 +2,17 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
 
+import 'http_client_test.mocks.dart';
 
-class MockHttpClient extends Mock implements http.Client {}
 
-
+@GenerateMocks([http.Client])
 void main() {
   group('HttpClient tests with token', () {
-    var httpMockClient = new MockHttpClient();
+    var httpMockClient = new MockClient();
 
     var baseUrl = 'baseUrl';
     HttpClient httpClient = new HttpClient.internal(
@@ -30,9 +31,7 @@ void main() {
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.get(Uri.parse('test'));
-        expect(true, res != null);
         expect(res.statusCode, 200);
-
         var capturedCall = verify(httpMockClient.send(captureAny)).captured;
         expect(capturedCall[0].url.toString(), equals('$baseUrl/test'));
         expect(capturedCall[0].headers['Authorization'], equals('Bearer JLKJDLSJDLKSJDLSD'));
@@ -45,9 +44,8 @@ void main() {
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.post(Uri.parse('test'));
-        expect(true, res != null);
         expect(res.statusCode, 200);
-
+        
         var capturedCall = verify(httpMockClient.send(captureAny)).captured;
         expect(capturedCall[0].url.toString(), equals('$baseUrl/test'));
         expect(capturedCall[0].headers['Authorization'], equals('Bearer JLKJDLSJDLKSJDLSD'));
@@ -60,7 +58,6 @@ void main() {
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.put(Uri.parse('test'));
-        expect(true, res != null);
         expect(res.statusCode, 200);
 
         var capturedCall = verify(httpMockClient.send(captureAny)).captured;
@@ -75,7 +72,6 @@ void main() {
             () => new http.StreamedResponse(new Stream.fromFuture(Future<List<int>>(() =>  [])), 200))
         );
         var res = await httpClient.delete(Uri.parse('test'));
-        expect(true, res != null);
         expect(res.statusCode, 200);
 
         var capturedCall = verify(httpMockClient.send(captureAny)).captured;

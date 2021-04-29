@@ -41,7 +41,7 @@ abstract class EditorAnchoredFullscreenHelperView {
   void showTutorial(String title, String content);
 
   Future showPreviewOfHelper(AnchoredFullscreenHelperViewModel model,
-      FinderService finderService, bool isTestingMode);
+      FinderService finderService, bool? isTestingMode);
 }
 
 /// ------------------------------------------------------------
@@ -53,54 +53,54 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       StreamController<bool>.broadcast();
 
   final PresenterBuilder<EditorAnchoredFullscreenPresenter> presenterBuilder;
-  final FinderService finderService;
+  final FinderService? finderService;
   final bool isTestingMode;
 
   EditorAnchoredFullscreenHelper._({
-    Key key,
-    @required this.presenterBuilder,
+    Key? key,
+    required this.presenterBuilder,
     this.finderService,
     this.isTestingMode = false,
   }) : super(key: key);
 
   factory EditorAnchoredFullscreenHelper.create(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          EditorHelperService helperService,
-          FinderService finderService,
-          bool isTestingMode,
-          @required HelperViewModel helperViewModel}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          EditorHelperService? helperService,
+          FinderService? finderService,
+          bool? isTestingMode,
+          required HelperViewModel helperViewModel}) =>
       EditorAnchoredFullscreenHelper._(
         key: key,
         presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
           AnchoredFullscreenHelperViewModel.fromModel(helperViewModel),
           _EditorAnchoredFullscreenHelperView(
-              context, EditorInjector.of(context).palEditModeStateService),
-          finderService ?? EditorInjector.of(context).finderService,
+              context, EditorInjector.of(context)!.palEditModeStateService),
+          finderService ?? EditorInjector.of(context)!.finderService,
           isTestingMode,
-          helperService ?? EditorInjector.of(context).helperService,
+          helperService ?? EditorInjector.of(context)!.helperService,
           parameters,
         ),
       );
 
   factory EditorAnchoredFullscreenHelper.edit(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          EditorHelperService helperService,
-          PalEditModeStateService palEditModeStateService,
-          FinderService finderService,
-          bool isTestingMode,
-          @required String helperId}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          EditorHelperService? helperService,
+          PalEditModeStateService? palEditModeStateService,
+          FinderService? finderService,
+          bool? isTestingMode,
+          required String? helperId}) =>
       EditorAnchoredFullscreenHelper._(
           key: key,
           presenterBuilder: (context) => EditorAnchoredFullscreenPresenter(
                 AnchoredFullscreenHelperViewModel.fromEntity(HelperEntity(
                     id: helperId, helperTexts: [])),
                 _EditorAnchoredFullscreenHelperView(context,
-                    EditorInjector.of(context).palEditModeStateService),
-                finderService ?? EditorInjector.of(context).finderService,
+                    EditorInjector.of(context)!.palEditModeStateService),
+                finderService ?? EditorInjector.of(context)!.finderService,
                 isTestingMode,
-                helperService ?? EditorInjector.of(context).helperService,
+                helperService ?? EditorInjector.of(context)!.helperService,
                 parameters,
               ));
 
@@ -123,7 +123,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
       ],
       animListener: (context, presenter, model) {
         if (model.selectedAnchorKey != null) {
-          context.animationsControllers[1].forward(from: 0);
+          context.animationsControllers![1].forward(from: 0);
         }
       },
       builder: (context, presenter, model) => Material(
@@ -133,7 +133,7 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
             : EditorToolboxPage(
                 boxViewHandler: BoxViewHandler(
                     callback: presenter.updateBackgroundColor,
-                    selectedColor: model.backgroundBox?.backgroundColor),
+                    selectedColor: model.backgroundBox.backgroundColor),
                 onValidate: (model.canValidate?.value == true)
                     ? presenter.onValidate
                     : null,
@@ -149,8 +149,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                   children: [
                     _createAnchoredWidget(
                         model,
-                        context.animationsControllers[0],
-                        context.animationsControllers[1]),
+                        context.animationsControllers![0],
+                        context.animationsControllers![1]),
                     _buildEditableTexts(presenter, model),
                     ..._createSelectableElements(presenter, model),
                     _buildRefreshButton(presenter),
@@ -187,8 +187,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
           visible: model.selectedAnchor != null,
           child: AnimatedAnchoredFullscreenCircle(
               listenable: animationController,
-              currentPos: element?.value?.offset,
-              anchorSize: element?.value?.rect?.size,
+              currentPos: element?.value.offset,
+              anchorSize: element?.value.rect?.size,
               bgColor: model.backgroundBox.backgroundColor,
               padding: 4),
         ),
@@ -203,10 +203,10 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
     if (model.selectedAnchor == null || model.anchorValidated)
       return Container();
     return Positioned(
-        left: model.selectedAnchor.value.offset.dx,
-        top: model.selectedAnchor.value.offset.dy,
+        left: model.selectedAnchor!.value.offset!.dx,
+        top: model.selectedAnchor!.value.offset!.dy,
         child: EditorButton.validate(
-            PalTheme.of(context), presenter.validateSelection,
+            PalTheme.of(context)!, presenter.validateSelection,
             key: ValueKey("validateSelectionBtn")));
   }
 
@@ -257,8 +257,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 child: EditableTextField(
                   data: model.titleField,
                   onTap: presenter.onNewEditableSelect,
-                  backgroundColor: model.backgroundBox?.backgroundColor,
-                  isSelected: model.currentEditableItemNotifier?.value?.key ==
+                  backgroundColor: model.backgroundBox.backgroundColor,
+                  isSelected: model.currentEditableItemNotifier.value?.key ==
                       model.titleField.key,
                 ),
               ),
@@ -267,8 +267,8 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                 child: EditableTextField(
                   data: model.descriptionField,
                   onTap: presenter.onNewEditableSelect,
-                  backgroundColor: model.backgroundBox?.backgroundColor,
-                  isSelected: model.currentEditableItemNotifier?.value?.key ==
+                  backgroundColor: model.backgroundBox.backgroundColor,
+                  isSelected: model.currentEditableItemNotifier.value?.key ==
                       model.descriptionField.key,
                 ),
               ),
@@ -281,9 +281,9 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                       data: model.negativBtnField,
                       outline: true,
                       onTap: presenter.onNewEditableSelect,
-                      backgroundColor: model.backgroundBox?.backgroundColor,
+                      backgroundColor: model.backgroundBox.backgroundColor,
                       isSelected:
-                          model.currentEditableItemNotifier?.value?.key ==
+                          model.currentEditableItemNotifier.value?.key ==
                               model.negativBtnField.key,
                     ),
                   ),
@@ -291,9 +291,9 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
                     child: EditableButton(
                       data: model.positivBtnField,
                       onTap: presenter.onNewEditableSelect,
-                      backgroundColor: model.backgroundBox?.backgroundColor,
+                      backgroundColor: model.backgroundBox.backgroundColor,
                       isSelected:
-                          model.currentEditableItemNotifier?.value?.key ==
+                          model.currentEditableItemNotifier.value?.key ==
                               model.positivBtnField.key,
                     ),
                   ),
@@ -312,11 +312,11 @@ class EditorAnchoredFullscreenHelper extends StatelessWidget {
 class _EditorAnchoredFullscreenHelperView
     with EditorSendingOverlayMixin, EditorNavigationMixin
     implements EditorAnchoredFullscreenHelperView {
-  BuildContext context;
+  BuildContext? context;
 
   final PalEditModeStateService palEditModeStateService;
 
-  EditorSendingOverlay sendingOverlay;
+  EditorSendingOverlay? sendingOverlay;
 
   _EditorAnchoredFullscreenHelperView(
       this.context, this.palEditModeStateService) {
@@ -351,7 +351,7 @@ class _EditorAnchoredFullscreenHelperView
 
   @override
   Future showPreviewOfHelper(AnchoredFullscreenHelperViewModel model,
-      FinderService finderService, bool isTestingMode) async {
+      FinderService finderService, bool? isTestingMode) async {
     AnchoredHelper page = AnchoredHelper.fromEntity(
       finderService: finderService,
       positivButtonLabel:
@@ -365,8 +365,8 @@ class _EditorAnchoredFullscreenHelperView
           HelperSharedFactory.parseBoxNotifier(model.backgroundBox),
       anchorKey: model.selectedAnchorKey,
       isTestingMode: isTestingMode,
-      onNegativButtonTap: () => Navigator.of(context).pop(),
-      onPositivButtonTap: () => Navigator.of(context).pop(),
+      onNegativButtonTap: () => Navigator.of(context!).pop(),
+      onPositivButtonTap: () => Navigator.of(context!).pop(),
     );
 
     EditorPreviewArguments arguments = EditorPreviewArguments(
@@ -374,7 +374,7 @@ class _EditorAnchoredFullscreenHelperView
       preBuiltHelper: page,
     );
     await Navigator.pushNamed(
-      context,
+      context!,
       '/editor/preview',
       arguments: arguments,
     );
@@ -387,14 +387,14 @@ class _WidgetElementModelTransformer {
   Widget apply(String key, WidgetElementModel model, OnTapElement onTap) {
     // debugPrint("$key: w:${model.rect.width} h:${model.rect.height} => ${model.offset.dx} ${model.offset.dy}");
     return Positioned(
-      left: model.offset.dx,
-      top: model.offset.dy,
+      left: model.offset!.dx,
+      top: model.offset!.dy,
       child: InkWell(
         key: ValueKey("elementContainer"),
         onTap: () => onTap(key),
         child: Container(
-          width: model.rect.width,
-          height: model.rect.height,
+          width: model.rect!.width,
+          height: model.rect!.height,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.white.withOpacity(model.selected ? 1 : .5),

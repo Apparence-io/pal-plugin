@@ -30,24 +30,24 @@ abstract class EditorHelperService {
   Future<Pageable<HelperEntity>> getPage(
       final String route, final int page, final int pageSize);
 
-  Future<HelperEntity> getHelper(String helperId);
+  Future<HelperEntity> getHelper(String? helperId);
 
   /// saves a simple helper to our api
   /// providing [args.config.id] will makes an update
-  Future<HelperEntity> saveSimpleHelper(final CreateSimpleHelper args);
+  Future<HelperEntity?> saveSimpleHelper(final CreateSimpleHelper args);
 
   /// saves a fullscreen helper to our api
   /// providing [args.config.id] will makes an update
-  Future<HelperEntity> saveFullScreenHelper(
+  Future<HelperEntity?> saveFullScreenHelper(
       final CreateFullScreenHelper createArgs);
 
   /// saves an update helper to our api
   /// providing [args.config.id] will makes an update
-  Future<HelperEntity> saveUpdateHelper(final CreateUpdateHelper createArgs);
+  Future<HelperEntity?> saveUpdateHelper(final CreateUpdateHelper createArgs);
 
   /// saves an anchored helper to our api
   /// providing [args.config.id] will makes an update
-  Future<HelperEntity> saveAnchoredWidget(
+  Future<HelperEntity?> saveAnchoredWidget(
       final CreateAnchoredHelper createArgs);
 
   /// Change helperPriority
@@ -71,10 +71,10 @@ class _EditorHelperHttpService implements EditorHelperService {
       this._versionRepository, this._editorHelperGroupRepository);
 
   @override
-  Future<HelperEntity> saveSimpleHelper(
+  Future<HelperEntity?> saveSimpleHelper(
       final CreateSimpleHelper createArgs) async {
     var pageId = await _getOrCreatePageId(createArgs.config.route);
-    String groupId =createArgs.config.id != null ? null :  createArgs.helperGroup?.id ??
+    String? groupId =createArgs.config.id != null ? null :  createArgs.helperGroup.id ??
         await _createGroupId(pageId, createArgs.helperGroup);
     return createArgs.config.id != null
         ? _editorHelperRepository.updateHelper(
@@ -84,53 +84,53 @@ class _EditorHelperHttpService implements EditorHelperService {
   }
 
   @override
-  Future<HelperEntity> getHelper(String helperId) {
+  Future<HelperEntity> getHelper(String? helperId) {
     return this._editorHelperRepository.getHelper(helperId);
   }
 
   @override
-  Future<HelperEntity> saveFullScreenHelper(
+  Future<HelperEntity?> saveFullScreenHelper(
       CreateFullScreenHelper createArgs) async {
     if (createArgs.title == null ||
         createArgs.description == null ||
-        createArgs.title.text.isEmpty) throw "TITLE_AND_DESCRIPTION_REQUIRED";
+        createArgs.title!.text!.isEmpty) throw "TITLE_AND_DESCRIPTION_REQUIRED";
     // create page group version
     var pageId = await _getOrCreatePageId(createArgs.config.route);
-    String groupId = createArgs.config.id != null ? null : createArgs.helperGroup.id ??
+    String? groupId = createArgs.config.id != null ? null : createArgs.helperGroup.id ??
         await _createGroupId(pageId, createArgs.helperGroup);
     // create entity
     var helperEntity = HelperEditorAdapter.parseFullscreenHelper(createArgs);
-    helperEntity.helperTexts.removeWhere(
-        (element) => element.value == null || element.value.isEmpty);
+    helperEntity.helperTexts!.removeWhere(
+        (element) => element.value == null || element.value!.isEmpty);
     return createArgs.config.id != null
         ? _editorHelperRepository.updateHelper(pageId, helperEntity)
         : _editorHelperRepository.createHelper(pageId, groupId, helperEntity);
   }
 
   @override
-  Future<HelperEntity> saveUpdateHelper(CreateUpdateHelper createArgs) async {
+  Future<HelperEntity?> saveUpdateHelper(CreateUpdateHelper createArgs) async {
     var pageId = await _getOrCreatePageId(createArgs.config.route);
     // create page group version
-    String groupId =createArgs.config.id != null ? null :  createArgs.helperGroup.id ??
-        await _createGroupId(pageId, createArgs.helperGroup);
+    String? groupId =createArgs.config.id != null ? null :  createArgs.helperGroup!.id ??
+        await _createGroupId(pageId, createArgs.helperGroup!);
     // create entity
     var helperEntity = HelperEditorAdapter.parseUpdateHelper(createArgs);
-    helperEntity.helperTexts.removeWhere(
-        (element) => element.value == null || element.value.isEmpty);
+    helperEntity.helperTexts!.removeWhere(
+        (element) => element.value == null || element.value!.isEmpty);
     return createArgs.config.id != null
         ? _editorHelperRepository.updateHelper(pageId, helperEntity)
         : _editorHelperRepository.createHelper(pageId, groupId, helperEntity);
   }
 
   @override
-  Future<HelperEntity> saveAnchoredWidget(
+  Future<HelperEntity?> saveAnchoredWidget(
       CreateAnchoredHelper createArgs) async {
-    if (createArgs.bodyBox.key.isEmpty) {
+    if (createArgs.bodyBox!.key!.isEmpty) {
       throw "ANCHOR_KEY_MISSING";
     }
     var pageId = await _getOrCreatePageId(createArgs.config.route);
     // create page group version
-    String groupId =createArgs.config.id != null ? null :  createArgs.helperGroup.id ??
+    String? groupId =createArgs.config.id != null ? null :  createArgs.helperGroup.id ??
         await _createGroupId(pageId, createArgs.helperGroup);
     // create entity
     var helperEntity = HelperEditorAdapter.parseAnchoredHelper(createArgs);
@@ -156,7 +156,7 @@ class _EditorHelperHttpService implements EditorHelperService {
   // PRIVATES
   // ------------------------------------------------------------
 
-  Future<String> _getOrCreatePageId(String routeName) async {
+  Future<String?> _getOrCreatePageId(String? routeName) async {
     if (routeName == null || routeName.isEmpty) {
       final errorMessage =
           """EMPTY_ROUTE_PROVIDED, maybe you forgot to add an unique name to your route like this:
@@ -171,43 +171,42 @@ class _EditorHelperHttpService implements EditorHelperService {
       """;
       throw PageCreationException(message: errorMessage);
     }
-    PageEntity resPage = await this._pageRepository.getPage(routeName);
-    if (resPage == null || resPage.id == null || resPage.id.isEmpty) {
+    PageEntity? resPage = await this._pageRepository.getPage(routeName);
+    if (resPage == null || resPage.id == null || resPage.id!.isEmpty) {
       resPage = await this._pageRepository.createPage(
             PageEntity(route: routeName),
           );
     }
-    if (resPage?.id != null && resPage.id.length > 0) {
-      return resPage?.id;
+    if (resPage.id != null && resPage.id!.length > 0) {
+      return resPage.id;
     } else {
       throw PageCreationException();
     }
   }
 
-  Future<int> _getOrCreateVersionId(String versionCode) async {
+  Future<int?> _getOrCreateVersionId(String? versionCode) async {
     if (versionCode == null || versionCode.isEmpty) {
       return 0;
     }
-    VersionEntity resVersion =
-        await this._versionRepository.getVersion(name: versionCode);
+    VersionEntity? resVersion = await this._versionRepository.getVersion(name: versionCode);
     if (resVersion == null || resVersion.id == null) {
-      resVersion = await this._versionRepository.createVersion(
-            VersionEntity(name: versionCode),
-          );
+      try {
+        resVersion = await this._versionRepository.createVersion(
+          VersionEntity(name: versionCode),
+        );
+      } catch(_) {
+        throw PageCreationException();
+      }
     }
-    if (resVersion != null) {
-      return resVersion.id;
-    } else {
-      throw PageCreationException();
-    }
+    return resVersion.id;
   }
 
   Future<String> _createGroupId(
-      String pageId, HelperGroupConfig helperGroupConfig) async {
-    if (helperGroupConfig.name.isEmpty) throw "EMPTY_GROUP_NAME_NOT_ALLOWED";
+      String? pageId, HelperGroupConfig helperGroupConfig) async {
+    if (helperGroupConfig.name!.isEmpty) throw "EMPTY_GROUP_NAME_NOT_ALLOWED";
     var minVersionId =
         await _getOrCreateVersionId(helperGroupConfig.minVersion);
-    int maxVersionId;
+    int? maxVersionId;
     if (helperGroupConfig.minVersion == helperGroupConfig.maxVersion) {
       maxVersionId = minVersionId;
     } else if (helperGroupConfig.maxVersion != null) {
@@ -216,12 +215,12 @@ class _EditorHelperHttpService implements EditorHelperService {
     return _editorHelperGroupRepository
         .create(pageId, helperGroupConfig.name, minVersionId, maxVersionId,
             helperGroupConfig.triggerType)
-        .then((value) => value.id);
+        .then((value) => value.id!);
   }
 }
 
 class PageCreationException implements Exception {
-  final String message;
+  final String? message;
 
   PageCreationException({this.message});
 
@@ -232,7 +231,7 @@ class PageCreationException implements Exception {
 }
 
 class VersionCreationException implements Exception {
-  final String message;
+  final String? message;
 
   VersionCreationException({this.message});
 

@@ -11,7 +11,7 @@ abstract class GenericEntityAdapter<T> {
   String toJson(T model) => json.encode(model);
 
   T parse(String value) {
-    Map<String, dynamic> map = json.decode(value);
+    Map<String, dynamic>? map = json.decode(value);
     try {
       return parseMap(map);
     } catch (e) {
@@ -46,11 +46,11 @@ abstract class GenericEntityAdapter<T> {
       result.entities = this.parseArray(json.encode(page['content']));
       return result;
     } catch (err) {
-      throw "Error while parsing data " + err;
+      throw "Error while parsing data $err";
     }
   }
 
-  Map<String, dynamic> decode(String value) {
+  Map<String, dynamic>? decode(String value) {
     return json.decode(value);
   }
 
@@ -58,7 +58,7 @@ abstract class GenericEntityAdapter<T> {
     return json.encode(object);
   }
 
-  T parseMap(Map<String, dynamic> map);
+  T parseMap(Map<String, dynamic>? map);
 
   static checkKey(Map<String, dynamic> map, String key) {
     return map.containsKey(key) && map[key] != null && map[key] != '';

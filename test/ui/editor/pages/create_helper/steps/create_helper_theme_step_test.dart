@@ -24,7 +24,7 @@ Future _before(WidgetTester tester) async {
   when(mockedModel.selectedHelperType).thenReturn(HelperType.HELPER_FULL_SCREEN);
 
   // Clean static data
-  for (PreviewThemeCard card in CreateHelperThemeStepModel.cards[mockedModel.selectedHelperType]) {
+  for (PreviewThemeCard card in CreateHelperThemeStepModel.cards[mockedModel.selectedHelperType!]!) {
     card.isSelected = false;
   }
 
@@ -34,7 +34,7 @@ Future _before(WidgetTester tester) async {
       theme: PalThemeData.light(),
       child: Builder(
         builder: (context) => MaterialApp(
-          theme: PalTheme.of(context).buildTheme(),
+          theme: PalTheme.of(context)!.buildTheme(),
           home: CreateHelperThemeStep(
             presenter: mockedPresenter,
             model: mockedModel,

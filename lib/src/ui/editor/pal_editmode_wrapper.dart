@@ -10,11 +10,11 @@ import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 class PalEditModeWrapper extends StatefulWidget {
   // this is the client embedded application that wanna use our Pal
-  final Widget userApp;
+  final Widget? userApp;
 
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+  final GlobalKey<NavigatorState>? hostedAppNavigatorKey;
 
-  PalEditModeWrapper({@required this.userApp, this.hostedAppNavigatorKey});
+  PalEditModeWrapper({required this.userApp, this.hostedAppNavigatorKey});
 
   @override
   _PalEditModeWrapperState createState() => _PalEditModeWrapperState();
@@ -23,14 +23,14 @@ class PalEditModeWrapper extends StatefulWidget {
 class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   final GlobalKey _repaintBoundaryKey = GlobalKey();
 
-  PalEditModeStateService palEditModeStateService;
+  PalEditModeStateService? palEditModeStateService;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     palEditModeStateService =
-        EditorInjector.of(context).palEditModeStateService;
-    palEditModeStateService.showEditorBubble
+        EditorInjector.of(context)!.palEditModeStateService;
+    palEditModeStateService!.showEditorBubble
         .addListener(_onShowBubbleStateChanged);
   }
 
@@ -38,7 +38,7 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
   void dispose() {
     super.dispose();
     if (palEditModeStateService != null) {
-      palEditModeStateService.showEditorBubble
+      palEditModeStateService!.showEditorBubble
           .removeListener(_onShowBubbleStateChanged);
     }
   }
@@ -53,13 +53,13 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
             navigatorKey: palNavigatorGlobalKey,
             debugShowCheckedModeBanner: false,
             onGenerateRoute: (RouteSettings settings) => route(settings),
-            theme: PalTheme.of(context).buildTheme(),
+            theme: PalTheme.of(context)!.buildTheme(),
             home: NotificationListener<PalGlobalNotification>(
               onNotification: (notification) {
                 if (notification is ShowHelpersListNotification) {
-                  _showGroupsList(EditorInjector.of(context).hostedAppNavigatorKey.currentContext);
+                  _showGroupsList(EditorInjector.of(context)!.hostedAppNavigatorKey!.currentContext!);
                 } else if (notification is ShowBubbleNotification) {
-                  palEditModeStateService.showEditorBubble.value =
+                  palEditModeStateService!.showEditorBubble.value =
                       notification.isVisible;
                 }
                 return true;
@@ -76,13 +76,13 @@ class _PalEditModeWrapperState extends State<PalEditModeWrapper> {
                     // Build the floating widget above the app
                     BubbleOverlayButton(
                       key: ValueKey('palBubbleOverlay'),
-                      visibility: palEditModeStateService.showEditorBubble,
+                      visibility: palEditModeStateService!.showEditorBubble,
                       screenSize: Size(
                         constraints.maxWidth,
                         constraints.maxHeight,
                       ),
                       onTapCallback: () {
-                        palEditModeStateService.showEditorBubble.value = false;
+                        palEditModeStateService!.showEditorBubble.value = false;
                         return _showGroupsList(_context);
                       },
                     ),

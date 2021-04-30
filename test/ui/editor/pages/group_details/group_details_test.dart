@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/services/http_client/base_client.dart';
@@ -89,25 +89,23 @@ main() {
     setUp(() {
       reset(httpMock);
       // GROUP DETAILS MOCK
-      when(httpMock.get(Uri.parse('pal-business/editor/groups/testId')))
+      when(() => httpMock.get(Uri.parse('pal-business/editor/groups/testId')))
           .thenAnswer((_) => Future.value(Response(mockGroup, 200)));
 
-      when(httpMock.get(Uri.parse('pal-business/editor/groups/testId/helpers')))
+      when(() => httpMock.get(Uri.parse('pal-business/editor/groups/testId/helpers')))
           .thenAnswer((_) => Future.value(Response(mockHelpersList, 200)));
       // GROUP DETAILS MOCK
 
-      when(httpMock.put(Uri.parse('pal-business/editor/groups/testId'),
-              body: anyNamed('body')))
+      when(() => httpMock.put(Uri.parse('pal-business/editor/groups/testId'), body: any(named: 'body')))
           .thenAnswer((_) => Future.delayed(
-              Duration(seconds: 2), () => Response(mockGroup, 200)));
+            Duration(seconds: 2), () => Response(mockGroup, 200))
+          );
 
       // VERSIONS MOCKS
-      when(httpMock
-              .get(Uri.parse('pal-business/editor/versions?versionName=1.0.2&pageSize=1')))
+      when(() => httpMock.get(Uri.parse('pal-business/editor/versions?versionName=1.0.2&pageSize=1')))
           .thenAnswer((_) => Future.value(Response(minVersionEntity, 200)));
 
-      when(httpMock
-              .get(Uri.parse('pal-business/editor/versions?versionName=1.0.3&pageSize=1')))
+      when(() => httpMock.get(Uri.parse('pal-business/editor/versions?versionName=1.0.3&pageSize=1')))
           .thenAnswer((_) => Future.value(Response(maxVersionEntity, 200)));
       // VERSIONS MOCKS
     });
@@ -144,24 +142,21 @@ main() {
       await tester.pump(Duration(seconds: 2));
 
       expect(
-        verify(httpMock.put(
+        verify(() => httpMock.put(
           Uri.parse('pal-business/editor/groups/testId'),
-          body: captureAnyNamed('body'),
+          body: captureAny(named: 'body'),
         )).captured.first,
-        equals(
-            '{"versionMinId":666,"versionMaxId":42,"triggerType":"ON_NEW_UPDATE","name":"newTest"}'),
+        equals('{"versionMinId":666,"versionMaxId":42,"triggerType":"ON_NEW_UPDATE","name":"newTest"}'),
       );
 
       await tester.pumpAndSettle();
-      expect(
-          component.getPageBuilder.presenter.viewModel.loading, equals(false));
+      expect(component.getPageBuilder.presenter.viewModel.loading, equals(false));
     });
 
     testWidgets(
         'On save button click (error) => should make server \'save\' request',
         (tester) async {
-      when(httpMock.put(Uri.parse('pal-business/editor/groups/testId'),
-              body: anyNamed('body')))
+      when(() => httpMock.put(Uri.parse('pal-business/editor/groups/testId'), body: any(named: 'body')))
           .thenThrow(InternalHttpError);
       await _before(tester);
 
@@ -193,9 +188,8 @@ main() {
 
     testWidgets('On helpers list click => Should fetch helper list and show',
         (tester) async {
-      when(httpMock.put(Uri.parse('pal-business/groups/testId/helpers'))).thenAnswer((_) =>
-          Future.delayed(
-              Duration(seconds: 2), () => Response(mockHelpersList, 200)));
+      when(() => httpMock.put(Uri.parse('pal-business/groups/testId/helpers')))
+        .thenAnswer((_) => Future.delayed(Duration(seconds: 2), () => Response(mockHelpersList, 200)));
       await _before(tester);
 
       await _goToHelpersList(tester);
@@ -207,12 +201,13 @@ main() {
     testWidgets(
         'On Helper delete click (sucess) => Should make server request and delete helper from list',
         (tester) async {
-      when(httpMock.put(Uri.parse('pal-business/groups/testId/helpers'))).thenAnswer((_) =>
-          Future.delayed(
-              Duration(seconds: 2), () => Response(mockHelpersList, 200)));
+      when(() => httpMock.put(Uri.parse('pal-business/groups/testId/helpers')))
+        .thenAnswer((_) => Future.delayed(Duration(seconds: 2), () => Response(mockHelpersList, 200)));
+      when(() => httpMock.delete(Uri.parse('pal-business/editor/helpers/id1')))
+        .thenAnswer((_) async => Response('''''', 200));
 
-      when(httpMock.delete(Uri.parse('pal-business/groups/testId/helpers/id1')))
-          .thenAnswer((_) => Future.value(Response(mockHelpersList, 200)));
+      when(() => httpMock.delete(Uri.parse('pal-business/groups/testId/helpers/id1')))
+        .thenAnswer((_) => Future.value(Response(mockHelpersList, 200)));
       await _before(tester);
 
       await _goToHelpersList(tester);
@@ -222,25 +217,25 @@ main() {
       await tester.pump();
 
       Finder deleteButton = find.byKey(ValueKey('DeleteHelperButtonid1'));
-      await tester.tap(deleteButton);
+      expect(deleteButton, findsOneWidget);
+      var deleteButtonAction = deleteButton.evaluate().first.widget as ActionWidget;
+      deleteButtonAction.onTap!();
       await tester.pump();
 
-      verify(httpMock.delete(Uri.parse('pal-business/editor/helpers/id1'))).called(1);
+      verify(() => httpMock.delete(Uri.parse('pal-business/editor/helpers/id1'))).called(1);
 
       await tester.pumpAndSettle();
       Finder helpers = find.byType(GroupDetailsHelperTile);
       expect(helpers.evaluate().length, equals(2));
     });
 
-    testWidgets(
-        'On Helper delete click (error) => Should make server request and show error message',
-        (tester) async {
-      when(httpMock.put(Uri.parse('pal-business/groups/testId/helpers'))).thenAnswer((_) =>
-          Future.delayed(
-              Duration(seconds: 2), () => Response(mockHelpersList, 200)));
+    testWidgets('On Helper delete click (error) => Should make server request and show error message', 
+      (tester) 
+    async {
+      when(() => httpMock.put(Uri.parse('pal-business/groups/testId/helpers')))
+        .thenAnswer((_) => Future.delayed(Duration(seconds: 2), () => Response(mockHelpersList, 200)));
 
-      when(httpMock.delete(Uri.parse('pal-business/editor/helpers/id1')))
-          .thenThrow(InternalHttpError);
+      when(() => httpMock.delete(Uri.parse('pal-business/editor/helpers/id1'))).thenThrow(InternalHttpError);
       await _before(tester);
 
       await _goToHelpersList(tester);
@@ -253,7 +248,7 @@ main() {
       await tester.tap(deleteButton);
       await tester.pump();
 
-      verify(httpMock.delete(Uri.parse('pal-business/editor/helpers/id1'))).called(1);
+      verify(() => httpMock.delete(Uri.parse('pal-business/editor/helpers/id1'))).called(1);
 
       await tester.pumpAndSettle(Duration(milliseconds: 200));
       SnackBar snackBar = tester.widget(find.byType(SnackBar));
@@ -265,7 +260,7 @@ main() {
     testWidgets(
         'On Group menu click (sucess) => Should show delete button and delete the group',
         (tester) async {
-      when(httpMock.delete(Uri.parse('pal-business/editor/groups/testId')))
+      when(() => httpMock.delete(Uri.parse('pal-business/editor/groups/testId')))
           .thenAnswer((_) => Future.value(Response('true', 200)));
       await _before(tester);
       expect(find.byType(GroupDetailsPage), findsOneWidget);
@@ -278,13 +273,13 @@ main() {
       await tester.tap(deleteGroup);
       await tester.pump(Duration(milliseconds: 250));
 
-      verify(httpMock.delete(Uri.parse('pal-business/editor/groups/testId'))).called(1);
+      verify(() => httpMock.delete(Uri.parse('pal-business/editor/groups/testId'))).called(1);
     });
 
     testWidgets(
         'On Group menu click (error) => Should show delete button and show error message',
         (tester) async {
-      when(httpMock.delete(Uri.parse('pal-business/editor/groups/testId')))
+      when(() => httpMock.delete(Uri.parse('pal-business/editor/groups/testId')))
           .thenThrow(InternalHttpError);
       await _before(tester);
       expect(find.byType(GroupDetailsPage), findsOneWidget);

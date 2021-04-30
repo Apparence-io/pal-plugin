@@ -123,14 +123,14 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _ActionWidget(
+            ActionWidget(
               key: ValueKey('PreviewHelperButton${widget.model.helperId}'),
               color: Color(0xFF3EB4D9),
               icon: Icons.play_arrow,
               text: 'Preview',
               onTap: () => widget.onPreview(widget.model.helperId!),
             ),
-            _ActionWidget(
+            ActionWidget(
               key: ValueKey('EditHelperButton${widget.model.helperId}'),
               color: Color(0xFF90E0EF),
               icon: Icons.edit,
@@ -138,7 +138,7 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
               onTap: () =>
                   widget.onEdit(widget.model.helperId!, widget.model.type!),
             ),
-            _ActionWidget(
+            ActionWidget(
                 key: ValueKey('DeleteHelperButton${widget.model.helperId}'),
                 color: Color(0xFFEB5160),
                 icon: Icons.delete,
@@ -229,13 +229,13 @@ class _GroupDetailsHelperTileState extends State<GroupDetailsHelperTile>
   }
 }
 
-class _ActionWidget extends StatelessWidget {
+class ActionWidget extends StatelessWidget {
   final IconData? icon;
   final String? text;
   final Color? color;
   final Function? onTap;
 
-  const _ActionWidget({Key? key, this.icon, this.text, this.color, this.onTap})
+  const ActionWidget({Key? key, this.icon, this.text, this.color, this.onTap})
       : super(key: key);
 
   @override

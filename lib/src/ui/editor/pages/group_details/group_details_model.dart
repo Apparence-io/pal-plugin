@@ -14,7 +14,7 @@ class GroupDetailsPageModel extends MVVMModel {
 
   // GROUP INFO / GROUP HELPERS
   late GroupModel groupModel;
-  ValueNotifier<List<HelperModel>?>? helpers;
+  late ValueNotifier<List<HelperModel>?> helpers;
 
   // GROUP INFO CONTROLLERS & FORM KEY
   TextEditingController? groupNameController;

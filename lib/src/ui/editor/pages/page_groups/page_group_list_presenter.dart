@@ -36,33 +36,29 @@ class PageGroupsListPresenter
     RouteSettings route = await navigatorObserver!.routeSettings.first;
     this.viewModel.route = route.name;
     // TODO show current page route path
-    this.pageService.getOrCreatePageId(route.name).catchError((err) {
-      viewModel.errorMessage = "Server error while loading data...";
+    try {
+      this.pageId = await this.pageService.getOrCreatePageId(route.name);
+      var groupsEntities = await helperGroupService.getPageGroups(pageId);
+      if (viewModel.errorMessage != null) return;//
+      if (viewModel.groups.isNotEmpty) viewModel.groups.clear();
+      groupsEntities.forEach((element) {
+        if (!viewModel.groups.containsKey(element.triggerType)) {
+          viewModel.groups.putIfAbsent(element.triggerType, () => []);
+        }
+        viewModel.groups[element.triggerType]!.add(GroupItemViewModel(
+            element.name,
+            _formatDate(element.creationDate!),
+            _formatVersion(element.minVersion, element.maxVersion),
+            element.id));
+      });
       viewModel.isLoading = false;
       refreshView();
-    }).then((id) {
-      this.pageId = id;
-      helperGroupService.getPageGroups(id).catchError((err) {
-        viewModel.errorMessage = "Server error while loading data...";
-        viewModel.isLoading = false;
-        refreshView();
-      }).then((groupsEntities) {
-        if (viewModel.errorMessage != null) return;
-        if (viewModel.groups.isNotEmpty) viewModel.groups.clear();
-        groupsEntities.forEach((element) {
-          if (!viewModel.groups.containsKey(element.triggerType)) {
-            viewModel.groups.putIfAbsent(element.triggerType, () => []);
-          }
-          viewModel.groups[element.triggerType]!.add(GroupItemViewModel(
-              element.name,
-              _formatDate(element.creationDate!),
-              _formatVersion(element.minVersion, element.maxVersion),
-              element.id));
-        });
-        viewModel.isLoading = false;
-        refreshView();
-      });
-    });
+    } catch(err, stack) {
+      viewModel.errorMessage = "Server error while loading data...";
+      debugPrintStack(stackTrace: stack);
+      viewModel.isLoading = false;
+      refreshView();
+    }
   }
 
   void onClickClose() {

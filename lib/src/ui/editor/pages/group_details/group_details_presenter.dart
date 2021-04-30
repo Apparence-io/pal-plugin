@@ -49,10 +49,8 @@ class GroupDetailsPresenter
       this.viewModel.groupModel = GroupModel.from(group);
 
       // ASSIGNING INITIALS VALUES TO CONTROLLERS
-      this.viewModel.groupMaxVerController!.text =
-          this.viewModel.groupModel.maxVer!;
-      this.viewModel.groupMinVerController!.text =
-          this.viewModel.groupModel.minVer!;
+      this.viewModel.groupMaxVerController!.text = this.viewModel.groupModel.maxVer ?? '';
+      this.viewModel.groupMinVerController!.text = this.viewModel.groupModel.minVer!;
       this.viewModel.groupNameController!.text = this.viewModel.groupModel.name!;
       this.viewModel.groupTriggerValue = this.viewModel.groupModel.triggerType;
 
@@ -64,7 +62,7 @@ class GroupDetailsPresenter
     this.groupService.getGroupHelpers(this.viewModel.groupId).then((res) {
       var list = <HelperModel>[];
       res.forEach((helper) => list.add(HelperModel.from(helper)));
-      this.viewModel.helpers!.value = list;
+      this.viewModel.helpers.value = list;
     });
   }
 
@@ -196,10 +194,7 @@ class GroupDetailsPresenter
     this.viewModel.loading = true;
     this.refreshView();
     return this.helperService!.deleteHelper(id).then((done) {
-      this.viewModel.helpers!.value = this
-          .viewModel
-          .helpers!
-          .value!
+      this.viewModel.helpers.value = this.viewModel.helpers.value!
           .where((helper) => helper.helperId != id)
           .toList();
       this.viewModel.loading = false;

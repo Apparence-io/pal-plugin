@@ -23,12 +23,15 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       HttpClient.internal(url, token);
 
   @visibleForTesting
-  HttpClient.internal(final String url, final String token, {http.Client? httpClient})
-      : assert(url.isNotEmpty),
-        assert(token.isNotEmpty),
-        this._baseUrl = url,
+  HttpClient.internal(final String url, final String token, {http.Client? httpClient, bool testMode = false})
+      : this._baseUrl = url,
         this._client = httpClient ?? new http.Client(),
-        this._token = token;
+        this._token = token {
+    if(!testMode)  {
+      assert(url.isNotEmpty);
+      assert(token.isNotEmpty);
+    }    
+  }
 
   @override
   Future<http.StreamedResponse> send(final http.BaseRequest request) async {

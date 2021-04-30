@@ -58,12 +58,12 @@ class _PageEditorHttpService implements PageEditorService {
     }
     PageEntity? resPage = await this.getPage(routeName);
     if(resPage == null || resPage.id!.length == 0) {
-      PageEntity resPage = await this.createPage(
+      resPage = await this.createPage(
         PageEntity(route: routeName),
       );
       if(resPage.id == null)
         throw 'page id is null';
     } 
-    return resPage!.id;
+    return resPage.id;
   }
 }

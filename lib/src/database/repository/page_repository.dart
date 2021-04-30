@@ -35,6 +35,9 @@ class PageRepository extends BaseHttpRepository {
         .httpClient
         .get(Uri.parse('pal-business/editor/pages?route=$route&pageSize=1'))
         .then((res) {
+          if(res.body.isEmpty) {
+            return null;
+          }
           Pageable<PageEntity>? pages = _adapter.parsePage(res.body);
           return pages.entities!.first;
         });

@@ -12,10 +12,8 @@ import 'package:pal/src/database/adapter/helper_group_entity_adapter.dart'
     as GroupEntityAdapter;
 
 class EditorHelperGroupRepository extends BaseHttpRepository {
-  final GroupEntityAdapter.HelperGroupEntityAdapter _groupAdapter =
-      GroupEntityAdapter.HelperGroupEntityAdapter();
-  final HelperEntityAdapter.HelperEntityAdapter _helperAdapter =
-      HelperEntityAdapter.HelperEntityAdapter();
+  final GroupEntityAdapter.HelperGroupEntityAdapter _groupAdapter = GroupEntityAdapter.HelperGroupEntityAdapter();
+  final HelperEntityAdapter.HelperEntityAdapter _helperAdapter = HelperEntityAdapter.HelperEntityAdapter();
 
   EditorHelperGroupRepository({
     required HttpClient httpClient,
@@ -23,13 +21,9 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
 
   Future<List<HelperGroupEntity>> listHelperGroups(String? pageId) async {
     var response;
-    try {
-      response = await httpClient.get(Uri.parse('pal-business/editor/pages/$pageId/groups'));
-      if (response == null || response.body == null)
-        throw new UnknownHttpError("NO_RESULT");
-    } catch (e) {
-      throw new UnknownHttpError("NETWORK ERROR $e");
-    }
+    response = await httpClient.get(Uri.parse('pal-business/editor/pages/$pageId/groups'));
+    if (response == null || response.body == null)
+      throw new UnknownHttpError("NO_RESULT");
     try {
       return _groupAdapter.parseArray(response.body);
     } catch (e) {
@@ -57,8 +51,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
   Future<List<HelperEntity>> listGroupHelpers(String? groupId) async {
     var response;
     try {
-      response =
-          await httpClient.get(Uri.parse('pal-business/editor/groups/$groupId/helpers'));
+      response = await httpClient.get(Uri.parse('pal-business/editor/groups/$groupId/helpers'));
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
@@ -82,7 +75,8 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     }
     try {
       return _groupAdapter.parse(response.body);
-    } catch (e) {
+    } catch (e,stacktrace) {
+      debugPrintStack(stackTrace: stacktrace);
       throw "UNPARSABLE RESPONSE $e";
     }
   }

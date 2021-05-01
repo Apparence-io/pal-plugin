@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_update_helper/user_update_helper.dart';
@@ -12,8 +12,8 @@ void main() {
   group('[Client] Update helper widget', () {
     var packageVersionReaderService = PackageVersionReaderMock();
 
-    when(packageVersionReaderService.init()).thenAnswer((_) => Future.value());
-    when(packageVersionReaderService.version).thenReturn('0.0.1');
+    when(() => packageVersionReaderService.init()).thenAnswer((_) => Future.value());
+    when(() => packageVersionReaderService.version).thenReturn('0.0.1');
 
     UserUpdateHelperPage userUpdateHelperWidget = UserUpdateHelperPage(
       onPositivButtonTap: () {},

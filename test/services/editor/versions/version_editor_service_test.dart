@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/version_entity.dart';
 import 'package:pal/src/database/repository/version_repository.dart';
 import 'package:pal/src/services/package_version.dart';
@@ -63,8 +63,8 @@ void main() {
         "totalPages": 1
       };
 
-      when(packageVersionReaderMock.version).thenReturn(versionNumber);
-      when(httpClientMock.get(Uri.parse('pal-business/editor/versions?versionName=$versionNumber&pageSize=10')))
+      when(() => packageVersionReaderMock.version).thenReturn(versionNumber);
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/versions?versionName=$versionNumber&pageSize=10')))
         .thenAnswer((_) async => http.Response(jsonEncode(expectedModel), 200));
       var currentVersionEntity = await versionEditorService.getCurrentVersion();
       expect(currentVersionEntity, isNotNull);
@@ -104,7 +104,7 @@ void main() {
         "totalElements": 3,
         "totalPages": 1
       };
-      when(httpClientMock.get(Uri.parse('pal-business/editor/versions?versionName=&pageSize=1000')))
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/versions?versionName=&pageSize=1000')))
         .thenAnswer((_) async => http.Response(jsonEncode(expectedModel), 200));
 
       List<VersionEntity> allVersions = await versionEditorService.getAll();

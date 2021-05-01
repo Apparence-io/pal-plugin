@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
@@ -20,8 +20,8 @@ Future _before(WidgetTester tester) async {
   final mockedPresenter = CreateHelperPresenterMock();
   final mockedModel = CreateHelperModelMock();
 
-  when(mockedPresenter.checkValidStep()).thenAnswer((_) => Future.value([]));
-  when(mockedModel.selectedHelperType).thenReturn(HelperType.HELPER_FULL_SCREEN);
+  when(() => mockedPresenter.checkValidStep()).thenAnswer((_) => Future.value([]));
+  when(() => mockedModel.selectedHelperType).thenReturn(HelperType.HELPER_FULL_SCREEN);
 
   // Clean static data
   for (PreviewThemeCard card in CreateHelperThemeStepModel.cards[mockedModel.selectedHelperType!]!) {

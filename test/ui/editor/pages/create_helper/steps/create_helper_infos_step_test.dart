@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
@@ -19,13 +19,13 @@ var mockedPresenter = _CreateHelperPresenterMock();
 var mockedModel = _CreateHelperModelMock();
 
 Future _before(WidgetTester tester) async {
-  when(mockedPresenter.checkValidStep()).thenAnswer((_) => Future.value([]));
-  when(mockedModel.helperNameController).thenReturn(TextEditingController());
-  when(mockedModel.isAppVersionLoading).thenReturn(false);
-  when(mockedModel.infosForm).thenReturn(GlobalKey<FormState>());
-  when(mockedModel.appVersion).thenReturn('1.0.0');
-  when(mockedModel.isFormValid).thenReturn(ValueNotifier(false));
-  when(mockedPresenter.readAppVersion())
+  when(() => mockedPresenter.checkValidStep()).thenAnswer((_) => Future.value([]));
+  when(() => mockedModel.helperNameController).thenReturn(TextEditingController());
+  when(() => mockedModel.isAppVersionLoading).thenReturn(false);
+  when(() => mockedModel.infosForm).thenReturn(GlobalKey<FormState>());
+  when(() => mockedModel.appVersion).thenReturn('1.0.0');
+  when(() => mockedModel.isFormValid).thenReturn(ValueNotifier(false));
+  when(() => mockedPresenter.readAppVersion())
       .thenAnswer((realInvocation) => Future.value());
 
   final app = MediaQuery(

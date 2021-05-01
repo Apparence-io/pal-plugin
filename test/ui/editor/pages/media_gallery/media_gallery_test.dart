@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
@@ -9,9 +8,8 @@ import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery_loader.dart'
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery_viewmodel.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/widgets/media_cell_widget.dart';
 
-import 'media_gallery_test.mocks.dart';
+class MediaGalleryLoaderMock extends Mock implements MediaGalleryLoader {}
 
-@GenerateMocks([MediaGalleryLoader])
 void main() {
 
   group('Media gallery', () {
@@ -25,7 +23,7 @@ void main() {
       )
     );
 
-    final mediaGalleryLoader = MockMediaGalleryLoader();
+    final mediaGalleryLoader = MediaGalleryLoaderMock();
 
     Future _beforeEach(WidgetTester tester) async {
       var app = MediaQuery(
@@ -52,8 +50,8 @@ void main() {
     });
 
     testWidgets('should valid ui', (WidgetTester tester) async {
-      when(mediaGalleryLoader.loadMore()).thenAnswer((_) async => List<GraphicEntity>.empty());
-      when(mediaGalleryLoader.load()).thenAnswer((_) async => mediasData);
+      when(() => mediaGalleryLoader.loadMore()).thenAnswer((_) async => List<GraphicEntity>.empty());
+      when(() => mediaGalleryLoader.load()).thenAnswer((_) async => mediasData);
       await _beforeEach(tester);
 
       expect(find.byKey(ValueKey('pal_MediaGalleryPage_Header')), findsOneWidget);
@@ -64,8 +62,8 @@ void main() {
     });
 
     testWidgets('should display media cells', (WidgetTester tester) async {
-      when(mediaGalleryLoader.loadMore()).thenAnswer((_) async => List<GraphicEntity>.empty());
-      when(mediaGalleryLoader.load()).thenAnswer((_) async => mediasData);
+      when(() => mediaGalleryLoader.loadMore()).thenAnswer((_) async => List<GraphicEntity>.empty());
+      when(() => mediaGalleryLoader.load()).thenAnswer((_) async => mediasData);
       await _beforeEach(tester);
       await tester.pump(Duration.zero);
 
@@ -73,8 +71,8 @@ void main() {
     });
 
     testWidgets('should select second cell', (WidgetTester tester) async {
-      when(mediaGalleryLoader.loadMore()).thenAnswer((_) async => List<GraphicEntity>.empty());
-      when(mediaGalleryLoader.load()).thenAnswer((_) async => mediasData);
+      when(() => mediaGalleryLoader.loadMore()).thenAnswer((_) async => List<GraphicEntity>.empty());
+      when(() => mediaGalleryLoader.load()).thenAnswer((_) async => mediasData);
       await _beforeEach(tester);
       await tester.pump(Duration.zero);
 

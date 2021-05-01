@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_presenter.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/create_helper_viewmodel.dart';
@@ -16,8 +16,8 @@ Future _before(WidgetTester tester) async {
   final mockedPresenter = CreateHelperPresenterMock();
   final mockedModel = CreateHelperModelMock();
 
-  when(mockedPresenter.checkValidStep()).thenAnswer((_) => Future.value([]));
-  when(mockedModel.selectedHelperType).thenReturn(null);
+  when(() => mockedPresenter.checkValidStep()).thenAnswer((_) => Future.value([]));
+  when(() => mockedModel.selectedHelperType).thenReturn(null);
 
   // Clean static data
   for (PreviewTypeCard card in CreateHelperTypesStepModel.cards) {

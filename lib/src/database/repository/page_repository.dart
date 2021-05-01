@@ -39,7 +39,9 @@ class PageRepository extends BaseHttpRepository {
             return null;
           }
           Pageable<PageEntity>? pages = _adapter.parsePage(res.body);
-          return pages.entities!.first;
+          if(pages.entities!.length > 0)
+            return pages.entities?.first;
+          return null;  
         });
   }
 

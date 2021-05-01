@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
@@ -31,7 +30,7 @@ class HelperClientService {
     final String? inAppUserId, 
     final AppVersion appVersion) => throw "not implemented";
 
-  Future onHelperTrigger(
+  Future<void> onHelperTrigger(
     final String? pageId, 
     final HelperGroupEntity helperGroup, 
     final HelperEntity helper, 
@@ -97,7 +96,7 @@ class _HelperClientService implements HelperClientService {
   }
 
   @override
-  Future onHelperTrigger(
+  Future<void> onHelperTrigger(
     String? pageId, 
     HelperGroupEntity helperGroup, 
     HelperEntity helper, 

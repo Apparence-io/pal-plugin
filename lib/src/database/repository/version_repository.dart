@@ -40,9 +40,14 @@ class VersionHttpRepository extends BaseHttpRepository
         .httpClient
         .get(Uri.parse('pal-business/editor/versions?versionName=$name&pageSize=1'))
         .then((res) {
-      Pageable<VersionEntity> pages = _versionEntityAdapter.parsePage(res.body);
-      return pages.entities?.first;
-    });
+          if(res.body.isEmpty) {
+            return null;
+          }
+          Pageable<VersionEntity> pages = _versionEntityAdapter.parsePage(res.body);
+          if(pages.entities!.length == 0)
+            return null;
+          return pages.entities!.first;
+        });
   }
 
   Future<VersionEntity> createVersion(

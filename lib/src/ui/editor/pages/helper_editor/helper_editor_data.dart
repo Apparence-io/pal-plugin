@@ -17,15 +17,20 @@ abstract class EditableTextData extends EditableData {
   Color? fontColor;
   int? fontSize;
 
-  EditableTextData(int? id, String key,
-      { required this.text,
-        required this.fontColor,
-        String? fontFamily = 'Montserrat',
-        String? fontWeight,
-        required this.fontSize,
-        String? hintText
-    }) : super(id, key) {
-    this.fontWeight ??= FontWeightMapper.toFontKey(FontWeight.normal);
+  EditableTextData(
+    int? id,
+    String key, {
+    required this.text,
+    required this.fontColor,
+    String? fontFamily,
+    String? fontWeight,
+    required this.fontSize,
+    String? hintText,
+  }) : super(id, key) {
+    this.fontWeight = fontWeight != null
+        ? fontWeight
+        : FontWeightMapper.toFontKey(FontWeight.normal);
+    this.fontFamily = fontFamily != null ? fontFamily : 'Montserrat';
   }
 }
 

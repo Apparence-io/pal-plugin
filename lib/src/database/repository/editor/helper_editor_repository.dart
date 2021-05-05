@@ -37,8 +37,8 @@ class EditorHelperRepository extends BaseHttpRepository {
     final Response response = await this.httpClient.put(
         Uri.parse('pal-business/editor/helpers/${updatedHelper.id}'),
         body: payload);
-    if (response.body.isEmpty)
-      throw new UnknownHttpError('NO_RESULT');
+    // if (response.body.isEmpty)
+    //   throw new UnknownHttpError('NO_RESULT');
     return response.body.length == 0
         ? null
         : this._adapter.parse(response.body);

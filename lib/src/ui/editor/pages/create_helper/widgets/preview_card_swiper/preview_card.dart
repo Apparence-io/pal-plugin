@@ -63,7 +63,7 @@ class _PreviewCardWidgetState extends State<PreviewCardWidget>
                       vertical: 20.0,
                       horizontal: 35.0,
                     ),
-                    child: Image.asset(widget.cardData.previewImage, package: 'pal'),
+                    child: Center(child: Image.asset(widget.cardData.previewImage, package: 'pal')),
                   ),
                 ),
                 Padding(

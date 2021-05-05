@@ -100,7 +100,7 @@ class CreateHelperGroup extends StatelessWidget {
                 label: 'Maximum app version',
                 widget: BorderedTextField(
                   key: ValueKey('pal_CreateHelper_TextField_MaximumVersion'),
-                  textInputType: TextInputType.numberWithOptions(decimal: true),
+                  textInputType: TextInputType.numberWithOptions(decimal: true, signed: true),
                   initialValue: maxVersionInitialValue,
                   hintText: "Max version number or empty for latest version",
                   onValueChanged: maxVersionChanged,

@@ -53,7 +53,7 @@ class UserInjector extends InheritedWidget {
         ),
         this._packageVersionReader = PackageVersionReader(),
         this._clientInAppUserService =
-            InAppUserClientService.build(appContext.inAppUserRepository),
+            InAppUserClientService.build(appContext.inAppUserRepository,appContext.inAppUserLocalRepository),
         this._finderService = FinderService(observer: routeObserver as PalNavigatorObserver?),
         super(key: key, child: child) {
     setInAppUserManagerService(this.inAppUserClientService);

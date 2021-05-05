@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/hive_client.dart';
 import 'package:pal/src/extensions/color_extension.dart';
+import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
+import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/router.dart';
+import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/client/helpers/user_anchored_helper/anchored_helper_widget.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_weight_picker/font_weight_picker_loader.dart';
@@ -14,6 +19,8 @@ import '../../../../pal_test_utilities.dart';
 import './data.dart';
 
 void main() {
+  HiveClient(shouldInit: false)..initLocal();
+
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   Scaffold _myHomeTest = Scaffold(
@@ -34,9 +41,13 @@ void main() {
   );
 
   Future beforeEach(WidgetTester tester, HelperEntity helperEntity) async {
-    await initAppWithPal(tester, _myHomeTest, _navigatorKey,
-        editorModeEnabled: false);
-        await tester.pumpAndSettle();
+    await initAppWithPal(
+      tester,
+      _myHomeTest,
+      _navigatorKey,
+      editorModeEnabled: false,
+    );
+    await tester.pumpAndSettle();
     showOverlayed(
         _navigatorKey,
         (context) => PalTheme(

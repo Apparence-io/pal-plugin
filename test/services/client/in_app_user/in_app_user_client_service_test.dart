@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
+import 'package:pal/src/database/hive_client.dart';
 import 'package:pal/src/database/repository/in_app_user_repository.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_storage.dart';
@@ -11,27 +12,36 @@ import 'package:pal/src/services/http_client/base_client.dart';
 
 class _HttpClientMock extends Mock implements HttpClient{}
 
-class _InAppUserStorageClientManagerMock extends Mock implements InAppUserStorageClientManager{}
-
 void main() {
   group('Test in app user service', () {
+
+    HiveClient hiveClient = HiveClient(shouldInit: false)
+      ..initLocal();
+
+    final storageClient = InAppUserLocalRepository(hiveClient.openInAppUserBox);
 
     setUpAll(() {
       registerFallbackValue(InAppUserEntity());
     });
 
+    setUp(() async {
+      await storageClient.clearInAppUser();
+    });
+
     test('Test get and create in app user => in app user already created', () async {
       final HttpClient httpClient = _HttpClientMock();
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(InAppUserEntity(
+      // final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
+
+      await storageClient.storeInAppUser(InAppUserEntity(
         id: "db6b01e1-b649-4a17-949a-9ab320601001",
         inAppId: "test",
         disabledHelpers: false,
         anonymous: false,
-      )));
+      ));
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository,  storageClient);
+      
       final InAppUserEntity inAppUserEntity = await inAppUserClientService.getOrCreate();
       assert(inAppUserEntity.id == "db6b01e1-b649-4a17-949a-9ab320601001");
       assert(inAppUserEntity.inAppId == "test");
@@ -46,12 +56,8 @@ void main() {
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_create_body.json").readAsStringSync();
       when(() => httpClient.post(Uri.parse("pal-analytic/in-app-users"), body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(null));
-      when(() => mockedInAppUserStorageClientManager.storeInAppUser(any())).thenAnswer((_) async => null);  
-
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository,storageClient);
       final InAppUserEntity inAppUserEntity = await inAppUserClientService.getOrCreate();
       assert(inAppUserEntity.id == "db6b01e1-b649-4a17-949a-9ab320601001");
       assert(inAppUserEntity.inAppId == null);
@@ -64,16 +70,15 @@ void main() {
 
       final HttpClient httpClient = _HttpClientMock();
 
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(InAppUserEntity(
+      await storageClient.storeInAppUser(InAppUserEntity(
         id: "db6b01e1-b649-4a17-949a-9ab320601001",
         inAppId: "test",
         disabledHelpers: false,
         anonymous: false,
-      )));
+      ));
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, storageClient);
       final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onConnect("test");
       assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
       assert(inAppUserEntity!.inAppId == "test");
@@ -95,14 +100,10 @@ void main() {
       when(() => httpClient.put(Uri.parse("pal-analytic/in-app-users/db6b01e1-b649-4a17-949a-9ab320601001"), body: expectedBody))
         .thenAnswer((_) => Future.value(Response(content, 200)));
 
-
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(inAppUser));
-      when(() => mockedInAppUserStorageClientManager.clearInAppUser()).thenAnswer((_) => Future.value());
-      when(() => mockedInAppUserStorageClientManager.clearInAppUser()).thenAnswer((_) => Future.value(inAppUser));
+      await storageClient.storeInAppUser(inAppUser);
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, storageClient);
       final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onConnect("test");
       assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
       assert(inAppUserEntity!.inAppId == "test");
@@ -115,11 +116,8 @@ void main() {
 
       final HttpClient httpClient = _HttpClientMock();
 
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(null));
-
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, storageClient);
       final InAppUserEntity? inAppUserEntity = await inAppUserClientService.update(true);
       assert(inAppUserEntity == null);
     });
@@ -131,21 +129,16 @@ void main() {
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_update_body.json").readAsStringSync();
       when(() => httpClient.put(Uri.parse("pal-analytic/in-app-users/db6b01e1-b649-4a17-949a-9ab320601001"), body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
       var user = InAppUserEntity(
           id: "db6b01e1-b649-4a17-949a-9ab320601001",
           inAppId: null,
           disabledHelpers: false,
           anonymous: true);
-      when(() => mockedInAppUserStorageClientManager.readInAppUser())
-        .thenAnswer((_) => Future.value(user));
-      when(() => mockedInAppUserStorageClientManager.clearInAppUser())
-        .thenAnswer((_) => Future.value(user));    
-      when(() => mockedInAppUserStorageClientManager.storeInAppUser(any()))
-        .thenAnswer((_) => Future.value(user));  
+
+      await storageClient.storeInAppUser(user);
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, storageClient);
       final InAppUserEntity? inAppUserEntity = await inAppUserClientService.update(false);
       assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
       assert(inAppUserEntity!.inAppId == "test");
@@ -159,21 +152,16 @@ void main() {
       final String expectedBody = new File("test/services/client/in_app_user/resources/in_app_user_create_body.json").readAsStringSync();
       when(() => httpClient.post(Uri.parse("pal-analytic/in-app-users"), body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
       var user = InAppUserEntity(
           id: "db6b01e1-b649-4a17-949a-9ab320601001",
           inAppId: 'test',
           disabledHelpers: false,
           anonymous: false);
-      when(() => mockedInAppUserStorageClientManager.readInAppUser())
-        .thenAnswer((_) => Future.value(user));
-      when(() => mockedInAppUserStorageClientManager.storeInAppUser(any()))
-        .thenAnswer((_) => Future.value(user));  
-      when(() => mockedInAppUserStorageClientManager.clearInAppUser())
-        .thenAnswer((_) => Future.value(user));
+
+      await storageClient.storeInAppUser(user);
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, storageClient);
       final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onDisconnect();
       assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
       assert(inAppUserEntity!.inAppId == null);
@@ -185,18 +173,16 @@ void main() {
 
       final HttpClient httpClient = _HttpClientMock();
 
-      final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) {
-        return Future.value(InAppUserEntity(
+      await storageClient.storeInAppUser(InAppUserEntity(
           id: "db6b01e1-b649-4a17-949a-9ab320601001",
           inAppId: 'test',
           disabledHelpers: false,
           anonymous: true,
-        ));
-      });
+        )
+      );
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
-      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
+      final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, storageClient);
       final InAppUserEntity? inAppUserEntity = await inAppUserClientService.onDisconnect();
       assert(inAppUserEntity!.id == "db6b01e1-b649-4a17-949a-9ab320601001");
       assert(inAppUserEntity!.inAppId == "test");

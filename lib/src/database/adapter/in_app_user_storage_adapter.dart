@@ -1,7 +1,7 @@
 import 'package:pal/src/database/adapter/generic_adapter.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
 
-class InAppUserEntityAdapter extends GenericEntityAdapter<InAppUserEntity> {
+class InAppUserEntityStorageAdapter extends GenericEntityAdapter<InAppUserEntity> {
   @override
   InAppUserEntity parseMap(Map<String, dynamic>? map) {
     return InAppUserEntity(

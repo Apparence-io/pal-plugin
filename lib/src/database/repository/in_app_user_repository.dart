@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pal/src/database/adapter/in_app_user_storage_adapter.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
@@ -11,11 +10,10 @@ class InAppUserRepository extends BaseHttpRepository {
 
   Future<InAppUserEntity> create(final InAppUserEntity inAppUser) async {
     try {
-      final Response response = await this
-          .httpClient
-          .post(Uri.parse("pal-analytic/in-app-users"),
-              body: InAppUserEntityAdapter().toJson(inAppUser));
-      return InAppUserEntityAdapter().parse(response.body);
+      final Response response = await this.httpClient.post(
+          Uri.parse("pal-analytic/in-app-users"),
+          body: InAppUserEntityStorageAdapter().toJson(inAppUser));
+      return InAppUserEntityStorageAdapter().parse(response.body);
     } catch (e) {
       throw InternalHttpError('ERROR WHILE CREATING InAppUser $e');
     }
@@ -24,7 +22,7 @@ class InAppUserRepository extends BaseHttpRepository {
   Future<InAppUserEntity> update(final InAppUserEntity inAppUser) async {
     final Response response = await this.httpClient.put(
         Uri.parse("pal-analytic/in-app-users/${inAppUser.id}"),
-        body: InAppUserEntityAdapter().toJson(inAppUser));
-    return InAppUserEntityAdapter().parse(response.body);
+        body: InAppUserEntityStorageAdapter().toJson(inAppUser));
+    return InAppUserEntityStorageAdapter().parse(response.body);
   }
 }

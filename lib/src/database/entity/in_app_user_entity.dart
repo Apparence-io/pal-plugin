@@ -1,7 +1,16 @@
+import 'package:hive/hive.dart';
+
+part 'in_app_user_entity.g.dart';
+
+@HiveType(typeId: 12)
 class InAppUserEntity {
+  @HiveField(0)
   String? id;
+  @HiveField(1)
   String? inAppId;
+  @HiveField(2)
   bool? disabledHelpers;
+  @HiveField(3)
   bool? anonymous;
 
   InAppUserEntity(

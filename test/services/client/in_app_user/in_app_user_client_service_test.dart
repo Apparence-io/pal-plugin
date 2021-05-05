@@ -23,12 +23,12 @@ void main() {
     test('Test get and create in app user => in app user already created', () async {
       final HttpClient httpClient = _HttpClientMock();
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(InAppUserEntity(
+      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => InAppUserEntity(
         id: "db6b01e1-b649-4a17-949a-9ab320601001",
         inAppId: "test",
         disabledHelpers: false,
         anonymous: false,
-      )));
+      ));
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
@@ -47,7 +47,7 @@ void main() {
       when(() => httpClient.post(Uri.parse("pal-analytic/in-app-users"), body: expectedBody)).thenAnswer((_) => Future.value(Response(content, 200)));
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(null));
+      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => null);
       when(() => mockedInAppUserStorageClientManager.storeInAppUser(any())).thenAnswer((_) async => null);  
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
@@ -65,12 +65,12 @@ void main() {
       final HttpClient httpClient = _HttpClientMock();
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(InAppUserEntity(
+      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => InAppUserEntity(
         id: "db6b01e1-b649-4a17-949a-9ab320601001",
         inAppId: "test",
         disabledHelpers: false,
         anonymous: false,
-      )));
+      ));
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
@@ -97,7 +97,7 @@ void main() {
 
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(inAppUser));
+      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => inAppUser);
       when(() => mockedInAppUserStorageClientManager.clearInAppUser()).thenAnswer((_) => Future.value());
       when(() => mockedInAppUserStorageClientManager.clearInAppUser()).thenAnswer((_) => Future.value(inAppUser));
 
@@ -116,7 +116,7 @@ void main() {
       final HttpClient httpClient = _HttpClientMock();
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
-      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => Future.value(null));
+      when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) => null);
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);
       final InAppUserClientService inAppUserClientService = InAppUserClientService.build(inAppUserRepository, inAppUserStorageClientManager: mockedInAppUserStorageClientManager);
@@ -138,7 +138,7 @@ void main() {
           disabledHelpers: false,
           anonymous: true);
       when(() => mockedInAppUserStorageClientManager.readInAppUser())
-        .thenAnswer((_) => Future.value(user));
+        .thenAnswer((_) => user);
       when(() => mockedInAppUserStorageClientManager.clearInAppUser())
         .thenAnswer((_) => Future.value(user));    
       when(() => mockedInAppUserStorageClientManager.storeInAppUser(any()))
@@ -166,7 +166,7 @@ void main() {
           disabledHelpers: false,
           anonymous: false);
       when(() => mockedInAppUserStorageClientManager.readInAppUser())
-        .thenAnswer((_) => Future.value(user));
+        .thenAnswer((_) => user);
       when(() => mockedInAppUserStorageClientManager.storeInAppUser(any()))
         .thenAnswer((_) => Future.value(user));  
       when(() => mockedInAppUserStorageClientManager.clearInAppUser())
@@ -187,12 +187,12 @@ void main() {
 
       final InAppUserStorageClientManager mockedInAppUserStorageClientManager = _InAppUserStorageClientManagerMock();
       when(() => mockedInAppUserStorageClientManager.readInAppUser()).thenAnswer((_) {
-        return Future.value(InAppUserEntity(
+        return InAppUserEntity(
           id: "db6b01e1-b649-4a17-949a-9ab320601001",
           inAppId: 'test',
           disabledHelpers: false,
           anonymous: true,
-        ));
+        );
       });
 
       final InAppUserRepository inAppUserRepository = InAppUserRepository(httpClient: httpClient);

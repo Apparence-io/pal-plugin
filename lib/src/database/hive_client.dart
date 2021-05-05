@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
+import 'package:pal/src/database/entity/in_app_user_entity.dart';
 import 'entity/helper/helper_entity.dart';
 import 'entity/helper/helper_group_entity.dart';
 import 'entity/helper/helper_type.dart';
@@ -45,6 +46,7 @@ class HiveClient {
     Hive.registerAdapter(HelperImageEntityAdapter());
     Hive.registerAdapter(HelperBorderEntityAdapter());
     Hive.registerAdapter(HelperBoxEntityAdapter());
+    Hive.registerAdapter(InAppUserEntityAdapter());
   }
 
   LocalDbOpener<SchemaEntity> get openSchemaBox =>
@@ -52,6 +54,9 @@ class HiveClient {
 
   LocalDbOpener<HelperGroupUserVisitEntity> get openVisitsBox =>
       () => Hive.openBox<HelperGroupUserVisitEntity>('visits');
+
+      LocalDbOpener<InAppUserEntity> get openInAppUserBox =>
+      () => Hive.openBox<InAppUserEntity>('inAppUser');
 
 
   close() => Hive.close();

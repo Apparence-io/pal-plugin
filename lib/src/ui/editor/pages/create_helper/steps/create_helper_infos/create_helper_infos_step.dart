@@ -54,7 +54,7 @@ class CreateHelperInfosStep extends StatelessWidget {
     return Form(
       key: model.infosForm,
       onChanged: _checkFormValid,
-      autovalidateMode: AutovalidateMode.disabled,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Wrap(
         runSpacing: 17.0,
         children: [

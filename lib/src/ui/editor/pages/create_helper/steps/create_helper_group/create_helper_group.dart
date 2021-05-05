@@ -47,66 +47,69 @@ class CreateHelperGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        onChanged: () => onFormChanged(_formKey.currentState!.validate()),
-        child: ListView(
-          children: [
-            LabeledForm(
-              label: 'New helper group name',
-              widget: BorderedTextField(
-                key: ValueKey('pal_CreateHelperGroup_TextField_Name'),
-                hintText: 'My new group name',
-                validator: helperNameValidator,
-                textCapitalization: TextCapitalization.sentences,
-                onValueChanged: onChangedNameText,
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          onChanged: () => onFormChanged(_formKey.currentState!.validate()),
+          child: ListView(
+            children: [
+              LabeledForm(
+                label: 'New helper group name',
+                widget: BorderedTextField(
+                  key: ValueKey('pal_CreateHelperGroup_TextField_Name'),
+                  hintText: 'My new group name',
+                  validator: helperNameValidator,
+                  textCapitalization: TextCapitalization.sentences,
+                  onValueChanged: onChangedNameText,
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            LabeledForm(
-              label: 'Trigger type',
-              widget: DropdownButtonFormField<HelperTriggerTypeDisplay>(
-                key: ValueKey('pal_CreateHelperGroup_Dropdown_Type'),
-                validator: triggerTypeValidator,
-                value: defaultTriggerType,
-                items: triggerTypes!.map(
-                  (element) =>  DropdownMenuItem<HelperTriggerTypeDisplay>(
-                    value: element,
-                    child: Text(element.description!),
-                  )
-                ).toList(),
-                onChanged: onTriggerValueSelected,
-                // items: _buildDropdownArray(),
+              SizedBox(height: 16),
+              LabeledForm(
+                label: 'Trigger type',
+                widget: DropdownButtonFormField<HelperTriggerTypeDisplay>(
+                  key: ValueKey('pal_CreateHelperGroup_Dropdown_Type'),
+                  validator: triggerTypeValidator,
+                  value: defaultTriggerType,
+                  items: triggerTypes!.map(
+                    (element) =>  DropdownMenuItem<HelperTriggerTypeDisplay>(
+                      value: element,
+                      child: Text(element.description!),
+                    )
+                  ).toList(),
+                  onChanged: onTriggerValueSelected,
+                  // items: _buildDropdownArray(),
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            LabeledForm(
-              label: 'Minimum app version',
-              widget: BorderedTextField(
-                key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
-                textInputType: TextInputType.numberWithOptions(decimal: true),
-                initialValue: minVersionInitialValue,
-                onValueChanged: minVersionChanged,
-                validator: minVersionValidator,
-                isLoading: false,
+              SizedBox(height: 16),
+              LabeledForm(
+                label: 'Minimum app version',
+                widget: BorderedTextField(
+                  key: ValueKey('pal_CreateHelper_TextField_MinimumVersion'),
+                  textInputType: TextInputType.numberWithOptions(decimal: true),
+                  initialValue: minVersionInitialValue,
+                  onValueChanged: minVersionChanged,
+                  validator: minVersionValidator,
+                  isLoading: false,
+                ),
               ),
-            ),
-            SizedBox(height: 16),
-            LabeledForm(
-              label: 'Maximum app version',
-              widget: BorderedTextField(
-                key: ValueKey('pal_CreateHelper_TextField_MaximumVersion'),
-                textInputType: TextInputType.numberWithOptions(decimal: true),
-                initialValue: maxVersionInitialValue,
-                hintText: "Max version number or empty for latest version",
-                onValueChanged: maxVersionChanged,
-                validator: maxVersionValidator,
-                isLoading: false,
+              SizedBox(height: 16),
+              LabeledForm(
+                label: 'Maximum app version',
+                widget: BorderedTextField(
+                  key: ValueKey('pal_CreateHelper_TextField_MaximumVersion'),
+                  textInputType: TextInputType.numberWithOptions(decimal: true),
+                  initialValue: maxVersionInitialValue,
+                  hintText: "Max version number or empty for latest version",
+                  onValueChanged: maxVersionChanged,
+                  validator: maxVersionValidator,
+                  isLoading: false,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -69,8 +69,7 @@ class HelperGroupUserVisitHttpRepository extends BaseHttpRepository implements H
       'isLast': isLast,
       'language': languageCode
     });
-    var res = await httpClient.post(url, body: body, headers: {"inAppUserId": inAppUserId});
-    print("test");
+    await httpClient.post(url, body: body, headers: {"inAppUserId": inAppUserId});
   }
 }
 

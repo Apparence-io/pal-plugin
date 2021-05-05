@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
@@ -10,8 +11,8 @@ import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_infos/
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_theme/create_helper_theme_step_model.dart';
 import 'package:pal/src/ui/editor/pages/create_helper/steps/create_helper_type/create_helper_type_step_model.dart';
 
-class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperView> {
-
+class CreateHelperPresenter
+    extends Presenter<CreateHelperModel, CreateHelperView> {
   final PackageVersionReader packageVersionReader;
 
   final PalRouteObserver? routeObserver;
@@ -21,7 +22,8 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   final String? pageId;
 
   CreateHelperPresenter(
-    CreateHelperView viewInterface, this.pageId, {
+    CreateHelperView viewInterface,
+    this.pageId, {
     required this.projectEditorService,
     required this.routeObserver,
     required this.packageVersionReader,
@@ -49,19 +51,16 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   ////////////////////////////////////////////////////////////////
 
   Future<List<HelperGroupViewModel>> loadHelperGroup() async {
-    return projectEditorService.getPageGroups(this.pageId)
-      .catchError((error) {
-        print("error $error");
-        return null;
-      })
-      .then((groupsEntity) {
-        List<HelperGroupViewModel> res = [];
-        groupsEntity.forEach((element) => res.add(
-          HelperGroupViewModel(groupId: element.id, title: element.name))
-        );
-        viewModel.helperGroups = res;
-        return viewModel.helperGroups;
-      });
+    return projectEditorService.getPageGroups(this.pageId).catchError((error) {
+      print("error $error");
+      return null;
+    }).then((groupsEntity) {
+      List<HelperGroupViewModel> res = [];
+      groupsEntity.forEach((element) => res
+          .add(HelperGroupViewModel(groupId: element.id, title: element.name)));
+      viewModel.helperGroups = res;
+      return viewModel.helperGroups;
+    });
   }
 
   void onTapHelperGroupSelection(HelperGroupViewModel select) {
@@ -70,7 +69,8 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   }
 
   void onTapAddNewGroup() {
-    this.viewModel.selectedHelperGroup = new HelperGroupViewModel(groupId: null, title: "");
+    this.viewModel.selectedHelperGroup =
+        new HelperGroupViewModel(groupId: null, title: "");
     viewInterface.showNewHelperGroupForm();
   }
 
@@ -122,8 +122,8 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
     }
   }
 
-  void groupCreationFormChanged(bool state)
-    => viewModel.helperGroupCreationState = state;
+  void groupCreationFormChanged(bool state) =>
+      viewModel.helperGroupCreationState = state;
 
   void setMinAppVersion(String value) {
     viewModel.minVersion = value;
@@ -140,16 +140,22 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   ////////////////////////////////////////////////////////////////
 
   Future<List<GroupHelperViewModel>> loadGroupHelpers() async {
-    if(viewModel.selectedHelperGroup == null || viewModel.selectedHelperGroup!.groupId == null) {
+    if (viewModel.selectedHelperGroup == null ||
+        viewModel.selectedHelperGroup!.groupId == null) {
       return [];
     }
     // put our new helper in the list and highlight it
     try {
-      var helpers = await projectEditorService.getGroupHelpers(viewModel.selectedHelperGroup!.groupId);
-      return helpers.map((e) => GroupHelperViewModel(id: e.id, title: e.name))
-        .toList()
-        ..add(GroupHelperViewModel(id: "NEW_HELPER", title: viewModel.helperNameController?.text ?? "My new helper"));
-    } catch(e) {
+      var helpers = await projectEditorService
+          .getGroupHelpers(viewModel.selectedHelperGroup!.groupId);
+      return helpers
+          .map((e) => GroupHelperViewModel(id: e.id, title: e.name))
+          .toList()
+            ..add(GroupHelperViewModel(
+                id: "NEW_HELPER",
+                title:
+                    viewModel.helperNameController?.text ?? "My new helper"));
+    } catch (e) {
       return Future.error("error while parsing helpers");
     }
   }
@@ -159,7 +165,8 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   }
 
   void onTapChangePosition() {
-    viewInterface.showGroupHelpersPositions(loadGroupHelpers(), this.onGroupReorder);
+    viewInterface.showGroupHelpersPositions(
+        loadGroupHelpers(), this.onGroupReorder);
   }
 
   ////////////////////////////////////////////////////////////////
@@ -182,7 +189,9 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
           );
     });
     this.viewModel.selectedTriggerType = this.viewModel.triggerTypes?.first;
-    readAppVersion();
+    if (!kIsWeb) {
+      readAppVersion();
+    }
   }
 
   readAppVersion() async {
@@ -236,27 +245,28 @@ class CreateHelperPresenter extends Presenter<CreateHelperModel, CreateHelperVie
   void checkValidStep() {
     switch (this.viewModel.step!.value) {
       case 0:
-        this.viewModel.isFormValid!.value = this.viewModel.selectedHelperGroup != null
-          && this.viewModel.selectedHelperGroup!.title!.isNotEmpty
-          && (this.viewModel.selectedHelperGroup!.groupId != null
-            || (checkValidVersion(viewModel.minVersion) == null
-              && checkMaxValidVersion(viewModel.maxVersion) == null)
-          );
+        this.viewModel.isFormValid!.value =
+            this.viewModel.selectedHelperGroup != null &&
+                this.viewModel.selectedHelperGroup!.title!.isNotEmpty &&
+                (this.viewModel.selectedHelperGroup!.groupId != null ||
+                    (checkValidVersion(viewModel.minVersion) == null &&
+                        checkMaxValidVersion(viewModel.maxVersion) == null));
         break;
       case 1:
-        this.viewModel.isFormValid!.value = viewModel.infosForm != null
-          && this.viewModel.infosForm!.currentState != null
+        this.viewModel.isFormValid!.value = viewModel.infosForm != null &&
+                this.viewModel.infosForm!.currentState != null
             ? this.viewModel.infosForm!.currentState!.validate()
             : false;
         break;
       case 2:
-        this.viewModel.isFormValid!.value = this.viewModel.selectedHelperType != null;
+        this.viewModel.isFormValid!.value =
+            this.viewModel.selectedHelperType != null;
         break;
       case 3:
-        this.viewModel.isFormValid!.value = this.viewModel.selectedHelperTheme != null;
+        this.viewModel.isFormValid!.value =
+            this.viewModel.selectedHelperTheme != null;
         break;
       default:
     }
   }
-
 }

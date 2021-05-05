@@ -15,7 +15,7 @@ class _ProgressBarRenderState extends State<ProgressBarRender> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.9,
+      widthFactor: 0.96,
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(

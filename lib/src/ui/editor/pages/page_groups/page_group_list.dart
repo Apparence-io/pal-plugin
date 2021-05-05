@@ -105,11 +105,13 @@ class PageGroupsListPage extends StatelessWidget {
               ]),
             ),
           ),
-          _buildCircleButton(
-            'pal_HelpersListModal_Settings',
-            Icon(Icons.settings, size: 24),
-            presenter.onClickSettings,
-          ),
+          // currently disabled because not supported for desktop & web for now
+          // https://github.com/ueman/application_icon/issues/9 
+          // _buildCircleButton(
+          //   'pal_HelpersListModal_Settings',
+          //   Icon(Icons.settings, size: 24),
+          //   presenter.onClickSettings,
+          // ),
         ],
       );
 

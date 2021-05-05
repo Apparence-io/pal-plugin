@@ -189,9 +189,7 @@ class CreateHelperPresenter
           );
     });
     this.viewModel.selectedTriggerType = this.viewModel.triggerTypes?.first;
-    if (!kIsWeb) {
-      readAppVersion();
-    }
+    readAppVersion();
   }
 
   readAppVersion() async {

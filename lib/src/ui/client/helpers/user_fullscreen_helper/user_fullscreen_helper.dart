@@ -53,7 +53,7 @@ class UserFullScreenHelperPage extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
-      key: ValueKey('pal_UserFullScreenHelperPage_Builder'),
+      key: UniqueKey(),
       context: context,
       multipleAnimControllerBuilder: (tickerProvider) {
         return [

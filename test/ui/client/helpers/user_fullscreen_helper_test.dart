@@ -60,12 +60,13 @@ void main() {
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
 
-      final presenterFinder =
-          find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
-      final page = presenterFinder.evaluate().first.widget
-          as PresenterInherited<UserFullScreenHelperPresenter,
-              UserFullScreenHelperModel>;
-      presenter = page.presenter;
+      // final presenterFinder =
+      //     find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
+      // final page = presenterFinder.evaluate().first.widget
+      //     as PresenterInherited<UserFullScreenHelperPresenter,
+      //         UserFullScreenHelperModel>;
+
+      presenter = userFullScreenHelperPage.presenter;
     }
 
     testWidgets('should have valid UI', (WidgetTester tester) async {

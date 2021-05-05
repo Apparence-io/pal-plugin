@@ -24,7 +24,6 @@ abstract class UserFullScreenHelperView {
 
 class UserFullScreenHelperPage extends StatelessWidget
     implements UserFullScreenHelperView {
-
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
   final HelperTextViewModel descriptionLabel;
@@ -50,10 +49,13 @@ class UserFullScreenHelperPage extends StatelessWidget
       UserFullScreenHelperModel>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
+  @visibleForTesting
+  get presenter => _mvvmPageBuilder.presenter;
+
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
-      key: ValueKey('pal_UserFullScreenHelperPage_Builder'),
+      key: UniqueKey(),
       context: context,
       multipleAnimControllerBuilder: (tickerProvider) {
         return [

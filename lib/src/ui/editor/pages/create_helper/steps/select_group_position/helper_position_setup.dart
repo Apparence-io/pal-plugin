@@ -88,7 +88,7 @@ class _HelperPositionPageState extends State<HelperPositionPage> {
       key: ValueKey(element.id),
       padding: const EdgeInsets.symmetric(vertical: 1.0),
       child: ListTile(
-        title: Text(element.title!),
+        title: Text(element.title!.isEmpty ?  "[No name]" : element.title! ),
         tileColor: element.id != "NEW_HELPER"
             ? Colors.grey.withOpacity(.2)
             : PalTheme.of(context)!.colors.color1!.withOpacity(.2),

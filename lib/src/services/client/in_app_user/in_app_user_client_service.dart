@@ -12,16 +12,16 @@ abstract class InAppUserClientService {
   Future<InAppUserEntity?> onDisconnect();
   
   factory InAppUserClientService.build(
-      InAppUserRepository inAppUserRepository, {final InAppUserStorageClientManager? inAppUserStorageClientManager}) =>
-      _ClientInAppUserHttpService(inAppUserRepository, inAppUserStorageClientManager: inAppUserStorageClientManager);
+      InAppUserRepository inAppUserRepository, final InAppUserLocalRepository inAppUserStorageClientManager) =>
+      _ClientInAppUserHttpService(inAppUserRepository, inAppUserStorageClientManager);
 }
 
 class _ClientInAppUserHttpService implements InAppUserClientService {
   final InAppUserRepository _inAppUserRepository;
-  final InAppUserStorageClientManager _clientInAppUserStorageManager;
+  final InAppUserLocalRepository _clientInAppUserStorageManager;
 
-  _ClientInAppUserHttpService(this._inAppUserRepository, {final InAppUserStorageClientManager? inAppUserStorageClientManager})
-      : this._clientInAppUserStorageManager = inAppUserStorageClientManager ?? InAppUserStorageClientManager.build();
+  _ClientInAppUserHttpService(this._inAppUserRepository, final InAppUserLocalRepository inAppUserStorageClientManager)
+      : this._clientInAppUserStorageManager = inAppUserStorageClientManager;
 
   @override
   Future<InAppUserEntity> getOrCreate() async {

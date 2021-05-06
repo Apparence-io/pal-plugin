@@ -33,18 +33,18 @@ class HiveClient {
 
   @visibleForTesting
   initAdapters() {
-    Hive.registerAdapter(SchemaEntityAdapter());
-    Hive.registerAdapter(HelperGroupEntityAdapter());
-    Hive.registerAdapter(HelperEntityAdapter());
-    Hive.registerAdapter(PageEntityAdapter());
-    Hive.registerAdapter(HelperGroupUserVisitEntityAdapter());
-    Hive.registerAdapter(HelperTypeAdapter());
-    Hive.registerAdapter(HelperTriggerTypeAdapter());
-    Hive.registerAdapter(HelperTextEntityAdapter());
-    Hive.registerAdapter(HelperImageEntityAdapter());
-    Hive.registerAdapter(HelperBorderEntityAdapter());
-    Hive.registerAdapter(HelperBoxEntityAdapter());
-    Hive.registerAdapter(InAppUserEntityAdapter());
+    Hive.registerAdapter(SchemaEntityAdapter(), override: true);
+    Hive.registerAdapter(HelperGroupEntityAdapter(), override: true);
+    Hive.registerAdapter(HelperEntityAdapter(), override: true);
+    Hive.registerAdapter(PageEntityAdapter(), override: true);
+    Hive.registerAdapter(HelperGroupUserVisitEntityAdapter(), override: true);
+    Hive.registerAdapter(HelperTypeAdapter(), override: true);
+    Hive.registerAdapter(HelperTriggerTypeAdapter(), override: true);
+    Hive.registerAdapter(HelperTextEntityAdapter(), override: true);
+    Hive.registerAdapter(HelperImageEntityAdapter(), override: true);
+    Hive.registerAdapter(HelperBorderEntityAdapter(), override: true);
+    Hive.registerAdapter(HelperBoxEntityAdapter(), override: true);
+    Hive.registerAdapter(InAppUserEntityAdapter(), override: true);
   }
 
   LocalDbOpener<SchemaEntity> get openSchemaBox =>

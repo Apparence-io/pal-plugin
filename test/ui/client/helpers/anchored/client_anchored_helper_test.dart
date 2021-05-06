@@ -95,6 +95,8 @@ void main() {
         'valid anchored helper entity => show anchored helper as overlay',
         (WidgetTester tester) async {
       await beforeEach(tester, validAnchoredHelperEntity);
+      await tester.pump();
+      await tester.pump();
       expect(find.byType(AnchoredHelper), findsOneWidget);
       validAnchoredHelperEntity.helperTexts!.forEach((element) {
         var textWidget =
@@ -116,6 +118,7 @@ void main() {
       await tester.pump();
       await tester.pump();
       expect(find.byType(AnchoredHelper), findsNothing);
+      await tester.pump();
     });
   });
 }

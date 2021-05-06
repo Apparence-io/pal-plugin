@@ -1,6 +1,4 @@
 PODS:
-  - application_icon (0.0.1):
-    - Flutter
   - Flutter (1.0.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
@@ -14,7 +12,6 @@ PODS:
     - FMDB (>= 2.7.5)
 
 DEPENDENCIES:
-  - application_icon (from `.symlinks/plugins/application_icon/ios`)
   - Flutter (from `Flutter`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -25,8 +22,6 @@ SPEC REPOS:
     - FMDB
 
 EXTERNAL SOURCES:
-  application_icon:
-    :path: ".symlinks/plugins/application_icon/ios"
   Flutter:
     :path: Flutter
   package_info_plus:
@@ -37,7 +32,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
-  application_icon: 6c882fd954934784443dad48a169cadb5f326cb1
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e

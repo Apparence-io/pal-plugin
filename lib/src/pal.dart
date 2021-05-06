@@ -134,7 +134,7 @@ class Pal extends StatelessWidget {
       // load asynchronous stuff in this class
       child: PalLoader(
         builder: (BuildContext context, snapshot) {
-          if (snapshot) {
+          if (snapshot.hasData) {
             // return client app WITH Pal if already loaded
             return (editorModeEnabled)
                 ? buildEditorApp(

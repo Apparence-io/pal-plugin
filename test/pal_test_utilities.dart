@@ -54,7 +54,8 @@ Future initAppWithPal(
     ),
   );
   await tester.pumpWidget(app);
-  print(navigatorKey);
+  await tester.pump();
+  await tester.pumpAndSettle();
 }
 
 /// use this to show an helper editor for each type

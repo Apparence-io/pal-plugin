@@ -1,11 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pal/src/pal_utils.dart';
 
 // this is used to load pal in asynchronous mode,
 // can be used to call some asynchronous stuff like migrations, init etc.
 class PalLoader extends StatefulWidget {
-  final Widget Function(BuildContext, bool) builder;
+  final Widget Function(BuildContext, AsyncSnapshot<dynamic>) builder;
 
   const PalLoader({Key? key, required this.builder}) : super(key: key);
 
@@ -18,27 +21,23 @@ class _PalLoaderState extends State<PalLoader> {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
-        // if async loading done, then ignore loading (already done)
-        if (!_isLoaded) {
-          this.asynchronousLoading();
-        }
-        // trigger parent future builder loading
-        return this.widget.builder(context, _isLoaded);
-      },
+    return FutureBuilder(
+      builder: this.widget.builder,
+      future: !PalUtils.isRunningInTestEnv()
+          ? asynchronousLoading()
+          : Future.value(true),
     );
   }
 
-  Future<void> asynchronousLoading() async {
-    await Hive.initFlutter();
-    // migrations...
-    // async stuff goes here
+  Future<bool> asynchronousLoading() async {
+    if (!_isLoaded) {
+      await Hive.initFlutter();
 
-    setState(() {
-      // loading done, refresh state to inform parent
-      // FutureBuilder job done
-      this._isLoaded = true;
-    });
+      // migrations...
+      // async stuff goes here
+      _isLoaded = true;
+    }
+
+    return _isLoaded;
   }
 }

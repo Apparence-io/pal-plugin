@@ -49,9 +49,12 @@ class GroupDetailsPresenter
       this.viewModel.groupModel = GroupModel.from(group);
 
       // ASSIGNING INITIALS VALUES TO CONTROLLERS
-      this.viewModel.groupMaxVerController!.text = this.viewModel.groupModel.maxVer ?? '';
-      this.viewModel.groupMinVerController!.text = this.viewModel.groupModel.minVer!;
-      this.viewModel.groupNameController!.text = this.viewModel.groupModel.name!;
+      this.viewModel.groupMaxVerController!.text =
+          this.viewModel.groupModel.maxVer ?? '';
+      this.viewModel.groupMinVerController!.text =
+          this.viewModel.groupModel.minVer!;
+      this.viewModel.groupNameController!.text =
+          this.viewModel.groupModel.name!;
       this.viewModel.groupTriggerValue = this.viewModel.groupModel.triggerType;
 
       // ENDING LOADING
@@ -77,9 +80,8 @@ class GroupDetailsPresenter
             .versionService
             .getOrCreateVersionId(this.viewModel.groupMinVerController!.text),
         this.viewModel.groupMaxVerController!.text.isNotEmpty
-            ? this
-                .versionService
-                .getOrCreateVersionId(this.viewModel.groupMaxVerController!.text)
+            ? this.versionService.getOrCreateVersionId(
+                this.viewModel.groupMaxVerController!.text)
             : Future.value(null),
       ]).catchError((err) {
         this.viewModel.loading = false;
@@ -106,6 +108,13 @@ class GroupDetailsPresenter
           this.viewInterface.showError();
         });
       });
+    }
+  }
+
+  void onDeleteTap() async {
+    var result = await this.viewInterface.showGroupDeleteModal();
+    if (result) {
+      this.deleteGroup();
     }
   }
 
@@ -141,7 +150,7 @@ class GroupDetailsPresenter
     if (val != this.viewModel.groupModel.maxVer) this.updateState();
   }
 
-  String? validateVersion(String ?val) {
+  String? validateVersion(String? val) {
     if (val!.contains(new RegExp(
         r'^(?<version>(?<major>0|[1-9][0-9]*)\.(?<minor>0|[1-9][0-9]*)\.(?<patch>0|[1-9][0-9]*))$'))) {
       this.viewModel.locked = false;
@@ -194,7 +203,10 @@ class GroupDetailsPresenter
     this.viewModel.loading = true;
     this.refreshView();
     return this.helperService!.deleteHelper(id).then((done) {
-      this.viewModel.helpers.value = this.viewModel.helpers.value!
+      this.viewModel.helpers.value = this
+          .viewModel
+          .helpers
+          .value!
           .where((helper) => helper.helperId != id)
           .toList();
       this.viewModel.loading = false;

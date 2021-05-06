@@ -273,6 +273,10 @@ main() {
       await tester.tap(deleteGroup);
       await tester.pump(Duration(milliseconds: 250));
 
+      Finder deleteConfirmation = find.byKey(ValueKey('DeleteGroupConfirmationYesButton'));
+      await tester.tap(deleteConfirmation);
+      await tester.pump(Duration(milliseconds: 250));
+
       verify(() => httpMock.delete(Uri.parse('pal-business/editor/groups/testId'))).called(1);
     });
 
@@ -290,6 +294,10 @@ main() {
 
       Finder deleteGroup = find.byKey(ValueKey('DeleteGroupButton'));
       await tester.tap(deleteGroup);
+      await tester.pump(Duration(milliseconds: 250));
+
+      Finder deleteConfirmation = find.byKey(ValueKey('DeleteGroupConfirmationYesButton'));
+      await tester.tap(deleteConfirmation);
       await tester.pump(Duration(milliseconds: 250));
 
       SnackBar snackBar = tester.widget(find.byType(SnackBar));

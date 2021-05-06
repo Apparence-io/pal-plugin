@@ -24,6 +24,8 @@ abstract class GroupDetailsView {
   void pop();
 
   void previewHelper(String id) {}
+
+  Future<bool> showGroupDeleteModal();
 }
 
 class GroupDetailsPage extends StatelessWidget
@@ -151,7 +153,7 @@ class GroupDetailsPage extends StatelessWidget
                   ],
                   icon: Icon(Icons.more_horiz),
                   offset: Offset(0, 24),
-                  onSelected: (dynamic val) => presenter.deleteGroup(),
+                  onSelected: (dynamic val) => presenter.onDeleteTap(),
                 )
               ],
               // *******MENU BUTTON
@@ -238,6 +240,35 @@ class GroupDetailsPage extends StatelessWidget
       navKey.currentContext!,
       '/editor/preview',
       arguments: arguments,
+    );
+  }
+
+  @override
+  Future<bool> showGroupDeleteModal() async {
+    return await showDialog(
+      context: _scaffoldKey.currentContext!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Do you really want to remove this group?'),
+          actions: <Widget>[
+            TextButton(
+              key: ValueKey('DeleteGroupConfirmationCancelButton'),
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              key: ValueKey('DeleteGroupConfirmationYesButton'),
+              child: Text('Delete', style: TextStyle(color: Colors.redAccent),),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

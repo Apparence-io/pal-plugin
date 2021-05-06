@@ -5,6 +5,7 @@ import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
+import 'package:pal/src/pal_loader.dart';
 import 'package:pal/src/services/locale_service/locale_service.dart';
 import 'package:pal/src/ui/client/helper_orchestrator.dart';
 import 'package:pal/src/ui/editor/pal_editmode_wrapper.dart';
@@ -58,7 +59,8 @@ class Pal extends StatelessWidget {
             childApp.navigatorKey != null, 'Pal navigatorKey must not be null'),
         navigatorKey = childApp.navigatorKey,
         navigatorObserver = childApp.navigatorObservers!
-            .firstWhere((element) => element is PalNavigatorObserver) as PalNavigatorObserver?,
+                .firstWhere((element) => element is PalNavigatorObserver)
+            as PalNavigatorObserver?,
         super(key: key) {
     assert(navigatorObserver != null,
         'your app navigatorObservers must contain PalNavigatorObserver like this: navigatorObservers: [PalNavigatorObserver.instance()]');
@@ -129,11 +131,24 @@ class Pal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: textDirection,
-      child: (editorModeEnabled)
-          ? buildEditorApp(
-              childApp == null ? childAppBuilder!(context) : childApp)
-          : buildUserApp(
-              childApp == null ? childAppBuilder!(context) : childApp),
+      // load asynchronous stuff in this class
+      child: PalLoader(
+        builder: (BuildContext context, snapshot) {
+          if (snapshot) {
+            // return client app WITH Pal if already loaded
+            return (editorModeEnabled)
+                ? buildEditorApp(
+                    childApp == null ? childAppBuilder!(context) : childApp,
+                  )
+                : buildUserApp(
+                    childApp == null ? childAppBuilder!(context) : childApp,
+                  );
+          } else {
+            // return client app WITHOUT Pal if not already loaded
+            return childApp!;
+          }
+        },
+      ),
     );
   }
 
@@ -158,10 +173,13 @@ class Pal extends StatelessWidget {
       child: Builder(builder: (context) {
         HelperOrchestrator.getInstance(
             helperClientService: UserInjector.of(context)!.helperService,
-            inAppUserClientService: UserInjector.of(context)!.inAppUserClientService,
-            helpersSynchronizer: UserInjector.of(context)!.helpersSynchronizerService,
+            inAppUserClientService:
+                UserInjector.of(context)!.inAppUserClientService,
+            helpersSynchronizer:
+                UserInjector.of(context)!.helpersSynchronizerService,
             routeObserver: navigatorObserver,
-            packageVersionReader: UserInjector.of(context)!.packageVersionReader,
+            packageVersionReader:
+                UserInjector.of(context)!.packageVersionReader,
             navigatorKey: navigatorKey);
         return Overlayed(child: childApp!);
       }),

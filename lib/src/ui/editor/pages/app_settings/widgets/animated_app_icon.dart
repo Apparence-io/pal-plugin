@@ -1,4 +1,4 @@
-import 'package:application_icon/application_icon.dart';
+// import 'package:application_icon/application_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
@@ -44,7 +44,7 @@ class AnimatedAppIcon extends AnimatedWidget {
         ),
         child: Stack(
           children: [
-            ClipOval(child: !testMode ? AppIconImage() : Container()),
+            // ClipOval(child: !testMode ? AppIconImage() : Container()),
             Align(
               alignment: Alignment.bottomRight,
               child: CircleIconButton(

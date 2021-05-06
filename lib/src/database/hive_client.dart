@@ -9,7 +9,6 @@ import 'entity/helper/helper_type.dart';
 import 'entity/helper/schema_entity.dart';
 import 'entity/page_user_visit_entity.dart';
 import 'entity/page_entity.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 typedef Future<Box<T>> LocalDbOpener<T>();
 
@@ -23,7 +22,6 @@ class HiveClient {
 
   @visibleForTesting
   init() async {
-    await Hive.initFlutter();
     initAdapters();
   }
 

@@ -5,7 +5,7 @@ import 'package:pal/src/injectors/editor_app/editor_app_context.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
 import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/injectors/user_app/user_app_injector.dart';
-import 'package:pal/src/pal_loader.dart';
+import 'package:pal/src/pal_database_initializer.dart';
 import 'package:pal/src/services/locale_service/locale_service.dart';
 import 'package:pal/src/ui/client/helper_orchestrator.dart';
 import 'package:pal/src/ui/editor/pal_editmode_wrapper.dart';
@@ -132,7 +132,7 @@ class Pal extends StatelessWidget {
     return Directionality(
       textDirection: textDirection,
       // load asynchronous stuff in this class
-      child: PalLoader(
+      child: PalDatabaseInitializer(
         builder: (BuildContext context, snapshot) {
           if (snapshot.hasData) {
             // return client app WITH Pal if already loaded

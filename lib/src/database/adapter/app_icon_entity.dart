@@ -3,9 +3,9 @@ import 'generic_adapter.dart';
 
 class AppIconEntityAdapter extends GenericEntityAdapter<AppIconEntity> {
   @override
-  AppIconEntity parseMap(Map<String, dynamic> map) {
+  AppIconEntity parseMap(Map<String, dynamic>? map) {
     return AppIconEntity(
-      id: map['id'],
+      id: map!['id'],
       url: map['url'],
     );
   }

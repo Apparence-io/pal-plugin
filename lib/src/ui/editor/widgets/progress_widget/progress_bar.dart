@@ -3,9 +3,9 @@ import 'package:pal/src/theme.dart';
 
 /* Bar render class : Renders the progress bar with the given value */
 class ProgressBarRender extends StatefulWidget {
-  final double value;
+  final double? value;
 
-  const ProgressBarRender({Key key, this.value}) : super(key: key);
+  const ProgressBarRender({Key? key, this.value}) : super(key: key);
 
   @override
   _ProgressBarRenderState createState() => _ProgressBarRenderState();
@@ -15,18 +15,18 @@ class _ProgressBarRenderState extends State<ProgressBarRender> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.9,
+      widthFactor: 0.96,
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(
               //* ANIMATION MOVES THE LEFT GRADIENT COLOR
               stops: [
-                widget.value,
+                widget.value!,
                 0
               ],
               // IN THE ORDER BELOW : DARK / GREY
               colors: [
-                PalTheme.of(context).colors.dark,
+                PalTheme.of(context)!.colors.dark!,
                 Color(0xFFC1BFD6),
               ]),
         ),

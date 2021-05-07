@@ -11,14 +11,14 @@ enum HelperTriggerType {
   ON_NEW_UPDATE,
 }
 
-HelperTriggerType getHelperTriggerType(final String value) =>
+HelperTriggerType getHelperTriggerType(final String? value) =>
     HelperTriggerType.values
         .firstWhere((element) => element.toString().split('.')[1] == value);
 
-String helperTriggerTypeToString(final HelperTriggerType helperTriggerType) =>
+String helperTriggerTypeToString(final HelperTriggerType? helperTriggerType) =>
     helperTriggerType.toString().split('.')[1];
 
-extension HelperTriggerTypeExt on HelperTriggerType {
+extension HelperTriggerTypeExt on HelperTriggerType? {
   String get description {
     switch (this) {
       case HelperTriggerType.ON_SCREEN_VISIT:
@@ -41,9 +41,9 @@ extension HelperTriggerTypeExt on HelperTriggerType {
 }
 
 // FIXME replace by extension
-String getHelperTriggerTypeDescription(
+String? getHelperTriggerTypeDescription(
     final HelperTriggerType helperTriggerType) {
-  String description;
+  String? description;
   switch (helperTriggerType) {
     case HelperTriggerType.ON_SCREEN_VISIT:
       description = 'On screen visit';

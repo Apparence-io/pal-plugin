@@ -22,7 +22,7 @@ class HelperTypeAdapter extends TypeAdapter<HelperType> {
       case 3:
         return HelperType.UPDATE_HELPER;
       default:
-        return null;
+        return HelperType.HELPER_FULL_SCREEN;
     }
   }
 

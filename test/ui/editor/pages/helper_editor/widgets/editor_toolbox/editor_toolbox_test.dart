@@ -19,7 +19,7 @@ main() {
   }
 
   void _onFontPickerDone(EditedFontModel font) {
-    expect(font?.size, closeTo(40.0, 50.0));
+    expect(font.size, closeTo(40.0, 50.0));
   }
 
   void _onMediaPickerDone(GraphicEntity graphicEntity) {}
@@ -29,7 +29,7 @@ main() {
   }
 
   group('Editor Toolbox tests', () {
-    ValueNotifier<EditableData> currentEditableItemNotifier =
+    ValueNotifier<EditableData?> currentEditableItemNotifier =
         ValueNotifier(null);
 
     Future _beforeEach(WidgetTester tester) async {

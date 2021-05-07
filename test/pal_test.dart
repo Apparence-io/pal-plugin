@@ -29,6 +29,7 @@ void main() {
     testWidgets('Create app with Pal in editor mode should inject EditorInjector', (WidgetTester tester) async {
       Pal app = _createApp(true);
       await tester.pumpWidget(app);
+      await tester.pump();
       var palFinder = find.byType(Pal).first;
       var editorInjectorFinder = find.byType(EditorInjector);
       var userAppInjectFinder = find.byType(UserInjector);

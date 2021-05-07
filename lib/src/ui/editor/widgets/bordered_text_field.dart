@@ -3,25 +3,26 @@ import 'package:flutter/services.dart';
 
 
 typedef OnValueChanged = void Function(String);
+typedef TextFieldValidator = String? Function(String?);
 typedef OnFieldSubmitted = void Function(String);
 
 class BorderedTextField extends StatelessWidget {
-  final String hintText, initialValue;
-  final String Function(String) validator;
-  final OnValueChanged onValueChanged;
-  final OnFieldSubmitted onFieldSubmitted;
-  final TextEditingController controller;
-  final TextInputType textInputType;
-  final List<TextInputFormatter> inputFormatters;
+  final String? hintText, initialValue;
+  final TextFieldValidator? validator;
+  final OnValueChanged? onValueChanged;
+  final OnFieldSubmitted? onFieldSubmitted;
+  final TextEditingController? controller;
+  final TextInputType? textInputType;
+  final List<TextInputFormatter>? inputFormatters;
   final bool enableSuggestions;
   final bool autovalidate;
   final bool isLoading;
   final TextCapitalization textCapitalization;
 
   const BorderedTextField({
-    Key key,
+    Key? key,
     this.hintText,
-    @required this.validator,
+    this.validator,
     this.controller,
     this.inputFormatters,
     this.textInputType,
@@ -56,7 +57,7 @@ class BorderedTextField extends StatelessWidget {
           validator: validator,
           onChanged: (String newValue) {
             if (this.onValueChanged != null) {
-              this.onValueChanged(newValue);
+              this.onValueChanged!(newValue);
             }
           },
           onFieldSubmitted: this.onFieldSubmitted,

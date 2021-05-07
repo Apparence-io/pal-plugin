@@ -1,42 +1,42 @@
 import 'package:flutter/widgets.dart';
 
 class HelperTextViewModel {
-  int id;
-  String key;
-  String text;
-  Color fontColor;
-  double fontSize;
-  String fontFamily;
-  FontWeight fontWeight;
+  int? id;
+  String? key;
+  String? text;
+  Color? fontColor;
+  double? fontSize;
+  String? fontFamily;
+  FontWeight? fontWeight;
 
   HelperTextViewModel({
     this.id,
     this.text,
     this.key,
-    @required this.fontColor,
-    @required this.fontSize,
+    required this.fontColor,
+    required this.fontSize,
     this.fontFamily,
     this.fontWeight,
   });
 }
 
 class HelperButtonViewModel {
-  int id;
-  String key;
-  String text;
-  Color fontColor;
-  double fontSize;
-  String fontFamily;
-  FontWeight fontWeight;
-  Color borderColor;
-  Color backgroundColor;
+  int? id;
+  String? key;
+  String? text;
+  Color? fontColor;
+  double? fontSize;
+  String? fontFamily;
+  FontWeight? fontWeight;
+  Color? borderColor;
+  Color? backgroundColor;
 
   HelperButtonViewModel({
     this.id,
     this.text,
     this.key,
-    @required this.fontColor,
-    @required this.fontSize,
+    required this.fontColor,
+    required this.fontSize,
     this.fontFamily,
     this.fontWeight,
     this.backgroundColor,
@@ -45,30 +45,30 @@ class HelperButtonViewModel {
 }
 
 class HelperImageViewModel {
-  int id;
-  String url;
+  int? id;
+  String? url;
 
   HelperImageViewModel({
     this.id,
-    @required this.url,
+    required this.url,
   });
 }
 
 class HelperBoxViewModel {
-  int id;
-  Color backgroundColor;
+  int? id;
+  Color? backgroundColor;
 
   HelperBoxViewModel({
     this.id,
-    @required this.backgroundColor,
+    required this.backgroundColor,
   });
 }
 
 class HelperBorderViewModel {
-  int id;
-  Color color;
-  String style;
-  double width;
+  int? id;
+  Color? color;
+  String? style;
+  double? width;
 
   HelperBorderViewModel({
     this.id,

@@ -9,7 +9,7 @@ class PalRouteObserver {
 
 class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements PalRouteObserver {
 
-  static PalNavigatorObserver _instance;
+  static PalNavigatorObserver? _instance;
 
   Subject<RouteSettings> _routeSettingsSubject = BehaviorSubject();
   
@@ -21,21 +21,21 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
     if(_instance == null) {
       _instance = PalNavigatorObserver._();
     }
-    return _instance;
+    return _instance!;
   }
 
   _notify(RouteSettings route) => _routeSettingsSubject.add(route);
 
   _notifyRoute(PageRoute route) => _routeSubject.add(route);
 
-  void changePage(String route, {Map<String, String> arguments}) {
+  void changePage(String route, {Map<String, String>? arguments}) {
     if(route != null && route.isNotEmpty) {
       _notify(RouteSettings(name: route, arguments: arguments));
     }
   }
 
   @override
-  void didPush(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
     if(route.settings == null || route.settings.name == null) {
       debugPrint("Pal Warning ------------------");
@@ -54,7 +54,7 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
   }
 
   @override
-  void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (newRoute is PageRoute) {
       _notify(newRoute.settings);
@@ -63,7 +63,7 @@ class PalNavigatorObserver extends RouteObserver<PageRoute<dynamic>> implements 
   }
 
   @override
-  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
     if (previousRoute is PageRoute && route is PageRoute) {
       _notify(previousRoute.settings);

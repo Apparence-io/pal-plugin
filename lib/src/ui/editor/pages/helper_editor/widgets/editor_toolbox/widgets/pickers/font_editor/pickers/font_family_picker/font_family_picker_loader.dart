@@ -18,7 +18,7 @@ class FontFamilyPickerLoader {
 
     // Create font textstyles map in background (other isolate)
     viewModel.originalFonts = await compute(fontKeysConverter, 0);
-    viewModel.fonts = List.from(viewModel.originalFonts);
+    viewModel.fonts = List.from(viewModel.originalFonts!);
 
     return viewModel;
   }

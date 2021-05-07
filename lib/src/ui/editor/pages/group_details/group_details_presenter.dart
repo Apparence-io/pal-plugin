@@ -13,14 +13,14 @@ import 'group_details_model.dart';
 class GroupDetailsPresenter
     extends Presenter<GroupDetailsPageModel, GroupDetailsView> {
   final EditorHelperGroupService groupService;
-  final EditorHelperService helperService;
+  final EditorHelperService? helperService;
   final VersionEditorService versionService;
 
   GroupDetailsPresenter(
       GroupDetailsPageModel viewModel, GroupDetailsView viewInterface,
       {this.helperService,
-      @required this.groupService,
-      @required this.versionService})
+      required this.groupService,
+      required this.versionService})
       : super(viewModel, viewInterface);
 
   @override
@@ -36,7 +36,7 @@ class GroupDetailsPresenter
     this.viewModel.canSave = ValueNotifier(false);
     this.viewModel.page = this.viewModel.startPage ?? PageStep.DETAILS;
     this.viewModel.pageController =
-        PageController(initialPage: this.viewModel.page.index);
+        PageController(initialPage: this.viewModel.page!.index);
 
     // *CONTROLLERS
     this.viewModel.groupMaxVerController = TextEditingController();
@@ -49,11 +49,12 @@ class GroupDetailsPresenter
       this.viewModel.groupModel = GroupModel.from(group);
 
       // ASSIGNING INITIALS VALUES TO CONTROLLERS
-      this.viewModel.groupMaxVerController.text =
-          this.viewModel.groupModel.maxVer;
-      this.viewModel.groupMinVerController.text =
-          this.viewModel.groupModel.minVer;
-      this.viewModel.groupNameController.text = this.viewModel.groupModel.name;
+      this.viewModel.groupMaxVerController!.text =
+          this.viewModel.groupModel.maxVer ?? '';
+      this.viewModel.groupMinVerController!.text =
+          this.viewModel.groupModel.minVer!;
+      this.viewModel.groupNameController!.text =
+          this.viewModel.groupModel.name!;
       this.viewModel.groupTriggerValue = this.viewModel.groupModel.triggerType;
 
       // ENDING LOADING
@@ -70,18 +71,17 @@ class GroupDetailsPresenter
 
   // SERVER CALLS [SAVE,DELETE]
   void save() {
-    if (!this.viewModel.locked) {
+    if (!this.viewModel.locked!) {
       this.viewModel.locked = true;
       this.viewModel.loading = true;
       this.refreshView();
       Future.wait([
         this
             .versionService
-            .getOrCreateVersionId(this.viewModel.groupMinVerController.text),
-        this.viewModel.groupMaxVerController.text.isNotEmpty
-            ? this
-                .versionService
-                .getOrCreateVersionId(this.viewModel.groupMaxVerController.text)
+            .getOrCreateVersionId(this.viewModel.groupMinVerController!.text),
+        this.viewModel.groupMaxVerController!.text.isNotEmpty
+            ? this.versionService.getOrCreateVersionId(
+                this.viewModel.groupMaxVerController!.text)
             : Future.value(null),
       ]).catchError((err) {
         this.viewModel.loading = false;
@@ -93,7 +93,7 @@ class GroupDetailsPresenter
           id: this.viewModel.groupId,
           maxVersionId: res[1],
           minVersionId: res[0],
-          name: this.viewModel.groupNameController.text,
+          name: this.viewModel.groupNameController!.text,
           type: this.viewModel.groupTriggerValue,
         );
         this.groupService.updateGroup(updated).then((res) {
@@ -111,8 +111,15 @@ class GroupDetailsPresenter
     }
   }
 
+  void onDeleteTap() async {
+    var result = await this.viewInterface.showGroupDeleteModal();
+    if (result) {
+      this.deleteGroup();
+    }
+  }
+
   void deleteGroup() {
-    if (!this.viewModel.locked) {
+    if (!this.viewModel.locked!) {
       this.viewModel.loading = true;
       this.refreshView();
       this.groupService.deleteGroup(this.viewModel.groupId).then((done) {
@@ -126,7 +133,7 @@ class GroupDetailsPresenter
   }
 
   // CONTROLLERS SUBMIT CHECKS && VALIDATOR
-  onNewTrigger(HelperTriggerType newTrigger) {
+  onNewTrigger(HelperTriggerType? newTrigger) {
     this.viewModel.groupTriggerValue = newTrigger;
     this.viewModel.canSave.value = true;
   }
@@ -143,8 +150,8 @@ class GroupDetailsPresenter
     if (val != this.viewModel.groupModel.maxVer) this.updateState();
   }
 
-  String validateVersion(String val) {
-    if (val.contains(new RegExp(
+  String? validateVersion(String? val) {
+    if (val!.contains(new RegExp(
         r'^(?<version>(?<major>0|[1-9][0-9]*)\.(?<minor>0|[1-9][0-9]*)\.(?<patch>0|[1-9][0-9]*))$'))) {
       this.viewModel.locked = false;
       return null;
@@ -153,8 +160,8 @@ class GroupDetailsPresenter
     return 'Invalid version format';
   }
 
-  String validateName(String val) {
-    if (val.isNotEmpty) {
+  String? validateName(String? val) {
+    if (val != null && val.isNotEmpty) {
       this.viewModel.locked = false;
       return null;
     }
@@ -164,26 +171,26 @@ class GroupDetailsPresenter
 
   // STATE CHANGES
   void goToHelpersList() {
-    if (!this.viewModel.loading) {
+    if (!this.viewModel.loading!) {
       this.viewModel.page = PageStep.HELPERS;
-      this.viewModel.pageController.animateToPage(1,
+      this.viewModel.pageController!.animateToPage(1,
           curve: Curves.easeOut, duration: Duration(milliseconds: 250));
       this.refreshView();
     }
   }
 
   void goToGroupDetails() {
-    if (!this.viewModel.loading) {
+    if (!this.viewModel.loading!) {
       this.viewModel.page = PageStep.DETAILS;
-      this.viewModel.pageController.animateToPage(0,
+      this.viewModel.pageController!.animateToPage(0,
           curve: Curves.easeOut, duration: Duration(milliseconds: 250));
       this.refreshView();
     }
   }
 
   void updateState() {
-    this.viewModel.canSave.value = !this.viewModel.locked &&
-        this.viewModel.formKey.currentState.validate();
+    this.viewModel.canSave.value = !this.viewModel.locked! &&
+        this.viewModel.formKey.currentState!.validate();
   }
 
   // HELPERS ACTIONS / PREVIEW / EDIT / DELETE
@@ -195,11 +202,11 @@ class GroupDetailsPresenter
   Future deleteHelper(String id) {
     this.viewModel.loading = true;
     this.refreshView();
-    return this.helperService.deleteHelper(id).then((done) {
+    return this.helperService!.deleteHelper(id).then((done) {
       this.viewModel.helpers.value = this
           .viewModel
           .helpers
-          .value
+          .value!
           .where((helper) => helper.helperId != id)
           .toList();
       this.viewModel.loading = false;

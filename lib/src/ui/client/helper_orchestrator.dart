@@ -18,7 +18,7 @@ typedef OnTriggeredHelper = Future Function(bool userPositivFeedback);
 /// There is a variety of Helper types.
 class HelperOrchestrator {
 
-  static HelperOrchestrator _instance;
+  static HelperOrchestrator? _instance;
 
   final PalRouteObserver routeObserver;
 
@@ -26,45 +26,45 @@ class HelperOrchestrator {
 
   final InAppUserClientService inAppUserClientService;
 
-  final GlobalKey<NavigatorState> navigatorKey;
+  final GlobalKey<NavigatorState>? navigatorKey;
 
-  final HelpersSynchronizer helpersSynchronizer;
+  final HelpersSynchronizer? helpersSynchronizer;
 
-  final PackageVersionReader packageVersionReader;
+  final PackageVersionReader? packageVersionReader;
 
-  OverlayEntry overlay;
+  OverlayEntry? overlay;
 
-  bool hasSync;
+  late bool hasSync;
 
   factory HelperOrchestrator.getInstance({
-    GlobalKey<NavigatorState> navigatorKey,
-    PalRouteObserver routeObserver,
-    HelperClientService helperClientService,
-    InAppUserClientService inAppUserClientService,
-    HelpersSynchronizer helpersSynchronizer,
-    PackageVersionReader packageVersionReader,
+    GlobalKey<NavigatorState>? navigatorKey,
+    PalRouteObserver? routeObserver,
+    HelperClientService? helperClientService,
+    InAppUserClientService? inAppUserClientService,
+    HelpersSynchronizer? helpersSynchronizer,
+    PackageVersionReader? packageVersionReader,
   }) {
     if (_instance == null) {
       _instance = HelperOrchestrator._(
-        routeObserver, 
-        helperClientService, 
-        inAppUserClientService, 
+        routeObserver!, 
+        helperClientService!, 
+        inAppUserClientService!, 
         navigatorKey, 
         helpersSynchronizer,
         packageVersionReader
       );
     }
-    return _instance;
+    return _instance!;
   }
 
   @visibleForTesting
   factory HelperOrchestrator.create({
-    GlobalKey<NavigatorState> navigatorKey,
-    PalRouteObserver routeObserver,
-    HelperClientService helperClientService,
-    InAppUserClientService inAppUserClientService,
-    HelpersSynchronizer helpersSynchronizer,
-    @required PackageVersionReader packageVersionReader,
+    GlobalKey<NavigatorState>? navigatorKey,
+    required PalRouteObserver routeObserver,
+    required HelperClientService helperClientService,
+    required InAppUserClientService inAppUserClientService,
+    HelpersSynchronizer? helpersSynchronizer,
+    required PackageVersionReader packageVersionReader,
   }) {
     _instance = HelperOrchestrator._(
       routeObserver, 
@@ -74,7 +74,7 @@ class HelperOrchestrator {
       helpersSynchronizer,
       packageVersionReader
     );
-    return _instance;
+    return _instance!;
   }
 
   HelperOrchestrator._(
@@ -97,25 +97,25 @@ class HelperOrchestrator {
   }
 
   @visibleForTesting
-  onChangePage(final String route) async {
+  onChangePage(final String? route) async {
     if (overlay != null) {
       popHelper();
     }
     try {
       final InAppUserEntity inAppUser = await this.inAppUserClientService.getOrCreate();
       if(!hasSync) {
-        var lang = Localizations.localeOf(navigatorKey.currentContext).languageCode;
-        await this.helpersSynchronizer.sync(inAppUser.id, languageCode: lang);
+        var lang = Localizations.localeOf(navigatorKey!.currentContext!).languageCode;
+        await this.helpersSynchronizer!.sync(inAppUser.id, languageCode: lang);
         this.hasSync = true;
       }
       final helperGroupToShow = await helperClientService.getPageNextHelper(
         route, 
         inAppUser.id, 
-        packageVersionReader.appVersion
+        packageVersionReader!.appVersion
       );
-      if (helperGroupToShow != null && helperGroupToShow.helpers.isNotEmpty) {
+      if (helperGroupToShow != null && helperGroupToShow.helpers!.isNotEmpty) {
         showHelper(
-          helperGroupToShow.page.id, 
+          helperGroupToShow.page!.id, 
           inAppUser.id, 
           helperGroupToShow, 
           0);
@@ -128,7 +128,7 @@ class HelperOrchestrator {
 
   bool popHelper() {
     if (overlay != null) {
-      overlay.remove();
+      overlay!.remove();
       overlay = null;
       return true;
     }
@@ -137,8 +137,8 @@ class HelperOrchestrator {
 
   @visibleForTesting
   showHelper(
-    final String pageId,
-    final String userId,
+    final String? pageId,
+    final String? userId,
     final HelperGroupEntity helperGroupEntity,
     final int helperIndex) {
       var onTriggeredHelper = _buildTriggeredHelperAction(
@@ -151,37 +151,37 @@ class HelperOrchestrator {
         builder: (context) => PalTheme(
           theme: PalThemeData.light(),
           child: HelperFactory.build(
-            helperGroupEntity.helpers[helperIndex], 
+            helperGroupEntity.helpers![helperIndex], 
             onTrigger: onTriggeredHelper,
             onError: this.popHelper
-          ),
+          )!,
       ));
-      var overlay = navigatorKey.currentState.overlay;
+      var overlay = navigatorKey!.currentState!.overlay!;
       // If there is already an helper, remove it and show the next one (useful when we change page fastly)
       if (this.overlay != null) {
-        this.overlay.remove();
+        this.overlay!.remove();
       }
       overlay.insert(entry);
       this.overlay = entry;
   }
 
   OnTriggeredHelper _buildTriggeredHelperAction(
-    String pageId,
-    String userId,
+    String? pageId,
+    String? userId,
     HelperGroupEntity helperGroupEntity,
     int helperIndex,
   ) {
     return (positivAnswer) async {
-      final appversion = packageVersionReader.version;
+      final appversion = packageVersionReader!.version;
       await helperClientService.onHelperTrigger(
         pageId, 
         helperGroupEntity, 
-        helperGroupEntity.helpers[helperIndex], 
+        helperGroupEntity.helpers![helperIndex], 
         userId, 
         positivAnswer,
         appversion);
       this.popHelper();
-      if(positivAnswer && helperIndex < helperGroupEntity.helpers.length - 1 ) {
+      if(positivAnswer && helperIndex < helperGroupEntity.helpers!.length - 1 ) {
         showHelper(pageId, userId, helperGroupEntity, helperIndex + 1);
       }
     };

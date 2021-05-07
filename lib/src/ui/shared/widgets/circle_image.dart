@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CircleImageButton extends StatelessWidget {
-  final Color backgroundColor;
-  final Color splashColor;
+  final Color? backgroundColor;
+  final Color? splashColor;
   final num radius;
   final String image;
-  final BoxShadow shadow;
+  final BoxShadow? shadow;
   const CircleImageButton({
-    Key key,
+    Key? key,
     this.backgroundColor = Colors.blue,
     this.splashColor,
     this.radius = 20.0,
     this.shadow,
-    @required this.image,
+    required this.image,
   }) : super(key: key);
 
   @override

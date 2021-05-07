@@ -4,9 +4,9 @@ import 'generic_adapter.dart';
 
 class VersionEntityAdapter extends GenericEntityAdapter<VersionEntity> {
   @override
-  VersionEntity parseMap(Map<String, dynamic> map) {
+  VersionEntity parseMap(Map<String, dynamic>? map) {
     return VersionEntity(
-      id: map['id'],
+      id: map!['id'],
       name: map['name']
     );
   }

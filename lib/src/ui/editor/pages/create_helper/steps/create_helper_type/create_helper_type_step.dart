@@ -10,9 +10,9 @@ class CreateHelperTypeStep extends StatelessWidget {
   final CreateHelperPresenter presenter;
 
   const CreateHelperTypeStep({
-    Key key,
-    @required this.model,
-    @required this.presenter,
+    Key? key,
+    required this.model,
+    required this.presenter,
   }) : super(key: key);
 
   @override

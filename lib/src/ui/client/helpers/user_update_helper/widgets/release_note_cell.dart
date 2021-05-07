@@ -8,14 +8,14 @@ class ReleaseNoteCell extends StatelessWidget {
   final int index;
   final HelperTextViewModel customLabel;
   final AnimationController animationController;
-  final Curve positionCurve;
-  final Curve opacityCurve;
+  final Curve? positionCurve;
+  final Curve? opacityCurve;
 
   const ReleaseNoteCell({
-    Key key,
-    @required this.index,
-    @required this.customLabel,
-    @required this.animationController,
+    Key? key,
+    required this.index,
+    required this.customLabel,
+    required this.animationController,
     this.positionCurve,
     this.opacityCurve,
   }) : super(key: key);

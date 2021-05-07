@@ -12,19 +12,18 @@ class Overlayed extends InheritedWidget {
   final Map<OverlayKeys, EditorOverlayEntry> entries = new Map();
 
   Overlayed({
-    Key key,
-    @required Widget child,
-  })  : assert(child != null),
-        super(key: key, child: child);
+    Key? key,
+    required Widget child,
+  })  : super(key: key, child: child);
 
-  static Overlayed of(BuildContext context) =>
+  static Overlayed? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<Overlayed>();
 
   static void removeOverlay(BuildContext context, OverlayKeys key) {
     var instance = context.dependOnInheritedWidgetOfExactType<Overlayed>();
     instance?.entries[key]?.popFunction?.call();
     instance?.entries[key]?.remove();
-    instance?.entries?.remove(key);
+    instance?.entries.remove(key);
   }
 
   @override
@@ -32,9 +31,9 @@ class Overlayed extends InheritedWidget {
 }
 
 class EditorOverlayEntry extends OverlayEntry {
-  final Function popFunction;
+  final Function? popFunction;
 
   EditorOverlayEntry(this.popFunction, {bool maintainState = false, bool opaque = false,
-      Widget Function(BuildContext) builder})
+      required Widget Function(BuildContext) builder})
       : super(builder: builder, maintainState: maintainState, opaque: opaque);
 }

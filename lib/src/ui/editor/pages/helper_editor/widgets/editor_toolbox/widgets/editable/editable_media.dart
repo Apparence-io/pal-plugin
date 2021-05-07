@@ -6,24 +6,24 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_data.dart';
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 class EditableMedia extends StatelessWidget {
-  final EditableMediaFormData data;
+  final EditableMediaFormData? data;
   final double size;
-  final Function(EditableData) onTap;
+  final Function(EditableData?)? onTap;
   final bool isSelected;
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   EditableMedia({
-    Key key,
+    Key? key,
     this.size = 200.0,
     this.onTap,
-    @required this.data,
+    required this.data,
     this.isSelected = false,
-    @required this.backgroundColor,
+    required this.backgroundColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Color _borderColor = this.backgroundColor.computeLuminance() > 0.5
+    Color _borderColor = this.backgroundColor!.computeLuminance() > 0.5
         ? Colors.black
         : Colors.white;
         
@@ -37,9 +37,9 @@ class EditableMedia extends StatelessWidget {
         strokeWidth: this.isSelected ? 3.0 : 1.0,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: (this.data?.url != null && this.data.url.length > 0)
+          child: (this.data?.url != null && this.data!.url!.length > 0)
               ? CachedNetworkImage(
-                  imageUrl: this.data?.url,
+                  imageUrl: this.data!.url!,
                   width: this.size,
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),

@@ -13,41 +13,41 @@ import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 class FullscreenHelperViewModel extends HelperViewModel {
 
   // form
-  double helperOpacity;
-  ValueNotifier<bool> canValidate;
+  double? helperOpacity;
+  ValueNotifier<bool>? canValidate;
   // StreamController<bool> editableTextFieldController;
-  ValueNotifier<EditableData> currentEditableItemNotifier;
+  ValueNotifier<EditableData?>? currentEditableItemNotifier;
 
   // helper properties
   // LanguageNotifier language;
-  EditableBoxFormData backgroundBoxForm;
-  EditableMediaFormData headerMediaForm;
-  EditableTextFormData titleTextForm;
-  EditableTextFormData descriptionTextForm;
-  EditableButtonFormData positivButtonForm;
-  EditableButtonFormData negativButtonForm;
+  EditableBoxFormData? backgroundBoxForm;
+  EditableMediaFormData? headerMediaForm;
+  EditableTextFormData? titleTextForm;
+  EditableTextFormData? descriptionTextForm;
+  EditableButtonFormData? positivButtonForm;
+  EditableButtonFormData? negativButtonForm;
 
-  bool loading;
+  bool? loading;
 
   FullscreenHelperViewModel({
-    String id,
-    String name,
-    String groupId,
-    String groupName,
-    HelperTriggerType triggerType,
-    int priority,
-    HelperTheme helperTheme,
-    String minVersionCode,
-    String maxVersionCode,
-    int versionMaxId,
-    int languageId,
+    String? id,
+    String? name,
+    String? groupId,
+    String? groupName,
+    HelperTriggerType? triggerType,
+    int? priority,
+    HelperTheme? helperTheme,
+    String? minVersionCode,
+    String? maxVersionCode,
+    int? versionMaxId,
+    int? languageId,
     // For edit mode only
-    HelperBoxViewModel boxViewModel,
-    HelperImageViewModel helperImageViewModel,
-    HelperTextViewModel titleViewModel,
-    HelperTextViewModel descriptionLabel,
-    HelperTextViewModel positivButtonLabel,
-    HelperTextViewModel negativButtonLabel,
+    HelperBoxViewModel? boxViewModel,
+    HelperImageViewModel? helperImageViewModel,
+    HelperTextViewModel? titleViewModel,
+    HelperTextViewModel? descriptionLabel,
+    HelperTextViewModel? positivButtonLabel,
+    HelperTextViewModel? negativButtonLabel,
   }) : super(
     id: id,
     name: name,
@@ -116,7 +116,7 @@ class FullscreenHelperViewModel extends HelperViewModel {
       fontSize: negativButtonLabel?.fontSize?.toInt() ?? 13,
       fontFamily: negativButtonLabel?.fontFamily,
     );
-    this.currentEditableItemNotifier = ValueNotifier<EditableData>(null);
+    this.currentEditableItemNotifier = ValueNotifier<EditableData?>(null);
   }
 
   factory FullscreenHelperViewModel.fromHelperViewModel(HelperViewModel model) {
@@ -128,17 +128,17 @@ class FullscreenHelperViewModel extends HelperViewModel {
       maxVersionCode: model.helperGroup?.maxVersionCode,
       triggerType: model.helperGroup?.triggerType,
       helperTheme: model.helperTheme,
-      groupId: model.helperGroup.id,
-      groupName: model.helperGroup.name
+      groupId: model.helperGroup!.id,
+      groupName: model.helperGroup!.name
     );
     if (model is FullscreenHelperViewModel) {
-      fullscreenHelper.backgroundBoxForm = model?.backgroundBoxForm;
+      fullscreenHelper.backgroundBoxForm = model.backgroundBoxForm;
       // fullscreenHelper.language = model?.language;
-      fullscreenHelper.titleTextForm = model?.titleTextForm;
-      fullscreenHelper.descriptionTextForm = model?.descriptionTextForm;
-      fullscreenHelper.positivButtonForm = model?.positivButtonForm;
-      fullscreenHelper.negativButtonForm = model?.negativButtonForm;
-      fullscreenHelper.headerMediaForm = model?.headerMediaForm;
+      fullscreenHelper.titleTextForm = model.titleTextForm;
+      fullscreenHelper.descriptionTextForm = model.descriptionTextForm;
+      fullscreenHelper.positivButtonForm = model.positivButtonForm;
+      fullscreenHelper.negativButtonForm = model.negativButtonForm;
+      fullscreenHelper.headerMediaForm = model.headerMediaForm;
     }
 
     return fullscreenHelper;
@@ -146,38 +146,38 @@ class FullscreenHelperViewModel extends HelperViewModel {
 
   factory FullscreenHelperViewModel.fromHelperEntity(HelperEntity helperEntity) =>
     FullscreenHelperViewModel(
-      id: helperEntity?.id,
-      name: helperEntity?.name,
-      triggerType: helperEntity?.triggerType,
-      priority: helperEntity?.priority,
+      id: helperEntity.id,
+      name: helperEntity.name,
+      triggerType: helperEntity.triggerType,
+      priority: helperEntity.priority,
       helperTheme: null,
       boxViewModel: HelperSharedFactory.parseBoxBackground(
         FullscreenHelperKeys.BACKGROUND_KEY,
-        helperEntity?.helperBoxes,
+        helperEntity.helperBoxes!,
       ),
       titleViewModel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       descriptionLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.DESCRIPTION_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       positivButtonLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.POSITIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       negativButtonLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       helperImageViewModel: HelperSharedFactory.parseImageUrl(
         FullscreenHelperKeys.IMAGE_KEY,
-        helperEntity?.helperImages,
+        helperEntity.helperImages,
       ),
     );
 
-  List<EditableTextData> get fields => [
+  List<EditableTextData?> get fields => [
     titleTextForm,
     descriptionTextForm,
     positivButtonForm,

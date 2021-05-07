@@ -6,12 +6,12 @@ import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
 abstract class MockHelperEntityBuilder {
 
-  HelperEntity create(String id, {String title}); 
+  HelperEntity create(String id, {String? title}); 
 }
 
 class MockFullscreenHelperEntityBuilder implements MockHelperEntityBuilder {
   @override
-  HelperEntity create(String id, {String title}) 
+  HelperEntity create(String id, {String? title}) 
     => HelperEntity(
       id: id,
       name: "helper name",

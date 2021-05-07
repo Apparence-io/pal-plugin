@@ -5,12 +5,12 @@ class NestedNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigationKey;
   final String initialRoute;
   final Map<String, WidgetBuilder> routes;
-  final Function() onWillPop;
+  final Function()? onWillPop;
 
   NestedNavigator({
-    @required this.navigationKey,
-    @required this.initialRoute,
-    @required this.routes,
+    required this.navigationKey,
+    required this.initialRoute,
+    required this.routes,
     this.onWillPop,
   });
 
@@ -21,15 +21,15 @@ class NestedNavigator extends StatelessWidget {
         key: navigationKey,
         initialRoute: initialRoute,
         onGenerateRoute: (RouteSettings routeSettings) {
-          WidgetBuilder builder = routes[routeSettings.name];
+          WidgetBuilder? builder = routes[routeSettings.name!];
           if (routeSettings.name == initialRoute) {
             return PageRouteBuilder(
-              pageBuilder: (context, __, ___) => builder(context),
+              pageBuilder: (context, __, ___) => builder!(context),
               settings: routeSettings,
             );
           } else {
             return MaterialPageRoute(
-              builder: builder,
+              builder: builder!,
               settings: routeSettings,
             );
           }
@@ -37,10 +37,10 @@ class NestedNavigator extends StatelessWidget {
       ),
       onWillPop: () {
         if (this.onWillPop != null) {
-          this.onWillPop();
+          this.onWillPop!();
         }
-        if (navigationKey.currentState.canPop()) {
-          navigationKey.currentState.pop();
+        if (navigationKey.currentState!.canPop()) {
+          navigationKey.currentState!.pop();
           return Future<bool>.value(false);
         }
         return Future<bool>.value(true);

@@ -24,40 +24,38 @@ abstract class UserFullScreenHelperView {
 
 class UserFullScreenHelperPage extends StatelessWidget
     implements UserFullScreenHelperView {
-
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
   final HelperTextViewModel descriptionLabel;
-  final HelperButtonViewModel positivLabel;
-  final HelperButtonViewModel negativLabel;
-  final HelperImageViewModel headerImageViewModel;
+  final HelperButtonViewModel? positivLabel;
+  final HelperButtonViewModel? negativLabel;
+  final HelperImageViewModel? headerImageViewModel;
   final Function onPositivButtonTap;
   final Function onNegativButtonTap;
 
   UserFullScreenHelperPage({
-    Key key,
-    @required this.helperBoxViewModel,
-    @required this.titleLabel,
-    @required this.descriptionLabel,
-    @required this.onPositivButtonTap,
-    @required this.onNegativButtonTap,
+    Key? key,
+    required this.helperBoxViewModel,
+    required this.titleLabel,
+    required this.descriptionLabel,
+    required this.onPositivButtonTap,
+    required this.onNegativButtonTap,
     this.headerImageViewModel,
     this.positivLabel,
     this.negativLabel,
-  })  : assert(helperBoxViewModel != null),
-        assert(titleLabel != null),
-        assert(descriptionLabel != null),
-        assert(onPositivButtonTap != null),
-        assert(onNegativButtonTap != null);
+  });
 
   final _mvvmPageBuilder = MVVMPageBuilder<UserFullScreenHelperPresenter,
       UserFullScreenHelperModel>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
+  @visibleForTesting
+  get presenter => _mvvmPageBuilder.presenter;
+
   @override
   Widget build(BuildContext context) {
     return _mvvmPageBuilder.build(
-      key: ValueKey('pal_UserFullScreenHelperPage_Builder'),
+      key: UniqueKey(),
       context: context,
       multipleAnimControllerBuilder: (tickerProvider) {
         return [
@@ -85,26 +83,26 @@ class UserFullScreenHelperPage extends StatelessWidget
         ];
       },
       animListener: (context, presenter, model) {
-        if (model.mediaAnimation) {
+        if (model.mediaAnimation!) {
           this.playAnimation(
             context,
-            model.isReversedAnimations,
+            model.isReversedAnimations!,
             0,
             presenter.onMediaAnimationEnd,
           );
         }
-        if (model.titleAnimation) {
+        if (model.titleAnimation!) {
           this.playAnimation(
             context,
-            model.isReversedAnimations,
+            model.isReversedAnimations!,
             1,
             presenter.onTitleAnimationEnd,
           );
         }
-        if (model.feedbackAnimation) {
+        if (model.feedbackAnimation!) {
           this.playAnimation(
             context,
-            model.isReversedAnimations,
+            model.isReversedAnimations!,
             2,
             presenter.onFeedbackAnimationEnd,
           );
@@ -124,9 +122,9 @@ class UserFullScreenHelperPage extends StatelessWidget
     return AnimatedOpacity(
       duration: Duration(milliseconds: 500),
       curve: Curves.fastOutSlowIn,
-      opacity: model?.helperOpacity,
+      opacity: model.helperOpacity!,
       child: Scaffold(
-        backgroundColor: helperBoxViewModel?.backgroundColor,
+        backgroundColor: helperBoxViewModel.backgroundColor,
         key: _scaffoldKey,
         body: SafeArea(
           child: Container(
@@ -138,7 +136,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (headerImageViewModel?.url != null &&
-                      headerImageViewModel.url.length > 0)
+                      headerImageViewModel!.url!.length > 0)
                     Flexible(
                       key: ValueKey('pal_UserFullScreenHelperPage_Media'),
                       flex: 3,
@@ -175,7 +173,7 @@ class UserFullScreenHelperPage extends StatelessWidget
       widget: ClipRRect(
         borderRadius: BorderRadius.circular(15.0),
         child: CachedNetworkImage(
-          imageUrl: headerImageViewModel?.url,
+          imageUrl: headerImageViewModel?.url ?? '',
           fit: BoxFit.cover,
           placeholder: (context, url) =>
               Center(child: CircularProgressIndicator()),
@@ -184,38 +182,38 @@ class UserFullScreenHelperPage extends StatelessWidget
           },
         ),
       ),
-      animationController: context.animationsControllers[0],
+      animationController: context.animationsControllers![0],
     );
   }
 
   Widget _buildTitle(MvvmContext context) {
     return AnimatedTranslateWidget(
-      animationController: context.animationsControllers[1],
+      animationController: context.animationsControllers![1],
       widget: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              titleLabel?.text ?? 'Title',
+              titleLabel.text ?? 'Title',
               key: ValueKey('pal_UserFullScreenHelperPage_Title'),
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: titleLabel?.fontColor ?? Colors.white,
-                fontSize: titleLabel?.fontSize ?? 60.0,
-                fontWeight: titleLabel?.fontWeight,
+                color: titleLabel.fontColor ?? Colors.white,
+                fontSize: titleLabel.fontSize ?? 60.0,
+                fontWeight: titleLabel.fontWeight,
               ).merge(
-                  GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat')),
+                  GoogleFonts.getFont(titleLabel.fontFamily ?? 'Montserrat')),
             ),
             Text(
-              descriptionLabel?.text ?? '',
+              descriptionLabel.text ?? '',
               key: ValueKey('pal_UserFullScreenHelperPage_Description'),
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: descriptionLabel?.fontColor ?? Colors.white,
-                fontSize: descriptionLabel?.fontSize ?? 60.0,
-                fontWeight: descriptionLabel?.fontWeight,
+                color: descriptionLabel.fontColor ?? Colors.white,
+                fontSize: descriptionLabel.fontSize ?? 60.0,
+                fontWeight: descriptionLabel.fontWeight,
               ).merge(GoogleFonts.getFont(
-                  descriptionLabel?.fontFamily ?? 'Montserrat')),
+                  descriptionLabel.fontFamily ?? 'Montserrat')),
             )
           ],
         ),
@@ -227,7 +225,7 @@ class UserFullScreenHelperPage extends StatelessWidget
       MvvmContext context, UserFullScreenHelperPresenter presenter) {
     return AnimatedTranslateWidget(
       position: Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset(0.0, 0.0)),
-      animationController: context.animationsControllers[2],
+      animationController: context.animationsControllers![2],
       widget: Column(
         children: [
           SizedBox(
@@ -239,7 +237,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 HapticFeedback.selectionClick();
                 presenter.onPositivButtonCallback();
               },
-              color: PalTheme.of(context.buildContext).colors.green,
+              color: PalTheme.of(context.buildContext)!.colors.green,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -272,7 +270,7 @@ class UserFullScreenHelperPage extends StatelessWidget
                 HapticFeedback.selectionClick();
                 presenter.onNegativButtonCallback();
               },
-              color: PalTheme.of(context.buildContext).colors.accent,
+              color: PalTheme.of(context.buildContext)!.colors.accent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -316,11 +314,11 @@ class UserFullScreenHelperPage extends StatelessWidget
     Function callback,
   ) {
     if (isReversed) {
-      context.animationsControllers[index]
+      context.animationsControllers![index]
           .reverse()
           .then((value) => callback());
     } else {
-      context.animationsControllers[index]
+      context.animationsControllers![index]
           .forward()
           .then((value) => callback());
     }

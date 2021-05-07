@@ -13,13 +13,13 @@ abstract class SimpleHelperView {}
 
 class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
   final HelperTextViewModel descriptionLabel;
-  final HelperBoxViewModel helperBoxViewModel;
+  final HelperBoxViewModel? helperBoxViewModel;
 
   SimpleHelperPage({
-    Key key,
-    @required this.descriptionLabel,
+    Key? key,
+    required this.descriptionLabel,
     this.helperBoxViewModel,
-  }) : assert(descriptionLabel != null);
+  });
 
   final _mvvmPageBuilder =
       MVVMPageBuilder<SimpleHelperPresenter, SimpleHelperModel>();
@@ -33,14 +33,14 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
       builder: (mvvmContext, presenter, model) {
         final Animation<double> offsetAnimation = Tween(begin: 0.0, end: 20.0)
             .chain(CurveTween(curve: Curves.elasticIn))
-            .animate(mvvmContext.animationsControllers[2]);
+            .animate(mvvmContext.animationsControllers![2]);
 
         return AnimatedTranslateWidget(
           position: Tween<Offset>(
             begin: Offset(0.0, 1.0),
             end: Offset(0.0, 0.0),
           ),
-          animationController: mvvmContext.animationsControllers[0],
+          animationController: mvvmContext.animationsControllers![0],
           widget: SafeArea(
             child: Column(
               children: [
@@ -52,7 +52,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: PalTheme.of(context).colors.black, //this.helperBoxViewModel?.backgroundColor,
+                            color: PalTheme.of(context)!.colors.black, //this.helperBoxViewModel?.backgroundColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8.0)),
                             boxShadow: [
@@ -122,20 +122,20 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
       },
       animListener: (context, presenter, model) {
         if (model.boxTransitionAnimation) {
-          context.animationsControllers[0].forward().then(
+          context.animationsControllers![0].forward().then(
                 (value) => presenter.onBoxAnimationEnd(),
               );
         }
         if (model.thumbAnimation) {
-          context.animationsControllers[1].repeat(reverse: true).then(
+          context.animationsControllers![1].repeat(reverse: true).then(
                 (value) => presenter.onThumbAnimationEnd(),
               );
         }
         if (model.shakeAnimation) {
-          context.animationsControllers[2].forward().then(
+          context.animationsControllers![2].forward().then(
             (value) {
               presenter.onShakeAnimationEnd();
-              context.animationsControllers[2].reverse();
+              context.animationsControllers![2].reverse();
             },
           );
         }
@@ -184,7 +184,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
             Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Text(
-                descriptionLabel?.text ?? '',
+                descriptionLabel.text ?? '',
                 key: ValueKey('SimpleHelperContentText'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -193,7 +193,7 @@ class SimpleHelperPage extends StatelessWidget implements SimpleHelperView {
                   fontWeight: descriptionLabel.fontWeight ?? FontWeight.normal,
                 ).merge(
                   GoogleFonts.getFont(
-                      descriptionLabel?.fontFamily ?? 'Montserrat'),
+                      descriptionLabel.fontFamily ?? 'Montserrat'),
                 ),
                 maxLines: 10,
               ),

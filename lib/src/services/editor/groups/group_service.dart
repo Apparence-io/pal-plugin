@@ -10,15 +10,15 @@ abstract class EditorHelperGroupService {
       EditorHelperGroupHttpService(appContext.editorHelperGroupRepository);
 
   /// returns the list of groups on a route
-  Future<List<HelperGroupEntity>> getPageGroups(String route);
+  Future<List<HelperGroupEntity>> getPageGroups(String? route);
 
-  Future<List<HelperEntity>> getGroupHelpers(String groupId);
+  Future<List<HelperEntity>> getGroupHelpers(String? groupId);
 
-  Future<HelperGroupEntity> getGroupDetails(String groupId);
+  Future<HelperGroupEntity> getGroupDetails(String? groupId);
 
   Future updateGroup(HelperGroupUpdate updated);
 
-  Future deleteGroup(String groupId);
+  Future deleteGroup(String? groupId);
 }
 
 class EditorHelperGroupHttpService implements EditorHelperGroupService {
@@ -26,15 +26,15 @@ class EditorHelperGroupHttpService implements EditorHelperGroupService {
 
   EditorHelperGroupHttpService(this._editorHelperGroupRepository);
 
-  Future<List<HelperGroupEntity>> getPageGroups(String pageId) =>
+  Future<List<HelperGroupEntity>> getPageGroups(String? pageId) =>
       _editorHelperGroupRepository.listHelperGroups(pageId);
 
   @override
-  Future<List<HelperEntity>> getGroupHelpers(String groupId) =>
+  Future<List<HelperEntity>> getGroupHelpers(String? groupId) =>
       _editorHelperGroupRepository.listGroupHelpers(groupId);
 
   @override
-  Future<HelperGroupEntity> getGroupDetails(String groupId) =>
+  Future<HelperGroupEntity> getGroupDetails(String? groupId) =>
       _editorHelperGroupRepository.getGroupDetails(groupId);
 
   @override
@@ -48,7 +48,7 @@ class EditorHelperGroupHttpService implements EditorHelperGroupService {
   }
 
   @override
-  Future deleteGroup(String groupId) {
+  Future deleteGroup(String? groupId) {
     return this._editorHelperGroupRepository.deleteGroup(groupId);
   }
 }

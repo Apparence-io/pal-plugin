@@ -9,12 +9,12 @@ class HelperEditorAdapter {
   static HelperEntity parseSimpleHelper(CreateSimpleHelper args)
     => _parseConfig(args.config, HelperType.SIMPLE_HELPER)
         ..helperTexts = [_parseHelperText(SimpleHelperKeys.CONTENT_KEY, args.titleText)]
-        ..helperBoxes = args.boxConfig?.color != null ? [_parseHelperBox(SimpleHelperKeys.BACKGROUND_KEY, args.boxConfig)] : [];
+        ..helperBoxes = args.boxConfig.color != null ? [_parseHelperBox(SimpleHelperKeys.BACKGROUND_KEY, args.boxConfig)] : [];
   
   static HelperEntity parseFullscreenHelper(CreateFullScreenHelper args)
     => _parseConfig(args.config, HelperType.HELPER_FULL_SCREEN)
-      ..helperImages = args.mediaHeader?.url != null && args.mediaHeader.url.isNotEmpty ?
-        [_parseHelperImage(FullscreenHelperKeys.IMAGE_KEY, args.mediaHeader)]:[]
+      ..helperImages = args.mediaHeader?.url != null && args.mediaHeader!.url!.isNotEmpty ?
+        [_parseHelperImage(FullscreenHelperKeys.IMAGE_KEY, args.mediaHeader!)]:[]
       ..helperTexts = [
         _parseHelperText(FullscreenHelperKeys.TITLE_KEY, args.title),
         _parseHelperText(FullscreenHelperKeys.DESCRIPTION_KEY, args.description),
@@ -34,7 +34,7 @@ class HelperEditorAdapter {
         ),
       ]
       ..helperBoxes =  [_parseHelperBox(UpdatescreenHelperKeys.BACKGROUND_KEY, args.bodyBox)]
-      ..helperImages = args.headerMedia?.url != null && args.headerMedia.url.isNotEmpty ?
+      ..helperImages = args.headerMedia.url != null && args.headerMedia.url!.isNotEmpty ?
         [_parseHelperImage(UpdatescreenHelperKeys.IMAGE_KEY, args.headerMedia)]:[];
 
 
@@ -46,12 +46,12 @@ class HelperEditorAdapter {
         _parseHelperText(AnchoredscreenHelperKeys.POSITIV_KEY, args.positivButton),
         _parseHelperText(AnchoredscreenHelperKeys.NEGATIV_KEY, args.negativButton),
       ]
-      ..helperBoxes =  [_parseHelperBox(args.bodyBox.key, args.bodyBox)];
+      ..helperBoxes =  [_parseHelperBox(args.bodyBox!.key, args.bodyBox)];
 
   //-------------------------------------------------------------
   //-------------------------------------------------------------
   
-  static HelperBoxEntity _parseHelperBox(String key, HelperBoxConfig boxConfig) {
+  static HelperBoxEntity _parseHelperBox(String? key, HelperBoxConfig? boxConfig) {
     return HelperBoxEntity(
         id: boxConfig?.id,
         key: key,
@@ -59,7 +59,7 @@ class HelperEditorAdapter {
       );
   }
 
-  static HelperTextEntity _parseHelperText(String key, HelperTextConfig textConfig) {
+  static HelperTextEntity _parseHelperText(String key, HelperTextConfig? textConfig) {
     return HelperTextEntity(
         id: textConfig?.id,
         fontColor: textConfig?.fontColor,

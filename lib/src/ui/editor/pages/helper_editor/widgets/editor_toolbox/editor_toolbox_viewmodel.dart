@@ -4,8 +4,8 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 typedef OnNewBgColor(Color color);
 
 class EditedBorderData {
-  double thickness;
-  Color color;
+  double? thickness;
+  Color? color;
 
   EditedBorderData(
     Key key, {
@@ -15,10 +15,10 @@ class EditedBorderData {
 }
 
 class EditedFontData {
-  Color color;
-  double size;
-  String fontFamily;
-  FontWeight fontWeight;
+  Color? color;
+  double? size;
+  String? fontFamily;
+  FontWeight? fontWeight;
 
   EditedFontData(
     Key key, {
@@ -30,20 +30,20 @@ class EditedFontData {
 }
 
 class EditorToolboxModel {
-  bool isActionBarVisible;
-  bool isToolBarVisible;
+  bool? isActionBarVisible;
+  bool? isToolBarVisible;
 
-  bool animateIcons;
-  double animationTarget;
+  bool? animateIcons;
+  double? animationTarget;
 
-  ValueNotifier<bool> isBottomVisible;
+  ValueNotifier<bool>? isBottomVisible;
 
-  List<ToolBarGlobalActionButton> globalActions;
-  List<ToolBarActionButton> editableElementActions;
+  List<ToolBarGlobalActionButton>? globalActions;
+  List<ToolBarActionButton>? editableElementActions;
 
-  BoxViewHandler boxViewHandler;
+  BoxViewHandler? boxViewHandler;
 
-  bool animateActionBar;
+  late bool animateActionBar;
 
   EditorToolboxModel({
     this.isActionBarVisible,
@@ -58,8 +58,8 @@ class EditorToolboxModel {
 }
 
 class BoxViewHandler{
-  Color selectedColor;
-  OnNewBgColor callback;
+  Color? selectedColor;
+  OnNewBgColor? callback;
 
   BoxViewHandler({this.selectedColor, this.callback});
 }

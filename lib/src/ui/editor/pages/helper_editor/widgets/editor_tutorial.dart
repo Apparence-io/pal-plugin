@@ -8,10 +8,10 @@ class EditorTutorialOverlay extends StatefulWidget {
   final Function onPressDismiss;
 
   const EditorTutorialOverlay(
-      {Key key,
-      @required this.title,
-      @required this.content,
-      @required this.onPressDismiss})
+      {Key? key,
+      required this.title,
+      required this.content,
+      required this.onPressDismiss})
       : super(key: key);
 
   @override
@@ -20,11 +20,11 @@ class EditorTutorialOverlay extends StatefulWidget {
 
 class _EditorTutorialOverlayState extends State<EditorTutorialOverlay>
     with SingleTickerProviderStateMixin {
-  AnimationController fadeAnimController;
-  Animation<double> backgroundSizeAnimation;
-  Animation<double> titleOpacityAnimation, titleSizeAnimation;
-  Animation<double> contentOpacityAnimation, contentSizeAnimation;
-  Animation<double> buttonOpacityAnimation, buttonSizeAnimation;
+  late AnimationController fadeAnimController;
+  late Animation<double> backgroundSizeAnimation;
+  Animation<double>? titleOpacityAnimation, titleSizeAnimation;
+  Animation<double>? contentOpacityAnimation, contentSizeAnimation;
+  Animation<double>? buttonOpacityAnimation, buttonSizeAnimation;
 
   @override
   void didChangeDependencies() {
@@ -208,7 +208,7 @@ class _EditorTutorialOverlayState extends State<EditorTutorialOverlay>
               ),
               onPressed: () {
                 HapticFeedback.selectionClick();
-                widget.onPressDismiss?.call();
+                widget.onPressDismiss.call();
               },
               borderSide: BorderSide(
                 color: Colors.white,

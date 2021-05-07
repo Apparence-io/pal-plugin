@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:http/http.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
@@ -19,14 +20,16 @@ import 'package:pal/src/services/http_client/base_client.dart';
 import 'package:pal/src/services/locale_service/locale_service.dart';
 
 class HttpClientMock extends Mock implements HttpClient {}
+class LocaleServiceMock extends Mock implements LocaleService {}
 
 void main() {
 
   HiveClient hiveClient = HiveClient(shouldInit: false)
     ..initLocal();
 
-  HelperClientService helperClientService;
+  late HelperClientService helperClientService;
   HttpClient httpClientMock = HttpClientMock();
+  LocaleService localeServiceMock = LocaleServiceMock();
   ClientSchemaLocalRepository clientSchemaRepository = ClientSchemaLocalRepository(hiveBoxOpener: hiveClient.openSchemaBox);
   ClientHelperRepository clientHelperRepository = ClientHelperRepository(httpClient: httpClientMock);
   HelperGroupUserVisitRepository remoteVisitRepository = HelperGroupUserVisitHttpRepository(httpClient: httpClientMock);
@@ -40,7 +43,8 @@ void main() {
         clientSchemaRepository: clientSchemaRepository,
         helperRemoteRepository: clientHelperRepository,
         localVisitRepository: localVisitRepository,
-        remoteVisitRepository: remoteVisitRepository
+        remoteVisitRepository: remoteVisitRepository,
+        userLocale: localeServiceMock
       );
       var schema = SchemaEntity(
         projectId: "testprojectid",
@@ -97,28 +101,28 @@ void main() {
     });
 
     test('current page = route1, user already see helper id = g2 => returns helper group id g1', () async {
-      var nextHelperGroup = await helperClientService.getPageNextHelper('route1', inAppUserId, AppVersion.fromString('1.0.1'));
-      expect(nextHelperGroup.priority, equals(1));
+      var nextHelperGroup = await (helperClientService.getPageNextHelper('route1', inAppUserId, AppVersion.fromString('1.0.1')));
+      expect(nextHelperGroup!.priority, equals(1));
       expect(nextHelperGroup.id, equals("g1"));
-      expect(nextHelperGroup.page.route, equals('route1'));
+      expect(nextHelperGroup.page!.route, equals('route1'));
     });
 
     test('current page = route2, user has not see anything => returns ON_SCREEN_VISIT type, group g4', () async {
-      var nextHelperGroup = await helperClientService.getPageNextHelper('route2', inAppUserId, AppVersion.fromString('1.0.1'));
-      expect(nextHelperGroup.id, equals("g4"));
+      var nextHelperGroup = await (helperClientService.getPageNextHelper('route2', inAppUserId, AppVersion.fromString('1.0.1')));
+      expect(nextHelperGroup!.id, equals("g4"));
       expect(nextHelperGroup.triggerType, equals(HelperTriggerType.ON_SCREEN_VISIT));
-      expect(nextHelperGroup.page.route, equals('route2'));
+      expect(nextHelperGroup.page!.route, equals('route2'));
     });
 
     test('''current page = route3, user see all ON_SCREEN_VISIT, 
           first ON_NEW_UPDATE min version = 1.0.1
           user app version = 1.0.1 
          => returns ON_NEW_UPDATE type with lower prio, group g7''', () async {
-      var nextHelperGroup = await helperClientService.getPageNextHelper('route3', inAppUserId, AppVersion.fromString('1.0.1'));
-      expect(nextHelperGroup.id, equals("g7"));
+      var nextHelperGroup = await (helperClientService.getPageNextHelper('route3', inAppUserId, AppVersion.fromString('1.0.1')));
+      expect(nextHelperGroup!.id, equals("g7"));
       expect(nextHelperGroup.triggerType, equals(HelperTriggerType.ON_NEW_UPDATE));
       expect(nextHelperGroup.priority, equals(1));
-      expect(nextHelperGroup.page.route, equals('route3'));
+      expect(nextHelperGroup.page!.route, equals('route3'));
     });
 
     test('''current page = route4, user see all ON_SCREEN_VISIT, 
@@ -149,9 +153,9 @@ void main() {
           first ON_NEW_UPDATE id g10 min version = 0.1.0 max is null
           user app version = 0.5.0
          => returns group g10''', () async {
-      var nextHelperGroup = await helperClientService.getPageNextHelper('route6', inAppUserId, AppVersion.fromString('0.5.0'));
+      var nextHelperGroup = await (helperClientService.getPageNextHelper('route6', inAppUserId, AppVersion.fromString('0.5.0')));
       expect(nextHelperGroup, isNotNull);
-      expect(nextHelperGroup.id, equals("g10"));
+      expect(nextHelperGroup!.id, equals("g10"));
     });
 
     test('route not exists, return null', () async {
@@ -197,19 +201,21 @@ void main() {
       var pageId = 'p1';
       var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
       var helperGroupId = helperGroup.id;
-      var url = 'pal-analytic/users/$inAppUserId/groups/$helperGroupId/helpers/${helperGroup.helpers[0].id}';
+      var url = 'pal-analytic/users/$inAppUserId/groups/$helperGroupId/helpers/${helperGroup.helpers![0].id}';
       var expectedBody = jsonEncode({ 
         'answer': true,
         'isLast': true,
         'language': 'en'
       });
-      when(httpClientMock.post(Uri.parse(url),
+      when(() => httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
-      ).thenAnswer((_) => Future.value());
+      ).thenAnswer((_) => Future.value(Response('', 200)));
+      var visitsBefore = await localVisitRepository.get(inAppUserId, null);
+      expect(visitsBefore.length, equals(1));
 
-      await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers[0], inAppUserId, true, '1.0.0');
-      verify(httpClientMock.post(Uri.parse(url),
+      await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers![0], inAppUserId, true, '1.0.0');
+      verify(() => httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).called(1);
@@ -223,19 +229,19 @@ void main() {
       var pageId = 'p1';
       var helperGroup = HelperGroupEntity(id: "g1", priority: 1, page: PageEntity(id: 'p1', route: 'route1'), helpers: [HelperEntity(id: "1")]);
       var helperGroupId = helperGroup.id;
-      var url = 'pal-analytic/users/$inAppUserId/groups/$helperGroupId/helpers/${helperGroup.helpers[0].id}';
+      var url = 'pal-analytic/users/$inAppUserId/groups/$helperGroupId/helpers/${helperGroup.helpers![0].id}';
       var expectedBody = jsonEncode({ 
         'answer': true,
         'isLast': true,
         'language': 'en'
       });
-      when(httpClientMock.post(Uri.parse(url),
+      when(() => httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).thenThrow((_) => throw "ERROR");
 
-      await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers[0], inAppUserId, true, '1.0.0');
-      verify(httpClientMock.post(Uri.parse(url),
+      await helperClientService.onHelperTrigger(pageId, helperGroup, helperGroup.helpers![0], inAppUserId, true, '1.0.0');
+      verify(() => httpClientMock.post(Uri.parse(url),
         body: expectedBody,
         headers: {"inAppUserId": inAppUserId})
       ).called(1);

@@ -6,8 +6,8 @@ import 'package:pal/src/ui/editor/widgets/progress_widget/pulsing_circle.dart';
 
 void main() {
   group('Progress Bar', () {
-    ValueNotifier<int> notifier;
-    ProgressBarWidget widget;
+    ValueNotifier<int>? notifier;
+    ProgressBarWidget? widget;
 
     _setup(WidgetTester tester) async {
       notifier = ValueNotifier(2);
@@ -19,7 +19,7 @@ void main() {
           theme: PalThemeData.light(),
           child: Builder(
             builder: (context) => MaterialApp(
-              theme: PalTheme.of(context).buildTheme(),
+              theme: PalTheme.of(context)!.buildTheme(),
               home: widget,
             ),
           ),
@@ -61,11 +61,11 @@ void main() {
       PulsingCircleWidget circle = tester.widget(circles.at(2));
 
       expect(circle.active, isTrue);
-      notifier.value++;
+      notifier!.value++;
       await tester.pump(Duration(seconds: 2));
 
       circle = tester.widget(circles.at(2));
-      expect(widget.step.value,equals(3));
+      expect(widget!.step!.value,equals(3));
       expect(circle.active,isFalse);
       expect(circle.done,isTrue);
 
@@ -81,12 +81,12 @@ void main() {
 
       expect(circle.active, isTrue);
 
-      notifier.value--;
+      notifier!.value--;
       await tester.pump(Duration(seconds: 2));
 
       circle = tester.widget(circles.at(2));
 
-      expect(widget.step.value,equals(1));
+      expect(widget!.step!.value,equals(1));
       expect(circle.active,isFalse);
       expect(circle.done,isFalse);
 

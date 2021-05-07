@@ -4,9 +4,9 @@ import 'generic_adapter.dart';
 
 class HelperGroupUserVisitEntityAdapter extends GenericEntityAdapter<HelperGroupUserVisitEntity> {
   @override
-  HelperGroupUserVisitEntity parseMap(Map<String, dynamic> map) {
+  HelperGroupUserVisitEntity parseMap(Map<String, dynamic>? map) {
     return HelperGroupUserVisitEntity(
-      helperGroupId: map["helperGroupId"],
+      helperGroupId: map!["helperGroupId"],
       pageId: map["pageId"],
       visitDate: DateTime.parse(map['time']).toLocal() ,
       visitVersion: map["version"],

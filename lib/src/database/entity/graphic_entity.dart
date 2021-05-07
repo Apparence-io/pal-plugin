@@ -1,7 +1,7 @@
 class GraphicEntity {
-  String id;
-  String url;
-  DateTime uploadedDate;
+  String? id;
+  String? url;
+  DateTime? uploadedDate;
 
   GraphicEntity({
     this.id,

@@ -35,11 +35,11 @@ abstract class EditorSimpleHelperView {
 class EditorSimpleHelperPage extends StatelessWidget {
   final SimpleHelperViewModel baseviewModel;
 
-  final HelperEditorPageArguments arguments;
+  final HelperEditorPageArguments? arguments;
 
-  final EditorHelperService helperService;
+  final EditorHelperService? helperService;
 
-  final PalEditModeStateService palEditModeStateService;
+  final PalEditModeStateService? palEditModeStateService;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -48,19 +48,19 @@ class EditorSimpleHelperPage extends StatelessWidget {
   final GlobalKey _textKey = GlobalKey();
 
   EditorSimpleHelperPage._(
-      {Key key,
+      {Key? key,
       this.helperService,
-      @required this.baseviewModel,
-      @required this.arguments,
+      required this.baseviewModel,
+      required this.arguments,
       this.palEditModeStateService})
       : super(key: key);
 
   factory EditorSimpleHelperPage.create(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          EditorHelperService helperService,
-          PalEditModeStateService palEditModeStateService,
-          @required HelperViewModel helperViewModel}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          EditorHelperService? helperService,
+          PalEditModeStateService? palEditModeStateService,
+          required HelperViewModel helperViewModel}) =>
       EditorSimpleHelperPage._(
         key: key,
         helperService: helperService,
@@ -71,11 +71,11 @@ class EditorSimpleHelperPage extends StatelessWidget {
       );
 
   factory EditorSimpleHelperPage.edit(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          EditorHelperService helperService,
-          PalEditModeStateService palEditModeStateService,
-          @required String helperId}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          EditorHelperService? helperService,
+          PalEditModeStateService? palEditModeStateService,
+          required String? helperId}) =>
       EditorSimpleHelperPage._(
         key: key,
         helperService: helperService,
@@ -96,9 +96,9 @@ class EditorSimpleHelperPage extends StatelessWidget {
               context,
               null,
               palEditModeStateService ??
-                  EditorInjector.of(context).palEditModeStateService),
+                  EditorInjector.of(context)!.palEditModeStateService),
           baseviewModel,
-          helperService ?? EditorInjector.of(context).helperService,
+          helperService ?? EditorInjector.of(context)!.helperService,
           arguments),
       builder: (context, presenter, model) =>
           _buildPage(context.buildContext, presenter, model),
@@ -163,7 +163,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
                                   child: Container(
                                     width: constraints.maxWidth * 0.8,
                                     decoration: BoxDecoration(
-                                      color: PalTheme.of(context).colors.black,
+                                      color: PalTheme.of(context)!.colors.black,
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(12),
                                       ),
@@ -179,7 +179,7 @@ class EditorSimpleHelperPage extends StatelessWidget {
                                               .currentSelectedEditableNotifier
                                               ?.value
                                               ?.key,
-                                      backgroundColor: PalTheme.of(context)
+                                      backgroundColor: PalTheme.of(context)!
                                           .colors
                                           .black, // Currently we can't change background
                                     ),
@@ -204,7 +204,7 @@ class _EditorSimpleHelperPage
     implements EditorSimpleHelperView {
   final BuildContext context;
 
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   final PalEditModeStateService palEditModeStateService;
 
@@ -218,7 +218,7 @@ class _EditorSimpleHelperPage
     SimpleHelperPage page = SimpleHelperPage(
       // helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       descriptionLabel:
-          HelperSharedFactory.parseTextNotifier(model.contentTextForm),
+          HelperSharedFactory.parseTextNotifier(model.contentTextForm!),
     );
     SimpleHelperLayout layout = SimpleHelperLayout(
       toaster: page,

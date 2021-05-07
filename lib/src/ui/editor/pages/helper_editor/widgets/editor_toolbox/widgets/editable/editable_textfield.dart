@@ -6,16 +6,16 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 class EditableTextField extends StatelessWidget {
-  final EditableTextFormData data;
-  final Function(EditableData) onTap;
+  final EditableTextFormData? data;
+  final Function(EditableData?)? onTap;
   final bool isSelected;
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   const EditableTextField({
-    Key key,
+    Key? key,
     this.onTap,
-    @required this.data,
-    @required this.backgroundColor,
+    required this.data,
+    required this.backgroundColor,
     this.isSelected = false,
   }) : super(key: key);
 
@@ -30,7 +30,7 @@ class EditableTextField extends StatelessWidget {
       _googleCustomFont(this.data?.fontFamily),
     );
 
-    Color _borderColor = this.backgroundColor.computeLuminance() > 0.5
+    Color _borderColor = this.backgroundColor!.computeLuminance() > 0.5
         ? Colors.black
         : Colors.white;
     return BouncingWidget(
@@ -54,9 +54,9 @@ class EditableTextField extends StatelessWidget {
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
               hintText: 'Edit me!',
-              hintStyle: textStyle?.merge(
+              hintStyle: textStyle.merge(
                 TextStyle(
-                  color: textStyle?.color?.withAlpha(80),
+                  color: textStyle.color?.withAlpha(80),
                 ),
               ),
             ),
@@ -68,7 +68,7 @@ class EditableTextField extends StatelessWidget {
   }
 
   // TODO : move to extension
-  TextStyle _googleCustomFont(String fontFamily) {
+  TextStyle? _googleCustomFont(String? fontFamily) {
     return (fontFamily != null && fontFamily.length > 0)
         ? GoogleFonts.getFont(fontFamily)
         : null;

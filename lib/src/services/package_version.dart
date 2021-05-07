@@ -1,9 +1,8 @@
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pal/src/services/client/versions/version.dart';
 
 class PackageVersionReader {
-
-  PackageInfo info;
+  late PackageInfo info;
 
   PackageVersionReader() {
     init();

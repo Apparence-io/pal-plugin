@@ -21,13 +21,13 @@ abstract class ProjectEditorService {
 
   Future<AppIconEntity> sendAppIcon(Uint8List icon, String imageType) => throw "not implemented yet";
 
-  Future<AppIconEntity> updateAppIcon(String appIconId, Uint8List icon, String imageType) => throw "not implemented yet";
+  Future<AppIconEntity> updateAppIcon(String? appIconId, Uint8List icon, String imageType) => throw "not implemented yet";
 
   Future<AppIconEntity> getAppIcon() => throw "not implemented yet";
 
-  Future<List<HelperGroupEntity>> getPageGroups(String routeName) => throw "not implemented yet";
+  Future<List<HelperGroupEntity>> getPageGroups(String? routeName) => throw "not implemented yet";
 
-  Future<List<HelperEntity>> getGroupHelpers(String groupId) => throw "not implemented yet";
+  Future<List<HelperEntity>> getGroupHelpers(String? groupId) => throw "not implemented yet";
 }
 
 class ProjectEditorHttpService implements ProjectEditorService {
@@ -46,7 +46,7 @@ class ProjectEditorHttpService implements ProjectEditorService {
   Future<AppIconEntity> sendAppIcon(Uint8List icon, String imageType)
     => this.projectRepository.createAppIcon( icon, imageType);
 
-  Future<AppIconEntity> updateAppIcon(String appIconId, Uint8List icon, String imageType)
+  Future<AppIconEntity> updateAppIcon(String? appIconId, Uint8List icon, String imageType)
     => this.projectRepository.updateAppIcon(appIconId, icon, imageType);
 
   @override
@@ -54,11 +54,11 @@ class ProjectEditorHttpService implements ProjectEditorService {
     => this.projectRepository.getAppIcon();
 
   @override
-  Future<List<HelperGroupEntity>> getPageGroups(String pageId)
+  Future<List<HelperGroupEntity>> getPageGroups(String? pageId)
     => editorHelperGroupRepository.listHelperGroups(pageId);
 
   @override
-  Future<List<HelperEntity>> getGroupHelpers(String groupId)
+  Future<List<HelperEntity>> getGroupHelpers(String? groupId)
     => editorHelperRepository.getGroupHelpers(groupId);
 
 }

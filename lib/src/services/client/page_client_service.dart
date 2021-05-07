@@ -5,7 +5,7 @@ abstract class PageClientService {
 
   factory PageClientService.build(PageRepository pageRepository) => _PageClientHttpService(pageRepository);
 
-  Future<PageEntity> getPage(final String route);
+  Future<PageEntity?> getPage(final String route);
 }
 
 class _PageClientHttpService implements PageClientService {
@@ -14,7 +14,7 @@ class _PageClientHttpService implements PageClientService {
   _PageClientHttpService(this._pageRepository);
 
   @override
-  Future<PageEntity> getPage(String route) {
+  Future<PageEntity?> getPage(String route) {
     return this._pageRepository.getPage(route);
   }
 }

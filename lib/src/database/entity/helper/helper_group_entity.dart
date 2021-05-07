@@ -12,31 +12,31 @@ part 'helper_group_entity.g.dart';
 class HelperGroupEntity with Comparable<HelperGroupEntity> {
 
   @HiveField(0)
-  String id;
+  String? id;
 
   @HiveField(1)
-  int priority;
+  int? priority;
 
   @HiveField(2)
-  List<HelperEntity> helpers;
+  List<HelperEntity>? helpers;
 
   @HiveField(3)
-  PageEntity page;
+  PageEntity? page;
 
   @HiveField(4)
-  String name;
+  String? name;
 
   @HiveField(5)
-  HelperTriggerType triggerType;
+  HelperTriggerType? triggerType;
 
   @HiveField(6)
-  DateTime creationDate;
+  DateTime? creationDate;
 
   @HiveField(7)
-  String minVersion;
+  String? minVersion;
 
   @HiveField(8)
-  String maxVersion;
+  String? maxVersion;
 
   HelperGroupEntity({
     this.id, 
@@ -53,7 +53,7 @@ class HelperGroupEntity with Comparable<HelperGroupEntity> {
   @override
   int compareTo(HelperGroupEntity other) {
     if(other.triggerType == this.triggerType) {
-      return other.priority < this.priority ? 1 : -1;
+      return other.priority! < this.priority! ? 1 : -1;
     }
     return other.triggerType.typePriority < this.triggerType.typePriority ? 1 : -1;
   }

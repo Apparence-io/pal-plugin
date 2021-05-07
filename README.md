@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
       appToken: 'REPLACE_WITH_YOUR_APP_TOKEN',
       // --------------------
       // YOUR APP IS HERE
-      child: MaterialApp(
+      childApp: MaterialApp(
         navigatorKey: _navigatorKey,
         navigatorObservers: [PalNavigatorObserver.instance()],
         home: YourApp(),

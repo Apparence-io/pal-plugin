@@ -13,49 +13,48 @@ GlobalKey<NavigatorState> palNavigatorGlobalKey =
     new GlobalKey<NavigatorState>();
 
 Route<dynamic> route(RouteSettings settings) {
-  print("root router... ${settings.name}");
   switch (settings.name) {
     case '/settings':
       return MaterialPageRoute(
         builder: (context) => AppSettingsPage(),
       );
     case '/editor/new':
-      CreateHelperPageArguments args = settings.arguments;
+      CreateHelperPageArguments? args = settings.arguments as CreateHelperPageArguments?;
       return MaterialPageRoute(
         builder: (context) => CreateHelperPage(
-          pageId: args.pageId,
+          pageId: args!.pageId,
           hostedAppNavigatorKey: args.hostedAppNavigatorKey,
         ),
       );
     case '/editor/group/details':
-      String groupId = (settings.arguments as Map)["id"];
-      String pageRoute = (settings.arguments as Map)["route"];
-      PageStep startPage = (settings.arguments as Map)["page"];
+      String? groupId = (settings.arguments as Map)["id"];
+      String? pageRoute = (settings.arguments as Map)["route"];
+      PageStep? startPage = (settings.arguments as Map)["page"];
       return PageRouteBuilder(
         opaque: false,
         pageBuilder: (context, a, b) => GroupDetailsPage(
             groupId: groupId, routeName: pageRoute, page: startPage),
       );
     case '/editor/new/font-family':
-      FontFamilyPickerArguments args = settings.arguments;
+      FontFamilyPickerArguments? args = settings.arguments as FontFamilyPickerArguments?;
       return MaterialPageRoute(
           builder: (context) => FontFamilyPickerPage(
                 arguments: args,
               ));
     case '/editor/new/font-weight':
-      FontWeightPickerArguments args = settings.arguments;
+      FontWeightPickerArguments? args = settings.arguments as FontWeightPickerArguments?;
       return MaterialPageRoute(
           builder: (context) => FontWeightPickerPage(
                 arguments: args,
               ));
     case '/editor/media-gallery':
-      MediaGalleryPageArguments args = settings.arguments;
+      MediaGalleryPageArguments? args = settings.arguments as MediaGalleryPageArguments?;
       return MaterialPageRoute(
           builder: (context) => MediaGalleryPage(
-                mediaId: args.mediaId,
+                mediaId: args!.mediaId,
               ));
     case '/editor/preview':
-      EditorPreviewArguments args = settings.arguments;
+      EditorPreviewArguments? args = settings.arguments as EditorPreviewArguments?;
       return PageRouteBuilder(
         maintainState: true,
         opaque: false,
@@ -71,22 +70,22 @@ Route<dynamic> route(RouteSettings settings) {
 //shows a page as overlay for our editor
 showOverlayed(
     GlobalKey<NavigatorState> hostedAppNavigatorKey, WidgetBuilder builder,
-    {OverlayKeys key, Function onPop}) {
+    {OverlayKeys? key, Function? onPop}) {
   EditorOverlayEntry helperOverlay = EditorOverlayEntry(
     onPop,
     opaque: false,
     builder: builder,
   );
-  Overlayed.of(hostedAppNavigatorKey.currentContext).entries.putIfAbsent(
+  Overlayed.of(hostedAppNavigatorKey.currentContext!)!.entries.putIfAbsent(
         key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
         () => helperOverlay,
       );
-  hostedAppNavigatorKey.currentState.overlay.insert(helperOverlay);
+  hostedAppNavigatorKey.currentState!.overlay!.insert(helperOverlay);
 }
 
 showOverlayedInContext(WidgetBuilder builder,
-    {OverlayKeys key, Function onPop}) {
-  if (Overlayed.of(palNavigatorGlobalKey.currentState.context)
+    {OverlayKeys? key, Function? onPop}) {
+  if (Overlayed.of(palNavigatorGlobalKey.currentState!.context)!
       .entries
       .containsKey(key ?? OverlayKeys.EDITOR_OVERLAY_KEY)) {
     return;
@@ -96,16 +95,16 @@ showOverlayedInContext(WidgetBuilder builder,
     opaque: false,
     builder: builder,
   );
-  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.putIfAbsent(
+  Overlayed.of(palNavigatorGlobalKey.currentState!.context)!.entries.putIfAbsent(
         key ?? OverlayKeys.EDITOR_OVERLAY_KEY,
         () => helperOverlay,
       );
-  palNavigatorGlobalKey.currentState.overlay.insert(helperOverlay);
+  palNavigatorGlobalKey.currentState!.overlay!.insert(helperOverlay);
 }
 
 closeOverlayed(OverlayKeys key) {
-  Overlayed.of(palNavigatorGlobalKey.currentState.context)
-      .entries[key]
+  Overlayed.of(palNavigatorGlobalKey.currentState!.context)!
+      .entries[key]!
       .remove();
-  Overlayed.of(palNavigatorGlobalKey.currentState.context).entries.remove(key);
+  Overlayed.of(palNavigatorGlobalKey.currentState!.context)!.entries.remove(key);
 }

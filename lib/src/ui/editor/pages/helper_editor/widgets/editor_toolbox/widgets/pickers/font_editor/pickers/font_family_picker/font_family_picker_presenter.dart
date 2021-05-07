@@ -6,7 +6,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 class FontFamilyPickerPresenter
     extends Presenter<FontFamilyPickerModel, FontFamilyPickerView> {
   final FontFamilyPickerLoader loader;
-  final FontFamilyPickerArguments arguments;
+  final FontFamilyPickerArguments? arguments;
 
   FontFamilyPickerPresenter(
     FontFamilyPickerView viewInterface,
@@ -19,7 +19,7 @@ class FontFamilyPickerPresenter
     this.viewModel.originalFonts = [];
     this.viewModel.fonts = [];
     this.viewModel.isLoading = false;
-    this.viewModel.selectedFontFamilyKey = arguments.fontFamilyName;
+    this.viewModel.selectedFontFamilyKey = arguments!.fontFamilyName;
 
     this.setup();
   }
@@ -39,7 +39,7 @@ class FontFamilyPickerPresenter
   void filterSearchResults(String query) {
     if (query.isNotEmpty) {
       List<String> dummyListData = [];
-      this.viewModel.originalFonts.forEach((fontKey) {
+      this.viewModel.originalFonts!.forEach((fontKey) {
         final lowerQuery = query.toLowerCase();
         final lowerFontName = fontKey.toLowerCase();
 
@@ -47,11 +47,11 @@ class FontFamilyPickerPresenter
           dummyListData.add(fontKey);
         }
       });
-      this.viewModel.fonts.clear();
-      this.viewModel.fonts.addAll(dummyListData);
+      this.viewModel.fonts!.clear();
+      this.viewModel.fonts!.addAll(dummyListData);
     } else {
-      this.viewModel.fonts.clear();
-      this.viewModel.fonts.addAll(this.viewModel.originalFonts);
+      this.viewModel.fonts!.clear();
+      this.viewModel.fonts!.addAll(this.viewModel.originalFonts!);
     }
 
     this.refreshView();

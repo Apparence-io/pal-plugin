@@ -4,7 +4,7 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
-genSimpleHelperData({HelperGroupConfig groupConfig})
+genSimpleHelperData({HelperGroupConfig? groupConfig})
   => CreateSimpleHelper(
     boxConfig: HelperBoxConfig(color: '#FFF'),
     titleText: HelperTextConfig(

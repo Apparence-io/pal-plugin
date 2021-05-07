@@ -9,9 +9,9 @@ import 'package:pal/src/services/http_client/base_client.dart';
 
 class EditorAppContext {
 
-  static EditorAppContext _instance;
+  static EditorAppContext? _instance;
 
-  static init({@required url, @required String token}) {
+  static init({required url, required String token}) {
     if(_instance == null) {
       _instance = HttpEditorAppContext.create(url: url, token: token);
     }
@@ -22,7 +22,7 @@ class EditorAppContext {
     _instance = editorAppContext;
   }
 
-  static EditorAppContext get instance {
+  static EditorAppContext? get instance {
     if(_instance == null) {
       throw "init needs to be called";
     }
@@ -58,26 +58,22 @@ class HttpEditorAppContext implements  EditorAppContext {
 
   final EditorHelperGroupRepository _editorHelperGroupRepository;
 
-  factory HttpEditorAppContext.create(
-      {@required url, @required String token,})
-      => HttpEditorAppContext.private(
-        httpClient: url == null || token == null ? null : HttpClient.create(url, token),
-      );
+  factory HttpEditorAppContext.create({required url, required String token})
+      => HttpEditorAppContext.private(httpClient: HttpClient.create(url, token));
 
   @visibleForTesting
   HttpEditorAppContext.private({
-    @required HttpClient httpClient,
-  })  : assert(httpClient != null),
-        this._editorHelperGroupRepository = EditorHelperGroupRepository(httpClient: httpClient),
+    required HttpClient httpClient,
+  })  : this._editorHelperGroupRepository = EditorHelperGroupRepository(httpClient: httpClient),
         this._pageRepository = PageRepository(httpClient: httpClient),
         this._projectRepository = ProjectRepository(httpClient: httpClient),
         this._editorHelperRepository = EditorHelperRepository(httpClient: httpClient),
         this._projectGalleryRepository = ProjectGalleryHttpRepository(httpClient: httpClient),
         this._versionRepository = VersionHttpRepository(httpClient: httpClient);
 
-  EditorHelperRepository get helperRepository => this._editorHelperRepository;
+  EditorHelperRepository get helperRepository => _editorHelperRepository;
 
-  PageRepository get pageRepository => this._pageRepository;
+  PageRepository get pageRepository => _pageRepository;
 
   VersionRepository get versionRepository => _versionRepository;
 

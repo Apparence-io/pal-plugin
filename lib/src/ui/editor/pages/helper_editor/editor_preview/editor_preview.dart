@@ -17,8 +17,8 @@ import 'editor_preview_presenter.dart';
 import 'editor_preview_viewmodel.dart';
 
 class EditorPreviewArguments {
-  final String helperId;
-  final Widget preBuiltHelper;
+  final String? helperId;
+  final Widget? preBuiltHelper;
   final Function(BuildContext) onDismiss;
 
   EditorPreviewArguments(
@@ -29,25 +29,21 @@ class EditorPreviewArguments {
 }
 
 abstract class EditorPreviewView {
-  Widget buildFullscreen(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss);
+  Widget buildFullscreen(HelperEntity helperEntity, Function(BuildContext?) onDismiss);
 
-  Widget buildSimple(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss);
+  Widget buildSimple(HelperEntity helperEntity, Function(BuildContext?) onDismiss);
 
-  Widget buildAnchored(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss);
+  Widget buildAnchored(HelperEntity helperEntity, Function(BuildContext?) onDismiss);
 
-  Widget buildUpdate(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss);
+  Widget buildUpdate(HelperEntity helperEntity, Function(BuildContext?) onDismiss);
 }
 
 class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
-  final EditorPreviewArguments args;
+  final EditorPreviewArguments? args;
 
   EditorPreviewPage({
-    Key key,
-    @required this.args,
+    Key? key,
+    required this.args,
   });
 
   final _mvvmPageBuilder =
@@ -60,8 +56,8 @@ class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
       key: ValueKey('EditorPreviewPage_Builder'),
       context: context,
       presenterBuilder: (context) => EditorPreviewPresenter(this,
-          args: this.args,
-          helperService: EditorInjector.of(context).helperService),
+          args: this.args!,
+          helperService: EditorInjector.of(context)!.helperService),
       builder: (context, presenter, model) {
         return Scaffold(
           key: _scaffoldKey,
@@ -82,38 +78,37 @@ class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
         : Stack(
             fit: StackFit.expand,
             children: [
-              presenter.getHelper(),
+              presenter.getHelper()!,
             ],
           );
   }
 
   @override
-  Widget buildFullscreen(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss) {
+  Widget buildFullscreen(HelperEntity helperEntity, Function(BuildContext?) onDismiss) {
     return UserFullScreenHelperPage(
       helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         FullscreenHelperKeys.BACKGROUND_KEY,
-        helperEntity?.helperBoxes,
-      ),
+        helperEntity.helperBoxes!,
+      )!,
       titleLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
-        helperEntity?.helperTexts,
-      ),
+        helperEntity.helperTexts!,
+      )!,
       descriptionLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.DESCRIPTION_KEY,
-        helperEntity?.helperTexts,
-      ),
+        helperEntity.helperTexts!,
+      )!,
       headerImageViewModel: HelperSharedFactory.parseImageUrl(
         FullscreenHelperKeys.IMAGE_KEY,
-        helperEntity?.helperImages,
+        helperEntity.helperImages,
       ),
       negativLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       positivLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.POSITIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       onNegativButtonTap: () => onDismiss(_scaffoldKey.currentContext),
       onPositivButtonTap: () => onDismiss(_scaffoldKey.currentContext),
@@ -121,14 +116,13 @@ class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
   }
 
   @override
-  Widget buildSimple(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss) {
+  Widget buildSimple(HelperEntity helperEntity, Function(BuildContext?) onDismiss) {
     SimpleHelperPage content = SimpleHelperPage(
       // helperBoxViewModel: HelperSharedFactory.parseBoxNotifier(model.bodyBox),
       descriptionLabel: HelperSharedFactory.parseTextLabel(
         SimpleHelperKeys.CONTENT_KEY,
-        helperEntity?.helperTexts,
-      ),
+        helperEntity.helperTexts!,
+      )!,
     );
     return SimpleHelperLayout(
       toaster: content,
@@ -137,59 +131,56 @@ class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
   }
 
   @override
-  Widget buildAnchored(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss) {
+  Widget buildAnchored(HelperEntity helperEntity, Function(BuildContext?) onDismiss) {
     return AnchoredHelper.fromEntity(
       finderService:
-          EditorInjector.of(_scaffoldKey.currentContext).finderService,
+          EditorInjector.of(_scaffoldKey.currentContext!)!.finderService,
       positivButtonLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.POSITIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       titleLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       descriptionLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.DESCRIPTION_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       negativButtonLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       helperBoxViewModel: HelperBoxViewModel(
-          id: helperEntity.helperBoxes?.first?.id,
-          backgroundColor: HexColor?.fromHex(
-              helperEntity.helperBoxes.first.backgroundColor)),
-      anchorKey: helperEntity.helperBoxes?.first?.key,
+          id: helperEntity.helperBoxes?.first.id,
+          backgroundColor: HexColor.fromHex(
+              helperEntity.helperBoxes!.first.backgroundColor!)),
+      anchorKey: helperEntity.helperBoxes?.first.key,
       onNegativButtonTap: () => onDismiss(_scaffoldKey.currentContext),
       onPositivButtonTap: () => onDismiss(_scaffoldKey.currentContext),
     );
   }
 
   @override
-  Widget buildUpdate(
-      HelperEntity helperEntity, Function(BuildContext) onDismiss) {
+  Widget buildUpdate(HelperEntity helperEntity, Function(BuildContext?) onDismiss) {
     Map<String, EditableTextFormData> changelogsMap = {};
     List<HelperTextViewModel> changelogs = HelperSharedFactory.parseTextsLabel(
       UpdatescreenHelperKeys.LINES_KEY,
-      helperEntity?.helperTexts,
+      helperEntity.helperTexts!,
     );
-
-    if (changelogs != null && changelogs.length > 0) {
+    if (changelogs.length > 0) {
       int index = 0;
       for (var changelog in changelogs) {
         changelogsMap.putIfAbsent(
           'template_${changelog.id.toString()}',
           () => EditableTextFormData(
-            changelog?.id,
+            changelog.id,
             '${UpdatescreenHelperKeys.LINES_KEY}_${index++}',
-            text: changelog?.text ?? '',
-            fontColor: changelog?.fontColor ?? Colors.white,
-            fontSize: changelog?.fontSize?.toInt() ?? 18,
-            fontFamily: changelog?.fontFamily,
-            fontWeight: FontWeightMapper.toFontKey(changelog?.fontWeight),
+            text: changelog.text ?? '',
+            fontColor: changelog.fontColor ?? Colors.white,
+            fontSize: changelog.fontSize?.toInt() ?? 18,
+            fontFamily: changelog.fontFamily,
+            fontWeight: FontWeightMapper.toFontKey(changelog.fontWeight),
           ),
         );
       }
@@ -197,24 +188,24 @@ class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
     return UserUpdateHelperPage(
       helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
         SimpleHelperKeys.BACKGROUND_KEY,
-        helperEntity?.helperBoxes,
-      ),
+        helperEntity.helperBoxes!,
+      )!,
       titleLabel: HelperSharedFactory.parseTextLabel(
         UpdatescreenHelperKeys.TITLE_KEY,
-        helperEntity?.helperTexts,
-      ),
+        helperEntity.helperTexts!,
+      )!,
       thanksButtonLabel: HelperSharedFactory.parseButtonLabel(
         UpdatescreenHelperKeys.POSITIV_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
       changelogLabels: changelogs,
       helperImageViewModel: HelperSharedFactory.parseImageUrl(
         UpdatescreenHelperKeys.IMAGE_KEY,
-        helperEntity?.helperImages,
+        helperEntity.helperImages,
       ),
       onPositivButtonTap: () => onDismiss(_scaffoldKey.currentContext),
       packageVersionReader:
-          EditorInjector.of(_scaffoldKey.currentContext).packageVersionReader,
+          EditorInjector.of(_scaffoldKey.currentContext!)!.packageVersionReader,
     );
   }
 }

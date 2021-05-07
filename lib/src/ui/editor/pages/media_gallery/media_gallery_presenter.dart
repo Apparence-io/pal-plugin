@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/graphic_entity.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery_loader.dart';
@@ -8,13 +7,13 @@ import 'media_gallery_viewmodel.dart';
 
 class MediaGalleryPresenter
     extends Presenter<MediaGalleryModel, MediaGalleryView> {
-  final String mediaId;
+  final String? mediaId;
   final MediaGalleryLoader loader;
 
   MediaGalleryPresenter(
     MediaGalleryView viewInterface, {
     this.mediaId,
-    @required this.loader,
+    required this.loader,
   }) : super(MediaGalleryModel(), viewInterface);
 
   @override
@@ -26,7 +25,7 @@ class MediaGalleryPresenter
     this.loader.load().then((MediaGalleryModel res) {
       this.viewModel.medias = res.medias;
       this.viewModel.isLoading = false;
-      for (var media in res.medias) {
+      for (var media in res.medias!) {
         if(media.id == mediaId){
           this.selectMedia(media);
           break;
@@ -37,7 +36,7 @@ class MediaGalleryPresenter
   }
 
   void loadMore() {
-    if (!this.viewModel.isNoMore && !this.viewModel.isLoadingMore) {
+    if (!this.viewModel.isNoMore! && !this.viewModel.isLoadingMore!) {
       this.viewModel.isLoadingMore = true;
       this.refreshView();
 
@@ -45,7 +44,7 @@ class MediaGalleryPresenter
         if (value.isEmpty) {
           this.viewModel.isNoMore = true;
         } else {
-          this.viewModel.medias.addAll(value);
+          this.viewModel.medias!.addAll(value);
         }
         this.viewModel.isLoadingMore = false;
         this.refreshView();

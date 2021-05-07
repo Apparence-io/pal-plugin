@@ -28,7 +28,7 @@ import 'editor_update_helper_viewmodel.dart';
 abstract class EditorUpdateHelperView {
   void hidePalBubble();
   Future<void> scrollToBottomChangelogList();
-  Future<GraphicEntity> pushToMediaGallery(final String mediaId);
+  Future<GraphicEntity?> pushToMediaGallery(final String? mediaId);
   Future showLoadingScreen(ValueNotifier<SendingStatus> status);
   Future closeEditor(bool list, bool bubble);
   void closeLoadingScreen();
@@ -38,35 +38,35 @@ abstract class EditorUpdateHelperView {
 class EditorUpdateHelperPage extends StatelessWidget {
   // required params
   final UpdateHelperViewModel baseviewModel;
-  final HelperEditorPageArguments arguments;
-  final EditorHelperService helperService;
-  final PalEditModeStateService palEditModeStateService;
+  final HelperEditorPageArguments? arguments;
+  final EditorHelperService? helperService;
+  final PalEditModeStateService? palEditModeStateService;
 
   // inner page widgets
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final ScrollController scrollController = ScrollController();
-  final PackageVersionReader packageVersionReader;
+  final PackageVersionReader? packageVersionReader;
 
   // final GlobalKey _titleKey = GlobalKey();
   // final GlobalKey _thanksButtonKey = GlobalKey();
 
   EditorUpdateHelperPage._({
-    Key key,
+    Key? key,
     this.helperService,
     this.palEditModeStateService,
     this.packageVersionReader,
-    @required this.baseviewModel,
-    @required this.arguments,
+    required this.baseviewModel,
+    required this.arguments,
   }) : super(key: key);
 
   factory EditorUpdateHelperPage.create(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          EditorHelperService helperService,
-          PalEditModeStateService palEditModeStateService,
-          PackageVersionReader packageVersionReader,
-          @required HelperViewModel helperViewModel}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          EditorHelperService? helperService,
+          PalEditModeStateService? palEditModeStateService,
+          PackageVersionReader? packageVersionReader,
+          required HelperViewModel helperViewModel}) =>
       EditorUpdateHelperPage._(
         key: key,
         helperService: helperService,
@@ -78,12 +78,12 @@ class EditorUpdateHelperPage extends StatelessWidget {
       );
 
   factory EditorUpdateHelperPage.edit(
-          {Key key,
-          HelperEditorPageArguments parameters,
-          PalEditModeStateService palEditModeStateService,
-          EditorHelperService helperService,
-          PackageVersionReader packageVersionReader,
-          @required String helperId}) =>
+          {Key? key,
+          HelperEditorPageArguments? parameters,
+          PalEditModeStateService? palEditModeStateService,
+          EditorHelperService? helperService,
+          PackageVersionReader? packageVersionReader,
+          required String? helperId}) =>
       EditorUpdateHelperPage._(
         key: key,
         helperService: helperService,
@@ -112,11 +112,11 @@ class EditorUpdateHelperPage extends StatelessWidget {
                 _scaffoldKey,
                 scrollController,
                 palEditModeStateService ??
-                    EditorInjector.of(context).palEditModeStateService,
+                    EditorInjector.of(context)!.palEditModeStateService,
                 packageVersionReader ??
-                    EditorInjector.of(context).packageVersionReader),
+                    EditorInjector.of(context)!.packageVersionReader),
             baseviewModel,
-            helperService ?? EditorInjector.of(context).helperService,
+            helperService ?? EditorInjector.of(context)!.helperService,
             arguments);
         return presenter;
       },
@@ -206,7 +206,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
                           viewModel.backgroundBoxForm?.backgroundColor,
                       isSelected:
                           viewModel.currentEditableItemNotifier?.value?.key ==
-                              viewModel.headerMediaForm.key,
+                              viewModel.headerMediaForm!.key,
                     ),
                     SizedBox(height: 40),
                     EditableTextField(
@@ -216,7 +216,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
                           viewModel.backgroundBoxForm?.backgroundColor,
                       isSelected:
                           viewModel.currentEditableItemNotifier?.value?.key ==
-                              viewModel.titleTextForm.key,
+                              viewModel.titleTextForm!.key,
                     ),
                     SizedBox(height: 25.0),
                     _buildChangelogFields(context, presenter, viewModel),
@@ -243,7 +243,7 @@ class EditorUpdateHelperPage extends StatelessWidget {
     final UpdateHelperViewModel viewmodel,
   ) {
     List<Widget> changelogsTextfieldWidgets = [];
-    viewmodel.changelogsTextsForm.forEach((key, field) {
+    viewmodel.changelogsTextsForm!.forEach((key, field) {
       changelogsTextfieldWidgets.add(
         EditableTextField(
           data: field,
@@ -292,13 +292,13 @@ class EditorUpdateHelperPage extends StatelessWidget {
         onTap: presenter.onNewEditableSelect,
         backgroundColor: viewModel.backgroundBoxForm?.backgroundColor,
         isSelected: viewModel.currentEditableItemNotifier?.value?.key ==
-            viewModel.positivButtonForm.key,
+            viewModel.positivButtonForm!.key,
       ),
     );
   }
 
   //FIXME CONsider extension
-  TextStyle googleCustomFont(String fontFamily) {
+  TextStyle? googleCustomFont(String fontFamily) {
     return (fontFamily != null && fontFamily.length > 0)
         ? GoogleFonts.getFont(fontFamily)
         : null;
@@ -325,14 +325,14 @@ class _EditorUpdateHelperPage
   BuildContext get overlayContext => context;
 
   @override
-  Future<GraphicEntity> pushToMediaGallery(final String mediaId) async {
+  Future<GraphicEntity?> pushToMediaGallery(final String? mediaId) async {
     final media = await Navigator.pushNamed(
-      scaffoldKey.currentContext,
+      scaffoldKey.currentContext!,
       '/editor/media-gallery',
       arguments: MediaGalleryPageArguments(
         mediaId,
       ),
-    ) as GraphicEntity;
+    ) as GraphicEntity?;
     return media;
   }
 
@@ -350,15 +350,15 @@ class _EditorUpdateHelperPage
   Future showPreviewOfHelper(UpdateHelperViewModel model) async {
     UserUpdateHelperPage page = UserUpdateHelperPage(
       helperBoxViewModel:
-          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm),
-      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm),
+          HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm!),
+      titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm!),
       thanksButtonLabel:
-          HelperSharedFactory.parseButtonNotifier(model.positivButtonForm),
-      changelogLabels: model.changelogsTextsForm.entries
+          HelperSharedFactory.parseButtonNotifier(model.positivButtonForm!),
+      changelogLabels: model.changelogsTextsForm!.entries
           .map((e) => HelperSharedFactory.parseTextNotifier(e.value))
           .toList(),
       helperImageViewModel:
-          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm),
+          HelperSharedFactory.parseMediaNotifier(model.headerMediaForm!),
       onPositivButtonTap: () => Navigator.pop(context),
       packageVersionReader: this.packageVersionReader,
     );

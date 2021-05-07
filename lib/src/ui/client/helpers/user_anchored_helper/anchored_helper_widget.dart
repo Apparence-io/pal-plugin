@@ -10,32 +10,32 @@ import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 
 class AnchoredHelper extends StatefulWidget {
-  final String anchorKey;
-  final bool isTestingMode;
+  final String? anchorKey;
+  final bool? isTestingMode;
 
-  final FinderService finderService;
+  final FinderService? finderService;
 
-  final Function onPositivButtonTap, onNegativButtonTap, onError;
+  final Function? onPositivButtonTap, onNegativButtonTap, onError;
 
   // ATTRIBUTES MODELS
-  final HelperTextViewModel titleLabel;
-  final HelperTextViewModel descriptionLabel;
-  final HelperButtonViewModel positivButtonLabel;
-  final HelperButtonViewModel negativButtonLabel;
+  final HelperTextViewModel? titleLabel;
+  final HelperTextViewModel? descriptionLabel;
+  final HelperButtonViewModel? positivButtonLabel;
+  final HelperButtonViewModel? negativButtonLabel;
   final HelperBoxViewModel helperBoxViewModel;
 
   factory AnchoredHelper.fromEntity({
-    FinderService finderService,
-    String anchorKey,
-    @required HelperTextViewModel titleLabel,
-    @required HelperTextViewModel descriptionLabel,
-    @required HelperButtonViewModel positivButtonLabel,
-    @required HelperButtonViewModel negativButtonLabel,
-    @required HelperBoxViewModel helperBoxViewModel,
-    Function onPositivButtonTap,
-    Function onNegativButtonTap,
-    Function onError,
-    bool isTestingMode = false,
+    FinderService? finderService,
+    String? anchorKey,
+    required HelperTextViewModel? titleLabel,
+    required HelperTextViewModel? descriptionLabel,
+    required HelperButtonViewModel? positivButtonLabel,
+    required HelperButtonViewModel? negativButtonLabel,
+    required HelperBoxViewModel helperBoxViewModel,
+    Function? onPositivButtonTap,
+    Function? onNegativButtonTap,
+    Function? onError,
+    bool? isTestingMode = false,
   }) =>
     AnchoredHelper(
       finderService,
@@ -70,26 +70,25 @@ class AnchoredHelper extends StatefulWidget {
 
 class _AnchoredHelperState extends State<AnchoredHelper>
   with TickerProviderStateMixin {
-  Offset currentPos;
+  Offset? currentPos;
 
-  Size anchorSize;
+  Size? anchorSize;
 
-  Rect writeArea;
+  Rect? writeArea;
 
-  FinderService finderService;
+  late FinderService finderService;
 
-  AnimationController anchorAnimationController, fadeAnimController;
+  late AnimationController anchorAnimationController, fadeAnimController;
 
-  Animation<double> backgroundAnimation;
-  Animation<double> titleOpacityAnimation, titleSizeAnimation;
-  Animation<double> descriptionOpacityAnimation, descriptionSizeAnimation;
-  Animation<double> btnOpacityAnimation, btnSizeAnimation;
+  late Animation<double> backgroundAnimation;
+  Animation<double>? titleOpacityAnimation, titleSizeAnimation;
+  Animation<double>? descriptionOpacityAnimation, descriptionSizeAnimation;
+  Animation<double>? btnOpacityAnimation, btnSizeAnimation;
 
   @override
   void initState() {
     super.initState();
-    anchorAnimationController =
-    AnimationController(vsync: this, duration: Duration(seconds: 1))
+    anchorAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 1))
       ..repeat(reverse: true);
     fadeAnimController = AnimationController(
       vsync: this, duration: Duration(milliseconds: 2000));
@@ -121,13 +120,13 @@ class _AnchoredHelperState extends State<AnchoredHelper>
       parent: fadeAnimController,
       curve: Interval(.8, 1, curve: Curves.easeInOutBack),
     );
-    WidgetsBinding.instance.addPostFrameCallback((_) => init());
+    WidgetsBinding.instance!.addPostFrameCallback((_) => init());
   }
 
   @override
   void didChangeDependencies() {
     finderService =
-      widget.finderService ?? UserInjector.of(context).finderService;
+      widget.finderService ?? UserInjector.of(context)!.finderService;
     super.didChangeDependencies();
   }
 
@@ -151,10 +150,10 @@ class _AnchoredHelperState extends State<AnchoredHelper>
     } else {
       var element = await finderService.searchChildElement(widget.anchorKey);
       if (element == null || element.bounds == null) {
-        widget.onError();
+        widget.onError!();
         return;
       }
-      anchorSize = element.bounds.size;
+      anchorSize = element.bounds!.size;
       currentPos = element.offset;
       writeArea = await finderService.getLargestAvailableSpace(element);
     }
@@ -192,7 +191,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                           child: _buildAnimItem(
                               opacityAnim: titleOpacityAnimation,
                               sizeAnim: titleSizeAnimation,
-                              child: _buildText(widget.titleLabel,
+                              child: _buildText(widget.titleLabel!,
                                 ValueKey('pal_AnchoredHelperTitleLabel'))),
                           ),
                           Padding(
@@ -201,7 +200,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                               opacityAnim: descriptionOpacityAnimation,
                               sizeAnim: descriptionSizeAnimation,
                               child: _buildText(
-                                  widget.descriptionLabel,
+                                  widget.descriptionLabel!,
                                   ValueKey(
                                       'pal_AnchoredHelperDescriptionLabel'))),
                         ),
@@ -214,7 +213,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                                 opacityAnim: btnOpacityAnimation,
                                 sizeAnim: btnSizeAnimation,
                                 child: _buildEditableBordered(
-                                  widget.negativButtonLabel,
+                                  widget.negativButtonLabel!,
                                   ValueKey('pal_AnchoredHelperNegativFeedbackLabel'),
                                   ValueKey("negativeFeedback"),
                                   widget.onNegativButtonTap
@@ -225,7 +224,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
                                 opacityAnim: btnOpacityAnimation,
                                 sizeAnim: btnSizeAnimation,
                                 child: _buildEditableBordered(
-                                    widget.positivButtonLabel,
+                                    widget.positivButtonLabel!,
                                     ValueKey('pal_AnchoredHelperPositivFeedbackLabel'),
                                     ValueKey("positiveFeedback"),
                                     widget.onPositivButtonTap
@@ -254,7 +253,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
     : Container();
 
   Widget _buildText(HelperTextViewModel text, Key key) => Text(
-      text.text,
+      text.text!,
       key: key,
       textAlign: TextAlign.center,
       style: TextStyle(
@@ -262,16 +261,16 @@ class _AnchoredHelperState extends State<AnchoredHelper>
         fontWeight: text.fontWeight,
         color: text.fontColor,
       ).merge(
-        GoogleFonts.getFont(text?.fontFamily ?? 'Montserrat'),
+        GoogleFonts.getFont(text.fontFamily ?? 'Montserrat'),
       ),
     );
 
-  Widget _buildEditableBordered(HelperButtonViewModel model, Key textKey, Key buttonKey, Function onTap) {
+  Widget _buildEditableBordered(HelperButtonViewModel model, Key textKey, Key buttonKey, Function? onTap) {
     final textStyle = TextStyle(
         fontSize: model.fontSize,
         fontWeight: model.fontWeight,
-        color: model?.fontColor ?? Colors.white,
-      ).merge(GoogleFonts.getFont(model?.fontFamily ?? 'Montserrat'));
+        color: model.fontColor ?? Colors.white,
+      ).merge(GoogleFonts.getFont(model.fontFamily ?? 'Montserrat'));
     final ButtonStyle outlineButtonStyle = OutlinedButton.styleFrom(
       primary: model.fontColor ?? Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
@@ -283,7 +282,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
     ).copyWith(
       side: MaterialStateProperty.resolveWith<BorderSide>(
         (Set<MaterialState> states) => BorderSide(
-          color: model !=null && model.fontColor != null ? model.fontColor : Colors.white, 
+          color: model !=null && model.fontColor != null ? model.fontColor! : Colors.white, 
           width: 1,
         ),
       ),
@@ -293,11 +292,11 @@ class _AnchoredHelperState extends State<AnchoredHelper>
       onPressed: () async {
         HapticFeedback.selectionClick();
         await fadeAnimController.reverse();
-        onTap();
+        onTap!();
       },
       style: outlineButtonStyle,
       child: Text(
-        model.text, 
+        model.text!, 
         key: textKey,
         style: textStyle,
         textAlign: TextAlign.center,
@@ -306,9 +305,9 @@ class _AnchoredHelperState extends State<AnchoredHelper>
   }
 
   Widget _buildAnimItem(
-    {Animation<double> sizeAnim,
-      Animation<double> opacityAnim,
-      Widget child}) =>
+    {Animation<double>? sizeAnim,
+      Animation<double>? opacityAnim,
+      Widget? child}) =>
     AnimatedBuilder(
       animation: fadeAnimController,
       builder: (context, child) => Transform.translate(
@@ -326,21 +325,21 @@ class _AnchoredHelperState extends State<AnchoredHelper>
 }
 
 class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
-  final Offset currentPos;
+  final Offset? currentPos;
   final double padding;
-  final Size anchorSize;
-  final Color bgColor;
+  final Size? anchorSize;
+  final Color? bgColor;
 
   final Animation<double> _stroke1Animation, _stroke2Animation;
 
   AnimatedAnchoredFullscreenCircle(
-    {@required this.currentPos,
-      @required this.padding,
-      @required this.bgColor,
-      @required this.anchorSize,
-      @required Listenable listenable})
+    {required this.currentPos,
+      required this.padding,
+      required this.bgColor,
+      required this.anchorSize,
+      required Listenable listenable})
     : _stroke1Animation =
-  new CurvedAnimation(parent: listenable, curve: Curves.ease),
+  new CurvedAnimation(parent: listenable as Animation<double>, curve: Curves.ease),
       _stroke2Animation = CurvedAnimation(
         parent: listenable,
         curve: Interval(0, .8, curve: Curves.ease),
@@ -363,15 +362,15 @@ class AnimatedAnchoredFullscreenCircle extends AnimatedWidget {
 }
 
 class AnchoredFullscreenPainter extends CustomPainter {
-  final Offset currentPos;
+  final Offset? currentPos;
 
   final double padding;
 
-  final Size anchorSize;
+  final Size? anchorSize;
 
   final double area = 24.0 * 24.0;
 
-  final Color bgColor;
+  final Color? bgColor;
 
   double circle1Width, circle2Width;
 
@@ -390,7 +389,7 @@ class AnchoredFullscreenPainter extends CustomPainter {
       ..blendMode = BlendMode.clear
       ..isAntiAlias = true;
     Paint bgPainter = Paint()
-      ..color = bgColor
+      ..color = bgColor!
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
     Paint circle1Painter = Paint()
@@ -407,9 +406,9 @@ class AnchoredFullscreenPainter extends CustomPainter {
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), bgPainter);
     // canvas.drawCircle(currentPos, radius, clearPainter);
     // canvas.drawRect(currentPos & anchorSize, clearPainter);
-    var radius = sqrt(pow(anchorSize.width, 2) + pow(anchorSize.height, 2)) / 2;
+    var radius = sqrt(pow(anchorSize!.width, 2) + pow(anchorSize!.height, 2)) / 2;
     var center =
-    currentPos.translate(anchorSize.width / 2, anchorSize.height / 2);
+    currentPos!.translate(anchorSize!.width / 2, anchorSize!.height / 2);
     canvas.drawCircle(center, radius + padding, circle1Painter);
     canvas.drawCircle(center, radius + padding, circle2Painter);
     canvas.drawCircle(center, radius + padding, clearPainter);
@@ -427,7 +426,7 @@ class AnchoredFullscreenPainter extends CustomPainter {
   @override
   bool hitTest(Offset position) {
     if (currentPos == null) return false;
-    var distance = (position - currentPos).distanceSquared;
+    var distance = (position - currentPos!).distanceSquared;
     if (distance <= area) {
       return true;
     }

@@ -1,45 +1,35 @@
-import 'package:pal/src/database/adapter/in_app_user_storage_adapter.dart';
 import 'package:pal/src/database/entity/in_app_user_entity.dart';
-import 'package:pal/src/services/local_storage/local_storage_manager.dart';
+import 'package:pal/src/database/hive_client.dart';
 
-class InAppUserStorageClientManager {
-  final StorageManager _localStorageManager;
-  final InAppUserEntityAdapter _adapter;
-  InAppUserEntity _inAppUser;
+class InAppUserLocalRepository {
+  late LocalDbOpener<InAppUserEntity> _boxOpener;
+  InAppUserEntity? _inAppUser;
 
-  factory InAppUserStorageClientManager.build() =>
-      InAppUserStorageClientManager._private(
-          LocalStorageManager("in_app_user"), InAppUserEntityAdapter());
-
-  InAppUserStorageClientManager._private(
-      this._localStorageManager, this._adapter);
+  InAppUserLocalRepository(this._boxOpener);
 
   Future storeInAppUser(final InAppUserEntity inAppUser) async {
     this._inAppUser = inAppUser;
-    await this._localStorageManager.store(this._adapter.toJson(inAppUser));
-  }
-
-  Future<InAppUserEntity> readInAppUser() {
-    if (this._inAppUser != null) {
-      return Future.value(this._inAppUser);
-    }
-    return this._localStorageManager.read().then((res) {
-      if (res != null && res.length > 0) {
-        try {
-          this._inAppUser = this._adapter.parse(res);
-          return this._inAppUser;
-        } catch (e) {
-          return null;
-        }
-      }
-      return null;
+    await this._boxOpener().then((box) async {
+      await box.put("user", inAppUser);
     });
   }
 
-  Future<InAppUserEntity> clearInAppUser() async {
-    await this._localStorageManager.deleteFile();
-    InAppUserEntity deletedInAppUser = this._inAppUser;
-    this._inAppUser = null;
-    return deletedInAppUser;
+  Future<InAppUserEntity?> readInAppUser() async {
+    if (this._inAppUser != null) {
+      return Future.value(this._inAppUser);
+    }
+
+    return await this._boxOpener().then((box) {
+      return box.get("user");
+    });
+  }
+
+  Future<InAppUserEntity?> clearInAppUser() async {
+    return await this._boxOpener().then((box) async {
+      await box.delete("user");
+      InAppUserEntity? deletedInAppUser = this._inAppUser;
+      this._inAppUser = null;
+      return deletedInAppUser;
+    });
   }
 }

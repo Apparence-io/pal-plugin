@@ -29,13 +29,13 @@ const Duration kPressTimeout = Duration(milliseconds: 100);
 
 Future initAppWithPal(
     WidgetTester tester, 
-    Widget userApp, 
+    Widget? userApp, 
     GlobalKey<NavigatorState> navigatorKey,
     { 
-      RouteFactory routeFactory,
+      RouteFactory? routeFactory,
       bool editorModeEnabled = true,
-      EditorAppContext editorAppContext,
-      UserAppContext userAppContext
+      EditorAppContext? editorAppContext,
+      UserAppContext? userAppContext
     }) async {
   BuildContext context; // ignore: unused_local_variable
   if (editorAppContext != null) EditorAppContext.create(editorAppContext);
@@ -45,16 +45,17 @@ Future initAppWithPal(
     editorModeEnabled: editorModeEnabled,
     childApp: new MaterialApp(
       onGenerateRoute: routeFactory ??
-          (_) => MaterialPageRoute(settings: RouteSettings(name: "myPage"), builder: (ctx) {
+          ((_) => MaterialPageRoute(settings: RouteSettings(name: "myPage"), builder: (ctx) {
             context = ctx;
-            return userApp;
-          }),
+            return userApp!;
+          })),
       navigatorKey: navigatorKey,
       navigatorObservers: [PalNavigatorObserver.instance()],
     ),
   );
   await tester.pumpWidget(app);
-  print(navigatorKey);
+  await tester.pump();
+  await tester.pumpAndSettle();
 }
 
 /// use this to show an helper editor for each type
@@ -66,11 +67,11 @@ Future pumpHelperWidget(
   HelperTriggerType triggerType,
   HelperType type,
   HelperTheme theme, {
-  EditorHelperService editorHelperService,
-  PalEditModeStateService palEditModeStateService,
-  HelperEntity helperEntity,
-  PackageVersionReader packageVersionReader,
-  FinderService finderService,
+  EditorHelperService? editorHelperService,
+  PalEditModeStateService? palEditModeStateService,
+  HelperEntity? helperEntity,
+  PackageVersionReader? packageVersionReader,
+  FinderService? finderService,
 }) async {
   // push helper editor page
   HelperEditorPageArguments args = HelperEditorPageArguments(
@@ -83,7 +84,7 @@ Future pumpHelperWidget(
     helperTheme: theme,
     priority: 1,
     helperGroup: HelperGroupModel(
-      triggerType: triggerType ?? HelperTriggerType.ON_SCREEN_VISIT,
+      triggerType: triggerType,
       minVersionCode: "0.0.0",
       maxVersionCode: "1.0.1",
     ),
@@ -207,8 +208,7 @@ Future enterTextInTextForm(
   await tester.pump(Duration(milliseconds: 500));
   await tester.pump(Duration(milliseconds: 1500));
 
-  final textToolbarButton =
-      find.byKey(ValueKey('EditorToolBar_SpecificAction_Text'));
+  final textToolbarButton = find.byKey(ValueKey('EditorToolBar_SpecificAction_Text'));
   await tester.tap(textToolbarButton);
   await tester.pump(Duration(milliseconds: 1500));
 

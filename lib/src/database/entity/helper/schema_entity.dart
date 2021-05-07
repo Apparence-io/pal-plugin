@@ -8,13 +8,13 @@ part 'schema_entity.g.dart';
 class SchemaEntity {
 
   @HiveField(0)
-  String projectId;
+  String? projectId;
 
   @HiveField(1)
-  List<HelperGroupEntity> groups;
+  List<HelperGroupEntity>? groups;
 
   @HiveField(2)
-  int schemaVersion;
+  int? schemaVersion;
 
   SchemaEntity({this.projectId, this.groups, this.schemaVersion});
 }

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../../theme.dart';
 
 class CreateHelperButton extends StatefulWidget {
-  final PalThemeData palTheme;
-  final Function onTap;
+  final PalThemeData? palTheme;
+  final Function? onTap;
 
-  CreateHelperButton({this.palTheme, this.onTap, Key key}) : super(key: key);
+  CreateHelperButton({this.palTheme, this.onTap, Key? key}) : super(key: key);
 
   @override
   _CreateHelperButtonState createState() => _CreateHelperButtonState();
@@ -27,7 +27,7 @@ class _CreateHelperButtonState extends State<CreateHelperButton> {
             )
           ]),
       child: Material(
-        color: PalTheme.of(context).colors.color4,
+        color: PalTheme.of(context)!.colors.color4,
         child: InkWell(
           onTap: _onTap,
           child: Padding(
@@ -53,18 +53,18 @@ class _CreateHelperButtonState extends State<CreateHelperButton> {
       );
 
   void _onTap() {
-    if (widget.onTap != null) widget.onTap();
+    if (widget.onTap != null) widget.onTap!();
   }
 
   TextStyle get _textStyle1 => TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w400,
-        color: widget.palTheme.colors.dark,
+        color: widget.palTheme!.colors.dark,
       );
 
   TextStyle get _textStyle2 => TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w300,
-        color: widget.palTheme.colors.dark,
+        color: widget.palTheme!.colors.dark,
       );
 }

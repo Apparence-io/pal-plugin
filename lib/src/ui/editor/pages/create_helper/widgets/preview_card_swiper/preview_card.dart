@@ -19,12 +19,12 @@ class PreviewCard {
 
 class PreviewCardWidget extends StatefulWidget {
   final PreviewCard cardData;
-  final int index;
-  final Function(int) onTap;
+  final int? index;
+  final Function(int)? onTap;
 
   const PreviewCardWidget({
-    Key key,
-    @required this.cardData,
+    Key? key,
+    required this.cardData,
     this.index,
     this.onTap,
   }) : super(key: key);
@@ -40,13 +40,13 @@ class _PreviewCardWidgetState extends State<PreviewCardWidget>
   Widget build(BuildContext context) {
     return BouncingWidget(
       key: ValueKey('pal_PreviewCard_${widget.index}'),
-      onTap: () => widget.onTap?.call(widget.index),
+      onTap: () => widget.onTap?.call(widget.index!),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.0),
           side: (widget.cardData.isSelected)
               ? BorderSide(
-                  color: PalTheme.of(context).colors.color1,
+                  color: PalTheme.of(context)!.colors.color1!,
                   width: 6.0,
                 )
               : BorderSide.none,
@@ -63,7 +63,7 @@ class _PreviewCardWidgetState extends State<PreviewCardWidget>
                       vertical: 20.0,
                       horizontal: 35.0,
                     ),
-                    child: Image.asset(widget.cardData.previewImage, package: 'pal'),
+                    child: Center(child: Image.asset(widget.cardData.previewImage, package: 'pal')),
                   ),
                 ),
                 Padding(
@@ -116,7 +116,7 @@ class _PreviewCardWidgetState extends State<PreviewCardWidget>
             topRight: const Radius.circular(25.0),
             bottomLeft: const Radius.circular(25.0),
           ),
-          color: PalTheme.of(context).colors.color1,
+          color: PalTheme.of(context)!.colors.color1,
         ),
         child: Center(
           child: Icon(

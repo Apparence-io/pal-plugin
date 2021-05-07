@@ -12,30 +12,30 @@ import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 class SimpleHelperViewModel extends HelperViewModel {
 
   // form validation boolean
-  ValueNotifier<bool> canValidate;
+  ValueNotifier<bool>? canValidate;
 
   // LanguageNotifier language;
   // TODO : Add background box attribute
   // EditableBoxFormData bodyBox;
-  EditableTextFormData contentTextForm;
-  ValueNotifier<EditableData> currentSelectedEditableNotifier;
+  EditableTextFormData? contentTextForm;
+  ValueNotifier<EditableData?>? currentSelectedEditableNotifier;
 
-  bool loading;
+  bool? loading;
 
   SimpleHelperViewModel({
-    String id,
-    @required String name,
-    @required HelperTriggerType triggerType,
-    @required int priority,
-    String groupId,
-    String groupName,
-    String minVersionCode,
-    String maxVersionCode,
-    HelperTheme helperTheme,
-    int versionMaxId,
-    int languageId,
+    String? id,
+    required String? name,
+    required HelperTriggerType? triggerType,
+    required int? priority,
+    String? groupId,
+    String? groupName,
+    String? minVersionCode,
+    String? maxVersionCode,
+    HelperTheme? helperTheme,
+    int? versionMaxId,
+    int? languageId,
     // HelperBoxViewModel helperBoxViewModel,
-    HelperTextViewModel contentTextViewModel,
+    HelperTextViewModel? contentTextViewModel,
   }) : super(
     id: id,
     name: name,
@@ -70,31 +70,31 @@ class SimpleHelperViewModel extends HelperViewModel {
 
   factory SimpleHelperViewModel.fromHelperViewModel(HelperViewModel model) {
     final simpleHelper = SimpleHelperViewModel(
-      id: model?.id,
+      id: model.id,
       name: model.name,
       priority: model.priority,
       helperTheme: model.helperTheme,
       triggerType: model.helperGroup?.triggerType,
       minVersionCode: model.helperGroup?.minVersionCode,
       maxVersionCode: model.helperGroup?.maxVersionCode,
-      groupId: model.helperGroup.id,
-      groupName: model.helperGroup.name
+      groupId: model.helperGroup!.id,
+      groupName: model.helperGroup!.name
     );
 
     if (model is SimpleHelperViewModel) {
       // simpleHelper.bodyBox = model?.bodyBox;
       // simpleHelper.language = model?.language;
-      simpleHelper.contentTextForm = model?.contentTextForm;
+      simpleHelper.contentTextForm = model.contentTextForm;
     }
     return simpleHelper;
   }
 
   factory SimpleHelperViewModel.fromHelperEntity(HelperEntity helperEntity) {
     return SimpleHelperViewModel(
-      id: helperEntity?.id,
-      name: helperEntity?.name,
-      triggerType: helperEntity?.triggerType,
-      priority: helperEntity?.priority,
+      id: helperEntity.id,
+      name: helperEntity.name,
+      triggerType: helperEntity.triggerType,
+      priority: helperEntity.priority,
       helperTheme: null,
       // helperBoxViewModel: HelperSharedFactory.parseBoxBackground(
       //   SimpleHelperKeys.BACKGROUND_KEY,
@@ -102,7 +102,7 @@ class SimpleHelperViewModel extends HelperViewModel {
       // ),
       contentTextViewModel: HelperSharedFactory.parseTextLabel(
         SimpleHelperKeys.CONTENT_KEY,
-        helperEntity?.helperTexts,
+        helperEntity.helperTexts!,
       ),
     );
   }

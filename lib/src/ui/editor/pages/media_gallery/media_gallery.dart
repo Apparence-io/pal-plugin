@@ -10,7 +10,7 @@ import 'media_gallery_presenter.dart';
 import 'media_gallery_viewmodel.dart';
 
 class MediaGalleryPageArguments {
-  final String mediaId;
+  final String? mediaId;
 
   MediaGalleryPageArguments(
     this.mediaId,
@@ -22,11 +22,11 @@ abstract class MediaGalleryView {
 }
 
 class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
-  final String mediaId;
-  final MediaGalleryLoader loader;
+  final String? mediaId;
+  final MediaGalleryLoader? loader;
 
   MediaGalleryPage({
-    Key key,
+    Key? key,
     this.mediaId,
     this.loader,
   });
@@ -45,7 +45,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
         this,
         loader: this.loader ??
             MediaGalleryLoader(
-              EditorInjector.of(context).projectGalleryRepository,
+              EditorInjector.of(context)!.projectGalleryRepository,
             ),
         mediaId: mediaId,
       ),
@@ -61,13 +61,13 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
               title: Text(
                 'My image gallery',
                 style: TextStyle(
-                  color: PalTheme.of(context.buildContext).colors.dark,
+                  color: PalTheme.of(context.buildContext)!.colors.dark,
                 ),
               ),
               iconTheme: IconThemeData(
-                color: PalTheme.of(context.buildContext).colors.dark,
+                color: PalTheme.of(context.buildContext)!.colors.dark,
               ),
-              backgroundColor: PalTheme.of(context.buildContext).colors.light,
+              backgroundColor: PalTheme.of(context.buildContext)!.colors.light,
             ),
             body: this._buildPage(context.buildContext, presenter, model),
           ),
@@ -85,7 +85,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
       children: [
         Container(
           key: ValueKey('pal_MediaGalleryPage_Header'),
-          color: PalTheme.of(context).colors.color1,
+          color: PalTheme.of(context)!.colors.color1,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
@@ -98,7 +98,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
           ),
         ),
         Expanded(
-          child: (model.isLoading)
+          child: model.isLoading!
               ? Center(child: CircularProgressIndicator())
               : GridView.builder(
                   key: ValueKey('pal_MediaGalleryPage_Body_Grid'),
@@ -117,7 +117,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
                   ),
                   padding: const EdgeInsets.all(2.0),
                   itemBuilder: (context, index) {
-                    GraphicEntity media = model.medias[index];
+                    GraphicEntity media = model.medias![index];
                     return MediaCellWidget(
     // FIXME: Int or String ??
                       id: media.id.toString(),
@@ -126,7 +126,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
                       onTap: () => presenter.selectMedia(media),
                     );
                   },
-                  itemCount: model.medias.length,
+                  itemCount: model.medias!.length,
                 ),
         ),
         Padding(
@@ -154,14 +154,14 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
       width: double.infinity,
       child: RaisedButton(
         key: ValueKey('pal_MediaGalleryPage_SelectButton'),
-        disabledColor: PalTheme.of(context).colors.color4,
+        disabledColor: PalTheme.of(context)!.colors.color4,
         child: Text(
           'Select',
           style: TextStyle(
             color: Colors.white,
           ),
         ),
-        color: PalTheme.of(context).colors.color1,
+        color: PalTheme.of(context)!.colors.color1,
         onPressed: () => this.popBackToEditor(model.selectedMedia),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -171,7 +171,7 @@ class MediaGalleryPage extends StatelessWidget implements MediaGalleryView {
   }
 
   @override
-  void popBackToEditor(final GraphicEntity media) {
-    Navigator.pop(this._scaffoldKey.currentContext, media);
+  void popBackToEditor(final GraphicEntity? media) {
+    Navigator.pop(this._scaffoldKey.currentContext!, media);
   }
 }

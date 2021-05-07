@@ -11,7 +11,7 @@ class EditableTextDialog extends StatelessWidget {
     : this.controller = TextEditingController.fromValue(
       TextEditingValue(
         text: initialValue,
-        selection: TextSelection.fromPosition(TextPosition(offset: initialValue?.length ?? 0))
+        selection: TextSelection.fromPosition(TextPosition(offset: initialValue.length))
       )
     );
 

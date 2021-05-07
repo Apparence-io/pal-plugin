@@ -4,9 +4,9 @@ import 'package:pal/src/theme.dart';
 
 class PartialOverlayedPage extends StatefulWidget {
 
-  final Widget child;
+  final Widget? child;
 
-  PartialOverlayedPage({this.child, Key key}) : super(key: key);
+  PartialOverlayedPage({this.child, Key? key}) : super(key: key);
 
   @override
   PartialOverlayedPageState createState() => PartialOverlayedPageState();
@@ -14,8 +14,8 @@ class PartialOverlayedPage extends StatefulWidget {
 
 class PartialOverlayedPageState extends State<PartialOverlayedPage> with SingleTickerProviderStateMixin {
 
-  AnimationController fadeAnimController;
-  Animation<double> backgroundSizeAnimation;
+  late AnimationController fadeAnimController;
+  late Animation<double> backgroundSizeAnimation;
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class PartialOverlayedPageState extends State<PartialOverlayedPage> with SingleT
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: PalTheme.of(context).colors.light,
+            color: PalTheme.of(context)!.colors.light,
             borderRadius: BorderRadius.vertical(
               top: Radius.circular(16.0)
             )

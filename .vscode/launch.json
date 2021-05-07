@@ -24,14 +24,14 @@
         "SERVER_URL=https://app.pal-plugin.tech/api"
       ]
     },
-    // {
-    //   "name": "Dart: Run all Tests",
-    //   "type": "dart",
-    //   "request": "launch",
-    //   "program": "./test/",
-    //   "presentation": {
-    //     "clear": true,
-    //   }
-    // },
+    {
+      "name": "Run all Tests",
+      "type": "dart",
+      "request": "launch",
+      "program": "./test/",
+      "presentation": {
+        "clear": true,
+      }
+    },
   ]
 }

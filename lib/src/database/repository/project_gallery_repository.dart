@@ -19,7 +19,7 @@ class ProjectGalleryHttpRepository extends BaseHttpRepository
   final ProjectGalleryEntityAdapter _adapter = ProjectGalleryEntityAdapter();
   final HttpClient httpClient;
 
-  ProjectGalleryHttpRepository({@required this.httpClient})
+  ProjectGalleryHttpRepository({required this.httpClient})
       : super(httpClient: httpClient);
 
   @override

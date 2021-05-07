@@ -18,7 +18,7 @@ enum HelperType {
   UPDATE_HELPER,
 }
 
-HelperType getHelperType(final String value) {
+HelperType getHelperType(final String? value) {
   return HelperType.values
       .firstWhere((element) => element.toString().split('.')[1] == value);
 }
@@ -27,8 +27,8 @@ String helperTypeToString(final HelperType helperType) {
   return helperType.toString().split('.')[1];
 }
 
-String helperTypeToAsset(final HelperType helperType) {
-  String asset;
+String? helperTypeToAsset(final HelperType? helperType) {
+  String? asset;
   switch (helperType) {
     case HelperType.HELPER_FULL_SCREEN:
       asset = 'helper_type_fullscreen.png';
@@ -47,8 +47,8 @@ String helperTypeToAsset(final HelperType helperType) {
   return asset;
 }
 
-String getHelperTypeDescription(final HelperType helperType) {
-  String description;
+String? getHelperTypeDescription(final HelperType? helperType) {
+  String? description;
   switch (helperType) {
     case HelperType.HELPER_FULL_SCREEN:
       description = 'Fullscreen';

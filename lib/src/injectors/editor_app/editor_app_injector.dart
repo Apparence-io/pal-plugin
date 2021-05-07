@@ -34,22 +34,21 @@ class EditorInjector extends InheritedWidget {
 
   final ProjectGalleryEditorService _projectGalleryEditorService;
 
-  final PalRouteObserver routeObserver;
+  final PalRouteObserver? routeObserver;
 
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
+  final GlobalKey<NavigatorState>? hostedAppNavigatorKey;
 
-  final GlobalKey<NavigatorState> palNavigatorKey;
+  final GlobalKey<NavigatorState>? palNavigatorKey;
 
   EditorInjector({
-    Key key,
-    @required EditorAppContext appContext,
-    @required this.routeObserver,
-    @required Widget child,
-    @required GlobalKey boundaryChildKey,
+    Key? key,
+    required EditorAppContext appContext,
+    required this.routeObserver,
+    required Widget child,
+    required GlobalKey? boundaryChildKey,
     this.hostedAppNavigatorKey,
     this.palNavigatorKey
-  })  : assert(child != null && appContext != null),
-        this._pageEditorService = PageEditorService.build(boundaryChildKey, appContext.pageRepository),
+  })  : this._pageEditorService = PageEditorService.build(boundaryChildKey, appContext.pageRepository),
         this._projectEditorService = ProjectEditorService.build(
           appContext.projectRepository,
           appContext.editorHelperGroupRepository,
@@ -57,7 +56,7 @@ class EditorInjector extends InheritedWidget {
         ),
         this._helperService = EditorHelperService.build(appContext),
         this._helperGroupService = EditorHelperGroupService.build(appContext),
-        this._finderService = FinderService(observer: routeObserver),
+        this._finderService = FinderService(observer: routeObserver as PalNavigatorObserver?),
         this._projectGalleryEditorService = ProjectGalleryEditorService.build(
             projectGalleryRepository: appContext.projectGalleryRepository),
         this._packageVersionReader = PackageVersionReader(),
@@ -68,7 +67,7 @@ class EditorInjector extends InheritedWidget {
         this._palEditModeStateService = PalEditModeStateService.build(),
         super(key: key, child: child);
 
-  static EditorInjector of(BuildContext context) =>
+  static EditorInjector? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<EditorInjector>();
 
   @override

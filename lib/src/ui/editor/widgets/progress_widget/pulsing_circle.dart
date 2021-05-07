@@ -3,10 +3,10 @@ import 'package:pal/src/theme.dart';
 
 /* Controller class */
 class PulsingCircleWidget extends StatefulWidget {
-  final bool active;
-  final bool done;
+  final bool? active;
+  final bool? done;
 
-  const PulsingCircleWidget({Key key, this.active, this.done})
+  const PulsingCircleWidget({Key? key, this.active, this.done})
       : super(key: key);
 
   @override
@@ -16,8 +16,8 @@ class PulsingCircleWidget extends StatefulWidget {
 class _PulsingCircleWidgetState extends State<PulsingCircleWidget>
     with SingleTickerProviderStateMixin {
   // CORE ATTRIBUTES
-  AnimationController controller;
-  Animation animation;
+  late AnimationController controller;
+  late Animation animation;
 
   @override
   void initState() {
@@ -45,13 +45,13 @@ class _PulsingCircleWidgetState extends State<PulsingCircleWidget>
       builder: (context, child) => CircleRender(
         //  COLOR BASED ON IF THE CIRCLE IS DONE / ACTIVE / NONE
         // IN THE ORDER BELOW : DARK / CYAN / GREY
-        color: widget.done
-            ? PalTheme.of(context).colors.dark
-            : widget.active
-                ? PalTheme.of(context).colors.color3
+        color: widget.done!
+            ? PalTheme.of(context)!.colors.dark
+            : widget.active!
+                ? PalTheme.of(context)!.colors.color3
                 : Color(0xFFC1BFD6),
         // IF THE CIRCLE IS ACTIVE : ANIMATED / IF NOT : STATIC
-        radius: widget.active ? this.animation.value : 8,
+        radius: widget.active! ? this.animation.value : 8,
       ),
     );
   }
@@ -59,10 +59,10 @@ class _PulsingCircleWidgetState extends State<PulsingCircleWidget>
 
 /* Render class */
 class CircleRender extends StatelessWidget {
-  final Color color;
-  final double radius;
+  final Color? color;
+  final double? radius;
 
-  const CircleRender({Key key, this.color, this.radius}) : super(key: key);
+  const CircleRender({Key? key, this.color, this.radius}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

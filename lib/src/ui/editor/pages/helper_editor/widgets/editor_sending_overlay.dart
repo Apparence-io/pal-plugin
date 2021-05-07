@@ -17,10 +17,10 @@ enum SendingStatus {
 /// ...
 /// }
 mixin EditorSendingOverlayMixin {
-  EditorSendingOverlay sendingOverlay;
-  BuildContext overlayContext;
+  EditorSendingOverlay? sendingOverlay;
+  BuildContext? overlayContext;
 
-  void closeLoadingScreen() => sendingOverlay.dismiss();
+  void closeLoadingScreen() => sendingOverlay!.dismiss();
 
   Future showLoadingScreen(ValueNotifier<SendingStatus> status) async {
     sendingOverlay = EditorSendingOverlay(
@@ -30,7 +30,7 @@ mixin EditorSendingOverlayMixin {
       errorMessage: "Error occured, please try again later",
       status: status
     );
-    await sendingOverlay.show(overlayContext);
+    await sendingOverlay!.show(overlayContext!);
   }
 }
 
@@ -43,14 +43,14 @@ class EditorSendingOverlay {
   String errorMessage;
   ValueNotifier<SendingStatus> status;
 
-  OverlayEntry _entry;
+  OverlayEntry? _entry;
 
   EditorSendingOverlay({
-    @required this.loadingOpacity,
-    @required this.loadingMessage,
-    @required this.successMessage,
-    @required this.errorMessage,
-    @required this.status
+    required this.loadingOpacity,
+    required this.loadingMessage,
+    required this.successMessage,
+    required this.errorMessage,
+    required this.status
   });
 
   Future show(BuildContext context) async {
@@ -64,12 +64,12 @@ class EditorSendingOverlay {
         )
       );
     }
-    Overlay.of(context).insert(_entry);
+    Overlay.of(context)!.insert(_entry!);
   }
 
   dismiss() {
     if(_entry != null) {
-      _entry.remove();
+      _entry!.remove();
       _entry = null;
     }
   }
@@ -77,7 +77,7 @@ class EditorSendingOverlay {
   Widget _build() {
     return ValueListenableBuilder<SendingStatus>(
       valueListenable: status,
-      builder: (BuildContext context, SendingStatus currentStatus, Widget child)
+      builder: (BuildContext context, SendingStatus currentStatus, Widget? child)
         => AnimatedOpacity(
           duration: Duration(milliseconds: 400),
           opacity: loadingOpacity,

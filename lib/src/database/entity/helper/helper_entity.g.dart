@@ -17,17 +17,17 @@ class HelperEntityAdapter extends TypeAdapter<HelperEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HelperEntity(
-      id: fields[0] as String,
-      name: fields[3] as String,
-      type: fields[5] as HelperType,
-      triggerType: fields[6] as HelperTriggerType,
-      creationDate: fields[1] as DateTime,
-      lastUpdateDate: fields[2] as DateTime,
-      priority: fields[4] as int,
-      helperBorders: (fields[11] as List)?.cast<HelperBorderEntity>(),
-      helperImages: (fields[12] as List)?.cast<HelperImageEntity>(),
-      helperTexts: (fields[13] as List)?.cast<HelperTextEntity>(),
-      helperBoxes: (fields[14] as List)?.cast<HelperBoxEntity>(),
+      id: fields[0] as String?,
+      name: fields[3] as String?,
+      type: fields[5] as HelperType?,
+      triggerType: fields[6] as HelperTriggerType?,
+      creationDate: fields[1] as DateTime?,
+      lastUpdateDate: fields[2] as DateTime?,
+      priority: fields[4] as int?,
+      helperBorders: (fields[11] as List?)?.cast<HelperBorderEntity>(),
+      helperImages: (fields[12] as List?)?.cast<HelperImageEntity>(),
+      helperTexts: (fields[13] as List?)?.cast<HelperTextEntity>(),
+      helperBoxes: (fields[14] as List?)?.cast<HelperBoxEntity>(),
     );
   }
 
@@ -81,11 +81,11 @@ class HelperBorderEntityAdapter extends TypeAdapter<HelperBorderEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HelperBorderEntity(
-      id: fields[0] as int,
-      color: fields[1] as String,
-      key: fields[2] as String,
-      style: fields[3] as String,
-      width: fields[4] as double,
+      id: fields[0] as int?,
+      color: fields[1] as String?,
+      key: fields[2] as String?,
+      style: fields[3] as String?,
+      width: fields[4] as double?,
     );
   }
 
@@ -127,9 +127,9 @@ class HelperImageEntityAdapter extends TypeAdapter<HelperImageEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HelperImageEntity(
-      id: fields[0] as int,
-      key: fields[1] as String,
-      url: fields[2] as String,
+      id: fields[0] as int?,
+      key: fields[1] as String?,
+      url: fields[2] as String?,
     );
   }
 
@@ -167,13 +167,13 @@ class HelperTextEntityAdapter extends TypeAdapter<HelperTextEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HelperTextEntity(
-      id: fields[0] as int,
-      fontColor: fields[1] as String,
-      fontFamily: fields[2] as String,
-      fontWeight: fields[3] as String,
-      key: fields[4] as String,
-      value: fields[5] as String,
-      fontSize: fields[6] as int,
+      id: fields[0] as int?,
+      fontColor: fields[1] as String?,
+      fontFamily: fields[2] as String?,
+      fontWeight: fields[3] as String?,
+      key: fields[4] as String?,
+      value: fields[5] as String?,
+      fontSize: fields[6] as int?,
     );
   }
 
@@ -219,9 +219,9 @@ class HelperBoxEntityAdapter extends TypeAdapter<HelperBoxEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HelperBoxEntity(
-      id: fields[0] as int,
-      backgroundColor: fields[1] as String,
-      key: fields[2] as String,
+      id: fields[0] as int?,
+      backgroundColor: fields[1] as String?,
+      key: fields[2] as String?,
     );
   }
 

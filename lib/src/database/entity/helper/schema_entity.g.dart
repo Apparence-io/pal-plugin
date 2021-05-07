@@ -17,9 +17,9 @@ class SchemaEntityAdapter extends TypeAdapter<SchemaEntity> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SchemaEntity(
-      projectId: fields[0] as String,
-      groups: (fields[1] as List)?.cast<HelperGroupEntity>(),
-      schemaVersion: fields[2] as int,
+      projectId: fields[0] as String?,
+      groups: (fields[1] as List?)?.cast<HelperGroupEntity>(),
+      schemaVersion: fields[2] as int?,
     );
   }
 

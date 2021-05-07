@@ -7,12 +7,12 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/pickers/font_editor/pickers/font_family_picker/font_family_picker_viewmodel.dart';
 
 class FontFamilyPickerArguments {
-  String fontFamilyName;
-  String fontWeightName;
+  String? fontFamilyName;
+  String? fontWeightName;
 
   FontFamilyPickerArguments({
-    @required this.fontFamilyName,
-    @required this.fontWeightName,
+    required this.fontFamilyName,
+    required this.fontWeightName,
   });
 }
 
@@ -21,13 +21,13 @@ abstract class FontFamilyPickerView {}
 /// Use this picker with FontEditor dialog only
 class FontFamilyPickerPage extends StatelessWidget
     implements FontFamilyPickerView {
-  final FontFamilyPickerArguments arguments;
-  final FontFamilyPickerLoader loader;
+  final FontFamilyPickerArguments? arguments;
+  final FontFamilyPickerLoader? loader;
 
   FontFamilyPickerPage({
-    Key key,
+    Key? key,
     this.loader,
-    @required this.arguments,
+    required this.arguments,
   });
 
   final _mvvmPageBuilder =
@@ -85,13 +85,13 @@ class FontFamilyPickerPage extends StatelessWidget
             ),
           ),
           Expanded(
-            child: !model.isLoading
+            child: !model.isLoading!
                 ? ListView.builder(
                     key: ValueKey('pal_FontFamilyPicker_ListView'),
                     shrinkWrap: true,
-                    itemCount: model.fonts.length,
+                    itemCount: model.fonts!.length,
                     itemBuilder: (context, index) {
-                      final String key = model.fonts[index];
+                      final String key = model.fonts![index];
 
                       TextStyle originalFontStyle = GoogleFonts.getFont(key);
                       TextStyle modifiedFontStyle = originalFontStyle.merge(
@@ -110,7 +110,7 @@ class FontFamilyPickerPage extends StatelessWidget
                                 Icons.check,
                                 key: ValueKey(
                                     'pal_FontFamilyPicker_ListView_ListTile_Check$index'),
-                                color: PalTheme.of(context).colors.dark,
+                                color: PalTheme.of(context)!.colors.dark,
                               )
                             : null,
                         onTap: () {
@@ -126,12 +126,12 @@ class FontFamilyPickerPage extends StatelessWidget
                     child: CircularProgressIndicator(),
                   ),
           ),
-          if (!model.isLoading)
+          if (!model.isLoading!)
             Padding(
               key: ValueKey('pal_FontFamilyPicker_ResultsLabel'),
               padding: const EdgeInsets.only(bottom: 20.0, top: 20.0),
               child: Text(
-                '${model.fonts.length.toString()} ${(model.fonts.length <= 1 ? 'result' : 'results')}',
+                '${model.fonts!.length.toString()} ${(model.fonts!.length <= 1 ? 'result' : 'results')}',
               ),
             ),
         ],

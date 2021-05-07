@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
@@ -12,16 +13,16 @@ import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 class AnchoredFullscreenHelperViewModel extends HelperViewModel {
   /// Elements on user page
-  Map<String, WidgetElementModel> userPageElements;
+  Map<String, WidgetElementModel>? userPageElements;
 
   /// Rect where we will write our helper text
-  Rect writeArea;
+  Rect? writeArea;
 
   /// background color notifier
   EditableBoxFormData backgroundBox;
 
   /// enables the save button
-  ValueNotifier<bool> canValidate;
+  ValueNotifier<bool>? canValidate;
 
   /// titleField notifier including style
   EditableTextFormData titleField;
@@ -32,28 +33,28 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
   /// buttons textNotifiers
   EditableButtonFormData positivBtnField, negativBtnField;
 
-  ValueNotifier<EditableData> currentEditableItemNotifier;
+  ValueNotifier<EditableData?> currentEditableItemNotifier;
 
   /// true if user has validated the current anchor selection
   bool anchorValidated;
 
-  bool loading;
+  bool? loading;
 
   AnchoredFullscreenHelperViewModel._(
-      {String id,
-      String name,
-      String groupId,
-      String groupName,
-      HelperTriggerType triggerType,
-      int priority,
-      String minVersionCode,
-      String maxVersionCode,
-      HelperTheme helperTheme,
-      EditableBoxFormData backgroundBox,
-      HelperTextViewModel titleViewModel,
-      HelperTextViewModel descriptionLabel,
-      HelperTextViewModel positivButtonLabel,
-      HelperTextViewModel negativButtonLabel,
+      {String? id,
+      String? name,
+      String? groupId,
+      String? groupName,
+      HelperTriggerType? triggerType,
+      int? priority,
+      String? minVersionCode,
+      String? maxVersionCode,
+      HelperTheme? helperTheme,
+      EditableBoxFormData? backgroundBox,
+      HelperTextViewModel? titleViewModel,
+      HelperTextViewModel? descriptionLabel,
+      HelperTextViewModel? positivButtonLabel,
+      HelperTextViewModel? negativButtonLabel,
       this.anchorValidated = false})
       : titleField = EditableTextFormData(
           titleViewModel?.id,
@@ -99,7 +100,7 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
             EditableBoxFormData(
                 backgroundBox?.id, AnchoredscreenHelperKeys.BACKGROUND_KEY,
                 backgroundColor: Colors.lightGreenAccent.withOpacity(.6)),
-        currentEditableItemNotifier = ValueNotifier<EditableData>(null),
+        currentEditableItemNotifier = ValueNotifier<EditableData?>(null),
         super(
             id: id,
             helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
@@ -115,13 +116,12 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
             ));
 
   /// the current selected element to show anchor
-  MapEntry<String, WidgetElementModel> get selectedAnchor =>
-      userPageElements?.entries
-          ?.firstWhere((element) => element.value.selected, orElse: () => null);
+  MapEntry<String, WidgetElementModel>? get selectedAnchor =>
+      userPageElements?.entries.firstWhereOrNull((element) => element.value.selected);
 
   /// the current selected element's key to show anchor
-  String get selectedAnchorKey => backgroundBox.key ?? userPageElements.entries
-      .firstWhere((element) => element.value.selected, orElse: () => null)
+  String? get selectedAnchorKey => backgroundBox.key ?? userPageElements!.entries
+      .firstWhereOrNull((element) => element.value.selected)
       ?.key;
 
   /// [userPageElements] without selected anchor
@@ -138,40 +138,41 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
       minVersionCode: model.helperGroup?.minVersionCode,
       maxVersionCode: model.helperGroup?.maxVersionCode,
       triggerType: model.helperGroup?.triggerType,
-      groupId: model.helperGroup.id,
-      groupName: model.helperGroup.name,
+      groupId: model.helperGroup!.id,
+      groupName: model.helperGroup!.name,
     );
   }
 
   factory AnchoredFullscreenHelperViewModel.fromEntity(HelperEntity entity) {
     return AnchoredFullscreenHelperViewModel._(
-      id: entity?.id,
-      name: entity?.name,
+      id: entity.id,
+      name: entity.name,
       priority: entity.priority,
       helperTheme: null,
-      triggerType: entity?.triggerType,
+      triggerType: entity.triggerType,
       // TODO : Finish factory for multiple boxes
       backgroundBox: entity.helperBoxes == null
           ? null
           : EditableBoxFormData(
-              entity.helperBoxes?.first?.id, entity.helperBoxes?.first?.key,
-              backgroundColor:
-                  HexColor?.fromHex(entity.helperBoxes.first.backgroundColor)),
+              entity.helperBoxes?.first.id, 
+              entity.helperBoxes?.first.key,
+              backgroundColor: HexColor.fromHex(entity.helperBoxes!.first.backgroundColor!)
+            ),
       titleViewModel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
-        entity?.helperTexts,
+        entity.helperTexts!,
       ),
       descriptionLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.DESCRIPTION_KEY,
-        entity?.helperTexts,
+        entity.helperTexts!,
       ),
       positivButtonLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.POSITIV_KEY,
-        entity?.helperTexts,
+        entity.helperTexts!,
       ),
       negativButtonLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
-        entity?.helperTexts,
+        entity.helperTexts!,
       ),
     );
   }
@@ -181,9 +182,9 @@ class AnchoredFullscreenHelperViewModel extends HelperViewModel {
 }
 
 class WidgetElementModel {
-  final Rect rect;
-  final Offset offset;
-  bool selected;
+  final Rect? rect;
+  final Offset? offset;
+  late bool selected;
 
   WidgetElementModel(this.rect, this.offset) {
     selected = false;

@@ -29,23 +29,21 @@ class UserUpdateHelperPage extends StatelessWidget
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
   final List<HelperTextViewModel> changelogLabels;
-  final HelperButtonViewModel thanksButtonLabel;
-  final PackageVersionReader packageVersionReader;
-  final HelperImageViewModel helperImageViewModel;
+  final HelperButtonViewModel? thanksButtonLabel;
+  final PackageVersionReader? packageVersionReader;
+  final HelperImageViewModel? helperImageViewModel;
   final Function onPositivButtonTap;
 
   UserUpdateHelperPage({
-    Key key,
-    @required this.helperBoxViewModel,
-    @required this.titleLabel,
-    @required this.changelogLabels,
-    @required this.onPositivButtonTap,
+    Key? key,
+    required this.helperBoxViewModel,
+    required this.titleLabel,
+    required this.changelogLabels,
+    required this.onPositivButtonTap,
     this.helperImageViewModel,
     this.thanksButtonLabel,
     this.packageVersionReader,
-  })  : assert(helperBoxViewModel != null),
-        assert(titleLabel != null),
-        assert(changelogLabels != null);
+  });
 
   final _mvvmPageBuilder =
       MVVMPageBuilder<UserUpdateHelperPresenter, UserUpdateHelperModel>();
@@ -88,34 +86,34 @@ class UserUpdateHelperPage extends StatelessWidget
         ];
       },
       animListener: (context, presenter, model) {
-        if (model.changelogCascadeAnimation) {
+        if (model.changelogCascadeAnimation!) {
           this.playAnimation(
             context,
-            model.isReversedAnimations,
+            model.isReversedAnimations!,
             0,
             presenter.onCascadeAnimationEnd,
           );
         }
-        if (model.progressBarAnimation) {
+        if (model.progressBarAnimation!) {
           this.playAnimation(
             context,
-            model.isReversedAnimations,
+            model.isReversedAnimations!,
             1,
             presenter.onProgressBarAnimationEnd,
           );
         }
-        if (model.imageAnimation) {
+        if (model.imageAnimation!) {
           this.playAnimation(
             context,
-            model.isReversedAnimations,
+            model.isReversedAnimations!,
             2,
             presenter.onImageAnimationEnd,
           );
         }
-        if (model.titleAnimation) {
+        if (model.titleAnimation!) {
           this.playAnimation(
             context,
-            model.isReversedAnimations,
+            model.isReversedAnimations!,
             3,
             presenter.onTitleAnimationEnd,
           );
@@ -123,7 +121,7 @@ class UserUpdateHelperPage extends StatelessWidget
       },
       presenterBuilder: (context) => UserUpdateHelperPresenter(
         this,
-        packageVersionReader ?? UserInjector.of(context).packageVersionReader,
+        packageVersionReader ?? UserInjector.of(context)!.packageVersionReader,
       ),
       builder: (context, presenter, model) {
         return this._buildPage(context, presenter, model);
@@ -139,17 +137,17 @@ class UserUpdateHelperPage extends StatelessWidget
     return AnimatedOpacity(
       duration: Duration(milliseconds: 500),
       curve: Curves.fastOutSlowIn,
-      opacity: model.helperOpacity,
+      opacity: model.helperOpacity!,
       child: Scaffold(
         key: ValueKey('pal_UserUpdateHelperWidget_Scaffold'),
-        backgroundColor: helperBoxViewModel?.backgroundColor,
+        backgroundColor: helperBoxViewModel.backgroundColor,
         body: SafeArea(
           child: Container(
             width: double.infinity,
             child: Container(
               child: Column(
                 children: [
-                  if (helperImageViewModel?.url != null && helperImageViewModel.url.length > 0)
+                  if (helperImageViewModel?.url != null && helperImageViewModel!.url!.length > 0)
                     Flexible(
                       key: ValueKey('pal_UserUpdateHelperWidget_Icon'),
                       flex: 4,
@@ -187,7 +185,7 @@ class UserUpdateHelperPage extends StatelessWidget
             borderRadius: BorderRadius.circular(15.0),
             child: CachedNetworkImage(
               key: ValueKey('pal_UserUpdateHelperWidget_Image'),
-              imageUrl: helperImageViewModel?.url,
+              imageUrl: helperImageViewModel?.url ?? '',
               fit: BoxFit.contain,
               placeholder: (context, url) =>
                   Center(child: CircularProgressIndicator()),
@@ -198,7 +196,7 @@ class UserUpdateHelperPage extends StatelessWidget
               },
             ),
           ),
-          animationController: context.animationsControllers[2],
+          animationController: context.animationsControllers![2],
         ),
       ),
     );
@@ -212,23 +210,23 @@ class UserUpdateHelperPage extends StatelessWidget
       width: double.infinity,
       child: AnimatedTranslateWidget(
         position: Tween<Offset>(begin: Offset(-1.0, 0.0), end: Offset(0, 0)),
-        animationController: context.animationsControllers[3],
+        animationController: context.animationsControllers![3],
         widget: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
-                titleLabel?.text ?? 'New application update',
+                titleLabel.text ?? 'New application update',
                 key: ValueKey('pal_UserUpdateHelperWidget_AppSummary_Title'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: titleLabel?.fontSize ?? 27.0,
-                  fontWeight: titleLabel?.fontWeight ?? FontWeight.normal,
-                  color: titleLabel?.fontColor ??
-                      PalTheme.of(context.buildContext).colors.light,
+                  fontSize: titleLabel.fontSize ?? 27.0,
+                  fontWeight: titleLabel.fontWeight ?? FontWeight.normal,
+                  color: titleLabel.fontColor ??
+                      PalTheme.of(context.buildContext)!.colors.light,
                 ).merge(
-                  GoogleFonts.getFont(titleLabel?.fontFamily ?? 'Montserrat'),
+                  GoogleFonts.getFont(titleLabel.fontFamily ?? 'Montserrat'),
                 ),
               ),
             ),
@@ -266,8 +264,8 @@ class UserUpdateHelperPage extends StatelessWidget
         ),
         child: RaisedButton(
           key: ValueKey('pal_UserUpdateHelperWidget_ThanksButton_Raised'),
-          color: PalTheme.of(context.buildContext).colors.dark,
-          onPressed: model.showThanksButton
+          color: PalTheme.of(context.buildContext)!.colors.dark,
+          onPressed: model.showThanksButton!
               ? () {
                   HapticFeedback.selectionClick();
                   presenter.onThanksButtonCallback();
@@ -283,7 +281,7 @@ class UserUpdateHelperPage extends StatelessWidget
               child: child,
               scale: animation,
             ),
-            child: model.showThanksButton
+            child: model.showThanksButton!
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: Text(
@@ -302,7 +300,7 @@ class UserUpdateHelperPage extends StatelessWidget
                     ),
                   )
                 : AnimatedProgressBar(
-                    animationController: context.animationsControllers[1],
+                    animationController: context.animationsControllers![1],
                   ),
           ),
         ),
@@ -343,7 +341,7 @@ class UserUpdateHelperPage extends StatelessWidget
         ReleaseNoteCell(
           index: index++,
           customLabel: label,
-          animationController: context.animationsControllers[0],
+          animationController: context.animationsControllers![0],
           positionCurve: Interval(
             animationStart,
             animationEnd,
@@ -368,20 +366,16 @@ class UserUpdateHelperPage extends StatelessWidget
     Function callback,
   ) {
     if (isReversed) {
-      context.animationsControllers[index]
+      context.animationsControllers![index]
           .reverse()
           .then((value) => callback());
     } else {
-      context.animationsControllers[index]
+      context.animationsControllers![index]
           .forward()
           .then((value) => callback());
     }
   }
 
   @override
-  void onThanksButtonCallback() {
-    if (this.onPositivButtonTap != null) {
-      this.onPositivButtonTap();
-    }
-  }
+  void onThanksButtonCallback() => onPositivButtonTap();
 }

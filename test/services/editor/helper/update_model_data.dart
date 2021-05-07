@@ -4,7 +4,7 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
 
-genUpdateModelData({HelperGroupConfig groupConfig})
+genUpdateModelData({HelperGroupConfig? groupConfig})
   => CreateUpdateHelper(
     helperGroup: groupConfig ?? HelperGroupConfig(
       id: "3872983729JJF"
@@ -51,11 +51,11 @@ genExpectedUpdateEntity(CreateUpdateHelper args)
     priority: 1,
     helperTexts: [
       HelperTextEntity(
-        value: args.title.text,
-        fontColor: args.title.fontColor,
-        fontWeight: args.title.fontWeight,
-        fontSize: args.title.fontSize,
-        fontFamily: args.title.fontFamily,
+        value: args.title!.text,
+        fontColor: args.title!.fontColor,
+        fontWeight: args.title!.fontWeight,
+        fontSize: args.title!.fontSize,
+        fontFamily: args.title!.fontFamily,
         key: UpdatescreenHelperKeys.TITLE_KEY,
       ),
       HelperTextEntity(
@@ -84,6 +84,6 @@ genExpectedUpdateEntity(CreateUpdateHelper args)
     helperBoxes: [
       HelperBoxEntity(
         key: FullscreenHelperKeys.BACKGROUND_KEY,
-        backgroundColor: args.bodyBox.color,
+        backgroundColor: args.bodyBox!.color,
       )
     ]);

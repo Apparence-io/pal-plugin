@@ -3,20 +3,20 @@ import 'package:pal/src/ui/shared/widgets/bouncing_widget.dart';
 
 // TODO: COnvert to stateless
 class CircleIconButton extends StatefulWidget {
-  final Color backgroundColor;
-  final Color splashColor;
+  final Color? backgroundColor;
+  final Color? splashColor;
   final Color loadingColor;
   final num radius;
-  final Icon icon;
-  final BoxShadow shadow;
+  final Icon? icon;
+  final BoxShadow? shadow;
   final bool displayShadow;
-  final Function onTapCallback;
-  final bool isLoading;
-  final BorderSide borderSide;
-  final Widget animatedIcon;
+  final Function? onTapCallback;
+  final bool? isLoading;
+  final BorderSide? borderSide;
+  final Widget? animatedIcon;
 
   const CircleIconButton({
-    Key key,
+    Key? key,
     this.backgroundColor = Colors.blue,
     this.loadingColor = Colors.white,
     this.splashColor,
@@ -31,17 +31,17 @@ class CircleIconButton extends StatefulWidget {
   }) : super(key: key);
 
   factory CircleIconButton.animatedIcon({
-    Key key,
-    @required AnimatedIcon animatedIcon,
-    Color backgroundColor = Colors.blue,
-    Color splashColor,
+    Key? key,
+    required AnimatedIcon animatedIcon,
+    Color? backgroundColor = Colors.blue,
+    Color? splashColor,
     Color loadingColor = Colors.white,
     num radius = 20.0,
-    BoxShadow shadow,
+    BoxShadow? shadow,
     bool displayShadow = true,
-    Function onTapCallback,
+    Function? onTapCallback,
     bool isLoading = false,
-    BorderSide borderSide,
+    BorderSide? borderSide,
   }) {
     return CircleIconButton(
       key: key,
@@ -59,17 +59,17 @@ class CircleIconButton extends StatefulWidget {
   }
 
   factory CircleIconButton.icon({
-    Key key,
-    @required final Icon icon,
+    Key? key,
+    required final Icon icon,
     Color backgroundColor = Colors.blue,
-    Color splashColor,
+    Color? splashColor,
     Color loadingColor = Colors.white,
     num radius = 20.0,
-    BoxShadow shadow,
+    BoxShadow? shadow,
     bool displayShadow = true,
-    Function onTapCallback,
+    Function? onTapCallback,
     bool isLoading = false,
-    BorderSide borderSide,
+    BorderSide? borderSide,
   }) {
     return CircleIconButton(
       key: key,
@@ -94,12 +94,12 @@ class _CircleIconButtonState extends State<CircleIconButton> {
   @override
   Widget build(BuildContext context) {
     return BouncingWidget(
-      onTap: widget.onTapCallback,
+      onTap: widget.onTapCallback as void Function()?,
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: this.widget.borderSide != null
-              ? Border.fromBorderSide(this.widget.borderSide)
+              ? Border.fromBorderSide(this.widget.borderSide!)
               : null,
           color: Colors.transparent,
           boxShadow: widget.displayShadow
@@ -121,7 +121,7 @@ class _CircleIconButtonState extends State<CircleIconButton> {
             child: SizedBox(
               width: widget.radius * 2,
               height: widget.radius * 2,
-              child: (widget.isLoading)
+              child: widget.isLoading!
                   ? Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: CircularProgressIndicator(
@@ -137,6 +137,6 @@ class _CircleIconButtonState extends State<CircleIconButton> {
     );
   }
 
-  Widget _buildIcon() =>
+  Widget? _buildIcon() =>
       (widget.icon != null) ? widget.icon : widget.animatedIcon;
 }

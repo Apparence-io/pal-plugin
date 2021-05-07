@@ -19,22 +19,24 @@ abstract class GroupDetailsView {
   void showSucess(String text);
 
   void showEditor(
-      String routeName, String helperId, String groupId, HelperType type);
+      String? routeName, String helperId, String? groupId, HelperType type);
 
   void pop();
 
   void previewHelper(String id) {}
+
+  Future<bool> showGroupDeleteModal();
 }
 
 class GroupDetailsPage extends StatelessWidget
     with SnackbarMixin
     implements GroupDetailsView {
-  final String groupId;
-  final String routeName;
-  final PageStep page;
+  final String? groupId;
+  final String? routeName;
+  final PageStep? page;
 
   GroupDetailsPage(
-      {Key key, @required this.groupId, @required this.routeName, this.page})
+      {Key? key, required this.groupId, required this.routeName, this.page})
       : super(key: key);
 
   final _mvvmBuilder =
@@ -53,9 +55,9 @@ class GroupDetailsPage extends StatelessWidget
           GroupDetailsPageModel(
               this.groupId, GlobalKey<FormState>(), this.routeName, page),
           this,
-          helperService: EditorInjector.of(context).helperService,
-          groupService: EditorInjector.of(context).helperGroupService,
-          versionService: EditorInjector.of(context).versionEditorService),
+          helperService: EditorInjector.of(context)!.helperService,
+          groupService: EditorInjector.of(context)!.helperGroupService,
+          versionService: EditorInjector.of(context)!.versionEditorService),
       builder: (context, presenter, model) =>
           _buildPage(context, presenter, model),
     );
@@ -72,9 +74,9 @@ class GroupDetailsPage extends StatelessWidget
           return true;
         },
         child: Theme(
-          data: PalTheme.of(context.buildContext).buildTheme().copyWith(
+          data: PalTheme.of(context.buildContext)!.buildTheme().copyWith(
                 dividerTheme: DividerThemeData(color: Colors.transparent),
-                accentColor: PalTheme.of(context.buildContext).colors.color1,
+                accentColor: PalTheme.of(context.buildContext)!.colors.color1,
               ),
           child: Scaffold(
             key: _scaffoldKey,
@@ -86,10 +88,10 @@ class GroupDetailsPage extends StatelessWidget
               leading: GestureDetector(
                 onTap: () {
                   Navigator.pop(context.buildContext);
-                  EditorInjector.of(context.buildContext)
+                  EditorInjector.of(context.buildContext)!
                       .palEditModeStateService
-                      .showHelpersList(EditorInjector.of(context.buildContext)
-                          .hostedAppNavigatorKey
+                      .showHelpersList(EditorInjector.of(context.buildContext)!
+                          .hostedAppNavigatorKey!
                           .currentContext);
                 },
                 child: Icon(
@@ -151,7 +153,7 @@ class GroupDetailsPage extends StatelessWidget
                   ],
                   icon: Icon(Icons.more_horiz),
                   offset: Offset(0, 24),
-                  onSelected: (val) => presenter.deleteGroup(),
+                  onSelected: (dynamic val) => presenter.onDeleteTap(),
                 )
               ],
               // *******MENU BUTTON
@@ -196,34 +198,34 @@ class GroupDetailsPage extends StatelessWidget
 
   @override
   void showEditor(
-      String routeName, String helperId, String groupId, HelperType type) {
+      String? routeName, String helperId, String? groupId, HelperType type) {
     // POP CURRENT ROUTE, THE OVERLAY MUST BE ON TOP OF CLIENT ROUTE
-    Navigator.pop(_scaffoldKey.currentContext);
-    var navKey = EditorInjector.of(this._scaffoldKey.currentContext)
+    Navigator.pop(_scaffoldKey.currentContext!);
+    var navKey = EditorInjector.of(this._scaffoldKey.currentContext!)!
         .hostedAppNavigatorKey;
     EditorRouter router = EditorRouter(navKey);
     // SHOWING EDITOR HELPER WITH PAL CONTEXT IN ORDER TO RETURN TO THIS PAGE
     router.editHelper(routeName, helperId, type, groupId,
-        con: EditorInjector.of(this._scaffoldKey.currentContext)
-            .palNavigatorKey
+        con: EditorInjector.of(this._scaffoldKey.currentContext!)!
+            .palNavigatorKey!
             .currentContext);
   }
 
   @override
   void pop() {
-    Navigator.pop(_scaffoldKey.currentContext);
-    EditorInjector.of(_scaffoldKey.currentContext)
+    Navigator.pop(_scaffoldKey.currentContext!);
+    EditorInjector.of(_scaffoldKey.currentContext!)!
         .palEditModeStateService
-        .showHelpersList(EditorInjector.of(_scaffoldKey.currentContext)
-            .hostedAppNavigatorKey
+        .showHelpersList(EditorInjector.of(_scaffoldKey.currentContext!)!
+            .hostedAppNavigatorKey!
             .currentContext);
   }
 
   @override
   void previewHelper(String id) async {
-    Navigator.pop(_scaffoldKey.currentContext);
+    Navigator.pop(_scaffoldKey.currentContext!);
     var navKey =
-        EditorInjector.of(this._scaffoldKey.currentContext).palNavigatorKey;
+        EditorInjector.of(this._scaffoldKey.currentContext!)!.palNavigatorKey!;
     EditorPreviewArguments arguments = EditorPreviewArguments(
         (context) => Navigator.of(context).pushReplacementNamed(
               '/editor/group/details',
@@ -235,9 +237,38 @@ class GroupDetailsPage extends StatelessWidget
             ),
         helperId: id);
     await Navigator.pushNamed(
-      navKey.currentContext,
+      navKey.currentContext!,
       '/editor/preview',
       arguments: arguments,
+    );
+  }
+
+  @override
+  Future<bool> showGroupDeleteModal() async {
+    return await showDialog(
+      context: _scaffoldKey.currentContext!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmation'),
+          content: Text('Do you really want to remove this group?'),
+          actions: <Widget>[
+            TextButton(
+              key: ValueKey('DeleteGroupConfirmationCancelButton'),
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              key: ValueKey('DeleteGroupConfirmationYesButton'),
+              child: Text('Delete', style: TextStyle(color: Colors.redAccent),),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

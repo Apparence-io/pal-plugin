@@ -3,15 +3,15 @@ import 'package:pal/src/theme.dart';
 
 class PageGroupsListItem extends StatelessWidget {
 
-  final String title, subtitle, version;
-  final PalThemeData palTheme;
+  final String? title, subtitle, version;
+  final PalThemeData? palTheme;
 
   PageGroupsListItem({
-    @required this.title, 
-    @required this.subtitle, 
-    @required this.version,  
-    @required this.palTheme,
-    Key key
+    required this.title, 
+    required this.subtitle, 
+    required this.version,  
+    required this.palTheme,
+    Key? key
   }) : super(key: key);
 
   @override
@@ -36,15 +36,15 @@ class PageGroupsListItem extends StatelessWidget {
           RichText(text: TextSpan(
             style: TextStyle(height: 1.5),
             children: <TextSpan>[
-              TextSpan(text: "$title" ?? "\nNo title found", style: _textStyle1),
-              TextSpan(text: "\n$subtitle" ?? "\nNo subtitle found", style: _textStyle2),
+              TextSpan(text: "$title", style: _textStyle1),
+              TextSpan(text: "\n$subtitle", style: _textStyle2),
             ]
           )),
           RichText(text: TextSpan(
             style: TextStyle(height: 1.4),
             children: <TextSpan>[
               TextSpan(text: "Versions", style: _textStyle3),
-              TextSpan(text: "\n$version" ?? "\n--", style: _textStyle2),
+              TextSpan(text: "\n$version", style: _textStyle2),
             ]
           ))
         ],
@@ -55,19 +55,19 @@ class PageGroupsListItem extends StatelessWidget {
   TextStyle get _textStyle1 => TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w400,
-    color: palTheme.colors.dark,
+    color: palTheme!.colors.dark,
   );
 
   TextStyle get _textStyle2 => TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w300,
-    color: palTheme.colors.dark,
+    color: palTheme!.colors.dark,
   );
 
   TextStyle get _textStyle3 => TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.bold,
-    color: palTheme.colors.dark,
+    color: palTheme!.colors.dark,
   );
 
   

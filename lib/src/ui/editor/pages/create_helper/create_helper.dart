@@ -19,8 +19,8 @@ import '../../../../pal_navigator_observer.dart';
 import 'steps/select_group_position/helper_position_setup.dart';
 
 class CreateHelperPageArguments {
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
-  final String pageId;
+  final GlobalKey<NavigatorState>? hostedAppNavigatorKey;
+  final String? pageId;
 
   CreateHelperPageArguments(
     this.hostedAppNavigatorKey,
@@ -30,7 +30,7 @@ class CreateHelperPageArguments {
 
 abstract class CreateHelperView {
 
-  void launchHelperEditor(final String pageRoute, final CreateHelperModel model);
+  void launchHelperEditor(final String? pageRoute, final CreateHelperModel model);
 
   void changeStep(int index);
 
@@ -43,18 +43,18 @@ abstract class CreateHelperView {
 
 class CreateHelperPage extends StatelessWidget implements CreateHelperView {
 
-  final GlobalKey<NavigatorState> hostedAppNavigatorKey;
-  final PalRouteObserver routeObserver;
-  final String pageId;
-  final PackageVersionReader packageVersionReader;
-  final ProjectEditorService projectEditorService;
+  final GlobalKey<NavigatorState>? hostedAppNavigatorKey;
+  final PalRouteObserver? routeObserver;
+  final String? pageId;
+  final PackageVersionReader? packageVersionReader;
+  final ProjectEditorService? projectEditorService;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final GlobalKey<NavigatorState> _nestedNavigationKey = GlobalKey<NavigatorState>();
 
 
   CreateHelperPage({
-    Key key,
+    Key? key,
     this.hostedAppNavigatorKey,
     this.packageVersionReader,
     this.pageId,
@@ -72,9 +72,9 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       presenterBuilder: (context) => CreateHelperPresenter(
         this,
         this.pageId,
-        routeObserver: routeObserver ?? EditorInjector.of(context).routeObserver,
-        packageVersionReader: packageVersionReader ?? EditorInjector.of(context).packageVersionReader,
-        projectEditorService: projectEditorService ?? EditorInjector.of(context).projectEditorService
+        routeObserver: routeObserver ?? EditorInjector.of(context)!.routeObserver,
+        packageVersionReader: packageVersionReader ?? EditorInjector.of(context)!.packageVersionReader,
+        projectEditorService: projectEditorService ?? EditorInjector.of(context)!.projectEditorService
       ),
       builder: (context, presenter, model)
         => Scaffold(
@@ -83,12 +83,12 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
             elevation: 0,
             backgroundColor: Colors.transparent,
             iconTheme: IconThemeData(
-              color: PalTheme.of(context.buildContext).colors.dark,
+              color: PalTheme.of(context.buildContext)!.colors.dark,
             ),
             title: Text(
               'Create new helper',
               style: TextStyle(
-                color: PalTheme.of(context.buildContext).colors.dark,
+                color: PalTheme.of(context.buildContext)!.colors.dark,
               ),
             ),
           ),
@@ -124,7 +124,7 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
                 routes: {
                   'create/new_helper_group': (context) => CreateHelperGroup(
                     triggerTypes: model.triggerTypes,
-                    defaultTriggerType: model.triggerTypes.first,
+                    defaultTriggerType: model.triggerTypes!.first,
                     helperNameValidator: presenter.checkHelperGroupName,
                     onTriggerValueSelected: presenter.selectHelperGroupTrigger,
                     onChangedNameText: presenter.onChangedHelperGroupName,
@@ -181,8 +181,9 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          (model?.step?.value != null)
-              ? model.stepsTitle[model?.step?.value]
+          // model.step?.value.toString() ?? '',
+          (model.step?.value != null)
+              ? model.stepsTitle![model.step!.value]
               : '',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -204,17 +205,17 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
     final CreateHelperPresenter presenter,
   ) {
     return ValueListenableBuilder<bool>(
-      valueListenable: model.isFormValid,
+      valueListenable: model.isFormValid!,
       builder: (context, value, child) => RaisedButton(
         key: ValueKey('palCreateHelperNextButton'),
-        disabledColor: PalTheme.of(context).colors.color4,
+        disabledColor: PalTheme.of(context)!.colors.color4,
         child: Text(
           'Next',
           style: TextStyle(
             color: Colors.white,
           ),
         ),
-        color: PalTheme.of(context).colors.color1,
+        color: PalTheme.of(context)!.colors.color1,
         onPressed: (value) ? presenter.incrementStep : null,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
@@ -224,10 +225,10 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
   }
 
   @override
-  void launchHelperEditor(final String pageRoute, final CreateHelperModel model) {
+  void launchHelperEditor(final String? pageRoute, final CreateHelperModel model) {
     new EditorRouter(hostedAppNavigatorKey).createHelper(pageRoute, model);
     // Go back
-    Navigator.of(_scaffoldKey.currentContext).pop(true);
+    Navigator.of(_scaffoldKey.currentContext!).pop(true);
   }
 
   @override
@@ -238,19 +239,19 @@ class CreateHelperPage extends StatelessWidget implements CreateHelperView {
       "type",
       "theme",
     ];
-    Navigator.of(_nestedNavigationKey.currentContext).pushNamed('create/${routeNames[index]}');
+    Navigator.of(_nestedNavigationKey.currentContext!).pushNamed('create/${routeNames[index]}');
   }
 
   void showNewHelperGroupForm()
-    => Navigator.of(_nestedNavigationKey.currentContext).pushNamed('create/new_helper_group');
+    => Navigator.of(_nestedNavigationKey.currentContext!).pushNamed('create/new_helper_group');
 
   @override
   void popStep()
-    => Navigator.of(_nestedNavigationKey.currentContext).pop();
+    => Navigator.of(_nestedNavigationKey.currentContext!).pop();
 
   @override
   void showGroupHelpersPositions(Future<List<GroupHelperViewModel>> loadGroupHelpers, OnValidate onValidate) {
-   Navigator.of( _scaffoldKey.currentContext).push(new MaterialPageRoute(
+   Navigator.of( _scaffoldKey.currentContext!).push(new MaterialPageRoute(
       settings: RouteSettings(name: "helper_group_position"),
       builder: (context) => HelperPositionPage(
             helpersLoader: loadGroupHelpers,

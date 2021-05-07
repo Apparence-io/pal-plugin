@@ -7,7 +7,7 @@ import 'media_gallery_viewmodel.dart';
 class MediaGalleryLoader {
   final ProjectGalleryEditorService _projectGalleryEditorService;
   final _mediasOffset = 30;
-  Pageable<GraphicEntity> _pageable;
+  Pageable<GraphicEntity>? _pageable;
 
   MediaGalleryLoader(
     this._projectGalleryEditorService,
@@ -22,18 +22,16 @@ class MediaGalleryLoader {
   }
 
   Future<List<GraphicEntity>> loadMore() {
-    return _pageable != null && _pageable.last
+    return _pageable != null && _pageable!.last!
         ? Future.value([])
-        : this
-            ._projectGalleryEditorService
+        : _projectGalleryEditorService
             .getAllMedias(
-              _pageable == null ? 0 : ++_pageable.pageNumber,
+              _pageable == null ? 0 : _pageable!.pageNumber!,
               _mediasOffset,
             )
-            .then(
-            (res) {
+            .then((res) {
               _pageable = res;
-              return this._pageable.entities.toList();
+              return this._pageable!.entities!.toList();
             },
           );
   }

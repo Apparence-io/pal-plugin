@@ -4,14 +4,14 @@ import 'package:pal/src/database/entity/helper/helper_entity.dart';
 
 class EditorPreviewModel extends MVVMModel {
   // CORE ATTRIBUTES
-  final String helperId;
-  final Widget preBuiltHelper;
+  final String? helperId;
+  final Widget? preBuiltHelper;
   final Function onDismiss;
   //* BASE HELPER ENTITY FOR PREVIEW HELPER
-  HelperEntity helperEntity;
+  HelperEntity? helperEntity;
 
   // STATE ATTRIBUTES
-  bool loading;
+  late bool loading;
 
 
   EditorPreviewModel(this.helperId, this.onDismiss, this.preBuiltHelper);

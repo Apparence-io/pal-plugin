@@ -7,20 +7,20 @@ part 'page_user_visit_entity.g.dart';
 class HelperGroupUserVisitEntity {
 
   @HiveField(0)
-  String pageId;
+  String? pageId;
 
   @HiveField(1)
-  String helperGroupId;
+  String? helperGroupId;
 
   @HiveField(2)
-  DateTime visitDate;
+  DateTime? visitDate;
 
   @HiveField(3)
-  String visitVersion;
+  String? visitVersion;
 
   HelperGroupUserVisitEntity({
-    @required this.pageId, 
-    @required this.helperGroupId, 
-    @required this.visitDate, 
-    @required this.visitVersion});
+    required this.pageId, 
+    required this.helperGroupId, 
+    required this.visitDate, 
+    required this.visitVersion});
 }

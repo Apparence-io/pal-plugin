@@ -4,8 +4,8 @@ import 'package:pal/src/database/entity/helper/helper_type.dart';
 
 class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
   @override
-  HelperEntity parseMap(Map<String, dynamic> map) {
-    final HelperType helperType = map.containsKey('type') ? getHelperType(map['type']) : null;
+  HelperEntity parseMap(Map<String, dynamic>? map) {
+    final HelperType? helperType = map!.containsKey('type') ? getHelperType(map['type']) : null;
     return HelperEntity(
       id: map['id'],
       name: map['name'],
@@ -27,9 +27,9 @@ class HelperEntityAdapter extends GenericEntityAdapter<HelperEntity> {
 
 class HelperBorderEntityAdapter extends GenericEntityAdapter<HelperBorderEntity> {
   @override
-  HelperBorderEntity parseMap(Map<String, dynamic> map) {
+  HelperBorderEntity parseMap(Map<String, dynamic>? map) {
     return HelperBorderEntity(
-      id: map['id'],
+      id: map!['id'],
       key: map['key'],
       color: map['color'],
       style: map['style'],
@@ -40,9 +40,9 @@ class HelperBorderEntityAdapter extends GenericEntityAdapter<HelperBorderEntity>
 
 class HelperImageEntityAdapter extends GenericEntityAdapter<HelperImageEntity> {
   @override
-  HelperImageEntity parseMap(Map<String, dynamic> map) {
+  HelperImageEntity parseMap(Map<String, dynamic>? map) {
     return HelperImageEntity(
-      id: map['id'],
+      id: map!['id'],
       key: map['key'],
       url: map['url'],
     );
@@ -51,9 +51,9 @@ class HelperImageEntityAdapter extends GenericEntityAdapter<HelperImageEntity> {
 
 class HelperTextEntityAdapter extends GenericEntityAdapter<HelperTextEntity> {
   @override
-  HelperTextEntity parseMap(Map<String, dynamic> map) {
+  HelperTextEntity parseMap(Map<String, dynamic>? map) {
     return HelperTextEntity(
-      id: map['id'],
+      id: map!['id'],
       fontColor: map['fontColor'],
       fontFamily: map['fontFamily'],
       fontWeight: map['fontWeight'],
@@ -66,9 +66,9 @@ class HelperTextEntityAdapter extends GenericEntityAdapter<HelperTextEntity> {
 
 class HelperBoxEntityAdapter extends GenericEntityAdapter<HelperBoxEntity> {
   @override
-  HelperBoxEntity parseMap(Map<String, dynamic> map) {
+  HelperBoxEntity parseMap(Map<String, dynamic>? map) {
     return HelperBoxEntity(
-      id: map['id'],
+      id: map!['id'],
       key: map['key'],
       backgroundColor: map['backgroundColor'],
     );

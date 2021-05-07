@@ -10,9 +10,9 @@ class CreateHelperThemeStep extends StatelessWidget {
   final CreateHelperPresenter presenter;
 
   const CreateHelperThemeStep({
-    Key key,
-    @required this.model,
-    @required this.presenter,
+    Key? key,
+    required this.model,
+    required this.presenter,
   }) : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class CreateHelperThemeStep extends StatelessWidget {
       body: PreviewCardSwiperWidget(
         note: 'Note : you can customize colors / fonts… after this',
         onCardSelected: _checkFormValid,
-        cards: CreateHelperThemeStepModel.cards[model.selectedHelperType],
+        cards: CreateHelperThemeStepModel.cards[model.selectedHelperType!],
       ),
     );
   }
@@ -29,7 +29,7 @@ class CreateHelperThemeStep extends StatelessWidget {
   void _checkFormValid(int index) {
     bool isFormValid = false;
     for (PreviewThemeCard card
-        in CreateHelperThemeStepModel.cards[model.selectedHelperType]) {
+        in CreateHelperThemeStepModel.cards[model.selectedHelperType!]!) {
       if (card.isSelected) {
         isFormValid = true;
         model.selectedHelperTheme = card.helperTheme;

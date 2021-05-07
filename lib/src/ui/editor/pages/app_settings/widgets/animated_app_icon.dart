@@ -1,19 +1,19 @@
-import 'package:application_icon/application_icon.dart';
+// import 'package:application_icon/application_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:pal/src/theme.dart';
 import 'package:pal/src/ui/shared/widgets/circle_button.dart';
 
 class AnimatedAppIcon extends AnimatedWidget {
   final double radius;
-  final Function onTap;
-  final bool isSendingAppIcon;
+  final Function? onTap;
+  final bool? isSendingAppIcon;
   final AnimationController animationController;
   final bool testMode;
 
   AnimatedAppIcon({
-    Key key,
-    @required this.radius,
-    @required this.animationController,
+    Key? key,
+    required this.radius,
+    required this.animationController,
     this.onTap,
     this.isSendingAppIcon = false,
     this.testMode = false,
@@ -44,7 +44,7 @@ class AnimatedAppIcon extends AnimatedWidget {
         ),
         child: Stack(
           children: [
-            ClipOval(child: !testMode ? AppIconImage() : Container()),
+            // ClipOval(child: !testMode ? AppIconImage() : Container()),
             Align(
               alignment: Alignment.bottomRight,
               child: CircleIconButton(
@@ -53,10 +53,10 @@ class AnimatedAppIcon extends AnimatedWidget {
                 isLoading: isSendingAppIcon,
                 icon: Icon(
                   Icons.refresh,
-                  color: PalTheme.of(context).colors.light,
+                  color: PalTheme.of(context)!.colors.light,
                 ),
-                backgroundColor: PalTheme.of(context).colors.dark,
-                onTapCallback: !isSendingAppIcon
+                backgroundColor: PalTheme.of(context)!.colors.dark,
+                onTapCallback: !isSendingAppIcon!
                     ? onTap
                     : null,
               ),

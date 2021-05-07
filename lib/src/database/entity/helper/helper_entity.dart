@@ -8,37 +8,37 @@ part 'helper_entity.g.dart';
 @HiveType(typeId: 3)
 class HelperEntity with Comparable<HelperEntity> {
   @HiveField(0)
-  String id;
+  String? id;
 
   @HiveField(1)
-  DateTime creationDate;
+  DateTime? creationDate;
 
   @HiveField(2)
-  DateTime lastUpdateDate;
+  DateTime? lastUpdateDate;
 
   @HiveField(3)
-  String name;
+  String? name;
 
   @HiveField(4)
-  int priority;
+  int? priority;
 
   @HiveField(5)
-  HelperType type;
+  HelperType? type;
 
   @HiveField(6)
-  HelperTriggerType triggerType;
+  HelperTriggerType? triggerType;
 
   @HiveField(11)
-  List<HelperBorderEntity> helperBorders;
+  List<HelperBorderEntity>? helperBorders;
 
   @HiveField(12)
-  List<HelperImageEntity> helperImages;
+  List<HelperImageEntity>? helperImages;
 
   @HiveField(13)
-  List<HelperTextEntity> helperTexts;
+  List<HelperTextEntity>? helperTexts;
 
   @HiveField(14)
-  List<HelperBoxEntity> helperBoxes;
+  List<HelperBoxEntity>? helperBoxes;
 
   HelperEntity(
       {this.id,
@@ -63,21 +63,21 @@ class HelperEntity with Comparable<HelperEntity> {
       lastUpdateDate: from.lastUpdateDate,
       priority: from.priority,
       helperBorders:
-          from.helperBorders != null ? [...from.helperBorders] : null,
-      helperImages: from.helperImages != null ? [...from.helperImages] : null,
-      helperTexts: from.helperTexts != null ? [...from.helperTexts] : null,
-      helperBoxes: from.helperBoxes != null ? [...from.helperBoxes] : null,
+          from.helperBorders != null ? [...from.helperBorders!] : null,
+      helperImages: from.helperImages != null ? [...from.helperImages!] : null,
+      helperTexts: from.helperTexts != null ? [...from.helperTexts!] : null,
+      helperBoxes: from.helperBoxes != null ? [...from.helperBoxes!] : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'type': type?.toString()?.split('.')[1],
+        'type': type?.toString().split('.')[1],
         'creationDate':
-            creationDate != null ? creationDate.toIso8601String() : null,
+            creationDate != null ? creationDate!.toIso8601String() : null,
         'lastUpdateDate':
-            lastUpdateDate != null ? lastUpdateDate.toIso8601String() : null,
+            lastUpdateDate != null ? lastUpdateDate!.toIso8601String() : null,
         'priority': priority,
         'helperBorders': helperBorders,
         'helperImages': helperImages,
@@ -104,7 +104,7 @@ class HelperEntity with Comparable<HelperEntity> {
   @override
   int compareTo(HelperEntity other) {
     return other != null && this != null
-        ? other.priority < this.priority
+        ? other.priority! < this.priority!
             ? 1
             : -1
         : 0;
@@ -127,19 +127,19 @@ class HelperEntity with Comparable<HelperEntity> {
 @HiveType(typeId: 4)
 class HelperBorderEntity {
   @HiveField(0)
-  int id;
+  int? id;
 
   @HiveField(1)
-  String color;
+  String? color;
 
   @HiveField(2)
-  String key;
+  String? key;
 
   @HiveField(3)
-  String style;
+  String? style;
 
   @HiveField(4)
-  double width;
+  double? width;
 
   HelperBorderEntity({this.id, this.color, this.key, this.style, this.width});
 
@@ -181,13 +181,13 @@ class HelperBorderEntity {
 @HiveType(typeId: 5)
 class HelperImageEntity {
   @HiveField(0)
-  int id;
+  int? id;
 
   @HiveField(1)
-  String key;
+  String? key;
 
   @HiveField(2)
-  String url;
+  String? url;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -195,7 +195,7 @@ class HelperImageEntity {
         'url': url,
       };
 
-  HelperImageEntity({this.id, this.key, @required this.url});
+  HelperImageEntity({this.id, this.key, required this.url});
 
   HelperImageEntity copy() => HelperImageEntity(id: id, key: key, url: url);
 
@@ -214,25 +214,25 @@ class HelperImageEntity {
 @HiveType(typeId: 6)
 class HelperTextEntity {
   @HiveField(0)
-  int id;
+  int? id;
 
   @HiveField(1)
-  String fontColor;
+  String? fontColor;
 
   @HiveField(2)
-  String fontFamily;
+  String? fontFamily;
 
   @HiveField(3)
-  String fontWeight;
+  String? fontWeight;
 
   @HiveField(4)
-  String key;
+  String? key;
 
   @HiveField(5)
-  String value;
+  String? value;
 
   @HiveField(6)
-  int fontSize;
+  int? fontSize;
 
   HelperTextEntity({
     this.id,
@@ -289,17 +289,17 @@ class HelperTextEntity {
 @HiveType(typeId: 7)
 class HelperBoxEntity {
   @HiveField(0)
-  int id;
+  int? id;
 
   @HiveField(1)
-  String backgroundColor;
+  String? backgroundColor;
 
   @HiveField(2)
-  String key;
+  String? key;
 
   HelperBoxEntity({
     this.id,
-    @required this.backgroundColor,
+    required this.backgroundColor,
     this.key,
   });
 

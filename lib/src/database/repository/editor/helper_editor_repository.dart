@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pal/src/database/adapter/helper_entity_adapter.dart'
     as EntityAdapter;
@@ -15,31 +14,31 @@ class EditorHelperRepository extends BaseHttpRepository {
       EntityAdapter.HelperEntityAdapter();
 
   EditorHelperRepository({
-    @required HttpClient httpClient,
+    required HttpClient httpClient,
   }) : super(httpClient: httpClient);
 
-  Future<HelperEntity> createHelper(final String pageId, final String groupId,
+  Future<HelperEntity> createHelper(final String? pageId, final String? groupId,
       final HelperEntity createHelper) async {
     final payload = jsonEncode(createHelper);
     final Response response = await this.httpClient.post(
           Uri.parse('pal-business/editor/groups/$groupId/helpers'),
           body: payload,
         );
-    if (response == null || response.body == null)
+    if (response.body.isEmpty)
       throw new UnknownHttpError("NO_RESULT");
     return this._adapter.parse(response.body);
   }
 
-  Future<HelperEntity> updateHelper(
-    final String pageId,
+  Future<HelperEntity?> updateHelper(
+    final String? pageId,
     final HelperEntity updatedHelper,
   ) async {
     final payload = jsonEncode(updatedHelper);
     final Response response = await this.httpClient.put(
-        Uri.parse('pal-business/editor/helpers/${updatedHelper?.id}'),
+        Uri.parse('pal-business/editor/helpers/${updatedHelper.id}'),
         body: payload);
-    if (response == null || response.body == null)
-      throw new UnknownHttpError('NO_RESULT');
+    // if (response.body.isEmpty)
+    //   throw new UnknownHttpError('NO_RESULT');
     return response.body.length == 0
         ? null
         : this._adapter.parse(response.body);
@@ -52,7 +51,7 @@ class EditorHelperRepository extends BaseHttpRepository {
     return this._adapter.parsePage(response.body);
   }
 
-  Future<List<HelperEntity>> getGroupHelpers(String groupId) async {
+  Future<List<HelperEntity>> getGroupHelpers(String? groupId) async {
     final Response response =
         await this.httpClient.get(Uri.parse('pal-business/editor/groups/$groupId/helpers'));
     return this._adapter.parseArray(response.body);
@@ -76,7 +75,7 @@ class EditorHelperRepository extends BaseHttpRepository {
       );
   }
 
-  Future<HelperEntity> getHelper(String helperId) async {
+  Future<HelperEntity> getHelper(String? helperId) async {
     Response res =
         await this.httpClient.get(Uri.parse('pal-business/editor/helpers/$helperId'));
     return this._adapter.parse(res.body);

@@ -49,7 +49,7 @@ void main() {
           theme: PalThemeData.light(),
           child: Builder(
             builder: (context) => MaterialApp(
-              theme: PalTheme.of(context).buildTheme(),
+              theme: PalTheme.of(context)!.buildTheme(),
               home: userFullScreenHelperPage,
             ),
           ),
@@ -60,63 +60,14 @@ void main() {
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
 
-      final presenterFinder =
-          find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
-      final page = presenterFinder.evaluate().first.widget
-          as PresenterInherited<UserFullScreenHelperPresenter,
-              UserFullScreenHelperModel>;
-      presenter = page.presenter;
+      // final presenterFinder =
+      //     find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
+      // final page = presenterFinder.evaluate().first.widget
+      //     as PresenterInherited<UserFullScreenHelperPresenter,
+      //         UserFullScreenHelperModel>;
+
+      presenter = userFullScreenHelperPage.presenter;
     }
-
-    testWidgets('should crash when no box was provided',
-        (WidgetTester tester) async {
-      bool hasThrow = false;
-      try {
-        UserFullScreenHelperPage helperWidget =
-            UserFullScreenHelperPage(); // ignore: missing_required_param
-        var app = new MediaQuery(
-            data: MediaQueryData(), child: MaterialApp(home: helperWidget));
-        await tester.pumpWidget(app);
-      } catch (e) {
-        hasThrow = true;
-        expect(
-            e.toString().contains("'helperBoxViewModel != null': is not true"),
-            isTrue);
-      }
-      expect(hasThrow, isTrue);
-    });
-
-    testWidgets('should crash when no title label was provided',
-        (WidgetTester tester) async {
-      bool hasThrow = false;
-      try {
-        // ignore: missing_required_param
-        UserFullScreenHelperPage helperWidget = UserFullScreenHelperPage(
-          helperBoxViewModel: HelperBoxViewModel(
-            backgroundColor: Colors.black,
-          ),
-          positivLabel: HelperButtonViewModel(
-            text: 'test',
-            fontColor: Colors.white,
-            fontSize: 23.0,
-          ),
-          negativLabel: HelperButtonViewModel(
-            text: 'test',
-            fontColor: Colors.white,
-            fontSize: 23.0,
-          ),
-          onNegativButtonTap: () {},
-          onPositivButtonTap: () {},
-        );
-        var app = new MediaQuery(
-            data: MediaQueryData(), child: MaterialApp(home: helperWidget));
-        await tester.pumpWidget(app);
-        await tester.pumpAndSettle(Duration(seconds: 1));
-      } catch (e) {
-        hasThrow = true;
-      }
-      expect(hasThrow, isTrue);
-    });
 
     testWidgets('should have valid UI', (WidgetTester tester) async {
       await _beforeEach(tester);

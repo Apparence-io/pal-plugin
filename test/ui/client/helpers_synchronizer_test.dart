@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/schema_entity.dart';
@@ -67,13 +67,15 @@ void main() {
     test('[sync] loads all helpers from server if has nothing in local database', () async {
       var currentSchema = _mockSchema(1);
       const appVersion = "1.0.0";
-      when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
-      when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups'))).thenAnswer((_) => Future.value(Response('[]', 200)));
+      when(() => schemaRemoteRepository.get(appVersion: appVersion))
+        .thenAnswer((_) => Future.value(currentSchema));
+      when(() => packageVersionReader.version).thenReturn(appVersion);
+      when(() => mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups')))
+        .thenAnswer((_) => Future.value(Response('[]', 200)));
 
       expect(await schemaLocalRepository.get(appVersion: appVersion), isNull);
       await synchronizer.sync(userId);
-      verify(schemaRemoteRepository.get(appVersion: appVersion)).called(1);
+      verify(() => schemaRemoteRepository.get(appVersion: appVersion)).called(1);
       var localSchema = await schemaLocalRepository.get(appVersion: appVersion);
       expect(localSchema, isNotNull);
       expect(localSchema, equals(currentSchema));
@@ -83,10 +85,13 @@ void main() {
       var currentSchema = _mockSchema(1);
       var lastRemoteSchema = _mockSchema(2);
       const appVersion = "1.0.0";
-      when(packageVersionReader.version).thenReturn(appVersion);
-      when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
-      when(schemaRemoteRepository.get(schemaVersion: 1, appVersion: appVersion)).thenAnswer((_) => Future.value(lastRemoteSchema));
-      when(mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups'))).thenAnswer((_) => Future.value(Response('[]', 200)));
+      when(() => packageVersionReader.version).thenReturn(appVersion);
+      when(() => schemaRemoteRepository.get(appVersion: appVersion))
+        .thenAnswer((_) => Future.value(currentSchema));
+      when(() => schemaRemoteRepository.get(schemaVersion: 1, appVersion: appVersion))
+        .thenAnswer((_) => Future.value(lastRemoteSchema));
+      when(() => mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups')))
+        .thenAnswer((_) => Future.value(Response('[]', 200)));
       //first sync on null version
       await synchronizer.sync(userId);
       var localSchema = await schemaLocalRepository.get();
@@ -94,7 +99,7 @@ void main() {
       //second sync should send version 1 and get a new version
       await synchronizer.sync(userId);
       localSchema = await schemaLocalRepository.get();
-      expect(localSchema.schemaVersion, equals(lastRemoteSchema.schemaVersion));
+      expect(localSchema!.schemaVersion, equals(lastRemoteSchema.schemaVersion));
       expect(localSchema, equals(lastRemoteSchema));
     });
 
@@ -108,13 +113,16 @@ void main() {
           {"pageId":"390289032", "helperGroupId": "AN1782184", "time": "2020-10-01T06:00:00Z", "version":"1.0.0"},
           {"pageId":"390289032", "helperGroupId": "AN1782183", "time": "2020-10-01T06:00:00Z", "version":"1.0.0"}
         ]''';
-      when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
-      when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups'))).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
+      when(() => schemaRemoteRepository.get(appVersion: appVersion))
+        .thenAnswer((_) => Future.value(currentSchema));
+      when(() => packageVersionReader.version).thenReturn(appVersion);
+      when(() => mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups')))
+        .thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
       expect(await pageUserVisitLocalRepository.get(userId, appVersion), isEmpty);
 
       await synchronizer.sync(userId);
-      verify(mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups'))).called(1);
+      verify(() => mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups')))
+        .called(1);
       var savedVisits = await pageUserVisitLocalRepository.get(userId, appVersion);
       expect(savedVisits, isNotEmpty);
       expect(savedVisits.length, equals(5));
@@ -124,15 +132,20 @@ void main() {
       var currentSchema = _mockSchema(1);
       const appVersion = "1.0.0";
       var visitedUserGroupsJson = '''[]''';
-      when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(currentSchema));
-      when(packageVersionReader.version).thenReturn(appVersion);
-      when(mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups'))).thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
+      when(() => schemaRemoteRepository.get(appVersion: appVersion))
+        .thenAnswer((_) => Future.value(currentSchema));
+      when(() => packageVersionReader.version)
+        .thenReturn(appVersion);
+      when(() => mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups')))
+        .thenAnswer((_) => Future.value(Response(visitedUserGroupsJson, 200)));
 
       await synchronizer.sync(userId);
-      when(schemaRemoteRepository.get(appVersion: appVersion)).thenAnswer((_) => Future.value(null));
+      when(() => schemaRemoteRepository.get(appVersion: appVersion))
+        .thenAnswer((_) => Future.value(null));
       await synchronizer.sync(userId);
       // visits api is not called again because we gonne store them locally
-      verify(mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups'))).called(1);
+      verify(() => mockHttpClient.get(Uri.parse('pal-analytic/users/$userId/groups')))
+        .called(1);
     });
 
   });

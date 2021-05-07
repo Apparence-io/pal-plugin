@@ -13,7 +13,9 @@ extension HexColor on Color {
       '${green.toRadixString(16).padLeft(2, '0')}'
       '${blue.toRadixString(16).padLeft(2, '0')}';
 
-  static bool isHexColor(String hexString) {
+  static bool isHexColor(String? hexString) {
+    if(hexString == null)
+      return false;
     RegExp hexColor = RegExp(r'(^((0x){0,1}|#{0,1})([0-9A-F]{8}|[0-9A-F]{6})$)');
     return hexColor.hasMatch(hexString);
   }

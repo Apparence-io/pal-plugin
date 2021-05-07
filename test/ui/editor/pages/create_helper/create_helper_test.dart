@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/repository/editor/helper_editor_repository.dart';
 import 'package:pal/src/database/repository/editor/helper_group_repository.dart';
@@ -41,7 +41,7 @@ void main() {
 
   ProjectEditorService projectEditorService;
 
-  CreateHelperPresenter presenter;
+  CreateHelperPresenter? presenter;
 
   getPresenter() {
     var presenterFinder = find.byKey(ValueKey("createHelperPresenter"));
@@ -61,7 +61,7 @@ void main() {
         theme: PalThemeData.light(),
         child: Builder(
           builder: (context) => MaterialApp(
-            theme: PalTheme.of(context).buildTheme(),
+            theme: PalTheme.of(context)!.buildTheme(),
             home: CreateHelperPage(
               projectEditorService: projectEditorService,
               routeObserver: routeObserverMock,
@@ -81,9 +81,9 @@ void main() {
     setUp(() {
       reset(httpClientMock);
       reset(packageVersionReader);
-      when(packageVersionReader.init()).thenAnswer((realInvocation) => Future.value());
-      when(packageVersionReader.appName).thenReturn('test');
-      when(packageVersionReader.version).thenReturn('1.0.0');
+      when(() => packageVersionReader.init()).thenAnswer((realInvocation) => Future.value());
+      when(() => packageVersionReader.appName).thenReturn('test');
+      when(() => packageVersionReader.version).thenReturn('1.0.0');
     });
 
     testWidgets('should create page correctly', (WidgetTester tester) async {
@@ -105,7 +105,7 @@ void main() {
           {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups'))).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups'))).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
@@ -120,7 +120,7 @@ void main() {
       await tester.tap(find.text("Next"));
       await tester.pump();
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
     });
 
     testWidgets('[step 1] 2 groups are available on page, click on first, click on second => second only is selected', (WidgetTester tester) async {
@@ -129,7 +129,7 @@ void main() {
           {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups'))).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups'))).thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
@@ -147,7 +147,7 @@ void main() {
       expect(find.byType(HelperGroupItemLine), findsNWidgets(2));
       var lineWidget1 = find.byType(HelperGroupItemLine).evaluate().first.widget as HelperGroupItemLine;
       var lineWidget2 = find.byType(HelperGroupItemLine).evaluate().elementAt(1).widget as HelperGroupItemLine;
-      expect(presenter.viewModel.selectedHelperGroup.groupId, "jdlqsjdlq12");
+      expect(presenter!.viewModel.selectedHelperGroup!.groupId, "jdlqsjdlq12");
       expect(lineWidget1.model.selected, isTrue);
       expect(lineWidget2.model.selected, isFalse);
     });
@@ -158,7 +158,7 @@ void main() {
           {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
         .thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
@@ -178,7 +178,7 @@ void main() {
     testWidgets('[step 1] no groups available on page => click on create new group and create a group', (WidgetTester tester) async {
       var helperGroupListJson = '''[]''';
       var myNewHelperGroupName = 'My Helper Group Name';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
         .thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump(Duration(seconds: 1));
@@ -191,27 +191,27 @@ void main() {
       // create a group
       expect(find.byType(CreateHelperGroup), findsOneWidget);
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelperGroup_TextField_Name')), myNewHelperGroupName);
-      expect(presenter.viewModel.selectedHelperGroup.title, equals(myNewHelperGroupName));
-      expect(presenter.viewModel.minVersion, equals("1.0.0"));
+      expect(presenter!.viewModel.selectedHelperGroup!.title, equals(myNewHelperGroupName));
+      expect(presenter!.viewModel.minVersion, equals("1.0.0"));
       expect(find.text("1.0.0"), findsOneWidget);
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MinimumVersion')), "1.1.0");
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MaximumVersion')), "1.2.0");
-      expect(presenter.viewModel.minVersion, equals("1.1.0"));
-      expect(presenter.viewModel.maxVersion, equals("1.2.0"));
+      expect(presenter!.viewModel.minVersion, equals("1.1.0"));
+      expect(presenter!.viewModel.maxVersion, equals("1.2.0"));
       // go next step
       await tester.pump();
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isTrue);
       await tester.tap(find.text("Next"));
       await tester.pump();
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
     });
 
     testWidgets('[step 1] create a group with invalid min version, max version can be null => next button is disabled', (WidgetTester tester) async {
       var helperGroupListJson = '''[]''';
       var myNewHelperGroupName = 'My Helper Group Name';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
         .thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump(Duration(seconds: 1));
@@ -231,7 +231,7 @@ void main() {
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
       // enter 0.0.0-test min version => invalid
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MinimumVersion')), "0.0.0-test");
-      expect(presenter.viewModel.minVersion, equals("0.0.0-test"));
+      expect(presenter!.viewModel.minVersion, equals("0.0.0-test"));
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isFalse);
@@ -240,7 +240,7 @@ void main() {
     testWidgets('[step 1] create a group with valid min version max version is null => next button is enabled', (WidgetTester tester) async {
       var helperGroupListJson = '''[]''';
       var myNewHelperGroupName = 'My Helper Group Name';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
         .thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump(Duration(seconds: 1));
@@ -255,7 +255,7 @@ void main() {
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelperGroup_TextField_Name')), myNewHelperGroupName);
       // enter 1.0.0 min version => valid
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_MinimumVersion')), "1.0.0");
-      expect(presenter.viewModel.minVersion, equals("1.0.0"));
+      expect(presenter!.viewModel.minVersion, equals("1.0.0"));
       await tester.pump();
       await tester.pump(Duration(seconds: 1));
       expect(tester.widget<RaisedButton>(find.byKey(ValueKey('palCreateHelperNextButton'))).enabled, isTrue);
@@ -271,7 +271,7 @@ void main() {
           {"id":"jdlqsjdlq132","name":"test_intro2", "priority": 1, "type": "ANCHORED_OVERLAYED_HELPER", "helpers":[{"name":"test_intro2"}]}
         ]
       ''';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/pages/testPageId/groups')))
         .thenAnswer((_) => Future.value(Response(helperGroupListJson, 200)));
       await _before(tester);
       await tester.pump();
@@ -283,7 +283,7 @@ void main() {
       await tester.tap(find.text("Next"));
       await tester.pump();
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
     }
 
     testWidgets('[step 2] an existing group is selected, click on helper position => show group helpers list, by default our helper is last', (WidgetTester tester) async {
@@ -294,13 +294,13 @@ void main() {
         {"id":"8290832095", "name":"my helper 3", "priority": 3},
         {"id":"8290832096", "name":"my helper 4", "priority": 4}
       ]''';
-      when(httpClientMock.get(Uri.parse('pal-business/editor/groups/$selectedGroupId/helpers')))
+      when(() => httpClientMock.get(Uri.parse('pal-business/editor/groups/$selectedGroupId/helpers')))
         .thenAnswer((_) => Future.value(Response(groupHelperListJson, 200)));
       await _initStep1(tester);
       await tester.pump(Duration(seconds: 1));
       await tester.pump(Duration(seconds: 1));
       // current step is 1
-      expect(presenter.viewModel.step.value, 1);
+      expect(presenter!.viewModel.step!.value, 1);
       expect(find.byKey(ValueKey("pal_CreateHelper_TextField_Name")), findsOneWidget);
       expect(find.byKey(ValueKey("palHelperPositionNextButton")), findsOneWidget);
       await tester.enterText(find.byKey(ValueKey('pal_CreateHelper_TextField_Name')), 'my helper test');

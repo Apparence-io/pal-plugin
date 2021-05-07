@@ -9,30 +9,30 @@ import 'package:pal/src/ui/editor/pages/helper_editor/helper_editor_viewmodel.da
 /// Base helper config
 ///-------------------------------
 class CreateHelperConfig {
-  String id;
-  String route;
-  String name;
-  HelperTriggerType triggerType;
-  HelperType helperType; //remove
-  int priority;
+  String? id;
+  String? route;
+  String? name;
+  HelperTriggerType? triggerType;
+  HelperType? helperType; //remove
+  int? priority;
 
   CreateHelperConfig({
     this.id,
-    @required this.route,
-    @required this.name,
-    @required this.triggerType,
-    @required this.helperType,
+    required this.route,
+    required this.name,
+    required this.triggerType,
+    required this.helperType,
     this.priority,
   });
 
-  factory CreateHelperConfig.from(String route, HelperViewModel viewModel) =>
+  factory CreateHelperConfig.from(String? route, HelperViewModel viewModel) =>
       CreateHelperConfig(
-        id: viewModel?.id,
+        id: viewModel.id,
         route: route,
         name: viewModel.name,
-        triggerType: viewModel?.helperGroup?.triggerType,
-        helperType: viewModel?.helperType,
-        priority: viewModel?.priority,
+        triggerType: viewModel.helperGroup?.triggerType,
+        helperType: viewModel.helperType,
+        priority: viewModel.priority,
         // minVersion: viewModel?.helperGroup?.minVersionCode,
         // maxVersion: viewModel?.helperGroup?.maxVersionCode,
       );
@@ -51,11 +51,11 @@ class CreateHelperConfig {
 /// Helper group related to helper
 ///-------------------------------
 class HelperGroupConfig {
-  String id;
-  String name;
-  String minVersion;
-  String maxVersion;
-  String triggerType;
+  String? id;
+  String? name;
+  String? minVersion;
+  String? maxVersion;
+  String? triggerType;
 
   HelperGroupConfig({this.id, this.name, this.minVersion, this.maxVersion, this.triggerType});
 
@@ -66,11 +66,11 @@ class HelperGroupConfig {
 }
 
 class HelperGroupUpdate {
-  String id;
-  String name;
-  HelperTriggerType type;
-  int minVersionId;
-  int maxVersionId;
+  String? id;
+  String? name;
+  HelperTriggerType? type;
+  int? minVersionId;
+  int? maxVersionId;
 
   HelperGroupUpdate(
       {this.id, this.name, this.type, this.minVersionId, this.maxVersionId});
@@ -86,11 +86,24 @@ class CreateSimpleHelper {
   HelperGroupConfig helperGroup;
 
   CreateSimpleHelper({
-    @required this.config,
-    @required this.titleText,
-    @required this.boxConfig,
-    @required this.helperGroup,
+    required this.config,
+    required this.titleText,
+    required this.boxConfig,
+    required this.helperGroup,
   });
+
+  @visibleForTesting
+  factory CreateSimpleHelper.empty() => CreateSimpleHelper(
+    config: CreateHelperConfig(
+      name: "",
+      route: "",
+      helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
+      triggerType: HelperTriggerType.ON_NEW_UPDATE
+    ),
+    titleText: HelperTextConfig.empty(),
+    boxConfig: HelperBoxConfig(),
+    helperGroup: HelperGroupConfig(),
+  );
 }
 
 ///-------------------------------
@@ -98,20 +111,34 @@ class CreateSimpleHelper {
 ///-------------------------------
 class CreateFullScreenHelper {
   CreateHelperConfig config;
-  HelperTextConfig title, description, positivButton, negativButton;
-  HelperMediaConfig mediaHeader;
+  HelperTextConfig? title, description, positivButton, negativButton;
+  HelperMediaConfig? mediaHeader;
   HelperBoxConfig bodyBox;
   HelperGroupConfig helperGroup;
 
   CreateFullScreenHelper(
-      {@required this.config,
-      @required this.title,
-      @required this.description,
+      {required this.config,
+      required this.title,
+      required this.description,
       this.positivButton,
       this.negativButton,
-      @required this.bodyBox,
+      required this.bodyBox,
       this.mediaHeader,
-      @required this.helperGroup});
+      required this.helperGroup});
+
+  @visibleForTesting
+  factory CreateFullScreenHelper.empty() => CreateFullScreenHelper(
+    config: CreateHelperConfig(
+      name: "",
+      route: "",
+      helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
+      triggerType: HelperTriggerType.ON_NEW_UPDATE
+    ),
+    title: HelperTextConfig.empty(),
+    description: HelperTextConfig.empty(),
+    helperGroup: HelperGroupConfig(),
+    bodyBox: HelperBoxConfig()
+  );    
 }
 
 ///-------------------------------
@@ -119,21 +146,35 @@ class CreateFullScreenHelper {
 ///-------------------------------
 class CreateUpdateHelper {
   CreateHelperConfig config;
-  HelperTextConfig title, positivButton, negativButton;
+  HelperTextConfig? title, positivButton, negativButton;
   List<HelperTextConfig> lines;
-  HelperBoxConfig bodyBox;
+  HelperBoxConfig? bodyBox;
   HelperMediaConfig headerMedia;
-  HelperGroupConfig helperGroup;
+  HelperGroupConfig? helperGroup;
 
   CreateUpdateHelper(
-      {@required this.config,
-      @required this.title,
-      @required this.lines,
-      @required this.headerMedia,
+      {required this.config,
+      required this.title,
+      required this.lines,
+      required this.headerMedia,
       this.positivButton,
       this.negativButton,
       this.bodyBox,
       this.helperGroup});
+  
+  @visibleForTesting
+  factory CreateUpdateHelper.empty() => CreateUpdateHelper(
+    config: CreateHelperConfig(
+      name: "",
+      route: "",
+      helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
+      triggerType: HelperTriggerType.ON_NEW_UPDATE
+    ),
+    title: HelperTextConfig.empty(),
+    headerMedia: HelperMediaConfig(),
+    lines: [],
+    helperGroup: HelperGroupConfig(),
+  );  
 }
 
 ///-------------------------------
@@ -141,18 +182,32 @@ class CreateUpdateHelper {
 ///-------------------------------
 class CreateAnchoredHelper {
   CreateHelperConfig config;
-  HelperTextConfig title, description, positivButton, negativButton;
-  HelperBoxConfig bodyBox;
+  HelperTextConfig? title, description, positivButton, negativButton;
+  HelperBoxConfig? bodyBox;
   HelperGroupConfig helperGroup;
 
   CreateAnchoredHelper(
-      {@required this.config,
+      {required this.config,
       this.title,
       this.description,
       this.positivButton,
       this.negativButton,
       this.bodyBox,
-      @required this.helperGroup});
+      required this.helperGroup});
+
+  @visibleForTesting
+  factory CreateAnchoredHelper.empty() => CreateAnchoredHelper(
+    config: CreateHelperConfig(
+      name: "",
+      route: "",
+      helperType: HelperType.ANCHORED_OVERLAYED_HELPER,
+      triggerType: HelperTriggerType.ON_NEW_UPDATE
+    ),
+    title: HelperTextConfig.empty(),
+    description: HelperTextConfig.empty(),
+    helperGroup: HelperGroupConfig(),
+    bodyBox: HelperBoxConfig()
+  );    
 
   toJson() => {
         "config": jsonEncode(config),
@@ -169,20 +224,29 @@ class CreateAnchoredHelper {
 /// use this in helpers with multiple text
 ///-------------------------------
 class HelperTextConfig {
-  int id;
-  String text;
-  String fontColor;
-  String fontWeight;
-  String fontFamily;
-  int fontSize;
+  int? id;
+  String? text;
+  String? fontColor;
+  String? fontWeight;
+  String? fontFamily;
+  int? fontSize;
 
   HelperTextConfig(
       {this.id,
-      @required this.text,
-      @required this.fontColor,
-      @required this.fontWeight,
-      @required this.fontFamily,
-      @required this.fontSize});
+      required this.text,
+      required this.fontColor,
+      required this.fontWeight,
+      required this.fontFamily,
+      required this.fontSize});
+
+  @visibleForTesting
+  factory HelperTextConfig.empty() => HelperTextConfig(
+    text: "",
+    fontColor: "",
+    fontFamily: "",
+    fontSize: 1,
+    fontWeight: ""
+  );
 
   toJson() => {
         "id": id,
@@ -194,8 +258,8 @@ class HelperTextConfig {
 }
 
 class HelperMediaConfig {
-  int id;
-  String url;
+  int? id;
+  String? url;
 
   HelperMediaConfig({
     this.id,
@@ -204,9 +268,9 @@ class HelperMediaConfig {
 }
 
 class HelperBoxConfig {
-  int id;
-  String key;
-  String color;
+  int? id;
+  String? key;
+  String? color;
 
   HelperBoxConfig({
     this.id,

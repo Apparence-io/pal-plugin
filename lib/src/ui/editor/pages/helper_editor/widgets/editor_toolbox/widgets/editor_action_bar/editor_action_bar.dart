@@ -12,13 +12,13 @@ class EditorActionBar extends StatelessWidget {
   // ANIMATION VALUE BETWEEN [0,1] 0 => Hidden; 1 => Shown
   final AnimationController animation;
   // ICONS ATTRIBUTES
-  final Color iconsColor;
-  final double iconsSize;
+  final Color? iconsColor;
+  final double? iconsSize;
   // ONTAP FUNCTION
-  final OnCancel onCancel;
-  final OnPreview onPreview;
-  final OnSettings onSettings;
-  final OnText onText;
+  final OnCancel? onCancel;
+  final OnPreview? onPreview;
+  final OnSettings? onSettings;
+  final OnText? onText;
   // CONST ANIMATIONS BOUNDS
   final double kUpperbound = 65;
   final double kLowerbound = 0;
@@ -30,7 +30,7 @@ class EditorActionBar extends StatelessWidget {
     this.onPreview,
     this.onSettings,
     this.onText,
-    @required this.animation,
+    required this.animation,
   });
 
   @override
@@ -40,7 +40,7 @@ class EditorActionBar extends StatelessWidget {
       builder: (context, child) => Transform.translate(
           offset: Offset(0, this.animation.value * (MediaQuery.of(context).padding.bottom + kUpperbound)), child: child),
       child: BottomAppBar(
-        color: PalTheme.of(context).colors.dark,
+        color: PalTheme.of(context)!.colors.dark,
         shape: null,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 8),

@@ -5,9 +5,9 @@ class DotIndicatorsWidget extends StatelessWidget {
   final int pagesCount;
   final int activePage;
   const DotIndicatorsWidget({
-    Key key,
-    @required this.pagesCount,
-    @required this.activePage,
+    Key? key,
+    required this.pagesCount,
+    required this.activePage,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class DotIndicatorsWidget extends StatelessWidget {
       height: 20,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: PalTheme.of(context).colors.dark,
+        color: PalTheme.of(context)!.colors.dark,
       ),
     );
   }
@@ -49,7 +49,7 @@ class DotIndicatorsWidget extends StatelessWidget {
       height: 10,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: PalTheme.of(context).colors.dark.withAlpha(50),
+        color: PalTheme.of(context)!.colors.dark!.withAlpha(50),
       ),
     );
   }

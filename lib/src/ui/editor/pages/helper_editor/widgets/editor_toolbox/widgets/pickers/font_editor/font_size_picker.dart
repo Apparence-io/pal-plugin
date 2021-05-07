@@ -4,11 +4,11 @@ import 'package:flutter/widgets.dart';
 
 class FontSizePicker extends StatefulWidget {
 
-  final TextStyle style;
-  final Function(double) onFontSizeSelected;
+  final TextStyle? style;
+  final Function(double)? onFontSizeSelected;
 
   const FontSizePicker({
-    Key key,
+    Key? key,
     this.style,
     this.onFontSizeSelected,
   }) : super(key: key);
@@ -19,13 +19,13 @@ class FontSizePicker extends StatefulWidget {
 
 class _FontSizePickerState extends State<FontSizePicker> {
 
-  double _currentSliderValue;
+  late double _currentSliderValue;
   bool _isHapticPlayed = false;
 
   @override
   void initState() {
     super.initState();
-    _currentSliderValue = widget.style.fontSize ?? 20.0;
+    _currentSliderValue = widget.style!.fontSize ?? 20.0;
   }
 
   @override
@@ -53,7 +53,7 @@ class _FontSizePickerState extends State<FontSizePicker> {
             setState(() {
               _currentSliderValue = value;
             });
-            widget.onFontSizeSelected(value);
+            widget.onFontSizeSelected!(value);
           },
         ),
       ],

@@ -5,7 +5,7 @@ class AppVersion {
 
   AppVersion._(this.major, this.minor, this.patch, );
 
-  factory AppVersion.fromString(String version) {
+  factory AppVersion.fromString(String? version) {
     if(version == null || version == "latest") 
       return new AppVersion._(-1, -1, -1);
     var parsed = version.split(".");

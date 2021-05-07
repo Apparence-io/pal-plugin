@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pal/src/database/repository/client/schema_repository.dart';
 import 'package:pal/src/injectors/user_app/user_app_context.dart';
 import 'package:pal/src/services/client/in_app_user/in_app_user_client_service.dart';
 import 'package:pal/src/services/client/helper_client_service.dart';
@@ -20,7 +21,7 @@ class UserInjector extends InheritedWidget {
 
   final PackageVersionReader _packageVersionReader;
 
-  final PalRouteObserver routeObserver;
+  final PalRouteObserver? routeObserver;
 
   final HelpersSynchronizer _helperSynchronizeService;
 
@@ -29,13 +30,12 @@ class UserInjector extends InheritedWidget {
   final LocaleService _userLocale;
 
   UserInjector(
-      {Key key,
-      @required UserAppContext appContext,
-      @required this.routeObserver,
-      @required Widget child,
-      @required LocaleService userLocale})
-      : assert(child != null && appContext != null),
-        this._userLocale = userLocale,
+      {Key? key,
+      required UserAppContext appContext,
+      required this.routeObserver,
+      required Widget child,
+      required LocaleService userLocale})
+      : this._userLocale = userLocale,
         this._pageService = PageClientService.build(appContext.pageRepository),
         this._helperService = HelperClientService.build(
             clientSchemaRepository: appContext.localClientSchemaRepository,
@@ -44,7 +44,7 @@ class UserInjector extends InheritedWidget {
             remoteVisitRepository: appContext.pageUserVisitRemoteRepository,
             userLocale: userLocale),
         this._helperSynchronizeService = new HelpersSynchronizer(
-          schemaLocalRepository: appContext.localClientSchemaRepository,
+          schemaLocalRepository: appContext.localClientSchemaRepository as ClientSchemaLocalRepository,
           schemaRemoteRepository: appContext.remoteClientSchemaRepository,
           pageUserVisitLocalRepository: appContext.pageUserVisitLocalRepository,
           pageUserVisitRemoteRepository:
@@ -53,13 +53,13 @@ class UserInjector extends InheritedWidget {
         ),
         this._packageVersionReader = PackageVersionReader(),
         this._clientInAppUserService =
-            InAppUserClientService.build(appContext.inAppUserRepository),
-        this._finderService = FinderService(observer: routeObserver),
+            InAppUserClientService.build(appContext.inAppUserRepository,appContext.inAppUserLocalRepository),
+        this._finderService = FinderService(observer: routeObserver as PalNavigatorObserver?),
         super(key: key, child: child) {
     setInAppUserManagerService(this.inAppUserClientService);
   }
 
-  static UserInjector of(BuildContext context) =>
+  static UserInjector? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<UserInjector>();
 
   @override

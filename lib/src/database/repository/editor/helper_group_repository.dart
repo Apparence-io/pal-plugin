@@ -12,24 +12,18 @@ import 'package:pal/src/database/adapter/helper_group_entity_adapter.dart'
     as GroupEntityAdapter;
 
 class EditorHelperGroupRepository extends BaseHttpRepository {
-  final GroupEntityAdapter.HelperGroupEntityAdapter _groupAdapter =
-      GroupEntityAdapter.HelperGroupEntityAdapter();
-  final HelperEntityAdapter.HelperEntityAdapter _helperAdapter =
-      HelperEntityAdapter.HelperEntityAdapter();
+  final GroupEntityAdapter.HelperGroupEntityAdapter _groupAdapter = GroupEntityAdapter.HelperGroupEntityAdapter();
+  final HelperEntityAdapter.HelperEntityAdapter _helperAdapter = HelperEntityAdapter.HelperEntityAdapter();
 
   EditorHelperGroupRepository({
-    @required HttpClient httpClient,
+    required HttpClient httpClient,
   }) : super(httpClient: httpClient);
 
-  Future<List<HelperGroupEntity>> listHelperGroups(String pageId) async {
+  Future<List<HelperGroupEntity>> listHelperGroups(String? pageId) async {
     var response;
-    try {
-      response = await httpClient.get(Uri.parse('pal-business/editor/pages/$pageId/groups'));
-      if (response == null || response.body == null)
-        throw new UnknownHttpError("NO_RESULT");
-    } catch (e) {
-      throw new UnknownHttpError("NETWORK ERROR $e");
-    }
+    response = await httpClient.get(Uri.parse('pal-business/editor/pages/$pageId/groups'));
+    if (response == null || response.body == null)
+      throw new UnknownHttpError("NO_RESULT");
     try {
       return _groupAdapter.parseArray(response.body);
     } catch (e) {
@@ -37,8 +31,8 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     }
   }
 
-  Future<HelperGroupEntity> create(String pageId, String name, int minVersionId,
-      int maxVersionId, String triggerType) async {
+  Future<HelperGroupEntity> create(String? pageId, String? name, int? minVersionId,
+      int? maxVersionId, String? triggerType) async {
     var payload = jsonEncode({
       "name": name,
       "triggerType": triggerType,
@@ -46,9 +40,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
       "versionMaxId": maxVersionId,
     });
     var response = await httpClient
-        .post(Uri.parse('pal-business/editor/pages/$pageId/groups'), body: payload);
-    if (response == null || response.body == null)
-      throw new UnknownHttpError("NO_RESULT");
+      .post(Uri.parse('pal-business/editor/pages/$pageId/groups'), body: payload);
     try {
       return _groupAdapter.parse(response.body);
     } catch (e) {
@@ -56,11 +48,10 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     }
   }
 
-  Future<List<HelperEntity>> listGroupHelpers(String groupId) async {
+  Future<List<HelperEntity>> listGroupHelpers(String? groupId) async {
     var response;
     try {
-      response =
-          await httpClient.get(Uri.parse('pal-business/editor/groups/$groupId/helpers'));
+      response = await httpClient.get(Uri.parse('pal-business/editor/groups/$groupId/helpers'));
       if (response == null || response.body == null)
         throw new UnknownHttpError("NO_RESULT");
     } catch (e) {
@@ -73,7 +64,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     }
   }
 
-  Future<HelperGroupEntity> getGroupDetails(String groupId) async {
+  Future<HelperGroupEntity> getGroupDetails(String? groupId) async {
     var response;
     try {
       response = await httpClient.get(Uri.parse('pal-business/editor/groups/$groupId'));
@@ -84,12 +75,13 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     }
     try {
       return _groupAdapter.parse(response.body);
-    } catch (e) {
+    } catch (e,stacktrace) {
+      debugPrintStack(stackTrace: stacktrace);
       throw "UNPARSABLE RESPONSE $e";
     }
   }
 
-  Future updateGroup(String id, int maxVersionId, int minVersionId, String name,
+  Future updateGroup(String? id, int? maxVersionId, int? minVersionId, String? name,
       String type) async {
     var response;
     try {
@@ -108,7 +100,7 @@ class EditorHelperGroupRepository extends BaseHttpRepository {
     return;
   }
 
-  Future deleteGroup(String groupId) async {
+  Future deleteGroup(String? groupId) async {
     try {
       return await httpClient.delete(Uri.parse('pal-business/editor/groups/$groupId'));
     } catch (e) {

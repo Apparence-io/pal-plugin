@@ -23,12 +23,15 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
       HttpClient.internal(url, token);
 
   @visibleForTesting
-  HttpClient.internal(final String url, final String token, {http.Client httpClient})
-      : assert(url != null && url != ""),
-        assert(token != null && token != ""),
-        this._baseUrl = url,
+  HttpClient.internal(final String url, final String token, {http.Client? httpClient, bool testMode = false})
+      : this._baseUrl = url,
         this._client = httpClient ?? new http.Client(),
-        this._token = token;
+        this._token = token {
+    if(!testMode)  {
+      assert(url.isNotEmpty);
+      assert(token.isNotEmpty);
+    }    
+  }
 
   @override
   Future<http.StreamedResponse> send(final http.BaseRequest request) async {
@@ -40,11 +43,11 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return response;
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
-      String errorCode;
+      String? errorCode;
       try {
         errorCode = ErrorAdapter().parse(response.body);
       } catch(_) {}
-      throw UnreachableHttpError('Http ${response.statusCode} error, network or bad gateway : ${response?.request?.url}',
+      throw UnreachableHttpError('Http ${response.statusCode} error, network or bad gateway : ${response.request?.url}',
           code: errorCode);
     } else if (response.statusCode >= 500 && response.statusCode < 600) {
       debugPrint("... ==> 500 error ${response.body}");
@@ -57,9 +60,9 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
 
   @override
   Future<Response> post(final url,
-      {Map<String, String> headers,
+      {Map<String, String>? headers,
       final body,
-      final Encoding encoding}) async {
+      final Encoding? encoding}) async {
     headers = _initHeader(headers);
     return this._checkResponse(
       await super.post(
@@ -74,9 +77,9 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   @override
   Future<Response> delete(
     final Uri url, 
-    { final Map<String, String> headers,
+    { final Map<String, String>? headers,
       final body,
-      final Encoding encoding
+      final Encoding? encoding
     }
   ) async {
     return this._checkResponse(
@@ -85,9 +88,9 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
 
   @override
   Future<Response> put(final url,
-      {Map<String, String> headers,
+      {Map<String, String>? headers,
       final body,
-      final Encoding encoding}) async {
+      final Encoding? encoding}) async {
     headers = _initHeader(headers);
     var res = await super.put(Uri.parse('${this._baseUrl}/$url'),
       headers: headers, 
@@ -98,15 +101,15 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
 
   @override
   Future<Response> patch(final url,
-      {Map<String, String> headers,
+      {Map<String, String>? headers,
       final body,
-      final Encoding encoding}) async {
+      final Encoding? encoding}) async {
     headers = _initHeader(headers);
     return this._checkResponse(await super.patch(Uri.parse('${this._baseUrl}/$url'),
         headers: headers, body: body, encoding: encoding));
   }
 
-  Map<String, String> _initHeader(Map<String, String> headers) {
+  Map<String, String> _initHeader(Map<String, String>? headers) {
     if (headers == null) {
       headers = new Map();
     }
@@ -116,18 +119,18 @@ class HttpClient extends http.BaseClient implements BaseHttpClient {
   }
 
   @override
-  Future<Response> get(final url, {final Map<String, String> headers}) async {
+  Future<Response> get(final url, {final Map<String, String?>? headers}) async {
     return this._checkResponse(
-        await super.get(Uri.parse('${this._baseUrl}/$url'), headers: headers));
+        await super.get(Uri.parse('${this._baseUrl}/$url'), headers: headers as Map<String, String>?));
   }
 
   Future<http.StreamedResponse> multipartImage(url,
-      {Map<String, String> fields,
-      Map<String, String> headers,
-      List<int> fileData,
-      String imageType,
-      String filename,
-      String fileFieldName,
+      {Map<String, String>? fields,
+      Map<String, String>? headers,
+      required List<int> fileData,
+      String? imageType,
+      String? filename,
+      required String fileFieldName,
       String httpMethod = "POST"}) async {
     var request = new http.MultipartRequest(
         httpMethod, Uri.parse('${this._baseUrl}/$url'));
@@ -163,7 +166,7 @@ class InternalHttpError implements Exception {
 class UnreachableHttpError implements Exception {
   String message;
 
-  String code;
+  String? code;
 
   UnreachableHttpError(this.message, {this.code});
 

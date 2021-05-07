@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+// import 'package:mockito/annotations.dart';
+// import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/database/entity/helper/helper_theme.dart';
 import 'package:pal/src/database/entity/helper/helper_trigger_type.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
+import 'package:pal/src/services/editor/helper/helper_editor_models.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
 import 'package:pal/src/services/pal/pal_state_service.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
@@ -19,16 +22,21 @@ import '../../../../../pal_test_utilities.dart';
 
 class HelperEditorServiceMock extends Mock implements EditorHelperService {}
 
-class PalEditModeStateServiceMock extends Mock
-    implements PalEditModeStateService {}
+class PalEditModeStateServiceMock extends Mock implements PalEditModeStateService {}
 
 void main() {
+
+  setUpAll(() {
+    registerFallbackValue(CreateSimpleHelper.empty());
+  });
+
   group('[Editor] Simple helper', () {
     final _navigatorKey = GlobalKey<NavigatorState>();
 
-    EditorSimpleHelperPresenter presenter;
+    EditorSimpleHelperPresenter? presenter;
 
-    HelperEditorServiceMock helperEditorServiceMock = HelperEditorServiceMock();
+    EditorHelperService helperEditorServiceMock = HelperEditorServiceMock();
+    PalEditModeStateService palEditModeStateService = PalEditModeStateServiceMock();
 
     Scaffold _myHomeTest = Scaffold(
       body: Column(
@@ -60,7 +68,7 @@ void main() {
               builder: (context) => _myHomeTest,
             );
           case '/editor/preview':
-            EditorPreviewArguments args = settings.arguments;
+            EditorPreviewArguments? args = settings.arguments;
             return MaterialPageRoute(
               maintainState: true,
               builder: (context) => EditorPreviewPage(
@@ -78,7 +86,7 @@ void main() {
           HelperType.SIMPLE_HELPER,
           HelperTheme.BLACK,
           editorHelperService: helperEditorServiceMock,
-          palEditModeStateService: new PalEditModeStateServiceMock());
+          palEditModeStateService: palEditModeStateService);
       await tester.pumpAndSettle(Duration(milliseconds: 1000));
 
       var presenterFinder =
@@ -99,8 +107,8 @@ void main() {
       expect(find.text('Edit me!'), findsOneWidget);
     });
 
-    testWidgets('close editor  => page is removed',
-        (WidgetTester tester) async {
+    testWidgets('close editor  => page is removed', (WidgetTester tester) async {
+      when(() => palEditModeStateService.showHelpersList(any())).thenReturn(null);
       await _beforeEach(tester);
       expect(find.byType(EditorSimpleHelperPage), findsOneWidget);
       var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
@@ -109,8 +117,7 @@ void main() {
       expect(find.byType(EditorSimpleHelperPage), findsNothing);
     });
 
-    testWidgets('on text press  => button is disabled',
-        (WidgetTester tester) async {
+    testWidgets('on text press  => button is disabled', (WidgetTester tester) async {
       await _beforeEach(tester);
       expect(find.byType(EditorSimpleHelperPage), findsOneWidget);
       var textMode = find.byKey(ValueKey('editableActionBarTextButton'));
@@ -148,7 +155,7 @@ void main() {
 
       await enterTextInTextForm(tester, 0, '');
       await tester.pumpAndSettle();
-      expect(presenter.viewModel.contentTextForm.text, equals(''));
+      expect(presenter!.viewModel.contentTextForm!.text, equals(''));
 
       var cancelFinder = find.byKey(ValueKey('editableActionBarCancelButton'));
       var validateFinder =
@@ -184,7 +191,7 @@ void main() {
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
       await tester.runAsync(() async {
-        previewButton.onTap();
+        previewButton.onTap!();
         await tester.pump(Duration(milliseconds: 1100));
         await tester.pump(Duration(milliseconds: 500));
         await tester.pump(Duration(milliseconds: 500));
@@ -199,7 +206,7 @@ void main() {
         expect(toastFinder, findsOneWidget);
 
         Dismissible dis = tester.widget(toastFinder);
-        dis.onDismissed(DismissDirection.endToStart);
+        dis.onDismissed!(DismissDirection.endToStart);
         await tester.pump(Duration(milliseconds: 500));
         await tester.pump(Duration(milliseconds: 500));
         await tester.pump(Duration(milliseconds: 500));
@@ -226,7 +233,7 @@ void main() {
       final previewButton =
           previewButtonFinder.evaluate().first.widget as EditorActionItem;
       await tester.runAsync(() async {
-        previewButton.onTap();
+        previewButton.onTap!();
 
         await tester.pump(Duration(milliseconds: 1300));
         await tester.pump(Duration(milliseconds: 1100));
@@ -244,7 +251,7 @@ void main() {
         expect(toastFinder, findsOneWidget);
 
         Dismissible dis = tester.widget(toastFinder);
-        dis.onDismissed(DismissDirection.startToEnd);
+        dis.onDismissed!(DismissDirection.startToEnd);
 
         await tester.pump(Duration(milliseconds: 500));
         await tester.pump(Duration(milliseconds: 1100));
@@ -263,18 +270,16 @@ void main() {
       await _beforeEach(tester);
       await enterTextInTextForm(tester, 0, 'my helper tips lorem');
       await tester.pump();
-      var validateFinder =
-          find.byKey(ValueKey('editableActionBarValidateButton'));
-      var validateButton =
-          validateFinder.evaluate().first.widget as CircleIconButton;
+      var validateFinder = find.byKey(ValueKey('editableActionBarValidateButton'));
+      var validateButton = validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNotNull);
 
-      validateButton.onTapCallback();
+      validateButton.onTapCallback!();
       await tester.pump(Duration(seconds: 1));
       await tester.pump(Duration(seconds: 2));
       await tester.pump(Duration(milliseconds: 100));
       // await tester.pump(Duration(seconds: 1));
-      verify(helperEditorServiceMock.saveSimpleHelper(any)).called(1);
+      verify(() => helperEditorServiceMock.saveSimpleHelper(any())).called(1);
       await tester.pumpAndSettle(Duration(milliseconds: 2000));
 
       // await tester.pump(Duration(seconds: 2));
@@ -285,18 +290,17 @@ void main() {
         'save call helperService.saveSimpleHelper with error => an error is shown then fades',
         (WidgetTester tester) async {
       await _beforeEach(tester);
-      when(helperEditorServiceMock.saveSimpleHelper(any))
-          .thenThrow(new ArgumentError());
+      when(() => helperEditorServiceMock.saveSimpleHelper(any())).thenThrow(new ArgumentError());
       await _fillFields(tester, 'my helper tips lorem');
       await tester.pumpAndSettle();
-      print(presenter.viewModel.contentTextForm.text);
+      print(presenter!.viewModel.contentTextForm!.text);
       var validateFinder =
           find.byKey(ValueKey('editableActionBarValidateButton'));
       var validateButton =
           validateFinder.evaluate().first.widget as CircleIconButton;
       expect(validateButton.onTapCallback, isNotNull);
 
-      validateButton.onTapCallback();
+      validateButton.onTapCallback!();
       await tester.pump(Duration(seconds: 1));
       expect(
           find.text('Error occured, please try again later'), findsOneWidget);
@@ -325,11 +329,11 @@ void main() {
           SimpleHelperViewModel.fromHelperViewModel(helperViewModel);
       expect(simpleHelper.id, helperViewModel.id);
       expect(simpleHelper.name, helperViewModel.name);
-      expect(simpleHelper.helperGroup.minVersionCode,
-          helperViewModel.helperGroup.minVersionCode);
-      expect(simpleHelper.helperGroup.maxVersionCode,
-          helperViewModel.helperGroup.maxVersionCode);
-      expect(simpleHelper.helperGroup.triggerType,
+      expect(simpleHelper.helperGroup!.minVersionCode,
+          helperViewModel.helperGroup!.minVersionCode);
+      expect(simpleHelper.helperGroup!.maxVersionCode,
+          helperViewModel.helperGroup!.maxVersionCode);
+      expect(simpleHelper.helperGroup!.triggerType,
           HelperTriggerType.ON_SCREEN_VISIT);
       expect(simpleHelper.helperTheme, HelperTheme.BLACK);
     });

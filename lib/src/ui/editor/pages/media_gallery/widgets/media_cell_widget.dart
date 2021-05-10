@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -60,14 +59,16 @@ class _MediaCellWidgetState extends State<MediaCellWidget>
         scale: _scale,
         child: Stack(
           children: [
-            CachedNetworkImage(
-              imageUrl: widget.url!,
-              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-              errorWidget: (context, url, error) => Center(child: Icon(Icons.error)),
+            Image.network(
+              widget.url!,
+              loadingBuilder: (context, widget, chunk) 
+                => Center(child: CircularProgressIndicator()),
+              errorBuilder: (BuildContext context, dynamic _, dynamic error) 
+                => Center(child: Icon(Icons.error)),
             ),
             Container(
               decoration: BoxDecoration(
-                image: DecorationImage(image: CachedNetworkImageProvider(widget.url!),
+                image: DecorationImage(image: NetworkImage(widget.url!),
                 fit: BoxFit.cover),
                 border: Border.all(
                   color: PalTheme.of(context)!.colors.color1!,

@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   # application_icon: ^2.0.0 #no web, mac os, windows & linux
-  cached_network_image: ^3.0.0
   dotted_border: ^2.0.0
   flutter_colorpicker: ^0.4.0
   google_fonts: ^2.0.0

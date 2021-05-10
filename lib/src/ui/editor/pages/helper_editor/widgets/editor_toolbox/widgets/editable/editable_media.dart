@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -38,15 +37,13 @@ class EditableMedia extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: (this.data?.url != null && this.data!.url!.length > 0)
-              ? CachedNetworkImage(
-                  imageUrl: this.data!.url!,
+              ? Image.network(
+                  this.data!.url!,
                   width: this.size,
-                  placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  errorWidget: (context, url, error) => Center(
-                    child: Icon(Icons.error),
-                  ),
+                  loadingBuilder: (context, widget, chunk) 
+                    => Center(child: CircularProgressIndicator()),
+                  errorBuilder: (BuildContext context, dynamic _, dynamic error) 
+                    => Image.asset('assets/images/create_helper.png', package: 'pal'),
                 )
               : Icon(
                   Icons.image,

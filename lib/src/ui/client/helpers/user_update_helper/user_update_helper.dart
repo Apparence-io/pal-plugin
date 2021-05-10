@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -183,17 +182,14 @@ class UserUpdateHelperPage extends StatelessWidget
         child: AnimatedScaleWidget(
           widget: ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
-            child: CachedNetworkImage(
+            child: Image.network(
+              helperImageViewModel?.url ?? '',
               key: ValueKey('pal_UserUpdateHelperWidget_Image'),
-              imageUrl: helperImageViewModel?.url ?? '',
               fit: BoxFit.contain,
-              placeholder: (context, url) =>
-                  Center(child: CircularProgressIndicator()),
-              errorWidget: (BuildContext context, String url, dynamic error) {
-                return Image.asset(
-                  'packages/pal/assets/images/create_helper.png',
-                );
-              },
+              loadingBuilder: (context, widget, chunk) 
+                => Center(child: CircularProgressIndicator()),
+              errorBuilder: (BuildContext context, dynamic _, dynamic error) 
+                => Image.asset('assets/images/create_helper.png', package: 'pal'),
             ),
           ),
           animationController: context.animationsControllers![2],

@@ -15,7 +15,7 @@ import 'widgets/create_helper_button.dart';
 abstract class PageGroupsListView {
   Future closePage();
 
-  Future<bool?> navigateCreateHelper(final String? pageId);
+  Future<bool> navigateCreateHelper(final String? pageId);
 
   void changeBubbleState(bool state);
 
@@ -236,10 +236,10 @@ class _PageGroupsListView implements PageGroupsListView {
   }
 
   @override
-  Future<bool?> navigateCreateHelper(final String? pageId) async {
+  Future<bool> navigateCreateHelper(final String? pageId) async {
     HapticFeedback.selectionClick();
     // Display the helper creation view
-    final shouldOpenEditor = await Navigator.pushNamed(
+    final shouldOpenEditor = await Navigator.pushNamed<dynamic>(
       EditorInjector.of(context)!.palNavigatorKey!.currentContext!,
       '/editor/new',
       arguments: CreateHelperPageArguments(
@@ -247,11 +247,11 @@ class _PageGroupsListView implements PageGroupsListView {
         pageId,
       ),
     );
-    if (shouldOpenEditor != null && shouldOpenEditor as bool) {
+    if (shouldOpenEditor != null && shouldOpenEditor) {
       // Dismiss the bottom modal when next was tapped
       Navigator.pop(context);
     }
-    return shouldOpenEditor as Future<bool?>;
+    return shouldOpenEditor;
   }
 
   @override

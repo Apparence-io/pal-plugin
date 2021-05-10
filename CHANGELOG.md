@@ -1,3 +1,10 @@
+## [2.0.0+2] - 2021/05/10
+- Null safety migration
+- MacOS compatibility
+- Windows compatibility
+- Linux compatibility
+- Web compatibility
+
 ## [1.0.0+1] - 2021/04/20
 - Fix anchored helper selection within a Flex element 
 

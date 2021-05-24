@@ -118,11 +118,15 @@ class PageGroupsListPage extends StatelessWidget {
   Widget _buildItemList(PageGroupsListPresenter presenter, PageGroupsListViewModel model) {
     if (model.errorMessage != null) {
       return Expanded(
-          child: Center(
-              child: Text(
-        model.errorMessage!,
-        key: ValueKey("ErrorMessage"),
-      )));
+        child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal:16.0),
+              child: Text(model.errorMessage!,
+                key: ValueKey("ErrorMessage"),
+                style: TextStyle(),
+                textAlign: TextAlign.center,
+      ),
+            )));
     }
     if(model.groups.isEmpty) {
       return Expanded(

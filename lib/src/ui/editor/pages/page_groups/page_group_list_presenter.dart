@@ -10,8 +10,7 @@ import 'page_group_list_model.dart';
 
 /// [PageGroupsListPresenter]
 /// business logic for page group list
-class PageGroupsListPresenter
-    extends Presenter<PageGroupsListViewModel, PageGroupsListView?> {
+class PageGroupsListPresenter extends Presenter<PageGroupsListViewModel, PageGroupsListView?> {
   final EditorHelperGroupService helperGroupService;
   final PalNavigatorObserver? navigatorObserver;
   final PageEditorService pageService;
@@ -29,31 +28,37 @@ class PageGroupsListPresenter
 
   @override
   void onInit() async {
+    RouteSettings route = await navigatorObserver!.routeSettings.first;
+    if (route.name == null) {
+      viewModel.errorMessage = '''
+        This page has not route name. 
+        Please check documentation to properly show your page using Navigator.pushNamed('MyPage')
+      ''';
+      viewModel.isLoading = false;
+      this.refreshView();
+      return;
+    }
     viewModel.groups = Map();
     viewModel.isLoading = true;
     this.refreshView();
     viewModel.errorMessage = null;
-    RouteSettings route = await navigatorObserver!.routeSettings.first;
     this.viewModel.route = route.name;
     // TODO show current page route path
     try {
       this.pageId = await this.pageService.getOrCreatePageId(route.name);
       var groupsEntities = await helperGroupService.getPageGroups(pageId);
-      if (viewModel.errorMessage != null) return;//
+      if (viewModel.errorMessage != null) return; //
       if (viewModel.groups.isNotEmpty) viewModel.groups.clear();
       groupsEntities.forEach((element) {
         if (!viewModel.groups.containsKey(element.triggerType)) {
           viewModel.groups.putIfAbsent(element.triggerType, () => []);
         }
-        viewModel.groups[element.triggerType]!.add(GroupItemViewModel(
-            element.name,
-            _formatDate(element.creationDate!),
-            _formatVersion(element.minVersion, element.maxVersion),
-            element.id));
+        viewModel.groups[element.triggerType]!
+            .add(GroupItemViewModel(element.name, _formatDate(element.creationDate!), _formatVersion(element.minVersion, element.maxVersion), element.id));
       });
       viewModel.isLoading = false;
       refreshView();
-    } catch(err, stack) {
+    } catch (err, stack) {
       viewModel.errorMessage = "Server error while loading data...";
       debugPrintStack(stackTrace: stack);
       viewModel.isLoading = false;
@@ -72,11 +77,9 @@ class PageGroupsListPresenter
     }
   }
 
-  String _formatDate(DateTime date) =>
-      "Created on ${date.day}/${date.month}/${date.year}";
+  String _formatDate(DateTime date) => "Created on ${date.day}/${date.month}/${date.year}";
 
-  String _formatVersion(String? minVersion, String? maxVersion) =>
-      "$minVersion - ${maxVersion ?? 'last'}";
+  String _formatVersion(String? minVersion, String? maxVersion) => "$minVersion - ${maxVersion ?? 'last'}";
 
   Future onClickSettings() {
     return this.viewInterface!.openAppSettingsPage();

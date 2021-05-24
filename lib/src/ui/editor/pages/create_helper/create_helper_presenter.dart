@@ -31,6 +31,9 @@ class CreateHelperPresenter
 
   @override
   Future onInit() async {
+    if(this.pageId == null) {
+      //TODO show error
+    }
     this.viewModel.step = ValueNotifier<int>(0);
     this.viewModel.isFormValid = ValueNotifier<bool>(false);
     this.viewModel.helperGroupCreationState = false;

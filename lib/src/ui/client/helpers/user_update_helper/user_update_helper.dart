@@ -186,8 +186,14 @@ class UserUpdateHelperPage extends StatelessWidget
               helperImageViewModel?.url ?? '',
               key: ValueKey('pal_UserUpdateHelperWidget_Image'),
               fit: BoxFit.contain,
-              loadingBuilder: (context, widget, chunk) 
-                => Center(child: CircularProgressIndicator()),
+              loadingBuilder: (context, child, chunk) {
+                if(chunk != null && chunk.expectedTotalBytes != null && chunk.cumulativeBytesLoaded < chunk.expectedTotalBytes!) {
+                  return Center(child: CircularProgressIndicator(
+                    value: chunk.cumulativeBytesLoaded / chunk.expectedTotalBytes!,
+                  ));
+                }
+                return child;
+              },
               errorBuilder: (BuildContext context, dynamic _, dynamic error) 
                 => Image.asset('assets/images/create_helper.png', package: 'pal'),
             ),

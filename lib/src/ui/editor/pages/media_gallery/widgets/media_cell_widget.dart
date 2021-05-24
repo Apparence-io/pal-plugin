@@ -61,8 +61,14 @@ class _MediaCellWidgetState extends State<MediaCellWidget>
           children: [
             Image.network(
               widget.url!,
-              loadingBuilder: (context, widget, chunk) 
-                => Center(child: CircularProgressIndicator()),
+              loadingBuilder: (context, child, chunk) {
+                if(chunk != null && chunk.expectedTotalBytes != null && chunk.cumulativeBytesLoaded < chunk.expectedTotalBytes!) {
+                  return Center(child: CircularProgressIndicator(
+                    value: chunk.cumulativeBytesLoaded / chunk.expectedTotalBytes!,
+                  ));
+                }
+                return child;
+              },
               errorBuilder: (BuildContext context, dynamic _, dynamic error) 
                 => Center(child: Icon(Icons.error)),
             ),

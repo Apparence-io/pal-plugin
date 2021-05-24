@@ -1,3 +1,7 @@
+## [2.0.1] - 2021/05/20
+- Fix image loading spinner
+- Error message on null route
+
 ## [2.0.0+2] - 2021/05/10
 - Null safety migration
 - MacOS compatibility

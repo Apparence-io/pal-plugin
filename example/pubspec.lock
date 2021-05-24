@@ -139,7 +139,7 @@ packages:
       name: google_fonts
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   hive:
     dependency: transitive
     description:
@@ -258,7 +258,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "2.0.0+3"
+    version: "2.0.0+4"
   path:
     dependency: transitive
     description:
@@ -356,7 +356,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.26.0"
+    version: "0.27.0"
   sky_engine:
     dependency: transitive
     description: flutter

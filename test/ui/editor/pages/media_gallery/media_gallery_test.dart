@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -44,6 +46,8 @@ void main() {
       await tester.pumpWidget(app);
       await tester.pump();
     }
+
+    setUpAll(() => HttpOverrides.global = null);
 
     tearDown(() {
       reset(mediaGalleryLoader);

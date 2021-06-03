@@ -20,6 +20,10 @@ class HelperTextViewModel {
   });
 }
 
+enum HelperButtonStyle {
+  TEXT, BORDERED, COLORED
+}
+
 class HelperButtonViewModel {
   int? id;
   String? key;
@@ -30,6 +34,7 @@ class HelperButtonViewModel {
   FontWeight? fontWeight;
   Color? borderColor;
   Color? backgroundColor;
+  HelperButtonStyle buttonStyle;
 
   HelperButtonViewModel({
     this.id,
@@ -41,7 +46,8 @@ class HelperButtonViewModel {
     this.fontWeight,
     this.backgroundColor,
     this.borderColor,
-  });
+    HelperButtonStyle? buttonStyle
+  }): this.buttonStyle = buttonStyle ?? HelperButtonStyle.BORDERED;
 }
 
 class HelperImageViewModel {

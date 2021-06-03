@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:pal/src/theme.dart';
+import 'package:pal/src/ui/client/helpers/animations/combined_animation.dart';
+import 'package:pal/src/ui/client/helpers/animations/opacity_anims.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
 import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
+import 'package:pal/src/ui/client/widgets/helper_button_widget.dart';
+import 'package:pal/src/ui/client/widgets/screen_text_widget.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
-
 import 'user_fullscreen_helper_presenter.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
 
@@ -14,7 +16,6 @@ abstract class UserFullScreenHelperView {
   void playAnimation(
     MvvmContext context,
     bool isReversed,
-    int index,
     Function callback,
   );
   void onPositivButtonCallback();
@@ -44,9 +45,11 @@ class UserFullScreenHelperPage extends StatelessWidget
     this.negativLabel,
   });
 
-  final _mvvmPageBuilder = MVVMPageBuilder<UserFullScreenHelperPresenter,
-      UserFullScreenHelperModel>();
+  final _mvvmPageBuilder = MVVMPageBuilder<UserFullScreenHelperPresenter,UserFullScreenHelperModel>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  late final AnimationController pageAnimationController;
+  late final AnimationSet mediaAnim, titleAnim, descriptionAnim;
 
   @visibleForTesting
   get presenter => _mvvmPageBuilder.presenter;
@@ -57,59 +60,27 @@ class UserFullScreenHelperPage extends StatelessWidget
       key: UniqueKey(),
       context: context,
       multipleAnimControllerBuilder: (tickerProvider) {
-        return [
-          // Media
-          AnimationController(
-            vsync: tickerProvider,
-            duration: Duration(
-              milliseconds: 1100,
-            ),
-          ),
-          // Title / Description
-          AnimationController(
-            vsync: tickerProvider,
-            duration: Duration(
-              milliseconds: 700,
-            ),
-          ),
-          // Feedback
-          AnimationController(
-            vsync: tickerProvider,
-            duration: Duration(
-              milliseconds: 700,
-            ),
-          ),
-        ];
+        pageAnimationController = AnimationController(
+          vsync: tickerProvider, 
+          duration: Duration(milliseconds: 2000)
+        );
+        mediaAnim = AnimationSet.fadeAndTranslate(pageAnimationController, .2);
+        titleAnim = AnimationSet.fadeAndTranslate(pageAnimationController, .4);
+        descriptionAnim = AnimationSet.fadeAndTranslate(pageAnimationController, .5);
+        
+        return [pageAnimationController];
       },
       animListener: (context, presenter, model) {
-        if (model.mediaAnimation!) {
+        if (model.animate!) {
           this.playAnimation(
             context,
             model.isReversedAnimations!,
-            0,
-            presenter.onMediaAnimationEnd,
-          );
-        }
-        if (model.titleAnimation!) {
-          this.playAnimation(
-            context,
-            model.isReversedAnimations!,
-            1,
-            presenter.onTitleAnimationEnd,
-          );
-        }
-        if (model.feedbackAnimation!) {
-          this.playAnimation(
-            context,
-            model.isReversedAnimations!,
-            2,
-            presenter.onFeedbackAnimationEnd,
+            presenter.onAnimationEnd,
           );
         }
       },
       presenterBuilder: (context) => UserFullScreenHelperPresenter(this),
-      builder: (context, presenter, model) =>
-          _buildPage(context, presenter, model),
+      builder: (context, presenter, model) => _buildPage(context, presenter, model),
     );
   }
 
@@ -118,48 +89,76 @@ class UserFullScreenHelperPage extends StatelessWidget
     final UserFullScreenHelperPresenter presenter,
     final UserFullScreenHelperModel model,
   ) {
-    return AnimatedOpacity(
-      duration: Duration(milliseconds: 500),
-      curve: Curves.fastOutSlowIn,
-      opacity: model.helperOpacity!,
-      child: Scaffold(
-        backgroundColor: helperBoxViewModel.backgroundColor,
-        key: _scaffoldKey,
-        body: SafeArea(
-          child: Container(
-            key: ValueKey('pal_UserFullScreenHelperPage'),
-            width: double.infinity,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 30.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (headerImageViewModel?.url != null &&
-                      headerImageViewModel!.url!.length > 0)
-                    Flexible(
-                      key: ValueKey('pal_UserFullScreenHelperPage_Media'),
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    return Scaffold(
+      backgroundColor: helperBoxViewModel.backgroundColor,
+      key: _scaffoldKey,
+      body: SafeArea(
+        child: Container(
+          key: ValueKey('pal_UserFullScreenHelperPage'),
+          width: double.infinity,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 40),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  flex: 0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      HelperButton(
+                        buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
+                        model: negativLabel!,
+                        onPressed:  () {
+                          HapticFeedback.selectionClick();
+                          presenter.onNegativButtonCallback();
+                        },
+                      )
+                    ]
+                  )
+                ),
+                Column(
+                  children: [
+                    if (headerImageViewModel?.url != null &&
+                        headerImageViewModel!.url!.length > 0)
+                      Flexible(
+                        key: ValueKey('pal_UserFullScreenHelperPage_Media'),
+                        flex: 0,
+                        fit: FlexFit.tight,
                         child: _buildMedia(context),
                       ),
+                    Flexible(
+                      flex: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 24.0, bottom: 40.0),
+                        child: _buildTitle(context),
+                      ),
                     ),
-                  Flexible(
-                    flex: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      child: _buildTitle(context),
-                    ),
-                  ),
-                  Container(
+                  ],
+                ),
+                Expanded(
+                  flex: 0,
+                  child: Container(
                     key: ValueKey('pal_UserFullScreenHelperPage_Feedback'),
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: _buildFeedback(context, presenter),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: HelperButton(
+                          buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
+                          model: positivLabel!,
+                          onPressed:  () {
+                            HapticFeedback.selectionClick();
+                            presenter.onPositivButtonCallback();
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),
@@ -168,8 +167,10 @@ class UserFullScreenHelperPage extends StatelessWidget
   }
 
   Widget _buildMedia(MvvmContext context) {
-    return AnimatedScaleWidget(
-      widget: ClipRRect(
+    return TranslationOpacityAnimation(
+      opacityAnim: mediaAnim.opacity,
+      translateAnim: mediaAnim.translateHorizontal,    
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(15.0),
         child: Image.network(
           headerImageViewModel?.url ?? '',
@@ -186,120 +187,40 @@ class UserFullScreenHelperPage extends StatelessWidget
             => Image.asset('assets/images/create_helper.png', package: 'pal'),
         ),
       ),
-      animationController: context.animationsControllers![0],
+      controller: context.animationsControllers![0],
     );
   }
 
-  Widget _buildTitle(MvvmContext context) {
-    return AnimatedTranslateWidget(
-      animationController: context.animationsControllers![1],
-      widget: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              titleLabel.text ?? 'Title',
-              key: ValueKey('pal_UserFullScreenHelperPage_Title'),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: titleLabel.fontColor ?? Colors.white,
-                fontSize: titleLabel.fontSize ?? 60.0,
-                fontWeight: titleLabel.fontWeight,
-              ).merge(
-                  GoogleFonts.getFont(titleLabel.fontFamily ?? 'Montserrat')),
-            ),
-            Text(
-              descriptionLabel.text ?? '',
-              key: ValueKey('pal_UserFullScreenHelperPage_Description'),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: descriptionLabel.fontColor ?? Colors.white,
-                fontSize: descriptionLabel.fontSize ?? 60.0,
-                fontWeight: descriptionLabel.fontWeight,
-              ).merge(GoogleFonts.getFont(
-                  descriptionLabel.fontFamily ?? 'Montserrat')),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFeedback(
-      MvvmContext context, UserFullScreenHelperPresenter presenter) {
-    return AnimatedTranslateWidget(
-      position: Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset(0.0, 0.0)),
-      animationController: context.animationsControllers![2],
-      widget: Column(
+  Widget _buildTitle(MvvmContext context) 
+    => SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: RaisedButton(
-              key: ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_PositivButton'),
-              onPressed: () {
-                HapticFeedback.selectionClick();
-                presenter.onPositivButtonCallback();
-              },
-              color: PalTheme.of(context.buildContext)!.colors.green,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Text(
-                  positivLabel?.text ?? 'Ok, thanks !',
-                  textAlign: TextAlign.center,
-                  key: ValueKey(
-                      'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
-                  style: TextStyle(
-                    color: positivLabel?.fontColor ?? Colors.white,
-                    fontSize: positivLabel?.fontSize ?? 23.0,
-                    fontWeight: positivLabel?.fontWeight ?? FontWeight.bold,
-                  ).merge(GoogleFonts.getFont(
-                      positivLabel?.fontFamily ?? 'Montserrat')),
-                ),
-              ),
-            ),
+          TranslationOpacityAnimation(
+            controller: pageAnimationController,
+            opacityAnim: titleAnim.opacity,
+            translateAnim: titleAnim.translateHorizontal,    
+            child: ScreenText(
+              textKey: ValueKey('pal_UserFullScreenHelperPage_Title'),
+              model: titleLabel,
+            ) 
           ),
-          SizedBox(
-            height: 10.0,
+          SizedBox(height: 8),
+          TranslationOpacityAnimation(
+            controller: pageAnimationController,
+            opacityAnim: descriptionAnim.opacity,
+            translateAnim: descriptionAnim.translateHorizontal,      
+            child: ScreenText(
+              textKey: ValueKey('pal_UserFullScreenHelperPage_Description'),
+              model: descriptionLabel,
+            ) 
           ),
-          SizedBox(
-            width: double.infinity,
-            child: RaisedButton(
-              key: ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_NegativButton'),
-              onPressed: () {
-                HapticFeedback.selectionClick();
-                presenter.onNegativButtonCallback();
-              },
-              color: PalTheme.of(context.buildContext)!.colors.accent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Text(
-                  negativLabel?.text ?? 'This is not helping',
-                  textAlign: TextAlign.center,
-                  key: ValueKey(
-                      'pal_UserFullScreenHelperPage_Feedback_NegativLabel'),
-                  style: TextStyle(
-                    color: negativLabel?.fontColor ?? Colors.white,
-                    fontSize: negativLabel?.fontSize ?? 13.0,
-                    fontWeight: negativLabel?.fontWeight ?? FontWeight.bold,
-                  ).merge(GoogleFonts.getFont(
-                      negativLabel?.fontFamily ?? 'Montserrat')),
-                ),
-              ),
-            ),
-          )
         ],
       ),
     );
-  }
 
+
+  ////////////////////////////////
   @override
   void onNegativButtonCallback() {
     this.onNegativButtonTap();
@@ -314,15 +235,14 @@ class UserFullScreenHelperPage extends StatelessWidget
   void playAnimation(
     MvvmContext context,
     bool isReversed,
-    int index,
     Function callback,
   ) {
     if (isReversed) {
-      context.animationsControllers![index]
+      context.animationsControllers![0]
           .reverse()
           .then((value) => callback());
     } else {
-      context.animationsControllers![index]
+      context.animationsControllers![0]
           .forward()
           .then((value) => callback());
     }

@@ -52,14 +52,13 @@ class GroupDetailsPage extends StatelessWidget
       context: context,
       key: ValueKey('GroupDetailsPage'),
       presenterBuilder: (context) => GroupDetailsPresenter(
-          GroupDetailsPageModel(
-              this.groupId, GlobalKey<FormState>(), this.routeName, page),
+          GroupDetailsPageModel(this.groupId, GlobalKey<FormState>(), this.routeName, page),
           this,
           helperService: EditorInjector.of(context)!.helperService,
           groupService: EditorInjector.of(context)!.helperGroupService,
           versionService: EditorInjector.of(context)!.versionEditorService),
-      builder: (context, presenter, model) =>
-          _buildPage(context, presenter, model),
+      builder: (context, presenter, model) => model.helpers.value != null ? 
+          _buildPage(context, presenter, model) : Container(),
     );
   }
 

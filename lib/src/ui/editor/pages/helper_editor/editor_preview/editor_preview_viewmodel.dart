@@ -14,5 +14,6 @@ class EditorPreviewModel extends MVVMModel {
   late bool loading;
 
 
-  EditorPreviewModel(this.helperId, this.onDismiss, this.preBuiltHelper);
+  EditorPreviewModel(this.helperId, this.onDismiss, this.preBuiltHelper)
+    : loading = false;
 }

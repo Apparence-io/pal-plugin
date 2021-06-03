@@ -21,33 +21,28 @@ class GroupDetailsPresenter
       {this.helperService,
       required this.groupService,
       required this.versionService})
-      : super(viewModel, viewInterface);
+      : super(viewModel, viewInterface
+  ) {
+    this.viewModel.loading = true;
+    this.viewModel.locked = false;
+    this.viewModel.editorMode = false;
+    this.viewModel.helpers = ValueNotifier([]);
+    this.viewModel.canSave = ValueNotifier(false);
+    this.viewModel.page = this.viewModel.startPage ?? PageStep.DETAILS;
+    this.viewModel.pageController = PageController(initialPage: this.viewModel.page!.index);
+  }
 
   @override
   void onInit() {
     super.onInit();
-
-    // INIT
-    // *STATE
-    this.viewModel.loading = true;
-    this.viewModel.locked = false;
-    this.viewModel.editorMode = false;
-    this.viewModel.helpers = ValueNotifier(null);
-    this.viewModel.canSave = ValueNotifier(false);
-    this.viewModel.page = this.viewModel.startPage ?? PageStep.DETAILS;
-    this.viewModel.pageController =
-        PageController(initialPage: this.viewModel.page!.index);
-
     // *CONTROLLERS
     this.viewModel.groupMaxVerController = TextEditingController();
     this.viewModel.groupMinVerController = TextEditingController();
     this.viewModel.groupNameController = TextEditingController();
     // INIT
-
     // FETCHING GROUP INFO
     this.groupService.getGroupDetails(this.viewModel.groupId).then((group) {
       this.viewModel.groupModel = GroupModel.from(group);
-
       // ASSIGNING INITIALS VALUES TO CONTROLLERS
       this.viewModel.groupMaxVerController!.text =
           this.viewModel.groupModel.maxVer ?? '';
@@ -56,7 +51,6 @@ class GroupDetailsPresenter
       this.viewModel.groupNameController!.text =
           this.viewModel.groupModel.name!;
       this.viewModel.groupTriggerValue = this.viewModel.groupModel.triggerType;
-
       // ENDING LOADING
       this.viewModel.loading = false;
       this.refreshView();

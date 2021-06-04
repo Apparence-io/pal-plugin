@@ -5,6 +5,7 @@ import 'combined_animation.dart';
 enum TranslationType {
   LEFT_TO_RIGHT,
   RIGHT_TO_LEFT,
+  BOTTOM_TO_TOP,
 }
 
 class TranslationOpacityAnimation extends StatelessWidget {
@@ -29,8 +30,7 @@ class TranslationOpacityAnimation extends StatelessWidget {
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) => Transform.translate(
-        offset: controller.status == AnimationStatus.forward 
-          ? leftToRight : leftToRightReversed,
+        offset: offset,
         child: Opacity(
           opacity: opacityAnim.value,
           child: child,
@@ -39,6 +39,19 @@ class TranslationOpacityAnimation extends StatelessWidget {
       child: child,
     );
   }
+
+  Offset get offset {
+    switch(translationType) {
+      case TranslationType.BOTTOM_TO_TOP:
+        return bottomToTop;
+      case TranslationType.LEFT_TO_RIGHT:
+      default:
+        return controller.status == AnimationStatus.forward 
+          ? leftToRight : leftToRightReversed;
+    }
+  }
+
+  Offset get bottomToTop => Offset(0, 100 - ((translateAnim.value) * 100));
 
   Offset get leftToRight => Offset(-100 + ((translateAnim.value) * 100), 0);
 

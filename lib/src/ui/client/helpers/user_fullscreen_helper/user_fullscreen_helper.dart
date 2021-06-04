@@ -46,7 +46,12 @@ class UserFullScreenHelperPage extends StatelessWidget
   final _mvvmPageBuilder = MVVMPageBuilder<UserFullScreenHelperPresenter,UserFullScreenHelperModel>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  // late final AnimationSet mediaAnim, titleAnim, descriptionAnim;
+  AnimationSet mediaAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
+
+  AnimationSet titleAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
+
+  AnimationSet descriptionAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
+
 
   @visibleForTesting
   get presenter => _mvvmPageBuilder.presenter;
@@ -130,7 +135,8 @@ class UserFullScreenHelperPage extends StatelessWidget
                         child: TranslationOpacityAnimation(
                           controller: context.animationsControllers![0],
                           opacityAnim: titleAnim.opacity,
-                          translateAnim: titleAnim.translateHorizontal,    
+                          translateAnim: titleAnim.translation,   
+                          translationType: TranslationType.BOTTOM_TO_TOP, 
                           child: ScreenText(
                             textKey: ValueKey('pal_UserFullScreenHelperPage_Title'),
                             model: titleLabel,
@@ -143,7 +149,8 @@ class UserFullScreenHelperPage extends StatelessWidget
                         child: TranslationOpacityAnimation(
                           controller: context.animationsControllers![0],
                           opacityAnim: descriptionAnim.opacity,
-                          translateAnim: descriptionAnim.translateHorizontal,      
+                          translateAnim: descriptionAnim.translation,  
+                          translationType: TranslationType.BOTTOM_TO_TOP,     
                           child: ScreenText(
                             textKey: ValueKey('pal_UserFullScreenHelperPage_Description'),
                             model: descriptionLabel,
@@ -179,7 +186,7 @@ class UserFullScreenHelperPage extends StatelessWidget
     var mediaAnim = this.mediaAnim(context);
     return TranslationOpacityAnimation(
         opacityAnim: mediaAnim.opacity,
-        translateAnim: mediaAnim.translateHorizontal,    
+        translateAnim: mediaAnim.translation,    
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15.0),
           child: Image.network(
@@ -202,42 +209,7 @@ class UserFullScreenHelperPage extends StatelessWidget
       );
   }
 
-  Widget _buildTitle(MvvmContext context) {
-    var titleAnim = this.titleAnim(context);
-    var descriptionAnim = this.descriptionAnim(context);
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TranslationOpacityAnimation(
-            controller: context.animationsControllers![0],
-            opacityAnim: titleAnim.opacity,
-            translateAnim: titleAnim.translateHorizontal,    
-            child: ScreenText(
-              textKey: ValueKey('pal_UserFullScreenHelperPage_Title'),
-              model: titleLabel,
-            ) 
-          ),
-          SizedBox(height: 8),
-          TranslationOpacityAnimation(
-            controller: context.animationsControllers![0],
-            opacityAnim: descriptionAnim.opacity,
-            translateAnim: descriptionAnim.translateHorizontal,      
-            child: ScreenText(
-              textKey: ValueKey('pal_UserFullScreenHelperPage_Description'),
-              model: descriptionLabel,
-            ) 
-          ),
-        ],
-      ),
-    );
-  }
 
-  AnimationSet mediaAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
-
-  AnimationSet titleAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .4);
-
-  AnimationSet descriptionAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .5);
   ////////////////////////////////
   @override
   void onNegativButtonCallback() {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
-import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/services/editor/helper/helper_editor_service.dart';
+import 'package:pal/src/ui/client/helper_factory.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview.dart';
 import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_preview_viewmodel.dart';
 
@@ -42,23 +42,8 @@ class EditorPreviewPresenter
     if (this.viewModel.preBuiltHelper != null)
       return this.viewModel.preBuiltHelper;
     // PARSING AND CREATING HELPER ENTITY
-    switch (this.viewModel.helperEntity!.type) {
-      case HelperType.HELPER_FULL_SCREEN:
-        return this.viewInterface.buildFullscreen(
-            this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
-      case HelperType.SIMPLE_HELPER:
-        return this
-            .viewInterface
-            .buildSimple(this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
-      case HelperType.ANCHORED_OVERLAYED_HELPER:
-        return this.viewInterface.buildAnchored(
-            this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
-      case HelperType.UPDATE_HELPER:
-        return this
-            .viewInterface
-            .buildUpdate(this.viewModel.helperEntity!, this.viewModel.onDismiss as dynamic Function(BuildContext?));
-      default:
-        return null;
-    }
+    return HelperFactory.build(this.viewModel.helperEntity!,
+        onTrigger: (_) => this.viewModel.onDismiss(),
+        onError: (_) => this.viewModel.onDismiss());
   }
 }

@@ -161,29 +161,16 @@ void main() {
       expect(titleFinder, findsOneWidget);
       Text titleText = tester.widget(titleFinder);
       expect(titleText.data, equals('test title edited'));
+      expect(find.text('positiv edit'), findsOneWidget);
+      expect(find.text('negativ edit'), findsOneWidget);
 
-      Finder positivLabelFinder = find.byKey(
-          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivLabel'));
-      expect(positivLabelFinder, findsOneWidget);
-      Text positivText = tester.widget(positivLabelFinder);
-      expect(positivText.data, equals('positiv edit'));
-
-      Finder negativLabelFinder = find.byKey(
-          ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativLabel'));
-      expect(negativLabelFinder, findsOneWidget);
-      Text negativText = tester.widget(negativLabelFinder);
-      expect(negativText.data, equals('negativ edit'));
-
-      (tester.widget(find.byKey(ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_PositivButton')))
-              as RaisedButton)
-          .onPressed!();
+      (tester.widget(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton')))
+          as OutlinedButton).onPressed!();
 
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 700));
       await tester.pump(Duration(milliseconds: 1100));
       await tester.pumpAndSettle();
-
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsNothing);
     });
 
@@ -215,27 +202,9 @@ void main() {
 
       expect(find.byKey(ValueKey('EditorPreviewPage_Builder')), findsOneWidget);
 
-      Finder titleFinder =
-          find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title'));
-      expect(titleFinder, findsOneWidget);
-      Text titleText = tester.widget(titleFinder);
-      expect(titleText.data, equals('test title edited'));
-
-      Finder positivFinder = find.byKey(
-          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivLabel'));
-      expect(positivFinder, findsOneWidget);
-      Text positivText = tester.widget(positivFinder);
-      expect(positivText.data, equals('positiv edit'));
-
-      Finder negativFinder = find.byKey(
-          ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativLabel'));
-      expect(negativFinder, findsOneWidget);
-      Text negativText = tester.widget(negativFinder);
-      expect(negativText.data, equals('negativ edit'));
-
       (tester.widget(find.byKey(ValueKey(
-                  'pal_UserFullScreenHelperPage_Feedback_NegativButton')))
-              as RaisedButton)
+          'pal_UserFullScreenHelperPage_Feedback_NegativButton')))
+              as OutlinedButton)
           .onPressed!();
 
       await tester.pump(Duration(milliseconds: 700));

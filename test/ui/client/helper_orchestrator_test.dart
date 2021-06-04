@@ -15,7 +15,7 @@ import 'package:pal/src/services/package_version.dart';
 import 'package:pal/src/ui/client/helper_orchestrator.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper.dart';
 import 'package:pal/src/ui/client/helpers_synchronizer.dart';
-
+import '../screen_tester_utilities.dart';
 import '../../pal_test_utilities.dart';
 import 'helper_mocks.dart';
 
@@ -179,7 +179,8 @@ void main() {
       navigate to page test1,
       group has 3 helpers, show first helper then answer positive feedback 
       => show second helper
-      ''', (WidgetTester tester) async {
+      ''', (WidgetTester tester) async {  
+      await tester.setIphone8Plus();  
       final routeObserver = PalNavigatorObserver.instance();
       MockHelperEntityBuilder mockHelperBuilder = MockFullscreenHelperEntityBuilder();
       var helperGroup = HelperGroupEntity(

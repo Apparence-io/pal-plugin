@@ -16,10 +16,7 @@ class MockFullscreenHelperEntityBuilder implements MockHelperEntityBuilder {
       id: id,
       name: "helper name",
       type: HelperType.HELPER_FULL_SCREEN,
-      triggerType: HelperTriggerType.ON_SCREEN_VISIT, // remove me
       priority: 1,
-      // versionMinId: 25,
-      // versionMaxId: 25,
       helperTexts: [
         HelperTextEntity(
           value: title ?? "args.title.text",
@@ -34,6 +31,20 @@ class MockFullscreenHelperEntityBuilder implements MockHelperEntityBuilder {
           fontWeight: "w100",
           fontSize: 10,
           key: FullscreenHelperKeys.DESCRIPTION_KEY,
+        ),
+        HelperTextEntity(
+          value: "positivlabel",
+          fontColor: "#000000",
+          fontWeight: "w100",
+          fontSize: 14,
+          key: FullscreenHelperKeys.POSITIV_KEY,
+        ),
+        HelperTextEntity(
+          value: "skip",
+          fontColor: "#000000",
+          fontWeight: "w100",
+          fontSize: 10,
+          key: FullscreenHelperKeys.NEGATIV_KEY,
         ),
       ],
       helperBoxes: [

@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/client/helpers/animations/combined_animation.dart';
 import 'package:pal/src/ui/client/helpers/animations/opacity_anims.dart';
-import 'package:pal/src/ui/client/widgets/animated/animated_scale.dart';
-import 'package:pal/src/ui/client/widgets/animated/animated_translate.dart';
 import 'package:pal/src/ui/client/widgets/helper_button_widget.dart';
 import 'package:pal/src/ui/client/widgets/screen_text_widget.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
@@ -48,11 +46,11 @@ class UserFullScreenHelperPage extends StatelessWidget
   final _mvvmPageBuilder = MVVMPageBuilder<UserFullScreenHelperPresenter,UserFullScreenHelperModel>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  late final AnimationController pageAnimationController;
-  late final AnimationSet mediaAnim, titleAnim, descriptionAnim;
+  // late final AnimationSet mediaAnim, titleAnim, descriptionAnim;
 
   @visibleForTesting
   get presenter => _mvvmPageBuilder.presenter;
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +58,10 @@ class UserFullScreenHelperPage extends StatelessWidget
       key: UniqueKey(),
       context: context,
       multipleAnimControllerBuilder: (tickerProvider) {
-        pageAnimationController = AnimationController(
+        AnimationController pageAnimationController = AnimationController(
           vsync: tickerProvider, 
           duration: Duration(milliseconds: 2000)
         );
-        mediaAnim = AnimationSet.fadeAndTranslate(pageAnimationController, .2);
-        titleAnim = AnimationSet.fadeAndTranslate(pageAnimationController, .4);
-        descriptionAnim = AnimationSet.fadeAndTranslate(pageAnimationController, .5);
-        
         return [pageAnimationController];
       },
       animListener: (context, presenter, model) {
@@ -89,6 +83,8 @@ class UserFullScreenHelperPage extends StatelessWidget
     final UserFullScreenHelperPresenter presenter,
     final UserFullScreenHelperModel model,
   ) {
+    var titleAnim = this.titleAnim(context);
+    var descriptionAnim = this.descriptionAnim(context);
     return Scaffold(
       backgroundColor: helperBoxViewModel.backgroundColor,
       key: _scaffoldKey,
@@ -102,59 +98,72 @@ class UserFullScreenHelperPage extends StatelessWidget
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    HelperButton(
+                      buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
+                      model: negativLabel!,
+                      onPressed:  () {
+                        HapticFeedback.selectionClick();
+                        presenter.onNegativButtonCallback();
+                      },
+                    )
+                  ]
+                ),
                 Flexible(
                   flex: 0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                  child: Column(
                     children: [
-                      HelperButton(
-                        buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'),
-                        model: negativLabel!,
-                        onPressed:  () {
-                          HapticFeedback.selectionClick();
-                          presenter.onNegativButtonCallback();
-                        },
-                      )
-                    ]
-                  )
-                ),
-                Column(
-                  children: [
-                    if (headerImageViewModel?.url != null &&
-                        headerImageViewModel!.url!.length > 0)
+                      if (headerImageViewModel?.url != null &&
+                          headerImageViewModel!.url!.length > 0)
+                        Flexible(
+                          flex: 0,
+                          fit: FlexFit.loose,
+                          child: _buildMedia(context)
+                        ),
+                      SizedBox(height: 32),
                       Flexible(
-                        key: ValueKey('pal_UserFullScreenHelperPage_Media'),
                         flex: 0,
-                        fit: FlexFit.tight,
-                        child: _buildMedia(context),
-                      ),
-                    Flexible(
-                      flex: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 24.0, bottom: 40.0),
-                        child: _buildTitle(context),
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  flex: 0,
-                  child: Container(
-                    key: ValueKey('pal_UserFullScreenHelperPage_Feedback'),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: HelperButton(
-                          buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
-                          model: positivLabel!,
-                          onPressed:  () {
-                            HapticFeedback.selectionClick();
-                            presenter.onPositivButtonCallback();
-                          },
+                        // fit: FlexFit.tight,
+                        child: TranslationOpacityAnimation(
+                          controller: context.animationsControllers![0],
+                          opacityAnim: titleAnim.opacity,
+                          translateAnim: titleAnim.translateHorizontal,    
+                          child: ScreenText(
+                            textKey: ValueKey('pal_UserFullScreenHelperPage_Title'),
+                            model: titleLabel,
+                          ) 
                         ),
                       ),
+                      SizedBox(height: 8),
+                      Flexible(
+                        flex: 0,
+                        child: TranslationOpacityAnimation(
+                          controller: context.animationsControllers![0],
+                          opacityAnim: descriptionAnim.opacity,
+                          translateAnim: descriptionAnim.translateHorizontal,      
+                          child: ScreenText(
+                            textKey: ValueKey('pal_UserFullScreenHelperPage_Description'),
+                            model: descriptionLabel,
+                          ) 
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: HelperButton(
+                      buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
+                      model: positivLabel!,
+                      onPressed:  () {
+                        HapticFeedback.selectionClick();
+                        presenter.onPositivButtonCallback();
+                      },
                     ),
                   ),
                 )
@@ -167,37 +176,41 @@ class UserFullScreenHelperPage extends StatelessWidget
   }
 
   Widget _buildMedia(MvvmContext context) {
+    var mediaAnim = this.mediaAnim(context);
     return TranslationOpacityAnimation(
-      opacityAnim: mediaAnim.opacity,
-      translateAnim: mediaAnim.translateHorizontal,    
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15.0),
-        child: Image.network(
-          headerImageViewModel?.url ?? '',
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, chunk) {
-            if(chunk != null && chunk.expectedTotalBytes != null && chunk.cumulativeBytesLoaded < chunk.expectedTotalBytes!) {
-              return Center(child: CircularProgressIndicator(
-                value: chunk.cumulativeBytesLoaded / chunk.expectedTotalBytes!,
-              ));
-            }
-            return child;
-          },
-          errorBuilder: (BuildContext context, dynamic _, dynamic error) 
-            => Image.asset('assets/images/create_helper.png', package: 'pal'),
+        opacityAnim: mediaAnim.opacity,
+        translateAnim: mediaAnim.translateHorizontal,    
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15.0),
+          child: Image.network(
+            headerImageViewModel?.url ?? '',
+            key: ValueKey('pal_UserFullScreenHelperPage_Media'),
+            fit: BoxFit.scaleDown,
+            loadingBuilder: (context, child, chunk) {
+              if(chunk != null && chunk.expectedTotalBytes != null && chunk.cumulativeBytesLoaded < chunk.expectedTotalBytes!) {
+                return Center(child: CircularProgressIndicator(
+                  value: chunk.cumulativeBytesLoaded / chunk.expectedTotalBytes!,
+                ));
+              }
+              return child;
+            },
+            errorBuilder: (BuildContext context, dynamic _, dynamic error) 
+              => Image.asset('assets/images/create_helper.png', package: 'pal'),
+          ),
         ),
-      ),
-      controller: context.animationsControllers![0],
-    );
+        controller: context.animationsControllers![0],
+      );
   }
 
-  Widget _buildTitle(MvvmContext context) 
-    => SingleChildScrollView(
+  Widget _buildTitle(MvvmContext context) {
+    var titleAnim = this.titleAnim(context);
+    var descriptionAnim = this.descriptionAnim(context);
+    return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TranslationOpacityAnimation(
-            controller: pageAnimationController,
+            controller: context.animationsControllers![0],
             opacityAnim: titleAnim.opacity,
             translateAnim: titleAnim.translateHorizontal,    
             child: ScreenText(
@@ -207,7 +220,7 @@ class UserFullScreenHelperPage extends StatelessWidget
           ),
           SizedBox(height: 8),
           TranslationOpacityAnimation(
-            controller: pageAnimationController,
+            controller: context.animationsControllers![0],
             opacityAnim: descriptionAnim.opacity,
             translateAnim: descriptionAnim.translateHorizontal,      
             child: ScreenText(
@@ -218,8 +231,13 @@ class UserFullScreenHelperPage extends StatelessWidget
         ],
       ),
     );
+  }
 
+  AnimationSet mediaAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
 
+  AnimationSet titleAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .4);
+
+  AnimationSet descriptionAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .5);
   ////////////////////////////////
   @override
   void onNegativButtonCallback() {
@@ -237,6 +255,7 @@ class UserFullScreenHelperPage extends StatelessWidget
     bool isReversed,
     Function callback,
   ) {
+    // ignore: unnecessary_null_comparison
     if (isReversed) {
       context.animationsControllers![0]
           .reverse()

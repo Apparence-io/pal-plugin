@@ -32,8 +32,6 @@ class HelperButton extends StatelessWidget {
           child: Text(
             model.text ?? '',
             textAlign: TextAlign.center,
-            key: ValueKey(
-                'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
             style: textStyle,
           ),
         ),
@@ -51,8 +49,6 @@ class HelperButton extends StatelessWidget {
         child: Text(
           model.text ?? '',
           textAlign: TextAlign.center,
-          key: ValueKey(
-              'pal_UserFullScreenHelperPage_Feedback_PositivLabel'),
           style: textStyle,
         ),
       ),

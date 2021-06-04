@@ -6,6 +6,7 @@ import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_presenter.dart';
 import 'package:pal/src/ui/client/helpers/user_fullscreen_helper/user_fullscreen_helper_viewmodel.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
+import '../../screen_tester_utilities.dart';
 
 void main() {
   UserFullScreenHelperPresenter presenter; // ignore: unused_local_variable
@@ -17,12 +18,12 @@ void main() {
           HelperBoxViewModel(backgroundColor: Colors.blueAccent),
       titleLabel: HelperTextViewModel(
         text: 'A simple test',
-        fontSize: 60.0,
+        fontSize: 28.0,
         fontColor: Colors.white,
       ),
       descriptionLabel: HelperTextViewModel(
         text: 'A description test',
-        fontSize: 60.0,
+        fontSize: 16.0,
         fontColor: Colors.white,
       ),
       positivLabel: HelperButtonViewModel(
@@ -56,29 +57,20 @@ void main() {
         ),
       );
       await tester.pumpWidget(app);
-      await tester.pump(Duration(milliseconds: 1100));
-      await tester.pump(Duration(milliseconds: 700));
-      await tester.pump(Duration(milliseconds: 700));
-
-      // final presenterFinder =
-      //     find.byKey(ValueKey('pal_UserFullScreenHelperPage_Builder'));
-      // final page = presenterFinder.evaluate().first.widget
-      //     as PresenterInherited<UserFullScreenHelperPresenter,
-      //         UserFullScreenHelperModel>;
-
+      await tester.pump(Duration(milliseconds: 500));
+      await tester.pump(Duration(milliseconds: 2000));
       presenter = userFullScreenHelperPage.presenter;
     }
 
     testWidgets('should have valid UI', (WidgetTester tester) async {
+      await tester.setIphone11Max();
       await _beforeEach(tester);
-
+      await tester.pump(Duration(milliseconds: 2000));
       expect(
           find.byKey(ValueKey('pal_UserFullScreenHelperPage')), findsOneWidget);
       expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Media')),
           findsOneWidget);
       expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Title')),
-          findsOneWidget);
-      expect(find.byKey(ValueKey('pal_UserFullScreenHelperPage_Feedback')),
           findsOneWidget);
       expect(
           find.byKey(
@@ -88,38 +80,40 @@ void main() {
           find.byKey(
               ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton')),
           findsOneWidget);
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
     });
 
     testWidgets('should have valid data', (WidgetTester tester) async {
+      await tester.setIphone11Max();
       await _beforeEach(tester);
-
+      await tester.pump(Duration(milliseconds: 2000));
       expect(find.text('A simple test'), findsOneWidget);
       expect(find.text('Positiv button'), findsOneWidget);
       expect(find.text('Negativ button'), findsOneWidget);
-    });
 
-    testWidgets('should tap on positiv button', (WidgetTester tester) async {
-      await _beforeEach(tester);
-      await tester.pump(Duration(milliseconds: 1000));
-      final positivButton = find.byKey(
-          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
-      await tester.tap(positivButton);
-      await tester.pump(Duration(milliseconds: 100));
-      await tester.pump(Duration(milliseconds: 200));
-      await tester.pump(Duration(milliseconds: 1000));
-      await tester.pump(Duration(milliseconds: 500));
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
     });
 
     testWidgets('should tap on negativ button', (WidgetTester tester) async {
+      await tester.setIphone11Max();
       await _beforeEach(tester);
-      await tester.pump(Duration(milliseconds: 1000));
       final negativButton = find.byKey(
           ValueKey('pal_UserFullScreenHelperPage_Feedback_NegativButton'));
+      expect(negativButton, findsOneWidget);
       await tester.tap(negativButton);
-      await tester.pump(Duration(milliseconds: 100));
-      await tester.pump(Duration(milliseconds: 200));
-      await tester.pump(Duration(milliseconds: 1000));
-      await tester.pump(Duration(milliseconds: 500));
+
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
+      await tester.pump(Duration(milliseconds: 2000));
+    });
+
+    testWidgets('should tap on positiv button', (WidgetTester tester) async {
+      await tester.setIphone11Max();
+      await _beforeEach(tester);
+      final positivButton = find.byKey(
+          ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'));
+      await tester.tap(positivButton);
+
+      await tester.pumpAndSettle(Duration(milliseconds: 100));
     });
   });
 }

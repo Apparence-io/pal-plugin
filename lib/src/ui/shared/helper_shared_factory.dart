@@ -60,11 +60,13 @@ class HelperSharedFactory {
   static HelperButtonViewModel? parseButtonLabel(
     final String key,
     final List<HelperTextEntity> helperTexts,
+    {HelperButtonStyle? buttonStyle}
   ) {
     for (HelperTextEntity helperText in helperTexts) {
       if (key == helperText.key) {
         return HelperButtonViewModel(
           id: helperText.id,
+          buttonStyle: buttonStyle,
           text: helperText.value,
           fontColor: HexColor.fromHex(helperText.fontColor!),
           fontSize: helperText.fontSize?.toDouble(),

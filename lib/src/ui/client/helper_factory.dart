@@ -57,7 +57,8 @@ class HelperFactory {
       negativLabel: HelperSharedFactory.parseButtonLabel(
         FullscreenHelperKeys.NEGATIV_KEY,
         helper.helperTexts!,
-      )!..buttonStyle = HelperButtonStyle.TEXT,
+        buttonStyle: HelperButtonStyle.TEXT
+      ),
       onPositivButtonTap: () => onTrigger!(true),
       onNegativButtonTap: () => onTrigger!(false),
     );

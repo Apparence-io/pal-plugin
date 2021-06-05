@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/ui/client/helpers/animations/combined_animation.dart';
 import 'package:pal/src/ui/client/helpers/animations/opacity_anims.dart';
@@ -9,6 +8,8 @@ import 'package:pal/src/ui/client/widgets/screen_text_widget.dart';
 import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'user_fullscreen_helper_presenter.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
+import 'widgets/fullscreen_media.dart';
+import 'widgets/onboarding_progress.dart';
 
 abstract class UserFullScreenHelperView {
   void playAnimation(
@@ -46,11 +47,11 @@ class UserFullScreenHelperPage extends StatelessWidget
   final _mvvmPageBuilder = MVVMPageBuilder<UserFullScreenHelperPresenter,UserFullScreenHelperModel>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  AnimationSet mediaAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
+  AnimationSet mediaAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .3);
 
   AnimationSet titleAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
 
-  AnimationSet descriptionAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .2);
+  AnimationSet descriptionAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .3);
 
 
   @visibleForTesting
@@ -67,7 +68,14 @@ class UserFullScreenHelperPage extends StatelessWidget
           vsync: tickerProvider, 
           duration: Duration(milliseconds: 2000)
         );
-        return [pageAnimationController];
+        AnimationController progressAnimController = AnimationController(
+          vsync: tickerProvider, 
+          duration: Duration(milliseconds:1000)
+        );
+        return [
+          pageAnimationController, 
+          progressAnimController
+        ];
       },
       animListener: (context, presenter, model) {
         if (model.animate!) {
@@ -77,6 +85,9 @@ class UserFullScreenHelperPage extends StatelessWidget
             presenter.onAnimationEnd,
           );
         }
+        if(model.animatePosition!) {
+          context.animationsControllers![1].forward();
+        } 
       },
       presenterBuilder: (context) => UserFullScreenHelperPresenter(this),
       builder: (context, presenter, model) => _buildPage(context, presenter, model),
@@ -121,12 +132,15 @@ class UserFullScreenHelperPage extends StatelessWidget
                   flex: 0,
                   child: Column(
                     children: [
-                      if (headerImageViewModel?.url != null &&
-                          headerImageViewModel!.url!.length > 0)
+                      if (headerImageViewModel?.url != null && headerImageViewModel!.url!.isNotEmpty)
                         Flexible(
                           flex: 0,
                           fit: FlexFit.loose,
-                          child: _buildMedia(context)
+                          child: FullscreenMedia(
+                            animationController: context.animationsControllers![0],
+                            headerImageViewModel: headerImageViewModel!,
+                            mediaAnim: mediaAnim(context),
+                          )
                         ),
                       SizedBox(height: 32),
                       Flexible(
@@ -157,6 +171,26 @@ class UserFullScreenHelperPage extends StatelessWidget
                           ) 
                         ),
                       ),
+                      SizedBox(height: 24),
+                      GestureDetector(
+                        onTap: () {
+                          var ctrl = context.animationsControllers![1];
+                          if(ctrl.status != AnimationStatus.completed) {
+                            ctrl.forward();
+                          } else {
+                            ctrl.reverse();
+                          }
+                        },
+                        child: OnboardingProgress(
+                          controller: context.animationsControllers![1],
+                          radius: 6,
+                          activeRadius: 10,
+                          activeColor: Colors.yellow.shade200,
+                          inactiveColor: Colors.blue.shade200,
+                          steps: 3,
+                          progression: 0,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -181,34 +215,6 @@ class UserFullScreenHelperPage extends StatelessWidget
       ),
     );
   }
-
-  Widget _buildMedia(MvvmContext context) {
-    var mediaAnim = this.mediaAnim(context);
-    return TranslationOpacityAnimation(
-        opacityAnim: mediaAnim.opacity,
-        translateAnim: mediaAnim.translation,    
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15.0),
-          child: Image.network(
-            headerImageViewModel?.url ?? '',
-            key: ValueKey('pal_UserFullScreenHelperPage_Media'),
-            fit: BoxFit.scaleDown,
-            loadingBuilder: (context, child, chunk) {
-              if(chunk != null && chunk.expectedTotalBytes != null && chunk.cumulativeBytesLoaded < chunk.expectedTotalBytes!) {
-                return Center(child: CircularProgressIndicator(
-                  value: chunk.cumulativeBytesLoaded / chunk.expectedTotalBytes!,
-                ));
-              }
-              return child;
-            },
-            errorBuilder: (BuildContext context, dynamic _, dynamic error) 
-              => Image.asset('assets/images/create_helper.png', package: 'pal'),
-          ),
-        ),
-        controller: context.animationsControllers![0],
-      );
-  }
-
 
   ////////////////////////////////
   @override

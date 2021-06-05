@@ -10,6 +10,7 @@ class UserFullScreenHelperPresenter extends Presenter<UserFullScreenHelperModel,
   ) : super(UserFullScreenHelperModel(), viewInterface) {
     this.viewModel.helperOpacity = 0;
     this.viewModel.animate = false;
+    this.viewModel.animatePosition = false;
     this.viewModel.isReversedAnimations = false;
   }
 
@@ -33,6 +34,7 @@ class UserFullScreenHelperPresenter extends Presenter<UserFullScreenHelperModel,
     this.viewModel.isReversedAnimations = true;
     await Future.delayed(Duration(milliseconds: 100), () {
       this.viewModel.animate = true;
+      this.viewModel.animatePosition = true;
       this.refreshAnimations();
     });
     await Future.delayed(Duration(milliseconds: 1000));

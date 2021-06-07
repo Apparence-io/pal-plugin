@@ -1,4 +1,5 @@
 import 'package:mvvm_builder/mvvm_builder.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 
 import 'user_fullscreen_helper.dart';
 import 'user_fullscreen_helper_viewmodel.dart';
@@ -7,7 +8,8 @@ class UserFullScreenHelperPresenter extends Presenter<UserFullScreenHelperModel,
 
   UserFullScreenHelperPresenter(
     UserFullScreenHelperView viewInterface,
-  ) : super(UserFullScreenHelperModel(), viewInterface) {
+    GroupViewModel group
+  ) : super(UserFullScreenHelperModel(group: group), viewInterface) {
     this.viewModel.helperOpacity = 0;
     this.viewModel.animate = false;
     this.viewModel.animatePosition = false;
@@ -34,7 +36,9 @@ class UserFullScreenHelperPresenter extends Presenter<UserFullScreenHelperModel,
     this.viewModel.isReversedAnimations = true;
     await Future.delayed(Duration(milliseconds: 100), () {
       this.viewModel.animate = true;
-      this.viewModel.animatePosition = true;
+      if(viewModel.group.steps > 0 && viewModel.group.index < viewModel.group.steps - 1) {
+        this.viewModel.animatePosition = true;
+      }
       this.refreshAnimations();
     });
     await Future.delayed(Duration(milliseconds: 1000));

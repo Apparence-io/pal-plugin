@@ -132,6 +132,7 @@ class _OnboardingProgressPainter extends CustomPainter {
     path.arcTo(Rect.fromLTWH(deltaX2, 0, diameter, diameter), 3 * pi/2, pi, false);
     path.close();
     canvas.drawPath(path, activePainter);
+    canvas.restore();
   }
 
   @override

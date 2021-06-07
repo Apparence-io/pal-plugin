@@ -151,6 +151,7 @@ class HelperOrchestrator {
         builder: (context) => PalTheme(
           theme: PalThemeData.light(),
           child: HelperFactory.build(
+            helperGroupEntity,
             helperGroupEntity.helpers![helperIndex], 
             onTrigger: onTriggeredHelper,
             onError: this.popHelper

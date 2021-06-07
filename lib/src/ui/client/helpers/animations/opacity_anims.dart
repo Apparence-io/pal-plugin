@@ -57,5 +57,4 @@ class TranslationOpacityAnimation extends StatelessWidget {
 
   Offset get leftToRightReversed => Offset(100 - ((translateAnim.value) * 100), 0);
 
-
 }

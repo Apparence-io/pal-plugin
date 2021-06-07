@@ -1,5 +1,15 @@
 import 'package:flutter/widgets.dart';
 
+class GroupViewModel {
+  int index;
+  int steps;
+
+  GroupViewModel({
+    required this.index,
+    required this.steps
+  });
+}
+
 class HelperTextViewModel {
   int? id;
   String? key;

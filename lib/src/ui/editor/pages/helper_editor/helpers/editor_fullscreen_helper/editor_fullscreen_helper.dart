@@ -18,6 +18,7 @@ import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/wid
 import 'package:pal/src/ui/editor/pages/helper_editor/widgets/editor_toolbox/widgets/editable/editable_textfield.dart';
 import 'package:pal/src/ui/editor/pages/media_gallery/media_gallery.dart';
 import 'package:pal/src/ui/shared/helper_shared_factory.dart';
+import 'package:pal/src/ui/shared/helper_shared_viewmodels.dart';
 import 'package:pal/src/ui/shared/widgets/overlayed.dart';
 
 import '../../../../../../router.dart';
@@ -74,6 +75,7 @@ class EditorFullScreenHelper
   @override
   Future showPreviewOfHelper(FullscreenHelperViewModel model) async {
     UserFullScreenHelperPage page = UserFullScreenHelperPage(
+      group: GroupViewModel(index: 0, steps: 1),
       helperBoxViewModel:
           HelperSharedFactory.parseBoxNotifier(model.backgroundBoxForm!),
       titleLabel: HelperSharedFactory.parseTextNotifier(model.titleTextForm!),

@@ -14,11 +14,11 @@ class AnimationSet {
     =>  AnimationSet._({
       AnimationType.FADE: CurvedAnimation(
         parent: controller,
-        curve: Interval(startInterval, startInterval + .3, curve: Curves.easeIn),
+        curve: Interval(startInterval, startInterval + .6, curve: Curves.easeIn),
       ),
       AnimationType.TRANSLATION: CurvedAnimation(
         parent: controller,
-        curve: Interval(startInterval, startInterval + .3, curve: Curves.decelerate),
+        curve: Interval(startInterval, startInterval + .6, curve: Curves.decelerate),
       ),
     });
 

@@ -23,6 +23,7 @@ abstract class UserFullScreenHelperView {
 
 class UserFullScreenHelperPage extends StatelessWidget
     implements UserFullScreenHelperView {
+  final GroupViewModel group; 
   final HelperBoxViewModel helperBoxViewModel;
   final HelperTextViewModel titleLabel;
   final HelperTextViewModel descriptionLabel;
@@ -34,6 +35,7 @@ class UserFullScreenHelperPage extends StatelessWidget
 
   UserFullScreenHelperPage({
     Key? key,
+    required this.group,
     required this.helperBoxViewModel,
     required this.titleLabel,
     required this.descriptionLabel,
@@ -45,6 +47,7 @@ class UserFullScreenHelperPage extends StatelessWidget
   });
 
   final _mvvmPageBuilder = MVVMPageBuilder<UserFullScreenHelperPresenter,UserFullScreenHelperModel>();
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   AnimationSet mediaAnim(MvvmContext context) => AnimationSet.fadeAndTranslate(context.animationsControllers![0], .3);
@@ -55,7 +58,7 @@ class UserFullScreenHelperPage extends StatelessWidget
 
 
   @visibleForTesting
-  get presenter => _mvvmPageBuilder.presenter;
+  get presenter => _mvvmPageBuilder.presenter;  
 
 
   @override
@@ -66,7 +69,7 @@ class UserFullScreenHelperPage extends StatelessWidget
       multipleAnimControllerBuilder: (tickerProvider) {
         AnimationController pageAnimationController = AnimationController(
           vsync: tickerProvider, 
-          duration: Duration(milliseconds: 2000)
+          duration: Duration(milliseconds: 1000)
         );
         AnimationController progressAnimController = AnimationController(
           vsync: tickerProvider, 
@@ -88,8 +91,8 @@ class UserFullScreenHelperPage extends StatelessWidget
         if(model.animatePosition!) {
           context.animationsControllers![1].forward();
         } 
-      },
-      presenterBuilder: (context) => UserFullScreenHelperPresenter(this),
+      }, 
+      presenterBuilder: (context) => UserFullScreenHelperPresenter(this, group),
       builder: (context, presenter, model) => _buildPage(context, presenter, model),
     );
   }
@@ -171,40 +174,48 @@ class UserFullScreenHelperPage extends StatelessWidget
                           ) 
                         ),
                       ),
-                      SizedBox(height: 24),
-                      GestureDetector(
-                        onTap: () {
-                          var ctrl = context.animationsControllers![1];
-                          if(ctrl.status != AnimationStatus.completed) {
-                            ctrl.forward();
-                          } else {
-                            ctrl.reverse();
-                          }
-                        },
-                        child: OnboardingProgress(
-                          controller: context.animationsControllers![1],
-                          radius: 6,
-                          activeRadius: 10,
-                          activeColor: Colors.yellow.shade200,
-                          inactiveColor: Colors.blue.shade200,
-                          steps: 3,
-                          progression: 0,
-                        ),
-                      )
+                      
                     ],
                   ),
                 ),
+                SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SizedBox(
                     width: double.infinity,
-                    child: HelperButton(
-                      buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
-                      model: positivLabel!,
-                      onPressed:  () {
-                        HapticFeedback.selectionClick();
-                        presenter.onPositivButtonCallback();
-                      },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if(group.steps>1)
+                          GestureDetector(
+                            onTap: () {
+                              var ctrl = context.animationsControllers![1];
+                              if(ctrl.status != AnimationStatus.completed) {
+                                ctrl.forward();
+                              } else {
+                                ctrl.reverse();
+                              }
+                            },
+                            child: OnboardingProgress(
+                              controller: context.animationsControllers![1],
+                              radius: 6,
+                              activeRadius: 10,
+                              activeColor: titleLabel.fontColor!,
+                              inactiveColor: titleLabel.fontColor!.withOpacity(.5),
+                              steps: group.steps,
+                              progression: group.index,
+                            ),
+                          ),
+                        SizedBox(height: 24),
+                        HelperButton(
+                          buttonKey: ValueKey('pal_UserFullScreenHelperPage_Feedback_PositivButton'),
+                          model: positivLabel!,
+                          onPressed:  () {
+                            HapticFeedback.selectionClick();
+                            presenter.onPositivButtonCallback();
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 )

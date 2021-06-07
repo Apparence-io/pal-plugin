@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pal/src/database/entity/helper/helper_entity.dart';
+import 'package:pal/src/database/entity/helper/helper_group_entity.dart';
 import 'package:pal/src/database/entity/helper/helper_type.dart';
 import 'package:pal/src/extensions/color_extension.dart';
 import 'package:pal/src/ui/client/helpers/simple_helper/simple_helper.dart';
@@ -12,12 +13,15 @@ import 'helpers/simple_helper/widget/simple_helper_layout.dart';
 import 'helpers/user_anchored_helper/anchored_helper_widget.dart';
 
 class HelperFactory {
-  static Widget? build(final HelperEntity helper,
-      {final Function(bool positiveFeedBack)? onTrigger,
-      final Function? onError}) {
+  static Widget? build(
+    final HelperGroupEntity group,
+    final HelperEntity helper, {
+    final Function(bool positiveFeedBack)? onTrigger,
+    final Function? onError
+  }) {
     switch (helper.type) {
       case HelperType.HELPER_FULL_SCREEN:
-        return _createHelperFullScreen(helper, onTrigger);
+        return _createHelperFullScreen(group, helper, onTrigger);
       case HelperType.SIMPLE_HELPER:
         return _createSimpleHelper(helper, onTrigger);
       case HelperType.UPDATE_HELPER:
@@ -30,10 +34,15 @@ class HelperFactory {
   }
 
   static Widget _createHelperFullScreen(
+    final HelperGroupEntity group,
     final HelperEntity helper,
     final Function? onTrigger,
   ) {
     return UserFullScreenHelperPage(
+      group: GroupViewModel(
+        index: group.helpers!.indexOf(helper), 
+        steps: group.helpers!.length
+      ),
       titleLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,
         helper.helperTexts!,

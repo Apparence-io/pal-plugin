@@ -40,6 +40,7 @@ class EditableMedia extends StatelessWidget {
               ? Image.network(
                   this.data!.url!,
                   width: this.size,
+                  fit: BoxFit.fitWidth,
                   loadingBuilder: (context, child, chunk) {
                     if(chunk != null && chunk.expectedTotalBytes != null && chunk.cumulativeBytesLoaded < chunk.expectedTotalBytes!) {
                       return Center(child: CircularProgressIndicator(

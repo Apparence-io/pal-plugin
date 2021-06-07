@@ -11,6 +11,7 @@ class EditableButton extends StatelessWidget {
   final bool isSelected;
   final Color? backgroundColor;
   final bool outline;
+  final double? width;
   
   const EditableButton({
     Key? key,
@@ -19,6 +20,7 @@ class EditableButton extends StatelessWidget {
     this.isSelected = false,
     this.backgroundColor,
     this.outline = false,
+    this.width,
   }) : super(key: key);
 
   TextStyle? googleCustomFont(String? fontFamily) => 
@@ -53,7 +55,7 @@ class EditableButton extends StatelessWidget {
           child: IgnorePointer(
             ignoring: true,
             child: SizedBox(
-              width: double.infinity,
+              width: width,
               child: outline 
                 ? _buildEditableBordered(
                   child: Padding(

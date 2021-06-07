@@ -201,73 +201,92 @@ class EditorFullScreenHelperPage extends StatelessWidget {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: EditableBackground(
                     backgroundColor: model.backgroundBoxForm!.backgroundColor,
-                    widget: Center(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: SafeArea(
-                          bottom: false,
-                          child: SingleChildScrollView(
-                            padding: EdgeInsets.only(top: 25.0, bottom: 50.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                EditableMedia(
-                                  size: 150.0,
-                                  data: model.headerMediaForm,
-                                  onTap: presenter.onNewEditableSelect,
-                                  backgroundColor:
-                                      model.backgroundBoxForm?.backgroundColor,
-                                  isSelected: model.currentEditableItemNotifier
-                                          ?.value?.key ==
-                                      model.headerMediaForm!.key,
-                                ),
-                                SizedBox(height: 24),
-                                EditableTextField(
-                                  data: model.titleTextForm,
-                                  onTap: presenter.onNewEditableSelect,
-                                  backgroundColor:
-                                      model.backgroundBoxForm?.backgroundColor,
-                                  isSelected: model.currentEditableItemNotifier
-                                          ?.value?.key ==
-                                      model.titleTextForm!.key,
-                                ),
-                                SizedBox(height: 24),
-                                EditableTextField(
-                                  data: model.descriptionTextForm,
-                                  onTap: presenter.onNewEditableSelect,
-                                  backgroundColor:
-                                      model.backgroundBoxForm?.backgroundColor,
-                                  isSelected: model.currentEditableItemNotifier
-                                          ?.value?.key ==
-                                      model.descriptionTextForm!.key,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 40.0),
-                                ),
-                                EditableButton(
-                                  data: model.positivButtonForm,
-                                  onTap: presenter.onNewEditableSelect,
-                                  isSelected: model.currentEditableItemNotifier
-                                          ?.value?.key ==
-                                      model.positivButtonForm!.key,
-                                  backgroundColor:
-                                      model.backgroundBoxForm?.backgroundColor,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 12.0),
-                                ),
-                                EditableButton(
-                                  data: model.negativButtonForm,
-                                  onTap: presenter.onNewEditableSelect,
-                                  isSelected: model.currentEditableItemNotifier
-                                          ?.value?.key ==
-                                      model.negativButtonForm!.key,
-                                  backgroundColor:
-                                      model.backgroundBoxForm?.backgroundColor,
-                                )
-                              ],
+                    widget: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: SafeArea(
+                        bottom: false,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              flex: 0,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  EditableButton(
+                                    data: model.negativButtonForm,
+                                    onTap: presenter.onNewEditableSelect,
+                                    isSelected: model.currentEditableItemNotifier?.value?.key == model.negativButtonForm!.key,
+                                    backgroundColor: model.backgroundBoxForm?.backgroundColor,
+                                 ),
+                                ]
+                              ),
                             ),
-                          ),
+                            Flexible(
+                              flex: 2,
+                              fit: FlexFit.tight,
+                              child: Column(
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    fit: FlexFit.loose,
+                                    child: EditableMedia(
+                                      size: double.infinity,
+                                      data: model.headerMediaForm,
+                                      onTap: presenter.onNewEditableSelect,
+                                      backgroundColor:
+                                          model.backgroundBoxForm?.backgroundColor,
+                                      isSelected: model.currentEditableItemNotifier
+                                              ?.value?.key ==
+                                          model.headerMediaForm!.key,
+                                    ),
+                                  ),
+                                  SizedBox(height: 32),
+                                  EditableTextField(
+                                    data: model.titleTextForm,
+                                    onTap: presenter.onNewEditableSelect,
+                                    backgroundColor:
+                                        model.backgroundBoxForm?.backgroundColor,
+                                    isSelected: model.currentEditableItemNotifier
+                                            ?.value?.key ==
+                                        model.titleTextForm!.key,
+                                  ),
+                                  SizedBox(height: 8),
+                                  EditableTextField(
+                                    data: model.descriptionTextForm,
+                                    onTap: presenter.onNewEditableSelect,
+                                    backgroundColor:
+                                        model.backgroundBoxForm?.backgroundColor,
+                                    isSelected: model.currentEditableItemNotifier
+                                            ?.value?.key ==
+                                        model.descriptionTextForm!.key,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Flexible(
+                              flex: 0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  SizedBox(height: 24),
+                                  EditableButton(
+                                    width: double.infinity,
+                                    data: model.positivButtonForm,
+                                    onTap: presenter.onNewEditableSelect,
+                                    isSelected: model.currentEditableItemNotifier
+                                            ?.value?.key ==
+                                        model.positivButtonForm!.key,
+                                    backgroundColor:
+                                        model.backgroundBoxForm?.backgroundColor,
+                                  ),
+                                  SizedBox(height: 40),
+                                ],
+                              ),
+                            )
+                          ],
                         ),
                       ),
                     ),

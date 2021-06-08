@@ -14,8 +14,8 @@ import 'helpers/user_anchored_helper/anchored_helper_widget.dart';
 
 class HelperFactory {
   static Widget? build(
-    final HelperGroupEntity group,
     final HelperEntity helper, {
+    final HelperGroupEntity? group,
     final Function(bool positiveFeedBack)? onTrigger,
     final Function? onError
   }) {
@@ -34,14 +34,14 @@ class HelperFactory {
   }
 
   static Widget _createHelperFullScreen(
-    final HelperGroupEntity group,
+    final HelperGroupEntity? group,
     final HelperEntity helper,
     final Function? onTrigger,
   ) {
     return UserFullScreenHelperPage(
       group: GroupViewModel(
-        index: group.helpers!.indexOf(helper), 
-        steps: group.helpers!.length
+        index: group != null ? group.helpers!.indexOf(helper) : 0, 
+        steps: group != null ? group.helpers!.length : 1
       ),
       titleLabel: HelperSharedFactory.parseTextLabel(
         FullscreenHelperKeys.TITLE_KEY,

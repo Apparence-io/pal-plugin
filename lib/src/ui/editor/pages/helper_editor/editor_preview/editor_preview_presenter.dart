@@ -42,8 +42,9 @@ class EditorPreviewPresenter
     if (this.viewModel.preBuiltHelper != null)
       return this.viewModel.preBuiltHelper;
     // PARSING AND CREATING HELPER ENTITY
-    return HelperFactory.build(this.viewModel.helperEntity!,
-        onTrigger: (_) => this.viewModel.onDismiss(),
-        onError: (_) => this.viewModel.onDismiss());
+    return HelperFactory.build(
+      viewModel.helperEntity!,
+      onTrigger: (_) => this.viewModel.onDismiss(),
+      onError: (_) => this.viewModel.onDismiss());
   }
 }

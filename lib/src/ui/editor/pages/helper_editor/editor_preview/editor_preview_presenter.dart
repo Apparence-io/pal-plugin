@@ -8,25 +8,19 @@ import 'package:pal/src/ui/editor/pages/helper_editor/editor_preview/editor_prev
 import 'editor_preview.dart';
 import 'editor_preview_viewmodel.dart';
 
-class EditorPreviewPresenter
-    extends Presenter<EditorPreviewModel, EditorPreviewView> {
+class EditorPreviewPresenter extends Presenter<EditorPreviewModel, EditorPreviewView> {
   final EditorHelperService helperService;
 
   EditorPreviewPresenter(
     EditorPreviewView viewInterface, {
     required this.helperService,
     required EditorPreviewArguments args,
-  }) : super(
-            EditorPreviewModel(
-                args.helperId, args.onDismiss, args.preBuiltHelper),
-            viewInterface);
+  }) : super(EditorPreviewModel(args.helperId, args.onDismiss, args.preBuiltHelper), viewInterface);
 
   @override
   void onInit() {
     // INIT
     this.viewModel.loading = true;
-    // INIT
-
     if (this.viewModel.preBuiltHelper == null) {
       this.helperService.getHelper(this.viewModel.helperId).then((helper) {
         this.viewModel.helperEntity = helper;
@@ -36,15 +30,5 @@ class EditorPreviewPresenter
     } else {
       this.viewModel.loading = false;
     }
-  }
-
-  Widget? getHelper() {
-    if (this.viewModel.preBuiltHelper != null)
-      return this.viewModel.preBuiltHelper;
-    // PARSING AND CREATING HELPER ENTITY
-    return HelperFactory.build(
-      viewModel.helperEntity!,
-      onTrigger: (_) => this.viewModel.onDismiss(),
-      onError: (_) => this.viewModel.onDismiss());
   }
 }

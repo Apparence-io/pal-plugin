@@ -125,8 +125,7 @@ class _AnchoredHelperState extends State<AnchoredHelper>
 
   @override
   void didChangeDependencies() {
-    finderService =
-      widget.finderService ?? UserInjector.of(context)!.finderService;
+    finderService = widget.finderService ?? UserInjector.of(context)!.finderService;
     super.didChangeDependencies();
   }
 

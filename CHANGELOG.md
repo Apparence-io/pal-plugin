@@ -1,3 +1,6 @@
+## [2.1.0] - 2021/06/22
+- fullscreen onboarding 
+
 ## [2.0.1] - 2021/05/20
 - Fix image loading spinner
 - Error message on null route

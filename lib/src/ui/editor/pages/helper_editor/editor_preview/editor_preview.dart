@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvvm_builder/mvvm_builder.dart';
 import 'package:pal/src/injectors/editor_app/editor_app_injector.dart';
+import 'package:pal/src/ui/client/helper_factory.dart';
 
 import 'editor_preview_presenter.dart';
 import 'editor_preview_viewmodel.dart';
@@ -59,8 +60,23 @@ class EditorPreviewPage extends StatelessWidget implements EditorPreviewView {
         : Stack(
             fit: StackFit.expand,
             children: [
-              presenter.getHelper()!,
+              getHelper(context, model)!,
             ],
           );
   }
+
+  Widget? getHelper(BuildContext context, EditorPreviewModel viewModel) {
+    if (viewModel.preBuiltHelper != null)
+      return viewModel.preBuiltHelper;
+    // PARSING AND CREATING HELPER ENTITY
+    return HelperFactory.build(
+      viewModel.helperEntity!,
+      onTrigger: (_) async {
+        viewModel.onDismiss(context);
+      },
+      onError: (_) async {
+        viewModel.onDismiss(context);
+      });
+  }
+
 }

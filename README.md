@@ -4,7 +4,6 @@
 	</a>
 </p>
 <p align="center">
-    <img src="https://app.bitrise.io/app/83910b8783f1bf6a/status.svg?token=AZYUldjPs6PnJjBYlBfXCg&branch=master"/>
     <a href="https://codecov.io/gl/apparence:pal/pal-flutter">
       <img src="https://codecov.io/gl/apparence:pal/pal-flutter/branch/master/graph/badge.svg?token=VSU0MWER5H"/>
     </a>
@@ -17,15 +16,19 @@
 </p>
 
 # Pal - Flutter onboarding and messages plugin 
-- Create guide tours for new users<br/>
-- Ask questions and get feedbacks from your users<br/>
-- Inform about what’s new in your update<br/>
-- Improve your onboardings and app experience using analytics<br/>
-
-**[🎥  Pal introduction in video](https://www.youtube.com/watch?v=RIeeTG928Rc)**
+- Create guide tours for new users<br>
+- Ask questions and get feedbacks from your users<br>
+- Inform about what’s new in your update<br>
+- Improve your onboardings and app experience using analytics<br>
 
 <p align="center">
 <img src="https://i.postimg.cc/TwHGZ0r6/anchored.gif" width="150" alt="flutter anchored onboarding screen" />
+</p>
+
+## Wants a fast demo? 
+We got a live demo just for you -> [check it here](https://github.com/Apparence-io/pal-demo)
+<p align="center">
+<img src="https://i.postimg.cc/nLdjBFCy/cover.jpg" height="400" alt="flutter anchored onboarding screen" />
 </p>
 
 ## 📱 How it works ?
